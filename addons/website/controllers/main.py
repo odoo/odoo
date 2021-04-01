@@ -436,8 +436,6 @@ class Website(Home):
                     opt = {}
                     if field_type == 'monetary':
                         opt['display_currency'] = options['display_currency']
-                    elif field_type == 'html':
-                        opt['template_options'] = {}
                     value = request.env[('ir.qweb.field.%s' % field_type)].value_to_html(value, opt)
                 mapped[mapped_name] = escape(value)
             result.append(mapped)

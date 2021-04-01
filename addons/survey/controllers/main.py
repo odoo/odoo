@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, SUPERUSER_ID, _
-from odoo.addons.base.models.ir_ui_view import keep_query
+from odoo.addons.http_routing.models.ir_qweb import keep_query
 from odoo.exceptions import UserError
 from odoo.http import request, content_disposition
 from odoo.osv import expression
@@ -346,22 +346,22 @@ class Survey(http.Controller):
         survey_data = self._prepare_survey_data(survey_sudo, answer_sudo, **post)
 
         if answer_sudo.state == 'done':
-            survey_content = request.env.ref('survey.survey_fill_form_done')._render(survey_data)
+            survey_content = request.env['ir.qweb']._render('survey.survey_fill_form_done', survey_data)
         else:
-            survey_content = request.env.ref('survey.survey_fill_form_in_progress')._render(survey_data)
+            survey_content = request.env['ir.qweb']._render('survey.survey_fill_form_in_progress', survey_data)
 
         survey_progress = False
         if answer_sudo.state == 'in_progress' and not survey_data.get('question', request.env['survey.question']).is_page:
             if survey_sudo.questions_layout == 'page_per_section':
                 page_ids = survey_sudo.page_ids.ids
-                survey_progress = request.env.ref('survey.survey_progression')._render({
+                survey_progress = request.env['ir.qweb']._render('survey.survey_progression', {
                     'survey': survey_sudo,
                     'page_ids': page_ids,
                     'page_number': page_ids.index(survey_data['page'].id) + (1 if survey_sudo.progression_mode == 'number' else 0)
                 })
             elif survey_sudo.questions_layout == 'page_per_question':
                 page_ids = survey_sudo.question_ids.ids
-                survey_progress = request.env.ref('survey.survey_progression')._render({
+                survey_progress = request.env['ir.qweb']._render('survey.survey_progression', {
                     'survey': survey_sudo,
                     'page_ids': page_ids,
                     'page_number': page_ids.index(survey_data['question'].id)
@@ -376,7 +376,7 @@ class Survey(http.Controller):
         return {
             'survey_content': survey_content,
             'survey_progress': survey_progress,
-            'survey_navigation': request.env.ref('survey.survey_navigation')._render(survey_data),
+            'survey_navigation': request.env['ir.qweb']._render('survey.survey_navigation', survey_data),
             'background_image_url': background_image_url
         }
 

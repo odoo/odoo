@@ -52,7 +52,7 @@ class AccountEdiFormat(models.Model):
     def _export_ehf_3(self, invoice):
         self.ensure_one()
         # Create file content.
-        xml_content = self.env.ref('l10n_no_edi.export_ehf_3_invoice')._render(self._get_ehf_3_values(invoice))
+        xml_content = self.env['ir.qweb']._render('l10n_no_edi.export_ehf_3_invoice', self._get_ehf_3_values(invoice))
         vat = invoice.company_id.partner_id.commercial_partner_id.vat
         xml_name = 'ehf-%s%s%s.xml' % (vat or '', '-' if vat else '', invoice.name.replace('/', '_'))
         return self.env['ir.attachment'].create({

@@ -167,7 +167,7 @@ class PurchaseOrder(models.Model):
                 'order_exceptions': order_exceptions.values(),
                 'impacted_pickings': impacted_pickings,
             }
-            return self.env.ref('purchase_stock.exception_on_po')._render(values=values)
+            return self.env['ir.qweb']._render('purchase_stock.exception_on_po', values)
 
         documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_groupby)
         filtered_documents = {}

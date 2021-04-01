@@ -4,6 +4,7 @@
 from werkzeug import urls
 
 from odoo import api, fields, models, _
+from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
 
 
@@ -49,9 +50,9 @@ class Job(models.Model):
     _name = 'hr.job'
     _inherit = ['hr.job', 'website.seo.metadata', 'website.published.multi.mixin']
 
+    @mute_logger('odoo.addons.base.models.ir_qweb')
     def _get_default_website_description(self):
-        default_description = self.env.ref("website_hr_recruitment.default_website_description", raise_if_not_found=False)
-        return (default_description._render() if default_description else "")
+        return self.env['ir.qweb']._render("website_hr_recruitment.default_website_description", raise_if_not_found=False)
 
     website_published = fields.Boolean(help='Set if the application is published on the website of the company.')
     website_description = fields.Html('Website description', translate=html_translate, sanitize_attributes=False, default=_get_default_website_description, prefetch=False, sanitize_form=False)

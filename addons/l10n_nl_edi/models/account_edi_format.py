@@ -67,7 +67,7 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         # Create file content.
         xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
-        xml_content += self.env.ref('l10n_nl_edi.export_nlcius_invoice')._render(self._get_nlcius_values(invoice))
+        xml_content += self.env['ir.qweb']._render('l10n_nl_edi.export_nlcius_invoice', self._get_nlcius_values(invoice))
         vat = invoice.company_id.partner_id.commercial_partner_id.vat
         xml_name = 'nlcius-%s%s%s.xml' % (vat or '', '-' if vat else '', invoice.name.replace('/', '_'))
         return self.env['ir.attachment'].create({

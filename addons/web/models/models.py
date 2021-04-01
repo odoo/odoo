@@ -226,23 +226,15 @@ class Base(models.AbstractModel):
     def qweb_render_view(self, view_id, domain):
         assert view_id
         return self.env['ir.qweb']._render(
-            view_id, {
-            **self.env['ir.ui.view']._prepare_qcontext(),
-            **self._qweb_prepare_qcontext(view_id, domain),
-        })
-
-    def _qweb_prepare_qcontext(self, view_id, domain):
-        """
-        Base qcontext for rendering qweb views bound to this model
-        """
-        return {
-            'model': self,
-            'domain': domain,
-            # not necessarily necessary as env is already part of the
-            # non-minimal qcontext
-            'context': self.env.context,
-            'records': lazy(self.search, domain),
-        }
+            view_id,
+            {
+                'model': self,
+                'domain': domain,
+                # not necessarily necessary as env is already part of the
+                # non-minimal qcontext
+                'context': self.env.context,
+                'records': lazy(self.search, domain),
+            })
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -800,15 +792,12 @@ class ResCompany(models.Model):
         return res
 
     def _get_asset_style_b64(self):
-        template_style = self.env.ref('web.styles_company_report', raise_if_not_found=False)
-        if not template_style:
-            return b''
         # One bundle for everyone, so this method
         # necessarily updates the style for every company at once
         company_ids = self.sudo().search([])
-        company_styles = template_style._render({
-            'company_ids': company_ids,
-        })
+        company_styles = self.env['ir.qweb']._render('web.styles_company_report', {
+                'company_ids': company_ids,
+            }, raise_if_not_found=False)
         return base64.b64encode(company_styles.encode())
 
     def _update_asset_style(self):

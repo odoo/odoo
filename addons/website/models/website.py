@@ -430,9 +430,10 @@ class Website(models.Model):
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
-                    view_id = self.env['website'].with_context(website_id=website.id, lang=website.default_lang_id.code).viewref('website.' + snippet)
-                    if view_id:
-                        el = html.fromstring(view_id._render(values=cta_data))
+                    IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
+                    render = IrQweb._render('website.' + snippet, cta_data)
+                    if render:
+                        el = html.fromstring(render)
 
                         # Add the data-snippet attribute to identify the snippet
                         # for compatibility code
@@ -604,12 +605,12 @@ class Website(models.Model):
             return
 
         # keep strange indentation in python file, to get it correctly in database
-        new_homepage_view = '''<t name="Homepage" t-name="website.homepage%s">
+        new_homepage_view = '''<t name="Homepage" t-name="website.homepage">
     <t t-call="website.layout">
         <t t-set="pageName" t-value="'homepage'"/>
         <div id="wrap" class="oe_structure oe_empty"/>
     </t>
-</t>''' % (self.id)
+</t>'''
         standard_homepage.with_context(website_id=self.id).arch_db = new_homepage_view
 
         homepage_page = Page.search([
@@ -1415,9 +1416,8 @@ class Website(models.Model):
         # Check snippet template definition to avoid disabling its related assets.
         # This special case is needed because snippet template definitions do not
         # have a `data-snippet` attribute (which is added during drag&drop).
-        snippet_template = self.env.ref(f'{snippet_module}.{snippet_id}', raise_if_not_found=False)
-        if snippet_template:
-            snippet_template_html = snippet_template._render()
+        snippet_template_html = self.env['ir.qweb']._render(f'{snippet_module}.{snippet_id}', raise_if_not_found=False)
+        if snippet_template_html:
             match = re.search('<([^>]*class="[^>]*)>', snippet_template_html)
             snippet_occurences.append(match.group())
 

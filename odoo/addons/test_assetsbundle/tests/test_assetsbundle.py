@@ -825,7 +825,7 @@ class TestAssetsManifest(AddonManifestPatched):
 
     def test_01_globmanifest(self):
         view = self.make_asset_view('test_assetsbundle.manifest1')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest1.min.js')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -847,7 +847,7 @@ class TestAssetsManifest(AddonManifestPatched):
 
     def test_02_globmanifest_no_duplicates(self):
         view = self.make_asset_view('test_assetsbundle.manifest2')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest2.min.js')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -869,7 +869,7 @@ class TestAssetsManifest(AddonManifestPatched):
 
     def test_03_globmanifest_file_before(self):
         view = self.make_asset_view('test_assetsbundle.manifest3')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest3.min.js')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -896,7 +896,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.manifest4',
             'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
         })
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4.min.js')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -917,7 +917,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irasset1',
             'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
         })
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irasset1.min.js')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -937,7 +937,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'target': 'test_assetsbundle/static/src/js/test_jsfile1.js',
             'path': 'http://external.link/external.js',
         })
-        rendered = view._render()
+        rendered = self.env['ir.qweb']._render(view.id)
         html_tree = lxml.etree.fromstring(rendered)
         scripts = html_tree.findall('script')
         self.assertEqual(len(scripts), 2)
@@ -968,7 +968,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
             'target': 'test_assetsbundle/static/src/js/test_jsfile3.js',
         })
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -997,7 +997,7 @@ class TestAssetsManifest(AddonManifestPatched):
         })
         # asset is now: js_file1 ; js_file2 ; js_file3
         # because js_file is replaced by 1 and 2
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1022,7 +1022,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'directive': 'remove',
             'path': 'test_assetsbundle/static/src/js/test_jsfile2.js',
         })
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest5')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1054,7 +1054,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': 'test_assetsbundle/static/src/js/test_doesntexist.js',
         })
         with self.assertRaises(Exception) as cm:
-            view._render()
+            self.env['ir.qweb']._render(view.id)
         self.assertTrue(
             "['test_assetsbundle/static/src/js/test_doesntexist.js'] not found" in str(cm.exception)
         )
@@ -1067,7 +1067,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'directive': 'remove',
             'path': 'test_assetsbundle/static/src/**/*',
         })
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest2.js')], order='create_date DESC', limit=1)
         # indeed everything in the bundle matches the glob, so there is no attachment
         self.assertFalse(attach)
@@ -1080,7 +1080,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.manifest4',
             'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
         })
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1102,7 +1102,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irasset_include1',
             'path': 'test_assetsbundle.manifest6',
         })
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irasset_include1')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1115,7 +1115,7 @@ class TestAssetsManifest(AddonManifestPatched):
 
     def test_12_include2(self):
         view = self.make_asset_view('test_assetsbundle.manifest6')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest6')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1142,7 +1142,7 @@ class TestAssetsManifest(AddonManifestPatched):
         })
 
         with self.assertRaises(QWebException) as cm:
-            view._render()
+            self.env['ir.qweb']._render(view.id)
         error = str(cm.exception.__cause__)
         self.assertTrue(error)
         self.assertFalse(isinstance(error, RecursionError))
@@ -1181,7 +1181,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irasset_include3',
             'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
         })
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irasset_include1')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1205,7 +1205,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_other.mockmanifest1')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_other.mockmanifest1')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1229,7 +1229,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_assetsbundle.manifest4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1256,7 +1256,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_assetsbundle.manifest4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1283,7 +1283,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_assetsbundle.manifest4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1308,7 +1308,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_assetsbundle.manifest4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1332,7 +1332,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_assetsbundle.manifest4')
-        rendered = view._render()
+        rendered = self.env['ir.qweb']._render(view.id)
         html_tree = lxml.etree.fromstring(rendered)
         scripts = html_tree.findall('script')
         self.assertEqual(len(scripts), 2)
@@ -1373,7 +1373,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'media': 'print',
         })
 
-        rendered = view._render()
+        rendered = self.env['ir.qweb']._render(view.id)
         html_tree = lxml.etree.fromstring(rendered)
         stylesheets = html_tree.findall('link')
         self.assertEqual(len(stylesheets), 2)
@@ -1399,7 +1399,7 @@ class TestAssetsManifest(AddonManifestPatched):
             't-css': 'true',
         })
 
-        rendered = view._render()
+        rendered = self.env['ir.qweb']._render(view.id)
         html_tree = lxml.etree.fromstring(rendered)
         stylesheets = html_tree.findall('link')
         self.assertEqual(len(stylesheets), 2)
@@ -1431,7 +1431,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_assetsbundle.bundle4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.bundle4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1461,7 +1461,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_assetsbundle.bundle4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.bundle4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1495,7 +1495,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_assetsbundle.bundle4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.bundle4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1525,7 +1525,7 @@ class TestAssetsManifest(AddonManifestPatched):
             }
         }
         view = self.make_asset_view('test_assetsbundle.bundle4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.bundle4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1554,7 +1554,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'directive': 'before',
         })
         view = self.make_asset_view('test_assetsbundle.bundle4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.bundle4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1583,7 +1583,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'directive': 'after',
         })
         view = self.make_asset_view('test_assetsbundle.bundle4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.bundle4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1622,7 +1622,7 @@ class TestAssetsManifest(AddonManifestPatched):
             't-js': 'true',
             't-css': 'true',
         })
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.bundle4')], order='create_date DESC', limit=2)
         attach_css = None
         attach_js = None
@@ -1680,7 +1680,7 @@ class TestAssetsManifest(AddonManifestPatched):
         })
         view = self.make_asset_view('test_assetsbundle.wrong_path')
         with self.assertRaises(Exception) as cm:
-            view._render()
+            self.env['ir.qweb']._render(view.id)
         self.assertTrue(
             "test_assetsbundle/static/src/js/doesnt_exist.js not found" in str(cm.exception)
         )
@@ -1694,7 +1694,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'directive': 'after',
         })
         view = self.make_asset_view('test_assetsbundle.manifest4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1723,7 +1723,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'directive': 'before',
         })
         view = self.make_asset_view('test_assetsbundle.manifest4')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         self.assertStringEqual(
@@ -1756,7 +1756,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': '/test_assetsbundle/%s' % path_to_dummy,
         })
         view = self.make_asset_view('test_assetsbundle.irassetsec')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irassetsec')], order='create_date DESC', limit=1)
         self.assertFalse(attach.exists())
 
@@ -1789,7 +1789,7 @@ class TestAssetsManifest(AddonManifestPatched):
         })
         view = self.make_asset_view('test_assetsbundle.irassetsec')
         with self.assertRaises(QWebException) as cm:
-            view._render()
+            self.env['ir.qweb']._render(view.id)
 
         self.assertTrue('Unallowed to fetch files from addon notinstalled_module' in str(cm.exception))
 
@@ -1811,7 +1811,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': '/test_assetsbundle/__manifest__.py',
         })
         view = self.make_asset_view('test_assetsbundle.irassetsec')
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irassetsec')], order='create_date DESC', limit=1)
         self.assertFalse(attach.exists())
 
@@ -1857,7 +1857,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': 'test_assetsbundle/my_style_attach.scss',
         })
         view = self.make_asset_view('test_assetsbundle.irasset_custom_attach', {'t-css': True})
-        view._render()
+        self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irasset_custom_attach')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
         # The scss should be compiled

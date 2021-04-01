@@ -46,7 +46,7 @@ class MercuryTransaction(models.Model):
         data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):
-        xml_transaction = self.env.ref(template)._render(data)
+        xml_transaction = self.env['ir.qweb']._render(template, data)
 
         if not data['merchant_id'] or not data['merchant_pwd']:
             return "not setup"

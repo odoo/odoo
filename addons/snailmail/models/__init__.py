@@ -2,7 +2,6 @@
 
 from . import iap_account
 from . import ir_actions_report
-from . import ir_qweb_fields
 from . import mail_message
 from . import mail_notification
 from . import res_company

@@ -108,7 +108,7 @@ class TestQwebProcessAtt(TransactionCase):
 
     def _test_att(self, url, expect, tag='a', attribute='href'):
         self.assertEqual(
-            self.env['ir.qweb']._post_processing_att(tag, {attribute: url}, {}),
+            self.env['ir.qweb']._post_processing_att(tag, {attribute: url}),
             expect
         )
 

@@ -284,42 +284,40 @@ class MailTemplate(models.Model):
             values.pop('email_from')
         # encapsulate body
         if email_layout_xmlid and values['body_html']:
-            try:
-                template = self.env.ref(email_layout_xmlid, raise_if_not_found=True)
-            except ValueError:
+            record = self.env[self.model].browse(res_id)
+            model = self.env['ir.model']._get(record._name)
+
+            if self.lang:
+                lang = self._render_lang([res_id])[res_id]
+                model = model.with_context(lang=lang)
+
+            template_ctx = {
+                # message
+                'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
+                'subtype': self.env['mail.message.subtype'].sudo(),
+                # record
+                'model_description': model.display_name,
+                'record': record,
+                'record_name': False,
+                'subtitle': False,
+                # user / environment
+                'company': 'company_id' in record and record['company_id'] or self.env.company,
+                'email_add_signature': False,
+                'signature': '',
+                'website_url': '',
+                # tools
+                'is_html_empty': is_html_empty,
+            }
+            body = model.env['ir.qweb']._render(email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
+            if not body:
                 _logger.warning(
                     'QWeb template %s not found when sending template %s. Sending without layout.',
                     email_layout_xmlid,
                     self.name
                 )
-            else:
-                record = self.env[self.model].browse(res_id)
-                model = self.env['ir.model']._get(record._name)
 
-                if self.lang:
-                    lang = self._render_lang([res_id])[res_id]
-                    template = template.with_context(lang=lang)
-                    model = model.with_context(lang=lang)
+            values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
 
-                template_ctx = {
-                    # message
-                    'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
-                    'subtype': self.env['mail.message.subtype'].sudo(),
-                    # record
-                    'model_description': model.display_name,
-                    'record': record,
-                    'record_name': False,
-                    'subtitle': False,
-                    # user / environment
-                    'company': 'company_id' in record and record['company_id'] or self.env.company,
-                    'email_add_signature': False,
-                    'signature': '',
-                    'website_url': '',
-                    # tools
-                    'is_html_empty': is_html_empty,
-                }
-                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
-                values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
         mail = self.env['mail.mail'].sudo().create(values)
 
         # manage attachments

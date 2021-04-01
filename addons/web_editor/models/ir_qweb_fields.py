@@ -226,7 +226,6 @@ class Contact(models.AbstractModel):
     def attributes(self, record, field_name, options, values):
         attrs = super(Contact, self).attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
-            options.pop('template_options') # remove options not specific to this widget
             attrs['data-oe-contact-options'] = json.dumps(options)
         return attrs
 

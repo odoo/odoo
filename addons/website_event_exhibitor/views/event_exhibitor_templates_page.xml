@@ -50,8 +50,8 @@
                 </span>
                 <span class="my-0" t-else="">
                     starts on
-                    <span t-field="sponsor.event_id.with_context(tz=sponsor.event_id.date_tz).date_begin"
-                        t-options="{'format': 'medium'}"/> (<t t-out="sponsor.event_id.date_tz"/>).
+                    <span t-field="sponsor.event_id.date_begin"
+                        t-options="{'format': 'medium', 'tz_name': sponsor.event_id.date_tz}"/> (<t t-out="sponsor.event_id.date_tz"/>).
                 </span>
                 <br/>
                 <span t-if="is_event_user">Attendees will be able to join to meet <b t-out="sponsor.partner_name"/> .</span>

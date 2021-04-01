@@ -200,12 +200,12 @@ class ResCompany(models.Model):
 
     @api.depends('terms_type')
     def _compute_invoice_terms_html(self):
-        term_template = self.env.ref("account.account_default_terms_and_conditions", False)
-        if not term_template:
-            return
-
         for company in self.filtered(lambda company: is_html_empty(company.invoice_terms_html) and company.terms_type == 'html'):
-            company.invoice_terms_html = term_template._render({'company_name': company.name, 'company_country': company.country_id.name}, engine='ir.qweb')
+            html = self.env['ir.qweb']._render('account.account_default_terms_and_conditions',
+                        {'company_name': company.name, 'company_country': company.country_id.name},
+                        raise_if_not_found=False)
+            if html:
+                company.invoice_terms_html = html
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
