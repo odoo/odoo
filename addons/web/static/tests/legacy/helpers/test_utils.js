@@ -252,10 +252,8 @@ odoo.define('web.test_utils', async function (require) {
             inputFiles: testUtilsFile.inputFiles,
         },
 
-        createActionManager: testUtilsCreate.createActionManager,
         createComponent: testUtilsCreate.createComponent,
         createControlPanel: testUtilsCreate.createControlPanel,
-        createDebugManager: testUtilsCreate.createDebugManager,
         createAsyncView: testUtilsCreate.createView,
         createCalendarView: testUtilsCreate.createCalendarView,
         createView: testUtilsCreate.createView,

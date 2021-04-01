@@ -1,8 +1,22 @@
 {
+  "name": "web",
+  "version": "0.0.1",
+  "description": "Odoo Web Client",
+  "main": "index.js",
+  "scripts": {
+    "prettier": "prettier static/src static/tests doc --write"
+  },
+  "author": "",
+  "license": "",
   "devDependencies": {
     "grunt": "*",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-sass": "~0.4.1",
-    "grunt-contrib-watch": "~0.5.1"
+    "grunt-contrib-watch": "~0.5.1",
+    "prettier": "^2.2.0"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "endOfLine": "auto"
   }
 }

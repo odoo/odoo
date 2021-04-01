@@ -546,6 +546,7 @@ async function start(param0 = {}) {
             }
         });
     } else if (hasActionManager) {
+        throw new Error("This is deprecated, should be adapted");
         widget = await createActionManager(kwargs);
         legacyPatch(widget, {
             destroy() {

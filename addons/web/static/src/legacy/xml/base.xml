@@ -1705,67 +1705,6 @@
     </div>
 </t>
 
-<t t-name="UserMenu">
-    <li class="o_user_menu">
-        <a role="button" class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
-            <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="User"/>
-            <span class="oe_topbar_name"/>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" role="menu">
-            <t t-call="UserMenu.Actions"/>
-        </div>
-    </li>
-</t>
-
-<t t-name="UserMenu.Actions">
-    <a role="menuitem" href="#" data-menu="documentation" class="dropdown-item">Documentation</a>
-    <a role="menuitem" href="#" data-menu="support" class="dropdown-item">Support</a>
-    <div role="separator" class="dropdown-divider"/>
-    <a role="menuitem" href="#" data-menu="settings" class="dropdown-item">Preferences</a>
-    <a role="menuitem" href="#" data-menu="account" class="dropdown-item">My Odoo.com account</a>
-    <a role="menuitem" href="#" data-menu="logout" class="dropdown-item">Log out</a>
-</t>
-
-<t t-name="SwitchCompanyMenu">
-    <li class="o_switch_company_menu">
-        <a role="button" class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#" title="Dropdown menu">
-            <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}">
-                <t t-if="!widget.isMobile"><t t-esc="widget.current_company_name"/></t>
-            </span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" role="menu">
-            <t t-foreach="_.values(widget.user_companies)" t-as="company">
-                <div class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company.id">
-                    <t t-set="is_allowed" t-value="widget.allowed_company_ids.includes(company.id)"/>
-                    <t t-set="is_current" t-value="company.id === widget.current_company"/>
-                    <div role="menuitemcheckbox" t-att-aria-checked="is_allowed" t-att-aria-label="company.name" tabindex="0" class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py">
-                        <span style="height: 2rem;">
-                            <t t-if="is_allowed">
-                                <i class="fa fa-fw fa-check-square pt-2"></i>
-                            </t>
-                            <t t-if="!is_allowed">
-                                <i class="fa fa-fw fa-square-o pt-2"></i>
-                            </t>
-                        </span>
-                    </div>
-                    <div role="button" t-att-aria-pressed="is_current" aria-label="Switch to this company" tabindex="0" class="d-flex flex-grow-1 align-items-center py-0 log_into pl-3 o_py" t-att-style="is_current ? 'background-color: lightgrey;' : ''">
-                        <t t-if="is_allowed">
-                            <span class='mr-3 company_label'>
-                                <t t-esc="company.name"/>
-                            </span>
-                        </t>
-                        <t t-if="!is_allowed">
-                            <span class='mr-3 company_label text-muted'>
-                                <t t-esc="company.name"/>
-                            </span>
-                        </t>
-                    </div>
-                </div>
-            </t>
-        </div>
-    </li>
-</t>
-
 <t t-name="EnterpriseUpgrade">
     <div class="row" role="status">
         <div class="col-6">
