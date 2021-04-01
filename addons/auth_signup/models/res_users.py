@@ -188,7 +188,6 @@ class ResUsers(models.Model):
         template_values = {
             'email_to': '${object.email|safe}',
             'email_cc': False,
-            'auto_delete': True,
             'partner_to': False,
             'scheduled_date': False,
         }
