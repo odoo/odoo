@@ -9,7 +9,7 @@ odoo.define('web.TranslationDialog', function (require) {
 
     var TranslationDialog = Dialog.extend({
         xmlDependencies: (Dialog.prototype.xmlDependencies || [])
-            .concat(['/web/static/src/xml/translation_dialog.xml']),
+            .concat(['/web/static/src/legacy/xml/translation_dialog.xml']),
         template: 'TranslationDialog',
 
         /**

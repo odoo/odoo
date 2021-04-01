@@ -15,7 +15,7 @@ var _t = core._t;
  */
 var NameAndSignature = Widget.extend({
     template: 'web.sign_name_and_signature',
-    xmlDependencies: ['/web/static/src/xml/name_and_signature.xml'],
+    xmlDependencies: ['/web/static/src/legacy/xml/name_and_signature.xml'],
     events: {
         // name
         'input .o_web_sign_name_input': '_onInputSignName',

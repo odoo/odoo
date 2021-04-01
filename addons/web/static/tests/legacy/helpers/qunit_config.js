@@ -237,8 +237,8 @@ QUnit.config.urlConfig.push({
 });
 
 QUnit.begin(function() {
-    if (odoo.__DEBUG__.services["@web/js/core/error_utils"]) {
-        const errorUtils = odoo.__DEBUG__.services["@web/js/core/error_utils"];
+    if (odoo.__DEBUG__.services["@web/legacy/js/core/error_utils"]) {
+        const errorUtils = odoo.__DEBUG__.services["@web/legacy/js/core/error_utils"];
         const { annotateTraceback } = errorUtils
         QUnit.annotateTraceback = annotateTraceback
     }
