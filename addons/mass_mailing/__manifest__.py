@@ -64,7 +64,7 @@
             ('include', 'web._assets_helpers'),
             'web/static/lib/bootstrap/scss/_variables.scss',
             'mass_mailing/static/src/scss/mass_mailing.ui.scss',
-            'web/static/src/scss/webclient.scss',
+            'web/static/src/legacy/scss/webclient.scss',
         ],
         'web.assets_common': [
             'mass_mailing/static/src/js/tours/**/*',

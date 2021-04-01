@@ -434,7 +434,7 @@ Odoo Module System
 ===================
 
 Odoo has defined a small module system (located in the file
-*addons/web/static/src/js/boot.js*, which needs to be loaded first). The Odoo
+*addons/web/static/src/boot.js*, which needs to be loaded first). The Odoo
 module system, inspired by AMD, works by defining the function ``define``
 on the global odoo object. We then define each javascript module by calling that
 function.  In the Odoo framework, a module is a piece of code that will be executed
