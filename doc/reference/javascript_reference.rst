@@ -86,28 +86,28 @@ sale, the website or even the mobile application are different. Also, some
 assets may be large, but are seldom needed. In that case, we sometimes want them
 to be loaded lazily.
 
-The main idea is that we define a set of *bundles* in the module manifest. A
-bundle is here defined as a list of files (xml, javascript, css, scss). Files
-are declared using `glob`_ syntax, meaning that you can declare several asset
+The main idea is that we define a set of **bundles** in the module manifest. A
+bundle is here defined as a **list of file paths** (xml, javascript, css, scss).
+Files are declared using `glob`_ syntax, meaning that you can declare several asset
 files using a single line. Each file found using a glob will be appended to the
 `<head>` of the page, at most once, in the order the globs are given.
 
 As mentionned, the bundles are declared in each module's `__manifest__.py`, under
 a dedicated `assets` key which contains a dictionary. Said dictionary will declare
-bundles (keys) with the files they contain (values). It looks like this:
+**bundles** (keys) with the **files** they contain (values). It looks like this:
 
 .. code-block:: py
 
     'assets': {
-        'assets_backend': [
+        'web.assets_backend': [
             'web/static/src/xml/**/*',
         ],
-        'assets_common': [
+        'web.assets_common': [
             'web/static/lib/bootstrap/**/*',
             'web/static/src/js/boot.js',
             'web/static/src/js/webclient.js',
         ],
-        'qunit_suite_tests': [
+        'web.qunit_suite_tests': [
             'web/static/src/js/webclient_tests.js',
         ],
     },
@@ -118,8 +118,8 @@ directive:
 
 .. code-block:: xml
 
-    <t t-call-assets="assets_common" t-js="false"/>
-    <t t-call-assets="assets_common" t-css="false"/>
+    <t t-call-assets="web.assets_common" t-js="false"/>
+    <t t-call-assets="web.assets_common" t-css="false"/>
 
 Here is what happens when a template is rendered by the server with these directives:
 
@@ -151,16 +151,16 @@ and if necessary, will create/recreate the corresponding bundles.
 
 Here are some important bundles that most developers will need to know:
 
-- *assets_common*: this bundle contains most assets which are common to the
+- `web.assets_common`: this bundle contains most assets which are common to the
   web client, the website, and also the point of sale. This is supposed to contain
   lower level building blocks for the odoo framework. Note that it contains the
   *boot.js* file, which defines the odoo module system.
 
-- *assets_backend*: this bundle contains the code specific to the web client
+- `web.assets_backend`: this bundle contains the code specific to the web client
   (notably the web client/action manager/views) and all static XML templates used
   in the backend environment
 
-- *assets_frontend*: this bundle is about all that is specific to the public
+- `web.assets_frontend`: this bundle is about all that is specific to the public
   website: ecommerce, forum, blog, event management, ...
 
 Operations on asset bundles
@@ -171,95 +171,88 @@ to a frequently used bundle like 'common' or 'backend'. But there are other oper
 available to cover use cases bringing additional constraints. Such cases can mostly
 be covered with the following operations.
 
-a) Add one or multiple file(s): append
+a) Add one or multiple file(s): `append`
+    The proper way to add a file to a bundle in any addon is simple: it is just enough
+    to add a glob path to the bundle in the file `__manifest__.py` like so:
 
-The proper way to add a file to a bundle in any addon is simple: it is just enough
-to add a glob path to the bundle in the file *__manifest__.py* like so:
+    .. code-block:: py
 
-.. code-block:: py
+        'web.assets_common': [
+            'my_addon/static/src/js/**/*',
+        ],
 
-    'assets_common': [
-        'my_addon/static/src/js/**/*',
-    ],
+    By default, adding a simple string to a bundle will append the files matching the
+    glob at the end of the bundle.
 
-By default, adding a simple string to a bundle will append the files matching the
-glob at the end of the bundle.
+b) Add one or multiple file(s) at the beginning of the list: `prepend`
+    Sometimes you need to put a certain file before the others in a bundle, when
+    loading css file for example. In this case, you can use the `prepend` directive
+    like so:
 
-b) Add one or multiple file(s) at the beginning of the list: prepend
+    .. code-block:: py
 
-Sometimes you need to put a certain file before the others in a bundle, when
-loading css file for example. In this case, you can use the *prepend* directive
-like so:
+        'web.assets_common': [
+            ('prepend', 'my_addon/static/src/css/bootstrap_overridden.scss'),
+        ],
 
-.. code-block:: py
+c) Add one or multiple file(s) before a specific file: `before`
+    Prepending a file at the beginning of a bundle might not be precise enough. The
+    `before` directive can be used to add the given files right before the target
+    file.
 
-    'assets_common': [
-        ('prepend', 'my_addon/static/src/css/bootstrap_overridden.scss'),
-    ],
+    .. code-block:: py
 
-c) Add one or multiple file(s) before a specific file: before
+        'web.assets_common': [
+            ('before', 'web/static/src/css/bootstrap_overridden.scss', 'my_addon/static/src/css/bootstrap_overridden.scss'),
+        ],
 
-Prepending a file at the beginning of a bundle might not be precise enough. The
-*before* directive can be used to add the given files right before the target
-file. The syntax is `('before', target, glob)`:
+d) Add one or multiple file(s) after a specofic file: `after`
+    Same as `before`, with the resulting files appended after the target file.
 
-.. code-block:: py
+    .. code-block:: py
 
-    'assets_common': [
-        ('before', 'web/static/src/css/bootstrap_overridden.scss', 'my_addon/static/src/css/bootstrap_overridden.scss'),
-    ],
+        'web.assets_common': [
+            ('after', 'web/static/src/css/list_view.scss', 'my_addon/static/src/css/list_view.scss'),
+        ],
 
-d) Add one or multiple file(s) after a specofic file: after
+e) Use nested bundles: `include`
+    The `include` directive is a way to use a same bundle in other bundles to minimize
+    the size of your manifest. In Odoo we use sub bundles (prefixed with an underscore
+    by convention) to batch glob files used in multiple other bundles. You can then
+    specify the sub bundle like this:
 
-Same as *before*, with the resulting files appended after the target file. The
-syntax is `('after', target, glob)`:
+    .. code-block:: py
 
-.. code-block:: py
+        'web.assets_common': [
+            ('include', 'web._primary_variables'),
+        ],
 
-    'assets_common': [
-        ('after', 'web/static/src/css/list_view.scss', 'my_addon/static/src/css/list_view.scss'),
-    ],
+f) Remove one or multiple file(s): `remove`
+    In some additional module you may want to get rid of the call of a certain asset
+    in a bundle. Any file can be removed from an existing bundle using the `remove`
+    directive:
 
-e) Use nested bundles: include
+    .. code-block:: py
 
-The *include* directive is a way to use a same bundle in other bundles to minimize
-the size of your manifest. In Odoo we use sub bundles (prefixed with an underscore
-by convention) to batch glob files used in multiple other bundles. You can then
-specify the sub bundle like this:
+        'web.assets_common': [
+            ('remove', 'web/static/src/js/boot.js'),
+        ],
 
-.. code-block:: py
+g) Replace an asset file with one or multiple file(s): `replace`
+    Let us now say that an asset need not only to be removed, but you also want to insert
+    your new version of that asset at the same exact position. This can be done with
+    the `replace` directive, using a 3-element tuple:
 
-    'assets_common': [
-        ('include', 'web._primary_variables'),
-    ],
+    .. code-block:: py
 
-f) Remove one or multiple file(s): remove
+        'web.assets_common': [
+            ('replace', 'web/static/src/js/boot.js', 'my_addon/static/src/js/boot.js'),
+        ],
 
-In some additional module you may want to get rid of the call of a certain asset
-in a bundle. Any file can be removed from an existing bundle using the *remove*
-directive:
-
-.. code-block:: py
-
-    'assets_common': [
-        ('remove', 'web/static/src/js/boot.js'),
-    ],
-
-g) Replace an asset file with one or multiple file(s): replace
-
-Let us now say that an asset need not only to be removed, but you also want to insert
-your new version of that asset at the same exact position. This can be done with
-the *replace* directive, using a 3-element tuple `('replace', target, asset)`:
-
-.. code-block:: py
-
-    'assets_common': [
-        ('replace', 'web/static/src/js/boot.js', 'my_addon/static/src/js/boot.js'),
-    ],
-
-Note that directives targetting a certain file (i.e. *before*, *after*, *replace* and *remove*)
-need that file to be declared beforehand, either in manifests higher up in the hierarchy
-or in 'ir.asset' records with a lower sequence.
+    Note that directives targetting a certain file (i.e. `before`, `after`,
+    `replace` and `remove`) need that file to be declared beforehand, either
+    in manifests higher up in the hierarchy or in ``ir.asset`` records with a lower
+    sequence.
 
 .. note ::
 
@@ -273,16 +266,16 @@ or in 'ir.asset' records with a lower sequence.
     :ref:`reference/javascript_reference/qweb`)
 
 Assets loading order
--------------------
+--------------------
 
 The order in which assets are loaded is sometimes critical and must be deterministic,
 mostly for stylesheets priorities and setup scripts. Assets in Odoo are processed
 as follows.
 
-1. When an asset bundle is called (e.g. `t-call-assets="assets_common"`), an empty
+1. When an asset bundle is called (e.g. `t-call-assets="web.assets_common"`), an empty
 list of assets is generated
 
-2. All records of type 'ir.asset' matching the bundle will be fetched and sorted
+2. All records of type ``ir.asset`` matching the bundle will be fetched and sorted
 by sequence number. Then all records with a sequence strictly less than 16 will
 be processed and applied to the current list of assets.
 
@@ -292,12 +285,12 @@ assets operations to this list. This is done following the order of modules depe
 a file already present in the list, nothing is done for that file. In other word,
 only the first occurrence of a file is kept in the list.
 
-4. The remaining 'ir.asset' records (those with a sequence greater than or equal
+4. The remaining ``ir.asset`` records (those with a sequence greater than or equal
 to 16) are eventually processed and applied as well.
 
 Assets declared in the manifest may need to be loaded in a particular order, for
 example `jquery.js` must be loaded before all other jquery scripts when loading the
-lib folder. One solution would be to create an 'ir.asset' record with a lower sequence
+lib folder. One solution would be to create an ``ir.asset`` record with a lower sequence
 or a 'prepend' directive, but there is another simpler way to do so.
 
 Since the unicity of each file path in the list of assets is guaranteed, you can
@@ -306,7 +299,7 @@ in the list before all the others included in the glob.
 
 .. code-block:: py
 
-    'assets_common': [
+    'web.assets_common': [
         'my_addon/static/lib/jquery/jquery.js',
         'my_addon/static/lib/jquery/**/*',
     ],
@@ -317,15 +310,14 @@ in the list before all the others included in the glob.
     to depend on it. Trying to operate on assets that have yet to be declared will
     result in an error.
 
-The 'ir.asset' model
---------------------
+The asset model (``ir.asset``)
+------------------------------
 
 In most cases the assets declared in the manifest will largely suffice. But Odoo
 being highly customizable requires to modify things as critical as defining assets
-to be editted in place. A model 'ir.asset' exists to do such things. Records will
+to be editted in place. A model ``ir.asset`` exists to do such things. Records will
 be associated to a `bundle` and apply their `glob` (and `target` if any) to the
-list of assets using according to their `directive`. Each record of 'ir.asset' has
-the following fields:
+list of assets using according to their `directive`.
 
 .. autoclass:: odoo.addons.base.models.ir_asset.IrAsset
 
@@ -335,23 +327,36 @@ the following fields:
 ``bundle``
     Bundle in which the asset will be applied.
 
-``directive`` (default='append')
-    Directive to use on the bundle.
+``directive`` (default= `append`)
+    This field determines how the `glob` (and `target` if needed) will be interpreted.
+    Here is the list of available directives along with their required arguments:
+
+    - **append**: `glob`
+    - **prepend**: `glob`
+    - **before**: `target`, `glob`
+    - **after**: `target`, `glob`
+    - **include**: `glob` (interpreted as a **bundle name**)
+    - **remove**: `target`
+    - **replace**: `target`, `glob`
 
 ``glob``
-    Glob string defining:
-        a) a path to a file/folder in the Odoo file system
-        b) a URL to an attachment
+    Glob string defining one of the following:
+
+    - a **glob path** to a set of files in the Odoo file system;
+    - a **relative path** to a file in the Odoo file system;
+    - an **URL** to an attachment/external source;
+    - a **bundle name** if using the `include` directive.
 
 ``target``
     Target file to specify a position in the bundle. Can only be used with the
-    directives 'replace', 'before' and 'after'.
+    directives `replace`, `before` and `after`.
 
-``active`` (default=True)
+``active`` (default= `True`)
+    Wether the record is active
 
-``sequence`` (default=16)
+``sequence`` (default= `16`)
     Loading order of the asset records (ascending). A sequence lower than 16 means
-    that the asset will be processed __before__ the ones declared in the manifest.
+    that the asset will be processed *before* the ones declared in the manifest.
 
 What to do if a file is not loaded/updated
 ------------------------------------------
@@ -365,8 +370,8 @@ are a few things you can try to solve the issue:
   there are no obvious errors
 - try to add a console.log at the beginning of your file (before any module
   definition), so you can see if a file has been loaded or not
-- in the user interface, in debug mode (INSERT LINK HERE TO DEBUG MODE), there
-  is an option to force the server to update its assets files.
+- when in any debug mode, there is an option in the debug manager menu (bug icon)
+  to force the server to update its assets files.
 - use the *debug=assets* mode.  This will actually bypass the asset bundles (note
   that it does not actually solve the issue. The server still uses outdated bundles)
 - finally, the most convenient way to do it, for a developer, is to start the
@@ -781,7 +786,7 @@ Resig. The base Class is located in *web.Class*, in the file *class.js*.
     Note that the custom class system should be avoided for creating new code. It
     will be deprecated at some point, and then removed.  New classes should use
     the standard ES6 class system.
-    
+
 
 Creating a subclass
 -------------------
