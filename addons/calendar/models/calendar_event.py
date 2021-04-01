@@ -590,6 +590,14 @@ class Meeting(models.Model):
             'context': compose_ctx,
         }
 
+    def action_join_meeting(self, partner_id):
+        """ Method used when an existing user wants to join
+        """
+        self.ensure_one()
+        partner = self.env['res.partner'].browse(partner_id)
+        if partner not in self.partner_ids:
+            self.write({'partner_ids': [(4, partner.id)]})
+
     # ------------------------------------------------------------
     # MAILING
     # ------------------------------------------------------------
