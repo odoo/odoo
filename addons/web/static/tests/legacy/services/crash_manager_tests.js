@@ -11,7 +11,7 @@ QUnit.module('Services', {}, function() {
 
     QUnit.module('CrashManager');
 
-    QUnit.test("Execute an action and close the RedirectWarning when clicking on the primary button", async function (assert) {
+    QUnit.skip("Execute an action and close the RedirectWarning when clicking on the primary button", async function (assert) {
         assert.expect(4);
 
         var dummy_action_name = "crash_manager_tests_dummy_action";

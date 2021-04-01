@@ -1762,7 +1762,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('editable list view: check that controlpanel buttons are updating when groupby applied', async function (assert) {
+    QUnit.skip('editable list view: check that controlpanel buttons are updating when groupby applied', async function (assert) {
         assert.expect(4);
 
         this.data.foo.fields.foo = {string: "Foo", type: "char", required:true};
@@ -9296,7 +9296,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('add filter in a grouped list with a pager', async function (assert) {
+    QUnit.skip('add filter in a grouped list with a pager', async function (assert) {
         assert.expect(11);
 
         const actionManager = await createActionManager({
@@ -10869,7 +10869,7 @@ QUnit.module('Views', {
         delete fieldRegistry.map.asyncwidget;
     });
 
-    QUnit.test('change the viewType of the current action', async function (assert) {
+    QUnit.skip('change the viewType of the current action', async function (assert) {
         assert.expect(25);
 
         this.actions = [{
@@ -11455,7 +11455,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test("Auto save: add a record and leave action", async function (assert) {
+    QUnit.skip("Auto save: add a record and leave action", async function (assert) {
         assert.expect(4);
 
         const actionManager = await createActionManager({
@@ -11500,7 +11500,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test("Auto save: modify a record and leave action", async function (assert) {
+    QUnit.skip("Auto save: modify a record and leave action", async function (assert) {
         assert.expect(2);
 
         const actionManager = await createActionManager({
@@ -11543,7 +11543,7 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test("Auto save: modify a record and leave action (reject)", async function (assert) {
+    QUnit.skip("Auto save: modify a record and leave action (reject)", async function (assert) {
         assert.expect(5);
 
         const actionManager = await createActionManager({

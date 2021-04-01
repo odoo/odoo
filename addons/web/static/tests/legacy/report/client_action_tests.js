@@ -9,7 +9,7 @@ odoo.define('web/static/tests/report/client_action_tests', function (require) {
     const { createActionManager, dom, mock } = testUtils;
 
     QUnit.module('Client Action Report', {}, () => {
-        QUnit.test("mounted is called once when returning on 'Client Action Report' from breadcrumb", async assert => {
+        QUnit.skip("mounted is called once when returning on 'Client Action Report' from breadcrumb", async assert => {
             // This test can be removed as soon as we don't mix legacy and owl layers anymore.
             assert.expect(7);
 

@@ -59,7 +59,7 @@ odoo.define('web.search_bar_tests', function (require) {
 
         QUnit.module('SearchBar');
 
-        QUnit.test('basic rendering', async function (assert) {
+        QUnit.skip('basic rendering', async function (assert) {
             assert.expect(1);
 
             const actionManager = await createActionManager({
@@ -76,7 +76,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('navigation with facets', async function (assert) {
+        QUnit.skip('navigation with facets', async function (assert) {
             assert.expect(4);
 
             const actionManager = await createActionManager({
@@ -106,7 +106,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('search date and datetime fields. Support of timezones', async function (assert) {
+        QUnit.skip('search date and datetime fields. Support of timezones', async function (assert) {
             assert.expect(4);
 
             let searchReadCount = 0;
@@ -171,7 +171,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test("autocomplete menu clickout interactions", async function (assert) {
+        QUnit.skip("autocomplete menu clickout interactions", async function (assert) {
             assert.expect(9);
 
             const fields = this.data.partner.fields;
@@ -228,7 +228,7 @@ odoo.define('web.search_bar_tests', function (require) {
             searchBar.destroy();
         });
 
-        QUnit.test('select an autocomplete field', async function (assert) {
+        QUnit.skip('select an autocomplete field', async function (assert) {
             assert.expect(3);
 
             let searchReadCount = 0;
@@ -265,7 +265,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('select an autocomplete field with `context` key', async function (assert) {
+        QUnit.skip('select an autocomplete field with `context` key', async function (assert) {
             assert.expect(9);
 
             let searchReadCount = 0;
@@ -327,7 +327,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('no search text triggers a reload', async function (assert) {
+        QUnit.skip('no search text triggers a reload', async function (assert) {
             assert.expect(2);
 
             // Switch to pivot to ensure that the event comes from the control panel
@@ -360,7 +360,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('selecting (no result) triggers a re-render', async function (assert) {
+        QUnit.skip('selecting (no result) triggers a re-render', async function (assert) {
             assert.expect(3);
 
             const actionManager = await createActionManager({
@@ -391,7 +391,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('update suggested filters in autocomplete menu with Japanese IME', async function (assert) {
+        QUnit.skip('update suggested filters in autocomplete menu with Japanese IME', async function (assert) {
             assert.expect(4);
 
             // The goal here is to simulate as many events happening during an IME
@@ -473,7 +473,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('open search view autocomplete on paste value using mouse', async function (assert) {
+        QUnit.skip('open search view autocomplete on paste value using mouse', async function (assert) {
             assert.expect(1);
 
             const actionManager = await createActionManager({
@@ -495,7 +495,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('select autocompleted many2one', async function (assert) {
+        QUnit.skip('select autocompleted many2one', async function (assert) {
             assert.expect(5);
 
             const archs = Object.assign({}, this.archs, {
@@ -539,7 +539,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('"null" as autocomplete value', async function (assert) {
+        QUnit.skip('"null" as autocomplete value', async function (assert) {
             assert.expect(4);
 
             const actionManager = await createActionManager({
@@ -571,7 +571,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test('autocompletion with a boolean field', async function (assert) {
+        QUnit.skip('autocompletion with a boolean field', async function (assert) {
             assert.expect(9);
 
             this.archs['partner,false,search'] = '<search><field name="bool"/></search>';
@@ -619,7 +619,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test("reference fields are supported in search view", async function (assert) {
+        QUnit.skip("reference fields are supported in search view", async function (assert) {
             assert.expect(7);
 
             this.data.partner.fields.ref = { type: 'reference', string: "Reference" };

@@ -110,7 +110,7 @@ QUnit.module('Views', {
         await proms.c.resolve();
     });
 
-    QUnit.test('group_by from context can be a string, instead of a list of strings', async function (assert) {
+    QUnit.skip('group_by from context can be a string, instead of a list of strings', async function (assert) {
         assert.expect(1);
 
         var actionManager = await createActionManager({

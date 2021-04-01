@@ -2709,7 +2709,7 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
-    QUnit.test('Navigation list view for a group and back with breadcrumbs', async function (assert) {
+    QUnit.skip('Navigation list view for a group and back with breadcrumbs', async function (assert) {
         assert.expect(16);
         // create an action manager to test the interactions with the search view
         var readGroupCount = 0;

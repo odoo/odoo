@@ -7,7 +7,7 @@ QUnit.module("Views", {
 
 }, function () {
     QUnit.module("QWeb");
-    QUnit.test("basic", async function (assert) {
+    QUnit.skip("basic", async function (assert) {
         assert.expect(14);
         var am = await utils.createActionManager({
             data: {
