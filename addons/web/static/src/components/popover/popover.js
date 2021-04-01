@@ -358,5 +358,5 @@ Popover.computePositioningData = function (popoverElement, targetElement, margin
 };
 
 /** @todo remove this when wowl = web */
-delete QWeb.components.Popover;
-QWeb.registerComponent("Popover", Popover);
+// delete QWeb.components.Popover;
+// QWeb.registerComponent("Popover", Popover);

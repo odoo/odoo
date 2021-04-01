@@ -47,6 +47,7 @@ QUnit.test("Simple rendering", async function (assert) {
   assert.expect(6);
 
   class Parent extends Component {}
+  Parent.components = { Popover };
   Parent.template = xml`
     <div class="d-flex h-25 justify-content-around align-items-center">
       <button id="close">Click me to close</button>
@@ -92,6 +93,7 @@ QUnit.test("Recompute position", async function (assert) {
       });
     }
   }
+  Parent.components = { Popover };
   Parent.template = xml`
     <div class="d-flex h-25 justify-content-around align-items-center">
       <button id="close">Click me to close</button>
@@ -130,6 +132,7 @@ QUnit.test("Show popover on hover", async function (assert) {
   assert.expect(4);
 
   class Parent extends Component {}
+  Parent.components = { Popover };
   Parent.template = xml`
     <div class="d-flex h-25 justify-content-around align-items-start">
       <Popover trigger="'hover'">
@@ -166,6 +169,7 @@ QUnit.test("Show popover manually", async function (assert) {
       });
     }
   }
+  Parent.components = { Popover };
   Parent.template = xml`
     <div class="d-flex h-25 justify-content-around align-items-start">
       <Popover t-if="state.showPopover" trigger="'none'">
@@ -197,6 +201,7 @@ QUnit.test("Multiple popovers", async function (assert) {
   assert.expect(8);
 
   class Parent extends Component {}
+  Parent.components = { Popover };
   Parent.template = xml`
     <div class="d-flex h-25 justify-content-around align-items-start">
       <button id="close">Click me to close</button>
@@ -245,7 +250,7 @@ QUnit.test("Close event", async function (assert) {
   `;
 
   class Parent extends Component {}
-  Parent.components = { Content };
+  Parent.components = { Content, Popover };
   Parent.template = xml`
     <div class="d-flex h-25 justify-content-around align-items-start">
       <Popover>
@@ -273,6 +278,7 @@ QUnit.test("Target click", async function (assert) {
   assert.expect(4);
 
   class Parent extends Component {}
+  Parent.components = { Popover };
   Parent.template = xml`
     <div class="d-flex h-25 justify-content-around align-items-start">
       <button id="toggle">Toggle</button>
@@ -302,6 +308,7 @@ QUnit.test("close popover when target is removed", async function (assert) {
   assert.expect(3);
 
   class Parent extends Component {}
+  Parent.components = { Popover };
   Parent.template = xml`
     <div class="d-flex h-25 justify-content-around align-items-start">
       <button id="target">target</button>
