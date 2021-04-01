@@ -52,7 +52,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "click on Customizable Desk (TEST)",
-            trigger: '.oe_product_cart a:contains("Customizable Desk (TEST)")',
+            trigger: '.oe_product_cart a:contains("Customizable Desk")',
         },
         {
             content: "check the first variant is already in wishlist",
@@ -76,7 +76,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "remove Customizable Desk (TEST)",
-            trigger: 'tr:contains("Customizable Desk (TEST)") .o_wish_rm:first',
+            trigger: 'tr:contains("Customizable Desk") .o_wish_rm:first',
         },
         {
             content: "check that wishlist contains 1 item",
@@ -336,6 +336,69 @@ tour.register('shop_wishlist', {
         {
             content: "Check that there is no wishlist button from /product",
             trigger: '#product_detail:not(:has(.o_add_wishlist_dyn))',
+            run: function () {},
+        },
+        // Test if the wishlist button is active or not in /shop
+        {
+            content: "Go to '/shop?search=Customizable Desk'",
+            trigger: 'body',
+            run: function () {
+                window.location.href = '/shop?search=Customizable Desk '
+            },
+        },
+        {
+            content: "Click on the product",
+            trigger: '.oe_product_image_link img',
+        },
+        {
+            content: "Add the product in the wishlist",
+            trigger: '#product_option_block .o_add_wishlist_dyn',
+        },
+        {
+            content: "Added into the wishlist",
+            trigger: '.my_wish_quantity.badge-primary:contains(1)',
+            run: function () {},
+        },
+        {
+            content: "Go to '/shop",
+            trigger: '#top_menu_collapse a[href="/shop"]',
+        },
+        {
+            content: "Search the product Customizable Desk'",
+            trigger: 'form.o_wsale_products_searchbar_form input',
+            run: function () {
+                $('form.o_wsale_products_searchbar_form input[name="search"]').val("Customizable Desk");
+                $('form.o_wsale_products_searchbar_form button').click();
+            },
+        },
+        {
+            content: "The product is in the wishlist",
+            trigger: '.oe_product_cart .o_wsale_product_information:has(.o_add_wishlist[disabled])',
+            run: function () {},
+        },
+        {
+            content: "Go to the wishlist",
+            trigger: 'a[href="/shop/wishlist"]',
+        },
+        {
+            content: "Remove the product from the wishlist",
+            trigger: '.o_wish_rm',
+        },
+        {
+            content: "Go to '/shop",
+            trigger: '#top_menu_collapse a[href="/shop"]',
+        },
+        {
+            content: "Search the product Customizable Desk'",
+            trigger: 'form.o_wsale_products_searchbar_form input',
+            run: function () {
+                $('form.o_wsale_products_searchbar_form input[name="search"]').val("Customizable Desk");
+                $('form.o_wsale_products_searchbar_form button').click();
+            },
+        },
+        {
+            content: "The product is not in the wishlist",
+            trigger: '.oe_product_cart .o_wsale_product_information:not(:has(.o_add_wishlist[disabled]))',
             run: function () {},
         },
     ]

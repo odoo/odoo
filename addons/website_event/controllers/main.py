@@ -19,6 +19,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import get_lang
+from odoo.tools import lazy
 
 
 class WebsiteEventController(http.Controller):
@@ -177,13 +178,13 @@ class WebsiteEventController(http.Controller):
 
     def _prepare_event_register_values(self, event, **post):
         """Return the require values to render the template."""
-        urls = event._get_event_resource_urls()
+        urls = lazy(event._get_event_resource_urls)
         return {
             'event': event,
             'main_object': event,
             'range': range,
-            'google_url': urls.get('google_url'),
-            'iCal_url': urls.get('iCal_url'),
+            'google_url': lazy(lambda: urls.get('google_url')),
+            'iCal_url': lazy(lambda: urls.get('iCal_url')),
         }
 
     def _process_tickets_form(self, event, form_details):

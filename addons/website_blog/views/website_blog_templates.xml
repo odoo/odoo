@@ -143,7 +143,7 @@ list of filtered posts (by date or tag).
             <t t-set="use_text_align" t-value="True"/>
             <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
 
-            <div class="container position-relative h-100 d-flex flex-column justify-content-around">
+            <div class="container position-relative h-100 d-flex flex-column justify-content-around" t-cache="_record">
                 <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
                     <div t-if="not date and not tag and not blog" class="h4 bg-o-color-3 px-2 d-inline-block rounded-sm">Latest</div>
                     <a t-if="not blog and first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
@@ -217,7 +217,6 @@ list of filtered posts (by date or tag).
                     <t t-set="use_size" t-value="True"/>
                     <t t-set="display_opt_name">Blog Post Cover</t>
                     <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover'"/>
-
 
                     <div class="container text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-around">
                         <div t-attf-class="o_wblog_post_title #{opt_blog_post_select_to_tweet and 'js_tweet'} #{opt_blog_post_select_to_comment and 'js_comment'}">
@@ -413,7 +412,7 @@ list of filtered posts (by date or tag).
                 </div>
             </t>
             <t t-else="">
-                <div id="o_wblog_next_container" class="d-flex flex-column">
+                <div id="o_wblog_next_container" class="d-flex flex-column" t-cache="next_post">
                     <t t-call="website.record_cover">
                         <t t-set="_record" t-value="next_post"/>
                         <t t-set="_cp" t-value="json.loads(_record.cover_properties)"/>
@@ -478,6 +477,7 @@ list of filtered posts (by date or tag).
         <attribute name="t-att-data-module-id"/>
         <attribute name="t-att-data-module-shortdesc"/>
         <attribute name="t-if">is_designer</attribute>
+        <attribute name="t-cache"/>
     </xpath>
 </template>
 

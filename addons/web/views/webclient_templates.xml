@@ -37,7 +37,7 @@
         <t t-call-assets="web.assets_frontend" t-js="false"/>
       </xpath>
       <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
-        <script type="text/javascript">
+        <script t-nocache="Session information should always be up to date." type="text/javascript">
             odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
             if (!/(^|;\s)tz=/.test(document.cookie)) {
                 const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -60,7 +60,7 @@
                 <main>
                     <t t-out="0"/>
                 </main>
-                <footer t-if="not no_footer" id="bottom" data-anchor="true" t-attf-class="bg-light o_footer">
+                <footer t-cache="no_footer,no_copyright" t-if="not no_footer" id="bottom" data-anchor="true" t-attf-class="bg-light o_footer">
                     <div id="footer"/>
                     <div t-if="not no_copyright" class="o_footer_copyright">
                         <div class="container py-3">

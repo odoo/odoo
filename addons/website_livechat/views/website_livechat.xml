@@ -7,7 +7,7 @@
         -->
         <template id="loader" inherit_id="website.layout" name="Livechat : include loader on Website">
             <xpath expr="//div[@id='wrapwrap']" position="after">
-                <t t-if="website and website.channel_id and not no_livechat">
+                <t t-if="not no_livechat and website and website.channel_id">
                     <script>
                         <t t-call="im_livechat.loader">
                             <t t-set="info" t-value="website.get_livechat_channel_info()"/>

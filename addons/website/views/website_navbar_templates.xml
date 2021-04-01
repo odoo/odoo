@@ -31,7 +31,7 @@
                 </p>
             </div>
             <nav groups="base.group_user" t-if="website" id="oe_main_menu_navbar" class="o_main_navbar d-flex align-items-center">
-                <div id="oe_applications">
+                <div t-cache="website" id="oe_applications">
                     <div class="dropdown active pl-3">
                         <a class="dropdown-toggle full" data-toggle="dropdown" href="#" accesskey="h">
                             <i class="fa fa-th-large mr-2"/> WEBSITE
@@ -70,7 +70,7 @@
                             <a role="menuitem" data-action="promote-current-page" href="#" title="Promote page on the web" class="dropdown-item">Optimize SEO</a>
                         </div>
                     </div>
-                    <t t-call="website.website_publisher">
+                    <t t-call="website.website_publisher" groups="website.group_website_publisher">
                         <t t-set="extra_classes" t-translation="off">d-flex d-sm-flex d-md-none</t>
                     </t>
                 </div>
@@ -122,9 +122,8 @@
                                             <p>Page</p>
                                         </a>
                                     </div>
-
                                     <t t-set="mod" t-value="env.ref('base.module_website_blog')"/>
-                                    <div name="module_website_blog" t-if='is_system'
+                                    <div name="module_website_blog" t-if='is_system' t-cache="is_system"
                                          t-att-data-module-id="mod.id"
                                          t-att-data-module-shortdesc="mod.shortdesc"
                                          class="col-md-4 mb8 o_new_content_element">
@@ -134,7 +133,7 @@
                                         </a>
                                     </div>
                                     <t t-set="mod" t-value="env.ref('base.module_website_event')"/>
-                                    <div name="module_website_event" t-if='is_system'
+                                    <div name="module_website_event" t-if='is_system' t-cache="is_system"
                                          t-att-data-module-id="mod.id"
                                          t-att-data-module-shortdesc="mod.shortdesc"
                                          class="col-md-4 mb8 o_new_content_element">
@@ -144,7 +143,7 @@
                                         </a>
                                     </div>
                                     <t t-set="mod" t-value="env.ref('base.module_website_forum')"/>
-                                    <div name="module_website_forum" t-if='is_system'
+                                    <div name="module_website_forum" t-if='is_system' t-cache="is_system"
                                          t-att-data-module-id="mod.id"
                                          t-att-data-module-shortdesc="mod.shortdesc"
                                          class="col-md-4 mb8 o_new_content_element o_new_content_element_once">
@@ -154,7 +153,7 @@
                                         </a>
                                     </div>
                                     <t t-set="mod" t-value="env.ref('base.module_website_hr_recruitment')"/>
-                                    <div name="module_website_hr_recruitment" t-if='is_system'
+                                    <div name="module_website_hr_recruitment" t-if='is_system' t-cache="is_system"
                                          t-att-data-module-id="mod.id"
                                          t-att-data-module-shortdesc="mod.shortdesc"
                                          class="col-md-4 mb8 o_new_content_element">
@@ -164,7 +163,7 @@
                                             </a>
                                     </div>
                                     <t t-set="mod" t-value="env.ref('base.module_website_sale')"/>
-                                    <div name="module_website_sale" t-if='is_system'
+                                    <div name="module_website_sale" t-if='is_system' t-cache="is_system"
                                          t-att-data-module-id="mod.id"
                                          t-att-data-module-shortdesc="mod.shortdesc"
                                          class="col-md-4 mb8 o_new_content_element">
@@ -174,7 +173,7 @@
                                         </a>
                                     </div>
                                     <t t-set="mod" t-value="env.ref('base.module_website_slides')"/>
-                                    <div name="module_website_slides" t-if='is_system'
+                                    <div name="module_website_slides" t-if='is_system' t-cache="is_system"
                                          t-att-data-module-id="mod.id"
                                          t-att-data-module-shortdesc="mod.shortdesc"
                                          class="col-md-4 mb8 o_new_content_element">
@@ -185,7 +184,7 @@
                                         </a>
                                     </div>
                                     <t t-set="mod" t-value="env.ref('base.module_website_livechat')"/>
-                                    <div name="module_website_livechat" t-if='is_system'
+                                    <div name="module_website_livechat" t-if='is_system' t-cache="is_system"
                                          t-att-data-module-id="mod.id"
                                          t-att-data-module-shortdesc="mod.shortdesc"
                                          class="col-md-4 mb8 o_new_content_element o_new_content_element_once">

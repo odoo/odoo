@@ -30,7 +30,7 @@
 <!-- Event - Description -->
 <template id="event_description_full" name="Event Description" track="1">
     <t t-call="website_event.event_details">
-        <section class="bg-200 mt-n5">
+        <section class="bg-200 mt-n5" t-cache="event if not editable and event.website_published else None">
             <div class="container overflow-hidden">
                 <div class="row no-gutters mt-n4 mb-3">
                     <!-- Description -->
