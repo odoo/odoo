@@ -433,9 +433,9 @@ var ColorpickerWidget = Widget.extend({
  * @param {integer} g - [0, 255]
  * @param {integer} b - [0, 255]
  * @returns {Object|false}
- *          - hue [0, 360[
- *          - saturation [0, 100]
- *          - lightness [0, 100]
+ *          - hue [0, 360[ (float)
+ *          - saturation [0, 100] (float)
+ *          - lightness [0, 100] (float)
  */
 ColorpickerWidget.convertRgbToHsl = function (r, g, b) {
     if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255
@@ -467,24 +467,24 @@ ColorpickerWidget.convertRgbToHsl = function (r, g, b) {
             saturation = delta / (1 - Math.abs(2 * lightness - 1));
         }
     }
-    hue = 60 * hue | 0;
+    hue = 60 * hue;
     return {
-        hue: hue < 0 ? hue += 360 : hue,
-        saturation: (saturation * 100) | 0,
-        lightness: (lightness * 100) | 0,
+        hue: hue < 0 ? hue + 360 : hue,
+        saturation: saturation * 100,
+        lightness: lightness * 100,
     };
 };
 /**
  * Converts HSL color components to RGB components.
  *
  * @static
- * @param {integer} h - [0, 360[
- * @param {integer} s - [0, 100]
- * @param {integer} l - [0, 100]
+ * @param {number} h - [0, 360[ (float)
+ * @param {number} s - [0, 100] (float)
+ * @param {number} l - [0, 100] (float)
  * @returns {Object|false}
- *          - red [0, 255]
- *          - green [0, 255]
- *          - blue [0, 255]
+ *          - red [0, 255] (integer)
+ *          - green [0, 255] (integer)
+ *          - blue [0, 255] (integer)
  */
 ColorpickerWidget.convertHslToRgb = function (h, s, l) {
     if (typeof (h) !== 'number' || isNaN(h) || h < 0 || h > 360
@@ -500,9 +500,9 @@ ColorpickerWidget.convertHslToRgb = function (h, s, l) {
     var secondComponent = chroma * (1 - Math.abs(huePrime % 2 - 1));
     var lightnessAdjustment = lightness - chroma / 2;
     var precision = 255;
-    chroma = (chroma + lightnessAdjustment) * precision | 0;
-    secondComponent = (secondComponent + lightnessAdjustment) * precision | 0;
-    lightnessAdjustment = lightnessAdjustment * precision | 0;
+    chroma = Math.round((chroma + lightnessAdjustment) * precision);
+    secondComponent = Math.round((secondComponent + lightnessAdjustment) * precision);
+    lightnessAdjustment = Math.round((lightnessAdjustment) * precision);
     if (huePrime >= 0 && huePrime < 1) {
         return {
             red: chroma,
@@ -588,10 +588,10 @@ ColorpickerWidget.convertRgbaToCSSColor = function (r, g, b, a) {
  * @static
  * @param {string} cssColor - hexadecimal code or rgb() or rgba()
  * @returns {Object|false}
- *          - red [0, 255]
- *          - green [0, 255]
- *          - blue [0, 255]
- *          - opacity [0, 100.0]
+ *          - red [0, 255] (integer)
+ *          - green [0, 255] (integer)
+ *          - blue [0, 255] (integer)
+ *          - opacity [0, 100.0] (float)
  */
 ColorpickerWidget.convertCSSColorToRgba = function (cssColor) {
     // Check if cssColor is a rgba() or rgb() color
