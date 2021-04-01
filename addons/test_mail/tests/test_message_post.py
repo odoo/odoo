@@ -12,6 +12,7 @@ from odoo.api import call_kw
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
+from odoo.tests.common import users
 
 
 @tagged('mail_post')
@@ -34,6 +35,43 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         # Use call_kw as shortcut to simulate a RPC call.
         messageId = call_kw(self.env['mail.channel'], 'message_post', [test_channel.id], {'body': 'test'})
         self.assertTrue(isinstance(messageId, int))
+
+    @users('employee')
+    def test_notify_prepare_template_context_company_value(self):
+        """ Verify that the template context company value is right
+        after switching the env company or if a company_id is set
+        on mail record.
+        """
+        current_user = self.env.user
+        main_company = current_user.company_id
+        other_company = self.env['res.company'].with_user(self.user_admin).create({'name': 'Company B'})
+        current_user.sudo().write({'company_ids': [(4, other_company.id)]})
+        test_record = self.env['mail.test.multi.company'].with_user(self.user_admin).create({
+            'name': 'Multi Company Record',
+            'company_id': False,
+        })
+
+        # self.env.company.id = Main Company    AND    test_record.company_id = False
+        self.assertEqual(self.env.company.id, main_company.id)
+        self.assertEqual(test_record.company_id.id, False)
+        template_values = test_record._notify_prepare_template_context(test_record.message_ids, {})
+        self.assertEqual(template_values.get('company').id, self.env.company.id)
+
+        # self.env.company.id = Other Company    AND    test_record.company_id = False
+        current_user.company_id = other_company
+        test_record = self.env['mail.test.multi.company'].browse(test_record.id)
+        self.assertEqual(self.env.company.id, other_company.id)
+        self.assertEqual(test_record.company_id.id, False)
+        template_values = test_record._notify_prepare_template_context(test_record.message_ids, {})
+        self.assertEqual(template_values.get('company').id, self.env.company.id)
+
+        # self.env.company.id = Other Company    AND    test_record.company_id = Main Company
+        test_record.company_id = main_company
+        test_record = self.env['mail.test.multi.company'].browse(test_record.id)
+        self.assertEqual(self.env.company.id, other_company.id)
+        self.assertEqual(test_record.company_id.id, main_company.id)
+        template_values = test_record._notify_prepare_template_context(test_record.message_ids, {})
+        self.assertEqual(template_values.get('company').id, main_company.id)
 
     def test_notify_recipients_internals(self):
         pdata = self._generate_notify_recipients(self.partner_1 | self.partner_employee)
