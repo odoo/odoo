@@ -122,6 +122,7 @@ class Meeting(models.Model):
     # filtering
     active = fields.Boolean(
         'Active', default=True,
+        tracking=True,
         help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.")
     categ_ids = fields.Many2many(
         'calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags')
@@ -588,6 +589,14 @@ class Meeting(models.Model):
             'target': 'new',
             'context': compose_ctx,
         }
+
+    def action_join_meeting(self, partner_id):
+        """ Method used when an existing user wants to join
+        """
+        self.ensure_one()
+        partner = self.env['res.partner'].browse(partner_id)
+        if partner not in self.partner_ids:
+            self.write({'partner_ids': [(4, partner.id)]})
 
     # ------------------------------------------------------------
     # MAILING
