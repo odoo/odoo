@@ -129,6 +129,21 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         max-width: 150px;
     }
 }
+@media only screen and (max-width: 767px) {
+    .oe-toolbar {
+        background-color: white;
+
+        .btn {
+            color: black;
+        }
+        &::before {
+            display: none;
+        }
+        &::after {
+            display: none;
+        }
+    }
+}
 
 .oe_edited_link {
     position: relative;
