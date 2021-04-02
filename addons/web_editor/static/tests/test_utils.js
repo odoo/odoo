@@ -4,6 +4,7 @@ odoo.define('web_editor.test_utils', function (require) {
 var ajax = require('web.ajax');
 var MockServer = require('web.MockServer');
 var testUtils = require('web.test_utils');
+var OdooEditorLib = require('web_editor.odoo-editor');
 var Widget = require('web.Widget');
 var Wysiwyg = require('web_editor.wysiwyg');
 var options = require('web_editor.snippets.options');
@@ -332,7 +333,6 @@ async function createWysiwyg(params) {
 /**
  * Char codes.
  */
-var dom = $.summernote.dom;
 var keyboardMap = {
     "8": "BACKSPACE",
     "9": "TAB",
@@ -402,7 +402,6 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
         } else {
             keypress.key = keyboardMap[keypress.keyCode] || String.fromCharCode(keypress.keyCode);
         }
-        keypress.keyCode = keypress.keyCode;
         var event = $.Event("keydown", keypress);
         $target.trigger(event);
 
@@ -446,6 +445,24 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
         $(target.tagName ? target : target.parentNode).trigger('mouseup');
     }
 
+    function nextPoint(point) {
+        var node, offset;
+        if (OdooEditorLib.nodeSize(point.node) === point.offset) {
+            node = point.node.parentNode;
+            offset = OdooEditorLib.childNodeIndex(point.node) + 1;
+        } else if (point.node.hasChildNodes()) {
+            node = point.node.childNodes[point.offset];
+            offset = 0;
+        } else {
+            node = point.node;
+            offset = point.offset + 1;
+        }
+        return {
+            node: node,
+            offset: offset
+        };
+    }
+
     function endOfAreaBetweenTwoNodes(point) {
         // move the position because some browser make the caret on the end of the previous area after normalize
         if (
@@ -453,9 +470,9 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
             point.offset === point.node.textContent.length &&
             !/\S|\u00A0/.test(point.node.textContent)
         ) {
-            point = dom.nextPoint(dom.nextPoint(point));
+            point = nextPoint(nextPoint(point));
             while (point.node.tagName && point.node.textContent.length) {
-                point = dom.nextPoint(point);
+                point = nextPoint(point);
             }
         }
         return point;
@@ -471,7 +488,7 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
             var def = testUtils.makeTestPromise();
             if (step.start) {
                 selectText(step.start, step.end);
-                if (!Wysiwyg.getRange($editable[0])) {
+                if (!Wysiwyg.getRange()) {
                     throw 'Wrong range! \n' +
                         'Test: ' + test.name + '\n' +
                         'Selection: ' + step.start + '" to "' + step.end + '"\n' +
@@ -480,7 +497,7 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
             }
             setTimeout(function () {
                 if (step.keyCode || step.key) {
-                    var target = Wysiwyg.getRange($editable[0]).ec;
+                    var target = Wysiwyg.getRange().ec;
                     if (window.location.search.indexOf('notrycatch') !== -1) {
                         keydown(target, {
                             key: step.key,
@@ -556,14 +573,14 @@ var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
             // test carret position
             if (test.test.start) {
                 var start = _select(test.test.start);
-                var range = Wysiwyg.getRange($editable[0]);
+                var range = Wysiwyg.getRange();
                 if ((range.sc !== range.ec || range.so !== range.eo) && !test.test.end) {
                     assert.ok(false, test.name + ": the carret is not colapsed and the 'end' selector in test is missing");
                     return;
                 }
                 var end = test.test.end ? _select(test.test.end) : start;
                 if (start.node && end.node) {
-                    range = Wysiwyg.getRange($editable[0]);
+                    range = Wysiwyg.getRange();
                     var startPoint = endOfAreaBetweenTwoNodes({
                         node: range.sc,
                         offset: range.so,
@@ -657,7 +674,7 @@ var keydown = function (key, $editable, options) {
         keyPress.key = keyboardMap[key] || String.fromCharCode(key);
         keyPress.keyCode = key;
     }
-    var range = Wysiwyg.getRange($editable[0]);
+    var range = Wysiwyg.getRange();
     if (!range) {
         console.error("Editor have not any range");
         return;

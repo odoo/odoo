@@ -3,10 +3,8 @@ odoo.define('wysiwyg.widgets.LinkDialog', function (require) {
 
 var core = require('web.core');
 var Dialog = require('wysiwyg.widgets.Dialog');
-require("summernote/summernote");
-
-var dom = $.summernote.core.dom;
-var range = $.summernote.core.range;
+const OdooEditorLib = require('web_editor.odoo-editor');
+const wysiwygUtils = require('@web_editor/js/wysiwyg/wysiwyg_utils');
 
 var _t = core._t;
 
@@ -29,13 +27,13 @@ var LinkDialog = Dialog.extend({
      * @constructor
      * @param {Boolean} linkInfo.isButton - whether if the target is a button element.
      */
-    init: function (parent, options, editable, linkInfo) {
+    init: function (parent, options, editable, data, link) {
         this.options = options || {};
         this._super(parent, _.extend({
             title: _t("Link to"),
         }, this.options));
 
-        this.data = linkInfo || {};
+        this.data = data || {};
         this.isButton = this.data.isButton;
         // Using explicit type 'link' to preserve style when the target is <button class="...btn-link"/>.
         this.colorsData = [
@@ -49,17 +47,33 @@ var LinkDialog = Dialog.extend({
         ];
 
         this.editable = editable;
-        this.data.className = "";
-        this.data.iniClassName = "";
+        this.$editable = $(editable);
+        this.data = data || {};
 
-        var r = this.data.range;
-        this.needLabel = !r || (r.sc === r.ec && r.so === r.eo);
+        this.data.className = this.data.className || "";
+        this.data.iniClassName = this.data.iniClassName || "";
+
+        if (link) {
+            const range = document.createRange();
+            range.selectNodeContents(link);
+            this.data.range = range;
+        } else {
+            const selection = editable && editable.ownerDocument.getSelection();
+            this.data.range = selection && selection.rangeCount && selection.getRangeAt(0);
+        }
 
         if (this.data.range) {
-            const $el = $(this.data.range.sc).filter(this.isButton ? "button" : "a");
-            this.data.iniClassName = $el.attr("class") || "";
+            this.needLabel = this.data.range.collapsed;
+            let $link;
+            if (link) {
+                $link = $(link);
+            } else {
+                const firstLinkInSelection = OdooEditorLib.getInSelection(this.editable.ownerDocument, 'a');
+                $link = $(firstLinkInSelection);
+            }
+            this.data.iniClassName = $link.attr("class") || "";
             this.colorCombinationClass = false;
-            let $node = $el;
+            let $node = $link;
             while ($node.length && !$node.is('body')) {
                 const className = $node.attr('class') || '';
                 const m = className.match(/\b(o_cc\d+)\b/g);
@@ -71,81 +85,22 @@ var LinkDialog = Dialog.extend({
             }
             this.data.className = this.data.iniClassName.replace(/(^|\s+)btn(-[a-z0-9_-]*)?/gi, ' ');
 
-            var is_link = this.data.range.isOnAnchor();
-
-            var sc = r.sc;
-            var so = r.so;
-            var ec = r.ec;
-            var eo = r.eo;
-
-            var nodes;
-            if (!is_link) {
-                if (sc.tagName) {
-                    sc = dom.firstChild(so ? sc.childNodes[so] : sc);
-                    so = 0;
-                } else if (so !== sc.textContent.length) {
-                    if (sc === ec) {
-                        ec = sc = sc.splitText(so);
-                        eo -= so;
-                    } else {
-                        sc = sc.splitText(so);
-                    }
-                    so = 0;
-                }
-                if (ec.tagName) {
-                    ec = dom.lastChild(eo ? ec.childNodes[eo-1] : ec);
-                    eo = ec.textContent.length;
-                } else if (eo !== ec.textContent.length) {
-                    ec.splitText(eo);
-                }
-
-                nodes = dom.listBetween(sc, ec);
-
-                // browsers can't target a picture or void node
-                if (dom.isVoid(sc) || dom.isImg(sc)) {
-                    so = dom.listPrev(sc).length-1;
-                    sc = sc.parentNode;
-                }
-                if (dom.isBR(ec)) {
-                    eo = dom.listPrev(ec).length-1;
-                    ec = ec.parentNode;
-                } else if (dom.isVoid(ec) || dom.isImg(sc)) {
-                    eo = dom.listPrev(ec).length;
-                    ec = ec.parentNode;
-                }
-
-                this.data.range = range.create(sc, so, ec, eo);
-                $(editable).data("range", this.data.range);
-                this.data.range.select();
-            } else {
-                nodes = dom.ancestor(sc, dom.isAnchor).childNodes;
+            let textLink = link;
+            if (!textLink) {
+                const startLink = $(this.data.range.startContainer).closest('a')[0];
+                const endLink = $(this.data.range.endContainer).closest('a')[0];
+                const isLink = startLink && (startLink === endLink);
+                textLink = isLink ? startLink : this.data.range.cloneContents();
             }
-
-            if (dom.isImg(sc) && nodes.indexOf(sc) === -1) {
-                nodes.push(sc);
-            }
-            if (nodes.length > 1 || dom.ancestor(nodes[0], dom.isImg)) {
-                var text = "";
-                this.data.images = [];
-                for (var i=0; i<nodes.length; i++) {
-                    if (dom.ancestor(nodes[i], dom.isImg)) {
-                        this.data.images.push(dom.ancestor(nodes[i], dom.isImg));
-                        text += '[IMG]';
-                    } else if (!is_link && nodes[i].nodeType === 1) {
-                        // just use text nodes from listBetween
-                    } else if (!is_link && i===0) {
-                        text += nodes[i].textContent.slice(so, Infinity);
-                    } else if (!is_link && i===nodes.length-1) {
-                        text += nodes[i].textContent.slice(0, eo);
-                    } else {
-                        text += nodes[i].textContent;
-                    }
-                }
-                this.data.text = text;
-            }
+            const [encodedText, images] = wysiwygUtils.encodeNodeToText(textLink);
+            this.data.originalText = wysiwygUtils.decodeText(encodedText, images);
+            this.data.content = encodedText;
+            this.data.images = images;
+            this.data.url = $link.attr('href') || '';
+        } else {
+            this.data.content = this.data.content ? this.data.content.replace(/[ \t\r\n]+/g, ' ') : '';
+            this.needLabel = true;
         }
-
-        this.data.text = this.data.text.replace(/[ \t\r\n]+/g, ' ');
 
         var allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
         var allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
@@ -208,7 +163,7 @@ var LinkDialog = Dialog.extend({
             $url.focus();
             return Promise.reject();
         }
-        this.data.text = data.label;
+        this.data.content = data.content;
         this.data.url = data.url;
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
@@ -222,7 +177,11 @@ var LinkDialog = Dialog.extend({
         }
         this.data.isNewWindow = data.isNewWindow;
         this.final_data = this.data;
-        return this._super.apply(this, arguments);
+        const returnValue = this._super.apply(this, arguments);
+        if (this.insertedAnchors && this.insertedAnchors.length) {
+            $(this.insertedAnchors[this.insertedAnchors.length - 1]).focus();
+        }
+        return returnValue;
     },
 
     //--------------------------------------------------------------------------
@@ -244,24 +203,20 @@ var LinkDialog = Dialog.extend({
             href: data.url && data.url.length ? data.url : '#',
             class: `${data.classes.replace(/float-\w+/, '')} o_btn_preview`,
         };
-        this.$("#link-preview").attr(attrs).html((data.label && data.label.length) ? data.label : data.url);
+        this.$("#link-preview").attr(attrs).html((data.content && data.content.length) ? data.content : data.url);
     },
+
     /**
-     * Get the link's data (url, label and styles).
+     * Get the link's data (url, content and styles).
      *
      * @private
-     * @returns {Object} {label: String, url: String, classes: String, isNewWindow: Boolean}
+     * @returns {Object} {content: String, url: String, classes: String, isNewWindow: Boolean}
      */
     _getData: function () {
         var $url = this.$('input[name="url"]');
         var url = $url.val();
-        var label = this.$('input[name="label"]').val() || url;
-
-        if (label && this.data.images) {
-            for (var i = 0; i < this.data.images.length; i++) {
-                label = label.replace('<', "&lt;").replace('>', "&gt;").replace(/\[IMG\]/, this.data.images[i].outerHTML);
-            }
-        }
+        var content = this.$('input[name="label"]').val() || url;
+        content = wysiwygUtils.decodeText(content, this.data.images);
 
         if (!this.isButton && $url.prop('required') && (!url || !$url[0].checkValidity())) {
             return null;
@@ -287,8 +242,8 @@ var LinkDialog = Dialog.extend({
         var allWhitespace = /\s+/gi;
         var allStartAndEndSpace = /^\s+|\s+$/gi;
         return {
-            label: label,
-            url: url,
+            content: content,
+            url: this._correctLink(url),
             classes: classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, ''),
             isNewWindow: isNewWindow,
         };
@@ -314,6 +269,20 @@ var LinkDialog = Dialog.extend({
         } catch (ignored) {
             return true;
         }
+    },
+    /**
+     * @private
+     */
+    _correctLink: function (url) {
+        if (url.indexOf('mailto:') === 0 || url.indexOf('tel:') === 0) {
+            url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
+        } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
+            url = 'mailto:' + url;
+        } else if (url.indexOf('://') === -1 && url[0] !== '/'
+                    && url[0] !== '#' && url.slice(0, 2) !== '${') {
+            url = 'http://' + url;
+        }
+        return url;
     },
 
     //--------------------------------------------------------------------------

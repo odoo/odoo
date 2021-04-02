@@ -26,7 +26,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/xml/*.xml',
         ],
         'web_editor.assets_wysiwyg': [
-            ('include', 'web_editor.assets_summernote'),
 
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
@@ -35,6 +34,11 @@ Odoo Web Editor widget.
             'web_editor/static/lib/jQuery.transfo.js',
             'web/static/lib/nearest/jquery.nearest.js',
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
+            'web_editor/static/lib/odoo-editor/odoo-editor.css',
+            'web_editor/static/lib/odoo-editor/odoo-editor.js',
+
+            # utils
+            'web_editor/static/src/js/wysiwyg/wysiwyg_utils.js',
 
             # odoo utils
             ('include', 'web._assets_helpers'),
@@ -49,67 +53,29 @@ Odoo Web Editor widget.
 
             'web_editor/static/src/js/wysiwyg/fonts.js',
             'web_editor/static/src/js/base.js',
-            'web_editor/static/src/js/editor/editor.js',
-            'web_editor/static/src/js/editor/rte.js',
-            'web_editor/static/src/js/editor/rte.summernote.js',
             'web_editor/static/src/js/editor/image_processing.js',
+            'web_editor/static/src/js/editor/custom_colors.js',
 
             # widgets & plugins
             'web_editor/static/src/js/wysiwyg/widgets/**/*',
             'web_editor/static/src/js/editor/snippets.editor.js',
+            'web_editor/static/src/js/editor/toolbar.js',
             'web_editor/static/src/js/editor/snippets.options.js',
 
             # Launcher
             'web_editor/static/src/js/wysiwyg/wysiwyg.js',
-            'web_editor/static/src/js/wysiwyg/wysiwyg_snippets.js',
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
-        ],
-        'web_editor.assets_summernote': [
-            'web_editor/static/src/js/editor/summernote_import_start.js',
-
-            'web_editor/static/lib/summernote/src/css/**/*',
-            'web_editor/static/lib/summernote/src/js/core/async.js',
-            'web_editor/static/lib/summernote/src/js/core/func.js',
-            'web_editor/static/lib/summernote/src/js/core/agent.js',
-            'web_editor/static/lib/summernote/src/js/core/list.js',
-            'web_editor/static/lib/summernote/src/js/core/dom.js',
-            'web_editor/static/lib/summernote/src/js/core/key.js',
-            'web_editor/static/lib/summernote/src/js/core/range.js',
-            'web_editor/static/lib/summernote/src/js/editing/Bullet.js',
-            'web_editor/static/lib/summernote/src/js/editing/History.js',
-            'web_editor/static/lib/summernote/src/js/editing/Style.js',
-            'web_editor/static/lib/summernote/src/js/editing/Table.js',
-            'web_editor/static/lib/summernote/src/js/editing/Typing.js',
-            'web_editor/static/lib/summernote/src/js/module/Editor.js',
-            'web_editor/static/lib/summernote/src/js/module/Button.js',
-            'web_editor/static/lib/summernote/src/js/module/Clipboard.js',
-            'web_editor/static/lib/summernote/src/js/module/Codeview.js',
-            'web_editor/static/lib/summernote/src/js/module/DragAndDrop.js',
-            'web_editor/static/lib/summernote/src/js/module/Fullscreen.js',
-            'web_editor/static/lib/summernote/src/js/module/Handle.js',
-            'web_editor/static/lib/summernote/src/js/module/HelpDialog.js',
-            'web_editor/static/lib/summernote/src/js/module/ImageDialog.js',
-            'web_editor/static/lib/summernote/src/js/module/LinkDialog.js',
-            'web_editor/static/lib/summernote/src/js/module/Popover.js',
-            'web_editor/static/lib/summernote/src/js/module/Statusbar.js',
-            'web_editor/static/lib/summernote/src/js/module/Toolbar.js',
-            'web_editor/static/lib/summernote/src/js/Renderer.js',
-            'web_editor/static/lib/summernote/src/js/EventHandler.js',
-            'web_editor/static/lib/summernote/src/js/defaults.js',
-            'web_editor/static/lib/summernote/src/js/summernote.js',
-
-            'web_editor/static/src/js/editor/summernote_import_end.js',
-            'web_editor/static/src/js/editor/summernote.js',
         ],
         'web.assets_common': [
             'web_editor/static/lib/vkbeautify/**/*',
             'web_editor/static/src/js/common/**/*',
-            'web_editor/static/src/js/wysiwyg/root.js',
         ],
         'web.assets_backend': [
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.backend.scss',
 
+            'web_editor/static/src/js/wysiwyg/dialog.js',
+            'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',
         ],
         'web.assets_frontend_minimal': [
@@ -119,6 +85,7 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.frontend.scss',
 
+            'web_editor/static/src/js/wysiwyg/dialog.js',
             'web_editor/static/src/js/frontend/loader.js',
         ],
 
@@ -145,8 +112,6 @@ Odoo Web Editor widget.
         # ----------------------------------------------------------------------
 
         'web.qunit_suite_tests': [
-            'web_editor/static/src/js/wysiwyg/test_root.js',
-
             ('include', 'web_editor.assets_wysiwyg'),
 
             'web_editor/static/tests/**/*',

@@ -181,6 +181,12 @@ const dynamicSnippetOptions = options.Class.extend({
      * @private
      */
     _setOptionsDefaultValues: function () {
+        // Unactive the editor observer, otherwise, undo of the editor will undo
+        // the attribute being changed. In some case of undo, a race condition
+        // with the public widget that use following property (eg.
+        // numberOfElements or numberOfElementsSmallDevices) might throw an
+        // exception by not finding the attribute on the element.
+        this.options.wysiwyg.odooEditor.observerUnactive();
         this._setOptionValue('numberOfElements', 4);
         this._setOptionValue('numberOfElementsSmallDevices', 1);
         const filterKeys = this.$el.find("we-select[data-attribute-name='filterId'] we-selection-items we-button");
@@ -189,6 +195,7 @@ const dynamicSnippetOptions = options.Class.extend({
         }
         const filter = this.dynamicFilters[this.$target.get(0).dataset['filterId']];
         this._filterUpdated(filter);
+        this.options.wysiwyg.odooEditor.observerActive();
     },
     /**
      * Take the new filter selection into account
