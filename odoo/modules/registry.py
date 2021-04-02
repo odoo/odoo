@@ -312,7 +312,7 @@ class Registry(Mapping):
                 # dependencies of custom fields may not exist; ignore that case
                 exceptions = (Exception,) if field.base_field.manual else ()
                 with ignore(*exceptions):
-                    dependencies[field] = set(field.resolve_depends(self))
+                    dependencies[field] = OrderedSet(field.resolve_depends(self))
 
         # determine transitive dependencies
         def transitive_dependencies(field, seen=[]):
@@ -339,7 +339,7 @@ class Registry(Mapping):
                     tree = triggers
                     for label in reversed(path):
                         tree = tree.setdefault(label, {})
-                    tree.setdefault(None, set()).add(field)
+                    tree.setdefault(None, OrderedSet()).add(field)
 
         return triggers
 
