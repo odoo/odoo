@@ -2,6 +2,7 @@
 
 import { useService } from "../../src/core/hooks";
 import { Registry } from "../../src/core/registry";
+import { hotkeyService } from "../../src/hotkey/hotkey_service";
 import { uiService } from "../../src/services/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, nextTick } from "../helpers/utils";
@@ -20,6 +21,7 @@ QUnit.module("Components", (hooks) => {
     dialogContainer.classList.add("o_dialog_container");
     target.append(dialogContainer);
     const serviceRegistry = new Registry();
+    serviceRegistry.add("hotkey", hotkeyService);
     serviceRegistry.add("ui", uiService);
     env = await makeTestEnv({ serviceRegistry });
   });

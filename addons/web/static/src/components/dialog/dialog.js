@@ -1,16 +1,25 @@
 /** @odoo-module **/
 
 import { useActiveElement } from "../../services/ui_service";
+import { useHotkey } from "../../hotkey/hotkey_hook";
 
 const { Component, hooks, misc, QWeb } = owl;
-const { useRef, useExternalListener, useSubEnv } = hooks;
+const { useRef, useSubEnv } = hooks;
 const { Portal } = misc;
 
 export class Dialog extends Component {
   setup() {
     this.modalRef = useRef("modal");
     useActiveElement("modal");
-    useExternalListener(window, "keydown", this._onKeydown);
+    useHotkey(
+      "escape",
+      () => {
+        if (!this.modalRef.el.classList.contains("o_inactive_modal")) {
+          this._close();
+        }
+      },
+      { altIsOptional: true }
+    );
     useSubEnv({ inDialog: true });
   }
 
@@ -44,16 +53,6 @@ export class Dialog extends Component {
    */
   _close() {
     this.trigger("dialog-closed");
-  }
-
-  /**
-   *
-   * @param {KeyboardEvent} ev
-   */
-  _onKeydown(ev) {
-    if (ev.key === "Escape" && !this.modalRef.el.classList.contains("o_inactive_modal")) {
-      this._close();
-    }
   }
 }
 

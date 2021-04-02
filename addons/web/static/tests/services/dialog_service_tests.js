@@ -10,6 +10,7 @@ import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeRPCService } from "../helpers/mock_services";
 import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
 import { ErrorDialog } from "@web/errors/error_dialogs";
+import { hotkeyService } from "../../src/hotkey/hotkey_service";
 
 const { Component, mount, tags } = owl;
 
@@ -19,8 +20,7 @@ let target;
 let pseudoWebClient;
 
 class PseudoWebClient extends Component {
-  constructor() {
-    super(...arguments);
+  setup() {
     this.Components = odoo.mainComponentRegistry.getEntries();
   }
 }
@@ -41,6 +41,7 @@ QUnit.module("DialogManager", {
     serviceRegistry = new Registry();
     serviceRegistry.add("dialog", dialogService);
     serviceRegistry.add("ui", uiService);
+    serviceRegistry.add("hotkey", hotkeyService);
     const componentRegistry = new Registry();
     componentRegistry.add("DialogContainer", mainComponentRegistry.get("DialogContainer"));
     env = await makeTestEnv({ serviceRegistry, mainComponentRegistry: componentRegistry });
