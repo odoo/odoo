@@ -104,9 +104,21 @@ class TestRepair(AccountingTestCase):
         self.assertEqual(len(repair.invoice_id), 1, "No invoice exists for this repair order")
         self.assertEqual(len(repair.move_id.move_line_ids[0].consume_line_ids), 1, "Consume lines should be set")
 
+        # Check the invoice content
+        self.assertEqual(repair.invoice_id.state, 'draft')
+        self.assertEqual(len(repair.invoice_id.invoice_line_ids), 1)
+        self.assertEqual(repair.invoice_id.amount_total, 50.0)
+
     def test_01_repair_b4inv(self):
         repair = self._create_simple_repair_order('b4repair')
         # I confirm Repair order for Invoice Method 'Before Repair'.
+
+        self._create_simple_fee(repair_id=repair.id, qty=1.0, price_unit=30.0)
+        self.assertEqual(repair.amount_total, 30, "Amount_total should be 30")
+
+        self._create_simple_operation(repair_id=repair.id, qty=1.0, price_unit=12.0)
+        self.assertEqual(repair.amount_total, 42, "Amount_total should be 42")
+
         repair.with_user(self.res_repair_user).action_repair_confirm()
 
         # I click on "Create Invoice" button of this wizard to make invoice.
@@ -114,6 +126,11 @@ class TestRepair(AccountingTestCase):
 
         # I check that invoice is created for this Repair order.
         self.assertEqual(len(repair.invoice_id), 1, "No invoice exists for this repair order")
+
+        # Check the invoice content
+        self.assertEqual(repair.invoice_id.state, 'draft')
+        self.assertEqual(len(repair.invoice_id.invoice_line_ids), 2)
+        self.assertEqual(repair.invoice_id.amount_total, 42.0)
 
     def test_02_repair_noneinv(self):
         repair = self._create_simple_repair_order('none')
