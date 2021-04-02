@@ -342,9 +342,8 @@ class AssetsBundle(object):
         # to invite the user to refresh their browser
         if self.env and 'bus.bus' in self.env and self.name in self.TRACKED_BUNDLES:
             channel = (self.env.registry.db_name, 'bundle_changed')
-            message = (self.name, self.version)
-            self.env['bus.bus'].sendone(channel, message)
-            _logger.debug('Asset Changed: bundle: %s -- version: %s', message, message)
+            self.env['bus.bus'].sendone(channel, (self.name, self.version))
+            _logger.debug('Asset Changed: bundle: %s -- version: %s', self.name, self.version)
 
         return attachment
 
