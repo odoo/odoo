@@ -42,6 +42,7 @@
     window.odoo = {};
   }
   var odoo = window.odoo;
+  var debug = odoo.debug;
 
   var didLogInfoResolve;
   var didLogInfoPromise = new Promise(function (resolve) {
@@ -221,7 +222,7 @@
           return job.missing;
         });
 
-      if (odoo.debug || failed.length || unloaded.length) {
+      if (debug || failed.length || unloaded.length) {
         var log = window.console[!failed.length || !unloaded.length ? "info" : "error"].bind(
           window.console
         );
@@ -254,7 +255,7 @@
             })
           );
         }
-        if (odoo.debug && Object.keys(debugJobs).length) {
+        if (debug && Object.keys(debugJobs).length) {
           log("Debug:                   ", debugJobs);
         }
       }
