@@ -42,7 +42,7 @@ class MassMailingList(models.Model):
             ''', (tuple(self.ids), ))
             data = dict(self.env.cr.fetchall())
             for mailing_list in self:
-                mailing_list.contact_nbr = data.get(mailing_list.id, 0)
+                mailing_list.contact_nbr = data.get(mailing_list._origin.id, 0)
         else:
             self.contact_nbr = 0
 
