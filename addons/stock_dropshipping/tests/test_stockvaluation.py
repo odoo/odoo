@@ -69,6 +69,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = vendor1
         move_form.purchase_id = self.purchase_order1
+        move_form.invoice_date = move_form.date
         for i in range(len(self.purchase_order1.order_line)):
             with move_form.invoice_line_ids.edit(i) as line_form:
                 line_form.tax_ids.clear()
