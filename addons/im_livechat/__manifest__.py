@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name' : 'Live Chat',
+    'name': 'Live Chat',
     'version': '1.0',
     'sequence': 210,
     'summary': 'Chat with your website visitors',
@@ -80,5 +80,69 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.xml',
             'im_livechat/static/src/components/thread_icon/thread_icon.xml',
         ],
+        # Bundle of External Librairies of the Livechat (Odoo + required modules)
+        'im_livechat.external_lib': [
+            # Momentjs
+            'web/static/lib/moment/moment.js',
+            # Odoo minimal lib
+            'web/static/lib/underscore/underscore.js',
+            'web/static/lib/underscore.string/lib/underscore.string.js',
+            # jQuery
+            'web/static/lib/jquery/jquery.js',
+            'web/static/lib/jquery.ui/jquery-ui.js',
+            'web/static/lib/jquery/jquery.browser.js',
+            'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
+            # Qweb2 lib
+            'web/static/lib/qweb/qweb2.js',
+            # Odoo JS Framework
+            'web/static/lib/owl/owl.js',
+            'web/static/src/js/promise_extension.js',
+            'web/static/src/js/boot.js',
+            'web/static/src/js/libs/download.js',
+            'web/static/src/js/libs/content-disposition.js',
+            'web/static/src/js/services/config.js',
+            'web/static/src/js/core/abstract_service.js',
+            'web/static/src/js/core/class.js',
+            'web/static/src/js/core/collections.js',
+            'web/static/src/js/core/translation.js',
+            'web/static/src/js/core/ajax.js',
+            'im_livechat/static/src/js/ajax_external.js',
+            'web/static/src/js/core/time.js',
+            'web/static/src/js/core/mixins.js',
+            'web/static/src/js/core/service_mixins.js',
+            'web/static/src/js/core/rpc.js',
+            'web/static/src/js/core/widget.js',
+            'web/static/src/js/core/registry.js',
+            'web/static/src/js/core/session.js',
+            'web/static/src/js/core/concurrency.js',
+            'web/static/src/js/core/utils.js',
+            'web/static/src/js/core/dom.js',
+            'web/static/src/js/core/qweb.js',
+            'web/static/src/js/core/bus.js',
+            'web/static/src/js/services/core.js',
+            'web/static/src/js/core/local_storage.js',
+            'web/static/src/js/core/ram_storage.js',
+            'web/static/src/js/core/abstract_storage_service.js',
+            'web/static/src/js/common_env.js',
+            'web/static/src/js/public/lazyloader.js',
+            'web/static/src/js/public/public_env.js',
+            'web/static/src/js/public/public_root.js',
+            'web/static/src/js/public/public_root_instance.js',
+            'web/static/src/js/public/public_widget.js',
+            'web/static/src/js/services/ajax_service.js',
+            'web/static/src/js/services/local_storage_service.js',
+            # Bus, Mail, Livechat
+            'bus/static/src/js/longpolling_bus.js',
+            'bus/static/src/js/crosstab_bus.js',
+            'bus/static/src/js/services/bus_service.js',
+            'mail/static/src/js/utils.js',
+            'im_livechat/static/src/legacy/public_livechat.js',
+
+            ('include', 'web._assets_helpers'),
+
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'im_livechat/static/src/scss/im_livechat_bootstrap.scss',
+            'im_livechat/static/src/legacy/public_livechat.scss',
+        ]
     }
 }
