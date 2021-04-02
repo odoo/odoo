@@ -96,7 +96,7 @@ export function parseDateTime(value, options = {}) {
       fmt: fmt.replace(nonAlphaRegex, ""),
     };
     result =
-      check(DateTime.fromFormat(value, fmt, { locale: "no" })) ||
+      check(DateTime.fromFormat(value, fmt)) ||
       check(DateTime.fromFormat(value, fmtWoZero)) ||
       (woSeps &&
         (check(DateTime.fromFormat(woSeps.val, woSeps.fmt)) ||
