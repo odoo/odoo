@@ -3933,9 +3933,9 @@ Fields:
         quote = '"{}"'.format
 
         # insert rows
-        ids = []                        # ids of created records
-        other_fields = set()            # non-column fields
-        translated_fields = set()       # translated fields
+        ids = []                                # ids of created records
+        other_fields = OrderedSet()             # non-column fields
+        translated_fields = OrderedSet()        # translated fields
 
         # column names, formats and values (for common fields)
         columns0 = [('id', "nextval(%s)", self._sequence)]
