@@ -23,8 +23,14 @@ class AccountReconcileModelPartnerMapping(models.Model):
     def validate_regex(self):
         for record in self:
             if not (record.narration_regex or record.payment_ref_regex):
-                raise ValidationError(_("Please set at least one of the match texts to create a partner mapping."))
-
+                raise ValidationError(_("Please set at least one of the match texts to create a partner mapping."))      
+            try:
+                if(record.narration_regex):
+                    re.compile(record.narration_regex) 
+                if (record.payment_ref_regex):
+                    re.compile(record.payment_ref_regex) 
+            except:
+                raise ValidationError(_("Please encode a correct regular expression to create a partner mapping"))
 
 class AccountReconcileModelLine(models.Model):
     _name = 'account.reconcile.model.line'
