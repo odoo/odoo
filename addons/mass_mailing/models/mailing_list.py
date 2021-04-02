@@ -44,7 +44,7 @@ class MassMailingList(models.Model):
                 GROUP BY mailing_list_id''', (tuple(self.ids),))
             data = dict(self.env.cr.fetchall())
         for mailing_list in self:
-            mailing_list.mailing_count = data.get(mailing_list.id, 0)
+            mailing_list.mailing_count = data.get(mailing_list._origin.id, 0)
 
     def _compute_mailing_list_statistics(self):
         """ Computes various statistics for this mailing.list that allow users
