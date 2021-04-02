@@ -393,10 +393,11 @@
     <!-- Add to cart button-->
     <template id="categories_recursive" name="Category list">
         <li class="nav-item">
+            <t t-set="c" t-value="categ_data['category']" />
             <t t-call="website_sale.categorie_link"/>
-            <ul t-if="c.child_id" class="nav flex-column nav-hierarchy">
-                <t t-foreach="c.child_id" t-as="c">
-                    <t t-if="not search or c.id in search_categories_ids">
+            <ul t-if="categ_data['children']" class="nav flex-column nav-hierarchy">
+                <t t-foreach="categ_data['children']" t-as="categ_data">
+                    <t t-if="not search or categ_data['category'].id in search_categories_ids">
                         <t t-call="website_sale.categories_recursive" />
                     </t>
                 </t>
@@ -433,7 +434,7 @@
                                 <label class="custom-control-label font-weight-normal" t-att-for="all_products">All Products</label>
                             </div>
                         </li>
-                        <t t-foreach="categories" t-as="c">
+                        <t t-foreach="categories_tree" t-as="categ_data">
                             <t t-call="website_sale.categories_recursive" />
                         </t>
                     </form>

@@ -3,6 +3,7 @@
 import json
 import logging
 from werkzeug.exceptions import Forbidden, NotFound
+from collections import defaultdict
 
 from odoo import fields, http, SUPERUSER_ID, tools, _
 from odoo.fields import Command
@@ -252,13 +253,27 @@ class WebsiteSale(http.Controller):
 
         search_product = Product.search(domain, order=self._get_search_order(post))
         website_domain = request.website.website_domain()
-        categs_domain = [('parent_id', '=', False)] + website_domain
+        categs_domain = website_domain
         if search:
-            search_categories = Category.search([('product_tmpl_ids', 'in', search_product.ids)] + website_domain).parents_and_self
-            categs_domain.append(('id', 'in', search_categories.ids))
+            search_categories = Category.search([('product_tmpl_ids', 'in', search_product.ids)] + website_domain)
+            categs_domain.append(('id', 'child_of', search_categories.ids))
         else:
             search_categories = Category
         categs = Category.search(categs_domain)
+        parent2categories = defaultdict(list)
+        for c in categs:
+            parent2categories[c.parent_id.id].append(c)
+
+        def make_categories_tree(parent_id):
+            tree = []
+            for c in parent2categories[parent_id]:
+                tree.append({
+                    "category": c,
+                    "children": make_categories_tree(c.id)
+                })
+            return tree
+
+        categories_tree = make_categories_tree(False)
 
         if category:
             url = "/shop/category/%s" % slug(category)
@@ -296,6 +311,7 @@ class WebsiteSale(http.Controller):
             'ppg': ppg,
             'ppr': ppr,
             'categories': categs,
+            'categories_tree': categories_tree,
             'attributes': attributes,
             'keep': keep,
             'search_categories_ids': search_categories.ids,
