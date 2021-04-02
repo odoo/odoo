@@ -52,3 +52,6 @@ class StockValuationLayer(models.Model):
             if svl.company_id.anglo_saxon_accounting:
                 svl.stock_move_id._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=svl.product_id)
 
+    def _validate_analytic_accounting_entries(self):
+        for svl in self:
+            svl.stock_move_id._account_analytic_entry_move()
