@@ -1203,9 +1203,9 @@ options.registry.menu_data = options.Class.extend({
       *
       * @override
       */
-     onBlur: function () {
-         this.$target.popover('hide');
-     },
+    onBlur: function () {
+        this.$target.popover('hide');
+    },
 });
 
 options.registry.company_data = options.Class.extend({

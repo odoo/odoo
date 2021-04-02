@@ -2,6 +2,7 @@
 
 import Widget from 'web.Widget';
 import {_t} from 'web.core';
+import {DropPrevious} from 'web.concurrency';
 
 const LinkPopoverWidget = Widget.extend({
     template: 'wysiwyg.widgets.link.edit.tooltip',
@@ -20,6 +21,7 @@ const LinkPopoverWidget = Widget.extend({
         this.target = target;
         this.$target = $(target);
         this.href = this.$target.attr('href'); // for template
+        this._dp = new DropPrevious();
     },
     /**
      *
@@ -53,7 +55,7 @@ const LinkPopoverWidget = Widget.extend({
             placement: 'bottom',
             trigger: 'click',
         })
-        .on('show.bs.popover', () => {
+        .on('show.bs.popover.link_popover', () => {
             this._loadAsyncLinkPreview();
         })
         .popover('show')
@@ -66,6 +68,10 @@ const LinkPopoverWidget = Widget.extend({
      * @override
      */
     destroy() {
+        // FIXME those are never destroyed, so this could be a cause of memory
+        // leak. However, it is only one leak per click on a link during edit
+        // mode so this should not be a huge problem.
+        this.$target.off('.link_popover');
         this.$target.popover('dispose');
         return this._super(...arguments);
     },
@@ -80,7 +86,7 @@ const LinkPopoverWidget = Widget.extend({
      *
      * @private
      */
-    _loadAsyncLinkPreview() {
+    async _loadAsyncLinkPreview() {
         let url;
         try {
             url = new URL(this.target.href); // relative to absolute
@@ -112,7 +118,7 @@ const LinkPopoverWidget = Widget.extend({
             }).removeClass('d-none');
             this.$previewFaviconFa.addClass('d-none');
         } else {
-            $.get(this.target.href).then(content => {
+            await this._dp.add($.get(this.target.href)).then(content => {
                 const parser = new window.DOMParser();
                 const doc = parser.parseFromString(content, "text/html");
 

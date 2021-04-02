@@ -58,7 +58,6 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
             }).then(function () {
                 self.$target.attr('href', link.url);
                 $menu.text(link.text);
-                self._loadAsyncLinkPreview();
             });
         });
         dialog.open();

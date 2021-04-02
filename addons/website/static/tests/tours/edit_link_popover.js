@@ -97,10 +97,10 @@ tour.register('edit_link_popover', {
     {
         content: "Click on the Home menu again",
         trigger: '#top_menu a:contains("Home")',
+        extra_trigger: '#top_menu a:contains("Home")[href="/contactus"]', // href should be changed
     },
     {
         content: "Popover should be shown with updated preview data",
-        extra_trigger: '#top_menu a:contains("Home")[href="/contactus"]', // href should be changed
         trigger: '.o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
         run: function () {}, // it's a check
     },
