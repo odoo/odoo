@@ -21,6 +21,7 @@ class EventRegistration(models.Model):
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Event Ticket', readonly=True, ondelete='restrict',
         states={'draft': [('readonly', False)]})
+    active = fields.Boolean(default=True)
     # utm informations
     utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign',  index=True, ondelete='set null')
     utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')

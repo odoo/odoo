@@ -104,7 +104,7 @@ class ExhibitorController(WebsiteEventController):
             'sponsor_countries': sponsor_countries,
             # environment
             'hostname': request.httprequest.host.split(':')[0],
-            'user_event_manager': request.env.user.has_group('event.group_event_manager'),
+            'is_event_user': request.env.user.has_group('event.group_event_user'),
         }
 
     # ------------------------------------------------------------
@@ -158,10 +158,10 @@ class ExhibitorController(WebsiteEventController):
             'sponsors_other': sponsors_other[:30],
             # options
             'option_widescreen': option_widescreen,
-            'option_can_edit': request.env.user.has_group('event.group_event_manager'),
+            'option_can_edit': request.env.user.has_group('event.group_event_user'),
             # environment
             'hostname': request.httprequest.host.split(':')[0],
-            'user_event_manager': request.env.user.has_group('event.group_event_manager'),
+            'is_event_user': request.env.user.has_group('event.group_event_user'),
         }
 
     # ------------------------------------------------------------

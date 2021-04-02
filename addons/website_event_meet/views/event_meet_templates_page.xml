@@ -54,7 +54,7 @@
         </t>
         <!-- ROOM CONTENT -->
         <div class="d-flex flex-column">
-            <div t-if="meeting_room.room_is_full and not is_event_manager" class="alert alert-warning text-center">
+            <div t-if="meeting_room.room_is_full and not is_event_user" class="alert alert-warning text-center">
                 <span>Oops! This room is full !</span><br />Come back later to have a chat with us!
             </div>
             <div t-else="" class="d-flex flex-column">
@@ -72,7 +72,7 @@
                         <t t-set="auto_open" t-value="1"/>
                         <t t-set="attach_to" t-value="'#o_wemeet_jitsi_iframe'"/>
                         <t t-set="max_capacity" t-value="meeting_room.room_max_capacity"/>
-                        <t t-set="check_full" t-value="int(not is_event_manager)"/>
+                        <t t-set="check_full" t-value="int(not is_event_user)"/>
                         <t t-set="default_username" t-value="default_username"/>
                         <t t-set="jitsi_server_domain" t-value="meeting_room.chat_room_id.jitsi_server_domain"/>
                     </t>

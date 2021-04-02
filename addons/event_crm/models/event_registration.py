@@ -14,7 +14,7 @@ class EventRegistration(models.Model):
         groups='sales_team.group_sale_salesman',
         help="Leads generated from the registration.")
     lead_count = fields.Integer(
-        '# Leads', compute='_compute_lead_count', groups='sales_team.group_sale_salesman',
+        '# Leads', compute='_compute_lead_count', compute_sudo=True,
         help="Counter for the leads linked to this registration")
 
     @api.depends('lead_ids')
@@ -57,7 +57,7 @@ class EventRegistration(models.Model):
         """
         to_update, event_lead_rule_skip = False, self.env.context.get('event_lead_rule_skip')
         if not event_lead_rule_skip:
-            to_update = self.filtered(lambda reg: reg.lead_ids)
+            to_update = self.filtered(lambda reg: reg.lead_count)
         if to_update:
             lead_tracked_vals = to_update._get_lead_tracked_values()
 

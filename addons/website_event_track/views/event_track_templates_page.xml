@@ -175,7 +175,7 @@
                 <div class="tab-pane fade show active" id="track_list" role="tabpanel">
                     <ul class="list-unstyled mb-0">
                         <li t-foreach="tracks_other" t-as="track_other" class="w-100">
-                            <a t-if="user_event_manager or track_other.is_published"
+                            <a t-if="is_event_user or track_other.is_published"
                                 class="d-block w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
                                 t-att-href="track_other.website_url">
                                 <t t-call="website_event_track.event_track_aside_other_track"/>

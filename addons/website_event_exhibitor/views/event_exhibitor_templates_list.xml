@@ -123,7 +123,7 @@
             <div t-if="search_key" class="alert alert-info text-center">
                 <p class="m-0">We did not find any exhibitor matching your <strong t-esc="search_key"/> search.</p>
             </div>
-            <div t-else="" class="alert alert-info text-center" groups="event.group_event_manager">
+            <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
                 <p class="m-0">Add some exhibitors to get started !</p>
             </div>
         </div>
@@ -162,7 +162,7 @@
                      t-att-data-sponsor-id="sponsor.id"
                      t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
                      t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours"
-                     t-att-data-user-event-manager="user_event_manager">
+                     t-att-data-user-event-manager="is_event_user">
                     <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
                         t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
                         <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
@@ -170,7 +170,7 @@
                         </small>
                         <div class="o_wesponsor_connect_button">
                             <a href="#" class="btn btn-primary h3">
-                                <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
+                                <t t-if="not is_event_user and not sponsor.event_id.is_ongoing and not event.is_participating">
                                     Register
                                 </t>
                                 <t t-elif="sponsor.exhibitor_type == 'online'">Connect</t>
@@ -190,7 +190,7 @@
                         </small>
                         <div class="o_wesponsor_connect_button">
                             <a href="#" class="btn btn-primary h3">
-                                <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
+                                <t t-if="not is_event_user and not sponsor.event_id.is_ongoing and not event.is_participating">
                                     Register
                                 </t>
                                 <t t-else="">Connect</t>
