@@ -7,7 +7,7 @@ const wTourUtils = require('website.tour_utils');
 function removeSelectedBlock() {
     return {
         content: "Remove selected block",
-        trigger: '#oe_snippets we-customizeblock-options:last-child .oe_snippet_remove',
+        trigger: '#oe_snippets we-customizeblock-options:nth-last-child(2) .oe_snippet_remove',
     };
 }
 

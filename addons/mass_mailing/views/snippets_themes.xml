@@ -3,7 +3,10 @@
 <!-- Snippets & Themes Menu -->
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
     <xpath expr="//div[@id='snippets_menu']" position="inside">
-        <button type="button" disabled="disabled">Select a template</button>
+        <button type="button" class="o_we_select_template text-uppercase"><span>Select a template</span></button>
+        <button class="o_fullscreen_btn btn btn-primary">
+            <img src="/web_editor/font_to_img/61541/rgb(255,255,255)/16" alt="Fullscreen"/>
+        </button>
     </xpath>
     <xpath expr="//t[@id='default_snippets']" position="replace">
         <t id="default_snippets">

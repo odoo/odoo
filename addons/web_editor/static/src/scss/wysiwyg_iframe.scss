@@ -1,5 +1,4 @@
 iframe.wysiwyg_iframe.o_fullscreen {
-    position: fixed !important;
     left: 0 !important;
     right: 0 !important;
     top: 0 !important;
@@ -16,6 +15,21 @@ iframe.wysiwyg_iframe.o_fullscreen {
 
 body.o_in_iframe {
     background-color: $o-view-background-color;
+    display: flex;
+
+    #oe_snippets {
+        position: relative;
+        top: 0;
+    }
+
+    .iframe-editor-wrapper {
+        flex: 1 1 auto;
+        overflow: auto;
+    }
+
+    .iframe-utils-zone {
+        display: flex;
+    }
 
     &.editor_enable {
         padding-top: var(--o-we-toolbar-height) !important;
@@ -24,4 +38,16 @@ body.o_in_iframe {
     .note-statusbar {
         display: none;
     }
+
+    #oe_snippets #snippets_menu .o_fullscreen_btn {
+        display: flex;
+        align-items: center;
+        width: 24px;
+        height: 24px;
+        background-color: #337ab7;
+        border: 1px solid #2e6da4;
+        border-radius: 4px;
+        margin: 4px;
+    }
+
 }

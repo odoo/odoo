@@ -160,7 +160,7 @@ $.fn.extend({
     /**
      * @returns {jQuery}
      */
-    getScrollingElement() {
+    getScrollingElement(document = window.document) {
         const $baseScrollingElement = $(document.scrollingElement);
         if ($baseScrollingElement.isScrollable()
                 && $baseScrollingElement.hasScrollableContent()) {

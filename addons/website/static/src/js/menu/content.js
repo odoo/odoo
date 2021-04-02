@@ -461,7 +461,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
             title: _t("Add a menu item"),
         }, options || {}), editable, _.extend({
             needLabel: true,
-            text: data.name || '',
+            content: data.name || '',
             isNewWindow: data.new_window,
         }, data || {}));
 

@@ -801,7 +801,7 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
 
         this.menuEl = document.createElement('we-selection-items');
         if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => this.menuEl.appendChild(node));
+            this.options.childNodes.forEach(node => node && this.menuEl.appendChild(node));
         }
         this.containerEl.appendChild(this.menuEl);
     },
@@ -1661,7 +1661,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
             widgetParent: 'body',
 
             // Open the datetimepicker on focus not on click. This allows to
-            // take care of a bug which is due to the summernote editor:
+            // take care of a bug which is due to the wysiwyg editor:
             // sometimes, the datetimepicker loses the focus then get it back
             // in the same execution flow. This was making the datepicker close
             // for no apparent reason. Now, it only closes then reopens directly
@@ -3572,6 +3572,10 @@ const SnippetOptionWidget = Widget.extend({
     _select: async function (previewMode, widget) {
         let $applyTo = null;
 
+        if (previewMode === true) {
+            this.options.wysiwyg.odooEditor.automaticStepUnactive('preview_option');
+        }
+
         // Call each option method sequentially
         for (const methodName of widget.getMethodsNames()) {
             const widgetValue = widget.getValue(methodName);
@@ -3589,6 +3593,10 @@ const SnippetOptionWidget = Widget.extend({
             } else {
                 await this[methodName](previewMode, widgetValue, params);
             }
+        }
+
+        if (previewMode === 'reset' || previewMode === false) {
+            this.options.wysiwyg.odooEditor.automaticStepActive('preview_option');
         }
 
         // We trigger the event on elements targeted by apply-to if any as
@@ -3716,6 +3724,9 @@ const SnippetOptionWidget = Widget.extend({
 
         // Ask a mutexed snippet update according to the widget value change
         const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
+        if (shouldRecordUndo) {
+            this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+        }
         this.trigger_up('snippet_edition_request', {exec: async () => {
             // If some previous snippet edition in the mutex removed the target from
             // the DOM, the widget can be destroyed, in that case the edition request
@@ -3750,14 +3761,15 @@ const SnippetOptionWidget = Widget.extend({
                 return;
             }
 
+            // Call widget option methods and update $target
+            await this._select(previewMode, widget);
+
             // If it is not preview mode, the user selected the option for good
             // (so record the action)
             if (shouldRecordUndo) {
-                this.trigger_up('request_history_undo_record', {$target: this.$target});
+                this.options.wysiwyg.odooEditor.historyStep();
             }
 
-            // Call widget option methods and update $target
-            await this._select(previewMode, widget);
             if (previewMode) {
                 return;
             }
@@ -3919,7 +3931,7 @@ registry.sizing = SnippetOptionWidget.extend({
             };
             var bodyMouseUp = function () {
                 $body.off('mousemove', bodyMouseMove);
-                $(window).off('mouseup', bodyMouseUp);
+                $body.off('mouseup', bodyMouseUp);
                 $body.removeClass(cursor);
                 $handle.removeClass('o_active');
 
@@ -3933,14 +3945,11 @@ registry.sizing = SnippetOptionWidget.extend({
                     return;
                 }
                 setTimeout(function () {
-                    self.trigger_up('request_history_undo_record', {
-                        $target: self.$target,
-                        event: 'resize_' + XY,
-                    });
+                    self.options.wysiwyg.odooEditor.historyStep();
                 }, 0);
             };
             $body.on('mousemove', bodyMouseMove);
-            $(window).on('mouseup', bodyMouseUp);
+            $body.on('mouseup', bodyMouseUp);
         });
 
         return def;
@@ -4086,6 +4095,63 @@ registry['sizing_y'] = registry.sizing.extend({
         };
         return this.grid;
     },
+});
+
+/**
+ * Allows for media to be replaced.
+ */
+registry.ReplaceMedia = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    start() {
+        const $button = this.$el.find('we-button.fa');
+        this.$overlayRemove = this.$overlay.find('.oe_snippet_remove');
+        $button.insertBefore(this.$overlayRemove);
+
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        this.$overlayRemove.toggleClass('d-none', this.$target.is('.fa'));
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replaces the media.
+     *
+     * @see this.selectClass for parameters
+     */
+    async replaceMedia() {
+        // TODO for now, this simulates a double click on the media,
+        // to be refactored when the new editor is merged
+        this.$target.dblclick();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'replace_media_overlay_opt') {
+            return !this.$target.is('.fa');
+        }
+        return this._super(...arguments);
+    }
 });
 
 /*
@@ -5661,8 +5727,8 @@ registry.many2one = SnippetOptionWidget.extend({
         // Rerender this same field in other places in the page (with different
         // contact-options). Many2ones with the same contact options will just
         // copy the HTML of the current m2o on content_changed. Not sure why we
-        // only do this for contacts, or why we do this here instead of in
-        // rte.summernote.js like we do for replacing text on content_changed
+        // only do this for contacts, or why we do this here instead of in the
+        // wysiwyg like we do for replacing text on content_changed
         const selector = [
             `[data-oe-model="${this.$target.data('oe-model')}"]`,
             `[data-oe-id="${this.$target.data('oe-id')}"]`,

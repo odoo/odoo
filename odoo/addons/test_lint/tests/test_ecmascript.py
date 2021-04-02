@@ -29,8 +29,6 @@ class TestECMAScriptVersion(lint_case.LintCase):
     def test_ecmascript_version(self):
         """ Test that there is no unsupported ecmascript in javascript files """
 
-        black_re = re.compile(r'summernote.+(intro\.js|outro.js)$')
-
         files_to_check = [
             p for p in self.iter_module_files('*.js')
             if 'static/test' not in p
@@ -38,7 +36,6 @@ class TestECMAScriptVersion(lint_case.LintCase):
             if 'static/lib/qweb/qweb.js' not in p   # because this file is not bundled at all
             if 'py.js/lib/py.js' not in p           # because it is not "strict" compliant
             if 'static/lib/epos-2.12.0.js' not in p # same
-            if not black_re.search(p)
         ]
 
         _logger.info('Testing %s js files', len(files_to_check))

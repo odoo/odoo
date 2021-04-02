@@ -21,59 +21,27 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     }
 }
 
-// EDITOR TOP BAR AND POPOVER
-.note-popover .popover {
-    max-width: 350px;
-    left: 50% !important;
-    transform: translate(-50%, 0);
-
-    .popover-body {
-        white-space: normal;
-    }
-}
-
-#web_editor-top-edit {
-    @include o-position-absolute(0, 0, auto, 0);
-    position: fixed;
-    z-index: $o-we-zindex + 1;
-    height: var(--o-we-toolbar-height);
-    background-color: $o-we-bg;
-
-    .note-popover .popover {
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        border: none !important;
-        max-width: none;
-        transform: none;
-    }
-    .note-popover .popover .popover-body {
-        height: var(--o-we-toolbar-height);
-    }
-}
-
+// Editor website toolbar
 .wysiwyg_iframe,
 .note-editor {
-    border: $o-we-border-width solid $o-we-border-color;
+    border: $o-we-border-width solid $o-we-fg-light;
     margin: 0;
     padding: 0;
 }
-// avoid popover bar over its opened modal
-.note-popover .popover {
-    z-index: $o-we-overlay-zindex;
-}
-.note-popover .popover .popover-body,
-.panel-heading.note-toolbar {
+.oe-toolbar {
     padding-bottom: 0;
-    border-bottom: $o-we-border-width solid $o-we-border-color;
+    border-bottom: $o-we-border-width solid $o-we-fg-light;
     background-color: $o-we-bg;
     color: $o-we-color;
     font-family: $o-we-font-family;
 
+    &.noarrow::before {
+        display: none;
+    }
+
     // Main layout of buttons
     .btn-group, .btn {
         width: auto !important;
-        height: 100% !important;
         margin-top: 0;
         margin-bottom: 0;
         background: transparent;
@@ -82,31 +50,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     }
     .btn-secondary {
         color: inherit;
-    }
-
-    // Active buttons and opened dropdowns
-    .btn {
-        padding: 0.5em 0.75em !important;
-        border-left: $o-we-item-border-width solid $o-we-item-border-color;
-        border-right: $o-we-item-border-width solid $o-we-item-border-color;
-        background: $o-we-sidebar-content-field-clickable-bg;
-        color: inherit;
-        font-size: $o-we-font-size !important;
-
-        &.active,
-        &:focus, &:active, &:focus:active {
-            @extend %we-active-button;
-        }
-
-        // This element should have been removed but still exists in 13.0 by
-        // mistake. This takes advantage of it to restore the color preview
-        // feature which disappeared and cannot be fixed as in 12.0.
-        // TODO fix the right way in 14.0.
-        > .caret {
-            display: block;
-            @include o-position-absolute(auto, 0, 0, 0);
-            border-bottom: 2px solid transparent;
-        }
     }
     .btn-group.show {
         > .btn {
@@ -130,11 +73,17 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         border: $o-we-dropdown-border-width solid $o-we-dropdown-border-color;
         background-color: $o-we-dropdown-bg;
         box-shadow: $o-we-dropdown-shadow;
+
+        &.colorpicker-menu {
+            bottom: 100%;
+            margin-top: 0;
+            margin-bottom: 0.125rem;
+        }
     }
     .dropdown-menu.show { // To overcome .note-XXX .dropdown-menu rules
         min-width: 0;
     }
-    .dropdown-item { // To overcome summernote rules breaking this in iframes
+    .dropdown-item { // To overcome wysiwyg rules breaking this in iframes
         display: block;
         max-width: none;
         overflow: visible;
@@ -164,47 +113,32 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         border-top: $o-we-dropdown-item-spacing solid transparent;
     }
 
-    .note-style {
-        .dropdown-item {
-            > * {
-                display: inline;;
-            }
-            &, > * {
-                line-height: 2;
-            }
-            &[data-value="blockquote"] {
-                padding-top: 0.5em;
-                padding-bottom: 0.5em;
+    // Specific elements
+    #colorInputButtonGroup label:last-of-type() .btn {
+        margin: 0 1px 0 -1px;
+    }
+    .tablepicker {
+        margin: 1px 2px -8px 2px !important;
 
-                > * {
-                    display: block;
-                }
-            }
+        .tablepicker-cell {
+            width: 5px !important;
         }
     }
-
-    // Specific elements
     .o_image_alt {
         @include o-text-overflow();
         max-width: 150px;
     }
-    .note-color-palette div .note-color-btn {
-        border-color: $o-we-dropdown-bg;
-    }
-    .note-custom-color-palette .note-color-row {
-        height: auto!important;
-        .note-color-btn {
-            float: left;
-            height: 20px;
-            width: 20px;
-            padding: 0;
-            margin: 0;
-            border: 1px solid $o-we-dropdown-bg;
-        }
-    }
 }
-.note-color ul.show {
-    min-width: 216px !important;
+
+.oe_edited_link {
+    position: relative;
+    display: inline-block;
+    &::before {
+        content: '';
+        border: dashed 3px #01bad2;
+        position: absolute;
+        inset: -5px;
+    }
 }
 
 // ANIMATIONS
@@ -423,16 +357,6 @@ img::selection {
         height: initial !important;
         top: initial !important;
         left: initial !important;
-
-        #web_editor-toolbars .popover-body {
-            display: flex;
-            width: 100%;
-            overflow-x: auto;
-
-            .btn-group {
-                position: static;
-            }
-        }
     }
 }
 
@@ -450,6 +374,34 @@ img::selection {
             padding: 0.5rem 0; // To use more editor space if necessary
         }
     }
+}
+
+.o_wysiwyg_wrapper {
+    position: relative;
+    margin-bottom: 11px;
+}
+.o_wysiwyg_resizer {
+    background: #f5f5f5;
+    height: 10px;
+    width: 100%;
+    border-left: $o-we-border-width solid $o-we-fg-light;
+    border-bottom: $o-we-border-width solid $o-we-fg-light;
+    border-right: $o-we-border-width solid $o-we-fg-light;
+    cursor: row-resize;
+    padding-top: 1px;
+}
+.o_wysiwyg_resizer_hook {
+    width: 20px;
+    margin: 1px auto;
+    border-top: 1px solid #a9a9a9;
+}
+.note-editable {
+    border: $o-we-border-width solid $o-we-fg-light;
+    overflow: auto;
+    background: white;
+    color: black;
+    height: 100%;
+    padding: 5px 10px;
 }
 
 .o_we_no_pointer_events {
@@ -512,4 +464,8 @@ img::selection {
             }
         }
     }
+}
+
+[data-oe-xpath], [data-oe-xpath] [contenteditable=true] {
+    outline: none;
 }
