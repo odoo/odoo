@@ -327,7 +327,6 @@ class Repair(models.Model):
                     'partner_shipping_id': repair.address_id.id,
                     'currency_id': currency.id,
                     'narration': narration,
-                    'line_ids': [],
                     'invoice_origin': repair.name,
                     'repair_ids': [(4, repair.id)],
                     'invoice_line_ids': [],
