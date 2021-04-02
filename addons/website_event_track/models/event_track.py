@@ -392,8 +392,10 @@ class Track(models.Model):
         for track in tracks:
             track.event_id.message_post_with_view(
                 'website_event_track.event_track_template_new',
-                values={'track': track},
-                subject=track.name,
+                values={
+                    'track': track,
+                    'is_html_empty': is_html_empty,
+                },
                 subtype_id=self.env.ref('website_event_track.mt_event_track').id,
             )
             track._synchronize_with_stage(track.stage_id)
