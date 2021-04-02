@@ -18,6 +18,8 @@ class StockMove(models.Model):
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     account_move_ids = fields.One2many('account.move', 'stock_move_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
+    analytic_account_line_id = fields.Many2one(
+        'account.analytic.line', copy=False)
 
     def _filter_anglo_saxon_moves(self, product):
         return self.filtered(lambda m: m.product_id.id == product.id)
@@ -27,6 +29,10 @@ class StockMove(models.Model):
         action_data = self.env['ir.actions.act_window']._for_xml_id('account.action_move_journal_line')
         action_data['domain'] = [('id', 'in', self.account_move_ids.ids)]
         return action_data
+
+    def _action_cancel(self):
+        self.analytic_account_line_id.unlink()
+        return super()._action_cancel()
 
     def _get_price_unit(self):
         """ Returns the unit price to value this stock move """
@@ -264,8 +270,8 @@ class StockMove(models.Model):
                 todo_valued_moves._sanity_check_for_valuation()
                 stock_valuation_layers |= getattr(todo_valued_moves, '_create_%s_svl' % valued_type)()
 
-
         stock_valuation_layers._validate_accounting_entries()
+        stock_valuation_layers._validate_analytic_accounting_entries()
 
         stock_valuation_layers._check_company()
 
@@ -377,6 +383,53 @@ class StockMove(models.Model):
 
         return res
 
+    def _prepare_analytic_line(self):
+        self.ensure_one()
+        if not self._get_analytic_account():
+            return False
+
+        if self.state in ['cancel', 'draft']:
+            return False
+
+        if self.state != 'done':
+            unit_amount = self.product_uom._compute_quantity(
+                self.quantity_done, self.product_id.uom_id)
+            # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
+            # we would have to recompute all the analytic estimation at each out.
+            amount = - unit_amount * self.product_id.standard_price
+        elif self.product_id.valuation == 'real_time':
+            accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
+            account_valuation = accounts_data.get('stock_valuation', False)
+            analalytic_line_vals = self.stock_valuation_layer_ids.account_move_id.line_ids.filtered(
+                lambda l: l.account_id == account_valuation)._prepare_analytic_line()
+            amount = - sum(vals['amount'] for vals in analalytic_line_vals)
+            unit_amount = - sum(vals['unit_amount'] for vals in analalytic_line_vals)
+        elif sum(self.stock_valuation_layer_ids.mapped('quantity')):
+            amount = sum(self.stock_valuation_layer_ids.mapped('value'))
+            unit_amount = sum(self.stock_valuation_layer_ids.mapped('quantity'))
+        if self.analytic_account_line_id:
+            self.analytic_account_line_id.unit_amount = - unit_amount
+            self.analytic_account_line_id.amount = amount
+            return False
+        elif amount:
+            return self._generate_analytic_lines_data(
+                unit_amount, amount)
+
+    def _generate_analytic_lines_data(self, unit_amount, amount):
+        self.ensure_one()
+        account_id = self._get_analytic_account()
+        return {
+            'name': self.name,
+            'amount': amount,
+            'account_id': account_id.id,
+            'unit_amount': unit_amount,
+            'product_id': self.product_id.id,
+            'product_uom_id': self.product_id.uom_id.id,
+            'company_id': self.company_id.id,
+            'ref': self._description,
+            'category': 'other',
+        }
+
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
         # This method returns a dictionary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
         self.ensure_one()
@@ -451,6 +504,20 @@ class StockMove(models.Model):
             'move_type': 'entry',
         }
 
+    def _account_analytic_entry_move(self):
+        analytic_lines_vals = []
+        moves_to_link = []
+        for move in self:
+            analytic_line_vals = move._prepare_analytic_line()
+            if not analytic_line_vals:
+                continue
+            moves_to_link.append(move.id)
+            analytic_lines_vals.append(analytic_line_vals)
+        analytic_lines = self.env['account.analytic.line'].sudo().create(analytic_lines_vals)
+        for move_id, analytic_line in zip(moves_to_link, analytic_lines):
+            self.env['stock.move'].browse(
+                move_id).analytic_account_line_id = analytic_line
+
     def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """
         self.ensure_one()
@@ -498,6 +565,9 @@ class StockMove(models.Model):
                     am_vals.append(self.with_company(self.company_id)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
 
         return am_vals
+
+    def _get_analytic_account(self):
+        return False
 
     def _get_related_invoices(self):  # To be overridden in purchase and sale_stock
         """ This method is overrided in both purchase and sale_stock modules to adapt
