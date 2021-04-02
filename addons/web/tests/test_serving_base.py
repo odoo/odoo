@@ -111,7 +111,7 @@ class TestStaticInheritanceCommon(BaseCase):
 
     # Private methods
     def _get_module_names(self):
-        return ','.join([glob[1] for glob in self.asset_paths])
+        return ','.join([asset_path[1] for asset_path in self.asset_paths])
 
     def _set_patchers(self):
         def _patched_for_get_asset_paths(*args, **kwargs):
