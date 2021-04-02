@@ -11,6 +11,7 @@ import datetime
 import hmac as hmac_lib
 import hashlib
 import io
+import itertools
 import os
 import pickle as pickle_
 import re
@@ -1013,18 +1014,34 @@ class StackMap(MutableMapping):
 class OrderedSet(MutableSet):
     """ A set collection that remembers the elements first insertion order. """
     __slots__ = ['_map']
+
     def __init__(self, elems=()):
-        self._map = OrderedDict((elem, None) for elem in elems)
+        self._map = dict.fromkeys(elems)
+
     def __contains__(self, elem):
         return elem in self._map
+
     def __iter__(self):
         return iter(self._map)
+
     def __len__(self):
         return len(self._map)
+
     def add(self, elem):
         self._map[elem] = None
+
     def discard(self, elem):
         self._map.pop(elem, None)
+
+    def update(self, elems):
+        self._map.update(zip(elems, itertools.repeat(None)))
+
+    def difference_update(self, elems):
+        for elem in elems:
+            self.discard(elem)
+
+    def __repr__(self):
+        return f'{type(self).__name__}({list(self)!r})'
 
 
 class LastOrderedSet(OrderedSet):

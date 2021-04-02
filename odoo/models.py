@@ -139,7 +139,7 @@ def trigger_tree_merge(node1, node2):
     """ Merge two trigger trees. """
     for key, val in node2.items():
         if key is None:
-            node1.setdefault(None, set())
+            node1.setdefault(None, OrderedSet())
             node1[None].update(val)
         else:
             node1.setdefault(key, {})
@@ -3918,9 +3918,9 @@ Fields:
         quote = '"{}"'.format
 
         # insert rows
-        ids = []                        # ids of created records
-        other_fields = set()            # non-column fields
-        translated_fields = set()       # translated fields
+        ids = []                                # ids of created records
+        other_fields = OrderedSet()             # non-column fields
+        translated_fields = OrderedSet()        # translated fields
 
         for data in data_list:
             # determine column values
