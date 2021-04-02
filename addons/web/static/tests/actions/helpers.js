@@ -62,8 +62,9 @@ export async function createWebClient(params) {
     ...params.testConfig,
     mockRPC,
   });
-  const target = getFixture();
-  const wc = await mount(WebClient, { env, target });
+  const WebClientClass = params.WebClientClass || WebClient;
+  const target = (params && params.target) ? params.target : getFixture();
+  const wc = await mount(WebClientClass, { env, target });
   registerCleanup(() => {
     for (const controller of controllers) {
       if (!controller.isDestroyed()) {
@@ -189,9 +190,9 @@ export function getActionManagerTestConfig() {
   const menus = {
     root: { id: "root", children: [0, 1, 2], name: "root", appID: "root" },
     // id:0 is a hack to not load anything at webClient mount
-    0: { id: 0, children: [], name: "UglyHack", appID: 0 },
-    1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1001 },
-    2: { id: 2, children: [], name: "App2", appID: 2, actionID: 1002 },
+    0: { id: 0, children: [], name: "UglyHack", appID: 0, xmlid: 'menu_0' },
+    1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: 'menu_1' },
+    2: { id: 2, children: [], name: "App2", appID: 2, actionID: 1002, xmlid: 'menu_2' },
   };
   const actionsArray = [
     {
