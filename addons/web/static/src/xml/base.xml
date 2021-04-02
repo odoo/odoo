@@ -1559,7 +1559,7 @@
     </div>
 </t>
 
-<div t-name="FieldBinaryFileUploader.files" class="o_attachments" aria-atomic="true">
+<div t-name="FieldBinaryFileUploader.files" class="o_attachments o_attachments_list" aria-atomic="true">
     <!-- uploaded files -->
     <t t-foreach="widget.value.data" t-as="file">
         <t t-if="!file.data.upload" t-call="FieldBinaryFileUploader.attachment_preview"/>

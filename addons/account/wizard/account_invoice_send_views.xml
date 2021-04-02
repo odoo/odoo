@@ -51,13 +51,10 @@
                             <field name="body" style="border:none;" options="{'style-inline': true}"/>
                         </div>
                         <group>
-                            <group attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
-                                <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
-                            </group>
                             <group>
-                                <field name="template_id" options="{'no_create': True, 'no_edit': True}"
-                                    context="{'default_model': 'account.move'}"/>
+                                <field name="template_id" options="{'no_create': True, 'no_edit': True}" context="{'default_model': 'account.move'}"/>
                             </group>
+                            <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
                         </group>
                     </div>
 

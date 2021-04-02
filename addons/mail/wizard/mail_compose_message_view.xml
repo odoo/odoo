@@ -68,10 +68,11 @@
                                     'required':[('no_auto_thread', '=', True), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
                     <field name="body" options="{'style-inline': true}"/>
-                    <group col="4">
-                        <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
-                        <field name="template_id" options="{'no_create': True}"
-                               context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
+                    <group>
+                        <group>
+                            <field name="template_id" options="{'no_create': True}" context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
+                        </group>
+                        <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1"/>
                     </group>
                     <footer>
                         <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="action_send_mail" type="object" class="btn-primary o_mail_send"/>
