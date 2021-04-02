@@ -6,9 +6,10 @@ import { DebugManager } from "../../src/debug/debug_manager";
 import { debugService } from "../../src/debug/debug_service";
 import { ormService } from "../../src/services/orm_service";
 import { useDebugManager } from "../../src/debug/debug_manager";
-import { click, getFixture, makeTestEnv } from "../helpers/index";
+import { click, getFixture } from "../helpers/utils";
 import { hotkeyService } from "../../src/hotkey/hotkey_service";
 import { uiService } from "../../src/services/ui_service";
+import { makeTestEnv } from "../helpers/mock_env";
 
 const { Component, hooks, mount, tags } = owl;
 const { useSubEnv } = hooks;

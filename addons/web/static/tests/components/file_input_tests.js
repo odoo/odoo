@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { FileInput } from "../../src/components/file_input/file_input";
-import { getFixture, makeTestEnv } from "../helpers/utility";
-import { Registry } from "../../src/core/registry";
-
 import testUtils from "web.test_utils";
+import { FileInput } from "../../src/components/file_input/file_input";
+import { Registry } from "../../src/core/registry";
+import { makeTestEnv } from "../helpers/mock_env";
+import { getFixture } from "../helpers/utils";
 
 const { mount } = owl;
 

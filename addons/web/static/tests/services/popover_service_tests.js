@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
-import { click, getFixture, makeTestEnv, nextTick } from "../helpers";
+import { Popover } from "../../src/components/popover/popover";
 import { Registry } from "../../src/core/registry";
 import {
-  popoverService,
-  PopoverManager,
   KeyAlreadyExistsError,
-  KeyNotFoundError,
+  KeyNotFoundError, PopoverManager, popoverService
 } from "../../src/services/popover_service";
-import { Popover } from "../../src/components/popover/popover";
+import { makeTestEnv } from "../helpers/mock_env";
+import { click, getFixture, nextTick } from "../helpers/utils";
+
 
 const { Component, mount } = owl;
 const { xml } = owl.tags;

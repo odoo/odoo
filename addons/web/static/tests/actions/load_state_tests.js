@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { legacyExtraNextTick } from "../helpers/utility";
-import { makeFakeRouterService } from "../helpers/mocks";
+import { legacyExtraNextTick, patchWithCleanup } from "../helpers/utils";
+import { makeFakeRouterService } from "../helpers/mock_services";
 import { getLegacy } from "web.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig, loadState } from "./helpers";
-import { patch, unpatch } from "../../src/utils/patch";
 import { browser } from "../../src/core/browser";
 
 const { Component, tags } = owl;
@@ -600,7 +599,7 @@ QUnit.module("ActionManager", (hooks) => {
 
   QUnit.test("load a window action without id (in a multi-record view)", async function (assert) {
     assert.expect(14);
-    patch(browser.sessionStorage, "mock.sessionstorage", {
+    patchWithCleanup(browser.sessionStorage, {
       getItem(k) {
         assert.step(`getItem session ${k}`);
         return this._super(k);
@@ -642,7 +641,6 @@ QUnit.module("ActionManager", (hooks) => {
       "/web/dataset/search_read",
       "setItem session current_action",
     ]);
-    unpatch(browser.sessionStorage, "mock.sessionstorage");
   });
 
   QUnit.test("load state supports being given menu_id alone", async function (assert) {

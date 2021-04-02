@@ -5,7 +5,9 @@ import { hotkeyService } from "../../src/hotkey/hotkey_service";
 import { uiService } from "../../src/services/ui_service";
 import { patch, unpatch } from "../../src/utils/patch";
 import { UserMenu } from "../../src/webclient/user_menu/user_menu";
-import { click, getFixture, makeFakeUserService, makeTestEnv } from "../helpers";
+import { makeTestEnv } from "../helpers/mock_env";
+import { makeFakeUserService } from "../helpers/mock_services";
+import { click, getFixture } from "../helpers/utils";
 import { Registry } from "./../../src/core/registry";
 
 const { mount } = owl;

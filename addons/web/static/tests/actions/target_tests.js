@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { legacyExtraNextTick } from "../helpers/utility";
+import { legacyExtraNextTick } from "../helpers/utils";
 import { getLegacy } from "web.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";

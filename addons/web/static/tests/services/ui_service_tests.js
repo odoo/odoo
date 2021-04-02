@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
-import { uiService, useActiveElement } from "../../src/services/ui_service";
 import { Registry } from "../../src/core/registry";
-import { getFixture, makeTestEnv, nextTick } from "../helpers";
+import { uiService, useActiveElement } from "../../src/services/ui_service";
 import { BlockUI } from "../../src/webclient/block_ui/block_ui";
+import { makeTestEnv } from "../helpers/mock_env";
+import { getFixture, nextTick } from "../helpers/utils";
+
 
 const { mount } = owl;
 

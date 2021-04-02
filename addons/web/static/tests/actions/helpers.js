@@ -1,21 +1,18 @@
 /** @odoo-module **/
 
-import { WebClient } from "../../src/webclient/webclient";
-import { Registry } from "../../src/core/registry";
-import {
-  makeTestServiceRegistry,
-  makeTestViewRegistry,
-  getFixture,
-  makeTestEnv,
-  nextTick,
-} from "../helpers/index";
-import { legacyExtraNextTick } from "../helpers/utility";
-import { makeLegacyActionManagerService, mapLegacyEnvToWowlEnv } from "../../src/legacy/utils";
 import { getLegacy } from "web.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
-import { patch, unpatch } from "../../src/utils/patch";
 import { browser, makeRAMLocalStorage } from "../../src/core/browser";
+import { Registry } from "../../src/core/registry";
+import { makeLegacyActionManagerService, mapLegacyEnvToWowlEnv } from "../../src/legacy/utils";
+import { WebClient } from "../../src/webclient/webclient";
 import { registerCleanup } from "../helpers/cleanup";
+import { makeTestEnv } from "../helpers/mock_env";
+import {
+  makeTestServiceRegistry,
+  makeTestViewRegistry
+} from "../helpers/mock_registries";
+import { getFixture, legacyExtraNextTick, nextTick, patchWithCleanup } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
 
@@ -40,21 +37,17 @@ export async function createWebClient(params) {
   // we destroy the webclient and expect every legacy that has been instantiated
   // to be destroyed. We thus need to manually destroy them here.
   const controllers = [];
-  patch(AbstractAction.prototype, "abstractaction.test.patch", {
+  patchWithCleanup(AbstractAction.prototype, {
     init() {
       this._super(...arguments);
       controllers.push(this);
     },
   });
-  patch(AbstractController.prototype, "abstractcontroller.test.patch", {
+  patchWithCleanup(AbstractController.prototype, {
     init() {
       this._super(...arguments);
       controllers.push(this);
     },
-  });
-  registerCleanup(() => {
-    unpatch(AbstractAction.prototype, "abstractaction.test.patch");
-    unpatch(AbstractController.prototype, "abstractcontroller.test.patch");
   });
 
   const mockRPC = params.mockRPC || undefined;
@@ -158,9 +151,8 @@ export async function loadState(env, state) {
 }
 
 export function getActionManagerTestConfig() {
-  patch(
+  patchWithCleanup(
     browser,
-    "actionmanager.config.patch",
     {
       setTimeout: window.setTimeout.bind(window),
       clearTimeout: window.clearTimeout.bind(window),
@@ -169,7 +161,6 @@ export function getActionManagerTestConfig() {
     },
     { pure: true }
   );
-  registerCleanup(() => unpatch(browser, "actionmanager.config.patch"));
 
   const serviceRegistry = makeTestServiceRegistry();
   // build the action registry: copy the real action registry, and add an

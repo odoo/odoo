@@ -2,7 +2,8 @@
 
 import { translatedTerms } from "../../src/localization/translation";
 import { patch, unpatch } from "../../src/utils/patch";
-import { getFixture, makeTestEnv } from "../helpers/index";
+import { makeTestEnv } from "../helpers/mock_env";
+import { getFixture } from "../helpers/utils";
 
 const { mount } = owl;
 

@@ -3,7 +3,8 @@
 import { useService } from "../../src/core/hooks";
 import { Registry } from "../../src/core/registry";
 import { uiService } from "../../src/services/ui_service";
-import { click, getFixture, makeTestEnv, nextTick } from "../helpers/index";
+import { makeTestEnv } from "../helpers/mock_env";
+import { click, getFixture, nextTick } from "../helpers/utils";
 
 const { hooks, mount } = owl;
 const { useRef, useState } = hooks;

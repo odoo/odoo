@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
-import { RainbowMan } from "../../src/effects/rainbow_man";
-import { makeTestEnv } from "../helpers/utility";
-import { click, getFixture, makeFakeUserService, nextTick } from "../helpers/index";
 import { Registry } from "../../src/core/registry";
-import { effectService } from "../../src/effects/effect_service";
 import { EffectContainer } from "../../src/effects/effect_container";
+import { effectService } from "../../src/effects/effect_service";
+import { RainbowMan } from "../../src/effects/rainbow_man";
 import { notificationService } from "../../src/notifications/notification_service";
+import { makeTestEnv } from "../helpers/mock_env";
+import { makeFakeUserService } from "../helpers/mock_services";
+import { click, getFixture, nextTick } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
 

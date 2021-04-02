@@ -1,7 +1,6 @@
 /** @odoo-module **/
-import { nextTick } from "../helpers/index";
-import { click, legacyExtraNextTick } from "../helpers/utility";
-import { makeFakeRouterService } from "../helpers/mocks";
+import { nextTick, click, legacyExtraNextTick } from "../helpers/utils";
+import { makeFakeRouterService } from "../helpers/mock_services";
 import { useService } from "../../src/core/hooks";
 import { getLegacy } from "web.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";

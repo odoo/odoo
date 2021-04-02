@@ -2,7 +2,8 @@
 
 import { useBus, useService } from "../../src/core/hooks";
 import { Registry } from "../../src/core/registry";
-import { getFixture, makeTestEnv, nextTick } from "../helpers";
+import { makeTestEnv } from "../helpers/mock_env";
+import { getFixture, nextTick } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
 

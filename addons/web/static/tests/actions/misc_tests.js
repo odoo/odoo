@@ -1,10 +1,12 @@
 /** @odoo-module **/
 
-import { legacyExtraNextTick, makeTestEnv } from "../helpers/utility";
+import { legacyExtraNextTick } from "../helpers/utils";
 import { getLegacy } from "web.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { makeTestEnv } from "../helpers/mock_env";
+
 
 let testConfig;
 // legacy stuff

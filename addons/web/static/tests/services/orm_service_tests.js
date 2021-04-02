@@ -3,8 +3,9 @@
 import { useService } from "../../src/core/hooks";
 import { Registry } from "../../src/core/registry";
 import { ormService } from "../../src/services/orm_service";
-import { getFixture } from "../helpers";
-import { makeFakeUserService, makeTestEnv } from "../helpers/index";
+import { getFixture } from "../helpers/utils";
+import { makeTestEnv } from "../helpers/mock_env";
+import { makeFakeUserService } from "../helpers/mock_services";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { triggerEvent, click, getFixture, makeTestEnv, nextTick } from "../helpers/index";
 import { Popover } from "../../src/components/popover/popover";
-import { patch, unpatch } from "../../src/utils/patch";
 import { browser } from "../../src/core/browser";
 import { registerCleanup } from "../helpers/cleanup";
+import { makeTestEnv } from "../helpers/mock_env";
+import { click, getFixture, nextTick, patchWithCleanup, triggerEvent } from "../helpers/utils";
 
 const { Component, mount } = owl;
 const { useState } = owl.hooks;
@@ -25,7 +25,7 @@ function pointsTo(popover, element, position) {
 QUnit.module("Popover", {
   async beforeEach() {
     // todo: maybe add an "utils" function which do this and its cleanup??
-    patch(browser, "mock:popover_tests", {
+    patchWithCleanup(browser, {
       setTimeout: (handler, _, ...args) => handler(...args),
       clearTimeout: () => {},
     });
@@ -37,7 +37,6 @@ QUnit.module("Popover", {
     target.appendChild(popoverContainer);
 
     registerCleanup(() => {
-      unpatch(browser, "mock:popover_tests");
       target.removeChild(popoverContainer);
     });
   },

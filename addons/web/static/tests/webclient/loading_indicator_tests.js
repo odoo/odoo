@@ -4,8 +4,9 @@ import { browser as originalBrowser } from "../../src/core/browser";
 import { LoadingIndicator } from "../../src/webclient/loading_indicator/loading_indicator";
 import { uiService } from "../../src/services/ui_service";
 import { Registry } from "../../src/core/registry";
-import { getFixture, makeTestEnv, nextTick } from "../helpers/index";
+import { getFixture, nextTick } from "../helpers/utils";
 import { patch, unpatch } from "../../src/utils/patch";
+import { makeTestEnv } from "../helpers/mock_env";
 
 const { mount } = owl;
 

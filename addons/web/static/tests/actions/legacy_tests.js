@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { legacyExtraNextTick } from "../helpers/utility";
+import { legacyExtraNextTick, patchWithCleanup } from "../helpers/utils";
 import { getLegacy } from "web.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
 import { viewRegistry } from "../../src/views/view_registry";
@@ -54,7 +54,7 @@ QUnit.module("ActionManager", (hooks) => {
     // this test can be removed as soon as the legacy layer is dropped
     assert.expect(5);
     let list;
-    testUtils.patch(ListController, {
+    patchWithCleanup(ListController.prototype, {
       init() {
         this._super(...arguments);
         list = this;
@@ -83,7 +83,7 @@ QUnit.module("ActionManager", (hooks) => {
     // this test can be removed as soon as the legacy layer is dropped
     assert.expect(5);
     let list;
-    testUtils.patch(ListController, {
+    patchWithCleanup(ListController.prototype, {
       init() {
         this._super(...arguments);
         list = this;

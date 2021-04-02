@@ -1,11 +1,13 @@
 /** @odoo-module **/
-import { Registry } from "../../src/core/registry";
-import { hotkeyService } from "../../src/hotkey/hotkey_service";
-import { useHotkey } from "../../src/hotkey/hotkey_hook";
-import { uiService, useActiveElement } from "../../src/services/ui_service";
-import { getFixture, makeTestEnv, nextTick } from "../helpers/index";
-import { patch, unpatch } from "../../src/utils/patch";
 import { browser } from "../../src/core/browser";
+import { Registry } from "../../src/core/registry";
+import { useHotkey } from "../../src/hotkey/hotkey_hook";
+import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { uiService, useActiveElement } from "../../src/services/ui_service";
+import { patch, unpatch } from "../../src/utils/patch";
+import { makeTestEnv } from "../helpers/mock_env";
+import { getFixture, nextTick } from "../helpers/utils";
+
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;

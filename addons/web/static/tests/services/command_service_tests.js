@@ -2,11 +2,12 @@
 import { useCommand } from "../../src/commands/command_hook";
 import { commandService } from "../../src/commands/command_service";
 import { Registry } from "../../src/core/registry";
-import { dialogService } from "../../src/services/dialog_service";
 import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { dialogService } from "../../src/services/dialog_service";
 import { uiService } from "../../src/services/ui_service";
 import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
-import { click, getFixture, makeTestEnv, nextTick } from "../helpers";
+import { makeTestEnv } from "../helpers/mock_env";
+import { click, getFixture, nextTick } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;

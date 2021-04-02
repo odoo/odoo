@@ -2,7 +2,7 @@
 
 import { Registry } from "../../src/core/registry";
 import { titleService } from "../../src/services/title_service";
-import { makeTestEnv } from "../helpers/index";
+import { makeTestEnv } from "../helpers/mock_env";
 
 // -----------------------------------------------------------------------------
 // Tests

@@ -3,7 +3,7 @@
 import { localization } from "../../src/localization/localization_settings";
 import { humanNumber, formatFloat, parseFloat } from "../../src/utils/numbers";
 import { patch, unpatch } from "../../src/utils/patch";
-import { defaultLocalization } from "../helpers/mocks";
+import { defaultLocalization } from "../helpers/mock_services";
 
 QUnit.module("utils", () => {
   QUnit.module("numbers");

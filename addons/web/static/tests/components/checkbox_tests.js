@@ -2,8 +2,8 @@
 
 import { CheckBox } from "../../src/components/checkbox/checkbox";
 import { translatedTerms } from "../../src/localization/translation";
-import { patch, unpatch } from "../../src/utils/patch";
-import { getFixture, makeTestEnv } from "../helpers/utility";
+import { makeTestEnv } from "../helpers/mock_env";
+import { getFixture, patchWithCleanup } from "../helpers/utils";
 
 const { mount, tags } = owl;
 const { xml } = tags;
@@ -25,7 +25,7 @@ QUnit.module("Components", (hooks) => {
   });
 
   QUnit.test("has a slot for translatable text", async (assert) => {
-    patch(translatedTerms, "add_translations", { ragabadabadaba: "rugubudubudubu" });
+    patchWithCleanup(translatedTerms, { ragabadabadaba: "rugubudubudubu" });
 
     class Parent extends Component {}
     Parent.template = xml`<CheckBox>ragabadabadaba</CheckBox>`;
@@ -34,6 +34,5 @@ QUnit.module("Components", (hooks) => {
     assert.containsOnce(target, "div.custom-checkbox");
     assert.strictEqual(parent.el.innerText, "rugubudubudubu");
 
-    unpatch(translatedTerms, "add_translations");
   });
 });

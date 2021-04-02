@@ -1,19 +1,18 @@
 /** @odoo-module **/
 
-import { Registry } from "../../src/core/registry";
-import { errorService } from "../../src/errors/error_service";
-import { notificationService } from "../../src/notifications/notification_service";
-import { RPCErrorDialog } from "../../src/errors/error_dialogs";
-import { dialogService } from "../../src/services/dialog_service";
-import { makeFakeRPCService, makeFakeNotificationService } from "../helpers/mocks";
-import { ConnectionLostError, RPCError } from "../../src/services/rpc_service";
-import { nextTick } from "../helpers/utility";
-import { makeTestEnv } from "../helpers/index";
-import { errorHandlerRegistry } from "../../src/errors/error_handler_registry";
-import OdooError from "../../src/errors/odoo_error";
-import { patch, unpatch } from "../../src/utils/patch";
 import { browser } from "../../src/core/browser";
+import { Registry } from "../../src/core/registry";
+import { RPCErrorDialog } from "../../src/errors/error_dialogs";
+import { errorHandlerRegistry } from "../../src/errors/error_handler_registry";
+import { errorService } from "../../src/errors/error_service";
+import OdooError from "../../src/errors/odoo_error";
+import { notificationService } from "../../src/notifications/notification_service";
+import { dialogService } from "../../src/services/dialog_service";
+import { ConnectionLostError, RPCError } from "../../src/services/rpc_service";
 import { registerCleanup } from "../helpers/cleanup";
+import { makeTestEnv } from "../helpers/mock_env";
+import { makeFakeNotificationService, makeFakeRPCService } from "../helpers/mock_services";
+import { nextTick, patchWithCleanup } from "../helpers/utils";
 
 const { Component, tags } = owl;
 
@@ -113,13 +112,12 @@ QUnit.test(
 );
 
 QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
-  patch(browser, "mock.settimeout", {
+  patchWithCleanup(browser, {
     setTimeout: (callback, delay) => {
       assert.step(`set timeout (${delay === 2000 ? delay : ">2000"})`);
       callback();
     },
   });
-  registerCleanup(() => unpatch(browser, "mock.settimeout"));
   const mockCreate = (message) => {
     assert.step(`create (${message})`);
     return 1234;

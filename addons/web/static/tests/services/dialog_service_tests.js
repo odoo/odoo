@@ -1,14 +1,17 @@
 /** @odoo-module **/
 
-import { click, getFixture, makeFakeRPCService, makeTestEnv, nextTick } from "../helpers";
 import { Registry } from "../../src/core/registry";
-import { DialogContainer, dialogService } from "../../src/services/dialog_service";
-import { notificationService } from "../../src/notifications/notification_service";
 import { errorService } from "../../src/errors/error_service";
-import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
+import { notificationService } from "../../src/notifications/notification_service";
+import { DialogContainer, dialogService } from "../../src/services/dialog_service";
 import { uiService } from "../../src/services/ui_service";
+import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
+import { makeTestEnv } from "../helpers/mock_env";
+import { makeFakeRPCService } from "../helpers/mock_services";
+import { click, getFixture, nextTick } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
+
 
 let env;
 let serviceRegistry;

@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import { makeFakeUserService } from "../helpers/index";
-import { makeFakeDownloadService, makeFakeNotificationService } from "../helpers/mocks";
 import { getLegacy } from "web.test_legacy";
 import { actionRegistry } from "../../src/actions/action_registry";
-import { viewRegistry } from "../../src/views/view_registry";
-import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 import { uiService } from "../../src/services/ui_service";
+import { viewRegistry } from "../../src/views/view_registry";
+import { makeFakeDownloadService, makeFakeNotificationService, makeFakeUserService } from "../helpers/mock_services";
+import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 
 let testConfig;
 

@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
 import * as utils from "../../src/utils/arrays";
-import { makeFakeRPCService, makeMockFetch } from "./mocks";
+import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { Registry } from "../../src/core/registry";
 import { evaluateExpr } from "../../src/py_js/py";
 import { combineDomains, Domain } from "../../src/core/domain";
-import { patch, unpatch } from "../../src/utils/patch";
 import { browser } from "../../src/core/browser";
-import { registerCleanup } from "./cleanup";
+import { patchWithCleanup } from "./utils";
 
 const { DateTime } = luxon;
 
@@ -1070,10 +1069,9 @@ export function makeMockServer(config, serverData, mockRPC) {
     return res;
   };
   const rpcService = makeFakeRPCService(_mockRPC);
-  patch(browser, "mockserver.fetch", {
+  patchWithCleanup(browser, {
     fetch: makeMockFetch(_mockRPC),
   });
-  registerCleanup(() => unpatch(browser, "mockserver.fetch"));
   config.serviceRegistry = config.serviceRegistry || new Registry();
   config.serviceRegistry.add("rpc", rpcService);
 }

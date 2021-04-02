@@ -1,14 +1,12 @@
 /** @odoo-module **/
 
-import { setTemplates } from "./utility";
 import { legacyProm } from "web.test_legacy";
-import { makeTestOdoo } from "./mocks";
-import { registerCleanup } from "./cleanup";
-import { patch, unpatch } from "../../src/utils/patch";
+import { registerCleanup } from "./helpers/cleanup";
+import { makeTestOdoo } from "./helpers/mock_env";
+import { patchWithCleanup } from "./helpers/utils";
 
 const { whenReady, loadFile } = owl.utils;
 
-let templates;
 
 owl.config.enableTransitions = false;
 owl.QWeb.dev = true;
@@ -17,7 +15,6 @@ export async function setupTests() {
   const originalOdoo = odoo;
   const listeners = new Map();
   const objectsToPatch = [window, document];
-  const listenerPatchName = "wowl/tests/helpers/custom listeners";
 
   QUnit.testStart(() => {
     odoo = makeTestOdoo();
@@ -30,7 +27,7 @@ export async function setupTests() {
       listeners.set(obj, []);
     }
     for (const [obj, store] of listeners.entries()) {
-      patch(obj, listenerPatchName, {
+      patchWithCleanup(obj, {
         addEventListener: function () {
           store.push([...arguments]);
           this._super(...arguments);
@@ -45,13 +42,12 @@ export async function setupTests() {
         for (const args of store) {
           obj.removeEventListener(...args);
         }
-        unpatch(obj, listenerPatchName);
       }
     });
   });
 
   const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}`;
-  templates = await loadFile(templatesUrl);
+  let templates = await loadFile(templatesUrl);
   // as we currently have two qweb engines (owl and legacy), owl templates are
   // flagged with attribute `owl="1"`. The following lines removes the 'owl'
   // attribute from the templates, so that it doesn't appear in the DOM. For now,
@@ -65,20 +61,8 @@ export async function setupTests() {
     owlTemplates.push(child.outerHTML);
   }
   templates = `<templates> ${owlTemplates.join("\n")} </templates>`;
-  setTemplates(templates);
+  window.__ODOO_TEMPLATES__ = templates;
   await Promise.all([whenReady(), legacyProm]);
 }
 
-export { makeFakeUserService, makeFakeRPCService, makeMockXHR, makeMockFetch } from "./mocks";
 
-export {
-  click,
-  getFixture,
-  makeTestServiceRegistry,
-  makeTestViewRegistry,
-  makeDeferred,
-  makeTestEnv,
-  nextTick,
-  patchDate,
-  triggerEvent,
-} from "./utility";

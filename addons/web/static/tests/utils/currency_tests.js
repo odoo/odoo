@@ -3,7 +3,7 @@
 import { formatCurrency } from "../../src/utils/currency";
 import { patch, unpatch } from "../../src/utils/patch";
 import { localization } from "../../src/localization/localization_settings";
-import { defaultLocalization } from "../helpers/mocks";
+import { defaultLocalization } from "../helpers/mock_services";
 
 QUnit.module("utils", () => {
   QUnit.module("Currency");

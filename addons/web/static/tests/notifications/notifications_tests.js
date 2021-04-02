@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
-import { notificationService } from "../../src/notifications/notification_service";
-import { Registry } from "../../src/core/registry";
-import { click, getFixture, makeTestEnv, nextTick } from "../helpers/index";
-import { NotificationContainer } from "../../src/notifications/notification_container";
-import { patch, unpatch } from "../../src/utils/patch";
 import { browser } from "../../src/core/browser";
+import { Registry } from "../../src/core/registry";
+import { NotificationContainer } from "../../src/notifications/notification_container";
+import { notificationService } from "../../src/notifications/notification_service";
+import { patch, unpatch } from "../../src/utils/patch";
+import { makeTestEnv } from "../helpers/mock_env";
+import { click, getFixture, nextTick } from "../helpers/utils";
 
 const { mount } = owl;
 

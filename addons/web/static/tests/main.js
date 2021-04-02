@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { setupTests } from "./helpers/index";
+import { setupTests } from "./setup";
 
 (async () => {
   await setupTests();

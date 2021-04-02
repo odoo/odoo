@@ -4,7 +4,7 @@ import { strftimeToLuxonFormat } from "../../src/localization/localization_servi
 import { localization } from "../../src/localization/localization_settings";
 import { parseDateTime, formatDateTime, parseDate } from "../../src/utils/dates";
 import { patch, unpatch } from "../../src/utils/patch";
-import { defaultLocalization } from "../helpers/mocks";
+import { defaultLocalization } from "../helpers/mock_services";
 
 const { DateTime, Settings } = luxon;
 

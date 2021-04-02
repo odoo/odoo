@@ -1,11 +1,12 @@
 /** @odoo-module **/
+
 import { Registry } from "../../src/core/registry";
-import { makeFakeUserService, makeFakeUIService } from "../helpers/mocks";
-import { makeTestEnv, getFixture } from "../helpers/index";
-import { click } from "../helpers/utility";
-import { SwitchCompanyMenu } from "../../src/webclient/switch_company_menu/switch_company_menu";
 import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { SwitchCompanyMenu } from "../../src/webclient/switch_company_menu/switch_company_menu";
 import { registerCleanup } from "../helpers/cleanup";
+import { makeTestEnv } from "../helpers/mock_env";
+import { makeFakeUIService, makeFakeUserService } from "../helpers/mock_services";
+import { click, getFixture } from "../helpers/utils";
 
 const { mount } = owl;
 
