@@ -15,7 +15,7 @@
         <field name="name">Event Question: event user: read all</field>
         <field name="model_id" ref="website_event_questions.model_event_question"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('event.group_event_user'))]"/>
+        <field name="groups" eval="[(4, ref('event.group_event_registration_desk'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -36,7 +36,7 @@
         <field name="name">Event Question Answer: event user: read all</field>
         <field name="model_id" ref="website_event_questions.model_event_question_answer"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('event.group_event_user'))]"/>
+        <field name="groups" eval="[(4, ref('event.group_event_registration_desk'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>

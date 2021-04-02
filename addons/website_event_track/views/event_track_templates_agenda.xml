@@ -65,7 +65,7 @@
         <div t-if="search_key" class="alert alert-info text-center">
             <p class="m-0">We did not find any track matching your <strong t-esc="search_key"/> search.</p>
         </div>
-        <div t-else="" class="alert alert-info text-center" groups="event.group_event_manager">
+        <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
             <p class="m-0">Schedule some tracks to get started !</p>
         </div>
     </div>
@@ -159,7 +159,7 @@
             <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
                 class="mx-1 badge badge-danger">Live
             </small>
-            <small t-if="not track.website_published and user_event_manager and track.stage_id.is_accepted"
+            <small t-if="not track.website_published and is_event_user and track.stage_id.is_accepted"
                    title="Unpublished"
                    class="ml-1 badge badge-danger o_wevent_online_badge_unpublished">Unpublished</small>
             <small t-if="not track.stage_id.is_accepted" title="Not Accepted"
@@ -174,9 +174,9 @@
         </div>
 
         <div class="o_we_agenda_card_content d-flex flex-column justify-content-center my-1">
-            <div t-att-class="'text-black' if track.website_published or user_event_manager else 'text-muted'"
+            <div t-att-class="'text-black' if track.website_published or is_event_user else 'text-muted'"
                  t-att-onclick="'window.location=\'/event/%s/track/%s\'' % (slug(event), slug(track))
-                    if track.website_published or user_event_manager else ''">
+                    if track.website_published or is_event_user else ''">
                 <span class="o_we_agenda_card_title text-bold" t-esc="track.name"/>
             </div>
             <div class="text-muted text-center">

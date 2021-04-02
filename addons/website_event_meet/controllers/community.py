@@ -51,8 +51,8 @@ class WebsiteEventMeetController(EventCommunityController):
         meeting_rooms = request.env['event.meeting.room'].sudo().search(search_domain)
         meeting_rooms = meeting_rooms.sorted(self._sort_event_rooms, reverse=True)
 
-        is_event_manager = request.env.user.has_group("event.group_event_manager")
-        if not is_event_manager:
+        is_event_user = request.env.user.has_group("event.group_event_user")
+        if not is_event_user:
             meeting_rooms = meeting_rooms.filtered(lambda m: not m.room_is_full)
 
         visitor = request.env['website.visitor']._get_visitor_from_request()
@@ -68,7 +68,7 @@ class WebsiteEventMeetController(EventCommunityController):
             "default_lang_code": request.context.get('lang', request.env.user.lang),
             "default_username": visitor.display_name if visitor else None,
             # environment
-            "is_event_manager": is_event_manager,
+            "is_event_user": is_event_user,
         }
 
     @http.route("/event/<model('event.event'):event>/meeting_room_create",
@@ -155,5 +155,5 @@ class WebsiteEventMeetController(EventCommunityController):
             'meeting_rooms_other': meeting_rooms_other,
             # options
             'option_widescreen': True,
-            'is_event_manager': request.env.user.has_group('event.group_event_manager'),
+            'is_event_user': request.env.user.has_group('event.group_event_manager'),
         }

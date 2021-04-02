@@ -27,6 +27,13 @@ class TestEventCommon(common.TransactionCase):
             company_id=cls.env.ref("base.main_company").id,
             groups='base.group_user',
         )
+        cls.user_eventregistrationdesk = mail_new_test_user(
+            cls.env, login='user_eventregistrationdesk',
+            name='Ursule EventRegistration', email='ursule.eventregistration@test.example.com',
+            tz='Europe/Brussels', notification_type='inbox',
+            company_id=cls.env.ref("base.main_company").id,
+            groups='base.group_user,event.group_event_registration_desk',
+        )
         cls.user_eventuser = mail_new_test_user(
             cls.env, login='user_eventuser',
             name='Ursule EventUser', email='ursule.eventuser@test.example.com',
