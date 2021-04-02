@@ -31,6 +31,7 @@ export const scrollerService = {
       if (href) {
         if (href.value[0] === "#") {
           if (href.value.length === 1) {
+            ev.preventDefault(); // single hash in href are just a way to activate A-tags node
             return;
           }
           let matchingEl = null;
