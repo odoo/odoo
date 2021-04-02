@@ -40,7 +40,12 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
-        cls.Invoice = cls.env['account.move'].with_context(mail_notrack=True, mail_create_nolog=True)
+        cls.Invoice = cls.env['account.move'].with_context(
+            default_move_type='in_invoice',
+            default_invoice_date=cls.sale_order.date_order,
+            mail_notrack=True,
+            mail_create_nolog=True,
+        )
 
     def test_at_cost(self):
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
@@ -82,7 +87,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'company_id': self.company_data['company'].id,
         })
 
-        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_cost']
@@ -117,7 +122,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         self.assertEqual(sale_order_line4.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line should be computed by analytic amount")
 
         # create second invoice lines and validate it
-        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_cost']
@@ -181,7 +186,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         })
 
         # create invoice lines and validate it
-        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_sales_price']
@@ -216,7 +221,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         self.assertEqual(sale_order_line4.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line 4 should be computed by analytic amount")
 
         # create second invoice lines and validate it
-        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_sales_price']
@@ -256,7 +261,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
-        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form = Form(self.Invoice)
         move_form.partner_id = self.partner_a
         with move_form.line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_no']
