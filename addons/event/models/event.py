@@ -394,7 +394,11 @@ class EventRegistration(models.Model):
             'partner_id': partner_id.id,
             'event_id': event_id and event_id.id or False,
         }
-        data.update({key: value for key, value in registration.items() if key in self._fields})
+        data.update({
+            key: value for key, value in registration.items()
+            if key in self._fields and key not in data and not self._fields[key].default
+        })
+
         return data
 
     @api.one
