@@ -71,9 +71,9 @@ class AttachmentDeleteConfirmDialog extends Component {
     /**
      * @private
      */
-    _onClickOk() {
+    async _onClickOk() {
+        await this.attachment.remove();
         this._dialogRef.comp._close();
-        this.attachment.remove();
         this.trigger('o-attachment-removed', { attachmentLocalId: this.props.attachmentLocalId });
     }
 
