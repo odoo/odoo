@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, nextTick, makeDeferred } from "../helpers/utils";
+import { click, getFixture, nextTick, makeDeferred, triggerHotkey } from "../helpers/utils";
 import { Registry } from "./../../src/core/registry";
 import { hotkeyService } from "../../src/hotkey/hotkey_service";
 import { uiService } from "../../src/services/ui_service";
@@ -529,7 +529,7 @@ QUnit.module("Components", (hooks) => {
     parent = await mount(Parent, { env, target });
     assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed at start");
 
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "m", altKey: true }));
+    triggerHotkey("m");
     await nextTick();
     assert.containsOnce(
       parent.el,
@@ -545,19 +545,19 @@ QUnit.module("Components", (hooks) => {
     );
 
     const scenarioSteps = [
-      { evParams: { key: "arrowdown" }, expected: "item1" },
-      { evParams: { key: "arrowdown" }, expected: "item2" },
-      { evParams: { key: "arrowdown" }, expected: "item3" },
-      { evParams: { key: "arrowdown" }, expected: "item3" },
-      { evParams: { key: "arrowup" }, expected: "item2" },
-      { evParams: { key: "arrowup" }, expected: "item1" },
-      { evParams: { key: "arrowup" }, expected: "item1" },
-      { evParams: { key: "arrowdown", shiftKey: true }, expected: "item3" },
-      { evParams: { key: "arrowup", shiftKey: true }, expected: "item1" },
+      { hotkey: "arrowdown", expected: "item1" },
+      { hotkey: "arrowdown", expected: "item2" },
+      { hotkey: "arrowdown", expected: "item3" },
+      { hotkey: "arrowdown", expected: "item3" },
+      { hotkey: "arrowup", expected: "item2" },
+      { hotkey: "arrowup", expected: "item1" },
+      { hotkey: "arrowup", expected: "item1" },
+      { hotkey: "shift+arrowdown", expected: "item3" },
+      { hotkey: "shift+arrowup", expected: "item1" },
     ];
 
     for (const step of scenarioSteps) {
-      window.dispatchEvent(new KeyboardEvent("keydown", step.evParams));
+      triggerHotkey(step.hotkey, true);
       await nextTick();
       assert.hasClass(
         parent.el.querySelector(".o_dropdown_menu > .o_dropdown_active"),
@@ -566,12 +566,12 @@ QUnit.module("Components", (hooks) => {
     }
 
     // Select last one activated in previous scenario (item1)
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "enter" }));
+    triggerHotkey("enter", true);
     await nextTick();
     assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed after item selection");
 
     // Reopen dropdown
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "m", altKey: true }));
+    triggerHotkey("m");
     await nextTick();
     assert.containsOnce(
       parent.el,
@@ -580,12 +580,12 @@ QUnit.module("Components", (hooks) => {
     );
 
     // Select second item through data-hotkey attribute
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "2", altKey: true }));
+    triggerHotkey("2");
     await nextTick();
     assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed after item selection");
 
     // Reopen dropdown
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "m", altKey: true }));
+    triggerHotkey("m");
     await nextTick();
     assert.containsOnce(
       parent.el,
@@ -594,7 +594,7 @@ QUnit.module("Components", (hooks) => {
     );
 
     // Close dropdown with keynav
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "escape" }));
+    triggerHotkey("escape", true);
     await nextTick();
     assert.containsNone(parent.el, ".o_dropdown_menu", "menu is closed after item selection");
 

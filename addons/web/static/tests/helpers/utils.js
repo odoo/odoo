@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { isMacOS } from "../../src/core/browser";
 import { patch, unpatch } from "../../src/utils/patch";
 import { registerCleanup } from "./cleanup";
 
@@ -89,6 +90,39 @@ export function triggerEvent(el, selector, eventType, eventAttrs) {
 
 export function click(el, selector) {
   return triggerEvent(el, selector, "click", { bubbles: true, cancelable: true });
+}
+
+/**
+ * Triggers an hotkey properly disregarding the operating system.
+ *
+ * @param {string} hotkey
+ * @param {boolean} altIsOptional
+ * @param {KeyboardEventInit} eventAttrs
+ */
+export function triggerHotkey(hotkey, altIsOptional = false, eventAttrs = {}) {
+  eventAttrs.key = hotkey.split("+").pop();
+
+  if (/shift/i.test(hotkey)) {
+    eventAttrs.shiftKey = true;
+  }
+
+  if (/control/i.test(hotkey)) {
+    if (isMacOS()) {
+      eventAttrs.metaKey = true;
+    } else {
+      eventAttrs.ctrlKey = true;
+    }
+  }
+
+  if (!altIsOptional) {
+    if (isMacOS()) {
+      eventAttrs.ctrlKey = true;
+    } else {
+      eventAttrs.altKey = true;
+    }
+  }
+
+  window.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
 }
 
 export async function legacyExtraNextTick() {

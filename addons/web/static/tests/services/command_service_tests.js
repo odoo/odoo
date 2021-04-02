@@ -7,8 +7,7 @@ import { dialogService } from "../../src/services/dialog_service";
 import { uiService } from "../../src/services/ui_service";
 import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, nextTick } from "../helpers/utils";
-
+import { click, getFixture, nextTick, triggerHotkey } from "../helpers/utils";
 const { Component, mount, tags } = owl;
 const { xml } = tags;
 
@@ -28,9 +27,9 @@ TestComponent.template = xml`
 QUnit.module("Command", {
   async beforeEach() {
     const serviceRegistry = new Registry();
-    serviceRegistry.add("hotkey", hotkeyService);
     serviceRegistry.add("ui", uiService);
     serviceRegistry.add("dialog", dialogService);
+    serviceRegistry.add("hotkey", hotkeyService);
     serviceRegistry.add("command", commandService);
 
     const commandCategoryRegistry = new Registry();
@@ -51,8 +50,7 @@ QUnit.test("palette dialog can be rendered and closed on outside click", async (
   testComponent = await mount(TestComponent, { env, target });
 
   // invoke command palette through hotkey control+k
-  let keydown = new KeyboardEvent("keydown", { key: "k", ctrlKey: true });
-  window.dispatchEvent(keydown);
+  triggerHotkey("control+k", true);
   await nextTick();
   assert.containsOnce(target, ".o_command_palette");
 
@@ -102,21 +100,18 @@ QUnit.test("useCommand hook", async (assert) => {
   }
   testComponent = await mount(MyComponent, { env, target });
 
-  let keydown = new KeyboardEvent("keydown", { key: "k", ctrlKey: true });
-  window.dispatchEvent(keydown);
+  triggerHotkey("control+k", true);
   await nextTick();
-
   assert.containsOnce(target, ".o_command");
   assert.deepEqual(target.querySelector(".o_command").textContent, "Take the throne");
 
   await click(target, ".o_command");
+  assert.verifySteps(["Hodor"]);
+
   testComponent.unmount();
-  keydown = new KeyboardEvent("keydown", { key: "k", ctrlKey: true });
-  window.dispatchEvent(keydown);
+  triggerHotkey("control+k", true);
   await nextTick();
   assert.containsNone(target, ".o_command");
-
-  assert.verifySteps(["Hodor"]);
 });
 
 QUnit.test("command with hotkey", async (assert) => {
@@ -131,7 +126,7 @@ QUnit.test("command with hotkey", async (assert) => {
   });
   await nextTick();
 
-  window.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
+  triggerHotkey("a", true);
   await nextTick();
   assert.verifySteps([hotkey]);
 });
@@ -155,8 +150,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
   testComponent = await mount(MyComponent, { env, target });
 
   // Open palette
-  let keydown = new KeyboardEvent("keydown", { key: "k", ctrlKey: true });
-  window.dispatchEvent(keydown);
+  triggerHotkey("control+k", true);
   await nextTick();
 
   assert.containsN(target, ".o_command", 2);
@@ -170,8 +164,7 @@ QUnit.test("data-hotkey added to command palette", async (assert) => {
   assert.containsNone(target, ".o_command_palette", "palette is closed due to command action");
 
   // Reopen palette
-  keydown = new KeyboardEvent("keydown", { key: "k", ctrlKey: true });
-  window.dispatchEvent(keydown);
+  triggerHotkey("control+k", true);
   await nextTick();
 
   // Click on second command
@@ -206,8 +199,7 @@ QUnit.test("can be searched", async (assert) => {
   await nextTick();
 
   // Open palette
-  let keydown = new KeyboardEvent("keydown", { key: "k", ctrlKey: true });
-  window.dispatchEvent(keydown);
+  triggerHotkey("control+k", true);
   await nextTick();
 
   assert.deepEqual(
@@ -258,8 +250,7 @@ QUnit.test("command categories", async (assert) => {
   await nextTick();
 
   // Open palette
-  let keydown = new KeyboardEvent("keydown", { key: "k", ctrlKey: true });
-  window.dispatchEvent(keydown);
+  triggerHotkey("control+k", true);
   await nextTick();
 
   assert.containsN(target, ".o_command_category", 3);
@@ -290,8 +281,7 @@ QUnit.test("data-command-category", async (assert) => {
   testComponent = await mount(MyComponent, { env, target });
 
   // Open palette
-  let keydown = new KeyboardEvent("keydown", { key: "k", ctrlKey: true });
-  window.dispatchEvent(keydown);
+  triggerHotkey("control+k", true);
   await nextTick();
 
   assert.containsN(target, ".o_command", 4);
