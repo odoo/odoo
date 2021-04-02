@@ -3,7 +3,7 @@
 
 from ast import literal_eval
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import float_is_zero, float_round
 
 
@@ -18,25 +18,68 @@ class MrpProduction(models.Model):
 
     extra_cost = fields.Float(copy=False, help='Extra cost per produced unit')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
+    analytic_account_id = fields.Many2one(
+        'account.analytic.account', 'Analytic Account', copy=True,
+        help="Analytic account in which cost and revenue entries will take\
+        place for financial management of the manufacturing order.",
+        compute='_compute_analytic_account_id', store=True, readonly=False)
 
     def _compute_show_valuation(self):
         for order in self:
             order.show_valuation = any(m.state == 'done' for m in order.move_finished_ids)
+
+    @api.depends('bom_id')
+    def _compute_analytic_account_id(self):
+        if self.bom_id.analytic_account_id:
+            self.analytic_account_id = self.bom_id.analytic_account_id
+
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get('name'):
+            for production in self:
+                production.move_raw_ids.analytic_account_line_id.ref = production.display_name
+                production.workorder_ids.mo_analytic_account_line_id.ref = production.display_name
+        return res
+
+    def action_view_stock_valuation_layers(self):
+        self.ensure_one()
+        domain = [('id', 'in', (self.move_raw_ids + self.move_finished_ids + self.scrap_ids.move_id).stock_valuation_layer_ids.ids)]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock_account.stock_valuation_layer_action")
+        context = literal_eval(action['context'])
+        context.update(self.env.context)
+        context['no_at_date'] = True
+        context['search_default_group_by_product_id'] = False
+        return dict(action, domain=domain, context=context)
+
+    def action_view_analytic_account(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "account.analytic.account",
+            'res_id': self.analytic_account_id.id,
+            "context": {"create": False},
+            "name": "Analytic Account",
+            'view_mode': 'form',
+        }
 
     def _cal_price(self, consumed_moves):
         """Set a price unit on the finished move according to `consumed_moves`.
         """
         super(MrpProduction, self)._cal_price(consumed_moves)
         work_center_cost = 0
-        finished_move = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id and m.state not in ('done', 'cancel') and m.quantity_done > 0)
+        finished_move = self.move_finished_ids.filtered(
+            lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity_done > 0)
         if finished_move:
             finished_move.ensure_one()
             for work_order in self.workorder_ids:
-                time_lines = work_order.time_ids.filtered(lambda x: x.date_end and not x.cost_already_recorded)
+                time_lines = work_order.time_ids.filtered(
+                    lambda x: x.date_end and not x.cost_already_recorded)
                 duration = sum(time_lines.mapped('duration'))
                 time_lines.write({'cost_already_recorded': True})
-                work_center_cost += (duration / 60.0) * work_order.workcenter_id.costs_hour
-            qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
+                work_center_cost += (duration / 60.0) * \
+                    work_order.workcenter_id.costs_hour
+            qty_done = finished_move.product_uom._compute_quantity(
+                finished_move.quantity_done, finished_move.product_id.uom_id)
             extra_cost = self.extra_cost * qty_done
             total_cost = (sum(-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()) + work_center_cost + extra_cost)
             byproduct_moves = self.move_byproduct_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity_done > 0)
@@ -51,51 +94,7 @@ class MrpProduction(models.Model):
                 finished_move.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / qty_done
         return True
 
-    def _prepare_wc_analytic_line(self, wc_line):
-        wc = wc_line.workcenter_id
-        hours = wc_line.duration / 60.0
-        value = hours * wc.costs_hour
-        account = wc.costs_hour_account_id.id
-        return {
-            'name': wc_line.name + ' (H)',
-            'amount': -value,
-            'account_id': account,
-            'ref': wc.code,
-            'unit_amount': hours,
-            'company_id': self.company_id.id,
-        }
-
-    def _costs_generate(self):
-        """ Calculates total costs at the end of the production.
-        """
-        self.ensure_one()
-        AccountAnalyticLine = self.env['account.analytic.line'].sudo()
-        for wc_line in self.workorder_ids.filtered('workcenter_id.costs_hour_account_id'):
-            vals = self._prepare_wc_analytic_line(wc_line)
-            precision_rounding = (wc_line.workcenter_id.costs_hour_account_id.currency_id or self.company_id.currency_id).rounding
-            if not float_is_zero(vals.get('amount', 0.0), precision_rounding=precision_rounding):
-                # we use SUPERUSER_ID as we do not guarantee an mrp user
-                # has access to account analytic lines but still should be
-                # able to produce orders
-                AccountAnalyticLine.create(vals)
-
     def _get_backorder_mo_vals(self):
         res = super()._get_backorder_mo_vals()
         res['extra_cost'] = self.extra_cost
         return res
-
-    def button_mark_done(self):
-        res = super(MrpProduction, self).button_mark_done()
-        for order in self:
-            order._costs_generate()
-        return res
-
-    def action_view_stock_valuation_layers(self):
-        self.ensure_one()
-        domain = [('id', 'in', (self.move_raw_ids + self.move_finished_ids + self.scrap_ids.move_id).stock_valuation_layer_ids.ids)]
-        action = self.env["ir.actions.actions"]._for_xml_id("stock_account.stock_valuation_layer_action")
-        context = literal_eval(action['context'])
-        context.update(self.env.context)
-        context['no_at_date'] = True
-        context['search_default_group_by_product_id'] = False
-        return dict(action, domain=domain, context=context)
