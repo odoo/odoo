@@ -1202,11 +1202,16 @@ class IrModelSelection(models.Model):
                               'preferably through a custom addon!'))
 
         for selection in self:
-            if selection.field_id.store and \
-                    not self.env[selection.field_id.model]._abstract:
+            try:
+                model = self.env[selection.field_id.model]
+            except KeyError:
+                model = None
+            if selection.field_id.store \
+                    and model is not None \
+                    and not model._abstract:
                 # replace the value by NULL in the field's corresponding column
                 query = 'UPDATE "{table}" SET "{field}"=NULL WHERE "{field}"=%s'.format(
-                    table=self.env[selection.field_id.model]._table,
+                    table=model._table,
                     field=selection.field_id.name,
                 )
                 self.env.cr.execute(query, [selection.value])
