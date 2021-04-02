@@ -113,8 +113,10 @@ class AccountMove(models.Model):
 
         return journal
 
+    # TODO remove in master
     @api.model
     def _get_default_invoice_date(self):
+        warnings.warn("Method '_get_default_invoice_date()' is deprecated and has been removed.", DeprecationWarning)
         return fields.Date.context_today(self) if self._context.get('default_move_type', 'entry') in self.get_purchase_types(include_receipts=True) else False
 
     @api.model
@@ -274,8 +276,7 @@ class AccountMove(models.Model):
         string='Salesperson',
         default=lambda self: self.env.user)
     invoice_date = fields.Date(string='Invoice/Bill Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)]},
-        default=_get_default_invoice_date)
+        states={'draft': [('readonly', False)]})
     invoice_date_due = fields.Date(string='Due Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)]})
     invoice_origin = fields.Char(string='Origin', readonly=True, tracking=True,
@@ -1668,7 +1669,11 @@ class AccountMove(models.Model):
         duplicated_moves = self.browse([r[0] for r in self._cr.fetchall()])
         if duplicated_moves:
             raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n%s') % "\n".join(
-                duplicated_moves.mapped(lambda m: "%(partner)s - %(ref)s - %(date)s" % {'ref': m.ref, 'partner': m.partner_id.display_name, 'date': format_date(self.env, m.date)})
+                duplicated_moves.mapped(lambda m: "%(partner)s - %(ref)s - %(date)s" % {
+                    'ref': m.ref,
+                    'partner': m.partner_id.display_name,
+                    'date': format_date(self.env, m.invoice_date),
+                })
             ))
 
     def _check_balanced(self):
@@ -2515,9 +2520,12 @@ class AccountMove(models.Model):
             # lines are recomputed accordingly.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
-            if not move.invoice_date and move.is_invoice(include_receipts=True):
-                move.invoice_date = fields.Date.context_today(self)
-                move.with_context(check_move_validity=False)._onchange_invoice_date()
+            if not move.invoice_date:
+                if move.is_sale_document(include_receipts=True):
+                    move.invoice_date = fields.Date.context_today(self)
+                    move.with_context(check_move_validity=False)._onchange_invoice_date()
+                elif move.is_purchase_document(include_receipts=True):
+                    raise UserError(_("The Bill/Refund date is required to validate this document."))
 
             # When the accounting date is prior to the tax lock date, move it automatically to today.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
