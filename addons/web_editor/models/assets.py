@@ -185,7 +185,7 @@ class Assets(models.AbstractModel):
             # Create an asset with the new attachment
             IrAsset = self.env['ir.asset']
             new_asset = {
-                'glob': custom_url,
+                'path': custom_url,
                 'target': url,
                 'directive': 'replace',
                 **self._save_asset_hook(),
@@ -229,7 +229,7 @@ class Assets(models.AbstractModel):
             ir.asset()
         """
         url = custom_url[1:] if custom_url.startswith(('/', '\\')) else custom_url
-        return self.env['ir.asset'].search([('glob', 'like', url)])
+        return self.env['ir.asset'].search([('path', 'like', url)])
 
     def _save_asset_hook(self):
         """

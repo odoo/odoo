@@ -26,7 +26,7 @@ class ThemeAsset(models.Model):
         (REMOVE_DIRECTIVE, 'Remove'),
         (REPLACE_DIRECTIVE, 'Replace'),
         (INCLUDE_DIRECTIVE, 'Include')], default=APPEND_DIRECTIVE)
-    glob = fields.Char(required=True)
+    path = fields.Char(string='Path (or glob pattern)', required=True)
     target = fields.Char()
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=DEFAULT_SEQUENCE, required=True)
@@ -39,7 +39,7 @@ class ThemeAsset(models.Model):
             'key': self.key,
             'bundle': self.bundle,
             'directive': self.directive,
-            'glob': self.glob,
+            'path': self.path,
             'target': self.target,
             'active': self.active,
             'sequence': self.sequence,
