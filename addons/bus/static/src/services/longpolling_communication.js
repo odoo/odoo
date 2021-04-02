@@ -78,20 +78,18 @@ export class LongpollingCommunication {
             // that are not RPC related.
             let hasError;
             let busMessages;
-            try {
-                this._currentRpcPromise = this.env.services.rpc({
-                    params: {
-                        // TODO SEB handle new channels (only for livechat?)
-                        channels: [],
-                        last_bus_message_id: this._lastBusMessageId,
-                    },
-                    route: '/longpolling/poll',
-                }, {
-                    shadow: true,
-                    timeout: 60000,
-                });
-                busMessages = await this._currentRpcPromise;
-            } catch (error) {
+            this._currentRpcPromise = this.env.services.rpc({
+                params: {
+                    // TODO SEB handle new channels (only for livechat?)
+                    channels: [],
+                    last_bus_message_id: this._lastBusMessageId,
+                },
+                route: '/longpolling/poll',
+            }, {
+                shadow: true,
+                timeout: 60000,
+            });
+            const catchFn = error => {
                 // ajax.js is using exception to communicate actual information
                 if (error && error.message === "XmlHttpRequestError abort") {
                     // Necessary to prevent other parts of the code from
@@ -110,12 +108,15 @@ export class LongpollingCommunication {
                     // "Uncaught (in promise)" even though it is caught here.
                     error.event.preventDefault();
                 } else {
-                    console.error(JSON.stringify(error));
+                    console.error(error);
                     hasError = true;
                 }
-            } finally {
+            };
+            await this._currentRpcPromise.then(res => {
+                busMessages = res;
+            }).guardedCatch(catchFn).catch(catchFn).finally(() => {
                 this._currentRpcPromise = undefined;
-            }
+            });
             if (busMessages) {
                 for (const busMessage of busMessages) {
                     this._lastBusMessageId = Math.max(busMessage.id, this._lastBusMessageId);

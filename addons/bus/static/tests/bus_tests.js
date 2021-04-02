@@ -1,7 +1,8 @@
 odoo.define('web.bus_tests', function (require) {
 "use strict";
 
-var BusService = require('bus.BusService');
+// TODO SEB fix
+// var BusService = require('bus.BusService');
 var AbstractStorageService = require('web.AbstractStorageService');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');

@@ -1,7 +1,8 @@
 odoo.define('mail/static/src/components/discuss/tests/discuss_tests.js', function (require) {
 'use strict';
 
-const BusService = require('bus.BusService');
+// TODO SEB fix
+// const BusService = require('bus.BusService');
 
 const {
     afterEach,

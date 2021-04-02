@@ -1,7 +1,8 @@
 odoo.define('mail/static/src/utils/test_utils.js', function (require) {
 'use strict';
 
-const BusService = require('bus.BusService');
+// TODO SEB fix
+// const BusService = require('bus.BusService');
 
 const {
     addMessagingToEnv,

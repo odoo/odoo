@@ -1,7 +1,8 @@
 odoo.define('im_livechat.legacy.im_livechat.im_livechat', function (require) {
 "use strict";
 
-require('bus.BusService');
+// TODO SEB fix
+// require('bus.BusService');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
