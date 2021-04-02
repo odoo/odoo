@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Netherlands - E-Invoicing (NLCIUS 1.0.3)',
+    'icon': '/l10n_nl/static/description/icon.png',
     'version': '0.1',
     'category': 'Accounting/Localizations/EDI',
     'summary': 'E-Invoicing, Universal Business Language (NLCIUS 1.0.3), nlc',
