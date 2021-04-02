@@ -9,6 +9,67 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
         'input #event_track_search': '_onEventTrackSearchInput',
     },
 
+    /**
+     * @override
+     */
+    start: function () {
+        this._super.apply(this, arguments).then(() => {
+
+            let current = null;
+            let focus = false;
+            let timer = null;
+
+            let onEnter = () => { focus = true; };
+            let onLeave = () => {
+                if (focus) {
+                    hide();
+                    focus = false;
+                    clearTimeout(timer);
+                }
+            };
+
+            let show = () => {
+                if (current) {
+                    $(current).popover('show');
+                    const $popover = $('#' + current.getAttribute('aria-describedby'));
+                    $popover.on('mouseenter', onEnter);
+                    $popover.on('mouseleave', onLeave);
+                }
+            };
+
+            let hide = () => {
+                if (current) {
+                    const $popover = $('#' + current.getAttribute('aria-describedby'));
+                    $popover.off('mouseenter', onEnter);
+                    $popover.off('mouseleave', onLeave);
+                    $(current).popover('hide');
+                    let hover = $('[data-toggle="popover"]:hover');
+                    if (hover.length === 0) {
+                        current = null;
+                    } else {
+                        current = hover.get(0);
+                        show();
+                    }
+                }
+            };
+
+            this.$el.find('[data-toggle="popover"]').popover({
+                trigger: 'manual'
+            }).on('mouseenter', function () {
+                if (!current) {
+                    current = this;
+                    show();
+                }
+            }).on('mouseleave', function () {
+                if (current === this) {
+                    timer = setTimeout(() => {
+                        if (!focus) { hide(); }
+                    }, 200);
+                }
+            });
+        });
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

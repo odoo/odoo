@@ -6,8 +6,24 @@
         <div class="container mt32 mb16 d-none d-md-block d-print-none" t-if="event.sponsor_ids">
             <div t-attf-class="d-flex flex-wrap mb-5 #{'' if (len(event.sponsor_ids) > 10) else 'justify-content-md-center'}">
                 <t t-foreach="event.sponsor_ids" t-as="sponsor">
+                    <t t-set="tooltip">
+                        <span t-field="sponsor.name" class="h4 mb-0"/>
+                        <div t-if="sponsor.url" class="d-flex align-items-baseline">
+                            <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url" class="text-truncate"><span t-field="sponsor.url"/></a>
+                        </div>
+                        <div t-if="sponsor.email" class="d-flex align-items-baseline">
+                            <i class="fa fa-envelope mr-2"/><a t-att-mailto="sponsor.email" class="text-break"><span t-field="sponsor.email"/></a>
+                        </div>
+                        <div t-if="sponsor.phone" class="d-flex align-items-baseline">
+                            <i class="fa fa-phone mr-2"/><span t-field="sponsor.phone" class="text-break"/>
+                        </div>
+                        <div t-elif="sponsor.mobile" class="d-flex align-items-baseline">
+                            <i class="fa fa-phone mr-2"/><span t-field="sponsor.mobile" class="text-break"/>
+                        </div>
+                    </t>
                     <t t-if="sponsor.url">
-                        <a class="o_wevent_sponsor o_wevent_sponsor_card" target="_blank" t-att-href="sponsor.url">
+                        <a class="o_wevent_sponsor o_wevent_sponsor_card" target="_blank" t-att-href="sponsor.url"
+                            data-html="true" data-toggle="popover" data-placement="bottom" t-att-data-content="tooltip">
                             <div class="h-100 shadow-sm p-2">
                                 <span t-field="sponsor.image_128"
                                     t-options='{"widget": "image", "class": "img img-fluid"}'/>
@@ -17,7 +33,8 @@
                         </a>
                     </t>
                     <t t-if="not sponsor.url">
-                        <div class="o_wevent_sponsor o_wevent_sponsor_card">
+                        <div class="o_wevent_sponsor o_wevent_sponsor_card"
+                            data-html="true" data-toggle="popover" data-placement="bottom" t-att-data-content="tooltip">
                             <div class="h-100 shadow-sm p-2">
                                 <span t-field="sponsor.image_128"
                                     t-options='{"widget": "image", "class": "img img-fluid"}'/>
