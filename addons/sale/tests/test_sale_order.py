@@ -240,6 +240,7 @@ class TestSaleOrder(TestSaleCommon):
 
         inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
             'partner_id': self.partner_a.id,
+            'invoice_date': so.date_order,
             'invoice_line_ids': [
                 (0, 0, {
                     'name': serv_cost.name,
