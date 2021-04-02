@@ -540,7 +540,7 @@ const Wysiwyg = Widget.extend({
             }
             if (forceOpen || !this.linkTools) {
                 const $btn = this.toolbar.$el.find('#create-link');
-                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, $btn, link);
+                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, {}, $btn, link);
                 this.linkTools.appendTo(this.toolbar.$el);
             } else {
                 this.linkTools = undefined;
@@ -548,44 +548,16 @@ const Wysiwyg = Widget.extend({
         } else {
             const linkDialog = new weWidgets.LinkDialog(this, {
                 forceNewWindow: this.options.linkForceNewWindow,
-            }, this.$editable[0], undefined, link);
+                wysiwyg: this,
+            }, this.$editable[0], {}, undefined, link);
             linkDialog.open();
-            linkDialog.on('save', this, (linkInfo) => {
-                const linkUrl = linkInfo.url;
-                const linkContent = linkInfo.content;
-                const isNewWindow = linkInfo.isNewWindow;
-                const hasTextChanged = linkInfo.originalText !== linkContent;
-
-                const range = linkInfo.range;
-
-                const ancestorAnchor = $(range.startContainer).closest('a')[0];
-                let anchors = [];
-                if (ancestorAnchor && ancestorAnchor === $(range.endContainer).closest('a')[0]) {
-                    anchors.push($(ancestorAnchor).html(linkContent).get(0));
-                } else if (hasTextChanged) {
-                    const anchor = $('<A>' + linkContent + '</A>')[0];
-                    range.insertNode(anchor);
-                    anchors.push(anchor);
-                } else {
-                    const anchor = $('<a>')[0];
-                    anchor.appendChild(range.extractContents());
-                    range.insertNode(anchor);
-                    anchors.push(anchor);
+            linkDialog.on('save', this, data => {
+                const linkWidget = linkDialog.linkWidget;
+                getDeepRange(this.$editable[0], {range: data.range, select: true});
+                if (!linkWidget.$link.length) {
+                    linkWidget.$link = $(linkWidget.getOrCreateLink(this.$editable[0]));
                 }
-                linkDialog.insertedAnchors = [...anchors];
-                for (const anchor of anchors) {
-                    $(anchor).attr('href', linkUrl);
-                    $(anchor).attr('class', linkInfo.className || null);
-                    $(anchor).css(linkInfo.style || {});
-                    if (isNewWindow) {
-                        $(anchor).attr('target', '_blank');
-                    } else {
-                        $(anchor).removeAttr('target');
-                    }
-                    range.selectNode(anchor);
-                    range.collapse();
-                }
-                getDeepRange(this.odooEditor.editable, {range, select: true});
+                linkWidget.applyLinkToDom(data);
             });
         }
     },
