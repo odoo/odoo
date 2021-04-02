@@ -322,4 +322,13 @@ class AccountEdiFormat(models.Model):
                     invoice_line_form.quantity = 1
                     invoice_line_form.price_unit = amount_total_import
 
+            self._force_tax_values(
+                invoice_form,
+                tree,
+                tax_group_node='//ram:ApplicableHeaderTradeSettlement/ram:ApplicableTradeTax',
+                percent_node='.//ram:RateApplicablePercent',
+                value_node='.//ram:CalculatedAmount',
+                namespaces=tree.nsmap,
+            )
+
         return invoice_form.save()

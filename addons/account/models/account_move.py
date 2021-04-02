@@ -3511,11 +3511,23 @@ class AccountMoveLine(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
-    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'price_unit')
+    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'price_unit')
     def _onchange_mark_recompute_taxes(self):
         ''' Recompute the dynamic onchange based on taxes.
         If the edited line is a tax line, don't recompute anything as the user must be able to
         set a custom value.
+        '''
+        for line in self:
+            if not line.tax_repartition_line_id:
+                line.recompute_tax_line = True
+
+    @api.onchange('account_id')
+    def _onchange_account_id_mark_recompute_taxes(self):
+        ''' Recompute the dynamic onchange based on taxes.
+        If the edited line is a tax line, don't recompute anything as the user must be able to
+        set a custom value.
+        To be overriden in account_edi to not recompute taxes for moves that has been extracted,
+        unless the account has any tax_ids specified on it.
         '''
         for line in self:
             if not line.tax_repartition_line_id:

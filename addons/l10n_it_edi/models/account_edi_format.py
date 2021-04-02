@@ -535,6 +535,14 @@ class AccountEdiFormat(models.Model):
                         invoice_line_form_discount.name = discount["name"]
                         invoice_line_form_discount.price_unit = discount["amount"]
 
+                self._force_tax_values(
+                    invoice_form,
+                    body_tree,
+                    tax_group_node='DatiBeniServizi/DatiRiepilogo',
+                    percent_node='AliquotaIVA',
+                    value_node='Imposta',
+                )
+
             new_invoice = invoice_form.save()
             new_invoice.l10n_it_send_state = "other"
 

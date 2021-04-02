@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from freezegun import freeze_time
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.modules.module import get_module_resource
 from odoo.tests import tagged
 
 
@@ -244,3 +245,36 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
 
         self.assertEqual(invoice.amount_total, 4610)
         self.assertEqual(len(self.env['account.move'].search([])), invoice_count + 1)
+
+    def test_import_do_not_overwrite_tax(self):
+        file_path = get_module_resource('account_edi_facturx', 'test_file', 'test_facturx.xml')
+        file = open(file_path, 'rb').read()
+        original_etree = self.get_xml_tree_from_string(file)
+
+        # Add the information about the tax to the xml : with an absurd amount that couldn't be correct
+        applied_xpath = '''
+            <xpath expr="//*[local-name()='SpecifiedLineTradeSettlement']" position="inside"  
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+                <ram:ApplicableTradeTax>
+                    <ram:RateApplicablePercent>15.0</ram:RateApplicablePercent>
+                </ram:ApplicableTradeTax>
+            </xpath>
+        
+            <xpath expr="//*[local-name()='ApplicableHeaderTradeSettlement']" position="inside"  
+                xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100">
+                <ram:ApplicableTradeTax>
+                    <ram:CalculatedAmount currencyID="USD">123456.00</ram:CalculatedAmount>
+                    <ram:RateApplicablePercent>15.0</ram:RateApplicablePercent>
+                </ram:ApplicableTradeTax>
+            </xpath>
+        '''
+
+        etree = self.with_applied_xpath(original_etree, applied_xpath)
+
+        invoice = self.edi_format.with_context(default_move_type='out_invoice')._import_facturx(
+            etree,
+            self.env['account.move'].with_context(default_move_type='out_invoice')
+        )
+
+        # Ensure that the amount_tax is the one we set in the xml file and not the one computed by odoo
+        self.assertEqual(invoice.amount_tax_signed, 123456.00)

@@ -7,6 +7,7 @@ from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 from odoo.osv import expression
 from odoo.tools import html_escape
 
+from math import copysign
 from lxml import etree
 import base64
 import io
@@ -502,3 +503,46 @@ class AccountEdiFormat(models.Model):
     def _format_error_message(self, error_title, errors):
         bullet_list_msg = ''.join('<li>%s</li>' % html_escape(msg) for msg in errors)
         return '%s<ul>%s</ul>' % (error_title, bullet_list_msg)
+
+    def _force_tax_values(self, invoice_form, tree, tax_group_node, percent_node, value_node, namespaces=None):
+        """
+        Override the tax values computed by Odoo by the ones in the xml files.
+        :param invoice_form: The form emulator used when reading the xml file
+        :param tree: The xpath tree of the xml
+        :param tax_group_node: The string representing the taxes totals
+        :param percent_node: The string representing the percentage in a tax total line
+        :param value_node: The string representing the value in a tax total line
+        :param namespaces: The xpath namespace, if any
+        """
+        # Get the value for each tax group in the xml
+        tax_lines = tree.xpath(tax_group_node, namespaces=namespaces)
+        amount_per_taxes = {}
+        # Map the line with the tax in odoo, and its line in the view form
+        if tax_lines:
+            # Map the tax % with their totals, found in the xml file
+            for line in tax_lines:
+                percent_element = line.xpath(percent_node, namespaces=namespaces)
+                percent = percent_element and float(percent_element[0].text)
+                if percent:
+                    tax_element = line.xpath(value_node, namespaces=namespaces)
+                    amount_per_taxes[percent] = tax_element and float(tax_element[0].text) or 0.0
+
+        lines = {}
+        # Map the line ids with the values that should be put in them
+        for index, line in enumerate(invoice_form._values['line_ids']):
+            tax = self.env['account.tax'].browse(line[2]['tax_line_id'])
+            if tax:
+                # map line with values before editing.
+                for key, value in amount_per_taxes.items():
+                    if key == tax.amount:
+                        lines[index] = value
+                        break
+
+        # Only update taxes lines if we found all of them
+        if len(amount_per_taxes) == len(lines):
+            for index, value in lines.items():
+                with invoice_form.line_ids.edit(index) as line_form:
+                    # Update the tax value on the line with the one in the xml.
+                    # Make sure to keep the same sign as the one calculated by odoo, since it shouldn't change
+                    if invoice_form.move_type in ["in_invoice", "out_invoice"]:
+                        line_form.amount_currency = copysign(value, line_form.amount_currency)
