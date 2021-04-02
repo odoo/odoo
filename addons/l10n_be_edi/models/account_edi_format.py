@@ -14,13 +14,13 @@ class AccountEdiFormat(models.Model):
     def _create_invoice_from_xml_tree(self, filename, tree):
         self.ensure_one()
         if self._is_efff(filename, tree):
-            return self._import_ubl(tree, self.env['account.move'])
+            return self._create_invoice_from_ubl(tree)
         return super()._create_invoice_from_xml_tree(filename, tree)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
         self.ensure_one()
         if self._is_efff(filename, tree):
-            return self._import_ubl(tree, invoice)
+            return self._update_invoice_from_ubl(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
     def _is_compatible_with_journal(self, journal):
