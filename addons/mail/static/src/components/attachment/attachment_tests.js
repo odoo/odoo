@@ -107,8 +107,8 @@ QUnit.test('simplest layout + deletable', async function (assert) {
         async mockRPC(route, args) {
             if (route.includes('web/image/750')) {
                 assert.ok(
-                    route.includes('/160x160'),
-                    "should fetch image with 160x160 pixels ratio");
+                    route.includes('/200x200'),
+                    "should fetch image with 200x200 pixels ratio");
                 assert.step('fetch_image');
             }
             return this._super(...arguments);
