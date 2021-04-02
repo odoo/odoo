@@ -157,7 +157,7 @@ class TestUi(odoo.tests.HttpCase):
         self.env['ir.asset'].create({
             'name': 'EditorExtension',
             'bundle': 'website.assets_wysiwyg',
-            'glob': custom_url,
+            'path': custom_url,
             'website_id': new_website.id,
         })
 

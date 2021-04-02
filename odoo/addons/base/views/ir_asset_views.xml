@@ -15,7 +15,7 @@
                         </group>
                         <group>
                             <field name="target" attrs="{ 'invisible': [('directive', '!=', 'replace')] }"/>
-                            <field name="glob"/>
+                            <field name="path"/>
                         </group>
                     </group>
                 </sheet>
@@ -43,7 +43,7 @@
                 <field name="bundle"/>
                 <field name="directive"/>
                 <field name="sequence"/>
-                <field name="glob"/>
+                <field name="path"/>
                 <filter string="Active" name="active" domain="[('active', '=', True)]"/>
             </search>
         </field>

@@ -80,21 +80,21 @@ Assets Management
 =================
 
 Managing assets in Odoo is not as straightforward as it is in some other apps.
-One of the reason is that we have a variety of situations where some, but not all
-the assets are required. For example, the needs of the web client, the point of
-sale, the website or even the mobile application are different. Also, some
+One of the reasons is that we have a variety of situations where some, but not all
+of the assets are required. For example, the needs of the web client, the point of
+sale app, the website or even the mobile application are different. Also, some
 assets may be large, but are seldom needed. In that case, we sometimes want them
 to be loaded lazily.
 
 The main idea is that we define a set of **bundles** in the module manifest. A
 bundle is here defined as a **list of file paths** (xml, javascript, css, scss).
 Files are declared using `glob`_ syntax, meaning that you can declare several asset
-files using a single line. Each file found using a glob will be appended to the
-`<head>` of the page, at most once, in the order the globs are given.
+files using a single line. Each matching file found will be appended to the
+`<head>` of the page, at most once, in the order the glob patterns are given.
 
-As mentionned, the bundles are declared in each module's `__manifest__.py`, under
-a dedicated `assets` key which contains a dictionary. Said dictionary will declare
-**bundles** (keys) with the **files** they contain (values). It looks like this:
+As mentioned, the bundles are declared in each module's `__manifest__.py`, under
+a dedicated `assets` key which contains a dictionary. The dictionary will map
+**bundles** (keys) to the list of **files** they contain (values). It looks like this:
 
 .. code-block:: py
 
@@ -173,7 +173,7 @@ be covered with the following operations.
 
 a) Add one or multiple file(s): `append`
     The proper way to add a file to a bundle in any addon is simple: it is just enough
-    to add a glob path to the bundle in the file `__manifest__.py` like so:
+    to add a glob pattern to the bundle in the file `__manifest__.py` like so:
 
     .. code-block:: py
 
@@ -182,11 +182,13 @@ a) Add one or multiple file(s): `append`
         ],
 
     By default, adding a simple string to a bundle will append the files matching the
-    glob at the end of the bundle.
+    glob pattern at the end of the bundle. Obviously, the pattern may also be directly
+    a single file path.
 
 b) Add one or multiple file(s) at the beginning of the list: `prepend`
     Sometimes you need to put a certain file before the others in a bundle, when
-    loading css file for example. In this case, you can use the `prepend` directive
+    loading css file, for example. In this case, you can use the `prepend` directive
+    by replacing the path with a pair `('prepend', <path>)`,
     like so:
 
     .. code-block:: py
@@ -197,8 +199,9 @@ b) Add one or multiple file(s) at the beginning of the list: `prepend`
 
 c) Add one or multiple file(s) before a specific file: `before`
     Prepending a file at the beginning of a bundle might not be precise enough. The
-    `before` directive can be used to add the given files right before the target
-    file.
+    `before` directive can be used to add the given file(s) right *before* the target
+    file. It is declared by replacing the normal path with a 3-element tuple
+    `('before', <target>, <path>)`, like so:
 
     .. code-block:: py
 
@@ -206,8 +209,10 @@ c) Add one or multiple file(s) before a specific file: `before`
             ('before', 'web/static/src/css/bootstrap_overridden.scss', 'my_addon/static/src/css/bootstrap_overridden.scss'),
         ],
 
-d) Add one or multiple file(s) after a specofic file: `after`
-    Same as `before`, with the resulting files appended after the target file.
+d) Add one or multiple file(s) after a specific file: `after`
+    Same as `before`, with the matching file(s) appended right *after* the target file.
+    It is declared by replacing the normal path with a 3-element tuple
+    `('after', <target>, <path>)`, like so:
 
     .. code-block:: py
 
@@ -218,8 +223,8 @@ d) Add one or multiple file(s) after a specofic file: `after`
 e) Use nested bundles: `include`
     The `include` directive is a way to use a same bundle in other bundles to minimize
     the size of your manifest. In Odoo we use sub bundles (prefixed with an underscore
-    by convention) to batch glob files used in multiple other bundles. You can then
-    specify the sub bundle like this:
+    by convention) to batch files used in multiple other bundles. You can then
+    specify the sub bundle as a pair `('include', <bundle>)` like this:
 
     .. code-block:: py
 
@@ -230,7 +235,7 @@ e) Use nested bundles: `include`
 f) Remove one or multiple file(s): `remove`
     In some additional module you may want to get rid of the call of a certain asset
     in a bundle. Any file can be removed from an existing bundle using the `remove`
-    directive:
+    directive by specifying a pair `('remove', <target>)`:
 
     .. code-block:: py
 
@@ -241,7 +246,7 @@ f) Remove one or multiple file(s): `remove`
 g) Replace an asset file with one or multiple file(s): `replace`
     Let us now say that an asset need not only to be removed, but you also want to insert
     your new version of that asset at the same exact position. This can be done with
-    the `replace` directive, using a 3-element tuple:
+    the `replace` directive, using a 3-element tuple `('replace', <target>, <path>)`:
 
     .. code-block:: py
 
@@ -249,7 +254,7 @@ g) Replace an asset file with one or multiple file(s): `replace`
             ('replace', 'web/static/src/js/boot.js', 'my_addon/static/src/js/boot.js'),
         ],
 
-    Note that directives targetting a certain file (i.e. `before`, `after`,
+    Note that all directives targeting a certain asset file (i.e. `before`, `after`,
     `replace` and `remove`) need that file to be declared beforehand, either
     in manifests higher up in the hierarchy or in ``ir.asset`` records with a lower
     sequence.
@@ -262,7 +267,7 @@ g) Replace an asset file with one or multiple file(s): `replace`
     better to lazyload some assets. For example, if a widget requires a large
     library, and that widget is not a core part of the experience, then it may be
     a good idea to only load the library when the widget is actually created. The
-    widget class has actually builtin support just for this use case. (see section
+    widget class has actually built-in support just for this use case. (see section
     :ref:`reference/javascript_reference/qweb`)
 
 Assets loading order
@@ -286,7 +291,7 @@ a file already present in the list, nothing is done for that file. In other word
 only the first occurrence of a file is kept in the list.
 
 4. The remaining ``ir.asset`` records (those with a sequence greater than or equal
-to 16) are eventually processed and applied as well.
+to 16) are then processed and applied as well.
 
 Assets declared in the manifest may need to be loaded in a particular order, for
 example `jquery.js` must be loaded before all other jquery scripts when loading the
@@ -313,11 +318,12 @@ in the list before all the others included in the glob.
 The asset model (``ir.asset``)
 ------------------------------
 
-In most cases the assets declared in the manifest will largely suffice. But Odoo
-being highly customizable requires to modify things as critical as defining assets
-to be editted in place. A model ``ir.asset`` exists to do such things. Records will
-be associated to a `bundle` and apply their `glob` (and `target` if any) to the
-list of assets using according to their `directive`.
+In most cases the assets declared in the manifest will largely suffice. Yet for
+more flexibility, the framework also supports dynamic assets declared in the
+database.
+This is done by creating ``ir.asset`` records. Those will be processed as if they
+were found in a module manifest, and they give the same expressive power as their
+manifest counterparts.
 
 .. autoclass:: odoo.addons.base.models.ir_asset.IrAsset
 
@@ -328,24 +334,24 @@ list of assets using according to their `directive`.
     Bundle in which the asset will be applied.
 
 ``directive`` (default= `append`)
-    This field determines how the `glob` (and `target` if needed) will be interpreted.
+    This field determines how the `path` (and `target` if needed) will be interpreted.
     Here is the list of available directives along with their required arguments:
 
-    - **append**: `glob`
-    - **prepend**: `glob`
-    - **before**: `target`, `glob`
-    - **after**: `target`, `glob`
-    - **include**: `glob` (interpreted as a **bundle name**)
-    - **remove**: `target`
-    - **replace**: `target`, `glob`
+    - **append**: `path`
+    - **prepend**: `path`
+    - **before**: `target`, `path`
+    - **after**: `target`, `path`
+    - **include**: `path` (interpreted as a **bundle name**)
+    - **remove**: `path` (interpreted as a **target asset** to remove)
+    - **replace**: `target`, `path`
 
-``glob``
-    Glob string defining one of the following:
+``path``
+    A string defining one of the following:
 
-    - a **glob path** to a set of files in the Odoo file system;
-    - a **relative path** to a file in the Odoo file system;
-    - an **URL** to an attachment/external source;
-    - a **bundle name** if using the `include` directive.
+    - a **relative path** to an asset file in the addons file system;
+    - a **glob pattern** to a set of asset files in the addons file system;
+    - a **URL** to an attachment or external asset file;
+    - a **bundle name**, when using the `include` directive.
 
 ``target``
     Target file to specify a position in the bundle. Can only be used with the
@@ -368,7 +374,7 @@ are a few things you can try to solve the issue:
   modified.  So, you can simply restart the server to regenerate the assets.
 - check the console (in the dev tools, usually opened with F12) to make sure
   there are no obvious errors
-- try to add a console.log at the beginning of your file (before any module
+- try to add a `console.log()` at the beginning of your file (before any module
   definition), so you can see if a file has been loaded or not
 - when in any debug mode, there is an option in the debug manager menu (bug icon)
   to force the server to update its assets files.

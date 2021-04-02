@@ -251,7 +251,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.env['ir.asset'].create({
             'name': 'test bundle inheritance',
             'bundle': self.jsbundle_name,
-            'glob': 'test_assetsbundle/static/src/js/test_jsfile4.js',
+            'path': 'test_assetsbundle/static/src/js/test_jsfile4.js',
         })
 
         bundle1 = self._get_asset(self.jsbundle_name)
@@ -370,7 +370,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.env['ir.asset'].create({
             'name': 'test bundle inheritance',
             'bundle': self.cssbundle_name,
-            'glob': 'test_assetsbundle/static/src/css/test_cssfile2.css',
+            'path': 'test_assetsbundle/static/src/css/test_cssfile2.css',
         })
 
         bundle1 = self._get_asset(self.cssbundle_name)
@@ -562,7 +562,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.env['ir.asset'].create({
             'name': 'test bundle inheritance',
             'bundle': self.cssbundle_name,
-            'glob': 'test_assetsbundle/static/src/css/test_cssfile3.css',
+            'path': 'test_assetsbundle/static/src/css/test_cssfile3.css',
         })
 
         ltr_bundle1 = self._get_asset(self.cssbundle_name)
@@ -732,7 +732,7 @@ class TestAssetsBundleInBrowser(HttpCase):
         self.env['ir.asset'].create({
             'name': 'lol',
             'bundle': 'test_assetsbundle.bundle1',
-            'glob': custom_url,
+            'path': custom_url,
         })
         self.browser_js(
             "/test_assetsbundle/js",
@@ -907,7 +907,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.manifest4',
-            'glob': 'test_assetsbundle/static/src/js/test_jsfile1.js',
+            'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
         })
         view._render()
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4.min.js')], order='create_date DESC', limit=1)
@@ -928,7 +928,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.irasset1',
-            'glob': 'test_assetsbundle/static/src/js/test_jsfile1.js',
+            'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
         })
         view._render()
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irasset1.min.js')], order='create_date DESC', limit=1)
@@ -948,7 +948,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.manifest1',
             'directive': 'replace',
             'target': 'test_assetsbundle/static/src/js/test_jsfile1.js',
-            'glob': 'http://external.link/external.js',
+            'path': 'http://external.link/external.js',
         })
         rendered = view._render()
         html_tree = lxml.etree.fromstring(rendered)
@@ -978,7 +978,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.manifest4',
             'directive': 'replace',
-            'glob': 'test_assetsbundle/static/src/js/test_jsfile1.js',
+            'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
             'target': 'test_assetsbundle/static/src/js/test_jsfile3.js',
         })
         view._render()
@@ -998,14 +998,14 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'directive': 'prepend',
             'bundle': 'test_assetsbundle.manifest4',
-            'glob': 'test_assetsbundle/static/src/js/test_jsfile4.js',
+            'path': 'test_assetsbundle/static/src/js/test_jsfile4.js',
         })
         # asset is now: js_file4 ; js_file3
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.manifest4',
             'directive': 'replace',
-            'glob': 'test_assetsbundle/static/src/js/test_jsfile[12].js',
+            'path': 'test_assetsbundle/static/src/js/test_jsfile[12].js',
             'target': 'test_assetsbundle/static/src/js/test_jsfile[45].js',
         })
         # asset is now: js_file1 ; js_file2 ; js_file3
@@ -1033,7 +1033,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.manifest5',
             'directive': 'remove',
-            'glob': 'test_assetsbundle/static/src/js/test_jsfile2.js',
+            'path': 'test_assetsbundle/static/src/js/test_jsfile2.js',
         })
         view._render()
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest5')], order='create_date DESC', limit=1)
@@ -1056,7 +1056,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.remove_error',
-            'glob': '/test_assetsbundle/static/src/js/test_jsfile1.js',
+            'path': '/test_assetsbundle/static/src/js/test_jsfile1.js',
         })
 
         view = self.make_asset_view('test_assetsbundle.remove_error')
@@ -1064,7 +1064,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.remove_error',
             'directive': 'remove',
-            'glob': 'test_assetsbundle/static/src/js/test_doesntexist.js',
+            'path': 'test_assetsbundle/static/src/js/test_doesntexist.js',
         })
         with self.assertRaises(Exception) as cm:
             view._render()
@@ -1078,7 +1078,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.manifest2',
             'directive': 'remove',
-            'glob': 'test_assetsbundle/static/src/**/*',
+            'path': 'test_assetsbundle/static/src/**/*',
         })
         view._render()
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest2.js')], order='create_date DESC', limit=1)
@@ -1091,7 +1091,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'directive': 'prepend',
             'bundle': 'test_assetsbundle.manifest4',
-            'glob': 'test_assetsbundle/static/src/js/test_jsfile1.js',
+            'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
         })
         view._render()
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest4')], order='create_date DESC', limit=1)
@@ -1113,7 +1113,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'directive': 'include',
             'bundle': 'test_assetsbundle.irasset_include1',
-            'glob': 'test_assetsbundle.manifest6',
+            'path': 'test_assetsbundle.manifest6',
         })
         view._render()
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irasset_include1')], order='create_date DESC', limit=1)
@@ -1145,13 +1145,13 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'directive': 'include',
             'bundle': 'test_assetsbundle.irasset_include1',
-            'glob': 'test_assetsbundle.irasset_include2',
+            'path': 'test_assetsbundle.irasset_include2',
         })
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'directive': 'include',
             'bundle': 'test_assetsbundle.irasset_include2',
-            'glob': 'test_assetsbundle.irasset_include1',
+            'path': 'test_assetsbundle.irasset_include1',
         })
 
         with self.assertRaises(QWebException) as cm:
@@ -1168,30 +1168,30 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'directive': 'include',
             'bundle': 'test_assetsbundle.irasset_include1',
-            'glob': 'test_assetsbundle.irasset_include2',
+            'path': 'test_assetsbundle.irasset_include2',
         })
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'directive': 'include',
             'bundle': 'test_assetsbundle.irasset_include2',
-            'glob': 'test_assetsbundle.irasset_include3',
+            'path': 'test_assetsbundle.irasset_include3',
         })
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'directive': 'include',
             'bundle': 'test_assetsbundle.irasset_include2',
-            'glob': 'test_assetsbundle.irasset_include4',
+            'path': 'test_assetsbundle.irasset_include4',
         })
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'directive': 'include',
             'bundle': 'test_assetsbundle.irasset_include4',
-            'glob': 'test_assetsbundle.irasset_include3',
+            'path': 'test_assetsbundle.irasset_include3',
         })
         self.env['ir.asset'].create({
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.irasset_include3',
-            'glob': 'test_assetsbundle/static/src/js/test_jsfile1.js',
+            'path': 'test_assetsbundle/static/src/js/test_jsfile1.js',
         })
         view._render()
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irasset_include1')], order='create_date DESC', limit=1)
@@ -1372,12 +1372,12 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irasset2',
-            'glob': 'http://external.css/externalstyle.css',
+            'path': 'http://external.css/externalstyle.css',
         })
         self.env['ir.asset'].create({
             'name': '2',
             'bundle': 'test_assetsbundle.irasset2',
-            'glob': 'test_assetsbundle/static/src/css/test_cssfile1.css',
+            'path': 'test_assetsbundle/static/src/css/test_cssfile1.css',
         })
         view = self.make_asset_view('test_assetsbundle.irasset2', {
             't-js': 'false',
@@ -1399,12 +1399,12 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irasset2',
-            'glob': 'http://external.css/externalstyle.css',
+            'path': 'http://external.css/externalstyle.css',
         })
         self.env['ir.asset'].create({
             'name': '2',
             'bundle': 'test_assetsbundle.irasset2',
-            'glob': 'test_assetsbundle/static/src/scss/test_file1.scss',
+            'path': 'test_assetsbundle/static/src/scss/test_file1.scss',
         })
         view = self.make_asset_view('test_assetsbundle.irasset2', {
             't-js': 'false',
@@ -1561,7 +1561,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.bundle4',
-            'glob': '/test_assetsbundle/static/src/js/test_jsfile4.js',
+            'path': '/test_assetsbundle/static/src/js/test_jsfile4.js',
             'target': '/test_assetsbundle/static/src/js/test_jsfile3.js',
             'directive': 'before',
         })
@@ -1590,7 +1590,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.bundle4',
-            'glob': '/test_assetsbundle/static/src/js/test_jsfile4.js',
+            'path': '/test_assetsbundle/static/src/js/test_jsfile4.js',
             'target': '/test_assetsbundle/static/src/js/test_jsfile2.js',
             'directive': 'after',
         })
@@ -1619,14 +1619,14 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.bundle4',
-            'glob': '/test_assetsbundle/static/src/js/test_jsfile4.js',
+            'path': '/test_assetsbundle/static/src/js/test_jsfile4.js',
             'target': '/test_assetsbundle/static/src/css/test_cssfile1.css',
             'directive': 'after',
         })
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.bundle4',
-            'glob': '/test_assetsbundle/static/src/css/test_cssfile3.css',
+            'path': '/test_assetsbundle/static/src/css/test_cssfile3.css',
             'target': '/test_assetsbundle/static/src/js/test_jsfile2.js',
             'directive': 'before',
         })
@@ -1681,12 +1681,12 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.wrong_path',
-            'glob': '/test_assetsbundle/static/src/js/test_jsfile4.js',
+            'path': '/test_assetsbundle/static/src/js/test_jsfile4.js',
         })
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.wrong_path',
-            'glob': '/test_assetsbundle/static/src/js/test_jsfile1.js',
+            'path': '/test_assetsbundle/static/src/js/test_jsfile1.js',
             'target': '/test_assetsbundle/static/src/js/doesnt_exist.js',
             'directive': 'after',
         })
@@ -1701,7 +1701,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.manifest4',
-            'glob': '/test_assetsbundle/static/src/*/**',
+            'path': '/test_assetsbundle/static/src/*/**',
             'target': '/test_assetsbundle/static/src/js/test_jsfile3.js',
             'directive': 'after',
         })
@@ -1730,7 +1730,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.manifest4',
-            'glob': '/test_assetsbundle/static/src/js/test_jsfile[124].js',
+            'path': '/test_assetsbundle/static/src/js/test_jsfile[124].js',
             'target': '/test_assetsbundle/static/src/js/test_jsfile3.js',
             'directive': 'before',
         })
@@ -1765,7 +1765,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'glob': '/test_assetsbundle/%s' % path_to_dummy,
+            'path': '/test_assetsbundle/%s' % path_to_dummy,
         })
         view = self.make_asset_view('test_assetsbundle.irassetsec')
         view._render()
@@ -1782,7 +1782,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'glob': '/test_assetsbundle/%s' % path_to_dummy,
+            'path': '/test_assetsbundle/%s' % path_to_dummy,
         })
 
         files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=self.installed_modules, xml=False)
@@ -1797,7 +1797,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'glob': '/notinstalled_module/somejsfile.js',
+            'path': '/notinstalled_module/somejsfile.js',
         })
         view = self.make_asset_view('test_assetsbundle.irassetsec')
         with self.assertRaises(QWebException) as cm:
@@ -1809,7 +1809,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'glob': '/notinstalled_module/somejsfile.js',
+            'path': '/notinstalled_module/somejsfile.js',
         })
         self.make_asset_view('test_assetsbundle.irassetsec')
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irassetsec')], order='create_date DESC', limit=1)
@@ -1820,7 +1820,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'glob': '/test_assetsbundle/__manifest__.py',
+            'path': '/test_assetsbundle/__manifest__.py',
         })
         view = self.make_asset_view('test_assetsbundle.irassetsec')
         view._render()
@@ -1832,7 +1832,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'glob': '/test_assetsbundle/data/ir_asset.xml',
+            'path': '/test_assetsbundle/data/ir_asset.xml',
         })
         files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=self.installed_modules, xml=False)
         self.assertFalse(files)
@@ -1841,7 +1841,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'glob': '/test_assetsbundle/static/accessible.xml',
+            'path': '/test_assetsbundle/static/accessible.xml',
         })
         files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=self.installed_modules, xml=False)
         self.assertEqual(len(files), 1)
@@ -1866,7 +1866,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irasset_custom_attach',
-            'glob': 'test_assetsbundle/my_style_attach.scss',
+            'path': 'test_assetsbundle/my_style_attach.scss',
         })
         view = self.make_asset_view('test_assetsbundle.irasset_custom_attach', {'t-css': True})
         view._render()

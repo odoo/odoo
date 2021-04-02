@@ -83,7 +83,7 @@ class IrAsset(models.Model):
         (REMOVE_DIRECTIVE, 'Remove'),
         (REPLACE_DIRECTIVE, 'Replace'),
         (INCLUDE_DIRECTIVE, 'Include')], default=APPEND_DIRECTIVE)
-    glob = fields.Char(string='Path', required=True)
+    path = fields.Char(string='Path (or glob pattern)', required=True)
     target = fields.Char(string='Target')
     active = fields.Boolean(string='active', default=True)
     sequence = fields.Integer(string="Sequence", default=DEFAULT_SEQUENCE, required=True)
@@ -200,7 +200,7 @@ class IrAsset(models.Model):
         # 1. Process the first sequence of 'ir.asset' records
         assets = self._get_related_assets([('bundle', '=', bundle)]).filtered('active')
         for asset in assets.filtered(lambda a: a.sequence < DEFAULT_SEQUENCE):
-            process_path(asset.directive, asset.target, asset.glob)
+            process_path(asset.directive, asset.target, asset.path)
 
         # 2. Process all addons' manifests.
         for addon in self._topological_sort(tuple(addons)):
@@ -221,7 +221,7 @@ class IrAsset(models.Model):
 
         # 3. Process the rest of 'ir.asset' records
         for asset in assets.filtered(lambda a: a.sequence >= DEFAULT_SEQUENCE):
-            process_path(asset.directive, asset.target, asset.glob)
+            process_path(asset.directive, asset.target, asset.path)
 
     def _get_related_assets(self, domain):
         """
@@ -301,15 +301,15 @@ class IrAsset(models.Model):
     def _get_paths(self, path_def, installed, extensions=None):
         """
         Returns a list of file paths matching a given glob (path_def) as well as
-        the addon targetted by the path definition. If no file matches that glob,
-        the path definition is returned as is. This is either because the glob is
-        not correctly written or because it points to an URL.
+        the addon targeted by the path definition. If no file matches that glob,
+        the path definition is returned as is. This is either because the path is
+        not correctly written or because it points to a URL.
 
         :param path_def: the definition (glob) of file paths to match
         :param installed: the list of installed addons
         :param extensions: a list of extensions that found files must match
-        :returns: a tuple: the addon targetted by the path definition [0] and the
-            list of glob files matching the definition [1] (or the glob itself if
+        :returns: a tuple: the addon targeted by the path definition [0] and the
+            list of file paths matching the definition [1] (or the glob itself if
             none). Note that these paths are filtered on the given `extensions`.
         """
         paths = []
@@ -410,7 +410,7 @@ class AssetPaths:
                 self.memo.add(path)
         self.list[index:index] = to_insert
 
-    def remove(self, paths, addon, bundle, glob=None):
+    def remove(self, paths, addon, bundle, path=None):
         """Removes the given paths from the current list."""
         paths = {path for path in paths if path in self.memo}
         if paths:
@@ -418,8 +418,8 @@ class AssetPaths:
             self.memo.difference_update(paths)
             return
 
-        if glob:
-            self._raise_not_found(glob, bundle)
+        if path:
+            self._raise_not_found(path, bundle)
 
     def _raise_not_found(self, path, bundle):
         raise ValueError("File %s not found in bundle %s" % (path, bundle))
