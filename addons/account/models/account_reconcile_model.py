@@ -24,7 +24,15 @@ class AccountReconcileModelPartnerMapping(models.Model):
         for record in self:
             if not (record.narration_regex or record.payment_ref_regex):
                 raise ValidationError(_("Please set at least one of the match texts to create a partner mapping."))
-
+            try:
+                if record.payment_ref_regex:
+                    current_regex = record.payment_ref_regex
+                    re.compile(record.payment_ref_regex)
+                if record.narration_regex:
+                    current_regex = record.narration_regex
+                    re.compile(record.narration_regex) 
+            except re.error:
+                raise ValidationError(_("The following regular expression is invalid to create a partner mapping: %s") % current_regex)
 
 class AccountReconcileModelLine(models.Model):
     _name = 'account.reconcile.model.line'
