@@ -25,6 +25,21 @@ class AccountEdiFormat(models.Model):
     ####################################################
     # Import
     ####################################################
+    def _create_invoice_from_ubl(self, tree):
+        invoice = self.env['account.move']
+        journal = invoice._get_default_journal()
+
+        move_type = 'out_invoice' if journal.type == 'sale' else 'in_invoice'
+        element = tree.find('.//{*}InvoiceTypeCode')
+        if element is not None and element.text == '381':
+            move_type = 'in_refund' if move_type == 'in_invoice' else 'out_refund'
+
+        invoice = invoice.with_context(default_move_type=move_type, default_journal_id=journal.id)
+        return self._import_ubl(tree, invoice)
+
+    def _update_invoice_from_ubl(self, tree, invoice):
+        invoice = invoice.with_context(default_move_type=invoice.move_type, default_journal_id=invoice.journal_id.id)
+        return self._import_ubl(tree, invoice)
 
     def _import_ubl(self, tree, invoice):
         """ Decodes an UBL invoice into an invoice.
@@ -51,19 +66,7 @@ class AccountEdiFormat(models.Model):
         def _find_value(xpath, element=tree):
             return self._find_value(xpath, element, namespaces)
 
-        if not invoice:
-            invoice = self.env['account.move'].create({})
-
-        elements = tree.xpath('//cbc:InvoiceTypeCode', namespaces=namespaces)
-        if elements:
-            type_code = elements[0].text
-            move_type = 'in_refund' if type_code == '381' else 'in_invoice'
-        else:
-            move_type = 'in_invoice'
-
-        default_journal = invoice.with_context(default_move_type=move_type)._get_default_journal()
-
-        with Form(invoice.with_context(default_move_type=move_type, default_journal_id=default_journal.id)) as invoice_form:
+        with Form(invoice.with_context(account_predictive_bills_disable_prediction=True)) as invoice_form:
             # Reference
             elements = tree.xpath('//cbc:ID', namespaces=namespaces)
             if elements:
@@ -217,14 +220,14 @@ class AccountEdiFormat(models.Model):
         # OVERRIDE
         self.ensure_one()
         if self.code == 'ubl_2_1' and self._is_ubl(filename, tree):
-            return self._import_ubl(tree, self.env['account.move'])
+            return self._create_invoice_from_ubl(tree)
         return super()._create_invoice_from_xml_tree(filename, tree)
 
     def _update_invoice_from_xml_tree(self, filename, tree, invoice):
         # OVERRIDE
         self.ensure_one()
         if self.code == 'ubl_2_1' and self._is_ubl(filename, tree):
-            return self._import_ubl(tree, invoice)
+            return self._update_invoice_from_ubl(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
     def _is_compatible_with_journal(self, journal):
