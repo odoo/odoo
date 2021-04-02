@@ -1,3 +1,4 @@
+
 odoo.define('web.owl_dialog_tests', function (require) {
     "use strict";
 
@@ -6,7 +7,11 @@ odoo.define('web.owl_dialog_tests', function (require) {
     const Dialog = require('web.OwlDialog');
     const testUtils = require('web.test_utils');
 
-    const { Component, tags, useState } = owl;
+    const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
+    const { Dialog: WowlDialog } = require("@web/components/dialog/dialog");
+    const { getFixture, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+
+    const { Component, tags, useState, mount } = owl;
     const EscapeKey = { key: 'Escape', keyCode: 27, which: 27 };
     const { xml } = tags;
 
@@ -166,6 +171,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
         QUnit.test("Interactions between multiple dialogs", async function (assert) {
             assert.expect(22);
 
+            const { legacyEnv } = await makeLegacyDialogMappingTestEnv();
             class Parent extends Component {
                 constructor() {
                     super(...arguments);
@@ -178,7 +184,7 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 }
             }
             Parent.components = { Dialog };
-            Parent.env = makeTestEnvironment();
+            Parent.env = legacyEnv;
             Parent.template = xml`
                 <div>
                     <Dialog t-foreach="dialogIds" t-as="dialogId" t-key="dialogId"
@@ -265,6 +271,58 @@ odoo.define('web.owl_dialog_tests', function (require) {
             // dialog 1 is closed through the removal of its parent => no callback
             assert.verifySteps(['dialog_5_closed', 'dialog_4_closed']);
 
+            parent.destroy();
+        });
+
+        QUnit.test("Interactions between legacy owl dialogs and new owl dialogs", async function (assert) {
+            assert.expect(7);
+
+            const { legacyEnv, env } = await makeLegacyDialogMappingTestEnv();
+
+            // OwlDialog env
+            patchWithCleanup(Dialog.prototype, {
+                setup() {
+                    this.env = legacyEnv;
+                    this._super();
+                }
+            });
+
+            class Parent extends Component {
+                setup() {
+                    super.setup();
+                    this.dialogs = useState([]);
+                }
+                // Handlers
+                _onDialogClosed(id) {
+                    assert.step(`dialog_${id}_closed`);
+                    this.dialogs.splice(this.dialogs.findIndex(d => d.id === id), 1);
+                }
+            }
+            Parent.template = xml`
+                <div>
+                    <div class="o_dialog_container"/>
+                    <t t-foreach="dialogs" t-as="dialog" t-key="dialog.id" t-component="dialog.class"
+                        contentClass="'dialog_' + dialog.id"
+                        t-on-dialog-closed="_onDialogClosed(dialog.id)" />
+                </div>`;
+            const parent = await mount(Parent, { env, target: getFixture() });
+
+            parent.dialogs.push({ id: 1, class: WowlDialog });
+            await nextTick();
+            parent.dialogs.push({ id: 2, class: Dialog });
+            await nextTick();
+            parent.dialogs.push({ id: 3, class: WowlDialog });
+            await nextTick();
+
+            assert.verifySteps([]);
+            await testUtils.dom.triggerEvent(window, 'keydown', EscapeKey); // Press Escape
+            assert.verifySteps(['dialog_3_closed']);
+            await testUtils.dom.triggerEvent(window, 'keydown', EscapeKey); // Press Escape
+            assert.verifySteps(['dialog_2_closed']);
+            await testUtils.dom.triggerEvent(window, 'keydown', EscapeKey); // Press Escape
+            assert.verifySteps(['dialog_1_closed']);
+
+            parent.unmount();
             parent.destroy();
         });
     });

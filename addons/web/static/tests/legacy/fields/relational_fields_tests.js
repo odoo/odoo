@@ -9,6 +9,8 @@ var RamStorage = require('web.RamStorage');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 
+const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
+
 const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
 
@@ -3705,6 +3707,8 @@ QUnit.module('relational_fields', {
 
     QUnit.test('when Navigating to a many to one with tabs, editing in a popup, the popup should receive the focus then give it back', async function (assert) {
         assert.expect(3);
+
+        await makeLegacyDialogMappingTestEnv();
 
         this.data.partner.records[0].turtles = [];
 

@@ -83,7 +83,7 @@ var Dialog = Widget.extend({
             $content: false,
             buttons: [{text: _t("Ok"), close: true}],
             technical: true,
-            $parentNode: false,
+            $parentNode: false || $(".o_dialog_container"),
             backdrop: 'static',
             renderHeader: true,
             renderFooter: true,
@@ -204,6 +204,7 @@ var Dialog = Widget.extend({
             self.$modal.modal({
                 show: true,
                 backdrop: self.backdrop,
+                keyboard: false,
             });
             self._openedResolver();
             if (options && options.shouldFocusButtons) {
@@ -212,6 +213,9 @@ var Dialog = Widget.extend({
 
             // Notifies OwlDialog to adjust focus/active properties on owl dialogs
             OwlDialog.display(self);
+
+            // Notifies new webclient to adjust UI active element
+            core.bus.trigger("legacy_dialog_opened", self);
         });
 
         return self;
@@ -232,6 +236,9 @@ var Dialog = Widget.extend({
      *   `on_close` handler.
      */
     destroy: function (options) {
+        // Notifies new webclient to adjust UI active element
+        core.bus.trigger("legacy_dialog_destroyed", this);
+
         // Need to trigger before real destroy but if 'closed' handler destroys
         // the widget again, we want to avoid infinite recursion
         if (!this.__closed) {

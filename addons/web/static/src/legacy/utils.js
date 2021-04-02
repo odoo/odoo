@@ -52,6 +52,63 @@ export function makeLegacyRpcService(legacyEnv) {
   };
 }
 
+/**
+ * Returns a service that maps legacy dialogs
+ * to new environment services behavior.
+ *
+ * @param {object} legacyEnv
+ * @returns a wowl deployable service
+ */
+export function makeLegacyDialogMappingService(legacyEnv) {
+  return {
+    dependencies: ["ui", "hotkey"],
+    deploy(env) {
+      const { ui, hotkey } = env.services;
+
+      function getModalEl(dialog) {
+        return dialog.modalRef
+          ? dialog.modalRef.el
+          : dialog.$modal[0];
+      }
+
+      function getCloseCallback(dialog) {
+        return dialog.modalRef
+          ? () => dialog._close()
+          : () => dialog.$modal.modal("hide");
+      }
+
+      const tokensMap = new Map();
+
+      function onOpenDialog(dialog) {
+        ui.activateElement(getModalEl(dialog));
+        const token = hotkey.registerHotkey(
+          "escape",
+          getCloseCallback(dialog),
+          { altIsOptional: true }
+        );
+        tokensMap.set(token, dialog);
+      }
+
+      function onCloseDialog(dialog) {
+        for (const [token, d] of tokensMap) {
+          if (d === dialog) {
+            ui.deactivateElement(getModalEl(dialog));
+            hotkey.unregisterHotkey(token);
+            tokensMap.delete(token);
+            break;
+          }
+        }
+      }
+
+      legacyEnv.bus.on("legacy_dialog_opened", null, onOpenDialog);
+      legacyEnv.bus.on("legacy_dialog_destroyed", null, onCloseDialog);
+
+      legacyEnv.bus.on("owl_dialog_mounted", null, onOpenDialog);
+      legacyEnv.bus.on("owl_dialog_willunmount", null, onCloseDialog);
+    },
+  };
+}
+
 export function makeLegacySessionService(legacyEnv, session) {
   return {
     name: "legacy_session",
