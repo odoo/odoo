@@ -1015,14 +1015,16 @@
 
 <t t-name="FormSelection">
     <div class="btn-group o_selection" aria-atomic="true">
-        <a href="#" data-toggle="dropdown" aria-expanded="false" role="button" title="Dropdown menu"><span class="o_status"/></a>
+        <a href="#" data-toggle="dropdown" aria-expanded="false" role="button" title="Dropdown menu">
+            <span class="o_status rounded-circle d-inline-block align-middle"/>
+        </a>
         <div class="dropdown-menu state" role="menu"/>
     </div>
 </t>
 <t t-name="FormSelection.items">
     <t t-foreach="states" t-as="rec">
-        <a role="menuitem" href="#" class="dropdown-item" t-att-data-value="rec.name">
-            <span t-att-class="'o_status ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
+        <a role="menuitem" href="#" class="dropdown-item pl-4" t-att-data-value="rec.name">
+            <span t-att-class="'o_status rounded-circle d-inline-block align-middle ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
             <t t-raw="rec.state_name"/>
         </a>
     </t>
