@@ -4,6 +4,7 @@
 from odoo import http
 from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.http import request
+from werkzeug.exceptions import Forbidden
 
 
 class WebsiteEventTrackQuiz(EventTrackController):
@@ -32,6 +33,8 @@ class WebsiteEventTrackQuiz(EventTrackController):
         result = {
             'answers': {
                 answer.question_id.id: {
+                    'awarded_points': answer.awarded_points,
+                    'correct_answer': answer.question_id.correct_answer_id.text_value,
                     'is_correct': answer.is_correct,
                     'comment': answer.comment
                 } for answer in answers_details['user_answers']
@@ -43,9 +46,11 @@ class WebsiteEventTrackQuiz(EventTrackController):
             result['visitor_uuid'] = visitor_sudo.access_token
         return result
 
-    @http.route('/event_track/quiz/reset', type="json", auth="user", website=True)
+    @http.route('/event_track/quiz/reset', type="json", auth="public", website=True)
     def quiz_reset(self, event_id, track_id):
         track = self._fetch_track(track_id)
+        if not request.env.user.has_group('event.group_event_manager') and not track.sudo().quiz_id.unlimited_tries:
+            raise Forbidden()
 
         event_track_visitor = track._get_event_track_visitors(force_create=True)
         event_track_visitor.write({
@@ -65,6 +70,6 @@ class WebsiteEventTrackQuiz(EventTrackController):
             'user_answers': user_answers,
             'points': sum([
                 answer.awarded_points
-                for answer in user_answers.filtered(lambda answer: answer.is_correct)
+                for answer in user_answers
             ])
         }

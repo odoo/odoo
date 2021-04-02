@@ -39,8 +39,13 @@
                             placeholder="e.g. Test your Knowledge"/>
                     </h1>
                     <group>
-                        <field name="event_track_id"/>
-                        <field name="event_id"/>
+                        <group>
+                            <field name="unlimited_tries" string="Allow multiple tries"/>
+                        </group>
+                        <group groups="base.group_no_one">
+                            <field name="event_track_id"/>
+                            <field name="event_id"/>
+                        </group>
                     </group>
                     <group name="questions" string="Questions">
                         <field name="question_ids" nolabel="1"
