@@ -27,21 +27,23 @@ class TestCalendarController(HttpCase):
 
     def test_accept_meeting_unauthenticated(self):
         self.event.write({"partner_ids": [(4, self.other_user.partner_id.id)]})
-        token = self.event.attendee_ids[1].access_token
+        attendee = self.event.attendee_ids.filtered(lambda att: att.partner_id.id == self.other_user.partner_id.id)
+        token = attendee.access_token
         url = "/calendar/meeting/accept?token=%s&id=%d" % (token, self.event.id)
         res = self.url_open(url)
 
         self.assertEqual(res.status_code, 200, "Response should = OK")
-        self.event.attendee_ids[1].invalidate_cache()
-        self.assertEqual(self.event.attendee_ids[1].state, "accepted", "Attendee should have accepted")
+        attendee.invalidate_cache()
+        self.assertEqual(attendee.state, "accepted", "Attendee should have accepted")
 
     def test_accept_meeting_authenticated(self):
         self.event.write({"partner_ids": [(4, self.other_user.partner_id.id)]})
-        token = self.event.attendee_ids[1].access_token
+        attendee = self.event.attendee_ids.filtered(lambda att: att.partner_id.id == self.other_user.partner_id.id)
+        token = attendee.access_token
         url = "/calendar/meeting/accept?token=%s&id=%d" % (token, self.event.id)
         self.authenticate("test_user_2", "P@ssw0rd!")
         res = self.url_open(url)
 
         self.assertEqual(res.status_code, 200, "Response should = OK")
-        self.event.attendee_ids[1].invalidate_cache()
-        self.assertEqual(self.event.attendee_ids[1].state, "accepted", "Attendee should have accepted")
+        attendee.invalidate_cache()
+        self.assertEqual(attendee.state, "accepted", "Attendee should have accepted")
