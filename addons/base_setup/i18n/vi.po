@@ -7,8 +7,8 @@
 # Thang Duong Bao <nothingctrl@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr ""
 #: code:addons/base_setup/static/src/xml/res_config_edition.xml:0
 #, python-format
 msgid "(Community Edition)"
-msgstr "(Ấn bản Community)"
+msgstr "(Phiên bản Community)"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -45,7 +45,9 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
-msgstr "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-users\" aria-label=\"Số lượng người dùng đang hoạt"
+" động\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -58,10 +60,10 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
-"                                            Active User\n"
+"                                            Người dùng đang hoạt động\n"
 "                                        </span>\n"
 "                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
-"                                            Active Users\n"
+"                                            Người dùng đang hoạt động\n"
 "                                        </span>"
 
 #. module: base_setup
@@ -76,10 +78,10 @@ msgid ""
 "                                        <br/>"
 msgstr ""
 "<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
-"                                            Company\n"
+"                                            Công ty\n"
 "                                        </span>\n"
 "                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
-"                                            Companies\n"
+"                                            Công ty\n"
 "                                        </span>\n"
 "                                        <br/>"
 
@@ -94,10 +96,10 @@ msgid ""
 "                                            </span>"
 msgstr ""
 "<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
-"                                                Language\n"
+"                                                Ngôn ngữ\n"
 "                                            </span>\n"
 "                                            <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
-"                                                Languages\n"
+"                                                Ngôn ngữ\n"
 "                                            </span>"
 
 #. module: base_setup
@@ -106,8 +108,8 @@ msgid ""
 "<span class=\"o_form_label\">Document Layout</span>\n"
 "                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Document Layout</span>\n"
-"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"<span class=\"o_form_label\">Bố cục tài liệu</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Các giá trị được đặt ở đây là dành riêng cho công ty.\" aria-label=\"Các giá trị được đặt ở đây là dành riêng cho công ty.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -124,15 +126,15 @@ msgid ""
 "<strong>Save</strong> this page and come back here to choose your Geo "
 "Provider."
 msgstr ""
-"<strong>Save</strong> this page and come back here to choose your Geo "
-"Provider."
+"<strong>Lưu</strong> trang này và quay lại chọn nhà cung cấp định vị của "
+"bạn."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr ""
-"<strong>Save</strong> this page and come back here to set up reCaptcha."
+"<strong>Lưu</strong> trang này và quay lại đây để thiết lập reCaptcha."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -171,7 +173,7 @@ msgstr "Kích hoạt chế độ phát triển (có assets)"
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode (with tests assets)"
-msgstr "Activate the developer mode (with tests assets)"
+msgstr "Kích hoạt chế độ phát triển (có chạy thử assets)"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -217,16 +219,14 @@ msgstr "Đính kèm tài liệu google vào các dữ liệu"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Automatically enrich your contact base with company data"
-msgstr "Automatically enrich your contact base with company data"
+msgstr "Tự động làm phong phú cơ sở liên hệ của bạn với dữ liệu công ty"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "Automatically generate counterpart documents for orders/invoices between "
 "companies"
-msgstr ""
-"Automatically generate counterpart documents for orders/invoices between "
-"companies"
+msgstr "Tự động tạo tài liệu đối với đơn hàng/hóa đơn giữa các công ty"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -244,7 +244,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose the layout of your documents"
-msgstr "Choose the layout of your documents"
+msgstr "Chọn bố cục cho tài liệu của bạn"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_pad
@@ -264,7 +264,7 @@ msgstr "Công ty"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
 msgid "Company Informations"
-msgstr "Company Informations"
+msgstr "Thông tin công ty"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_name
@@ -279,7 +279,7 @@ msgstr "Thiết lập cấu hình"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Configure Document Layout"
-msgstr "Configure Document Layout"
+msgstr "Cài đặt bố cục tài liệu"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -300,7 +300,7 @@ msgstr "Liên hệ"
 #: code:addons/base_setup/static/src/xml/res_config_edition.xml:0
 #, python-format
 msgid "Copyright © 2004"
-msgstr "Copyright © 2004"
+msgstr "Bản quyền © 2004"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -317,7 +317,7 @@ msgstr "Tùy chỉnh chân báo cáo"
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Deactivate the developer mode"
-msgstr "Vô hiệu chế độ phát triển"
+msgstr "Tắt chế độ phát triển"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
@@ -336,7 +336,7 @@ msgstr ""
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Developer Tools"
-msgstr "Developer Tools"
+msgstr "Công cụ phát triển"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_ir_http__display_name
@@ -365,14 +365,14 @@ msgstr "Sửa bố cục"
 #: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
 #, python-format
 msgid "Email addresses already existing: %s."
-msgstr "Email addresses already existing: %s."
+msgstr "Các địa chỉ email sau đây đã tồn tại: %s."
 
 #. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Enter e-mail address"
-msgstr "Enter e-mail address"
+msgstr "Điền địa chỉ email"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
@@ -415,7 +415,7 @@ msgstr "Thiết lập chung"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geo Localization"
-msgstr "Geo Localization"
+msgstr "Thông tin địa lý"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
@@ -425,7 +425,7 @@ msgstr "GeoLocalize"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "GeoLocalize your partners"
-msgstr "GeoLocalize your partners"
+msgstr "Tọa độ đối tác của bạn"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -474,7 +474,7 @@ msgstr "Giao dịch liên Công ty"
 #: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
 #, python-format
 msgid "Invalid email addresses: %s."
-msgstr "Invalid email addresses: %s."
+msgstr "Các địa chỉ email sau đây không đúng: %s."
 
 #. module: base_setup
 #. openerp-web
@@ -488,7 +488,7 @@ msgstr "Mời"
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Invite New Users"
-msgstr "Invite New Users"
+msgstr "Mời người dùng mới"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -523,12 +523,12 @@ msgstr "Nạp dữ liệu mô phỏng"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr "Manage API Keys"
+msgstr "Quản lý khóa API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Companies"
-msgstr "Manage Companies"
+msgstr "Quản lý các công ty"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
@@ -538,17 +538,17 @@ msgstr "Quản lý liên công ty"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Languages"
-msgstr "Manage Languages"
+msgstr "Quản lý ngôn ngữ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr "Manage Users"
+msgstr "Quản lý người dùng"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Multi-Company"
-msgstr "Multi-Company"
+msgstr "Đa công ty"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
@@ -558,7 +558,7 @@ msgstr "Đa tiền tệ"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__active_user_count
 msgid "Number of Active Users"
-msgstr "Number of Active Users"
+msgstr "Số lượng tài khoản người dùng kích hoạt"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_count
@@ -568,7 +568,7 @@ msgstr "Số lượng công ty"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__language_count
 msgid "Number of Languages"
-msgstr "Number of Languages"
+msgstr "Số lượng ngôn ngữ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -592,12 +592,12 @@ msgstr "Odoo S.A."
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "On Apple Store"
-msgstr "On Apple Store"
+msgstr "Trên Apple Store"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "On Google Play"
-msgstr "On Google Play"
+msgstr "Trên Google Play"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -619,12 +619,12 @@ msgstr "Tự động điền thông tin đối tác"
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Pending Invitations:"
-msgstr "Pending Invitations:"
+msgstr "Lời mời đang đợi:"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Permissions"
-msgstr "Permissions"
+msgstr "Quyền"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -639,17 +639,17 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send SMS"
-msgstr "Send SMS"
+msgstr "Gửi SMS"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Send texts to your contacts"
-msgstr "Send texts to your contacts"
+msgstr "Gửi tin nhắn tới liên hệ của bạn"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
-msgstr "Thiết lập quyền truy cập tuỳ chỉnh cho người dùng mới"
+msgstr "Thiết lập quyền truy cập khác cho người dùng mới"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -674,7 +674,7 @@ msgstr "Đồng bộ lịch của bạn trên Odoo với Lịch Google"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Outlook"
-msgstr "Synchronize your calendar with Outlook"
+msgstr "Đồng bộ hóa lịch của bạn với Outlook"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
@@ -689,7 +689,7 @@ msgstr "Thư viện hình ảnh"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Update Info"
-msgstr "Update Info"
+msgstr "Cập nhật thông tin"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -741,4 +741,4 @@ msgstr "thêm"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
 msgid "reCAPTCHA: Easy on Humans, Hard on Bots"
-msgstr "reCAPTCHA: Easy on Humans, Hard on Bots"
+msgstr "reCAPTCHA: Dễ với con người, Khó với Bots"

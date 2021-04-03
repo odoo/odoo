@@ -39,6 +39,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> MJ Produktu je %s (%s) - MJ pohybu je %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -534,7 +537,7 @@ msgstr "<strong>Kam chcete produkty odeslat?</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? To může vést k nesrovnalostem v inventáři."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -865,7 +868,7 @@ msgstr "Dostupné produkty"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__available_quantity
 msgid "Available Quantity"
-msgstr ""
+msgstr "Dostupné množství"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -3225,7 +3228,7 @@ msgstr "Určuje, zda má být zboží dodáno po částech nebo naráz"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
 msgid "JSON data for the popover widget"
-msgstr ""
+msgstr "Data JSON pro widget popover"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__json_lead_days_popover
@@ -4591,7 +4594,7 @@ msgstr "Předvyplňte podrobné operace"
 #: code:addons/stock/static/src/xml/popover_widget.xml:0
 #, python-format
 msgid "Preceding operations"
-msgstr ""
+msgstr "Předcházející operace"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
@@ -5094,7 +5097,7 @@ msgstr "Množství na skladě které může být rezervováno pro tento pohyb"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
 msgid "Quantity in the default UoM of the product"
-msgstr ""
+msgstr "Množství ve výchozí MJ produktu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -5386,7 +5389,7 @@ msgstr "Průvodce doplněním"
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Replenishment"
-msgstr ""
+msgstr "Doplňování"
 
 #. module: stock
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -6575,6 +6578,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
+"Požadovanou operaci nelze zpracovat z důvodu programovací chyby při "
+"nastavení pole `product_qty` namísto` product_uom_qty`."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7205,7 +7210,7 @@ msgstr "UoM"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "Kategorie MJ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -7285,7 +7290,7 @@ msgstr "Ověřeno"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Počet variant"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -7770,6 +7775,8 @@ msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"Poměr této měrné jednotky nemůžete změnit, protože některé produkty s touto "
+"MJ již byly přesunuty nebo jsou aktuálně rezervovány."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8044,7 +8051,7 @@ msgstr "např. PO0032"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "from location"
-msgstr ""
+msgstr "z místa"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view

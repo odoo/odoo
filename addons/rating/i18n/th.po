@@ -1,37 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * rating
+# 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
-# gsong <gsong2014@foxmail.com>, 2018
+# Martin Trigaux, 2020
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
+# gsong <gsong2014@foxmail.com>, 2020
+# Odoo Thaidev <odoothaidev@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: gsong <gsong2014@foxmail.com>, 2018\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
+"PO-Revision-Date: 2020-09-07 08:17+0000\n"
+"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid ""
-"<br/>\n"
-"                            on our services on \""
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
-msgid "<span class=\"o_stat_text\">Resource</span>"
-msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
@@ -60,11 +49,6 @@ msgid "Created by"
 msgstr "สร้างโดย"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
-msgid "Created on"
-msgstr "สร้างเมื่อ"
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Customer"
@@ -76,13 +60,17 @@ msgid "Date"
 msgstr "วันที่"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_message__display_name
+#: model:ir.model.fields,field_description:rating.field_mail_thread__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
 msgstr "ชื่อที่ใช้แสดง"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Document"
 msgstr "เอกสาร"
 
@@ -102,28 +90,42 @@ msgid "Enabled if the rating has been filled."
 msgstr ""
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Feel free to write a feedback on your experience:"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
 msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Go to our website"
+msgid "Go back to the Homepage"
 msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Group By"
-msgstr "จัดกลุ่มโดย"
+msgstr "จัดกลุ่มตาม"
 
 #. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__is_internal
+msgid ""
+"Hide to public / portal users, independently from subtype configuration."
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_message__id
+#: model:ir.model.fields,field_description:rating.field_mail_thread__id
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__id
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__id
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
 msgstr "รหัส"
@@ -139,7 +141,10 @@ msgid "Image"
 msgstr "รูปภาพ"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_message____last_update
+#: model:ir.model.fields,field_description:rating.field_mail_thread____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
@@ -155,12 +160,8 @@ msgid "Last Updated on"
 msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
-msgid "Linked message"
-msgstr ""
-
-#. module: rating
 #: model:ir.model,name:rating.model_mail_message
+#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Message"
 msgstr "ข้อความ"
 
@@ -175,18 +176,18 @@ msgid "My Ratings"
 msgstr ""
 
 #. module: rating
-#: selection:rating.rating,rating_text:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__no_rating
 msgid "No Rating yet"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.actions.act_window,help:rating.action_view_rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_view
 msgid "No rating yet"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__not_satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
 msgstr ""
 
@@ -211,8 +212,23 @@ msgid "Parent Document Name"
 msgstr ""
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "Parent Holder"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
+msgid "Parent Ref"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
 msgstr ""
 
 #. module: rating
@@ -222,11 +238,11 @@ msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
-msgid "Rated person"
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Rated Operator"
 msgstr ""
 
 #. module: rating
-#: model:ir.actions.act_window,name:rating.action_view_rating
 #: model:ir.model,name:rating.model_rating_rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
@@ -237,6 +253,7 @@ msgid "Rating"
 msgstr ""
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
@@ -263,14 +280,19 @@ msgid "Rating Mixin"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
-msgid "Rating Number"
+#: model:ir.model,name:rating.model_rating_parent_mixin
+msgid "Rating Parent Mixin"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
 msgid "Rating Value"
 msgstr ""
 
@@ -280,16 +302,20 @@ msgid "Rating count"
 msgstr ""
 
 #. module: rating
-#: sql_constraint:rating.rating:0
-msgid "Rating should be between 0 to 10"
+#: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
+msgid "Rating should be between 0 and 5"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
-msgid "Rating value: 0=Unhappy, 10=Happy"
+msgid "Rating value: 0=Unhappy, 5=Happy"
 msgstr ""
 
 #. module: rating
+#: model:ir.actions.act_window,name:rating.rating_rating_view
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
+#: model:ir.ui.menu,name:rating.rating_rating_menu_technical
+#: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
 msgstr ""
@@ -303,10 +329,9 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
 msgid "Related Document Model"
-msgstr ""
+msgstr "รูปแบบเอกสารที่เกี่ยวข้อง"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
@@ -318,20 +343,25 @@ msgid "Resource"
 msgstr "ทรัพยากร"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
+msgid "Resource Ref"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
 msgid "Resource name"
 msgstr "ชื่อทรัพยากร"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Satisfied"
 msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "ความปลอดภัย"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -339,14 +369,18 @@ msgid "Send Feedback"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
 msgid "Submitted on"
 msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Thanks! We appreciate your feedback."
+msgid "Thank you for rating our services!"
+msgstr ""
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "Thank you, we appreciate your feedback!"
 msgstr ""
 
 #. module: rating
@@ -355,27 +389,16 @@ msgid "The name of the rated resource."
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.actions.act_window,help:rating.action_view_rating
+#: model_terms:ir.actions.act_window,help:rating.rating_rating_view
 msgid "There is no rating for this object at the moment."
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "We appreciate your feedback!"
+#: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
+msgid "Visible Internally Only"
 msgstr ""
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Would be great if you can provide more information:"
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Your rating has been submitted."
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
 msgstr "โดย"
@@ -386,13 +409,13 @@ msgid "for"
 msgstr ""
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:21
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "highly dissatisfied"
 msgstr ""
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:20
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "not satisfied"
 msgstr ""
@@ -403,12 +426,7 @@ msgid "on"
 msgstr "บน"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:22
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "satisfied"
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "you are"
 msgstr ""

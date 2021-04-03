@@ -6,6 +6,7 @@
 # Martin Trigaux, 2020
 # Chris Egal <sodaswed@web.de>, 2020
 # Udo Hennig <info@udohennig.de>, 2021
+# Robert Förster <hello@suppliot.eu>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Udo Hennig <info@udohennig.de>, 2021\n"
+"Last-Translator: Robert Förster <hello@suppliot.eu>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "(Disable two-factor authentication)"
-msgstr ""
+msgstr "(Zwei-Faktor-Authentifizierung deaktivieren)"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -40,6 +41,8 @@ msgid ""
 "<i class=\"fa fa-check-circle\"/>\n"
 "                                Two-factor authentication enabled"
 msgstr ""
+"<i class=\"fa fa-check-circle\"/>\n"
+"                                Zwei-Faktor-Authentifizierung aktiviert"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -47,6 +50,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/>\n"
 "                                Two-factor authentication not enabled"
 msgstr ""
+"<i class=\"fa fa-warning\"/>\n"
+"                                Zwei-Faktor-Authentifizierung nicht aktiviert"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -56,6 +61,10 @@ msgid ""
 "                            Two-factor authentication not enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"alert alert-info\" role=\"status\">\n"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                            Zwei-Faktor-Authentifizierung nicht aktiviert\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -65,6 +74,10 @@ msgid ""
 "                            Two-factor authentication enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-success\">\n"
+"                            <i class=\"fa fa-check-circle\"/>\n"
+"                            Zwei-Faktor-Authentifizierung aktiviert\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -111,13 +124,13 @@ msgstr "Anzeigename"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Enable Two-Factor Authentication"
-msgstr ""
+msgstr "Aktiviere Zwei-Faktor-Authentifizierung"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable two-factor authentication"
-msgstr ""
+msgstr "Aktiviere Zwei-Faktor-Authentifizierung"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -205,18 +218,18 @@ msgstr ""
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Two-factor Authentication"
-msgstr ""
+msgstr "Zwei-Faktor-Authentifizierung"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "Zwei-Faktor-Authentifizierung"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr ""
+msgstr "Zwei-Faktor-Authentifizierung bereits aktiviert"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
@@ -228,13 +241,13 @@ msgstr ""
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for user(s) %s"
-msgstr ""
+msgstr "Zwei-Faktor-Authentifizierung deaktiviert für User(s) %s"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication is now enabled."
-msgstr ""
+msgstr "Zwei-Faktor-Authentifizierung ist jetzt aktiviert"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url

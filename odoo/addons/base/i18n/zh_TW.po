@@ -7,8 +7,8 @@
 # Martin Trigaux, 2020
 # sejun huang <sejun.huang@gmail.com>, 2020
 # zhengwei wu <wzw15199@gmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8310,6 +8310,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">公司地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">發票地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">收貨地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">其他地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">家庭地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">地址</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -20069,7 +20077,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Notes"
-msgstr "待辦事項"
+msgstr "備註"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_nr

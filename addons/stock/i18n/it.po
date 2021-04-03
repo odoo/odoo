@@ -924,7 +924,7 @@ msgstr "Movimento automatico"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__auto__transparent
 msgid "Automatic No Step Added"
-msgstr "Automatico, nessun passaggio aggiuntivo"
+msgstr "Automatico senza fase aggiunta"
 
 #. module: stock
 #. openerp-web
@@ -1181,7 +1181,7 @@ msgstr "Esiste un movimento concatenato"
 #: model:ir.actions.act_window,name:stock.action_change_product_quantity
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
-msgstr "Cambio quantità prodotto"
+msgstr "Variazione quantità di prodotto"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__move_id
@@ -3916,7 +3916,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
 msgid "Multi-Step Routes"
-msgstr "Percorsi multi-passo"
+msgstr "Percorsi multi-fase"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
@@ -3995,7 +3995,7 @@ msgstr "Tipologia prossima attività"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Next transfer(s) impacted:"
-msgstr "Prossimo/i trasferimento/i colpito/i:"
+msgstr "Trasferimenti successivi coinvolti:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -4035,8 +4035,8 @@ msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)."
 msgstr ""
-"Nessun prodotto da restituire (solo le righe in stato \"Completato\" e non "
-"completamente restituite possono essere restituite)."
+"Nessun prodotto da rendere (possono essere rese solo le righe in stato "
+"Completato e non ancora totalmente restituite)."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
@@ -4334,27 +4334,27 @@ msgstr "Origine"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Origin Moves"
-msgstr "Movimenti origine"
+msgstr "Movimenti di origine"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__origin_returned_move_id
 msgid "Origin return move"
-msgstr "Origine movimenti di reso"
+msgstr "Movimento di reso di origine"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__original_location_id
 msgid "Original Location"
-msgstr "Ubicazione originale"
+msgstr "Ubicazione di origine"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_orig_ids
 msgid "Original Move"
-msgstr "Movimento originale"
+msgstr "Movimento di origine"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__orderpoint_id
 msgid "Original Reordering Rule"
-msgstr ""
+msgstr "Regola di riordino di origine"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5026,7 +5026,7 @@ msgstr "Propaga"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__propagate_cancel
 msgid "Propagate cancel and split"
-msgstr "Propagare annullamento e dividere"
+msgstr "Propagare annullamento e suddividere"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -5648,7 +5648,7 @@ msgstr "Prelievo reso"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr "Inverti trasferimento"
+msgstr "Storno trasferimento"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__name
@@ -6382,12 +6382,12 @@ msgstr "Regola di giacenza"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_rules_report
 msgid "Stock Rules Report"
-msgstr "Resoconto regole magazzino"
+msgstr "Resoconto regole di magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr "Resoconto regole magazzino"
+msgstr "Resoconto regole di magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_confirmation
@@ -6422,7 +6422,7 @@ msgstr "Movimenti di magazzino elaborati"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "Resoconto regola magazzino"
+msgstr "Resoconto regola di magazzino"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__type__product
@@ -6596,9 +6596,9 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
-"Il valore \"Operazione manuale\" crea un movimento dopo l'attuale. Con "
-"\"Automatico senza successivo\" l'ubicazione è sostituita nel movimento "
-"originale."
+"Il valore \"Operazione manuale\" crea un movimento di magazzino dopo quello "
+"attuale. Con \"Automatico senza fase aggiunta\" nel movimento di origine "
+"viene sostituita l'ubicazione."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -6845,10 +6845,10 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"Questa è l'ubicazione di destinazione predefinita quando si crea un prelievo"
-" manuale con questo tipo di operazione. È tuttavia possibile modificarla o "
-"che i percorsi definiscano un'altra ubicazione. Se questo campo è vuoto, "
-"verrà cotrollata l'ubicazione cliente definita sul partner. "
+"Ubicazione di destinazione predefinita quando viene creato un prelievo "
+"manuale per questo tipo di operazione. È tuttavia possibile modificarla o "
+"che venga definita un'altra ubicazione dai percorsi. Se vuota, viene "
+"controllata l'ubicazione cliente del partner."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -6858,10 +6858,10 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
-"Questa è l'ubicazione iniziale predefinita quando si crea un prelievo "
-"manuale con questo tipo di operazione. È tuttavia possibile modificarla o "
-"che i percorsi definiscano un'altra ubicazione. Se questo campo è vuoto, "
-"verrà usata l'ubicazione fornitore definita sul partner. "
+"Ubicazione di origine predefinita quando viene creato un prelievo manuale "
+"per questo tipo di operazione. È tuttavia possibile modificarla o che venga "
+"definita un'altra ubicazione dai percorsi. Se vuota, viene controllata "
+"l'ubicazione fornitore del partner."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -6953,10 +6953,10 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
-"Questo prelievo sembra essere collegato con un'altra operazione. Più tardi, "
-"se si riceve la merce che si sta restituendo ora, assicurasi di "
-"<b>invertire</b> il prelievo di reso per evitare che le regole logistiche si"
-" applichino di nuovo (ciò creerebbe operazioni duplicate). "
+"Questo prelievo sembra essere concatenato a un'altra operazione. Se la merce"
+" ora in reso viene ricevuta in seguito, assicurarsi di <b>stornare</b> il "
+"prelievo di reso. Questo per evitare che le regole di logistica vengano "
+"applicate di nuovo (verrebbero create operazioni duplicate)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7170,7 +7170,7 @@ msgstr "Trasferimento"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_partner_id
 msgid "Transfer Destination Address"
-msgstr "Indirizzo destinazione trasferimento"
+msgstr "Indirizzo di destinazione trasferimento"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
@@ -7756,9 +7756,8 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
-"Quando il prelievo non è completato, questo consente di modificare la "
-"domanda iniziale. Quando il prelievo è completato, questo consente di "
-"modificare le quantità realizzate."
+"Un prelievo non completato consente di variare la richiesta iniziale. Quando"
+" viene completato è consentito modificare le quantità realizzate."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -7960,6 +7959,8 @@ msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
 msgstr ""
+"Impossibile annullare un movimento di magazzino impostato a \"Completato\". "
+"Per stornare i movimenti effettuati creare un reso."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -8031,8 +8032,8 @@ msgid ""
 "You cannot perform the move because the unit of measure has a different "
 "category as the product unit of measure."
 msgstr ""
-"Non è possibile eseguire il movimento perché l'unità di misura ha una "
-"categoria diversa dall'unità di misura del prodotto. "
+"Impossibile eseguire il movimento. L'unità di misura possiede una categoria "
+"diversa da quella dell'unità di misura del prodotto."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -8049,15 +8050,14 @@ msgstr ""
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
-"Impossibile suddividere un movimento in bozza. Deve prima essere confermato."
+"Impossibile suddividere un movimento in bozza, deve prima essere confermato."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
 msgstr ""
-"Non è possibile dividere un movimento di magazzino che è nello stato "
-"\"Completato\"."
+"Impossibile suddividere un movimento di magazzino con stato \"Completato\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8083,8 +8083,8 @@ msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
-"Impossibile usare due volte lo stesso numero di serie. Correggere i numeri "
-"di serie inseriti. "
+"Impossibile usare due volte lo stesso numero di serie, correggere i numeri "
+"inseriti. "
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -8103,7 +8103,8 @@ msgstr ""
 msgid ""
 "You have manually created product lines, please delete them to proceed."
 msgstr ""
-"Hai creato righe di prodotto manualmente, devi cancellarli per procedere."
+"Le righe di prodotto sono state create manualmente, per procedere devono "
+"essere eliminate."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
@@ -8215,7 +8216,7 @@ msgid ""
 "You tried to create a record who already exists.<br/>This last one has been "
 "modified instead."
 msgstr ""
-"Tentativo di creazione di un record già esistente.<br/>È stato invece  "
+"Tentativo di creazione di un record già esistente.<br/>È stato invece "
 "modificato quest'ultimo."
 
 #. module: stock
@@ -8312,7 +8313,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
-msgstr "elaborato al posto di"
+msgstr "elaborati al posto di"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph

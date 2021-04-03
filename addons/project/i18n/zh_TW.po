@@ -6,7 +6,8 @@
 # Martin Trigaux, 2020
 # gogobook <O968041428@gmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# Kevin Li, 2021
+# 李振維, 2021
+# Manga Tsang <mts@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Kevin Li, 2021\n"
+"Last-Translator: Manga Tsang <mts@odoo.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -415,7 +416,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "<span>Are you sure you want to delete this project ?</span>"
-msgstr "<span>確定要刪除專案？</span>"
+msgstr "<span>確定要刪除項目？</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -457,7 +458,7 @@ msgstr "<strong>訊息與互動歷程</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
-msgstr "<strong>專案:</strong>"
+msgstr "<strong>項目:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -627,7 +628,7 @@ msgstr "分析帳戶"
 msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
-msgstr "此專案與財務管理相關聯的分析帳戶。流量分析客戶紀錄專案的成本和收入。"
+msgstr "此項目與財務管理相關聯的分析帳戶。流量分析客戶紀錄項目的成本和收入。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -648,7 +649,7 @@ msgstr "封存階段"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Archive project"
-msgstr "封存專案"
+msgstr "封存項目"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -861,6 +862,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
 "     of a product, of a team, of a construction site...</i>"
 msgstr ""
+"建立您的項目 <b>名稱</b> 。 <i>您可以用任何方式命名項目，例如客戶名稱、\n"
+"     產品名稱、團隊名稱、工作地點等。</i>"
 
 #. module: project
 #. openerp-web
@@ -978,7 +981,7 @@ msgstr "建立"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr "建立專案"
+msgstr "建立項目"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
@@ -1212,7 +1215,7 @@ msgstr "刪除"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Delete Project"
-msgstr "刪除專案"
+msgstr "刪除項目"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1233,7 +1236,7 @@ msgstr "已送貨"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Describe your project..."
-msgstr ""
+msgstr "請描述您的項目⋯⋯"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
@@ -1417,7 +1420,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "Error! project start-date must be lower than project end-date."
-msgstr "錯誤！專案的起始日期須大於結束日期。"
+msgstr "錯誤！項目的開始日期須早於結束日期。"
 
 #. module: project
 #. openerp-web
@@ -2125,7 +2128,7 @@ msgstr "我的收藏夾"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Projects"
-msgstr "我的專案"
+msgstr "我的項目"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2188,7 +2191,7 @@ msgstr "新訂單"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Projects"
-msgstr "新專案"
+msgstr "新項目"
 
 #. module: project
 #. openerp-web
@@ -2250,7 +2253,7 @@ msgstr "還沒有客戶評分"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "No projects found. Let's create one!"
-msgstr ""
+msgstr "沒有找到任何項目。立即建立新項目！"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -2570,12 +2573,12 @@ msgstr "優先級"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Project"
-msgstr "專案"
+msgstr "項目"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
 msgid "Project Count"
-msgstr "專案個數"
+msgstr "項目數目"
 
 #. module: project
 #: model:ir.model,name:project.model_project_delete_wizard

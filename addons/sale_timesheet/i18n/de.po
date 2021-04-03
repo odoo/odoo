@@ -20,7 +20,9 @@
 # Martin Trigaux, 2020
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2020
 # Robert Förster <robert.jun@foerster.co.at>, 2020
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
+# Wolfgang Taferner, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2020\n"
+"Last-Translator: Wolfgang Taferner, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -261,7 +263,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Before"
-msgstr ""
+msgstr "Vor"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allow_billable
@@ -470,7 +472,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
-msgid "Customer Type"
+msgid "Invoice Tasks to"
 msgstr ""
 
 #. module: sale_timesheet
@@ -596,7 +598,7 @@ msgstr "Festpreis-Dienste"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
-msgid "Fixed rate"
+msgid "Project rate"
 msgstr ""
 
 #. module: sale_timesheet
@@ -702,7 +704,7 @@ msgstr "Rechnung"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_project
-msgid "Invoice all tasks to a single customer"
+msgid "A unique customer"
 msgstr ""
 
 #. module: sale_timesheet
@@ -712,7 +714,7 @@ msgstr "Rechnung aus dem Stundenzettel erstellt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_task
-msgid "Invoice tasks separately to different customers"
+msgid "Different customers"
 msgstr ""
 
 #. module: sale_timesheet
@@ -814,6 +816,7 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: sale_timesheet
+#. openerp-web
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Late"
@@ -962,8 +965,8 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
-msgid "Ordered quantities"
-msgstr "Rechnung bei Auftrag"
+msgid "Prepaid"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -1065,7 +1068,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__currency_id
 msgid "Project Currency"
-msgstr ""
+msgstr "Projekt Währung"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__user_id
@@ -1226,6 +1229,8 @@ msgid ""
 "Select a Service product with which you would like to bill your time spent "
 "on tasks."
 msgstr ""
+"Wählen Sie ein Dienstleistungsprodukt aus, mit welchem Sie Ihre Zeit "
+"verrechnen wollen."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__timesheet_product_id
@@ -1286,7 +1291,7 @@ msgstr ""
 #: model:product.product,name:sale_timesheet.time_product
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Dienstleistung für Zeiterfassung"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -1411,6 +1416,8 @@ msgid ""
 "The timesheet product is required when the task can be billed and timesheets"
 " are allowed."
 msgstr ""
+"Das Zeitprodukt ist nötig, wenn die Aufgabe in Rechnung gestellt werden kann"
+" resp. wenn die Zeiterfassung erlaubt ist."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1490,7 +1497,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
 msgid "Timesheet Product"
-msgstr ""
+msgstr "Zeitprodukt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
@@ -1588,7 +1595,7 @@ msgstr "Dienstleistungsverfolgung"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__price_unit
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__price_unit
 msgid "Unit Price"
-msgstr "Preis pro ME"
+msgstr "Einzelpreis"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
