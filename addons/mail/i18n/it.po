@@ -15,8 +15,8 @@
 # Martin Trigaux, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Paolo Valier, 2020
+# Léonie Bouchat <lbo@odoo.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
-# Léonie Bouchat <lbo@odoo.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
@@ -500,7 +500,7 @@ msgstr "Azione da eseguire"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "Vista finestra azione"
+msgstr "Azione visualizzazione finestra"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
@@ -522,7 +522,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
 msgid "Activated by default when subscribing."
-msgstr "Attivati di default dopo l'iscrizione."
+msgstr "Attivato in modo predefinito all'iscrizione."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__active
@@ -878,8 +878,8 @@ msgid ""
 "Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
 msgstr ""
-"Eliminare veramente %s errori di consegna? In seguito non sarà più possibile"
-" reinviare queste e-mail."
+"Scartare veramente %s errori di consegna? In seguito non sarà più possibile "
+"reinviare queste e-mail."
 
 #. module: mail
 #. openerp-web
@@ -898,8 +898,8 @@ msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
 msgstr ""
-"L'utente assegnato %s non ha accesso a questo documento e non può gestire "
-"questa attività. "
+"L'utente assegnato %s non ha accesso a questo documento e non è in grado di "
+"gestire l'attività. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1162,7 +1162,7 @@ msgstr "Annulla e-mail"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Cancel notification in failure"
-msgstr "Cancellare le notifiche fallite"
+msgstr "Invalida notifiche di errore"
 
 #. module: mail
 #. openerp-web
@@ -1527,7 +1527,7 @@ msgstr "Crea prossima attività"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__create_uid
 msgid "Create Uid"
-msgstr "Crea UID"
+msgstr "UID creazione"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -1742,9 +1742,9 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
-"Destinatari predefiniti del documento:\n"
-"- partner (usando l'id partner o il campo partner_id) oppure\n"
-"- email (usando email_from o il campo email)"
+"Destinatari predefiniti del record:\n"
+"- partner (utilizzando ID del partner o il campo partner_id) OPPURE\n"
+"- e-mail (utilizzando email_from o il campo e-mail)"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -1827,31 +1827,31 @@ msgstr "Messaggi diretti"
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 #, python-format
 msgid "Discard"
-msgstr "Abbandona"
+msgstr "Scarta"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Discard delivery failures"
-msgstr "Elimina errori di consegna"
+msgstr "Scarta errori di consegna"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_cancel_action
 msgid "Discard mail delivery failures"
-msgstr "Elimina errori di consegna della posta"
+msgstr "Scarta errori di consegna e-mail"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "Discard message delivery failures"
-msgstr "Elimina errori di consegna messaggio"
+msgstr "Scarta errori di consegna messaggi"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/widgets/discuss/discuss.xml:0
 #, python-format
 msgid "Discard selected messages"
-msgstr "Elimina messaggi selezionati"
+msgstr "Scarta messaggi selezionati"
 
 #. module: mail
 #. openerp-web
@@ -2034,7 +2034,7 @@ msgstr "Scarica"
 #: code:addons/mail/static/src/components/drop_zone/drop_zone.xml:0
 #, python-format
 msgid "Drag Files Here"
-msgstr "Trascina i File Qui"
+msgstr "Trascina qui i file"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -2385,13 +2385,13 @@ msgstr "Invio non riuscito"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s"
-msgstr ""
+msgstr "Rappresentazione del modello non riuscita : %s"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s (%d)"
-msgstr ""
+msgstr "Rappresentazione del modello non riuscita : %s (%d)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -2966,9 +2966,9 @@ msgid ""
 "notification and review them one by one by clicking on the red envelope next"
 " to each message."
 msgstr ""
-"Per inviarli di nuovo, cliccare su Annula adesso, poi cliccare sulla "
-"notifica e controllarli uno ad uno cliccando sulla busta rossa accanto a "
-"ciascun messaggio. "
+"Per procedere al reinvio, fare clic prima su Annulla e poi sulla notifica. "
+"Esaminarle quindi una per una con un clic sulla busta rossa accanto a "
+"ciascun messaggio."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -3513,7 +3513,7 @@ msgstr "Errori e-mail"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_render_mixin
 msgid "Mail Render Mixin"
-msgstr ""
+msgstr "Mixin rappresentazione e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -3524,7 +3524,7 @@ msgstr "Discussione e-mail"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr "Valore di tracciamento posta"
+msgstr "Valore monitoraggio posta"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__notification
@@ -4510,6 +4510,18 @@ msgid "Online"
 msgstr "In linea"
 
 #. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to export mail message"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to use grouped read on message model"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -5222,7 +5234,7 @@ msgstr "Rimuovi"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
-msgstr ""
+msgstr "Procedura rimozione e-mail da lista nera"
 
 #. module: mail
 #. openerp-web
@@ -5896,7 +5908,7 @@ msgstr "Notifica di sistema"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__model_id
 msgid "Targeted model"
-msgstr ""
+msgstr "Modello designato"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__has_recommended_activities
@@ -5945,18 +5957,22 @@ msgstr "Lingua anteprima modello"
 #, python-format
 msgid "Template rendering for language should be called with a list of IDs."
 msgstr ""
+"La rappresentazione del modello per la lingua deve essere chiamata "
+"attraverso un elenco di ID."
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering should be called only using on a list of IDs."
 msgstr ""
+"La rappresentazione del modello deve essere chiamata solo attraverso un "
+"elenco di ID."
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Template rendering supports only jinja or qweb."
-msgstr ""
+msgstr "La rappresentazione del modello supporta solo Jinja o QWeb."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_template_tree_all
@@ -6780,14 +6796,14 @@ msgstr "Verranno bloccati i seguenti utenti:"
 #: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js:0
 #, python-format
 msgid "You are going to discard %s messages."
-msgstr "Verranno eliminati %s messaggi."
+msgstr "Verranno scartati %s messaggi."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js:0
 #, python-format
 msgid "You are going to discard 1 message."
-msgstr "Verrà eliminato 1 messaggio."
+msgstr "Verrà scartato 1 messaggio."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -6915,7 +6931,8 @@ msgstr "Ricevuto un invito per: %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
-msgstr "Hai messaggi da moderare. "
+msgstr ""
+"Sono presenti messaggi da moderare, procedere con le azioni opportune."
 
 #. module: mail
 #. openerp-web
@@ -7027,7 +7044,7 @@ msgstr "dopo la data di conferma"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "alias %(name)s: %(error)s"
-msgstr ""
+msgstr "alias %(name)s: %(error)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
@@ -7118,13 +7135,14 @@ msgstr ""
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "incorrectly configured alias"
-msgstr "alias scorrettamente configurato"
+msgstr "alias configurato non correttamente"
 
 #. module: mail
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr "alias scorrettamente configurato (record di riferimento sconosciuto)"
+msgstr ""
+"alias configurato non correttamente (record di riferimento sconosciuto)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -7210,6 +7228,8 @@ msgid ""
 "reply to missing document (%(model)s,%(thread)s), fall back on document "
 "creation"
 msgstr ""
+"risposta al documento mancante (%(model)s,%(thread)s), in ripiego sulla "
+"creazione del documento"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -7218,6 +7238,8 @@ msgid ""
 "reply to model %s that does not accept document update, fall back on "
 "document creation"
 msgstr ""
+"risposta al modello %s che non accetta l'aggiornamento del documento, in "
+"ripiego sulla creazione del documento"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7246,7 +7268,7 @@ msgstr "vendite"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "target model unspecified"
-msgstr ""
+msgstr "modello obiettivo non specificato"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -7269,7 +7291,7 @@ msgstr "da chiudere entro il"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "unknown target model %s"
-msgstr "modello target sconosciuto %s"
+msgstr "modello obiettivo sconosciuto %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email

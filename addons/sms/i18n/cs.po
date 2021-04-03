@@ -7,9 +7,9 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# Jiří Podhorecký, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +28,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr ""
+msgstr "Počet neplatných příjemců"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
 msgid "# Valid recipients"
-msgstr ""
+msgstr "Počet platných příjemců"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -1211,6 +1211,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typ akce serveru. K dispozici jsou následující hodnoty:\n"
+"- 'Execute Python Code': blok kódu Pythonu, který bude spuštěn\n"
+"- 'Create': vytvoření nového záznamu s novými hodnotami\n"
+"- 'Update a Record': aktualizuje hodnoty záznamu\n"
+"- 'Execute several actions': definujte akci, která spustí několik dalších akcí serveru\n"
+"- 'Send Email': automaticky odešle e-mail (u Diskuse)\n"
+"- 'Add Followers': přidá sledující k záznamu (u Diskuse)\n"
+"- 'Create Next Activity': vytvoří novou aktivitu (u Diskuse)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf

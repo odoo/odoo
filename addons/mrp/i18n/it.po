@@ -155,7 +155,7 @@ msgstr "Gamba quadrata 18″ x 2½″"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ": Insufficient Quantity To Unbuild"
-msgstr ""
+msgstr ": quantità da disassemblare non sufficiente"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -400,14 +400,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "A BoM of type kit is used to split the product into its components."
 msgstr ""
-"Una distinta base di tipo kit viene utilizzata per dividere il prodotto nei "
-"suoi componenti."
+"Una DiBa di tipo kit viene usata per scomporre il prodotto nei suoi "
+"componenti."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
-msgstr "Un ordine di produzione è già stato completato o annullato."
+msgstr "Un ordine di produzione risulta già completato o annullato."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -415,6 +415,7 @@ msgstr "Un ordine di produzione è già stato completato o annullato."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Un prodotto con DiBa di tipo kit non può avere una regola di riordino."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -594,8 +595,8 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
-"Un ordine di scomposizione è per scomporre un prodotto finito nei suoi "
-"componenti"
+"Un ordine di disassemblaggio è utilizzato per scomporre un prodotto finito "
+"nei suoi componenti."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
@@ -1142,7 +1143,7 @@ msgstr "Conferma"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__confirm_cancel
 msgid "Confirm Cancel"
-msgstr "Conferma \"Cancella\""
+msgstr "Conferma annullamento"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__confirmed
@@ -1166,22 +1167,22 @@ msgstr "Utilizzati"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__consume_line_ids
 msgid "Consumed Disassembly Lines"
-msgstr "Linee di disassemblaggio consumate"
+msgstr "Righe di disassemblaggio utilizzate"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__consume_unbuild_id
 msgid "Consumed Disassembly Order"
-msgstr "Ordine di disassemblaggio consumato"
+msgstr "Ordine di disassemblaggio utilizzato"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Consumed Products"
-msgstr "Prodotti Utilizzati"
+msgstr "Prodotti utilizzati"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__operation_id
 msgid "Consumed in Operation"
-msgstr "Consumato nell'Operazione"
+msgstr "Utilizzato nell'operazione"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__consumption
@@ -1189,7 +1190,7 @@ msgstr "Consumato nell'Operazione"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__consumption
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__consumption
 msgid "Consumption"
-msgstr "Consumo"
+msgstr "Utilizzo"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_consumption_warning
@@ -1472,7 +1473,7 @@ msgstr "Ubicazione di destinazione"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unbuild_id
 msgid "Disassembly Order"
-msgstr "Disassemblaggio ordine"
+msgstr "Ordine di disassemblaggio"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit_editable
@@ -1531,7 +1532,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "Do you confirm you want to unbuild"
-msgstr ""
+msgstr "Confermare il disassemblaggio di"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2338,7 +2339,7 @@ msgstr "Ubicazione"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr "Ubicazione in cui si trova il prodotto che si desidera smontare."
+msgstr "Ubicazione in cui si trova il prodotto da disassemblare."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
@@ -2357,8 +2358,8 @@ msgid ""
 "Location where you want to send the components resulting from the unbuild "
 "order."
 msgstr ""
-"Ubicazione in cui si desidera inviare i componenti derivati dall'ordine di "
-"smontaggio."
+"Ubicazione nella quale inviare i componenti ottenuti dall'ordine di "
+"disassemblaggio."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2405,7 +2406,7 @@ msgstr "Numero di lotto/serie"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__lot_id
 msgid "Lot/Serial Number of the product to unbuild."
-msgstr "Lotto / numero di serie del prodotto da smontare."
+msgstr "Numero di lotto/serie del prodotto da disassemblare."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_traceability
@@ -2784,12 +2785,12 @@ msgstr "Nessun prodotto trovato. Creane uno!"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_blocked
 msgid "No productivity loss for this equipment"
-msgstr "Non presente una perdita di produttivita' per questo equipaggiamento"
+msgstr "Nessuna perdita di produttività per l'attrezzatura"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
-msgstr ""
+msgstr "Nessun ordine di disassemblaggio trovato"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -3135,7 +3136,7 @@ msgstr "Pianifica"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
-msgstr "Pianifica Ordini"
+msgstr "Pianifica ordini"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3248,7 +3249,7 @@ msgstr "Elabora operazioni in centri di lavori specifici"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__produce_line_ids
 msgid "Processed Disassembly Lines"
-msgstr "Processa linee di disassemblaggio"
+msgstr "Righe di disassemblaggio elaborate"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_group
@@ -3398,7 +3399,7 @@ msgstr "Ordine di produzione per i prodotti finiti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
 msgid "Production State"
-msgstr ""
+msgstr "Stato produzione"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3455,7 +3456,7 @@ msgstr "Prodotti"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Products to Consume"
-msgstr "Prodotti da Utilizzare"
+msgstr "Prodotti da utilizzare"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
@@ -3595,7 +3596,7 @@ msgstr "Allegato collegato"
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Replan"
-msgstr ""
+msgstr "Ripianifica"
 
 #. module: mrp
 #. openerp-web
@@ -3946,7 +3947,7 @@ msgstr "Ubicazione di origine"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
 msgid "Specify cost of work center per hour."
-msgstr "Specificare il costo orario del posto di lavoro."
+msgstr "Indica il costo orario del centro di lavoro."
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_screw
@@ -4262,7 +4263,7 @@ msgid ""
 " been produced"
 msgstr ""
 "Il numero di serie %(number)s, utilizzato dal sottoprodotto "
-"%(product_name)s, è già stato già creato"
+"%(product_name)s, è già stato creato"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4271,6 +4272,8 @@ msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr ""
+"Il numero di serie %(number)s, utilizzato dal componente %(component)s, è "
+"già stato utilizzato"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4573,29 +4576,29 @@ msgstr "Sblocca"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild"
-msgstr "Smonta"
+msgstr "Disassembla"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild Order"
-msgstr "Ordine di Smontaggio"
+msgstr "Ordine di disassemblaggio"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
 msgstr ""
-"La quantità del prodotto nell'ordine di smontaggio deve essere strettamente "
-"positiva."
+"La quantità di prodotto nell'ordine di disassemblaggio deve essere "
+"strettamente positiva."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Ordini Smontaggio"
+msgstr "Ordini di disassemblaggio"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4817,7 +4820,7 @@ msgstr "Magazzino"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr "Avviso quantità smontata insufficiente"
+msgstr "Avviso per quantità disassemblata non sufficiente"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
@@ -5008,7 +5011,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
 msgid "Work Order To Consume"
-msgstr "Ordine di lavoro da trattare"
+msgstr "Ordine di lavoro da utilizzare"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -5163,6 +5166,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"Impossibile creare DiBa di tipo kit per prodotti che possiedono almeno una "
+"regola di riordino."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5195,8 +5200,7 @@ msgstr "Da qui è impossibile creare una nuova distinta base."
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr ""
-"Non è possibile eliminare un ordine di smontaggio se lo stato è "
-"\"Completato\"."
+"Impossibile eliminare un ordine di disassemblaggio con stato \"Completato\"."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -5228,7 +5232,7 @@ msgstr "Impossibile creare due volte lo stesso numero di serie."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "Non è possibile smontare un ordine di produzione annullato."
+msgstr "Impossibile disassemblare un ordine di produzione non completato."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form

@@ -5,9 +5,9 @@
 # Translators:
 # Triine Aavik <triine@avalah.ee>, 2020
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
-# Eneli Õigus <enelioigus@gmail.com>, 2020
 # Marek Pontus, 2020
 # Piia Paurson <piia@avalah.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2020\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,8 @@ msgid ""
 "${object.create_uid.name} from ${object.company_id.name} invites you to "
 "connect to Odoo"
 msgstr ""
+"${object.create_uid.name} ${object.company_id.name}'st kutsub sind liituma "
+"Odooga"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -51,8 +53,8 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-"<strong>Saadeti e-maili teel kutse, mis sisaldab linki järgmisele "
-"liitumisele :</strong>"
+"<strong>E-kirja teel saadeti kutse, mis sisaldas järgmist linki Odooga "
+"liitumiseks:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -223,9 +225,9 @@ msgstr ""
 "                        % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')\n"
 "                        Teie Odoo keskkonna aadress: <b><a href=\"${website_url}\">${website_url}</a></b><br/>\n"
 "                        Teie e-posti aadress sisselogimiseks: <b><a href=\"/web/login?login=${object.email}\" target=\"_blank\">${object.email}</a></b><br/><br/>\n"
-"                        Odoo on kõik-ühes äritarjvara, millel on üle 3 miljoni kasutaja. See täieneb pidevalt ja aitab teie äri kasvatada! \n"
+"                        Odoo on kõik-ühes äritarkvara, millel on üle 3 miljoni kasutaja. See täieneb pidevalt ja aitab teie äri kasvatada! \n"
 "                        <br/><br/>\n"
-"                        Odoo kasutusvõimaluste nägemiseks tee läbi <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo tutvustus</a>.\n"
+"                        Odoo kasutusvõimaluste nägemiseks tee läbi <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo kooltiused</a>.\n"
 "                        <br/><br/>\n"
 "                        Head Odoo kasutamist!<br/>\n"
 "                        --<br/>${object.company_id.name} tiim\n"
@@ -265,7 +267,7 @@ msgstr ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Saatis<a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Saatis <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -498,7 +500,7 @@ msgstr "Kinnitage"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Confirm Password"
-msgstr "Kinnitage parool"
+msgstr "Kinnitage salasõna"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active

@@ -11,15 +11,15 @@
 # Alice Van Goethem <vga@odoo.com>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 14:19+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -693,7 +693,7 @@ msgstr "Alle taken"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
 msgid "Allow Sub-tasks"
-msgstr ""
+msgstr "Subtaken toestaan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_internal_user_ids
@@ -1321,6 +1321,11 @@ msgid ""
 "- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
 "   them or by someone of their company."
 msgstr ""
+"Bepaalt de zichtbaarheid van de taken van het project:\n"
+"- Uitgenodigde interne gebruikers: medewerkers mogen alleen het gevolgde project en de gevolgde taken zien.\n"
+"- Alle interne gebruikers: medewerkers kunnen alle projecten en taken zien.\n"
+"- Uitgenodigd portaal en alle interne gebruikers: medewerkers mogen alles zien. Portaalgebruikers kunnen project en taken zien gevolgd door\n"
+"hen of door iemand van hun bedrijf."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1651,7 +1656,7 @@ msgstr "Volgers (Relaties)"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icoon b.v. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
@@ -2200,6 +2205,9 @@ msgid ""
 "acquired projects, assign them and use the %s and %s to define if the "
 "project is ready for the next step. %s"
 msgstr ""
+"Beheer de levenscyclus van uw project met de kanbanweergave. Voeg nieuw "
+"verworven projecten toe, wijs ze toe en gebruik de %s en %s om te bepalen of"
+" het project klaar is voor de volgende stap. %s"
 
 #. module: project
 #. openerp-web
@@ -2641,11 +2649,11 @@ msgstr "Telefoon"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
-"Plan resource allocation accross projets and tasks, and estimate deadlines "
+"Plan resource allocation across projets and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
-"Plan de toewijzing van middelen over projecten en taken, en schat deadlines "
-"nauwkeuriger in."
+"Plan de toewijzing van resources over projecten en taken, en schat deadlines"
+" nauwkeuriger in"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -4216,7 +4224,7 @@ msgstr "Bijv. Bedrijfsfeest"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. office-party"
-msgstr "bijv. kantoorfeest"
+msgstr "Bijv. kantoorfeest"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks

@@ -6,6 +6,7 @@
 # Martin Trigaux, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -343,6 +344,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Indică statul de membru.\n"
+"-Non-membru: un partener care nu a solicitat niciun membru..\n"
+"Membru anulat: un membru care și-a anulat calitatea de membru.\n"
+"-Membru vechi: un membru a cărui dată de membru a expirat..\n"
+"-Membru în așteptare: un membru care a solicitat calitatea de membru și a cărui factură va fi creată.\n"
+"-Membru facturat: un membru a cărui factură a fost creată.\n"
+"-Membru plătitor: Un membru care a plătit taxa de membru."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__state
@@ -355,6 +363,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"Indică statul de membru.\n"
+"-Non-membru: un partener care nu a solicitat niciun membru..\n"
+"Membru anulat: un membru care și-a anulat calitatea de membru.\n"
+"-Membru vechi: un membru a cărui dată de membru a expirat..\n"
+"-Membru în așteptare: un membru care a solicitat calitatea de membru și a cărui factură va fi creată.\n"
+"-Membru facturat: un membru a cărui factură a fost creată.\n"
+"-Membru plătit: un membru care a plătit suma de membru."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date
@@ -557,6 +572,8 @@ msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                  Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
+"Odoo vă ajută să urmăriți cu ușurință toate activitățile legate de un membru: \n"
+"                  Starea actuală a calității de membru, discuții și istoricul calității de membru etc."
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__old
@@ -637,7 +654,7 @@ msgstr "Dată început"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Starting Date Of Membership"
-msgstr ""
+msgstr "Data de începere a calității de membru"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
