@@ -901,7 +901,7 @@ class PosOrder(models.Model):
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
                 moves |= Move.create({
-                    'name': line.name,
+                    'name': line.product_id.description if line.product_id.description else line.product_id.name,
                     'product_uom': line.product_id.uom_id.id,
                     'picking_id': order_picking.id if line.qty >= 0 else return_picking.id,
                     'picking_type_id': picking_type.id if line.qty >= 0 else return_pick_type.id,
