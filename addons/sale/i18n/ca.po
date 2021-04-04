@@ -12,9 +12,9 @@
 # M Palau <mpalau@tda.ad>, 2019
 # Arnau Ros, 2019
 # Jesus Ramoneda <chusamo@gmail.com>, 2019
-# Eugeni Chafert <eugeni@chafer.cat>, 2020
-# jabelchi <jabelchi@gmail.com>, 2020
+# Eugeni Chafer <eugeni@chafer.cat>, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
+# Josep Anton Belchi, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2020\n"
+"Last-Translator: Josep Anton Belchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -452,13 +452,13 @@ msgstr "<strong>La nostra referència:</strong>"
 #: code:addons/sale/models/sale.py:811
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "Cal especificar un diari del connector %s."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:804
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "Per a crear una transacció res requereix un connector de pagament."
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
@@ -471,6 +471,7 @@ msgstr "Un únic preu de venda per producte"
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
 msgstr ""
+"No es pot vincular una transacció a comandes que tenen diferents divises."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:780
@@ -478,6 +479,7 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
 msgstr ""
+"No es pot vincular una transacció a comandes que tenen diferents partners."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -609,6 +611,8 @@ msgstr "Entrega a compte: %s"
 #: model:ir.model.fields,help:sale.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
 msgstr ""
+"Permet als usuaris introduir valors personalitzats per aquest valor "
+"d'atribut"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -628,13 +632,13 @@ msgstr "Import"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Import abans de descomptes"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:90
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Import no coincideix (%s)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
@@ -679,6 +683,9 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Aplicar descomptes manuals en  línies de comandes o visualitzar descomptes "
+"calculats des de les tarifes (opció a activar a la configuració de la "
+"tarifa)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -686,6 +693,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Esteu segur que voleu anul·lar la transacció autoritzada? Aquesta acció no "
+"es pot desfer."
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -715,7 +724,7 @@ msgstr "Atributs"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Transaccions autoritzades"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
@@ -744,14 +753,14 @@ msgstr "Nom del Banc "
 #: selection:payment.acquirer,so_reference_type:0
 #, python-format
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "Bassat en ID de client"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:13
 #: selection:payment.acquirer,so_reference_type:0
 #, python-format
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "Bassat en referència de document"
 
 #. module: sale
 #: model:product.template.attribute.value,name:sale.product_template_attribute_value_5
@@ -830,7 +839,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:41
 #, python-format
 msgid "Click here to add some products or services to your quotation."
-msgstr ""
+msgstr "Cliqueu aquí per a afegir productes o serveis al pressupost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -999,7 +1008,7 @@ msgstr "Creï un nou producte"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgstr "Creeu un pressupost. El primer pas per a una venda."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1084,7 +1093,7 @@ msgstr "País del client"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr ""
+msgstr "Entitat client"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1157,7 +1166,7 @@ msgstr "Data:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Default Limit:"
-msgstr ""
+msgstr "Límit per defecte:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_quotation_validity_days
@@ -1168,7 +1177,7 @@ msgstr "Validesa per defecte del pressupost"
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity (Days)"
-msgstr ""
+msgstr "Validesa per defecte del pressupost (dies)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_sale_note
@@ -1188,12 +1197,12 @@ msgstr "Producte per defecte utilitzat per entregues a compte "
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr ""
+msgstr "Lliurar contingut per Email"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_manual
 msgid "Delivered Manually"
-msgstr ""
+msgstr "Lliurat manualment"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1060
@@ -1403,6 +1412,9 @@ msgid ""
 " a validated expense can be re-invoice to a customer at its cost or sales "
 "price."
 msgstr ""
+"Es poden refacturar als clients despeses i factures de proveïdor. Amb "
+"aquesta opció, una despesa validada es pot refacturar al client a preu de "
+"cost o de venda."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1443,7 +1455,7 @@ msgstr "Seguidors (Clients)"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "Valors no permesos en una línia de venda no facturable"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1586,7 +1598,7 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:89
 #, python-format
 msgid "Import Template for Products"
-msgstr ""
+msgstr "Plantilla d'importació de Productes"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:92
@@ -1619,13 +1631,13 @@ msgstr "Comanda Invàlida"
 #: code:addons/sale/models/sale.py:794
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "S'ha trobat un token no vàlid. Token del connector %s != %s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:797
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "S'ha trobat un token no vàlid. Token del partner %s != %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice
@@ -1651,7 +1663,7 @@ msgstr "Factura confirmada "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "Comptador de factures"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
@@ -1826,7 +1838,7 @@ msgstr "És un dipòsit"
 #: model:ir.model.fields,field_description:sale.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__is_custom
 msgid "Is custom value"
-msgstr ""
+msgstr "És valor personalitzat"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
@@ -1843,6 +1855,8 @@ msgstr "Ha Expirat"
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"És cert si la ínia de comanda de venda ve d'una despesa o d'una factura de "
+"proveïdor"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1083
@@ -1858,7 +1872,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:667
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
+msgstr "No es permet confirmar una comanda en aquests estats: %s"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -1923,6 +1937,8 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually point"
 " to the next logical actions.</i>"
 msgstr ""
+"Creeu un nou pressupost.<br/><i>Noteu que els botons acolorits normalment "
+"assenyalen les pròximes accions més lógiques.</i>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1932,7 +1948,7 @@ msgstr "Bloqueja"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr ""
+msgstr "Blocar vendes confirmades"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -2026,7 +2042,7 @@ msgstr "Mètode d'actualització de la quantitat entregada"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "Falten camps obligatoris a la línia de venda comptabilitzable. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__multi_sales_price
@@ -2062,7 +2078,7 @@ msgstr "Les meves línies de comandes de venda"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_by
 msgid "Name of the person that signed the SO."
-msgstr ""
+msgstr "Nom de qui signa la comanda de venda"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:131 code:addons/sale/models/sale.py:367
@@ -2116,7 +2132,7 @@ msgstr "No s'ha trobat cap comanda per facturar"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found"
-msgstr ""
+msgstr "No s'han trobat comandes per augmentar vendes"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -2196,6 +2212,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Un cop el pressupost és confirmat pel client, esdevé una comanda de "
+"venda.<br> Podreu crear-ne una factura i tramitar el pagament. "
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2203,6 +2221,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Un cop el pressupost é sconfirmat esdevé una comanda de venda.<br> Podreu "
+"crear-ne una factura i tramitar el pagament. "
 
 #. module: sale
 #. openerp-web
@@ -2272,7 +2292,7 @@ msgstr "Comanda #"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr ""
+msgstr "Comptador de comandes"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:51
