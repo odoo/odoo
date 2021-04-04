@@ -3,32 +3,33 @@
 # 	* base_setup
 # 
 # Translators:
+# Maksym <ms@myodoo.pl>, 2019
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
+# Monika Grzelak <m.e.grzelak@gmail.com>, 2019
+# Wiktor Kaźmierczak <wik92tor@wp.pl>, 2019
 # Martin Trigaux, 2019
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2019
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2019
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
 # Tomasz Leppich <t.leppich@gmail.com>, 2019
 # Mariusz, 2019
 # Jaroslaw Kaczmarski, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
 # Karol Rybak <karolrybak85@gmail.com>, 2019
-# Monika Grzelak <m.e.grzelak@gmail.com>, 2019
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
 # Paweł Wodyński <pw@myodoo.pl>, 2019
 # Maja Stawicka <mjstwck@wp.pl>, 2019
-# Wiktor Kaźmierczak <wik92tor@wp.pl>, 2019
-# Maksym <ms@myodoo.pl>, 2019
 # Natalia Gros <nag@odoo.com>, 2019
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2020
+# Piotr Strębski <strebski@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 11:27+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Natalia Gros <nag@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,9 +51,16 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Wartości tutaj podane są "
+"specyficzne dla firmy.\" aria-label=\"Wartości tutaj podane są specyficzne "
+"dla firmy.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "<span class=\"fa fa-lg fa-users\" aria-label=\"Number of active users\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-users\" aria-label=\"Liczba aktywnych "
+"użytkowników\"/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -62,42 +70,50 @@ msgid ""
 "                                        </span>\n"
 "                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
 "                                            Active Users\n"
-"                                        </span>\n"
-"\n"
-"                                        <br/>"
+"                                        </span>"
 msgstr ""
 "<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
 "                                            Aktywny użytkownik\n"
 "                                        </span>\n"
 "                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
-"                                            Aktywny użytkownik\n"
+"                                            Aktywni użytkownicy\n"
+"                                        </span>"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"                                            Company\n"
 "                                        </span>\n"
-"\n"
-"                                        <br/>"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">\n"
-"                                                Languages\n"
-"                                            </span>"
-msgstr ""
-"<span class=\"o_form_label\">\n"
-"                                                Języki\n"
-"                                            </span>"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
 "                                            Companies\n"
 "                                        </span>\n"
 "                                        <br/>"
 msgstr ""
-"<span class=\"o_form_label\">\n"
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"                                            Firma\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
 "                                            Firmy\n"
 "                                        </span>\n"
 "                                        <br/>"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"                                                Language\n"
+"                                            </span>\n"
+"                                            <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                                Languages\n"
+"                                            </span>"
+msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"                                                Język\n"
+"                                            </span>\n"
+"                                            <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                                Języki\n"
+"                                            </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -123,8 +139,16 @@ msgid ""
 "<strong>Save</strong> this page and come back here to choose your Geo "
 "Provider."
 msgstr ""
-"<strong>Zapisz</strong> tą stronę and wróć tutaj by wybrać swojego Geo "
+"<strong>Zapisz</strong> tę stronę i powróć tutaj, aby wybrać swojego Geo "
 "Dostawcę."
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up reCaptcha."
+msgstr ""
+"<strong>Zapisz</strong> tę stronę i powróć tutaj, aby skonfigurować "
+"reCaptcha."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -168,13 +192,23 @@ msgstr "Aktywuj tryb developera (z zasobami testowymi)"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Add Language"
+msgstr "Dodaj język"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add fun feedback and motivate your employees"
 msgstr "Dodaj zabawną wiadomość zwrotną i zmotywuj swoich pracowników."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "Pozwala użytkownikom synchronizować kalendarz z Google Calendar"
+msgstr "Pozwala użytkownikom synchronizować kalendarz z Kalendarzem Google"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
+msgid "Allow the users to synchronize their calendar with Outlook Calendar"
+msgstr "Pozwala użytkownikom synchronizować kalendarz z Kalendarzem Outlook"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
@@ -283,7 +317,7 @@ msgstr "Kontakty"
 #: code:addons/base_setup/static/src/xml/res_config_edition.xml:0
 #, python-format
 msgid "Copyright © 2004"
-msgstr "Copyright © 2004"
+msgstr "Prawa autorskie © 2004"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -309,11 +343,24 @@ msgid "Default Access Rights"
 msgstr "Domyślne prawa dostępu"
 
 #. module: base_setup
+#: code:addons/base_setup/models/res_config_settings.py:0
+#, python-format
+msgid "Default User Template not found."
+msgstr "Domyślny szablon użytkownika nie został znaleziony."
+
+#. module: base_setup
 #. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Developer Tools"
 msgstr "Narzędzia deweloperskie "
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_ir_http__display_name
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_setup.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nazwa wyświetlana"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -322,8 +369,20 @@ msgstr "Szablon dokumentu"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentacja"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
 msgstr "Edytuj układ"
+
+#. module: base_setup
+#. openerp-web
+#: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
+#, python-format
+msgid "Email addresses already existing: %s."
+msgstr "Adresy e-mail, które już istnieją: %s."
 
 #. module: base_setup
 #. openerp-web
@@ -372,13 +431,8 @@ msgstr "Ustawienia ogólne"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Gengo Translations"
-msgstr "Tłumaczenia Gengo"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Geo Localization"
-msgstr "Geo Lokalizacja"
+msgstr "Geolokalizacja"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
@@ -411,6 +465,13 @@ msgid "HTTP Routing"
 msgstr "Wytyczanie HTTP"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_ir_http__id
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_setup.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
 msgstr "Import i Eksport"
@@ -427,6 +488,13 @@ msgstr "Transakcje międzyfirmowe"
 
 #. module: base_setup
 #. openerp-web
+#: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
+#, python-format
+msgid "Invalid email addresses: %s."
+msgstr "Nieprawidłowe adresy e-mail: %s."
+
+#. module: base_setup
+#. openerp-web
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Invite"
@@ -437,7 +505,7 @@ msgstr "Zaproś"
 #: code:addons/base_setup/static/src/xml/res_config_invite_users.xml:0
 #, python-format
 msgid "Invite New Users"
-msgstr "Zaproś Nowego Użytkownika "
+msgstr "Zaproś nowych użytkowników"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -451,6 +519,13 @@ msgid "Languages"
 msgstr "Języki"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_ir_http____last_update
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:base_setup.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Data ostatniej modyfikacji"
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Layout"
 msgstr "Układ"
@@ -460,27 +535,32 @@ msgstr "Układ"
 #: code:addons/base_setup/static/src/xml/res_config_dev_tool.xml:0
 #, python-format
 msgid "Load demo data"
-msgstr "Załaduj demo dane"
+msgstr "Wczytaj dane demonstracyjne"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Manage API Keys"
+msgstr "Zarządzaj kluczami API"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Companies"
-msgstr "Zarządzaj Firmami"
+msgstr "Zarządzaj firmami"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_inter_company_rules
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_account_inter_company_rules
 msgid "Manage Inter Company"
 msgstr "Zarządzaj firmą wewnętrzną"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Languages"
-msgstr "Zarządzaj Językami"
+msgstr "Zarządzaj językami"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage Users"
-msgstr "Zarządzaj Użytkownikami "
+msgstr "Zarządzaj użytkownikami "
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -495,7 +575,7 @@ msgstr "Wielowalutowość"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__active_user_count
 msgid "Number of Active Users"
-msgstr "Liczba Aktywnych Użytkowników"
+msgstr "Liczba aktywnych użytkowników"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_count
@@ -505,7 +585,7 @@ msgstr "Ilość firm"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__language_count
 msgid "Number of Languages"
-msgstr "Liczba Języków"
+msgstr "Liczba języków"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -537,6 +617,11 @@ msgid "On Google Play"
 msgstr "W Google Play"
 
 #. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Outlook Calendar"
+msgstr "Kalendarz Outlook"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__paperformat_id
 msgid "Paper format"
 msgstr "Format papieru"
@@ -555,8 +640,18 @@ msgstr "Oczekujące zaproszenia"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Permissions"
+msgstr "Uprawnienia"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
 msgstr "Podgląd dokumentu"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Protect your forms from spam and abuse."
+msgstr "Chroń swoje formularze przed spamem i nadużyciami."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -590,37 +685,18 @@ msgstr "Wyświetl rezultat "
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Statistics"
-msgstr "Statystyki"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Google Calendar"
 msgstr "Zsynchronizuj swój kalendarz z Kalendarzem Google"
 
 #. module: base_setup
-#. openerp-web
-#: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
-#, python-format
-msgid "The following email addresses already exist: %s."
-msgstr "Następujący adres e-mail już istnieje: %s."
-
-#. module: base_setup
-#. openerp-web
-#: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
-#, python-format
-msgid "The following email addresses are invalid: %s."
-msgstr "Następujący adres e-mail jest nieprawidłowy: %s."
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Synchronize your calendar with Outlook"
+msgstr "Zsynchronizuj swój kalendarz z Outlookiem"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
 msgid "Translate Your Website with Gengo"
 msgstr "Przetłumacz swoją witrynę za pomocą Gengo"
-
-#. module: base_setup
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Translate your website with Gengo"
-msgstr "Przetłumacz swoją stronę internetową z Gengo"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -678,3 +754,8 @@ msgstr ""
 #, python-format
 msgid "more"
 msgstr "więcej"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
+msgid "reCAPTCHA"
+msgstr "reCAPTCHA"

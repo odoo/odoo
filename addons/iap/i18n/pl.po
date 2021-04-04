@@ -4,20 +4,21 @@
 # 
 # Translators:
 # Tomasz Leppich <t.leppich@gmail.com>, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2019
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
 # Maja Stawicka <mjstwck@wp.pl>, 2019
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
 # Maksym <ms@myodoo.pl>, 2019
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
+# Piotr Strębski <strebski@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2019\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
+"PO-Revision-Date: 2017-12-13 14:54+0000\n"
+"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,17 +38,11 @@ msgstr "Token konta"
 
 #. module: iap
 #. openerp-web
+#: code:addons/iap/static/src/js/crash_manager.js:0
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Buy credits"
 msgstr "Zakup kredyty"
-
-#. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/js/crash_manager.js:0
-#, python-format
-msgid "Buy credits at Odoo"
-msgstr ""
 
 #. module: iap
 #. openerp-web
@@ -78,8 +73,14 @@ msgstr "Data utworzenia"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+msgid "Documentation"
+msgstr "Dokumentacja"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -101,6 +102,7 @@ msgstr "Konta IAP"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
+#: model:ir.model.fields,field_description:iap.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
@@ -125,6 +127,7 @@ msgstr "Niewystarczające środki na wykonanie tej usługi."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account____last_update
+#: model:ir.model.fields,field_description:iap.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr "Data ostatniej modyfikacji"
 
@@ -161,7 +164,7 @@ msgid "Start a Trial at Odoo"
 msgstr ""
 
 #. module: iap
-#: code:addons/iap/models/iap.py:0
+#: code:addons/iap/tools/iap_tools.py:0
 #, python-format
 msgid ""
 "The url that this service requested returned an error. Please contact the "
@@ -169,9 +172,12 @@ msgid ""
 msgstr ""
 
 #. module: iap
+#. openerp-web
+#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
+#, python-format
 msgid "View My Services"
-msgstr ""
+msgstr "Zobacz moje usługi"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form

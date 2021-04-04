@@ -1083,7 +1083,7 @@ msgstr "Bot"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_users__message_bounce
 msgid "Bounce"
-msgstr "Odskočit"
+msgstr "Oťuknout"
 
 #. module: mail
 #. openerp-web
@@ -2337,7 +2337,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_channel_res_model_id_uniq
 msgid "Error, a channel cannot follow twice the same object."
-msgstr "Chyba, kanál nemůže sledovat dvakrát stejný objekt."
+msgstr "Chyba, kanál nemůže dvakrát sledovat stejný objekt."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
@@ -3005,7 +3005,7 @@ msgstr "Obrázek je odkaz"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Inactive Alias"
-msgstr "Neaktivní alias"
+msgstr "Neaktivní zástupce"
 
 #. module: mail
 #. openerp-web
@@ -3384,7 +3384,7 @@ msgstr "Posluchač"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_partner_ids
 msgid "Listeners"
-msgstr "Posluchači"
+msgstr "Naslouchající"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
@@ -3849,8 +3849,8 @@ msgstr "Zprávy jsou zasílány e-mailem"
 #, python-format
 msgid "Messages can be <b>starred</b> to remind you to check back later."
 msgstr ""
-"Zprávy mohou být <b>hrál</b> abychom vám připomněli, abyste se zkusili "
-"podívat později."
+"Zprávy mohou být <b>označeny hvězdičkou</b> k připomenutí podívat se "
+"později."
 
 #. module: mail
 #. openerp-web
@@ -3872,8 +3872,8 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr ""
-"Zprávy s interními podtypy budou viditelné pouze pro zaměstnance, aka členy "
-"skupiny base_user"
+"Zprávy s interními podtypy budou viditelné pouze pro zaměstnance, jako např."
+" členy skupiny base_user"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_id
@@ -4502,6 +4502,18 @@ msgstr ""
 #, python-format
 msgid "Online"
 msgstr "Online"
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to export mail message"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to use grouped read on message model"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -6020,7 +6032,7 @@ msgstr "E-mail odeslaný na"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr "Uniklý html kód nahrazující zástupce"
+msgstr "Escapovaný html kód nahrazující zástupce"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__user_id
@@ -6347,6 +6359,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typ akce serveru. K dispozici jsou následující hodnoty:\n"
+"- 'Execute Python Code': blok kódu Pythonu, který bude spuštěn\n"
+"- 'Create': vytvoření nového záznamu s novými hodnotami\n"
+"- 'Update a Record': aktualizuje hodnoty záznamu\n"
+"- 'Execute several actions': definujte akci, která spustí několik dalších akcí serveru\n"
+"- 'Send Email': automaticky odešle e-mail (u Diskuse)\n"
+"- 'Add Followers': přidá sledující k záznamu (u Diskuse)\n"
+"- 'Create Next Activity': vytvoří novou aktivitu (u Diskuse)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -7141,7 +7161,7 @@ msgstr "pro%s"
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
 msgid "general"
-msgstr "Všeobecné"
+msgstr "obecné"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link

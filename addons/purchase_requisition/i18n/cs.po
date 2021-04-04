@@ -3,20 +3,22 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2019
-# Jakub Lohnisky <jakub@lepremier.cz>, 2019
-# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
-# Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# Martin Trigaux, 2020
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
+# Jakub Lohnisky <jakub@lepremier.cz>, 2020
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"POT-Creation-Date: 2020-10-02 14:12+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,12 +29,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
 msgid "'Tender - %s' % (object.name)"
-msgstr ""
+msgstr "'Nabídka - %s' % (název objektu)"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>Výzva k podávání nabídek:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -47,7 +49,7 @@ msgstr "<strong>Popis</strong>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Product UoM</strong>"
-msgstr ""
+msgstr "<strong>MJ produktu</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -67,17 +69,17 @@ msgstr "<strong>Plánované datum</strong>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Ordering Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Plánované datum objednávky:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Selection Type:</strong><br/>"
-msgstr ""
+msgstr "<strong>Typ výběru:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Source:</strong><br/>"
-msgstr ""
+msgstr "<strong>Zdroj:</strong><br/>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -97,7 +99,7 @@ msgstr "Aktivity"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Dekorace výjimky aktivity"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
@@ -105,31 +107,36 @@ msgid "Activity State"
 msgstr "Stav aktivity"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typu aktivity"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
 msgid "Agreement"
-msgstr ""
+msgstr "Dohoda"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
 msgid "Agreement Deadline"
-msgstr ""
+msgstr "Termín dohody"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid "Agreement Selection Type"
-msgstr ""
+msgstr "Výběr typu Dohody"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__type_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__name
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr ""
+msgstr "Typ dohody"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
 msgid "Agreement Types"
-msgstr ""
+msgstr "Typy dohod"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__account_analytic_id
@@ -150,23 +157,23 @@ msgstr "Počet příloh"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__open
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state_blanket_order__open
 msgid "Bid Selection"
-msgstr ""
+msgstr "Výběr nabídky"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr ""
+msgstr "Hromadná objednávka"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
 msgid "Call for Tender"
-msgstr ""
+msgstr "Výzva k podávání nabídek"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
-msgstr ""
+msgstr "Výzva k podávání nabídek"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -242,6 +249,10 @@ msgid ""
 " 'purchase_requisition' module is installed and this option is selected, the"
 " system will create a draft call for tender."
 msgstr ""
+"Vytvoření konceptu nákupní objednávky: Na základě vaší konfigurace produktu "
+"systém vytvoří koncept nákupní objednávky. Navrhnout výzvu k podávání "
+"nabídek: Pokud je nainstalován modul „purchase_requisition“ a je vybrána "
+"tato možnost, systém vytvoří koncept výzvy k podávání nabídek. ."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -263,6 +274,11 @@ msgid "Currency"
 msgstr "Měna"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_description_variants
+msgid "Custom Description"
+msgstr "Vlastní popis"
+
+#. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
 msgstr "Údaje pro nové nabídky"
@@ -278,6 +294,11 @@ msgid "Description"
 msgstr "Popis"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_template__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__display_name
@@ -287,7 +308,7 @@ msgstr "Zobrazované jméno"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
 msgid "Do not create RfQ lines automatically"
-msgstr ""
+msgstr "Nevytvářet řádky RfQ automaticky"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -306,11 +327,7 @@ msgstr "Návrh"
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
-
-#. module: purchase_requisition
-#: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
-msgid "Exception Activities"
-msgstr "Výjimečné činnosti"
+"Příkladem kupních smluv je výzva k podávání nabídek a hromadné objednávky."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_follower_ids
@@ -328,11 +345,16 @@ msgid "Followers (Partners)"
 msgstr "Sledující (Partneři)"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Skvělá ikona písma, např. fa-úkoly"
+
+#. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "For a blanket order, you can record an agreement for a specifc period\n"
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
-"            from the negociated prices."
+"            from the negotiated prices."
 msgstr ""
 
 #. module: purchase_requisition
@@ -346,6 +368,11 @@ msgid "Group By"
 msgstr "Seskupit podle"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_template__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__id
@@ -394,6 +421,11 @@ msgid "Is Follower"
 msgstr "je Sledující"
 
 #. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_product____last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo____last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_product_template____last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order____last_update
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_line____last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition____last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line____last_update
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type____last_update
@@ -442,12 +474,17 @@ msgstr "Zprávy"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Multiple Requisitions"
-msgstr ""
+msgstr "Více požadavků"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "My Agreements"
-msgstr ""
+msgstr "Moje dohody"
+
+#. module: purchase_requisition
+#: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
+msgid "Name, TIN, Email, or Reference"
+msgstr "Jméno, DIČ, e-mail nebo reference"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -482,7 +519,7 @@ msgstr "Počet akcí"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__order_count
 msgid "Number of Orders"
-msgstr ""
+msgstr "Číslo objednávek"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
@@ -519,7 +556,7 @@ msgstr "Objednaná množství"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__ordering_date
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
-msgstr ""
+msgstr "Datum objednání"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_product__purchase_requisition
@@ -558,13 +595,13 @@ msgstr "Produkty k nákupu"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__product_template__purchase_requisition__tenders
 msgid "Propose a call for tenders"
-msgstr ""
+msgstr "Navrhnout výzvu k podávání nabídek"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__requisition_id
 msgid "Purchase Agreement"
-msgstr ""
+msgstr "Kupní smlouva"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
@@ -572,7 +609,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
-msgstr ""
+msgstr "Typy kupních smluv"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -600,7 +637,7 @@ msgstr "Objednávky"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
-msgstr ""
+msgstr "Objednávky s požadavkem"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
@@ -611,13 +648,13 @@ msgstr "Nákupčí"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
 msgid "Purchase Requisition"
-msgstr ""
+msgstr "Požadavek k nákupu"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_line_id
 msgid "Purchase Requisition Line"
-msgstr ""
+msgstr "Řádek požadavku na objednávku"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
@@ -627,7 +664,7 @@ msgstr "Typ požadavku na nákup"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr ""
+msgstr "Nákupní objednávky"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__is_quantity_copy
@@ -644,7 +681,7 @@ msgstr "Množství"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr ""
+msgstr "Žádosti / objednávky"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
@@ -675,7 +712,7 @@ msgstr "Žádosti o podrobnosti nabídky"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Requisition"
-msgstr ""
+msgstr "Požadavek"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -700,24 +737,24 @@ msgstr "Plánované datum"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Purchase Agreements"
-msgstr ""
+msgstr "Hledat kupní smlouvy"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
-msgid "Select multiple RFQ"
-msgstr ""
+msgid "Select multiple RFQ (non-exclusive)"
+msgstr "Vyberte více RFQ (neexkluzivní)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
 msgid "Select only one RFQ (exclusive)"
-msgstr ""
+msgstr "Vyberte pouze jedno RFQ (exkluzivní)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__exclusive
 msgid ""
 "Select only one RFQ (exclusive):  when a purchase order is confirmed, cancel the remaining purchase order.\n"
 "\n"
-"                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
+"                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
 
 #. module: purchase_requisition
@@ -744,12 +781,12 @@ msgstr "Zdrojový dokument"
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
-msgstr ""
+msgstr "Spusťte novou kupní smlouvu"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr ""
+msgstr "Státní hromadná objednávka"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -773,7 +810,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
-msgstr ""
+msgstr "Informace o dodavateli"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
@@ -789,15 +826,18 @@ msgstr "Podmínky"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
-msgstr ""
+msgstr "Očekávané a plánované datum dodání, kdy jsou přijaty všechny produkty"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid ""
-"There is already an open blanket order for this supplier. We suggest you to "
-"use to complete this open blanket order instead of creating a new one."
+"There is already an open blanket order for this supplier. We suggest you "
+"complete this open blanket order, instead of creating a new one."
 msgstr ""
+"U tohoto dodavatele již existuje otevřená hromadná objednávka. Doporučujeme "
+"vám dokončit tuto otevřenou hromadnou objednávku, místo abyste vytvořili "
+"novou."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -807,7 +847,7 @@ msgstr "Dnešní činnosti"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ zaznamenané výjimečné aktivity."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
@@ -832,17 +872,17 @@ msgstr "UoM"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__copy
 msgid "Use lines of agreement"
-msgstr ""
+msgstr "Použijte dohody"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__copy
 msgid "Use quantities of agreement"
-msgstr ""
+msgstr "Použít množstevní dohody"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr "Schválit"
+msgstr "Ověřit"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__vendor_id
@@ -869,13 +909,14 @@ msgstr "Historie komunikace Webové stránky"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft requisitions."
-msgstr ""
+msgstr "Můžete smazat pouze koncept požadavků."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
 msgstr ""
+"Souhlas nemůžete potvrdit'%s' protože neexistuje žádná produktová řada."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
@@ -889,7 +930,7 @@ msgstr "Hromadnou objednávku nelze potvrdit bez ceny."
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without quantity."
-msgstr ""
+msgstr "Nelze potvrdit hromadnou objednávku bez množství."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
@@ -898,6 +939,7 @@ msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
 msgstr ""
+"Před uzavřením požadavku na nákup musíte zrušit nebo ověřit každé RfQ."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
