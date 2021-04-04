@@ -322,7 +322,7 @@ msgstr "<p>Créez un canal ici.</p>"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/tours/mail.js:26
+#: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
 msgstr "<p>Créer un canal public ou privél.</p>"
@@ -2496,7 +2496,7 @@ msgid "Following"
 msgstr "Abonné(e)"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:778
+#: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Following invites are invalid as user groups do not match: %s"
 msgstr ""
@@ -4312,6 +4312,18 @@ msgstr "Un abonné"
 #, python-format
 msgid "Online"
 msgstr "En ligne"
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to export mail message"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_message.py:0
+#, python-format
+msgid "Only administrators are allowed to use grouped read on message model"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -6498,6 +6510,14 @@ msgstr ""
 "nécessaire pour d'autres modules."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -6506,14 +6526,6 @@ msgid ""
 msgstr ""
 "Vous n'avez pas le droit de modifier les champs liés à la modération sur "
 "l'un des canaux que vous modifiez."
-
-#. module: mail
-#: code:addons/mail/models/mail_alias.py:89
-#, python-format
-msgid ""
-"You cannot use anything else than unaccented latin characters in the alias "
-"address."
-msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

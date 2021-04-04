@@ -420,6 +420,7 @@ msgstr "Poglej vse časovnice"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Set the time unit used to record your timesheets"
 msgstr ""
+"Nastavite časovno enoto, ki se uporablja za beleženje vaših časovnih listov "
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -673,6 +674,14 @@ msgstr ""
 "Delovne ure po projektu lahko knjižite in spremljate vsak dan.\n"
 "                Čas porabljen na projektu postane strošek in se lahko\n"
 "                po potrebi zaračuna kupcu."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"You cannot delete a project containing timesheets. You can either archive it"
+" or first delete all of its timesheets."
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet

@@ -512,7 +512,12 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     });
     return def;
 };
+var originalShowImageDialog = eventHandler.modules.imageDialog.showImageDialog;
 eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
+    var options = $editable.closest('.o_editable, .note-editor').data('options');
+    if (options.disableFullMediaDialog) {
+        return originalShowImageDialog.apply(this, arguments);
+    }
     var r = $editable.data('range');
     if (r.sc.tagName && r.sc.childNodes.length) {
         r.sc = r.sc.childNodes[r.so];
@@ -520,7 +525,6 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     var media = $(r.sc).parents().addBack().filter(function (i, el) {
         return dom.isImg(el);
     })[0];
-    var options = $editable.closest('.o_editable, .note-editor').data('options');
     core.bus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
@@ -933,6 +937,9 @@ eventHandler.attach = function (oLayoutInfo, options) {
     oLayoutInfo.editor().on('dragstart', 'img', function (e) { e.preventDefault(); });
     $(document).on('mousedown', summernote_mousedown).on('mouseup', summernote_mouseup);
     oLayoutInfo.editor().off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
+    oLayoutInfo.editor().find('.note-image-dialog').on('click', '.note-image-input', function (e) {
+        e.stopPropagation(); // let browser default happen for image file input
+    });
 
     /**
      * Open Media Dialog on double click on an image/video/icon.

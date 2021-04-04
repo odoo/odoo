@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero
 
 
@@ -290,14 +290,14 @@ class PosSession(models.Model):
         # Users without any accounting rights won't be able to create the journal entry. If this
         # case, switch to sudo for creation and posting.
         sudo = False
-        if (
-            not self.env['account.move'].check_access_rights('create', raise_exception=False)
-            and self.user_has_groups('point_of_sale.group_pos_user')
-        ):
-            sudo = True
-            self.sudo()._create_account_move()
-        else:
+        try:
             self._create_account_move()
+        except AccessError as e:
+            if self.user_has_groups('point_of_sale.group_pos_user'):
+                sudo = True
+                self.sudo()._create_account_move()
+            else:
+                raise e
         if self.move_id.line_ids:
             self.move_id.post() if not sudo else self.move_id.sudo().post()
             # Set the uninvoiced orders' state to 'done'

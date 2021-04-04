@@ -374,6 +374,13 @@ msgid "A Manufacturing Order is already done or cancelled."
 msgstr "Üretim Emri bitmiş ya da iptal edilmiş."
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:0
+#, python-format
+msgid ""
+"A product with a kit-type bill of materials can not have a reordering rule."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
@@ -4891,6 +4898,14 @@ msgstr "İşlenmiş iş emrini değiştiremezsiniz."
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr "Hangi lotu tükettiğinizi söylemeden, tüketim yapamazsınız"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"You can not create a kit-type bill of materials for products that have at "
+"least one reordering rule."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0

@@ -99,7 +99,7 @@ class SaleOrder(models.Model):
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
         # Take the default taxes on the reward product, mapped with the fiscal position
-        taxes = program.reward_product_id.taxes_id
+        taxes = program.reward_product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
         if self.fiscal_position_id:
             taxes = self.fiscal_position_id.map_tax(taxes)
         return {

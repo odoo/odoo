@@ -275,6 +275,10 @@ class StockMove(models.Model):
 
         stock_valuation_layers._check_company()
 
+        # Special update for subcontracting and landed cost
+        for svl in stock_valuation_layers:
+            svl._update_stock_move()
+
         # For every in move, run the vacuum for the linked product.
         products_to_vacuum = valued_moves['in'].mapped('product_id')
         company = valued_moves['in'].mapped('company_id') and valued_moves['in'].mapped('company_id')[0] or self.env.company

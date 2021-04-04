@@ -37,3 +37,6 @@ class StockValuationLayer(models.Model):
             self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
         )
 
+    def _update_stock_move(self):
+        """ To be overriden in mrp subcontracting"""
+        return True

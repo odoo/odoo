@@ -9,7 +9,6 @@ from odoo.exceptions import ValidationError
 
 from odoo.osv import expression
 
-
 class Contract(models.Model):
     _name = 'hr.contract'
     _description = 'Contract'
@@ -68,6 +67,7 @@ class Contract(models.Model):
     def _expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
 
+
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
         if self.employee_id:
@@ -87,7 +87,7 @@ class Contract(models.Model):
                     ('state', 'in', ['open', 'close']),
                     '&',
                         ('state', '=', 'draft'),
-                        ('kanban_state', '=', 'done')  # replaces incoming
+                        ('kanban_state', '=', 'done') # replaces incoming
             ]
 
             if not contract.date_end:
@@ -130,7 +130,7 @@ class Contract(models.Model):
             'state': 'close'
         })
 
-        self.search([('state', '=', 'draft'), ('kanban_state', '=', 'done'), ('date_start', '<=', fields.Date.to_string(date.today())), ]).write({
+        self.search([('state', '=', 'draft'), ('kanban_state', '=', 'done'), ('date_start', '<=', fields.Date.to_string(date.today())),]).write({
             'state': 'open'
         })
 
@@ -164,11 +164,8 @@ class Contract(models.Model):
         if vals.get('state') == 'open':
             self._assign_open_contract()
         if vals.get('state') == 'close':
-            for contract in self:
-                date_end = max(date.today(), contract.date_start)
-                if contract.date_end:
-                    date_end = min(date_end, contract.date_end)
-                contract.date_end = date_end
+            for contract in self.filtered(lambda c: not c.date_end):
+                contract.date_end = max(date.today(), contract.date_start)
 
         calendar = vals.get('resource_calendar_id')
         if calendar and (self.state == 'open' or (self.state == 'draft' and self.kanban_state == 'done')):

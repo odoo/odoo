@@ -59,7 +59,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vânzări</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
@@ -69,7 +69,7 @@ msgstr "<span class=\"o_stat_text\">Vândut</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
 msgid "<span>Product</span>"
-msgstr ""
+msgstr "<span>Produs</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
@@ -79,7 +79,7 @@ msgstr "<span>Cantitate</span>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
 msgid "<span>SN/LN</span>"
-msgstr ""
+msgstr "<span>SN/LN</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -142,7 +142,7 @@ msgstr "Include toate operațiile planificate"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Apply specific routes"
-msgstr ""
+msgstr "Aplicați rute specifice"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
@@ -166,7 +166,7 @@ msgstr "Disponibil"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
+msgstr "Alegeți să aplicați rute specifice liniilor SO."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -176,7 +176,7 @@ msgstr "Companii"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Data finalizării primei comenzi de livrare."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -219,12 +219,12 @@ msgstr "Afișați loturi și numere de serie în facturi"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr ""
+msgstr "Afișare widget cantitate"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
-msgstr ""
+msgstr "Afișare serie și număr lot pe facturi"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -243,6 +243,7 @@ msgstr "Afișați incotermeni la comenzi și facturi"
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
+"Nu uitați să schimbați partenerul la următoarele comenzi de livrare: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -378,6 +379,10 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Marja de eroare pentru datele promise clienților. Produsele vor fi "
+"programate pentru livrare cu multe zile mai devreme decât data reală "
+"promisă, pentru a face față întârzierilor neașteptate în lanțul de "
+"aprovizionare."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -388,6 +393,10 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"Marja de eroare pentru datele promise clienților. Produsele vor fi "
+"programate pentru achiziție și livrare cu multe zile mai devreme decât data "
+"reală promisă, pentru a face față întârzierilor neașteptate în lanțul de "
+"aprovizionare."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
@@ -441,12 +450,12 @@ msgstr "Tip produs"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr ""
+msgstr "Cantitate disponibilă astăzi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "Cantitate de livrat"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -456,6 +465,11 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Rezervarea manuală a produselor în comenzile de livrare sau prin rularea "
+"planificatorului este sfătuită să gestioneze mai bine prioritățile în cazul "
+"unor termene lungi de livrare ale clienților sau / și a stocurilor "
+"frecvente. În mod implicit, programatorul rulează automat la fiecare 24 de "
+"ore."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -480,7 +494,7 @@ msgstr "Comenzi de Vanzari"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
-msgstr ""
+msgstr "Numărul comenzilor de vânzare"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -511,12 +525,12 @@ msgstr "Comenzi de vânzare"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "Zilele de siguranță a vânzărilor"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "Programați livrările mai devreme pentru a evita întârzierile"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
@@ -531,12 +545,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "Termen de livrare de securitate pentru vânzări"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Selectabil pe linia de comandă de vânzări"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
@@ -592,6 +606,9 @@ msgid ""
 "                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
+"Adresa de livrare a fost modificată în Comanda de vânzare<br/>\n"
+"                        De la <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
+"                       Probabil ar trebui să actualizați partenerul în acest document."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -604,7 +621,7 @@ msgstr ""
 #: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "This product is replenished on demand."
-msgstr ""
+msgstr "Acest produs este completat la cerere."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -626,7 +643,7 @@ msgstr "Vezi estimare"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "Virtual disponibil la data"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
