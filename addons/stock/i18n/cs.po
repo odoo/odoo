@@ -39,6 +39,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> MJ Produktu je %s (%s) - MJ pohybu je %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -4729,7 +4732,7 @@ msgstr "Množství na skladě které může být rezervováno pro tento pohyb"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
 msgid "Quantity in the default UoM of the product"
-msgstr ""
+msgstr "Množství ve výchozí MJ produktu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -6105,6 +6108,8 @@ msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
 msgstr ""
+"Požadovanou operaci nelze zpracovat z důvodu programovací chyby při "
+"nastavení pole `product_qty` namísto` product_uom_qty`."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_date
@@ -6707,7 +6712,7 @@ msgstr "UoM"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "Kategorie MJ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -6782,7 +6787,7 @@ msgstr "Ověřeno"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Počet variant"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
