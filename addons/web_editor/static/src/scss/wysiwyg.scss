@@ -62,6 +62,11 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 .note-popover .popover {
     z-index: $o-we-overlay-zindex;
 }
+
+#web_editor-toolbars .note-popover .popover .popover-body .dropdown-menu {
+    transform: none !important;
+}
+
 .note-popover .popover .popover-body,
 .panel-heading.note-toolbar {
     padding-bottom: 0;
@@ -125,7 +130,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         outline: none !important;
     }
     .dropdown-menu {
-        transform: none !important;
         margin-top: $o-we-dropdown-spacing;
         padding: 0;
         margin-top: $o-we-toolbar-height;

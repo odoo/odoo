@@ -88,7 +88,7 @@ renderer.createPalette = function ($container, options) {
             if (manualOpening) {
                 return true;
             }
-            mutex.exec(() => {
+            return mutex.exec(() => {
                 const oldColorpicker = colorpicker;
                 const hookEl = oldColorpicker ? oldColorpicker.el : elem;
 
@@ -118,7 +118,6 @@ renderer.createPalette = function ($container, options) {
                     manualOpening = false;
                 });
             });
-            return false;
         });
     });
 };
