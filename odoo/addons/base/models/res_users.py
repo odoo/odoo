@@ -646,10 +646,16 @@ class Users(models.Model):
         # use read() to not read other fields: this must work while modifying
         # the schema of models res.users or res.partner
         values = user.read(list(name_to_key), load=False)[0]
-        return frozendict({
-            key: values[name]
-            for name, key in name_to_key.items()
-        })
+        tmpdict = {}
+        # Convert date and datetime fields to string to avoid error
+        # TypeError: Object of type date is not JSON serializable
+        for name, key in name_to_key.items():
+            if isinstance(values[name], datetime.datetime):
+                values[name] = fields.Datetime.to_string(values[name])
+            elif isinstance(values[name], datetime.date):
+                values[name] = fields.Date.to_string(values[name])
+            tmpdict[key] = values[name]
+        return frozendict(tmpdict)
 
     @api.model
     def action_get(self):
