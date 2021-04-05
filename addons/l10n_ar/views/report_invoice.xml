@@ -159,9 +159,6 @@
             <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.l10n_latam_tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
         </span>
 
-        <!-- remove payment term, this is added on information section -->
-        <p name="payment_term" position="replace"/>
-
         <!-- remove payment reference that is not used in Argentina -->
         <xpath expr="//span[@t-field='o.payment_reference']/../.." position="replace"/>
 
