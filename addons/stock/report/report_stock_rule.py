@@ -11,6 +11,14 @@ class ReportStockRule(models.AbstractModel):
 
     @api.model
     def _get_report_values(self, docids, data=None):
+        if 'product_id' not in data:
+            return {
+                'docs': self.env['product.product'],
+                'locations': [],
+                'header_lines': {},
+                'route_lines': [],
+            }
+
         product = self.env['product.product'].browse(data['product_id'])
         warehouses = self.env['stock.warehouse'].browse(data['warehouse_ids'])
 

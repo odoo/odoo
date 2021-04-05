@@ -9,6 +9,9 @@ class report_product_pricelist(models.AbstractModel):
     _description = 'Pricelist Report'
 
     def _get_report_values(self, docids, data):
+        if 'active_ids' not in data:
+            return self._get_report_data(False, False, False, False, 'pdf')
+
         product_ids = [int(i) for i in data['active_ids'].split(',')]
         pricelist_id = data['pricelist_id'] and int(data['pricelist_id']) or None
         quantities = [int(i) for i in data['quantities'].split(',')] or [1]
@@ -26,6 +29,14 @@ class report_product_pricelist(models.AbstractModel):
 
     def _get_report_data(self, active_model, active_ids, pricelist_id, quantities, report_type='html'):
         products = []
+        if not active_model:
+            return {
+                'pricelist': self.env['product.pricelist'],
+                'products': products,
+                'quantities': quantities,
+                'is_product_tmpl': False,
+                'is_html_type': report_type == 'html',
+            }
         is_product_tmpl = active_model == 'product.template'
 
         ProductClass = self.env['product.template'] if is_product_tmpl else self.env['product.product']
