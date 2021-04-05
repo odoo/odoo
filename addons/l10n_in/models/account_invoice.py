@@ -104,7 +104,7 @@ class AccountMove(models.Model):
             elif self.journal_id.type == 'purchase':
                 move.l10n_in_state_id = company_unit_partner.state_id
 
-            shipping_partner = move._l10n_in_get_shipping_partner()
+            shipping_partner = move.partner_id
             # In case of shipping address does not have GSTN then also check customer(partner_id) GSTN
             # This happens when Bill-to Ship-to transaction where shipping(Ship-to) address is unregistered and customer(Bill-to) is registred.
             move.l10n_in_gstin = move._l10n_in_get_shipping_partner_gstin(shipping_partner) or move.partner_id.vat
