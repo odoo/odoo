@@ -91,7 +91,7 @@ class Attendee(models.Model):
         calendar_view = self.env.ref('calendar.view_calendar_event_calendar')
         invitation_template = self.env.ref(template_xmlid, raise_if_not_found=False)
         if not invitation_template:
-            _logger.warning("Template %s could not be found. %s not notified." % (template_xmlid, self))
+            _logger.warning("Template %s could not be found. %s not notified." % (template_xmlid, self.partner_id.display_name))
             return
         # get ics file for all meetings
         ics_files = self.mapped('event_id')._get_ics_file()
