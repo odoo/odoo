@@ -393,7 +393,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBooleanToggle');
 
     QUnit.test('use boolean toggle widget in form view', async function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         var form = await createView({
             View: FormView,
@@ -404,6 +404,13 @@ QUnit.module('basic_fields', {
         });
 
         assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle", "Boolean toggle widget applied to boolean field");
+        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle .fa-check-circle",
+            "Boolean toggle should have fa-check-circle icon");
+
+        await testUtils.dom.click(form.$('.o_field_widget[name=bar]'));
+        assert.containsOnce(form, ".custom-checkbox.o_boolean_toggle .fa-times-circle",
+            "Boolean toggle should have fa-times-circle icon");
+
         form.destroy();
     });
 
