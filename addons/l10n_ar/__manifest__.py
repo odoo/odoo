@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
+<<<<<<< HEAD
     'name': 'Argentina - Accounting',
     'version': "3.2",
+=======
+    'name': 'Argentinian Accounting',
+    'version': "3.3",
+>>>>>>> dff6632fb99... temp
     'description': """
 Functional
 ----------
