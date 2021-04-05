@@ -324,14 +324,7 @@ export class PosGlobalState extends PosModel {
                 reject();
             };
             this.company_logo.crossOrigin = "anonymous";
-            this.company_logo.src =
-                "/web/binary/company_logo" +
-                "?dbname=" +
-                this.env.session.db +
-                "&company=" +
-                this.company.id +
-                "&_" +
-                Math.random();
+            this.company_logo.src = `/web/image?model=res.company&id=${this.company.id}&field=logo`;
         });
     }
     prepare_new_partners_domain() {
