@@ -56,3 +56,12 @@ Index: addons/openacademy/views/openacademy.xml
 +                  action="session_list_action"/>
 +
  </odoo>
+Index: addons/openacademy/security/ir.model.access.csv
+===================================================================
+--- addons.orig/openacademy/security/ir.model.access.csv
++++ addons/openacademy/security/ir.model.access.csv
+@@ -1,2 +1,3 @@
+ id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+-access_openacademy_openacademy,openacademy.openacademy,model_openacademy_openacademy,,1,0,0,0
++course_read_all,course all,model_openacademy_course,,1,0,0,0
++session_read_all,session all,model_openacademy_session,,1,0,0,0
