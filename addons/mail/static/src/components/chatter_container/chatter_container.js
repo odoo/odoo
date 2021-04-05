@@ -10,6 +10,7 @@ const { Component } = owl;
 
 const components = { Chatter };
 
+const { useRef } = owl.hooks;
 /**
  * This component abstracts chatter component to its parent, so that it can be
  * mounted and receive chatter data even when a chatter component cannot be
@@ -40,6 +41,7 @@ class ChatterContainer extends Component {
             return { chatter: this.chatter };
         });
         useUpdate({ func: () => this._update() });
+        this._chatterRef = useRef('chatter');
     }
 
     /**
@@ -62,6 +64,17 @@ class ChatterContainer extends Component {
         }
     }
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    onScroll(ev) {
+        if (!this._chatterRef.comp) {
+            return;
+        }
+        this._chatterRef.comp.onScroll(ev);
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -71,6 +84,8 @@ class ChatterContainer extends Component {
      */
     _insertFromProps(props) {
         const values = Object.assign({}, props);
+        // getScrollableElement is not required as a model field for chatter
+        delete values.getScrollableElement;
         if (values.threadId === undefined) {
             values.threadId = clear();
         }
@@ -95,6 +110,15 @@ class ChatterContainer extends Component {
 Object.assign(ChatterContainer, {
     components,
     props: {
+        /**
+         * Function returns the exact scrollable element from the parent
+         * to manage proper scroll heights which affects the load more messages.
+         * In our case, the whole form view content is scrollabe if it is not aside.
+         */
+        getScrollableElement: {
+            type: Function,
+            optional: true,
+        },
         hasActivities: {
             type: Boolean,
             optional: true,

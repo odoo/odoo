@@ -33,6 +33,13 @@ FormRenderer.include({
     /**
      * @override
      */
+    start() {
+        document.addEventListener('scroll', this._onScrollForm.bind(this), true);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     destroy() {
         this._super(...arguments);
         this._chatterContainerComponent = undefined;
@@ -40,6 +47,12 @@ FormRenderer.include({
         this.off('o_chatter_rendered', this);
         this.off('o_message_posted', this);
         owl.Component.env.bus.off('mail.thread:promptAddFollower-closed', this);
+    },
+    /**
+     * @returns {Element|undefined} Scrollable Element
+     */
+    getScrollableElement() {
+        return $(".o_content") && $(".o_content")[0];
     },
 
     //--------------------------------------------------------------------------
@@ -93,6 +106,7 @@ FormRenderer.include({
             isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,
             threadId: this.state.res_id,
             threadModel: this.state.model,
+            getScrollableElement: this.getScrollableElement
         };
     },
     /**
@@ -182,4 +196,13 @@ FormRenderer.include({
      * @param {mail.thread} ev.data.thread
      */
     _onChatterRendered(ev) {},
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onScrollForm(ev) {
+        if (this._chatterContainerComponent) {
+            this._chatterContainerComponent.componentRef.comp.onScroll(ev)
+        }
+    }
 });

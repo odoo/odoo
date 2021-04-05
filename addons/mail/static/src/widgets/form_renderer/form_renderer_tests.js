@@ -974,6 +974,75 @@ QUnit.test('chatter just contains "creating a new record" message during the cre
     );
 });
 
+QUnit.test('automatic loading of messages on scrolling of formview', async function (assert) {
+    assert.expect(3);
+
+    for (let i = 0; i < 50; i++) {
+        this.data['mail.message'].records.push({
+            body: `Message ${i}`,
+            model: 'res.partner',
+            res_id: 11
+        });
+    }
+    this.data['res.partner'].records.push({
+        display_name: "first partner",
+        id: 11
+    });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        res_id: 11,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+        config: {
+            device: { size_class: config.device.SIZES.LG },
+        },
+        env: {
+            device: { size_class: config.device.SIZES.LG },
+        },
+    });
+
+    const controllerContentEl = document.querySelector('.o_content');
+
+    assert.containsOnce(
+        document.body,
+        '.o_Chatter',
+        "there should be a chatter"
+    );
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        30,
+        "there should be 30 messages loaded initially"
+    );
+
+    // scroll the form view
+    await afterNextRender(async () => {
+        controllerContentEl.scrollTop = controllerContentEl.scrollHeight - controllerContentEl.clientHeight;
+        await triggerEvent(
+            document.querySelector('.o_content'),
+            'scroll'
+        );
+    });
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        50,
+        "there should be 50 messages after scroll"
+    );
+});
+
 });
 });
 });

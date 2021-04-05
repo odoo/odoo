@@ -4,7 +4,11 @@
     <t t-name="mail.ChatterContainer" owl="1">
         <div class="o_ChatterContainer">
             <t t-if="chatter">
-                <Chatter chatterLocalId="chatter.localId"/>
+                <Chatter
+                    chatterLocalId="chatter.localId"
+                    getScrollableElement= "props.getScrollableElement"
+                    t-ref="chatter"
+                />
             </t>
             <t t-else="">
                 <div class="o_ChatterContainer_noChatter"><i class="o_ChatterContainer_noChatterIcon fa fa-spinner fa-spin"/>Please wait...</div>

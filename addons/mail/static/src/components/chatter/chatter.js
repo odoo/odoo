@@ -79,10 +79,23 @@ class Chatter extends Component {
      * @returns {Element|undefined} Scrollable Element
      */
     getScrollableElement() {
+        if (this.props.getScrollableElement) {
+            return this.props.getScrollableElement();
+        }
         if (!this._scrollPanelRef.el) {
             return;
         }
         return this._scrollPanelRef.el;
+    }
+
+    /**
+     * @param {MouseEvent} ev
+     */
+    onScroll(ev) {
+        if (!this._threadRef.comp) {
+            return;
+        }
+        this._threadRef.comp.onScroll(ev);
     }
 
     //--------------------------------------------------------------------------
@@ -134,10 +147,7 @@ class Chatter extends Component {
      * @param {MouseEvent} ev
      */
     _onScrollPanelScroll(ev) {
-        if (!this._threadRef.comp) {
-            return;
-        }
-        this._threadRef.comp.onScroll(ev);
+        this.onScroll(ev);
     }
 
 }
@@ -146,6 +156,14 @@ Object.assign(Chatter, {
     components,
     props: {
         chatterLocalId: String,
+        /**
+         * Function returns the exact scrollable element from the parent
+         * to manage proper scroll heights which affects the load more messages.
+         */
+        getScrollableElement: {
+            type: Function,
+            optional: true,
+        },
     },
     template: 'mail.Chatter',
 });
