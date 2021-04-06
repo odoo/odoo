@@ -1020,6 +1020,9 @@ const Wysiwyg = Widget.extend({
         ));
         if (commandState && !resetAlignment) {
             $paragraphDropdownButton.addClass(newClass);
+        } else {
+            // Ensure we always display an icon in the align toolbar button.
+            $paragraphDropdownButton.addClass('fa-align-justify');
         }
     },
     _updateFaResizeButtons: function () {
