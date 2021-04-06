@@ -5,12 +5,37 @@
         <div class="ticket-screen screen">
             <div class="screen-content">
                 <div class="controls">
-                    <div class="buttons">
-                        <button t-if="showNewTicketButton" class="highlight" t-on-click="createNewOrder">New Order</button>
-                        <button class="discard" t-on-click="trigger('close-screen')">Discard</button>
+                    <div class="buttons" t-att-class="{ 'show-search-bar': state.showSearchBar }">
+                        <t t-if="!env.isMobile || !state.showSearchBar">
+                            <button class="discard" t-on-click="trigger('close-screen')">
+                                <span class="search-icon">
+                                    <i class="fa fa-angle-double-left"/>
+                                </span>
+                                <t t-if="!env.isMobile">
+                                    Back
+                                </t>
+                            </button>
+                            <button t-if="showNewTicketButton" class="highlight" t-on-click="createNewOrder">New Order</button>
+                        </t>
+                        <t t-if="env.isMobile">
+                            <t t-if="state.showSearchBar">
+                                <button class="arrow-left" t-on-click="state.showSearchBar = !state.showSearchBar;">
+                                    <span class="search-icon">
+                                        <i class="fa fa-angle-double-left"/>
+                                    </span>
+                                </button>
+                            </t>
+                            <t t-else="">
+                                <button class="search" t-on-click="state.showSearchBar = !state.showSearchBar;">
+                                    <span class="search-icon">
+                                        <i class="fa fa-search"/>
+                                    </span>
+                                </button>
+                           </t>
+                        </t>
                     </div>
-                    <t t-set="placeholder">Search Tickets...</t>
-                    <SearchBar config="searchBarConfig" placeholder="placeholder" />
+                    <t t-set="placeholder">Search...</t>
+                    <SearchBar t-if="state.showSearchBar" config="searchBarConfig" placeholder="placeholder" showSearchIcon="!env.isMobile" />
                 </div>
                 <div class="orders">
                     <div class="header-row">

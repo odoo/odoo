@@ -1,6 +1,7 @@
 odoo.define('point_of_sale.TicketScreen', function (require) {
     'use strict';
 
+    const { useState } = owl.hooks;
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
     const { useListener } = require('web.custom_hooks');
@@ -14,6 +15,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             useListener('search', this._onSearch);
             this.searchDetails = {};
             this.filter = null;
+            this.state = useState({
+                showSearchBar: !this.env.isMobile,
+            });
             this._initializeSearchFieldConstants();
         }
         mounted() {

@@ -3652,7 +3652,49 @@ td {
 
 @media screen and (max-width: 768px) {
 
+    .ticket-screen .pos-search-bar .search input {
+        padding-left: 10px;
+    }
+
     .pos .search-bar-portal .search-box .icon .fa-search {
         color: #f0f0f0;
+    }
+
+    .pos .ticket-screen .controls .buttons {
+        display: flex;
+        width: 100%;
+    }
+
+    .pos .ticket-screen .controls .buttons.show-search-bar {
+        width: initial;
+    }
+
+    .pos .ticket-screen .controls {
+        margin: 0 10px;
+    }
+
+    .pos .ticket-screen .controls button {
+        margin: 0;
+    }
+
+    .pos .ticket-screen .controls .buttons .arrow-left {
+         margin-right: 0;
+         margin-left: 0;
+    }
+
+    .pos .ticket-screen .controls .buttons .search {
+        margin-left: auto;
+    }
+
+    .pos .ticket-screen .controls .buttons .arrow-left,
+    .pos .ticket-screen .controls .buttons .discard,
+    .pos .ticket-screen .controls .buttons .search {
+        background: #fff;
+        width: 50px;
+        margin-right: 5px;
+    }
+
+    .pos .ticket-screen .pos-search-bar .search input {
+        width: 100px;
     }
 }
