@@ -60,9 +60,11 @@ class TSConfig(Command):
         return {
             'compilerOptions': {
                 "baseUrl": ".",
+                "target": "es2019",
                 "checkJs": True,
                 "allowJs": True,
                 "noEmit": True,
+                "typeRoots": ["community/addons/web/static/types/*.d.ts"],
                 "paths": self.generate_imports(modules)
             }, "exclude": self.generate_excludes()
         }
