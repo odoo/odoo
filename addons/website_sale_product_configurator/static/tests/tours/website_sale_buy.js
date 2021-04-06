@@ -11,7 +11,7 @@ var addCartStepIndex = _.findIndex(tour.tours.shop_buy_product.steps, function (
     return (step.id === 'add_cart_step');
 });
 
-tour.tours.shop_buy_product.steps.splice(addCartStepIndex + 1, 0, {
+tour.tours.shop_buy_product.steps.splice(addCartStepIndex + 1, 1, {
     content: "click in modal on 'Proceed to checkout' button",
     trigger: 'button:contains("Proceed to Checkout")',
 });
