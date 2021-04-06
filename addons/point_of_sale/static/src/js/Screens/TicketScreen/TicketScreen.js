@@ -1,6 +1,7 @@
 odoo.define('point_of_sale.TicketScreen', function (require) {
     'use strict';
 
+    const { useState } = owl.hooks;
     const models = require('point_of_sale.models');
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
@@ -32,6 +33,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 triggerAtInput: 'update-selected-orderline',
             });
             this._state = this.env.pos.TICKET_SCREEN_STATE;
+            this.state = useState({
+                showSearchBar: !this.env.isMobile,
+            });
             const defaultUIState = this.props.reuseSavedUIState
                 ? this._state.ui
                 : {
