@@ -142,6 +142,7 @@ const Wysiwyg = Widget.extend({
 
         $(this.odooEditor.editable).on('click', this._updateEditorUI.bind(this));
         $(this.odooEditor.editable).on('keydown', this._updateEditorUI.bind(this));
+        $(this.odooEditor.editable).on('keydown', this._handleShortcuts.bind(this));
         // Ensure the Toolbar always have the correct layout in note.
         this._updateEditorUI();
 
@@ -849,6 +850,31 @@ const Wysiwyg = Widget.extend({
         }
     },
     /**
+     * Handle custom keyboard shortcuts.
+     */
+    _handleShortcuts: function (e) {
+        // Open the link modal / tool when CTRL+K is pressed.
+        if (e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            this.toggleLinkTools();
+        }
+        // Override selectAll (CTRL+A) to restrict it to the editable zone / current snippet and prevent traceback.
+        if (e && e.key === 'a' && (e.ctrlKey || e.metaKey)) {
+            e.preventDefault();
+            const selection = this.odooEditor.document.getSelection();
+            const deepestParent =
+                selection ?
+                    $(selection.anchorNode).parentsUntil('#wrap>*, [contenteditable], .oe_structure>*').last() :
+                    [];
+            if(deepestParent.length) {
+                const range = document.createRange();
+                range.selectNodeContents(deepestParent.parent()[0]);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
+    },
+    /**
      * Update any editor UI that is not handled by the editor itself.
      */
     _updateEditorUI: function (e) {
@@ -908,11 +934,6 @@ const Wysiwyg = Widget.extend({
         this.toolbar.$el.find('.only_fa').toggleClass('d-none', !$target.is('.fa'));
         // Toggle the toolbar arrow.
         this.toolbar.$el.toggleClass('noarrow', isInMedia);
-        // open the link modal / tool when CTRL+K is pressed
-        if (e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
-            e.preventDefault();
-            this.toggleLinkTools();
-        }
         // Unselect all media.
         this.$editable.find('.o_we_selected_image').removeClass('o_we_selected_image');
         if (isInMedia) {
