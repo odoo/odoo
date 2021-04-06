@@ -854,5 +854,24 @@ return AbstractRenderer.extend({
             }));
         }
     },
+<<<<<<< HEAD
+=======
+    /**
+     * Helper function, turns label value into a usable string form if it is
+     * undefined, that we can display in the interface.
+     *
+     * @param {Array} datapt an array that contains groupby labels of the graph
+     *     received by the read_group rpc.
+     * @returns {string}
+     */
+    _sanitizeLabel: function (datapt) {
+        datapt.labels = datapt.labels.map(function(label) {
+            if (label === undefined) return _t("Undefined");
+            if (label === true) return _t("True");
+            if (label === false) return _t("False");
+            return label;
+        });
+    },
+>>>>>>> 0e02800bda3... temp
 });
 });

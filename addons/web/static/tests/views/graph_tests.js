@@ -257,6 +257,7 @@ QUnit.module('Views', {
             groupBy: ['product_id', 'bar', 'color_id'],
         });
 
+<<<<<<< HEAD
         assert.checkLabels(graph, [['xphone'], ['xpad']]);
         assert.checkLegend(graph, ['true/Undefined', 'true/red', 'false/Undefined']);
 
@@ -277,6 +278,14 @@ QUnit.module('Views', {
             'xphone/false/Undefined',
             'xpad/false/Undefined'
         ]);
+=======
+        assert.strictEqual(graph.$('.nv-x text:contains(xphone)').length, 1,
+            "should contain a text element with product xphone on X axis");
+        assert.strictEqual(graph.$('.nv-x text:contains(xpad)').length, 1,
+            "should contain a text element with product xpad on X axis");
+        assert.strictEqual(graph.$('text:contains("True")').length, 1,
+            "should have an entry for each value of field 'bar' in the legend");
+>>>>>>> 0e02800bda3... temp
 
         graph.destroy();
     });
