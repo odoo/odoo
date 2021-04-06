@@ -6,12 +6,37 @@
             <div class="screen-full-width">
                 <div class="rightpane pane-border">
                     <div class="controls">
-                        <div class="buttons">
-                            <button t-if="shouldShowNewOrderButton()" class="highlight" t-on-click="trigger('create-new-order')">New Order</button>
-                            <button class="discard" t-on-click="trigger('close-screen')">Back</button>
-                        </div>
+                        <t t-if="!env.isMobile || !state.showSearchBar">
+                            <div class="buttons">
+                                <button class="discard" t-on-click="trigger('close-screen')">
+                                    <span class="search-icon">
+                                        <i class="fa fa-angle-double-left"/>
+                                    </span>
+                                    <t t-if="!env.isMobile">
+                                        Back
+                                    </t>
+                                </button>
+                                <button t-if="shouldShowNewOrderButton()" class="highlight" t-on-click="trigger('create-new-order')">New Order</button>
+                            </div>
+                        </t>
+                        <t t-if="env.isMobile">
+                            <t t-if="state.showSearchBar">
+                                <button class="arrow-left" t-on-click="state.showSearchBar = !state.showSearchBar;">
+                                    <span class="search-icon">
+                                        <i class="fa fa-angle-double-left"/>
+                                    </span>
+                                </button>
+                            </t>
+                            <t t-else="">
+                                <button class="search" t-on-click="state.showSearchBar = !state.showSearchBar;">
+                                    <span class="search-icon">
+                                        <i class="fa fa-search"/>
+                                    </span>
+                                </button>
+                            </t>
+                        </t>
                         <t t-set="_placeholder">Search Orders...</t>
-                        <SearchBar config="getSearchBarConfig()" placeholder="_placeholder" />
+                        <SearchBar t-if="state.showSearchBar" config="getSearchBarConfig()" placeholder="_placeholder" />
                         <div t-if="shouldShowPageControls()" class="item">
                             <div class="page-controls">
                                 <div class="previous" t-on-click="trigger('prev-page')">

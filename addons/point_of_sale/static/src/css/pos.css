@@ -3095,16 +3095,13 @@ td {
 
 /* TICKET SCREEN */
 
-.ticket-screen {
-    font-size: medium;
-}
-
 .ticket-screen .orders {
     display: flex;
     flex-flow: column nowrap;
     overflow: hidden;
     overflow-y: hidden;
     overflow-y: auto;
+    font-size: medium;
 }
 
 .ticket-screen .orders .header-row{
@@ -3194,21 +3191,18 @@ td {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0px 20px;
+    margin: 0px 10px;
     border-bottom: dashed 1px rgb(215,215,215);
     flex: 0 0 80px;
 }
 
 .ticket-screen .controls button {
+    min-width: 45px;
     font-size: medium;
     padding: 12px;
-    margin-right: 20px;
+    margin-right: 10px;
+    background: #fff;
     font-weight: bold;
-}
-
-.ticket-screen .controls button.discard {
-    background: rgb(230, 230, 230);
-    border: solid 1px rgb(209, 209, 209);
 }
 
 .ticket-screen .controls button.highlight {
@@ -3233,8 +3227,8 @@ td {
 }
 
 .ticket-screen .pos-search-bar .search input {
+    width: 0;
     height: 40px;
-    font-size: medium;
     color: #63717f;
     padding-left: 40px;
     border: solid 1px rgb(209, 209, 209);
@@ -3251,6 +3245,10 @@ td {
     border-bottom-left-radius: 5px;
 }
 
+.ticket-screen .pos-search-bar .fa {
+    font-size: medium;
+}
+
 .ticket-screen .pos-search-bar .search input:focus {
     outline: none;
 }
@@ -3258,7 +3256,7 @@ td {
 .ticket-screen .pos-search-bar .search .search-icon {
     position: absolute;
     left: 15px;
-    top: 12px;
+    top: 14px;
     z-index: 1;
     color: #4f5b66;
 }
@@ -3301,7 +3299,7 @@ td {
 .ticket-screen .pos-search-bar .filter .down-icon {
     position: absolute;
     right: 13px;
-    top: 10px;
+    top: 12px;
 }
 
 .ticket-screen .pos-search-bar .filter {
@@ -3309,7 +3307,7 @@ td {
     background: white;
     padding-top: 1px;
     padding-bottom: 1px;
-    padding-left: 20px;
+    padding-left: 15px;
     padding-right: 40px;
     border: solid 1px rgb(209, 209, 209);
     border-left: none;
@@ -3317,7 +3315,6 @@ td {
     display: flex;
     align-items: center;
     max-width: 150px;
-    font-size: medium;
 }
 
 .ticket-screen .pos-search-bar .filter:hover {
@@ -3635,6 +3632,10 @@ td {
 
     .pos .search-bar-portal .search-box .icon .fa-search {
         color: #f0f0f0;
+    }
+
+    .ticket-screen .pos-search-bar .search input {
+        padding-left: 10px;
     }
 }
 
