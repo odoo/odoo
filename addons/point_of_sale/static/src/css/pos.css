@@ -3431,19 +3431,21 @@ td {
 
 /* Product Screen Search Bar */
 
-.search-bar-portal {
+.search-bar-portal,
+.search-bar-portal .search-box {
     display: flex;
+    flex: 1;
 }
 
 .search-bar-portal .search-box {
     font-size: medium;
     position: relative;
-    display: flex;
     align-items: center;
     margin: 0 15px;
 }
 
 .search-bar-portal .search-box input {
+    flex: 1;
     font-size: medium;
     height: 30px;
     border: none;
@@ -3627,6 +3629,13 @@ td {
 
 .pos .pos-topheader .status-buttons > div:hover {
     background: rgb(104,69,95);
+}
+
+@media screen and (max-width: 768px) {
+
+    .pos .search-bar-portal .search-box .icon .fa-search {
+        color: #f0f0f0;
+    }
 }
 
 /** CashMovePopup **/
