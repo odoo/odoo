@@ -281,8 +281,19 @@ class Users(models.Model):
         image = base64.b64encode(open(image_path, 'rb').read())
         return image_process(image, colorize=True)
 
+    # identity
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
+    # overridden inherited fields to bypass access rights, in case you have
+    # access to the user but not its corresponding partner
+    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
+    email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
+    active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
+    # preferences
+    signature = fields.Html(string="Email Signature", default="")
+    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
+    image_1920 = fields.Image(related='partner_id.image_1920', inherited=True, readonly=False, default=_get_default_image)
+    # system
     login = fields.Char(required=True, help="Used to log into the system")
     password = fields.Char(
         compute='_compute_password', inverse='_set_password',
@@ -293,9 +304,7 @@ class Users(models.Model):
         help="Specify a value only when creating a user or if you're "\
              "changing the user's password, otherwise leave empty. After "\
              "a change of password, the user has to login again.")
-    signature = fields.Html(string="Email Signature", default="")
     active = fields.Boolean(default=True)
-    active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
@@ -304,8 +313,6 @@ class Users(models.Model):
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
-    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
-
     # Special behavior for this field: res.company.search() will only return the companies
     # available to the current user (should be the user's companies?), when the user_preference
     # context is set.
@@ -314,39 +321,16 @@ class Users(models.Model):
     company_ids = fields.Many2many('res.company', 'res_company_users_rel', 'user_id', 'cid',
         string='Companies', default=lambda self: self.env.company.ids)
 
-    # overridden inherited fields to bypass access rights, in case you have
-    # access to the user but not its corresponding partner
-    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
-    email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
-
     accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
                                     compute='_compute_accesses_count', compute_sudo=True)
     rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
                                  compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
-    image_1920 = fields.Image(related='partner_id.image_1920', inherited=True, readonly=False, default=_get_default_image)
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
-
-    def init(self):
-        cr = self.env.cr
-
-        # allow setting plaintext passwords via SQL and have them
-        # automatically encrypted at startup: look for passwords which don't
-        # match the "extended" MCF and pass those through passlib.
-        # Alternative: iterate on *all* passwords and use CryptContext.identify
-        cr.execute("""
-        SELECT id, password FROM res_users
-        WHERE password IS NOT NULL
-          AND password !~ '^\$[^$]+\$[^$]+\$.'
-        """)
-        if self.env.cr.rowcount:
-            Users = self.sudo()
-            for uid, pw in cr.fetchall():
-                Users.browse(uid).password = pw
 
     def _set_password(self):
         ctx = self._crypt_context()
@@ -362,35 +346,6 @@ class Users(models.Model):
             (pw, uid)
         )
         self.invalidate_cache(['password'], [uid])
-
-    def _check_credentials(self, password, env):
-        """ Validates the current user's password.
-
-        Override this method to plug additional authentication methods.
-
-        Overrides should:
-
-        * call `super` to delegate to parents for credentials-checking
-        * catch AccessDenied and perform their own checking
-        * (re)raise AccessDenied if the credentials are still invalid
-          according to their own validation method
-
-        When trying to check for credentials validity, call _check_credentials
-        instead.
-        """
-        """ Override this method to plug additional authentication methods"""
-        assert password
-        self.env.cr.execute(
-            "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
-            [self.env.user.id]
-        )
-        [hashed] = self.env.cr.fetchone()
-        valid, replacement = self._crypt_context()\
-            .verify_and_update(password, hashed)
-        if replacement is not None:
-            self._set_encrypted_password(self.env.user.id, replacement)
-        if not valid:
-            raise AccessDenied()
 
     def _compute_password(self):
         for user in self:
@@ -442,19 +397,6 @@ class Users(models.Model):
     @api.onchange('parent_id')
     def onchange_parent_id(self):
         return self.partner_id.onchange_parent_id()
-
-    def _read(self, fields):
-        super(Users, self)._read(fields)
-        canwrite = self.check_access_rights('write', raise_exception=False)
-        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(fields):
-            for record in self:
-                for f in USER_PRIVATE_FIELDS:
-                    try:
-                        record._cache[f]
-                        record._cache[f] = '********'
-                    except Exception:
-                        # skip SpecialValue (e.g. for missing record or access right)
-                        pass
 
     @api.constrains('company_id', 'company_ids')
     def _check_company(self):
@@ -511,6 +453,23 @@ class Users(models.Model):
         else:
             return False
 
+    def init(self):
+        cr = self.env.cr
+
+        # allow setting plaintext passwords via SQL and have them
+        # automatically encrypted at startup: look for passwords which don't
+        # match the "extended" MCF and pass those through passlib.
+        # Alternative: iterate on *all* passwords and use CryptContext.identify
+        cr.execute("""
+        SELECT id, password FROM res_users
+        WHERE password IS NOT NULL
+          AND password !~ '^\$[^$]+\$[^$]+\$.'
+        """)
+        if self.env.cr.rowcount:
+            Users = self.sudo()
+            for uid, pw in cr.fetchall():
+                Users.browse(uid).password = pw
+
     def toggle_active(self):
         for user in self:
             if not user.active and not user.partner_id.active:
@@ -527,6 +486,19 @@ class Users(models.Model):
                 self = self.sudo()
 
         return super(Users, self).read(fields=fields, load=load)
+
+    def _read(self, fields):
+        super(Users, self)._read(fields)
+        canwrite = self.check_access_rights('write', raise_exception=False)
+        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(fields):
+            for record in self:
+                for f in USER_PRIVATE_FIELDS:
+                    try:
+                        record._cache[f]
+                        record._cache[f] = '********'
+                    except Exception:
+                        # skip SpecialValue (e.g. for missing record or access right)
+                        pass
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -638,6 +610,35 @@ class Users(models.Model):
         if 'login' not in default:
             default['login'] = _("%s (copy)", self.login)
         return super(Users, self).copy(default)
+
+    def _check_credentials(self, password, env):
+        """ Validates the current user's password.
+
+        Override this method to plug additional authentication methods.
+
+        Overrides should:
+
+        * call `super` to delegate to parents for credentials-checking
+        * catch AccessDenied and perform their own checking
+        * (re)raise AccessDenied if the credentials are still invalid
+          according to their own validation method
+
+        When trying to check for credentials validity, call _check_credentials
+        instead.
+        """
+        """ Override this method to plug additional authentication methods"""
+        assert password
+        self.env.cr.execute(
+            "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
+            [self.env.user.id]
+        )
+        [hashed] = self.env.cr.fetchone()
+        valid, replacement = self._crypt_context()\
+            .verify_and_update(password, hashed)
+        if replacement is not None:
+            self._set_encrypted_password(self.env.user.id, replacement)
+        if not valid:
+            raise AccessDenied()
 
     @api.model
     @tools.ormcache('self._uid')

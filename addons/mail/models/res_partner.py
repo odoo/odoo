@@ -13,18 +13,20 @@ _logger = logging.getLogger(__name__)
 
 
 class Partner(models.Model):
-    """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
-       to restrict usage of automatic email templates. """
     _name = "res.partner"
-    _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
+    _inherit = [
+        'res.partner',
+        'mail.activity.mixin',
+        'mail.thread.blacklist'
+    ]
     _mail_flat_thread = False
 
+    # channel
+    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
+    # override fields to track the visibility of user
     email = fields.Char(tracking=1)
     phone = fields.Char(tracking=2)
-
-    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
-    # override the field to track the visibility of user
-    user_id = fields.Many2one(tracking=True)
+    user_id = fields.Many2one(tracking=10)
 
     def _compute_im_status(self):
         super()._compute_im_status()
@@ -33,18 +35,9 @@ class Partner(models.Model):
         if odoobot in self:
             odoobot.im_status = 'bot'
 
-    def _message_get_suggested_recipients(self):
-        recipients = super(Partner, self)._message_get_suggested_recipients()
-        for partner in self:
-            partner._message_add_suggested_recipient(recipients, partner=partner, reason=_('Partner Profile'))
-        return recipients
-
-    def _message_get_default_recipients(self):
-        return {r.id: {
-            'partner_ids': [r.id],
-            'email_to': False,
-            'email_cc': False}
-            for r in self}
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
 
     @api.model
     @api.returns('self', lambda value: value.id)
@@ -69,6 +62,27 @@ class Partner(models.Model):
         if parsed_email:  # otherwise keep default_email in context
             create_values['email'] = parsed_email
         return self.create(create_values)
+
+    # ------------------------------------------------------------
+    # MAILING / GATEWAY
+    # ------------------------------------------------------------
+
+    def _message_get_suggested_recipients(self):
+        recipients = super(Partner, self)._message_get_suggested_recipients()
+        for partner in self:
+            partner._message_add_suggested_recipient(recipients, partner=partner, reason=_('Partner Profile'))
+        return recipients
+
+    def _message_get_default_recipients(self):
+        return {r.id: {
+            'partner_ids': [r.id],
+            'email_to': False,
+            'email_cc': False}
+            for r in self}
+
+    # ------------------------------------------------------------
+    # DISCUSS
+    # ---------------------------------------------------------
 
     def mail_partner_format(self):
         self.ensure_one()

@@ -59,37 +59,16 @@ class Partner(models.Model):
             values['lang'] = values.get('lang') or parent.lang or self.env.lang
         return values
 
+    # identity
     name = fields.Char(index=True)
-    display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
-    date = fields.Date(index=True)
-    title = fields.Many2one('res.partner.title')
-    parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
-    parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
-    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
-    ref = fields.Char(string='Reference', index=True)
-    lang = fields.Selection(_lang_get, string='Language',
-                            help="All the emails and documents sent to this contact will be translated in this language.")
-    active_lang_count = fields.Integer(compute='_compute_active_lang_count')
-    tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
-                          help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
-                               "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
-                               "Anywhere else, time values are computed according to the time offset of your web client.")
-
-    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
-    user_id = fields.Many2one('res.users', string='Salesperson',
-      help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
-    same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
-    bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
-    website = fields.Char('Website Link')
-    comment = fields.Text(string='Notes')
-
-    category_id = fields.Many2many('res.partner.category', column1='partner_id',
-                                    column2='category_id', string='Tags', default=_default_category)
-    credit_limit = fields.Float(string='Credit Limit')
+    email = fields.Char()
+    email_formatted = fields.Char(
+        'Formatted Email', compute='_compute_email_formatted',
+        help='Format email address "Name <email@domain>"')
+    mobile = fields.Char()
+    phone = fields.Char()
+    # status
     active = fields.Boolean(default=True)
-    employee = fields.Boolean(help="Check this box if this contact is an Employee.")
-    function = fields.Char(string='Job Position')
     type = fields.Selection(
         [('contact', 'Contact'),
          ('invoice', 'Invoice Address'),
@@ -99,6 +78,26 @@ class Partner(models.Model):
         ], string='Address Type',
         default='contact',
         help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
+    company_id = fields.Many2one('res.company', 'Company', index=True)
+    # company
+    is_company = fields.Boolean(string='Is a Company', default=False, help="Check if the contact is a company, otherwise it is a person")
+    industry_id = fields.Many2one('res.partner.industry', 'Industry')
+    # company_type is only an interface field, do not use it in business logic
+    company_type = fields.Selection(string='Company Type',
+        selection=[('person', 'Individual'), ('company', 'Company')],
+        compute='_compute_company_type', inverse='_write_company_type')
+    company_name = fields.Char('Company Name')
+    # commercial status
+    display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
+    title = fields.Many2one('res.partner.title')
+    function = fields.Char(string='Job Position')
+    parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
+    parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
+    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
+    commercial_partner_id = fields.Many2one(
+        'res.partner', compute='_compute_commercial_partner',
+        string='Commercial Entity', store=True, index=True)
+    commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name', store=True)
     # address fields
     street = fields.Char()
     street2 = fields.Char()
@@ -107,38 +106,40 @@ class Partner(models.Model):
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
     country_code = fields.Char(related='country_id.code', string="Country Code")
+    contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
     partner_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
     partner_longitude = fields.Float(string='Geo Longitude', digits=(10, 7))
-    email = fields.Char()
-    email_formatted = fields.Char(
-        'Formatted Email', compute='_compute_email_formatted',
-        help='Format email address "Name <email@domain>"')
-    phone = fields.Char()
-    mobile = fields.Char()
-    is_company = fields.Boolean(string='Is a Company', default=False,
-        help="Check if the contact is a company, otherwise it is a person")
-    industry_id = fields.Many2one('res.partner.industry', 'Industry')
-    # company_type is only an interface field, do not use it in business logic
-    company_type = fields.Selection(string='Company Type',
-        selection=[('person', 'Individual'), ('company', 'Company')],
-        compute='_compute_company_type', inverse='_write_company_type')
-    company_id = fields.Many2one('res.company', 'Company', index=True)
+    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
+    # lang and TZ
+    lang = fields.Selection(_lang_get, string='Language',
+                            help="All the emails and documents sent to this contact will be translated in this language.")
+    active_lang_count = fields.Integer(compute='_compute_active_lang_count')
+    tz = fields.Selection(_tz_get, string='Timezone', default=lambda self: self._context.get('tz'),
+                          help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
+                               "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
+                               "Anywhere else, time values are computed according to the time offset of your web client.")
+    # accounting and sales
+    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
+    same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
+    bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
+    user_id = fields.Many2one('res.users', string='Salesperson', help='The internal user in charge of this contact.')
+    credit_limit = fields.Float(string='Credit Limit')
+    barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
+    # misc description fields
+    date = fields.Date(index=True)
+    ref = fields.Char(string='Reference', index=True)
+    website = fields.Char('Website Link')
+    comment = fields.Text(string='Notes')
+    category_id = fields.Many2many('res.partner.category', column1='partner_id',
+                                    column2='category_id', string='Tags', default=_default_category)
     color = fields.Integer(string='Color Index', default=0)
+    # user
+    employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
         help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
              "access or with a limited access created for sharing data.")
-    contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
-
-    # technical field used for managing commercial fields
-    commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
-                                             string='Commercial Entity', store=True, index=True)
-    commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
-                                          store=True)
-    company_name = fields.Char('Company Name')
-    barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
-
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
 
