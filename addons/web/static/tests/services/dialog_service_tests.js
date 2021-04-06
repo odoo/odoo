@@ -8,7 +8,8 @@ import { uiService } from "../../src/services/ui_service";
 import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeRPCService } from "../helpers/mock_services";
-import { click, getFixture, nextTick } from "../helpers/utils";
+import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
+import { ErrorDialog } from "@web/errors/error_dialogs";
 
 const { Component, mount, tags } = owl;
 
@@ -130,6 +131,19 @@ QUnit.test("dialog component crashes", async (assert) => {
   }
   FailingDialog.template = tags.xml`<Dialog title="'Error'"/>`;
 
+  const prom = makeDeferred();
+  patchWithCleanup(ErrorDialog.prototype, {
+    mounted() {
+      this._super();
+      prom.resolve();
+    },
+  });
+
+  const qunitUnhandledReject = QUnit.onUnhandledRejection;
+  QUnit.onUnhandledRejection = () => {
+    assert.step("error");
+  };
+
   const rpc = makeFakeRPCService();
   serviceRegistry.add("rpc", rpc);
   serviceRegistry.add("notification", notificationService);
@@ -140,17 +154,12 @@ QUnit.test("dialog component crashes", async (assert) => {
 
   pseudoWebClient = await mount(PseudoWebClient, { env, target });
 
-  const qunitUnhandledReject = QUnit.onUnhandledRejection;
-  QUnit.onUnhandledRejection = () => {
-    assert.step("error");
-  };
-
   env.services.dialog.open(FailingDialog);
-  await nextTick();
+  await prom;
   assert.verifySteps(["error"]);
   assert.containsOnce(pseudoWebClient, ".modal");
   assert.containsOnce(pseudoWebClient, ".modal .o_dialog_error");
 
-  QUnit.onUnhandledRejection = qunitUnhandledReject;
   pseudoWebClient.destroy();
+  QUnit.onUnhandledRejection = qunitUnhandledReject;
 });
