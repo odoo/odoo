@@ -359,10 +359,10 @@
                 <field name="inventory_date" optional="show"/>
                 <field name="user_id" string="User" optional="show"/>
                 <field name='company_id' groups="base.group_multi_company" optional="hide"/>
-                <button name="action_apply_inventory" type="object" string="Apply" class="btn btn-link" icon="fa-save" attrs="{'invisible': [('inventory_diff_quantity', '=', 0), ('inventory_quantity', '=', 0), ('quantity', '!=', 0)]}"/>
-                <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" attrs="{'invisible': ['|',  '|', ('quantity', '=', 0.0), ('inventory_diff_quantity', '!=', 0), ('inventory_quantity', '!=', 0)]}"/>
+                <button name="action_apply_inventory" type="object" string="Apply" class="btn btn-link" icon="fa-save" groups="stock.group_stock_manager" attrs="{'invisible': [('inventory_diff_quantity', '=', 0), ('inventory_quantity', '=', 0), ('quantity', '!=', 0)]}"/>
+                <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" groups="stock.group_stock_manager" attrs="{'invisible': ['|',  '|', ('quantity', '=', 0.0), ('inventory_diff_quantity', '!=', 0), ('inventory_quantity', '!=', 0)]}"/>
                 <button name="action_inventory_history" type="object" class="btn btn-link" icon="fa-history" string="History"/>
-                <button name="action_set_inventory_quantity_to_zero" type="object" string="Reset" class="btn" icon="fa-times" attrs="{'invisible': [('inventory_diff_quantity', '=', 0), ('inventory_quantity', '=', 0), ('quantity', '!=', 0)]}"/>
+                <button name="action_set_inventory_quantity_to_zero" type="object" string="Reset" class="btn" icon="fa-times" groups="stock.group_stock_manager" attrs="{'invisible': [('inventory_diff_quantity', '=', 0), ('inventory_quantity', '=', 0), ('quantity', '!=', 0)]}"/>
             </tree>
         </field>
     </record>
