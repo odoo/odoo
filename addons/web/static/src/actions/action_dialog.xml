@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-  <t t-name="web.TrueActionDialog" t-inherit="web.Dialog" t-inherit-mode="primary" owl="1">
+  <t t-name="web.ActionDialog" t-inherit="web.Dialog" t-inherit-mode="primary" owl="1">
     <xpath expr="//header/h4[contains(concat(' ',normalize-space(@class),' '),' modal-title ')]" position="before">
       <DebugManager t-if="env.debug" />
     </xpath>
@@ -15,7 +15,7 @@
     </xpath>
   </t>
 
-  <t t-name="web.ActionDialog" t-inherit="web.TrueActionDialog" t-inherit-mode="primary" owl="1">
+  <t t-name="web.LegacyAdaptedActionDialog" t-inherit="web.ActionDialog" t-inherit-mode="primary" owl="1">
     <xpath expr="//footer[@class='modal-footer']" position="replace">
       <footer t-if="props.renderFooter" class="modal-footer">
         <t t-if="!isLegacy">

@@ -13,14 +13,7 @@ const LEGACY_SIZE_CLASSES = {
 // -----------------------------------------------------------------------------
 // Action Dialog (Component)
 // -----------------------------------------------------------------------------
-
-/**
- * TrueActionDialog is the "true" ActionDialog class.
- * You should add new web client code in this TrueActionDialog class.
- * If you need to add legacy compatibility layer stuffs, please add them to
- * the ActionDialog exported class (see below).
- */
-class TrueActionDialog extends Dialog {
+class ActionDialog extends Dialog {
   setup() {
     super.setup();
     this.actionRef = hooks.useRef("actionRef");
@@ -29,20 +22,19 @@ class TrueActionDialog extends Dialog {
     this.actionType = action && action.type;
   }
 }
-TrueActionDialog.components = { ...Dialog.components, DebugManager };
-TrueActionDialog.template = "web.TrueActionDialog";
-TrueActionDialog.props = {
+ActionDialog.components = { ...Dialog.components, DebugManager };
+ActionDialog.template = "web.ActionDialog";
+ActionDialog.props = {
   ...Dialog.props,
   ActionComponent: { optional: true },
   actionProps: { optional: true },
 };
 
 /**
- * This ActionDialog class will disappear when legacy code will be entirely rewritten.
- * The "TrueActionDialog" class will get renamed to "ActionDialog"
- * and exported from this file when the cleaning will occur.
+ * This LegacyAdaptedActionDialog class will disappear when legacy code will be entirely rewritten.
+ * The "ActionDialog" class should get exported from this file when the cleaning will occur.
  */
-export class ActionDialog extends TrueActionDialog {
+class LegacyAdaptedActionDialog extends ActionDialog {
   setup() {
     super.setup();
     const actionProps = this.props && this.props.actionProps;
@@ -67,4 +59,6 @@ export class ActionDialog extends TrueActionDialog {
     });
   }
 }
-ActionDialog.template = "web.ActionDialog";
+LegacyAdaptedActionDialog.template = "web.LegacyAdaptedActionDialog";
+
+export { LegacyAdaptedActionDialog as ActionDialog };
