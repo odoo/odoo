@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models
 
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -11,11 +12,14 @@ class ResPartner(models.Model):
                                               ('id_card', 'Tarjeta de Identidad'),
                                               ('passport', 'Pasaporte'),
                                               ('foreign_id_card', 'Cédula Extranjera'),
-                                              ('external_id', 'ID del Exterior'),
-                                              ('diplomatic_card', 'Carné Diplomatico'),
+                                              ('external_id', 'Nit de otro país'),
                                               ('residence_document', 'Salvoconducto de Permanencia'),
                                               ('civil_registration', 'Registro Civil'),
-                                              ('national_citizen_id', 'Cédula de ciudadanía')], string='Document Type',
+                                              ('national_citizen_id', 'Cédula de ciudadanía'),
+                                              ('niup_id', 'NIUP'),
+                                              ('foreign_colombian_card', 'Tarjeta de extranjería'),
+                                              ('foreign_resident_card', 'Cédula de extranjería'),
+                                              ('diplomatic_card', 'INACTIVO - Carné Diplomatico')], string='Document Type',
                                              help='Indicates to what document the information in here belongs to.')
     l10n_co_verification_code = fields.Char(compute='_compute_verification_code', string='VC',  # todo remove this field in master
                                             help='Redundancy check to verify the vat number has been typed in correctly.')
