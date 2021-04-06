@@ -44,7 +44,12 @@ export class Registry extends EventBus {
     if (!force && key in this.content) {
       throw new Error(`Cannot add '${key}' in this registry: it already exists`);
     }
-    sequence = sequence === undefined ? 50 : sequence;
+    let previousSequence;
+    if (force) {
+      const elem = this.content[key];
+      previousSequence = elem && elem[0];
+    }
+    sequence = sequence === undefined ? previousSequence || 50 : sequence;
     this.content[key] = [sequence, value];
     const payload = { operation: "add", key, value };
     this.trigger("UPDATE", payload);

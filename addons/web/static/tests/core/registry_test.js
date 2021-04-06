@@ -59,3 +59,31 @@ QUnit.test("can get ordered list of entries", function (assert) {
     ["foo5", "foo5"],
   ]);
 });
+
+QUnit.test("can override element with sequence", function (assert) {
+  const registry = new Registry();
+
+  registry
+    .add("foo1", "foo1", { sequence: 1 })
+    .add("foo2", "foo2", { sequence: 2 })
+    .add("foo1", "foo3", { force: true });
+
+  assert.deepEqual(registry.getEntries(), [
+    ["foo1", "foo3"],
+    ["foo2", "foo2"],
+  ]);
+});
+
+QUnit.test("can override element with sequence 2 ", function (assert) {
+  const registry = new Registry();
+
+  registry
+    .add("foo1", "foo1", { sequence: 1 })
+    .add("foo2", "foo2", { sequence: 2 })
+    .add("foo1", "foo3", { force: true, sequence: 3 });
+
+  assert.deepEqual(registry.getEntries(), [
+    ["foo2", "foo2"],
+    ["foo1", "foo3"],
+  ]);
+});
