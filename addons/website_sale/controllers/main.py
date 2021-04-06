@@ -591,19 +591,23 @@ class WebsiteSale(http.Controller):
         if data.get("vat") and hasattr(Partner, "check_vat"):
             if country_id:
                 data["vat"] = Partner.fix_eu_vat_number(country_id, data.get("vat"))
-            partner_dummy = Partner.new({
-                'vat': data['vat'],
-                'country_id': country_id or False,
-            })
+            partner_dummy = Partner.new(self._get_vat_validation_fields(data))
             try:
                 partner_dummy.check_vat()
-            except ValidationError:
+            except ValidationError as exception:
                 error["vat"] = 'error'
+                error_message.append(exception.args[0])
 
         if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
         return error, error_message
+
+    def _get_vat_validation_fields(self, data):
+        return {
+            'vat': data['vat'],
+            'country_id': int(data['country_id']) if data.get('country_id') else False,
+        }
 
     def _checkout_form_save(self, mode, checkout, all_values):
         Partner = request.env['res.partner']
@@ -670,7 +674,6 @@ class WebsiteSale(http.Controller):
 
         mode = (False, False)
         can_edit_vat = False
-        def_country_id = order.partner_id.country_id
         values, errors = {}, {}
 
         partner_id = int(kw.get('partner_id', -1))
@@ -679,11 +682,6 @@ class WebsiteSale(http.Controller):
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
             mode = ('new', 'billing')
             can_edit_vat = True
-            country_code = request.session['geoip'].get('country_code')
-            if country_code:
-                def_country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1)
-            else:
-                def_country_id = request.website.user_id.sudo().country_id
         # IF ORDER LINKED TO A PARTNER
         else:
             if partner_id > 0:
@@ -692,11 +690,14 @@ class WebsiteSale(http.Controller):
                     can_edit_vat = order.partner_id.can_edit_vat()
                 else:
                     shippings = Partner.search([('id', 'child_of', order.partner_id.commercial_partner_id.ids)])
-                    if partner_id in shippings.mapped('id'):
+                    if order.partner_id.commercial_partner_id.id == partner_id:
+                        mode = ('new', 'shipping')
+                        partner_id = -1
+                    elif partner_id in shippings.mapped('id'):
                         mode = ('edit', 'shipping')
                     else:
                         return Forbidden()
-                if mode:
+                if mode and partner_id != -1:
                     values = Partner.browse(partner_id)
             elif partner_id == -1:
                 mode = ('new', 'shipping')
@@ -730,22 +731,45 @@ class WebsiteSale(http.Controller):
                 if not errors:
                     return request.redirect(kw.get('callback') or '/shop/confirm_order')
 
-        country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
-        country = country and country.exists() or def_country_id
         render_values = {
             'website_sale_order': order,
             'partner_id': partner_id,
             'mode': mode,
             'checkout': values,
             'can_edit_vat': can_edit_vat,
-            'country': country,
-            'country_states': country.get_website_sale_states(mode=mode[1]),
-            'countries': country.get_website_sale_countries(mode=mode[1]),
             'error': errors,
             'callback': kw.get('callback'),
             'only_services': order and order.only_services,
         }
+        render_values.update(self._get_country_related_render_values(kw, render_values))
         return request.render("website_sale.address", render_values)
+
+    def _get_country_related_render_values(self, kw, render_values):
+        '''
+        This method provides fields related to the country to render the website sale form
+        '''
+        values = render_values['checkout']
+        mode = render_values['mode']
+        order = render_values['website_sale_order']
+
+        def_country_id = order.partner_id.country_id
+        # IF PUBLIC ORDER
+        if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
+            country_code = request.session['geoip'].get('country_code')
+            if country_code:
+                def_country_id = request.env['res.country'].search([('code', '=', country_code)], limit=1)
+            else:
+                def_country_id = request.website.user_id.sudo().country_id
+
+        country = 'country_id' in values and values['country_id'] != '' and request.env['res.country'].browse(int(values['country_id']))
+        country = country and country.exists() or def_country_id
+
+        res = {
+            'country': country,
+            'country_states': country.get_website_sale_states(mode=mode[1]),
+            'countries': country.get_website_sale_countries(mode=mode[1]),
+        }
+        return res
 
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
