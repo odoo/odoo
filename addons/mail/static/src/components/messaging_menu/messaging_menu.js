@@ -1,6 +1,8 @@
 odoo.define('mail/static/src/components/messaging_menu/messaging_menu.js', function (require) {
 'use strict';
 
+const { systrayRegistry } = require("@web/webclient/systray_registry");
+
 const components = {
     AutocompleteInput: require('mail/static/src/components/autocomplete_input/autocomplete_input.js'),
     MobileMessagingNavbar: require('mail/static/src/components/mobile_messaging_navbar/mobile_messaging_navbar.js'),
@@ -226,6 +228,17 @@ Object.assign(MessagingMenu, {
     props: {},
     template: 'mail.MessagingMenu',
 });
+
+// We need a wowl component as the SystrayMenu, because otherwise the env will be the wrong one
+class MessagingSystrayWowl extends Component {
+    setup() {
+        this.env = Component.env;
+    }
+}
+MessagingSystrayWowl.template = owl.tags.xml`<MessagingMenu t-props="props" />`;
+MessagingSystrayWowl.components = { MessagingMenu };
+
+systrayRegistry.add('messagingMenu', MessagingSystrayWowl, {sequence: 10});
 
 return MessagingMenu;
 

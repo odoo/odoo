@@ -1,6 +1,10 @@
 odoo.define('mail/static/src/widgets/messaging_menu/messaging_menu.js', function (require) {
 'use strict';
 
+// LPE: remove file ?
+// This is now handled by components/messaging_menu directly
+return;
+
 const components = {
     MessagingMenu: require('mail/static/src/components/messaging_menu/messaging_menu.js'),
 };
