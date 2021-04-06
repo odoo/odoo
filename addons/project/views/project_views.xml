@@ -419,7 +419,7 @@
                     <field name="name" string="Name" class="font-weight-bold"/>
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user"/>
                     <field name="partner_id" optional="show" string="Customer"/>
-                    <field name="analytic_account_id" optional="hide"/>
+                    <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
                     <field name="privacy_visibility" optional="hide"/>
                     <field name="label_tasks" optional="hide"/>
                     <field name="company_id" optional="show"  groups="base.group_multi_company"/>

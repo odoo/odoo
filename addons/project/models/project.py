@@ -585,7 +585,7 @@ class Task(models.Model):
     kanban_state = fields.Selection([
         ('normal', 'In Progress'),
         ('done', 'Ready'),
-        ('blocked', 'Blocked')], string='Kanban State',
+        ('blocked', 'Blocked')], string='Status',
         copy=False, default='normal', required=True)
     kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State Label', tracking=True)
     create_date = fields.Datetime("Created On", readonly=True, index=True)

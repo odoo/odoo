@@ -42,7 +42,7 @@ up a management by affair.
     'installable': True,
     'application': False,
     'auto_install': False,
-    'post_init_hook': 'create_internal_project',
+    'post_init_hook': 'post_init',
     'assets': {
         'web.assets_backend': [
             'hr_timesheet/static/src/scss/timesheets_task_form.scss',
