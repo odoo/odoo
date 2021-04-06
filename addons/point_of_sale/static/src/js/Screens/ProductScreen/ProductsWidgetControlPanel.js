@@ -24,6 +24,9 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                 this.trigger('try-add-product', { searchWordInput: this.searchWordInput });
             }
         }
+        _toggleMobileSearchbar() {
+            this.trigger('toggle-mobile-searchbar');
+        }
     }
     ProductsWidgetControlPanel.template = 'ProductsWidgetControlPanel';
 
