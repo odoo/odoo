@@ -842,3 +842,28 @@ containing community and enterprise.
 .. code-block:: console
 
    $ community/odoo-bin tsconfig --addons-path community/addons,community/odoo/addons,enterprise > tsconfig.json
+
+.. note::
+    Most editors need to reload their typescript service for the tsconfig to be loaded in. If you don't find how
+    to do this, just fully close and reopen your editor.
+
+A caveat is that every IDE has its own interpretation of the tsconfig file. So depending on your editor, the quality of
+this tool may vary. The code of Odoo being massive, editors tend to struggle. We use the exclude key in the tsconfig to
+try to lightened the load as much as possible. Right now, it is optimized for vscode. If you use a Jetbrain editor,
+it is likely not to work. We provide an alternative way of excluding files, through the ``alternative`` parameter flag.
+
+.. code-block:: console
+
+   $ community/odoo-bin tsconfig --addons-path community/addons --alternative > tsconfig.json
+
+Despite all of that, VSCode still throws a warning complaining more excludes should be set. Everything seems to work
+even after that warning, so just ignore it. If you insist on getting rid of it, there is a last option, ``trim``, that
+will remove all typescript help from the test files. If you tend to write tests, don't do it! But this appears to be
+enough so vscode won't complain.
+
+.. code-block:: console
+
+   $ community/odoo-bin tsconfig --addons-path community/addons --trim > tsconfig.json
+
+.. note::
+    Another way of not bloating the typescript service is by not providing all addon paths if you never use some of them.
