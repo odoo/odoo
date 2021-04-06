@@ -348,7 +348,7 @@ class IrAsset(models.Model):
                     return False
                 if path.rpartition('.')[2] in TEMPLATE_EXTENSIONS:
                     # Forbid xml to leak
-                    return ("%s/static/" % addon) in path
+                    return os.path.join(addon, 'static', '') in path
                 return True
 
             len_paths = len(paths)
