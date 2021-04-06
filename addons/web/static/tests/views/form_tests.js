@@ -11118,6 +11118,38 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Quick Edition: do not bounce edit button when click on field or label', async function (assert) {
+        assert.expect(2);
+
+        const MULTI_CLICK_TIME = 50;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                    </group>
+                </form>`,
+            formMultiClickTime: MULTI_CLICK_TIME,
+            res_id: 1,
+        });
+
+        await testUtils.dom.click(form.$('.o_field_widget'));
+        assert.containsNone(form, 'button.o_catch_attention:visible');
+        await concurrency.delay(MULTI_CLICK_TIME);
+
+        await testUtils.form.clickDiscard(form);
+
+        await testUtils.dom.click(form.$('.o_form_label'));
+        assert.containsNone(form, 'button.o_catch_attention:visible');
+        await concurrency.delay(MULTI_CLICK_TIME);
+
+        form.destroy();
+    });
+
     QUnit.test("attach callbacks with long processing in __renderView", async function (assert) {
         /**
          * The main use case of this test is discuss, in which the FormRenderer
