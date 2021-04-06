@@ -13,9 +13,9 @@
                     <TicketButton isTicketScreenShown="isTicketScreenShown" />
                 </div>
                 <div class="pos-rightheader">
-                    <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile" />
+                    <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile and !state.mobileSearchBarIsShown" />
                     <div class="search-bar-portal" />
-                    <div class="status-buttons-portal" />
+                    <div class="status-buttons-portal" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }"/>
                 </div>
             </div>
             <t t-if="state.uiState === 'READY'">
@@ -35,7 +35,7 @@
                             <div class="subwindow-container">
                                 <div class="subwindow-container-fix screens">
                                     <t isShown="!tempScreen.isShown" t-component="mainScreen.component"
-                                       t-props="mainScreenProps" t-key="mainScreen.name" />
+                                       t-props="mainScreenPropsFielded" t-key="mainScreen.name" />
                                     <t t-if="tempScreen.isShown" t-component="tempScreen.component"
                                        t-props="tempScreenProps" t-key="tempScreen.name" />
                                 </div>

@@ -39,6 +39,9 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
             this.trigger('switch-category', 0);
             this.trigger('update-search', productName);
         }
+        _toggleMobileSearchbar() {
+            this.trigger('toggle-mobile-searchbar');
+        }
         async loadProductFromDB() {
             if(!this.searchWordInput.el.value)
                 return;

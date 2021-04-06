@@ -31,6 +31,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             useExternalListener(window, 'beforeunload', this._onBeforeUnload);
             useListener('show-main-screen', this.__showScreen);
             useListener('toggle-debug-widget', debounce(this._toggleDebugWidget, 100));
+            useListener('toggle-mobile-searchbar', this._toggleMobileSearchBar);
             useListener('show-temp-screen', this.__showTempScreen);
             useListener('close-temp-screen', this.__closeTempScreen);
             useListener('close-pos', this._closePos);
@@ -46,6 +47,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             this.state = useState({
                 uiState: 'LOADING', // 'LOADING' | 'READY' | 'CLOSING'
                 debugWidgetIsShown: true,
+                mobileSearchBarIsShown: false,
                 hasBigScrollBars: false,
                 sound: { src: null },
                 notification: {
@@ -98,6 +100,16 @@ odoo.define('point_of_sale.Chrome', function(require) {
         get clientScreenButtonIsShown() {
             return this.env.pos.config.iface_customer_facing_display;
         }
+
+        /**
+         * Used to give the `state.mobileSearchBarIsShown` value to main screen props
+         */
+        get mainScreenPropsFielded() {
+            return Object.assign({}, this.mainScreenProps, {
+                mobileSearchBarIsShown: this.state.mobileSearchBarIsShown,
+            });
+        }
+
         /**
          * Startup screen can be based on pos config so the startup screen
          * is only determined after pos data is completely loaded.
@@ -297,6 +309,13 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
         _toggleDebugWidget() {
             this.state.debugWidgetIsShown = !this.state.debugWidgetIsShown;
+        }
+        _toggleMobileSearchBar({ detail: isSearchBarEnabled }) {
+            if (isSearchBarEnabled !== null) {
+                this.state.mobileSearchBarIsShown = isSearchBarEnabled;
+            } else {
+                this.state.mobileSearchBarIsShown = !this.state.mobileSearchBarIsShown;
+            }
         }
         _onPlaySound({ detail: name }) {
             let src;

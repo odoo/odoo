@@ -23,7 +23,7 @@
                     </t>
                 </div>
                 <div class="rightpane" t-if="!env.isMobile || mobile_pane === 'right'">
-                    <ProductsWidget/>
+                    <ProductsWidget mobileSearchBarIsShown="props.mobileSearchBarIsShown"/>
                     <t t-if="env.isMobile">
                         <MobileOrderWidget pane="mobile_pane" t-on-switchpane="switchPane"/>
                     </t>
