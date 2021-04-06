@@ -710,7 +710,7 @@ const Wysiwyg = Widget.extend({
                 $image.removeData('transfo-destroy');
                 return;
             }
-            $image.transfo();
+            $image.transfo({document: this.odooEditor.document});
             const mouseup = () => {
                 $('#image-transform').toggleClass('active', $image.is('[style*="transform"]'));
             };
