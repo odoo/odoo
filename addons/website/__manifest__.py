@@ -183,6 +183,7 @@
         'website.assets_editor': [
             ('include', 'web._assets_helpers'),
             'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/src/scss/ace.scss',
             'website/static/src/scss/website.editor.ui.scss',
             'website/static/src/scss/website.theme_install.scss',
             'website/static/src/js/menu/content.js',

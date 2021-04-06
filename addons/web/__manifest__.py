@@ -95,6 +95,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/tooltip.scss',
             'web/static/src/scss/switch_company_menu.scss',
             'web/static/src/scss/debug_manager.scss',
+            'web/static/src/scss/ace.scss',
             'web/static/src/scss/control_panel.scss',
             'web/static/src/scss/fields.scss',
             'web/static/src/scss/file_upload.scss',

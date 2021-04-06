@@ -122,6 +122,7 @@ var ViewEditor = Widget.extend({
         [
             '/web/static/lib/ace/javascript_highlight_rules.js',
             '/web/static/lib/ace/mode-xml.js',
+            '/web/static/lib/ace/mode-qweb.js',
             '/web/static/lib/ace/mode-scss.js',
             '/web/static/lib/ace/mode-js.js',
             '/web/static/lib/ace/theme-monokai.js'
@@ -349,7 +350,8 @@ var ViewEditor = Widget.extend({
         type = type || this.currentType;
         var editingSession = new window.ace.EditSession(this.resources[type][resID].arch);
         editingSession.setUseWorker(false);
-        editingSession.setMode('ace/mode/' + (type || this.currentType));
+        let mode = (type || this.currentType);
+        editingSession.setMode('ace/mode/' + (mode === 'xml' ? 'qweb' : mode));
         editingSession.setUndoManager(new window.ace.UndoManager());
         editingSession.on('change', function () {
             _.defer(function () {
