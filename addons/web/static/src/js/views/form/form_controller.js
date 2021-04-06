@@ -478,7 +478,10 @@ var FormController = BasicController.extend({
      * @override
      */
     _shouldBounceOnClick(element) {
-        return this.mode === 'readonly' && !!element.closest('.oe_title, .o_inner_group');
+        return this.mode === 'readonly' &&
+            !!element.closest('.oe_title, .o_inner_group') &&
+            !element.classList.contains("o_form_label") &&
+            !element.classList.contains("o_quick_editable");
     },
 
     //--------------------------------------------------------------------------
