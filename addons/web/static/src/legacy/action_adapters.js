@@ -44,7 +44,9 @@ class ActionAdapter extends ComponentAdapter {
       Object.assign(query, this.tempQuery);
       this.tempQuery = null;
       this.__widget = this.widget;
-      this.router.pushState(query);
+      if (!this.wowlEnv.inDialog) {
+        this.router.pushState(query);
+      }
       this.wowlEnv.bus.on("ACTION_MANAGER:UPDATE", this, (info) => {
         if (info.type === "MAIN") {
           this.env.bus.trigger("close_dialogs");
