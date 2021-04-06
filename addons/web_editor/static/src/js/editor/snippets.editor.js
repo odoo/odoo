@@ -2999,7 +2999,7 @@ var SnippetsMenu = Widget.extend({
     _checkEditorToolbarVisibility: function (e) {
         const $toolbarContainer = $('#o_we_editor_toolbar_container');
         const docSelection = document.getSelection();
-        const $currentSelectionTarget = docSelection.rangeCount > 0 ? $(docSelection.getRangeAt(0).commonAncestorContainer) : $();
+        const $currentSelectionTarget = docSelection && docSelection.rangeCount > 0 ? $(docSelection.getRangeAt(0).commonAncestorContainer) : $();
         // Do not  toggle visibility if the target is inside the toolbar ( eg. during link edition).
         if ($currentSelectionTarget.parents('#toolbar').length ||
             (e && $(e.target).parents('#toolbar').length)
@@ -3008,7 +3008,7 @@ var SnippetsMenu = Widget.extend({
         }
 
         const selection = this.options.wysiwyg.odooEditor.document.getSelection();
-        const range = selection.rangeCount && selection.getRangeAt(0);
+        const range = selection && selection.rangeCount && selection.getRangeAt(0);
         if (!range ||
             !$(range.commonAncestorContainer).parents('#wrapwrap').length ||
             $(range.commonAncestorContainer).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"])').length
