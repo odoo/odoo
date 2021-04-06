@@ -127,6 +127,7 @@ OTHER DEALINGS IN THE SOFTWARE.
             var transfo = {};
             $this.data('transfo', transfo);
             transfo.settings = settings;
+            transfo.settings.document = transfo.settings.document || document;
 
             // generate all the controls markup
             var css = "box-sizing: border-box; position: absolute; background-color: #fff; border: 1px solid #ccc; width: 8px; height: 8px; margin-left: -4px; margin-top: -4px;";
@@ -157,7 +158,7 @@ OTHER DEALINGS IN THE SOFTWARE.
             _overwriteOptions ($this, transfo, settings);
 
             // append controls to container
-            $("body").append(transfo.$markup);
+            $(transfo.settings.document.body).append(transfo.$markup);
 
             // set transfo container and markup
             setTimeout(function () {
@@ -227,14 +228,14 @@ OTHER DEALINGS IN THE SOFTWARE.
         function _bind ($this, transfo) {
             function mousedown (event) {
                 _mouseDown($this, this, transfo, event);
-                $(document).on("mousemove", mousemove).on("mouseup", mouseup);
+                $(transfo.settings.document).on("mousemove", mousemove).on("mouseup", mouseup);
             }
             function mousemove (event) {
                 _mouseMove($this, this, transfo, event);
             }
             function mouseup (event) {
                 _mouseUp($this, this, transfo, event);
-                $(document).off("mousemove", mousemove).off("mouseup", mouseup);
+                $(transfo.settings.document).off("mousemove", mousemove).off("mouseup", mouseup);
             }
 
             transfo.$markup.off().on("mousedown", mousedown);
@@ -400,6 +401,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
         function _targetCss ($this, transfo) {
             var settings = transfo.settings;
+            console.log('_targetCss settings', settings)
             var width = parseFloat(settings.css.width);
             var height = parseFloat(settings.css.height);
             settings.translatexp = Math.round(settings.translatex/width*1000)/10;
