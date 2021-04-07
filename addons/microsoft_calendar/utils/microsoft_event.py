@@ -60,40 +60,13 @@ class MicrosoftEvent(abc.Set):
         self.odoo_ids(env)  # load ids
         return self._odoo_id
 
-    def _meta_odoo_id(self, microsoft_guid):
-        """Returns the Odoo id stored in the Microsoft Event metadata.
-        This id might not actually exists in the database.
-        """
-        if self.singleValueExtendedProperties:
-            o_id = [prop['value'] for prop in self.singleValueExtendedProperties if prop['id'] == 'String {%s} Name odoo_id' % microsoft_guid][0]
-            return int(o_id)
-
     def odoo_ids(self, env):
         ids = tuple(e._odoo_id for e in self if e._odoo_id)
         if len(ids) == len(self):
             return ids
-        found = self._load_odoo_ids_from_db(env)
-        unsure = self - found
-        if unsure:
-            unsure._load_odoo_ids_from_metadata(env)
+        self._load_odoo_ids_from_db(env)
 
         return tuple(e._odoo_id for e in self)
-
-    def _load_odoo_ids_from_metadata(self, env):
-        model_env = self._get_model(env)
-        microsoft_guid = env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
-        unsure_odoo_ids = tuple(e._meta_odoo_id(microsoft_guid) for e in self)
-        odoo_events = model_env.browse(_id for _id in unsure_odoo_ids if _id)
-
-        # Extended properties are copied when splitting a recurrence Microsoft side.
-        # Hence, we may have two Microsoft recurrences linked to the same Odoo id.
-        # Therefore, we only consider Odoo records without microsoft id when trying
-        # to match events.
-        o_ids = odoo_events.exists().filtered(lambda e: not e.microsoft_id).ids
-        for e in self:
-            odoo_id = e._meta_odoo_id(microsoft_guid)
-            if odoo_id in o_ids:
-                e._events[e.id]['_odoo_id'] = odoo_id
 
     def _load_odoo_ids_from_db(self, env):
         model_env = self._get_model(env)
@@ -105,32 +78,6 @@ class MicrosoftEvent(abc.Set):
             if odoo_id:
                 e._events[e.id]['_odoo_id'] = odoo_id
         return self.filter(lambda e: e.id in existing_microsoft_ids)
-
-    def owner(self, env):
-        # Owner/organizer could be desynchronised between Microsoft and Odoo.
-        # Let userA, userB be two new users (never synced to Microsoft before).
-        # UserA creates an event in Odoo (he is the owner) but userB syncs first.
-        # There is no way to insert the event into userA's calendar since we don't have
-        # any authentication access. The event is therefore inserted into userB's calendar
-        # (he is the orginizer in Microsoft). The "real" owner (in Odoo) is stored as an
-        # extended property. There is currently no support to "transfert" ownership when
-        # userA syncs his calendar the first time.
-        if self.singleValueExtendedProperties:
-            microsoft_guid = env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
-            real_owner_id = [prop['value'] for prop in self.singleValueExtendedProperties if prop['id'] == 'String {%s} Name owner_odoo_id' % microsoft_guid][0]
-            real_owner = real_owner_id and env['res.users'].browse(int(real_owner_id))
-        else:
-            real_owner_id = False
-
-        if real_owner_id and real_owner.exists():
-            return real_owner
-        elif self.isOrganizer:
-            return env.user
-        elif self.organizer and self.organizer.get('emailAddress') and self.organizer.get('emailAddress').get('address'):
-            # In Microsoft: 1 email = 1 user; but in Odoo several users might have the same email
-            return env['res.users'].search([('email', '=', self.organizer.get('emailAddress').get('address'))], limit=1)
-        else:
-            return env['res.users']
 
     def filter(self, func) -> 'MicrosoftEvent':
         return MicrosoftEvent(e for e in self if func(e))

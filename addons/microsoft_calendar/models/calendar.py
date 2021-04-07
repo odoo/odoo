@@ -83,7 +83,6 @@ class Meeting(models.Model):
             'name': microsoft_event.subject or _("(No title)"),
             'description': microsoft_event.bodyPreview,
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
-            # 'user_id': microsoft_event.owner(self.env).id,
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
             'attendee_ids': commands_attendee,
             'partner_ids': commands_partner,
@@ -246,14 +245,6 @@ class Meeting(models.Model):
             return values
 
         values['id'] = self.microsoft_id
-        microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
-        values['singleValueExtendedProperties'] = [{
-            'id': 'String {%s} Name odoo_id' % microsoft_guid,
-            'value': str(self.id),
-        }, {
-            'id': 'String {%s} Name owner_odoo_id' % microsoft_guid,
-            'value': str(self.user_id.id),
-        }]
 
         if self.microsoft_recurrence_master_id and 'type' not in values:
             values['seriesMasterId'] = self.microsoft_recurrence_master_id
@@ -394,14 +385,6 @@ class Meeting(models.Model):
     def _microsoft_values_occurence(self, initial_values={}):
         values = dict(initial_values)
         values['id'] = self.microsoft_id
-        microsoft_guid = self.env['ir.config_parameter'].sudo().get_param('microsoft_calendar.microsoft_guid', False)
-        values['singleValueExtendedProperties'] = [{
-            'id': 'String {%s} Name odoo_id' % microsoft_guid,
-            'value': str(self.id),
-        }, {
-            'id': 'String {%s} Name owner_odoo_id' % microsoft_guid,
-            'value': str(self.user_id.id),
-        }]
 
         values['type'] = 'occurrence'
 
