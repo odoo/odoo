@@ -109,13 +109,21 @@ class AccountEdiFormat(models.Model):
                 invoice = self.env['account.move']
             first_run = False
 
+            # Refund type.
+            # TD01 == invoice
+            # TD02 == advance/down payment on invoice
+            # TD03 == advance/down payment on fee
+            # TD04 == credit note
+            # TD05 == debit note
+            # TD06 == fee
+            # For unsupported document types, just assume in_invoice, and log that the type is unsupported
             elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento')
-            if elements and elements[0].text and elements[0].text == 'TD01':
-                self_ctx = invoice.with_context(default_move_type='in_invoice')
-            elif elements and elements[0].text and elements[0].text == 'TD04':
-                self_ctx = invoice.with_context(default_move_type='in_refund')
-            else:
-                _logger.info('Document type not managed: %s.', elements[0].text)
+            move_type = "in_invoice"
+            if elements and elements[0].text and elements[0].text == 'TD04':
+                move_type = "in_refund"
+            elif elements and elements[0].text and elements[0].text != 'TD01':
+                _logger.info('Document type not managed: %s. Invoice type is set by default.', elements[0].text)
+            self_ctx = invoice.with_context(default_move_type=move_type)
 
             # type must be present in the context to get the right behavior of the _default_journal method (account.move).
             # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
@@ -139,20 +147,8 @@ class AccountEdiFormat(models.Model):
                 if self.env.company != company:
                     raise UserError(_("You can only import invoice concern your current company: %s", self.env.company.display_name))
 
-            # Refund type.
-            # TD01 == invoice
-            # TD02 == advance/down payment on invoice
-            # TD03 == advance/down payment on fee
-            # TD04 == credit note
-            # TD05 == debit note
-            # TD06 == fee
-            elements = tree.xpath('//DatiGeneraliDocumento/TipoDocumento')
-            if elements and elements[0].text and elements[0].text == 'TD01':
-                move_type = 'in_invoice'
-            elif elements and elements[0].text and elements[0].text == 'TD04':
-                move_type = 'in_refund'
             # move could be a single record (editing) or be empty (new).
-            with Form(invoice.with_context(default_move_type=move_type)) as invoice_form:
+            with Form(self_ctx.with_context(account_predictive_bills_disable_prediction=True)) as invoice_form:
                 message_to_log = []
 
                 # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
