@@ -33,18 +33,24 @@
             text-align: center;
         }
 
+        th, td {
+            border-color: gray('400');
+            border-width: 0 $border-width $border-width 0;
+        }
+
         th {
-            font-weight: normal;  // bootstrap override
-            background-color: lighten($o-brand-secondary, 40%);
+            font-weight: $font-weight-normal;  // bootstrap override
+            background-color: $o-view-background-color;
         }
 
         @mixin o-pivot-header-cell {
-            background-color: lighten($o-brand-secondary, 40%);
+            background-color: gray('100');
             cursor: pointer;
             white-space: nowrap;
             user-select: none;
             &:hover {
-                background-color: lighten($o-brand-secondary, 30%);
+                background-color: gray('200');
+                color: $headings-color;
             }
         }
 
