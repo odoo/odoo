@@ -83,7 +83,7 @@ class Meeting(models.Model):
             'name': microsoft_event.subject or _("(No title)"),
             'description': microsoft_event.bodyPreview,
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
-            'user_id': microsoft_event.owner(self.env).id,
+            # 'user_id': microsoft_event.owner(self.env).id,
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
             'attendee_ids': commands_attendee,
             'partner_ids': commands_partner,
@@ -93,6 +93,29 @@ class Meeting(models.Model):
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent()
         }
+
+        # This is the tricky part of this improvement.
+        # It totally bypasses the logic of using extended property to store real event owner.
+        # If the sync Microsoft account is the organizer for the Microsoft event:
+        #   Case 1: the sync Odoo user should be the real owner of the event
+        #       if the event is a new created in Microsoft Calendar, and there isn't corresponding Odoo event:
+        #           We do nothing to value["user_id"].
+        #           Odoo will create an Odoo event without specifying "user_id".
+        #           The sync Odoo user(creator) will become the event owner by default.
+        #       if the event has a corresponding Odoo event:
+        #           We do nothing to value["user_id"].
+        #           The owner of the Odoo will not be changed.
+        #   Case 2: Originally, this is a shared event owned by another Odoo user in Odoo Calendar. Later, it is synced to and updated in Microsoft Calendar
+        #       We do nothing to value["user_id"].
+        #       The real owner of the Odoo event will not be changed
+        # Else: (the sync Microsoft account is not the organizer for the Microsoft event)
+        #   Case 1: Originally, it is a Microsoft event owned by another Microsoft account and shared to this sync Microsoft account
+        #       We make the sync Odoo user become the owner of the event in Odoo Calendar
+        #       He can modify this event locally. However, the modified info will not be updated in Microsoft Calendar.
+        #       And if there is any updates in its Microsoft event, all modified info will be refreshed.
+        # As a result, we don't need any extended property in Microsoft event to store the real owner of the Odoo event.
+        if not microsoft_event.isOrganizer:
+            values["user_id"] = self.env.user.id
 
         values['microsoft_id'] = microsoft_event.id
         if microsoft_event.is_recurrent():
