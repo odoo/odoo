@@ -95,17 +95,17 @@ class StockQuant(models.Model):
 
     # Inventory Fields
     inventory_quantity = fields.Float(
-        'Counted Quantity', digits='Product Unit of Measure', groups='stock.group_stock_manager',
+        'Counted Quantity', digits='Product Unit of Measure',
         help="The product's counted quantity.")
     inventory_diff_quantity = fields.Float(
         'Difference', compute='_compute_inventory_diff_quantity', store=True,
         help="Indicates the gap between the product's theoretical quantity and its counted quantity.",
-        readonly=True, digits='Product Unit of Measure', groups='stock.group_stock_manager')
+        readonly=True, digits='Product Unit of Measure')
     inventory_date = fields.Date(
         'Scheduled Date', compute='_compute_inventory_date', store=True, readonly=False,
         help="Next date the On Hand Quantity should be counted.")
     user_id = fields.Many2one(
-        'res.users', 'Assigned To', groups='stock.group_stock_manager', help="User assigned to do product count.")
+        'res.users', 'Assigned To', help="User assigned to do product count.")
 
     @api.depends('quantity', 'reserved_quantity')
     def _compute_available_quantity(self):
@@ -233,6 +233,8 @@ class StockQuant(models.Model):
 
         ctx = dict(self.env.context or {})
         ctx['no_at_date'] = True
+        if self.user_has_groups('stock.group_stock_user') and not self.user_has_groups('stock.group_stock_manager'):
+            ctx['search_default_my_count'] = True
         action = {
             'name': _('Stock On Hand'),
             'view_mode': 'list',
@@ -478,6 +480,8 @@ class StockQuant(models.Model):
 
     def _apply_inventory(self):
         move_vals = []
+        if not self.user_has_groups('stock.group_stock_manager'):
+            raise UserError(_('Only a stock manager can validate an inventory adjustment.'))
         for quant in self:
             # Create and validate a move so that the quant matches its `inventory_quantity`.
             if float_compare(quant.inventory_diff_quantity, 0, precision_rounding=quant.product_uom_id.rounding) > 0:
@@ -676,7 +680,7 @@ class StockQuant(models.Model):
         "inventory session", meaning a mode where we need to create the stock.move
         record necessary to be consistent with the `inventory_quantity` field.
         """
-        return self.env.context.get('inventory_mode') and self.user_has_groups('stock.group_stock_manager')
+        return self.env.context.get('inventory_mode') and self.user_has_groups('stock.group_stock_user')
 
     @api.model
     def _get_inventory_fields_create(self):
@@ -737,7 +741,7 @@ class StockQuant(models.Model):
                 self = self.with_context(default_location_id=warehouse.lot_stock_id.id, hide_location=True)
 
         # If user have rights to write on quant, we set quants in inventory mode.
-        if self.user_has_groups('stock.group_stock_manager'):
+        if self.user_has_groups('stock.group_stock_user'):
             self = self.with_context(inventory_mode=True)
         return self
 
@@ -773,7 +777,7 @@ class StockQuant(models.Model):
         if target_action:
             action['id'] = target_action.id
 
-        if self._is_inventory_mode():
+        if self.env.context.get('inventory_mode') and self.user_has_groups('stock.group_stock_manager'):
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_editable').id
             form_view = self.env.ref('stock.view_stock_quant_form_editable').id
         else:
