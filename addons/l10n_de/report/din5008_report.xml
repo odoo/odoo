@@ -93,21 +93,21 @@
                 <div class="footer o_background_footer din">
                     <div class="text-right page_number">
                         <div class="text-muted">
-                            Page:
+                            Seite
                             <span class="page"/>
-                            of
+                            von
                             <span class="topage"/>
                         </div>
                     </div>
-                    <div class="text-center">
-                        <ul class="list-inline">
-                            <li t-if="company.phone"><i class="fa fa-phone"/> <span t-field="company.phone"/></li>
-                            <li t-if="company.email"><i class="fa fa-at"/> <span t-field="company.email"/></li>
-                            <li t-if="company.website"><i class="fa fa-globe"/> <span t-field="company.website"/></li>
-                            <li t-if="company.vat"><i class="fa fa-building-o"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
-                        </ul>
+                    <table style="width: 100%">
+                        <tr>
+                            <td t-if="company.phone"><i class="fa fa-phone"/> Telefon<br /><span t-field="company.phone"/></td>
+                            <td t-if="company.email"><i class="fa fa-envelope"/> E-Mail<br /><span t-field="company.email"/></td>
+                            <td t-if="company.website"><i class="fa fa-globe"/> Webseite<br /><span t-field="company.website"/></td>
+                            <td t-if="company.vat"><i class="fa fa-building-o"/> <t t-esc="company.country_id.vat_label or 'Tax ID'"/><br /><span t-field="company.vat"/></td>
+                        </tr>
                         <div t-field="company.report_footer"/>
-                    </div>
+                    </table>
                 </div>
             </div>
         </template>
