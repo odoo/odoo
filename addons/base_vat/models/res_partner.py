@@ -142,7 +142,7 @@ class ResPartner(models.Model):
     def check_vat(self):
         for partner in self:
             country = partner.commercial_partner_id.country_id
-            if partner.vat and not self._run_vat_test(partner.vat, country):
+            if partner.vat and self._run_vat_test(partner.vat, country) is False:
                 partner_label = _("partner [%s]", partner.name)
                 msg = partner._build_vat_error_message(country and country.code.lower() or None, partner.vat, partner_label)
                 raise ValidationError(msg)
@@ -158,7 +158,9 @@ class ResPartner(models.Model):
         :param default_country: a res.country object
 
         :return: The country code (in lower case) of the country the VAT number
-                 was validated for, if it was validated. Else, False.
+                 was validated for, if it was validated. False if it could not be validated
+                 against the provided or guessed country. None if no country was available
+                 for the check, and no conclusion could be made with certainty.
         """
         # Get company
         if self.env.context.get('company_id'):
@@ -173,16 +175,27 @@ class ResPartner(models.Model):
         else:
             check_func = self.simple_vat_check
 
+        check_result = None
+
         # First check with country code as prefix of the TIN
         vat_country_code, vat_number_split = self._split_vat(vat_number)
-        if check_func(vat_country_code, vat_number_split):
-            return vat_country_code
+        vat_guessed_country = self.env['res.country'].search([('code', '=', vat_country_code.upper())])
+        if vat_guessed_country:
+            check_result = check_func(vat_country_code, vat_number_split)
+            if check_result:
+                return vat_country_code
 
         # If it fails, check with default_country (if it exists)
-        if default_country and check_func(default_country.code.lower(), vat_number):
-            return default_country.code.lower()
+        if default_country:
+            check_result = check_func(default_country.code.lower(), vat_number)
+            if check_result:
+                return default_country.code.lower()
 
-        return False
+        # We allow any number if it doesn't start with a country code and the partner has no country.
+        # This is necessary to support an ORM limitation: setting vat and country_id together on a company
+        # triggers two distinct write on res.partner, one for each field, both triggering this constraint.
+        # If vat is set before country_id, the constraint must not break.
+        return check_result
 
     @api.model
     def _build_vat_error_message(self, country_code, wrong_vat, record_label):
