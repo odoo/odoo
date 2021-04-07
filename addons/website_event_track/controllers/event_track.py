@@ -440,6 +440,7 @@ class EventTrackController(http.Controller):
             'event_id': event.id,
             'tag_ids': [(6, 0, valid_tag_indices)],
             'description': plaintext2html(post['description']),
+            'partner_biography': plaintext2html(post['partner_biography']),
             'user_id': False,
             'image': base64.b64encode(post['image'].read()) if post.get('image') else False,
         })
