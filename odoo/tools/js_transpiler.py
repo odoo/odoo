@@ -227,7 +227,7 @@ EXPORT_OBJECT_RE = re.compile(r"""
     ^
     (?P<space>\s*)                      # space and empty line
     export\s*                           # export
-    (?P<object>{(\s*\w+\s*,?\s*)*}\s*)  # { a, b, c as x, ... }
+    (?P<object>{[\w\s,]+})              # { a, b, c as x, ... }
     """, re.MULTILINE | re.VERBOSE)
 
 
@@ -253,7 +253,7 @@ EXPORT_FROM_RE = re.compile(r"""
     ^
     (?P<space>\s*)                      # space and empty line
     export\s*                           # export
-    (?P<object>{(\s*\w+\s*,?\s*)*})\s*  # { a, b, c as x, ... }
+    (?P<object>{[\w\s,]+})\s*           # { a, b, c as x, ... }
     from\s*                             # from
     (?P<path>(?P<quote>["'`])([^"'`]+)(?P=quote))   # "file path" ("some/path.js")
     """, re.MULTILINE | re.VERBOSE)
@@ -271,7 +271,7 @@ def convert_from_export(content):
         { a, b, c } = {require("some/path.js"); Object.assign(__exports, { a, b, x: c });}
     """
     def repl(matchobj):
-        object_clean = "{" + ", ".join([remove_as(val) for val in matchobj["object"][1:-1].split(",")]) + "}"
+        object_clean = "{" + ",".join([remove_as(val) for val in matchobj["object"][1:-1].split(",")]) + "}"
         object_process = "{" + ", ".join([convert_as(val) for val in matchobj["object"][1:-1].split(",")]) + "}"
         return "%(space)s{const %(object_clean)s = require(%(path)s);Object.assign(__exports, %(object_process)s)}" % {
             'object_clean': object_clean,
