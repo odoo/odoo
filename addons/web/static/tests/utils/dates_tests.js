@@ -199,4 +199,19 @@ QUnit.module("utils", () => {
       DateTime.local().minus({ days: 1 }).toFormat(format)
     );
   });
+
+  QUnit.test("parseDateTime SQL Format", async (assert) => {
+    patch(localization, "default loc", defaultLocalization);
+
+    let dateStr = "2017-05-15 09:12:34";
+    let date1 = parseDateTime(dateStr);
+    let date2 = DateTime.fromFormat(dateStr, "yyyy-MM-dd HH:mm:ss");
+    assert.equal(date1.toISO(), date2.toISO(), "Date with SQL format");
+    dateStr = "2017-05-08 09:12:34";
+    date1 = parseDateTime(dateStr);
+    date2 = DateTime.fromFormat(dateStr, "yyyy-MM-dd HH:mm:ss");
+    assert.equal(date1.toISO(), date2.toISO(), "Date SQL format, check date is not confused with month");
+
+    unpatch(localization, "default loc");
+  });
 });
