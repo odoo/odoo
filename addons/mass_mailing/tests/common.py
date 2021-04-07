@@ -52,15 +52,15 @@ class MassMailCase(MailCase, MockLinkTracker):
                     fields_values['failure_type'] = recipient_info['failure_type']
 
                 if state == 'sent':
-                    self.assertMailMailWEmails([email], 'sent', content, fields_values=fields_values)
+                    self.assertMailMailWEmails([email], 'sent', content=content, fields_values=fields_values)
                 elif state == 'replied':  # replied imply something has been sent
-                    self.assertMailMailWEmails([email], 'sent', content, fields_values=fields_values)
+                    self.assertMailMailWEmails([email], 'sent', content=content, fields_values=fields_values)
                 elif state == 'ignored':
-                    self.assertMailMailWEmails([email], 'cancel', content, fields_values=fields_values)
+                    self.assertMailMailWEmails([email], 'cancel', content=content, fields_values=fields_values)
                 elif state == 'exception':
-                    self.assertMailMailWEmails([email], 'exception', content, fields_values=fields_values)
+                    self.assertMailMailWEmails([email], 'exception', content=content, fields_values=fields_values)
                 elif state == 'canceled':
-                    self.assertMailMailWEmails([email], 'canceled', content, fields_values=fields_values)
+                    self.assertMailMailWEmails([email], 'canceled', content=content, fields_values=fields_values)
                 else:
                     raise NotImplementedError()
 
