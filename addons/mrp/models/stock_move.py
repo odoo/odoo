@@ -204,6 +204,13 @@ class StockMove(models.Model):
                 defaults['additional'] = True
         return defaults
 
+    def unlink(self):
+        # Avoid deleting move related to active MO
+        for move in self:
+            if move.production_id and move.production_id.state not in ('draft', 'cancel'):
+                raise UserError(_('Please cancel the Manufacture Order first.'))
+        return super(StockMove, self).unlink()
+
     def _action_assign(self):
         res = super(StockMove, self)._action_assign()
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):

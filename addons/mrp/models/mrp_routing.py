@@ -51,6 +51,7 @@ class MrpRoutingWorkcenter(models.Model):
         for operation in self - manual_ops:
             data = self.env['mrp.workorder'].read_group([
                 ('operation_id', '=', operation.id),
+                ('qty_produced', '>', 0),
                 ('state', '=', 'done')], ['operation_id', 'duration', 'qty_produced'], ['operation_id'],
                 limit=operation.time_mode_batch)
             count_data = dict((item['operation_id'][0], (item['duration'], item['qty_produced'])) for item in data)
