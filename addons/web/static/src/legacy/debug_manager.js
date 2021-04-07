@@ -29,9 +29,8 @@ export function setupDebugAction(accessRights, env, action) {
     description: description,
     callback: async () => {
       const modelId = (
-        await env.services
-          .model("ir.model")
-          .search([["model", "=", action.res_model]], { limit: 1 })
+        await env.services.orm
+          .search("ir.model", [["model", "=", action.res_model]], { limit: 1 })
       )[0];
       env.services.action.doAction({
         res_model: "ir.model.fields",
@@ -77,9 +76,8 @@ export function setupDebugAction(accessRights, env, action) {
     type: "item",
     description: env._t("Technical Translation"),
     callback: async () => {
-      const result = await env.services
-        .model("ir.translation")
-        .call("get_technical_translations", [action.res_model]);
+      const result = await env.services.orm
+        .call("ir.translation", "get_technical_translations", [action.res_model]);
       env.services.action.doAction(result);
     },
     sequence: 140,
@@ -96,9 +94,8 @@ export function setupDebugAction(accessRights, env, action) {
     description: description,
     callback: async () => {
       const modelId = (
-        await env.services
-          .model("ir.model")
-          .search([["model", "=", action.res_model]], { limit: 1 })
+        await env.services.orm
+          .search("ir.model", [["model", "=", action.res_model]], { limit: 1 })
       )[0];
       env.services.action.doAction({
         res_model: "ir.model.access",
@@ -123,9 +120,8 @@ export function setupDebugAction(accessRights, env, action) {
     description: env._t("View Record Rules"),
     callback: async () => {
       const modelId = (
-        await env.services
-          .model("ir.model")
-          .search([["model", "=", action.res_model]], { limit: 1 })
+        await env.services.orm
+          .search("ir.model", [["model", "=", action.res_model]], { limit: 1 })
       )[0];
       env.services.action.doAction({
         res_model: "ir.rule",
@@ -187,17 +183,15 @@ class GetMetadataDialog extends Component {
   }
 
   async toggleNoupdate() {
-    await this.env.services
-      .model("ir.model.data")
-      .call("toggle_noupdate", [this.props.res_model, this.state.id]);
+    await this.env.services.orm
+      .call("ir.model.data", "toggle_noupdate", [this.props.res_model, this.state.id]);
     await this.getMetadata();
   }
 
   async getMetadata() {
     const metadata = (
-      await this.env.services
-        .model(this.props.res_model)
-        .call("get_metadata", [this.props.selectedIds])
+      await this.env.services.orm
+        .call(this.props.res_model,"get_metadata", [this.props.selectedIds])
     )[0];
     this.state.id = metadata.id;
     this.state.xmlid = metadata.xmlid;
@@ -345,9 +339,8 @@ class SetDefaultDialog extends Component {
     const fieldToSet = this.defaultFields.find((field) => {
       return field.name === this.state.fieldToSet;
     }).value;
-    await this.env.services
-      .model("ir.default")
-      .call("set", [
+    await this.env.services.orm
+      .call("ir.default", "set", [
         this.props.res_model,
         this.state.fieldToSet,
         fieldToSet,
