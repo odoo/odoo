@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="sms_template_data_coupon" model="sms.template">
+        <field name="name">Coupon: send coupon to customers</field>
+        <field name="model_id" ref="coupon.model_coupon_coupon"/>
+        <field name="body">
+            % if object.partner_id.name:
+                Congratulations ${object.partner_id.name},
+            % endif
+            Here is your reward from ${object.program_id.company_id.name}.
+            % if object.program_id.reward_type == 'discount':
+                % if object.program_id.discount_type == 'fixed_amount':
+                    ${object.program_id.discount_fixed_amount} ${object.program_id.currency_id.symbol} off on your next order
+                %else:
+                    ${object.program_id.discount_percentage}%
+                    % if object.program_id.discount_apply_on == 'specific_products':
+                        % if object.program_id.discount_apply_on == 'on_order':
+                            on some products*
+                        % else:
+                            % for products in object.program_id.discount_specific_product_ids:
+                                ${products.name},
+                            % endfor
+                        % endif
+                    % elif object.program_id.discount_apply_on == 'cheapest_product':
+                        off on the cheapest product
+                    % else:
+                        off on your next order
+                    % endif
+                % endif
+            % elif object.program_id.reward_type == 'product':
+                ${object.program_id.reward_product_quantity} ${object.program_id.reward_product_id.name} on your next order
+            % elif object.program_id.reward_type == 'free_shipping':
+                get free shipping on your next order
+            % endif
+            Use this promo code ${object.code}
+            % if object.expiration_date:
+                before ${object.expiration_date}
+            % endif
+            % if object.program_id.rule_min_quantity not in [0, 1]:
+                Minimum purchase of ${object.program_id.rule_min_quantity} products
+            % endif
+            % if object.program_id.rule_minimum_amount != 0.00:
+                Valid for purchase above ${object.program_id.company_id.currency_id.symbol}${object.program_id.rule_minimum_amount}
+            % endif
+            % if object.program_id.discount_apply_on == 'specific_products':
+                *Valid for following products:
+                % for products in object.program_id.discount_specific_product_ids:
+                    ${products.name},
+                % endfor
+            % endif
+            Thank you,
+            % if object.order_id.user_id.signature:
+                ${object.order_id.user_id.signature}
+            % endif
+        </field>
+    </record>
+
+</odoo>

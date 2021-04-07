@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="coupon_view_form_inherit_coupon" model="ir.ui.view">
+        <field name="name">coupon.coupon.form.coupon.sms</field>
+        <field name="model">coupon.coupon</field>
+        <field name="inherit_id" ref="coupon.coupon_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_coupon_sent']" position="after">
+                <button name="action_send_sms" type="object" string="Send By SMS" class="oe_highlight" attrs="{'invisible': ['|',('state', 'not in', ['new', 'sent']), ('partner_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>
