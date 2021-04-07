@@ -3,6 +3,7 @@
 import { editModelDebug } from "../debug/debug_service";
 import { json_node_to_xml } from "../utils/misc";
 import { formatMany2one } from "../utils/fields";
+import { parseDateTime, formatDateTime } from "../utils/dates";
 
 const { Component, hooks, tags } = owl;
 const { useState } = hooks;
@@ -198,12 +199,11 @@ class GetMetadataDialog extends Component {
     this.state.creator = formatMany2one(metadata.create_uid);
     this.state.lastModifiedBy = formatMany2one(metadata.write_uid);
     this.state.noupdate = metadata.noupdate;
-    const localization = this.env.services.localization;
-    this.state.create_date = localization.formatDateTime(
-      localization.parseDateTime(metadata.create_date)
+    this.state.create_date = formatDateTime(
+      parseDateTime(metadata.create_date)
     );
-    this.state.write_date = localization.formatDateTime(
-      localization.parseDateTime(metadata.write_date)
+    this.state.write_date = formatDateTime(
+      parseDateTime(metadata.write_date)
     );
   }
 }
