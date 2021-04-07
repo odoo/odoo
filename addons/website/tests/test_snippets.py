@@ -10,3 +10,6 @@ class TestSnippets(odoo.tests.HttpCase):
 
     def test_01_empty_parents_autoremove(self):
         self.start_tour("/?enable_editor=1", "snippet_empty_parent_autoremove", login='admin')
+    
+    def test_02_default_shape_gets_palette_colors(self):
+        self.start_tour("/?enable_editor=1", "default_shape_gets_palette_colors", login='admin')
