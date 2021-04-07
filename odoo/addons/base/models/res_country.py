@@ -3,8 +3,9 @@
 
 import re
 import logging
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.exceptions import UserError
 from psycopg2 import IntegrityError
 from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
@@ -84,6 +85,18 @@ class Country(models.Model):
         return super(Country, self).create(vals_list)
 
     def write(self, vals):
+        address_format = vals.get('address_format', None)
+        if address_format:
+            address_fields = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id',
+                            'state_code','state_name','country_code','country_name','company_name')
+            fields = re.findall(r'\((.+?)\)', address_format)
+            try:
+                address_format % {i: i for i in address_fields}
+            except ValueError:
+                 raise UserError(_('The layout contains an invalid format key'))
+            except KeyError:
+                undefined_fields = [field for field in fields if field not in address_fields]
+                raise UserError(_('The fields %s are undefined.' % ', '.join(undefined_fields)))
         if vals.get('code'):
             vals['code'] = vals['code'].upper()
         return super(Country, self).write(vals)
