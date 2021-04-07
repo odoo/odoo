@@ -31,47 +31,6 @@
     }
 }
 
-// EDITOR TOP BAR AND POPOVER
-#oe_snippets .o_we_website_top_actions {
-    display: flex;
-    justify-content: flex-end;
-    width: $o-we-sidebar-width;
-    height: $o-we-sidebar-top-height;
-    // Firefox css fix
-    min-height: $o-we-sidebar-top-height;
-    background-color: $o-we-sidebar-tabs-bg;
-
-    .btn-group, .btn {
-        height: 100%;
-    }
-
-    .btn {
-        border: none;
-        border-radius: 0;
-        padding: 0.375rem 0.75rem;
-        font-size: $o-we-font-size;
-        font-family: $o-we-font-family;
-        font-weight: 400;
-        line-height: 1;
-
-        &.btn-primary {
-            @include button-variant($o-brand-primary, $o-brand-primary);
-        }
-        &.btn-secondary {
-            @include button-variant($o-we-sidebar-tabs-bg, $o-we-sidebar-tabs-bg);
-        }
-        &:focus, &:active, &:focus:active {
-            outline: none;
-            box-shadow: none;
-        }
-    }
-
-    .dropdown-menu {
-        left: auto;
-        right: 0;
-    }
-}
-
 #oe_snippets {
     top: 0;
     .oe-toolbar {
