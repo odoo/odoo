@@ -8,6 +8,7 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, formataddr
 
 
+@tagged('mail_channel')
 class TestChannelAccessRights(TestMailCommon):
 
     @classmethod
@@ -107,6 +108,7 @@ class TestChannelAccessRights(TestMailCommon):
                 trigger_read = partner.with_user(self.user_portal).name
 
 
+@tagged('mail_channel')
 class TestChannelFeatures(TestMailCommon):
 
     @classmethod
@@ -348,7 +350,7 @@ class TestChannelFeatures(TestMailCommon):
         self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
 
 
-@tagged('moderation')
+@tagged('moderation', 'mail_channel')
 class TestChannelModeration(TestMailCommon):
 
     @classmethod
