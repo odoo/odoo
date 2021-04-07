@@ -77,9 +77,7 @@ class WebsiteSaleDelivery(WebsiteSale):
     def order_2_return_dict(self, order):
         """ Returns the tracking_cart dict of the order for Google analytics """
         ret = super(WebsiteSaleDelivery, self).order_2_return_dict(order)
-        for line in order.order_line:
-            if line.is_delivery:
-                ret['transaction']['shipping'] = line.price_unit
+        ret['shipping'] = sum(order.order_line.filtered('is_delivery').mapped('price_unit'))
         return ret
 
     def _get_shop_payment_values(self, order, **kwargs):

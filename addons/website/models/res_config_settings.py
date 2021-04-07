@@ -30,6 +30,7 @@ class ResConfigSettings(models.TransientModel):
     website_cookies_bar = fields.Boolean(related='website_id.cookies_bar', readonly=False)
 
     google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key', readonly=False)
+    google_analytics_anonymize = fields.Boolean('Google Analytics Anonymization', related='website_id.google_analytics_anonymize', readonly=False)
     google_management_client_id = fields.Char('Google Client ID', related='website_id.google_management_client_id', readonly=False)
     google_management_client_secret = fields.Char('Google Client Secret', related='website_id.google_management_client_secret', readonly=False)
     google_search_console = fields.Char('Google Search Console', related='website_id.google_search_console', readonly=False)

@@ -141,15 +141,19 @@
     </xpath>
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <script id='tracking_code' t-if="website and website.google_analytics_key and not editable">
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        <t t-if="website and website.google_analytics_key and not editable">
+            <script id="tracking_code" async="1" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
 
-            ga('create', '<t t-esc="website.google_analytics_key"/>'.trim(), 'auto');
-            ga('send','pageview');
-        </script>
+                gtag('config', '<t t-esc="website.google_analytics_key"/>', {
+                    <t t-if="website.google_analytics_anonymize">'anonymize_ip': true,</t>
+                    <t t-else="">'anonymize_ip': false,</t>
+                });
+            </script>
+        </t>
     </xpath>
 
     <!-- Page options -->

@@ -1065,8 +1065,7 @@ class WebsiteSale(http.Controller):
         for line in order_lines:
             product = line.product_id
             ret.append({
-                'id': line.order_id.id,
-                'sku': product.barcode or product.id,
+                'id': product.barcode or product.id,
                 'name': product.name or '-',
                 'category': product.categ_id.name or '-',
                 'price': line.price_unit,
@@ -1077,14 +1076,12 @@ class WebsiteSale(http.Controller):
     def order_2_return_dict(self, order):
         """ Returns the tracking_cart dict of the order for Google analytics basically defined to be inherited """
         return {
-            'transaction': {
-                'id': order.id,
-                'affiliation': order.company_id.name,
-                'revenue': order.amount_total,
-                'tax': order.amount_tax,
-                'currency': order.currency_id.name
-            },
-            'lines': self.order_lines_2_google_api(order.order_line)
+            'transaction_id': order.id,
+            'affiliation': order.company_id.name,
+            'value': order.amount_total,
+            'tax': order.amount_tax,
+            'currency': order.currency_id.name,
+            'items': self.order_lines_2_google_api(order.order_line)
         }
 
     @http.route(['/shop/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)

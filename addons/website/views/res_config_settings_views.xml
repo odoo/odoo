@@ -284,6 +284,8 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                         <div class="row mt16">
+                                            <label class="col-lg-3 o_light_label" for="google_analytics_anonymize" string="Anonymization"/>
+                                            <field name="google_analytics_anonymize"/>
                                             <label class="col-lg-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
                                             <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
                                                 attrs="{'required': [('has_google_analytics', '=', True)]}"/>

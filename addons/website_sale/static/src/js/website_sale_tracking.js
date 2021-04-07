@@ -26,23 +26,13 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
 
         // ...
         if (this.$('div.oe_website_sale_tx_status').length) {
-            this._trackGA('require', 'ecommerce');
-
             var orderID = this.$('div.oe_website_sale_tx_status').data('order-id');
             this._vpv('/stats/ecom/order_confirmed/' + orderID);
 
             this._rpc({
                 route: '/shop/tracking_last_order/',
             }).then(function (o) {
-                self._trackGA('ecommerce:clear');
-
-                if (o.transaction && o.lines) {
-                    self._trackGA('ecommerce:addTransaction', o.transaction);
-                    _.forEach(o.lines, function (line) {
-                        self._trackGA('ecommerce:addItem', line);
-                    });
-                }
-                self._trackGA('ecommerce:send');
+                self._trackGA('event', 'purchase', o);
             });
         }
 
@@ -57,16 +47,15 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _trackGA: function () {
-        var websiteGA = window.ga || function () {};
+        var websiteGA = window.gtag || function () {};
         websiteGA.apply(this, arguments);
     },
     /**
      * @private
      */
     _vpv: function (page) { //virtual page view
-        this._trackGA('send', 'pageview', {
-          'page': page,
-          'title': document.title,
+        this._trackGA('event', 'page_view', {
+            'page_path': page,
         });
     },
 
