@@ -76,11 +76,11 @@ $o-cw-filter-avatar-size: 20px;
         // =====================================
 
         td {
-            border-color: gray('200');
+            border-color: $border-color;
         }
 
         .fc-time-grid .fc-slats .fc-minor td {
-            border-top-color: gray('300');
+            border-top-color: gray('400');
         }
 
         .fc-widget-content {
@@ -89,7 +89,7 @@ $o-cw-filter-avatar-size: 20px;
 
         .fc-widget-header {
             border-color: transparent;
-            border-bottom-color: $gray-200;
+            border-bottom-color: $border-color;
             padding: 3px 0 5px;
         }
 
@@ -542,7 +542,7 @@ $o-cw-filter-avatar-size: 20px;
     position: relative;
     @include o-webclient-padding($top: $o-horizontal-padding/2);
     background-color: $o-view-background-color;
-    border-left: 1px solid darken($o-control-panel-background-color, 20%);
+    border-left: 1px solid $border-color;
     overflow-y:auto;
 
     .o_calendar_sidebar {
