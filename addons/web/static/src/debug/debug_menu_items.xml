@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <Dialog t-name="web.DebugManager.SetDefault" title="title">
-        <t t-call="web.DebugManager.setDefault"/>
-        <t t-set-slot="buttons">
-            <button class="btn btn-secondary" t-on-click="trigger('dialog-closed')">Close</button>
-            <button class="btn btn-secondary" t-on-click="saveDefault">Save default</button>
-        </t>
-    </Dialog>
+    <t t-name="web.DebugManager.SetDefault" owl="1">
+        <Dialog title="title">
+            <t t-call="web.DebugManager.setDefault"/>
+            <t t-set-slot="buttons">
+                <button class="btn btn-secondary" t-on-click="trigger('dialog-closed')">Close</button>
+                <button class="btn btn-secondary" t-on-click="saveDefault">Save default</button>
+            </t>
+        </Dialog>
+    </t>
 
-    <t t-name="web.DebugManager.setDefault">
+    <t t-name="web.DebugManager.setDefault" owl="1">
         <table style="width: 100%">
             <tr>
                 <td>
@@ -65,11 +67,13 @@
         </table>
     </t>
 
-    <Dialog t-name="web.DebugManager.GetMetadata" title="title">
-        <t t-call="web.DebugManager.getMetadata"/>
-    </Dialog>
+    <t t-name="web.DebugManager.GetMetadata" owl="1">
+        <Dialog title="title">
+            <t t-call="web.DebugManager.getMetadata"/>
+        </Dialog>
+    </t>
 
-    <t t-name="web.DebugManager.getMetadata">
+    <t t-name="web.DebugManager.getMetadata" owl="1">
         <table class="table table-sm table-striped">
             <tr>
                 <th>ID:</th>
