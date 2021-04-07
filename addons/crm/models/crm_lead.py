@@ -412,40 +412,24 @@ class Lead(models.Model):
     @api.depends('partner_id.email')
     def _compute_email_from(self):
         for lead in self:
-            if lead.partner_id.email and lead.partner_id.email != lead.email_from:
+            if lead.partner_id.email and lead._get_partner_email_update():
                 lead.email_from = lead.partner_id.email
 
     def _inverse_email_from(self):
         for lead in self:
-            if lead.partner_id and lead.email_from != lead.partner_id.email:
-                # force reset
-                if not lead.email_from or not lead.partner_id.email:
-                    lead.partner_id.email = lead.email_from
-                # compare formatted values as we may have formatting differences between equivalent email
-                else:
-                    lead_email_normalized = tools.email_normalize(lead.email_from)
-                    partner_email_normalized = tools.email_normalize(lead.partner_id.email)
-                    if lead_email_normalized != partner_email_normalized:
-                        lead.partner_id.email = lead.email_from
+            if lead._get_partner_email_update():
+                lead.partner_id.email = lead.email_from
 
     @api.depends('partner_id.phone')
     def _compute_phone(self):
         for lead in self:
-            if lead.partner_id.phone and lead.phone != lead.partner_id.phone:
+            if lead.partner_id.phone and lead._get_partner_phone_update():
                 lead.phone = lead.partner_id.phone
 
     def _inverse_phone(self):
         for lead in self:
-            if lead.partner_id and lead.phone != lead.partner_id.phone:
-                # force reset
-                if not lead.phone or not lead.partner_id.phone:
-                    lead.partner_id.phone = lead.phone
-                # compare formatted values as we may have encoding differences between equivalent numbers
-                else:
-                    lead_phone_formatted = lead.phone_get_sanitized_number(number_fname='phone')
-                    partner_phone_formatted = lead.partner_id.phone_get_sanitized_number(number_fname='phone')
-                    if lead_phone_formatted != partner_phone_formatted:
-                        lead.partner_id.phone = lead.phone
+            if lead._get_partner_phone_update():
+                lead.partner_id.phone = lead.phone
 
     @api.depends('phone', 'country_id.code')
     def _compute_phone_state(self):
@@ -582,32 +566,48 @@ class Lead(models.Model):
             lead.duplicate_lead_ids = duplicate_lead_ids + lead
             lead.duplicate_lead_count = len(duplicate_lead_ids)
 
-    @api.depends('email_from', 'partner_id')
+    @api.depends('email_from', 'partner_id.email')
     def _compute_partner_email_update(self):
         for lead in self:
-            will_write_email = False
-            if lead.partner_id:
-                # beware: void user input gives '' which is different from False
-                lead_email_normalized = tools.email_normalize(lead.email_from) or (lead.email_from if lead.email_from else False)
-                partner_email_normalized = tools.email_normalize(lead.partner_id.email) or lead.partner_id.email
-                will_write_email = lead_email_normalized != partner_email_normalized if lead.partner_id else False
-            lead.partner_email_update = will_write_email
+            lead.partner_email_update = lead._get_partner_email_update()
 
-    @api.depends('phone', 'partner_id')
+    def _get_partner_email_update(self):
+        """Calculate if we should write the email on the related partner.
+
+        When the email of the lead / partner is an empty string, we force it to False to
+        not propagate a False on an empty string.
+
+        Done in a separate method so it can be used in the compute of "partner_email_update"
+        and also in the compute / inverse of the "email_from" field without conflict between.
+        """
+        self.ensure_one()
+        if self.partner_id and self.email_from != self.partner_id.email:
+            lead_email_normalized = tools.email_normalize(self.email_from) or self.email_from or False
+            partner_email_normalized = tools.email_normalize(self.partner_id.email) or self.partner_id.email or False
+            return lead_email_normalized != partner_email_normalized
+        return False
+
+    @api.depends('phone', 'partner_id.phone')
     def _compute_partner_phone_update(self):
         for lead in self:
-            will_write_phone = False
-            if lead.partner_id and lead.phone != lead.partner_id.phone:
-                # if reset -> obviously new value will be propagated
-                if not lead.phone or not lead.partner_id.phone:
-                    will_write_phone = True
-                # otherwise compare formatted values as we may have encoding differences
-                else:
-                    lead_phone_formatted = lead.phone_get_sanitized_number(number_fname='phone')
-                    partner_phone_formatted = lead.partner_id.phone_get_sanitized_number(number_fname='phone')
-                    if lead_phone_formatted != partner_phone_formatted:
-                        will_write_phone = True
-            lead.partner_phone_update = will_write_phone
+            lead.partner_phone_update = lead._get_partner_phone_update()
+
+    def _get_partner_phone_update(self):
+        """Calculate if we should write the phone on the related partner.
+
+        When the phone of the lead / partner is an empty string, we force it to False to
+        not propagate a False on an empty string (comparing '' to False is not equal, but
+        should not be propagated).
+
+        Done in a separate method so it can be used in the compute of "partner_phone_update"
+        and also in the compute / inverse of the "phone" field without conflict between.
+        """
+        self.ensure_one()
+        if self.partner_id and self.phone != self.partner_id.phone:
+            lead_phone_formatted = self.phone_get_sanitized_number(number_fname='phone') or self.phone or False
+            partner_phone_formatted = self.partner_id.phone_get_sanitized_number(number_fname='phone') or self.partner_id.phone or False
+            return lead_phone_formatted != partner_phone_formatted
+        return False
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):

@@ -238,16 +238,16 @@ class TestCRMLead(TestCrmCommon):
         lead_form = Form(lead)
 
         # reset partner phone to a local number and prepare formatted / sanitized values
-        partner_phone, partner_mobile = self.test_pĥone_data[2], self.test_pĥone_data[1]
+        partner_phone, partner_mobile = self.test_phone_data[2], self.test_phone_data[1]
         partner_phone_formatted = phone_format(partner_phone, 'US', '1')
         partner_phone_sanitized = phone_format(partner_phone, 'US', '1', force_format='E164')
         partner_mobile_formatted = phone_format(partner_mobile, 'US', '1')
         partner_mobile_sanitized = phone_format(partner_mobile, 'US', '1', force_format='E164')
         partner_email, partner_email_normalized = self.test_email_data[2], self.test_email_data_normalized[2]
         self.assertEqual(partner_phone_formatted, '+1 202-555-0888')
-        self.assertEqual(partner_phone_sanitized, self.test_pĥone_data_sanitized[2])
+        self.assertEqual(partner_phone_sanitized, self.test_phone_data_sanitized[2])
         self.assertEqual(partner_mobile_formatted, '+1 202-555-0999')
-        self.assertEqual(partner_mobile_sanitized, self.test_pĥone_data_sanitized[1])
+        self.assertEqual(partner_mobile_sanitized, self.test_phone_data_sanitized[1])
         # ensure initial data
         self.assertEqual(partner.phone, partner_phone)
         self.assertEqual(partner.mobile, partner_mobile)
@@ -292,6 +292,18 @@ class TestCRMLead(TestCrmCommon):
         lead_form.save()
         self.assertEqual(partner.phone, partner_phone)
 
+        # for email of the partner, if only formatting differs, should not propagate the email
+        old_lead_email_from = lead.email_from
+        partner.email = '"Test 1234" <%s>' % partner_email_normalized
+        self.assertEqual(lead.email_from, old_lead_email_from)
+        self.assertNotEqual(partner.email, lead.email_from)
+
+        # for phone of the partner, if only formatting differs, should not propagate the phone
+        old_lead_phone = lead.phone
+        partner.phone = "++++" + lead.phone + "/////"  # keep the same phone, but change the format
+        self.assertEqual(lead.phone, old_lead_phone)
+        self.assertNotEqual(partner.phone, lead.phone)
+
         # LEAD/PARTNER SYNC: lead updates partner
         new_email = '"John Zoidberg" <john.zoidberg@test.example.com>'
         new_email_normalized = 'john.zoidberg@test.example.com'
@@ -332,6 +344,40 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(partner.mobile, partner_mobile)
         self.assertEqual(partner.phone_sanitized, partner_mobile_sanitized,
                          'Partner sanitized should be computed on mobile')
+
+        # False VS empty string
+        partner.phone = ''
+        partner.email = ''
+        lead_form = Form(self.env['crm.lead'])
+        lead_form.partner_id = partner
+        self.assertFalse(lead_form.partner_phone_update)
+        self.assertFalse(lead_form.partner_email_update)
+
+        # Invalid phone format should be propagated if there's a change
+        # Even if the sanitized value is False
+        partner.phone = False
+        lead.phone = '(555) 5555555555555555555555555'
+        sanitized_number = lead.phone_get_sanitized_number(number_fname='phone')
+        self.assertFalse(sanitized_number)
+        self.assertEqual(partner.phone, lead.phone)
+
+        lead.phone = False
+        partner.phone = '(666) 6666666666666666666666666'
+        sanitized_number = partner.phone_get_sanitized_number(number_fname='phone')
+        self.assertFalse(sanitized_number)
+        self.assertEqual(partner.phone, partner.phone)
+
+        # Country set on the partner, but not on the lead
+        # If the phone is the same, but the formated phone is different
+        # (because of the country difference), do not propagate the phone
+        country = self.env['res.country'].search([('phone_code', '=', '32')], limit=1)
+        lead.country_id = False
+        partner.country_id = country
+        lead.phone = '0494 44 44 44'
+        partner_sanitized_number = partner.phone_get_sanitized_number(number_fname='phone')
+        lead_sanitized_number = lead.phone_get_sanitized_number(number_fname='phone')
+        self.assertNotEqual(partner_sanitized_number, lead_sanitized_number)
+        self.assertFalse(lead.partner_phone_update, 'Formated phone is just different because of country, should not be propagated')
 
     @users('user_sales_manager')
     def test_crm_lead_stages(self):
