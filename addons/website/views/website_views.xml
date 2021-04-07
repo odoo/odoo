@@ -79,6 +79,7 @@
             <field name="model">website</field>
             <field name="arch" type="xml">
                 <tree string="Websites">
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="domain"/>
                     <field name="country_group_ids" widget="many2many_tags"/>
