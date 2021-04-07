@@ -359,7 +359,7 @@ class Website(Home):
             domain += ['|', ('name', 'ilike', search), ('url', 'ilike', search)]
 
         pages = Page.search(domain, order=sort_order)
-        if sortby != 'url' or not request.env.user.has_group('website.group_multi_website'):
+        if sortby != 'url' or not request.session.debug:
             pages = pages.filtered(pages._is_most_specific_page)
         pages_count = len(pages)
 
