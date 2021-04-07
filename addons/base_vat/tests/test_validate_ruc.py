@@ -81,6 +81,6 @@ class TestStructure(common.TransactionCase):
         with self.assertRaises(ValidationError):
             test_partner.write({'vat': '42', 'country_id': self.env.ref('base.be').id})
 
-        # If no country can be guessed: VAT number cannot be validated
-        with self.assertRaises(ValidationError):
-            test_partner.write({'vat': '0477472701', 'country_id': None})
+        # If no country can be guessed: VAT number should always be considered valid
+        # (for technical reasons due to ORM and res.company making related fields towards res.partner for country_id and vat)
+        test_partner.write({'vat': '0477472701', 'country_id': None})
