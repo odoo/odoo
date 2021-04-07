@@ -9,6 +9,8 @@ from odoo.tests import tagged, Form
 from odoo.tests.common import users
 from odoo.tools import mute_logger, formataddr
 
+
+@tagged('mail_channel')
 class TestChannelAccessRights(MailCommon):
 
     @classmethod
@@ -139,6 +141,7 @@ class TestChannelAccessRights(MailCommon):
             })
 
 
+@tagged('mail_channel')
 class TestChannelInternals(MailCommon):
 
     @classmethod
@@ -427,7 +430,7 @@ class TestChannelInternals(MailCommon):
             self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
 
 
-@tagged('moderation')
+@tagged('moderation', 'mail_channel')
 class TestChannelModeration(MailCommon):
 
     @classmethod

@@ -189,7 +189,7 @@ class MockEmail(common.BaseCase):
             if all(p in mail.recipient_ids for p in recipients):
                 break
         else:
-            raise AssertionError('mail.mail not found for message %s / status %s / recipients %s' % (mail_message, status, recipients.ids))
+            raise AssertionError('mail.mail not found for message %s / status %s / recipients %s / author %s' % (mail_message, status, recipients.ids, author))
         return mail
 
     def _find_mail_mail_wemail(self, email_to, status, mail_message=None, author=None):
@@ -218,15 +218,21 @@ class MockEmail(common.BaseCase):
         mail = self._find_mail(author, recipients, mail_message)
         self.assertEqual(mail.state, 'exception')
 
-    def assertMailMail(self, recipients, status, check_mail_mail=True, mail_message=None, author=None, email_values=None, fields_values=None):
+    def assertMailMail(self, recipients, status,
+                       check_mail_mail=True, mail_message=None, author=None,
+                       content=None, fields_values=None, email_values=None):
         if check_mail_mail:
-            mail = self._find_mail_mail_wpartners(recipients, status, mail_message=mail_message, author=author)
-            self.assertTrue(bool(mail))
+            found_mail = self._find_mail_mail_wpartners(recipients, status, mail_message=mail_message, author=author)
+            self.assertTrue(bool(found_mail))
+            if content:
+                self.assertIn(content, found_mail.body_html)
             for fname, fvalue in (fields_values or {}).items():
-                self.assertEqual(mail[fname], fvalue)
+                self.assertEqual(
+                    found_mail[fname], fvalue,
+                    'Mail: expected %s for %s, got %s' % (fvalue, fname, found_mail[fname]))
         if status == 'sent':
             for recipient in recipients:
-                self.assertSentEmail(author, [recipient], **email_values)
+                self.assertSentEmail(email_values['email_from'] if email_values and email_values.get('email_from') else author, [recipient], **(email_values or {}))
 
     def assertMailMailWEmails(self, emails, status, content, fields_values=None):
         """ Will check in self._new_mails to find a sent mail.mail. To use with
@@ -298,6 +304,15 @@ class MockEmail(common.BaseCase):
         for val in ['reply_to', 'subject', 'references', 'attachments']:
             if val in expected:
                 self.assertEqual(expected[val], sent_mail[val], 'Value for %s: expected %s, received %s' % (val, expected[val], sent_mail[val]))
+        if 'attachments_info' in values:
+            attachments = sent_mail['attachments']
+            for attachment_info in values['attachments_info']:
+                attachment = next(attach for attach in attachments if attach[0] == attachment_info['name'])
+                if attachment_info.get('raw'):
+                    self.assertEqual(attachment[1], attachment_info['raw'])
+                if attachment_info.get('type'):
+                    self.assertEqual(attachment[2], attachment_info['type'])
+            self.assertEqual(len(values['attachments_info']), len(attachments))
         for val in ['body']:
             if val in expected:
                 self.assertHtmlEqual(expected[val], sent_mail[val], 'Value for %s: expected %s, received %s' % (val, expected[val], sent_mail[val]))
@@ -650,6 +665,29 @@ class MailCase(MockEmail):
                     (json_dump(expected), '\n'.join([n for n in notif_messages])))
 
         return bus_notifs
+
+    def assertNotified(self, message, recipients_info, is_complete=False):
+        """ Lightweight check for notifications (mail.notification).
+
+        :param recipients_info: list notified recipients: [
+          {'partner': res.partner record (may be empty),
+           'type': notification_type to check,
+           'is_read': is_read to check,
+          }, {...}]
+        """
+        notifications = self._new_notifs.filtered(lambda notif: notif in message.notification_ids)
+        if is_complete:
+            self.assertEqual(len(notifications), len(recipients_info))
+        for rinfo in recipients_info:
+            recipient_notif = next(
+                (notif
+                 for notif in notifications
+                 if notif.res_partner_id == rinfo['partner']
+                ), False
+            )
+            self.assertTrue(recipient_notif)
+            self.assertEqual(recipient_notif.is_read, rinfo['is_read'])
+            self.assertEqual(recipient_notif.notification_type, rinfo['type'])
 
     def assertTracking(self, message, data):
         tracking_values = message.sudo().tracking_value_ids
