@@ -5034,6 +5034,40 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         });
     },
     /**
+     * Inserts or removes the given container at the right position in the
+     * document.
+     *
+     * @param {HTMLElement} [newContainer] container to insert, null to remove
+     */
+    _insertShapeContainer(newContainer) {
+        const target = this.$target[0];
+
+        const shapeContainer = target.querySelector(':scope > .o_we_shape');
+        if (shapeContainer) {
+            shapeContainer.remove();
+        }
+        if (newContainer) {
+            const preShapeLayerElement = this._getLastPreShapeLayerElement();
+            if (preShapeLayerElement) {
+                $(preShapeLayerElement).after(newContainer);
+            } else {
+                this.$target.prepend(newContainer);
+            }
+        }
+        return newContainer;
+    },
+    /**
+     * Creates and inserts a container for the shape with the right classes.
+     *
+     * @param {string} shape the shape name for which to create a container
+     */
+    _createShapeContainer(shape) {
+        const shapeContainer = this._insertShapeContainer(document.createElement('div'));
+        this.$target[0].style.position = 'relative';
+        shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
+        return shapeContainer;
+    },
+    /**
      * Handles everything related to saving state before preview and restoring
      * it after a preview or locking in the changes when not in preview.
      *
@@ -5042,25 +5076,10 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     _handlePreviewState(previewMode, computeShapeData) {
         const target = this.$target[0];
-        const insertShapeContainer = newContainer => {
-            const shapeContainer = target.querySelector(':scope > .o_we_shape');
-            if (shapeContainer) {
-                shapeContainer.remove();
-            }
-            if (newContainer) {
-                const preShapeLayerElement = this._getLastPreShapeLayerElement();
-                if (preShapeLayerElement) {
-                    $(preShapeLayerElement).after(newContainer);
-                } else {
-                    this.$target.prepend(newContainer);
-                }
-            }
-            return newContainer;
-        };
 
         let changedShape = false;
         if (previewMode === 'reset') {
-            insertShapeContainer(this.prevShapeContainer);
+            this._insertShapeContainer(this.prevShapeContainer);
             if (this.prevShape) {
                 target.dataset.oeShapeData = this.prevShape;
             } else {
@@ -5090,16 +5109,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         const {shape, colors, flip = []} = json ? JSON.parse(json) : {};
         let shapeContainer = target.querySelector(':scope > .o_we_shape');
         if (!shape) {
-            return insertShapeContainer(null);
+            return this._insertShapeContainer(null);
         }
         // When changing shape we want to reset the shape container (for transparency color)
         if (changedShape) {
-            shapeContainer = insertShapeContainer(null);
-        }
-        if (!shapeContainer) {
-            shapeContainer = insertShapeContainer(document.createElement('div'));
-            target.style.position = 'relative';
-            shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
+            shapeContainer = this._createShapeContainer(shape);
         }
         // Compat: remove old flip classes as flipping is now done inside the svg
         shapeContainer.classList.remove('o_we_flip_x', 'o_we_flip_y');
@@ -5282,6 +5296,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 // options for shape will only be available after _toggleShape() returned
                 this._requestUserValueWidgets('bg_shape_opt')[0].enable();
             }});
+            this._createShapeContainer(shapeToSelect);
             return this._handlePreviewState(false, () => ({shape: shapeToSelect, colors: this._getImplicitColors(shapeToSelect)}));
         }
     },
