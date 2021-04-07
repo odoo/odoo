@@ -520,7 +520,6 @@ class TestComposerResultsComment(TestMailComposer):
         # template is sent only to partners (email_to are transformed)
         message = self.test_record.message_ids[0]
         self.assertMailMail(self.partner_employee_2, 'sent',
-                            check_mail_mail=True,
                             mail_message=message,
                             author=self.partner_employee,  # author != email_from (template sets only email_from)
                             email_values={
@@ -536,7 +535,6 @@ class TestComposerResultsComment(TestMailComposer):
                             fields_values={},
                            )
         self.assertMailMail(self.test_record.customer_id + new_partners, 'sent',
-                            check_mail_mail=True,
                             mail_message=message,
                             author=self.partner_employee,  # author != email_from (template sets only email_from)
                             email_values={
@@ -597,7 +595,7 @@ class TestComposerResultsMass(TestMailComposer):
             message = record.message_ids[0]
 
             # template is sent directly using customer field, meaning we have recipients
-            self.assertMailMail(record.customer_id, 'sent', check_mail_mail=True,
+            self.assertMailMail(record.customer_id, 'sent',
                                 mail_message=message,
                                 author=self.partner_employee)
 
@@ -668,7 +666,6 @@ class TestComposerResultsMass(TestMailComposer):
             self._mails = _mails
             self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
                                 'sent',
-                                check_mail_mail=True,
                                 mail_message=message,
                                 author=self.partner_employee,
                                 email_values={

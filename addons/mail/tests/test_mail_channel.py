@@ -509,8 +509,11 @@ class TestChannelModeration(MailCommon):
             (msg_c1_admin1 | msg_c1_emplo2).with_user(self.user_employee)._moderate('reject', title='RejectTitle', comment='RejectComment')
             self.assertEqual(len(self._new_mails), 2)
 
-        self.assertMailMailWEmails([self.partner_admin.email_formatted, self.partner_employee_2.email_formatted], 'outgoing', 'RejectComment',
-                                   fields_values={'subject': 'RejectTitle', 'author_id': self.partner_employee})
+        self.assertMailMailWEmails(
+            [self.partner_admin.email_formatted, self.partner_employee_2.email_formatted], 'outgoing',
+            content='RejectComment',
+            fields_values={'subject': 'RejectTitle', 'author_id': self.partner_employee}
+        )
         self.assertTrue(all('RejectComment' in body for body in self._new_mails.mapped('body_html')))
         self.assertTrue(all('Body' in body for body in self._new_mails.mapped('body_html')))
 
@@ -676,7 +679,7 @@ class TestChannelModeration(MailCommon):
             })
 
         # admin being banned, should not received any email
-        self.assertNoMail(self.partner_employee, self.partner_admin)
+        self.assertNoMail(self.partner_employee, author=self.partner_admin)
 
         # only moderators can send guidelines
         channel.write({
