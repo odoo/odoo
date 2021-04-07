@@ -152,7 +152,7 @@ class WebsiteEventController(http.Controller):
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
             'dates': dates,
-            'categories': request.env['event.tag.category'].search([]),
+            'categories': request.env['event.tag.category'].search([('is_published', '=', True)]),
             'countries': countries,
             'pager': pager,
             'searches': searches,
