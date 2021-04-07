@@ -317,7 +317,7 @@
                                     </group>
                                     <group string="Control-Access" groups="account.group_account_manager">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
-                                        <field name="type_control_ids" widget="many2many_tags"/>
+                                        <field name="type_control_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
                                         <field name="restrict_mode_hash_table" groups="account.group_account_user"/>
                                     </group>
