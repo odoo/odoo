@@ -95,9 +95,9 @@
         <menuitem action="product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" active="False"/>
         <menuitem id="prod_config_main" name="Products" parent="menu_sale_config" sequence="5"/>
         <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2" active="False"/>
-        <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="uom.group_uom" active="False"/>
-        <menuitem action="uom.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="uom.group_uom" active="False"/>
-        <menuitem action="uom.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="8" groups="uom.group_uom" active="False"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="menu_sale_config" sequence="6" groups="uom.group_uom" active="False"/>
+        <menuitem action="uom.product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16" sequence="7" groups="base.group_no_one" active="False"/>
+        <menuitem action="uom.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="next_id_16" sequence="8" active="False"/>
         <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="product_menu_catalog" action="product.product_pricelist_action2" groups="product.group_product_pricelist" sequence="3" active="False"/>
 
         <record id="sale_order_view_activity" model="ir.ui.view">
