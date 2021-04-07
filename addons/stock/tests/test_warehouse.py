@@ -2,7 +2,7 @@
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import Form
-from odoo.exceptions import AccessError
+from odoo.exceptions import UserError
 from odoo.tools import mute_logger
 
 
@@ -83,15 +83,8 @@ class TestWarehouse(TestStockCommon):
             'new_quantity': 50.0,
         })
         # User has no right on quant, must raise an AccessError
-        with self.assertRaises(AccessError):
+        with self.assertRaises(UserError):
             inventory_wizard.change_product_qty()
-        # Check quantity wasn't updated
-        self.assertEqual(self.product_1.virtual_available, 0.0)
-        self.assertEqual(self.product_1.qty_available, 0.0)
-
-        # Check associated quants: 0 quant expected
-        quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
-        self.assertEqual(len(quant), 0)
 
     def test_basic_move(self):
         product = self.product_3.with_user(self.user_stock_manager)
