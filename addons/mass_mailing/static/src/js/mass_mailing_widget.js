@@ -338,7 +338,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         var $snippetsSideBar = ev.data;
         var $themes = $snippetsSideBar.find("#email_designer_themes").children();
         var $snippets = $snippetsSideBar.find(".oe_snippet");
-        $snippetsSideBar.find('.o_we_website_top_actions').hide();
+        $snippetsSideBar.find('.o_we_website_top_actions>*:not(.o_we_external_history_buttons)').hide();
         var $snippets_menu = $snippetsSideBar.find("#snippets_menu");
         var $selectTemplateBtn = $snippets_menu.find('.o_we_select_template');
 
