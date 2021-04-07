@@ -248,6 +248,10 @@
           log("Rejected linked modules: ", rejectedLinked);
         }
         if (unloaded.length) {
+          const cycle = findCycle(unloaded);
+          if (cycle) {
+            console.error("Cyclic dependencies: " + cycle);
+          }
           log(
             "Non loaded modules:      ",
             unloaded.map(function (unload) {
@@ -359,4 +363,43 @@
       });
     }, 9999);
   });
+
+
+  /**
+   * Visit the list of jobs, and return the first found cycle, if any
+   *
+   * @param {any[]} jobs 
+   * @returns {null | string} either a string describing a cycle, or null
+   */
+  function findCycle(jobs) {
+    // build dependency graph
+    const dependencyGraph = new Map();
+    for (let job of jobs) {
+      dependencyGraph.set(job.name, job.dependencies)
+    }
+
+    // helpers
+    function visitJobs(jobs, visited = new Set()) {
+      for (let job of jobs) {
+        const result = visitJob(job, visited);
+        if (result) {
+          return result;
+        }
+      }
+      return null;
+    }
+
+    function visitJob(job, visited) {
+      if (visited.has(job)) {
+        const jobs = Array.from(visited).concat([job]);
+        const index = jobs.indexOf(job);
+        return jobs.slice(index).map(j => `"${j}"`).join(' => ');
+      }
+      const deps = dependencyGraph.get(job);
+      return deps ? visitJobs(deps, new Set(visited).add(job)) : null;
+    }
+
+    // visit each root to find cycles
+    return visitJobs(jobs.map(j => j.name));
+  }
 })();
