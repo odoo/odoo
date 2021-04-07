@@ -140,9 +140,9 @@ class StockPickingBatch(models.Model):
         return res
 
     @api.ondelete(at_uninstall=False)
-    def _unlink_if_draft(self):
-        if any(batch.state != 'draft' for batch in self):
-            raise UserError(_("You can only delete draft batch transfers."))
+    def _unlink_if_not_done(self):
+        if any(batch.state == 'done' for batch in self):
+            raise UserError(_("You cannot delete Done batch transfers."))
 
     def onchange(self, values, field_name, field_onchange):
         """Override onchange to NOT to update all scheduled_date on pickings when
@@ -171,6 +171,7 @@ class StockPickingBatch(models.Model):
     def action_cancel(self):
         self.ensure_one()
         self.state = 'cancel'
+        self.picking_ids = False
         return True
 
     def action_print(self):
