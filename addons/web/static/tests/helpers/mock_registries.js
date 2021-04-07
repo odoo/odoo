@@ -12,12 +12,7 @@ import { popoverService } from "../../src/services/popover_service";
 import { uiService } from "../../src/services/ui_service";
 import { viewRegistry } from "../../src/views/view_registry";
 import { viewService } from "../../src/views/view_service";
-import {
-  fakeTitleService,
-  makeFakeRouterService,
-  makeFakeUserService
-} from "./mock_services";
-
+import { fakeTitleService, makeFakeRouterService, makeFakeUserService } from "./mock_services";
 
 export function makeTestServiceRegistry() {
   // build the service registry

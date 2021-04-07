@@ -194,59 +194,58 @@ QUnit.module("utils", () => {
       assert.verifySteps(["base.setup", "base.fn"]);
     });
 
-    QUnit.test(
-      "unpatch two patches on the same base class (returned by patch)",
-      async function (assert) {
-        assert.expect(15);
+    QUnit.test("unpatch two patches on the same base class (returned by patch)", async function (
+      assert
+    ) {
+      assert.expect(15);
 
-        const BaseClass = makeBaseClass(assert);
+      const BaseClass = makeBaseClass(assert);
 
-        patch(BaseClass.prototype, "patch1", {
-          setup() {
-            this._super();
-            assert.step("patch1.setup");
-          },
-          fn() {
-            this._super();
-            assert.step("patch1.fn");
-          },
-        });
+      patch(BaseClass.prototype, "patch1", {
+        setup() {
+          this._super();
+          assert.step("patch1.setup");
+        },
+        fn() {
+          this._super();
+          assert.step("patch1.fn");
+        },
+      });
 
-        patch(BaseClass.prototype, "patch2", {
-          setup() {
-            this._super();
-            assert.step("patch2.setup");
-          },
-          fn() {
-            this._super();
-            assert.step("patch2.fn");
-          },
-        });
+      patch(BaseClass.prototype, "patch2", {
+        setup() {
+          this._super();
+          assert.step("patch2.setup");
+        },
+        fn() {
+          this._super();
+          assert.step("patch2.fn");
+        },
+      });
 
-        new BaseClass().fn();
+      new BaseClass().fn();
 
-        assert.verifySteps([
-          "base.setup",
-          "patch1.setup",
-          "patch2.setup",
-          "base.fn",
-          "patch1.fn",
-          "patch2.fn",
-        ]);
+      assert.verifySteps([
+        "base.setup",
+        "patch1.setup",
+        "patch2.setup",
+        "base.fn",
+        "patch1.fn",
+        "patch2.fn",
+      ]);
 
-        unpatch(BaseClass.prototype, "patch1");
+      unpatch(BaseClass.prototype, "patch1");
 
-        new BaseClass().fn();
+      new BaseClass().fn();
 
-        assert.verifySteps(["base.setup", "patch2.setup", "base.fn", "patch2.fn"]);
+      assert.verifySteps(["base.setup", "patch2.setup", "base.fn", "patch2.fn"]);
 
-        unpatch(BaseClass.prototype, "patch2");
+      unpatch(BaseClass.prototype, "patch2");
 
-        new BaseClass().fn();
+      new BaseClass().fn();
 
-        assert.verifySteps(["base.setup", "base.fn"]);
-      }
-    );
+      assert.verifySteps(["base.setup", "base.fn"]);
+    });
 
     QUnit.test("unpatch twice the same patch name", async function (assert) {
       assert.expect(1);

@@ -12,7 +12,6 @@ import { click, getFixture, nextTick } from "../helpers/utils";
 import { Registry } from "./../../src/core/registry";
 import { menuService } from "./../../src/services/menu_service";
 
-
 const { Component, mount, tags } = owl;
 const { xml } = tags;
 

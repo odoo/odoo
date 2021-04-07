@@ -3,16 +3,17 @@
 import { browser } from "../../src/core/browser";
 import { Registry } from "../../src/core/registry";
 import {
-  ClientErrorDialog, Error504Dialog, ErrorDialog,
+  ClientErrorDialog,
+  Error504Dialog,
+  ErrorDialog,
   RedirectWarningDialog,
   SessionExpiredDialog,
-  WarningDialog
+  WarningDialog,
 } from "../../src/errors/error_dialogs";
 import OdooError from "../../src/errors/odoo_error";
 import { uiService } from "../../src/services/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, nextTick, patchWithCleanup } from "../helpers/utils";
-
 
 const { Component, mount, tags } = owl;
 let target;

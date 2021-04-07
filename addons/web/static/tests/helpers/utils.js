@@ -28,7 +28,7 @@ export function patchDate(year, month, day, hours, minutes, seconds) {
 let nextId = 1;
 
 /**
- * 
+ *
  * @param {Object} obj object to patch
  * @param {Object} patchValue the actual patch description
  * @param {{pure?: boolean}} [options]
@@ -38,7 +38,7 @@ export function patchWithCleanup(obj, patchValue, options) {
   patch(obj, patchName, patchValue, options);
   registerCleanup(() => {
     unpatch(obj, patchName);
-  })
+  });
 }
 
 export function getFixture() {

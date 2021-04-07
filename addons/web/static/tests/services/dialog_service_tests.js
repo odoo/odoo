@@ -12,7 +12,6 @@ import { click, getFixture, nextTick } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
 
-
 let env;
 let serviceRegistry;
 let target;

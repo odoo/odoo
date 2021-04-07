@@ -4,11 +4,7 @@ import { Registry } from "../../src/core/registry";
 import { makeEnv } from "../../src/env";
 import { registerCleanup } from "./cleanup";
 import { makeMockServer } from "./mock_server";
-import {
-  makeFakeLocalizationService, makeFakeUIService,
-  mocks
-} from "./mock_services";
-
+import { makeFakeLocalizationService, makeFakeUIService, mocks } from "./mock_services";
 
 function makeTestConfig(config = {}) {
   const serviceRegistry = config.serviceRegistry || new Registry();

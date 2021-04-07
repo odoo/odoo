@@ -8,7 +8,6 @@ import { patch, unpatch } from "../../src/utils/patch";
 import { makeTestEnv } from "../helpers/mock_env";
 import { getFixture, nextTick } from "../helpers/utils";
 
-
 const { Component, mount, tags } = owl;
 const { xml } = tags;
 

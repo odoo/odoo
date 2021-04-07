@@ -364,18 +364,17 @@
     }, 9999);
   });
 
-
   /**
    * Visit the list of jobs, and return the first found cycle, if any
    *
-   * @param {any[]} jobs 
+   * @param {any[]} jobs
    * @returns {null | string} either a string describing a cycle, or null
    */
   function findCycle(jobs) {
     // build dependency graph
     const dependencyGraph = new Map();
     for (let job of jobs) {
-      dependencyGraph.set(job.name, job.dependencies)
+      dependencyGraph.set(job.name, job.dependencies);
     }
 
     // helpers
@@ -393,13 +392,16 @@
       if (visited.has(job)) {
         const jobs = Array.from(visited).concat([job]);
         const index = jobs.indexOf(job);
-        return jobs.slice(index).map(j => `"${j}"`).join(' => ');
+        return jobs
+          .slice(index)
+          .map((j) => `"${j}"`)
+          .join(" => ");
       }
       const deps = dependencyGraph.get(job);
       return deps ? visitJobs(deps, new Set(visited).add(job)) : null;
     }
 
     // visit each root to find cycles
-    return visitJobs(jobs.map(j => j.name));
+    return visitJobs(jobs.map((j) => j.name));
   }
 })();

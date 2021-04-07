@@ -7,7 +7,6 @@ import { patchWithCleanup } from "./helpers/utils";
 
 const { whenReady, loadFile } = owl.utils;
 
-
 owl.config.enableTransitions = false;
 owl.QWeb.dev = true;
 
@@ -64,5 +63,3 @@ export async function setupTests() {
   window.__ODOO_TEMPLATES__ = templates;
   await Promise.all([whenReady(), legacyProm]);
 }
-
-

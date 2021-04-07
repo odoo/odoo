@@ -5,12 +5,11 @@ import {
   parseHash,
   parseSearchQuery,
   redirect,
-  routeToUrl
+  routeToUrl,
 } from "../../src/services/router_service";
 import { patch, unpatch } from "../../src/utils/patch";
 import { makeTestEnv } from "../helpers/mock_env";
 import { nextTick } from "../helpers/utils";
-
 
 QUnit.module("Router");
 

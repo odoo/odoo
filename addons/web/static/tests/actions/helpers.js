@@ -8,10 +8,7 @@ import { makeLegacyActionManagerService, mapLegacyEnvToWowlEnv } from "../../src
 import { WebClient } from "../../src/webclient/webclient";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
-import {
-  makeTestServiceRegistry,
-  makeTestViewRegistry
-} from "../helpers/mock_registries";
+import { makeTestServiceRegistry, makeTestViewRegistry } from "../helpers/mock_registries";
 import { getFixture, legacyExtraNextTick, nextTick, patchWithCleanup } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
@@ -56,7 +53,7 @@ export async function createWebClient(params) {
     mockRPC,
   });
   const WebClientClass = params.WebClientClass || WebClient;
-  const target = (params && params.target) ? params.target : getFixture();
+  const target = params && params.target ? params.target : getFixture();
   const wc = await mount(WebClientClass, { env, target });
   registerCleanup(() => {
     for (const controller of controllers) {
@@ -181,9 +178,9 @@ export function getActionManagerTestConfig() {
   const menus = {
     root: { id: "root", children: [0, 1, 2], name: "root", appID: "root" },
     // id:0 is a hack to not load anything at webClient mount
-    0: { id: 0, children: [], name: "UglyHack", appID: 0, xmlid: 'menu_0' },
-    1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: 'menu_1' },
-    2: { id: 2, children: [], name: "App2", appID: 2, actionID: 1002, xmlid: 'menu_2' },
+    0: { id: 0, children: [], name: "UglyHack", appID: 0, xmlid: "menu_0" },
+    1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" },
+    2: { id: 2, children: [], name: "App2", appID: 2, actionID: 1002, xmlid: "menu_2" },
   };
   const actionsArray = [
     {

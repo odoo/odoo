@@ -33,6 +33,5 @@ QUnit.module("Components", (hooks) => {
     const parent = await mount(Parent, { env, target });
     assert.containsOnce(target, "div.custom-checkbox");
     assert.strictEqual(parent.el.innerText, "rugubudubudubu");
-
   });
 });

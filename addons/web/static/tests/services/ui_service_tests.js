@@ -6,7 +6,6 @@ import { BlockUI } from "../../src/webclient/block_ui/block_ui";
 import { makeTestEnv } from "../helpers/mock_env";
 import { getFixture, nextTick } from "../helpers/utils";
 
-
 const { mount } = owl;
 
 let target;
