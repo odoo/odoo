@@ -13,6 +13,7 @@ export function documentationItem(env) {
     callback: () => {
       browser.open(documentationURL, "_blank");
     },
+    sequence: 10,
   };
 }
 
@@ -25,6 +26,7 @@ export function supportItem(env) {
     callback: () => {
       browser.open(buyEnterpriseURL, "_blank");
     },
+    sequence: 20,
   };
 }
 
@@ -39,12 +41,14 @@ export function shortCutsItem(env) {
       const title = env._t("Shortcuts");
       env.services.dialog.open(ShortCutsDialog, { title });
     },
+    sequence: 30,
   };
 }
 
 export function separator(env) {
   return {
     type: "separator",
+    sequence: 40,
   };
 }
 
@@ -53,10 +57,11 @@ export function preferencesItem(env) {
     type: "item",
     description: env._t("Preferences"),
     callback: async function () {
-      const actionDescription = await env.services.orm.call("res.users", "action_get");
+      const actionDescription = await env.services.model("res.users").call("action_get");
       actionDescription.res_id = env.services.user.userId;
       env.services.action.doAction(actionDescription);
     },
+    sequence: 50,
   };
 }
 
@@ -74,6 +79,7 @@ export function odooAccountItem(env) {
           browser.location.href = "https://accounts.odoo.com/account";
         });
     },
+    sequence: 60,
   };
 }
 
@@ -86,5 +92,6 @@ export function logOutItem(env) {
     callback: () => {
       browser.location.href = route;
     },
+    sequence: 70,
   };
 }

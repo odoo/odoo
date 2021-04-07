@@ -17,10 +17,10 @@ import {
 export const userMenuRegistry = (odoo.userMenuRegistry = new Registry());
 
 userMenuRegistry
-  .add("documentation", documentationItem, {sequence: 10})
-  .add("support", supportItem, {sequence: 20})
-  .add("shortcuts", shortCutsItem, {sequence: 30})
-  .add("separator", separator, {sequence: 40})
-  .add("profile", preferencesItem, {sequence: 50})
-  .add("odoo_account", odooAccountItem, {sequence: 60})
-  .add("log_out", logOutItem, {sequence: 70});
+  .add("documentation", documentationItem)
+  .add("support", supportItem)
+  .add("shortcuts", shortCutsItem)
+  .add("separator", separator)
+  .add("profile", preferencesItem)
+  .add("odoo_account", odooAccountItem)
+  .add("log_out", logOutItem);

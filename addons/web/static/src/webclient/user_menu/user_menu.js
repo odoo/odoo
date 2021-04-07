@@ -19,8 +19,14 @@ export class UserMenu extends Component {
   }
 
   getElements() {
-    const sortedItems = odoo.userMenuRegistry.getAll()
-      .map((element) => element(this.env));
+    const sortedItems = odoo.userMenuRegistry
+      .getAll()
+      .map((element) => element(this.env))
+      .sort((x, y) => {
+        const xSeq = x.sequence ? x.sequence : 100;
+        const ySeq = y.sequence ? y.sequence : 100;
+        return xSeq - ySeq;
+      });
     return sortedItems;
   }
 
