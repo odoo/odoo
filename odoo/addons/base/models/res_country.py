@@ -5,6 +5,7 @@ import re
 import logging
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.exceptions import UserError
 from psycopg2 import IntegrityError
 from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
@@ -120,6 +121,15 @@ class Country(models.Model):
                 code = FLAG_MAPPING.get(country.code, country.code.lower())
                 country.image_url = "/base/static/img/country_flags/%s.png" % code
 
+    @api.constrains('address_format')
+    def _check_address_format(self):
+        for record in self:
+            if record.address_format:
+                address_fields = self.env['res.partner']._formatting_address_fields() + ['state_code', 'state_name', 'country_code', 'country_name', 'company_name']
+                try:
+                    record.address_format % {i: 1 for i in address_fields}
+                except (ValueError, KeyError):
+                    raise UserError(_('The layout contains an invalid format key'))
 
 class CountryGroup(models.Model):
     _description = "Country Group"
