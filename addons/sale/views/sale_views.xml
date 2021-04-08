@@ -275,8 +275,8 @@
                     <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
                         type="action" context="{'default_advance_payment_method': 'percentage'}"
                         attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
-                    <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
-                    <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice"
+                    <button name="action_send_quotation" string="Send by Email" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_send_quotation" type="object" string="Send PRO-FORMA Invoice"
                       groups="sale.group_proforma_sales" class="btn-primary"
                       attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="action_confirm" id="action_confirm"
@@ -285,8 +285,8 @@
                     <button name="action_confirm"
                         string="Confirm" type="object"
                         attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
-                    <button name="action_quotation_send" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
-                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
+                    <button name="action_send_quotation" type="object" string="Send PRO-FORMA Invoice" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
+                    <button name="action_send_quotation" string="Send by Email" type="object" states="sent,sale"/>
                     <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'not in', ['draft', 'sent','sale']), ('id', '=', False)]}"/>
                     <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
@@ -891,6 +891,15 @@
             <field name="binding_view_types">form,list</field>
             <field name="state">code</field>
             <field name="code">action = records.action_quotation_sent()</field>
+        </record>
+
+        <record id="model_sale_order_action_send_quotations" model="ir.actions.server">
+            <field name="name">Send Quotations by Email</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_send_quotation()</field>
         </record>
 
         <menuitem id="menu_sale_invoicing"

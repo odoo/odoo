@@ -92,7 +92,7 @@ class TestSaleOrder(TestSaleCommon):
         self.sale_order.order_line._compute_product_updatable()
         self.assertTrue(self.sale_order.order_line[0].product_updatable)
         # send quotation
-        email_act = self.sale_order.action_quotation_send()
+        email_act = self.sale_order.action_send_quotation()
         email_ctx = email_act.get('context', {})
         self.sale_order.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
         self.assertTrue(self.sale_order.state == 'sent', 'Sale: state after sending is wrong')
@@ -159,7 +159,7 @@ class TestSaleOrder(TestSaleCommon):
                 'price_unit': self.company_data['product_order_no'].list_price,
             }]]
         })
-        email_ctx = sale_order.action_quotation_send().get('context', {})
+        email_ctx = sale_order.action_send_quotation().get('context', {})
         # We need to prevent auto mail deletion, and so we copy the template and send the mail with
         # added configuration in copied template. It will allow us to check whether mail is being
         # sent to to author or not (in case author is present in 'Recipients' of composer).

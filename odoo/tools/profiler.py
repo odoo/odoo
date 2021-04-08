@@ -109,7 +109,7 @@ def profile(method=None, whitelist=None, blacklist=(None,), files=None,
             def unlink(self):
             ...
             @profile(whitelist=['sale.order', 'ir.model.data'])
-            def action_quotation_send(self):
+            def action_send_quotation(self):
             ...
             @profile(files=['/home/openerp/odoo/odoo/addons/sale/models/sale.py'])
             def write(self):

@@ -112,7 +112,7 @@ tour.register("sale_quote_tour", {
         position: "right",
         run: "text 10.0"
     },
-    ...tour.stepUtils.statusbarButtonsSteps("Send by Email", _t("<b>Send the quote</b> to yourself and check what the customer will receive."), ".o_statusbar_buttons button[name='action_quotation_send']"),
+    ...tour.stepUtils.statusbarButtonsSteps("Send by Email", _t("<b>Send the quote</b> to yourself and check what the customer will receive."), ".o_statusbar_buttons button[name='action_send_quotation']"),
     {
         trigger: ".modal-footer button.btn-primary",
         auto: true,

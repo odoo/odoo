@@ -49,11 +49,11 @@
                 <field name="is_abandoned_cart" invisible="1"/>
                 <field name="cart_recovery_email_sent" invisible="1"/>
             </xpath>
-            <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="attributes">
+            <xpath expr="//button[@name='action_send_quotation' and @states='draft']" position="attributes">
                 <!-- The '| and the '&amp' opertors are necessary because draft state of the parent concatenate the domain -->
                 <attribute name="attrs">{'invisible': ['|','&amp;',('is_abandoned_cart', '=', True), ('cart_recovery_email_sent', '=', False)]}</attribute>
             </xpath>
-            <xpath expr="//button[@name='action_quotation_send']" position="after">
+            <xpath expr="//button[@name='action_send_quotation']" position="after">
                 <button name="action_recovery_email_send"
                     string="Send a Recovery Email"
                     type="object"

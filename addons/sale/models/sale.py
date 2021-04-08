@@ -831,35 +831,54 @@ Reason(s) of this behavior could be:
 
         return template_id
 
-    def action_quotation_send(self):
-        ''' Opens a wizard to compose an email, with relevant mail template loaded by default '''
-        self.ensure_one()
-        template_id = self._find_mail_template()
-        lang = self.env.context.get('lang')
-        template = self.env['mail.template'].browse(template_id)
-        if template.lang:
-            lang = template._render_lang(self.ids)[self.id]
-        ctx = {
-            'default_model': 'sale.order',
-            'default_res_id': self.ids[0],
-            'default_use_template': bool(template_id),
-            'default_template_id': template_id,
-            'default_composition_mode': 'comment',
-            'mark_so_as_sent': True,
-            'custom_layout': "mail.mail_notification_paynow",
-            'proforma': self.env.context.get('proforma', False),
-            'force_email': True,
-            'model_description': self.with_context(lang=lang).type_name,
-        }
+    def action_send_quotation(self):
+        ''' Opens a wizard to compose an email, with relevant mail template loaded by default.
+        If there is more than one email selected, create a batch of emails to send at once, using the chosen template. '''
+        if len(self) == 0:
+            raise UserError('You have to select at least one quotation.')
+        if len(self) == 1:
+            template_id = self._find_mail_template()
+            lang = self.env.context.get('lang')
+            template = self.env['mail.template'].browse(template_id)
+            if template.lang:
+                lang = template._render_lang(self.ids)[self.id]
+            ctx = {
+                'default_model': 'sale.order',
+                'default_res_id': self.ids[0],
+                'default_use_template': bool(template_id),
+                'default_template_id': template_id,
+                'default_composition_mode': 'comment',
+                'mark_so_as_sent': True,
+                'custom_layout': "mail.mail_notification_paynow",
+                'proforma': self.env.context.get('proforma', False),
+                'force_email': True,
+                'model_description': self.with_context(lang=lang).type_name,
+            }
+            return {
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'mail.compose.message',
+                'views': [(False, 'form')],
+                'view_id': False,
+                'target': 'new',
+                'context': ctx,
+            }
+
+        ctx={}
+        for record in self:
+            pass
+            # TODO : adding each record to the ctx
         return {
-            'type': 'ir.actions.act_window',
+            'type': 'ir.action.act_window',
             'view_mode': 'form',
-            'res_model': 'mail.compose.message',
+            'res_model': '', # TODO : create new model
             'views': [(False, 'form')],
             'view_id': False,
             'target': 'new',
             'context': ctx,
         }
+
+
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
