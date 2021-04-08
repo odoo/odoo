@@ -396,6 +396,25 @@ const Wysiwyg = Widget.extend({
         this.odooEditor.historyRedo();
     },
     /**
+     * Focus inside the editor.
+     *
+     * Set cursor to the editor latest position before blur or to the last editable node, ready to type.
+     */
+    focus: function () {
+        if(!this.odooEditor.resetCursorOnLastHistoryCursor()) {
+            // If the editor don't have an history step to focus to,
+            // We place the cursor after the end of the editor exiting content.
+            const range = document.createRange();
+            const elementToTarget = this.$editable[0].lastElementChild ? this.$editable[0].lastElementChild : this.$editable[0];
+            range.selectNodeContents(elementToTarget);
+            range.collapse();
+
+            const selection = this.odooEditor.document.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    },
+    /**
      * Start or resume the Odoo field changes muation observers.
      *
      * Necessary to keep all copies of a given field at the same value throughout the page.
