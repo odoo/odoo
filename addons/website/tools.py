@@ -65,7 +65,8 @@ def werkzeugRaiseNotFound(*args, **kwargs):
 def MockRequest(
         env, *, routing=True, multilang=True,
         context=None,
-        cookies=None, country_code=None, website=None, sale_order_id=None
+        cookies=None, country_code=None, website=None, sale_order_id=None,
+        website_sale_current_pl=None,
 ):
     router = MagicMock()
     match = router.return_value.bind.return_value.match
@@ -102,6 +103,7 @@ def MockRequest(
             geoip={'country_code': country_code},
             debug=False,
             sale_order_id=sale_order_id,
+            website_sale_current_pl=website_sale_current_pl,
         ),
         website=website
     )

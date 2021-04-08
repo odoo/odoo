@@ -43,6 +43,7 @@ class Coupon(models.Model):
         return message
 
     def _get_default_template(self):
-        if self.order_id:
+        default_template = super()._get_default_template()
+        if not default_template:
             return self.env.ref('sale_coupon.mail_template_sale_coupon', False)
-        return super()._get_default_template()
+        return default_template
