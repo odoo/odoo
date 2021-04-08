@@ -19,10 +19,7 @@
             'bus/static/src/js/services/bus_service.js',
         ],
         'web.qunit_suite_tests': [
-            'bus/static/tests/bus_tests.js',
-        ],
-        'web.assets_tests': [
-            'bus/static/tests/bus_tests_tour.js',
+            'bus/static/tests/*.js',
         ],
     }
 }

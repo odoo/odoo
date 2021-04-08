@@ -36,7 +36,8 @@ class BusWebTests(odoo.tests.HttpCase):
 
         self.patch(type(self.env['bus.bus']), 'sendone', patched_sendone)
 
-        self.start_tour('/web', "bundle_changed_notification", login='admin', timeout=180)
+        self.authenticate('admin', 'admin')
+        self.url_open('/web')
 
         # One sendone for each asset bundle and for each CSS / JS
         self.assertEqual(

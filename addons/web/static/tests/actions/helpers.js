@@ -52,6 +52,8 @@ export async function createWebClient(params) {
     ...params.testConfig,
     mockRPC,
   });
+  addLegacyMockEnvironment(env, params.testConfig, params.legacyParams);
+
   const WebClientClass = params.WebClientClass || WebClient;
   const target = params && params.target ? params.target : getFixture();
   const wc = await mount(WebClientClass, { env, target });
@@ -64,7 +66,6 @@ export async function createWebClient(params) {
     wc.destroy();
   });
   wc._____testname = QUnit.config.current.testName;
-  addLegacyMockEnvironment(wc, params.testConfig, params.legacyParams);
   await legacyExtraNextTick();
   return wc;
 }
@@ -72,19 +73,19 @@ export async function createWebClient(params) {
 /**
  * Remove this as soon as we drop the legacy support
  */
-function addLegacyMockEnvironment(comp, testConfig, legacyParams = {}) {
+function addLegacyMockEnvironment(env, testConfig, legacyParams = {}) {
   const legacy = getLegacy();
   // setup a legacy env
   const dataManager = Object.assign(
     {
       load_action: (actionID, context) => {
-        return comp.env.services.rpc("/web/action/load", {
+        return env.services.rpc("/web/action/load", {
           action_id: actionID,
           additional_context: context,
         });
       },
       load_views: async (params, options) => {
-        const result = await comp.env.services.rpc(`/web/dataset/call_kw/${params.model}`, {
+        const result = await env.services.rpc(`/web/dataset/call_kw/${params.model}`, {
           args: [],
           kwargs: {
             context: params.context,
@@ -114,9 +115,20 @@ function addLegacyMockEnvironment(comp, testConfig, legacyParams = {}) {
     },
     legacyParams.dataManager
   );
+
   const legacyEnv = legacy.makeTestEnvironment({ dataManager, bus: legacy.core.bus });
+
+  if (legacyParams.serviceRegistry) {
+    const legacyServiceMap = legacy.core.serviceRegistry.map;
+    legacy.core.serviceRegistry.map = legacyParams.serviceRegistry.map;
+    legacy.AbstractService.prototype.deployServices(legacyEnv);
+    registerCleanup(() => {
+      legacy.core.serviceRegistry.map = legacyServiceMap;
+    });
+  }
+
   Component.env = legacyEnv;
-  mapLegacyEnvToWowlEnv(legacyEnv, comp.env);
+  mapLegacyEnvToWowlEnv(legacyEnv, env);
   // deploy the legacyActionManagerService (in Wowl env)
   const legacyActionManagerService = makeLegacyActionManagerService(legacyEnv);
   testConfig.serviceRegistry.add("legacy_action_manager", legacyActionManagerService);

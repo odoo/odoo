@@ -5,6 +5,7 @@ odoo.define("web.test_legacy", async (require) => {
     const session = require("web.session");
     await session.is_bound; // await for templates from server
     Object.assign(legacyExports, {
+      AbstractService: require("web.AbstractService"),
       makeTestEnvironment: require("web.test_env"),
       testUtils: require("web.test_utils"),
       basicFields: require("web.basic_fields"),

@@ -178,7 +178,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/service_provider_adapter.js',
             'web/static/src/legacy/legacy_client_actions.js',
             'web/static/src/legacy/legacy_dialog.js',
-            'web/static/src/legacy/legacy_setup.js',
             'web/static/src/legacy/legacy_views.js',
             'web/static/src/legacy/root_widget.js',
             'web/static/src/legacy/systray_menu.js',
@@ -256,6 +255,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.assets_backend_prod_only': [
             'web/static/src/main.js',
+            'web/static/src/legacy/legacy_setup.js',
         ],
         # Optional Bundle for PDFJS lib
         # Since PDFJS is quite huge (80000≈ lines), please only load it when it is necessary.
