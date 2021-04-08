@@ -246,6 +246,21 @@ class Track(models.Model):
             if track.partner_id:
                 track.contact_phone = track.partner_id.phone
 
+    @api.depends('partner_name', 'partner_function', 'partner_company_name')
+    def _compute_partner_tag_line(self):
+        for track in self:
+            tag_line = False
+            if track.partner_name:
+                tag_line = track.partner_name
+                if track.partner_function:
+                    tag_line = '%s, %s' % (tag_line, track.partner_function)
+                    if track.partner_company_name:
+                        tag_line = _('%s at %s', tag_line, track.partner_company_name)
+                else:
+                    if track.partner_company_name:
+                        tag_line = _('%s from %s', tag_line, track.partner_company_name)
+            track.partner_tag_line = tag_line
+
     # TIME
 
     @api.depends('date', 'duration')
