@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from freezegun import freeze_time
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -1761,3 +1763,34 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             {'amount_currency': 96.0,   'debit': 48.0,  'credit': 0.0,      'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
             {'amount_currency': -96.0,  'debit': 0.0,   'credit': 48.0,     'account_id': wizard.expense_accrual_account.id,        'reconciled': True},
         ])
+
+    def test_in_invoice_copy(self):
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2016-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, self.product_line_vals_1),
+            ]
+        })
+        self.assertEqual([move.amount_total, move.amount_total_signed], [920.0, -306.67])
+        self.assertEqual(
+            move.line_ids.filtered(lambda l: l.account_internal_type == 'payable').date,
+            fields.Date.from_string('2016-01-01'),
+        )
+
+        with freeze_time('2019-01-01'):
+            copied = move.copy()
+        self.assertEqual(copied.invoice_date, False)
+        with self.assertRaises(UserError):
+            # we need to set the invoice_date before posting so the following values will be updated
+            copied.action_post()
+        with Form(copied) as move_form:
+            move_form.invoice_date = move_form.date
+        self.assertEqual([copied.amount_total, copied.amount_total_signed], [920.0, -460])
+        self.assertEqual(
+            copied.line_ids.filtered(lambda l: l.account_internal_type == 'payable').date,
+            fields.Date.from_string('2019-01-01'),
+        )
