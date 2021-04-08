@@ -35,7 +35,9 @@ WILDCARD_CHARACTERS = {'*', "?", "[", "]"}
 
 def fs2web(path):
     """Converts a file system path to a web path"""
-    return '/'.join(os.path.split(path))
+    if os.path.sep == '/':
+        return path
+    return '/'.join(path.split(os.path.sep))
 
 def can_aggregate(url):
     parsed = urls.url_parse(url)
@@ -347,8 +349,10 @@ class IrAsset(models.Model):
                 except (ValueError, FileNotFoundError):
                     return False
                 if path.rpartition('.')[2] in TEMPLATE_EXTENSIONS:
+                    # normpath will strip the trailing /, which is why it has to be added afterwards
+                    static_path = os.path.normpath("%s/static" % addon) + os.path.sep
                     # Forbid xml to leak
-                    return ("%s/static/" % addon) in path
+                    return static_path in path
                 return True
 
             len_paths = len(paths)
@@ -359,7 +363,7 @@ class IrAsset(models.Model):
             # files are read from the file system. But web assets (scripts and
             # stylesheets) must be loaded using relative paths, hence the trimming
             # for non-xml file paths.
-            paths = [path if path.split('.')[-1] in TEMPLATE_EXTENSIONS else path[len(addons_path):] for path in paths]
+            paths = [path if path.split('.')[-1] in TEMPLATE_EXTENSIONS else fs2web(path[len(addons_path):]) for path in paths]
 
         else:
             addon = None
