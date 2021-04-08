@@ -877,8 +877,27 @@ Reason(s) of this behavior could be:
             'target': 'new',
             'context': ctx,
         }
-
-
+    
+    def action_send_and_print(self):
+        template_id = self[0]._find_mail_template()
+        dictionnaire = {
+            'name': _('Send Invoice'),
+            'res_model': 'sale.quotation.send',
+            'view_mode': 'form',
+            'context': {
+                'default_template_id': template_id,
+                'mark_so_as_sent': True,
+                'active_model': 'sale.order',
+                # Setting both active_id and active_ids is required, mimicking how direct call to
+                # ir.actions.act_window works
+                'active_id': self.ids[0],
+                'active_ids': self.ids,
+            },
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
+        import ipdb; ipdb.set_trace()
+        return dictionnaire
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):

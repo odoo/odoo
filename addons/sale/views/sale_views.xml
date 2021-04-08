@@ -893,15 +893,6 @@
             <field name="code">action = records.action_quotation_sent()</field>
         </record>
 
-        <record id="model_sale_order_action_send_quotations" model="ir.actions.server">
-            <field name="name">Send Quotations by Email</field>
-            <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="binding_model_id" ref="sale.model_sale_order"/>
-            <field name="binding_view_types">list</field>
-            <field name="state">code</field>
-            <field name="code">action = records.action_send_quotation()</field>
-        </record>
-
         <menuitem id="menu_sale_invoicing"
             name="To Invoice"
             parent="sale_menu_root"
