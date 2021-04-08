@@ -428,7 +428,7 @@
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
                 <kanban create="false" class="o_theme_kanban" default_order="state,sequence,name" js_class="theme_preview_kanban">
-                    <field name="icon"/>
+                    <field name="summary"/>
                     <field name="name"/>
                     <field name="state"/>
                     <field name="url"/>
@@ -456,12 +456,11 @@
                                 </div>
                             </div>
                             <div class="o_theme_preview_bottom clearfix">
-                                <h5 t-if="record.display_name.value" class="text-uppercase float-left">
-                                    <img class="float-left mr4"  t-att-src="record.icon.value" height="16" width="16" alt="Theme preview"/>
-                                    <b><t t-esc="record.display_name.value.replace(('Theme'), '').replace(('theme'), '')"/></b>
+                                <h5 t-if="record.summary.value" class="text-uppercase float-left">
+                                    <b><t t-esc="record.summary.value.split(',')[0]"/></b>
                                 </h5>
-                                <h6 t-if="record.category_id.value" class="text-muted float-right">
-                                    <b><t t-esc="record.category_id.value"/></b>
+                                <h6 t-if="record.display_name.value" class="text-muted float-right">
+                                    <b><t t-esc="record.display_name.value.replace('Theme', '').replace('theme', '')"/></b>
                                 </h6>
                             </div>
                         </div>
