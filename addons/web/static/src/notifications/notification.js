@@ -2,25 +2,13 @@
 
 import { useService } from "../core/hooks";
 
-const { Component } = owl;
+const { Component, hooks } = owl;
 
 export class Notification extends Component {
   setup() {
     this.notificationService = useService("notification");
-  }
-
-  get icon() {
-    switch (this.props.type) {
-      case "danger":
-        return "fa-exclamation";
-      case "warning":
-        return "fa-lightbulb-o";
-      case "success":
-        return "fa-check";
-      case "info":
-        return "fa-info";
-      default:
-        return this.props.icon;
+    if (this.props.onClose) {
+      hooks.onWillUnmount(() => this.props.onClose());
     }
   }
 
@@ -55,7 +43,6 @@ Notification.props = {
     validate: (t) => ["warning", "danger", "success", "info"].includes(t),
   },
   className: { type: String, optional: true },
-  icon: { type: String, optional: true },
   buttons: {
     type: Array,
     element: {
@@ -64,9 +51,11 @@ Notification.props = {
         name: { type: String },
         icon: { type: String, optional: true },
         primary: { type: Boolean, optional: true },
+        onClick: Function,
       },
     },
   },
+  onClose: { type: Function, optional: true },
 };
 Notification.defaultProps = {
   buttons: [],

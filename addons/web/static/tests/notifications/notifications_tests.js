@@ -34,7 +34,10 @@ QUnit.test("can display a basic notification", async (assert) => {
   await nextTick();
   assert.containsOnce(target, ".o_notification");
   const notif = target.querySelector(".o_notification");
-  assert.strictEqual(notif.textContent, "I'm a basic notification");
+  assert.strictEqual(
+    notif.querySelector(".o_notification_content").textContent,
+    "I'm a basic notification"
+  );
   assert.hasClass(notif, "bg-warning");
 });
 
@@ -47,7 +50,10 @@ QUnit.test("can display a notification of type danger", async (assert) => {
   await nextTick();
   assert.containsOnce(target, ".o_notification");
   const notif = target.querySelector(".o_notification");
-  assert.strictEqual(notif.textContent, "I'm a danger notification");
+  assert.strictEqual(
+    notif.querySelector(".o_notification_content").textContent,
+    "I'm a danger notification"
+  );
   assert.hasClass(notif, "bg-danger");
 });
 
@@ -60,13 +66,61 @@ QUnit.test("can display a danger notification with a title", async (assert) => {
   await nextTick();
   assert.containsOnce(target, ".o_notification");
   const notif = target.querySelector(".o_notification");
-  assert.strictEqual(notif.querySelector(".o_notification_header").textContent, "Some title");
+  assert.strictEqual(notif.querySelector(".o_notification_title").textContent, "Some title");
   assert.strictEqual(
-    notif.querySelector(".o_notification_body").textContent,
+    notif.querySelector(".o_notification_content").textContent,
     "I'm a danger notification"
   );
   assert.hasClass(notif, "bg-danger");
-  assert.hasClass(notif.querySelector(".o_notification_icon"), "fa-exclamation");
+});
+
+QUnit.test("can display a notification with a button", async (assert) => {
+  const env = await makeTestEnv({ serviceRegistry });
+  const notifService = env.services.notification;
+  await mount(NotificationContainer, { env, target });
+
+  notifService.create("I'm a notification with button", {
+    buttons: [
+      {
+        name: "I'm a button",
+        primary: true,
+        onClick: () => {
+          assert.step("Button clicked");
+        },
+      },
+    ],
+  });
+  await nextTick();
+  assert.containsOnce(target, ".o_notification");
+  const notif = target.querySelector(".o_notification");
+  assert.strictEqual(notif.querySelector(".o_notification_buttons").textContent, "I'm a button");
+  await click(notif, ".btn-primary");
+  assert.verifySteps(["Button clicked"]);
+  assert.containsOnce(
+    target,
+    ".o_notification",
+    "Clicking on a button shouldn't close automatically the notification"
+  );
+});
+
+QUnit.test("can display a notification with a callback when closed", async (assert) => {
+  const env = await makeTestEnv({ serviceRegistry });
+  const notifService = env.services.notification;
+  await mount(NotificationContainer, { env, target });
+
+  notifService.create("I'm a sticky notification", {
+    sticky: true,
+    onClose: () => {
+      assert.step("Notification closed");
+    },
+  });
+  await nextTick();
+  assert.containsOnce(target, ".o_notification");
+
+  // close by clicking on the close icon
+  await click(target, ".o_notification .o_notification_close");
+  assert.verifySteps(["Notification closed"]);
+  assert.containsNone(target, ".o_notification");
 });
 
 QUnit.test("notifications aren't sticky by default", async (assert) => {
