@@ -35,34 +35,36 @@
                 position: relative;
 
                 .searchInput {
-                    height: 28px;
                     padding: 0px;
                     border: 0px;
-                    border-bottom: 1px solid gray('400');
-                    border-color: gray('700');
+                    max-width: 400px;
+                    border-bottom: 1px solid $border-color;
                     box-shadow: none;
-                    font-weight: 500;
+                    font-size: 18px;
                 }
 
                 .searchIcon {
                     @include o-position-absolute(4px, 0);
                     color: gray('700');
                 }
+
+                &:focus-within {
+                    .searchInput {
+                        border-bottom-color: $primary;
+                    }
+                }
+
+                @include media-breakpoint-up(md) {
+                    transform: translateY(50%);
+                    z-index: 1;
+                }
             }
         }
 
         .o_form_statusbar {
             padding: 0;
-            margin: 5px 0px;
+            margin: 0;
             border: 0;
-
-            .btn-primary, .btn-link  {
-                padding: $btn-padding-y-sm $btn-padding-x-sm;
-            }
-
-            .btn-link {
-                @include o-hover-text-color($link-color, $link-hover-color);
-            }
         }
     }
 
@@ -78,15 +80,10 @@
             flex-flow: column nowrap;
             background: gray('900');
             overflow: auto;
-            padding-top: $o-horizontal-padding*0.5;
 
             .selected {
-                background-color: gray('900');
-                box-shadow: inset 3px 0 0 $o-brand-primary;
-
-                .app_name {
-                    color: white;
-                }
+                background-color: gray('800');
+                box-shadow: inset 2px 0 0 $o-brand-primary;
             }
 
             .tab {
@@ -104,6 +101,10 @@
                     min-width: 23px;
                     margin-right: 10px;
                 }
+
+                &:hover, &.selected {
+                    color: white;
+                }
             }
         }
 
@@ -114,40 +115,39 @@
             overflow: auto;
 
             > .app_settings_block {
+                &:not(.o_hidden) {
+                    padding-bottom: 30px;
+                }
+
                 h2 {
-                    margin-bottom: 0;
-                    @include o-base-settings-horizontal-padding;
+                    margin: 0 0 !important;
+                    @include o-base-settings-horizontal-padding(.4rem);
                     background-color: gray('200');
                     font-size: 15px;
-                    font-weight: bold;
 
-                    &:first-of-type {
-                        // Necessary to overwrite mt32 class
-                        margin-top: 10px!important;
+                    &.o_invisible_modifier + .o_settings_container {
+                        display: none;
                     }
                 }
 
                 .o_settings_container {
                     max-width: map-get($grid-breakpoints, lg); // Provide a maximum container size to ensure readability
                     @include o-base-settings-horizontal-padding(0);
+                    margin-bottom: 24px;
                 }
             }
 
             .settingSearchHeader {
                 display: flex;
-                margin: 30px 0 10px;
-                @include o-base-settings-horizontal-padding;
+                align-items: center;
+                margin-bottom: 10px;
+                @include o-base-settings-horizontal-padding(.8rem);
                 background-color: gray('200');
 
                 .icon {
-                    width: 25px;
-                    height: 25px;
+                    width: 1.4em;
+                    height: 1.4em;
                     margin-right: 10px;
-                }
-
-                .appName {
-                    color: $headings-color;
-                    font-size: 17px;
                 }
             }
 
