@@ -9,6 +9,8 @@
                 <field name="expiration_date"/>
                 <field name="program_id"/>
                 <field name="partner_id"/>
+                <button name="action_coupon_send" string="Send" type="object" icon="fa-paper-plane-o" attrs="{'invisible': [('state', 'not in', ['new', 'sent'])]}"/>
+                <button name="action_coupon_cancel" string="Cancel" type="object" icon="fa-times" attrs="{'invisible': [('state', '!=', 'new')]}"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -29,7 +31,7 @@
         <field name="arch" type="xml">
             <form string="Coupons" create="false" edit="false" delete="false">
                 <header>
-                    <button name="action_coupon_sent" type="object" string="Send by Email" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['new', 'sent'])]}"/>
+                    <button name="action_coupon_send" type="object" string="Send by Email" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['new', 'sent'])]}"/>
                     <button name="action_coupon_cancel" type="object" string="Cancel" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'new')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="new,sent,used,expired" context="{'state': state}"/>
                 </header>

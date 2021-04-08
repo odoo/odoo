@@ -52,7 +52,7 @@ class Coupon(models.Model):
     def _get_default_template(self):
         return False
 
-    def action_coupon_sent(self):
+    def action_coupon_send(self):
         """ Open a window to compose an email, with the edi invoice template
             message loaded by default
         """

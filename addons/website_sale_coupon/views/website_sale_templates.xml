@@ -6,6 +6,22 @@
         <attribute name="t-if">not line.is_reward_line</attribute>
     </xpath>
 </template>
+<template id="layout" inherit_id="website.layout">
+    <body position="inside">
+        <t t-set="coupon_error" t-value="request.params.get('coupon_error')"/>
+        <t t-set="pending_coupon_code" t-value="request.session.get('pending_coupon_code')"/>
+        <t t-if="coupon_error and pending_coupon_code">
+            <div class="d-none coupon-message coupon-error-message">
+                <span class="coupon-message-title">Could not apply the promo code: <t t-out="pending_coupon_code"/></span>
+                <span class="coupon-message-content" t-out="coupon_error"/>
+            </div>
+        </t>
+        <t t-set="notify_coupon" t-value="request.params.get('notify_coupon')"/>
+        <div t-if="notify_coupon" class="d-none coupon-message coupon-info-message">
+            <span class="coupon-message-content">The following promo code was applied on your order: <t t-out="notify_coupon"/></span>
+        </div>
+    </body>
+</template>
 <template id="sale_coupon_result" inherit_id="website_sale.coupon_form">
     <xpath expr="//form[@name='coupon_code']" position="after">
         <t t-if="website_sale_order and website_sale_order.applied_coupon_ids">
