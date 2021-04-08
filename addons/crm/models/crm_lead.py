@@ -353,7 +353,7 @@ class Lead(models.Model):
 
     def _inverse_email_from(self):
         for lead in self:
-            if lead.partner_id and lead.email_from != lead.partner_id.email:
+            if lead.partner_id and (lead.email_from or False) != (lead.partner_id.email or False):
                 # force reset
                 if not lead.email_from or not lead.partner_id.email:
                     lead.partner_id.email = lead.email_from
@@ -372,7 +372,7 @@ class Lead(models.Model):
 
     def _inverse_phone(self):
         for lead in self:
-            if lead.partner_id and lead.phone != lead.partner_id.phone:
+            if lead.partner_id and (lead.phone or False) != (lead.partner_id.phone or False):
                 # force reset
                 if not lead.phone or not lead.partner_id.phone:
                     lead.partner_id.phone = lead.phone
@@ -455,11 +455,11 @@ class Lead(models.Model):
     def _compute_ribbon_message(self):
         for lead in self:
             # beware: void user input gives '' which is different from False
-            lead_email_normalized = tools.email_normalize(lead.email_from) or (lead.email_from if lead.email_from else False)
-            partner_email_normalized = tools.email_normalize(lead.partner_id.email) or lead.partner_id.email
+            lead_email_normalized = tools.email_normalize(lead.email_from) or lead.email_from or False
+            partner_email_normalized = tools.email_normalize(lead.partner_id.email) or lead.partner_id.email or False
             will_write_email = lead_email_normalized != partner_email_normalized if lead.partner_id else False
             will_write_phone = False
-            if lead.partner_id and lead.phone != lead.partner_id.phone:
+            if lead.partner_id and (lead.phone or False) != (lead.partner_id.phone or False):
                 # if reset -> obviously new value will be propagated
                 if not lead.phone or not lead.partner_id.phone:
                     will_write_phone = True
