@@ -81,11 +81,11 @@
             }
             div.o_we_agenda_card_content {
                 height: 100%;
-                span {
-                    cursor: pointer;
-                }
                 .o_we_agenda_card_title, small {
                     word-break: break-word;
+                }
+                .badge:hover {
+                    cursor: pointer;
                 }
             }
             .badge {
@@ -180,6 +180,13 @@
 /*
  * EVENT TOOL: DATE
  */
-.o_wevent_event .o_we_track_day_header > div > span.h1 {
-    font-size: xx-large;
+.o_wevent_event {
+    .o_we_track_day_header {
+        & > div > span.h1 {
+            font-size: xx-large;
+        }
+        a.collapsed {
+            transform: rotate(-90deg);
+        }
+    }
 }

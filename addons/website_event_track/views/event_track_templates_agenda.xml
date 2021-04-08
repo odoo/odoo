@@ -174,14 +174,20 @@
         </div>
 
         <div class="o_we_agenda_card_content d-flex flex-column justify-content-center my-1">
-            <div t-att-class="'text-black' if track.website_published or is_event_user else 'text-muted'"
-                 t-att-onclick="'window.location=\'/event/%s/track/%s\'' % (slug(event), slug(track))
-                    if track.website_published or is_event_user else ''">
-                <span class="o_we_agenda_card_title text-bold" t-esc="track.name"/>
+            <div class="o_we_agenda_card_title">
+                <t t-if="track.website_published or is_event_user">
+                    <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-black text-bold">
+                        <t t-esc="track.name"/>
+                    </a>
+                </t>
+                <t t-else="">
+                    <span class="text-muted text-bold">
+                        <t t-esc="track.name"/>
+                    </span>
+                </t>
             </div>
-            <div class="text-muted text-center">
-                <small t-if="track.partner_id or track.partner_name">
-                    <t t-esc="track.partner_id.sudo().name or track.partner_name"/></small>
+            <div class="text-muted text-center" t-if="track.partner_tag_line">
+                <small t-esc="track.partner_tag_line"/>
             </div>
             <div class="d-flex justify-content-center flex-wrap">
                 <t t-foreach="track.tag_ids" t-as="tag">
