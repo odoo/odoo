@@ -11279,6 +11279,47 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('resize column with x2many list with several fields in form notebook', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.records[0].o2m = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Page 1">
+                                <field name="o2m">
+                                    <tree editable="bottom">
+                                        <field name="display_name"/>
+                                        <field name="display_name"/>
+                                        <field name="display_name"/>
+                                        <field name="display_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+        });
+
+        const th = form.el.getElementsByTagName('th')[0];
+        const resizeHandle = th.getElementsByClassName('o_resize')[0];
+        const listInitialWidth = form.el.querySelector('.o_list_view').offsetWidth;
+
+        await testUtils.dom.dragAndDrop(resizeHandle, form.el.getElementsByTagName('th')[1], { position: "right" });
+
+        assert.strictEqual(form.el.querySelector('.o_list_view').offsetWidth, listInitialWidth,
+            "resizing the column should not impact the width of list");
+
+        form.destroy();
+    });
+
     QUnit.test('enter edition in editable list with <widget>', async function (assert) {
         assert.expect(1);
 
