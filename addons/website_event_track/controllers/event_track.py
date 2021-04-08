@@ -121,6 +121,13 @@ class EventTrackController(http.Controller):
             tracks_announced = tracks_announced.sorted('wishlisted_by_default', reverse=True)
             tracks_by_day.append({'date': False, 'name': _('Coming soon'), 'tracks': tracks_announced})
 
+        for tracks_group in tracks_by_day:
+            # the tracks group is folded if all tracks are done (and if it's not "today")
+            tracks_group['default_collapsed'] = (today_tz != tracks_group['date']) and all(
+                track.is_track_done and not track.is_track_live
+                for track in tracks_group['tracks']
+            )
+
         # return rendering values
         return {
             # event information
