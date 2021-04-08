@@ -1003,6 +1003,11 @@ class Partner(models.Model):
     def _get_country_name(self):
         return self.country_id.name or ''
 
+    def _get_placeholder_filename(self, field=None):
+        if self.is_company:
+            return '/base/static/img/company_image.png'
+        return super()._get_placeholder_filename(field)
+
 
 class ResPartnerIndustry(models.Model):
     _description = 'Industry'
