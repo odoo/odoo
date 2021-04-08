@@ -1789,3 +1789,28 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         move.post()
         self.assertEquals(move.name, 'INV/2019/01/1')
+
+    def test_in_invoice_copy(self):
+        move = self.env['account.move'].create({
+            'type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2016-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, self.product_line_vals_1),
+            ]
+        })
+        self.assertEqual([move.amount_total, move.amount_total_signed], [920.0, -306.67])
+        self.assertEqual(
+            move.line_ids.filtered(lambda l: l.account_internal_type == 'payable').date,
+            fields.Date.from_string('2016-01-01'),
+        )
+
+        with self.mocked_today('2019-01-01'):
+            copied = move.copy()
+        self.assertEqual([copied.amount_total, copied.amount_total_signed], [920.0, -460])
+        self.assertEqual(
+            copied.line_ids.filtered(lambda l: l.account_internal_type == 'payable').date,
+            fields.Date.from_string('2019-01-01'),
+        )

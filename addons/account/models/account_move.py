@@ -1776,6 +1776,15 @@ class AccountMove(models.Model):
             move.line_ids.unlink()
         return super(AccountMove, self).unlink()
 
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        rec = super().copy(default)
+        # invoice_date is not copied but is the basis for currency rates and payment terms
+        if rec.invoice_date != self.invoice_date:
+            rec.with_context(check_move_validity=False)._onchange_invoice_date()
+            rec._check_balanced()
+        return rec
+
     @api.depends('name', 'state')
     def name_get(self):
         result = []
