@@ -167,7 +167,7 @@ class PortalWizardUser(models.TransientModel):
             self.partner_id.write({'email': self.email})
 
         # Remove the sign up token, so it can not be used
-        self.partner_id.signup_token = False
+        self.partner_id.sudo().signup_token = False
 
         user_sudo = self.user_id.sudo()
 
