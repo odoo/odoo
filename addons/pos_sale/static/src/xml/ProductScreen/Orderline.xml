@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ul[hasclass('info-list')]" position="inside">
+            <t t-if="props.line.get_sale_order()">
+                <li class="info orderline-sale-order">
+                    <i class="fa fa-basket" role="img" aria-label="SO" title="SO"/>
+                    <t t-esc="props.line.get_sale_order()" />
+                </li>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

@@ -17,9 +17,25 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
         'data/pos_sale_data.xml',
         'security/pos_sale_security.xml',
         'security/ir.model.access.csv',
+        'views/sale_order_views.xml',
+        'views/pos_order_views.xml',
         'views/sales_team_views.xml',
         'views/pos_config_views.xml',
     ],
     'installable': True,
     'auto_install': True,
+    'assets': {
+        'point_of_sale.assets': [
+            'pos_sale/static/src/js/models.js',
+            'pos_sale/static/src/js/SetSaleOrderButton.js',
+            'pos_sale/static/src/js/OrderManagementScreen/SaleOrderFetcher.js',
+            'pos_sale/static/src/js/OrderManagementScreen/SaleOrderList.js',
+            'pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementControlPanel.js',
+            'pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js',
+            'pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js',
+        ],
+        'web.assets_qweb': [
+            'pos_sale/static/src/xml/**/*',
+        ],
+    },
 }
