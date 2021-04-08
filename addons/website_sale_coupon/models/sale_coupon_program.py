@@ -34,3 +34,8 @@ class CouponProgram(models.Model):
         if self.website_id and self.website_id != order.website_id:
             return {'error': 'This promo code is not valid on this website.'}
         return super()._check_promo_code(order, coupon_code)
+
+    def action_program_share(self):
+        """ Open a window to copy the program link """
+        self.ensure_one()
+        return self.env['coupon.share'].create_share_action(program=self)
