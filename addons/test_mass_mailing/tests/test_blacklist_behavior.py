@@ -35,7 +35,8 @@ class TestAutoBlacklist(common.TestMassMailCommon):
 
         self.assertMailTraces(
             [{'email': 'test.record.00@test.example.com'}],
-            mailing, target, check_mail=True
+            mailing, target,
+            check_mail=True
         )
 
         # call bounced

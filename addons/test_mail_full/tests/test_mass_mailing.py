@@ -75,6 +75,6 @@ class TestMassMailing(TestMailFullCommon):
                     'http://localhost:%s/mailing/%s/view' % (config['http_port'], mailing.id),
                     email['body'])
 
-            self.assertMailTraces([recipient_info], mailing, recipient, check_mail=True)
+            self.assertMailTraces([recipient_info], mailing, recipient, check_mail=True, author=self.env.user.partner_id)
 
         self.assertEqual(mailing.ignored, 4)
