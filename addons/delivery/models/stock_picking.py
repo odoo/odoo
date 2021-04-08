@@ -195,14 +195,13 @@ class StockPicking(models.Model):
             delivery_lines = sale_order.order_line.filtered(lambda l: l.is_delivery and l.currency_id.is_zero(l.price_unit) and l.product_id == self.carrier_id.product_id)
             carrier_price = self.carrier_price * (1.0 + (float(self.carrier_id.margin) / 100.0))
             if not delivery_lines:
-                sale_order._create_delivery_line(self.carrier_id, carrier_price)
-            else:
-                delivery_line = delivery_lines[0]
-                delivery_line[0].write({
-                    'price_unit': carrier_price,
-                    # remove the estimated price from the description
-                    'name': sale_order.carrier_id.with_context(lang=self.partner_id.lang).name,
-                })
+                delivery_lines = [sale_order._create_delivery_line(self.carrier_id, carrier_price)]
+            delivery_line = delivery_lines[0]
+            delivery_line[0].write({
+                'price_unit': carrier_price,
+                # remove the estimated price from the description
+                'name': sale_order.carrier_id.with_context(lang=self.partner_id.lang).name,
+            })
 
     def open_website_url(self):
         self.ensure_one()
