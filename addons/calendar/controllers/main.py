@@ -90,7 +90,7 @@ class CalendarController(http.Controller):
         if not event:
             return request.not_found()
         event.action_join_meeting(request.env.user.partner_id.id)
-        attendee = request.env['calendar.attendee'].sudo().search([('partner_id', '=', request.env.user.partner_id), ('event_id', '=', event.id)])
+        attendee = request.env['calendar.attendee'].sudo().search([('partner_id', '=', request.env.user.partner_id.id), ('event_id', '=', event.id)])
         return request.redirect('/calendar/meeting/view?token=%s&id=%s' % (attendee.access_token, event.id))
 
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
