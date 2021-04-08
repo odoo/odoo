@@ -619,6 +619,26 @@ class WebsiteSlides(WebsiteProfile):
             'allow_comment': bool(kw.get('allow_comment')),
         }
 
+    # This route is the one sent in invitation email to join the course. It acts as a dispatcher.
+    # Do not use model in route, otherwise it will return a 403 error instead of desired behaviour:
+    # If not logged , go to login page instead, redirecting to the channel concerned by the invitation
+    # once logged. If a logged user has no rights to see the course, send him back on the main course page.
+    @http.route('/slides/<int:channel_id>/invite', type='http', auth='public', website=True, sitemap=False)
+    def slide_channel_invite(self, channel_id):
+        channel = request.env['slide.channel'].browse(int(channel_id))
+        try:
+            channel.check_access_rights('read')
+            channel.check_access_rule('read')
+        except AccessError:
+            channel = request.env['slide.channel'].sudo().browse(int(channel_id))
+            if request.website.is_public_user():
+                # Trick to avoid 403 error if logged user has no access rights: send back to the dispatcher.
+                return werkzeug.utils.redirect('/web/login?redirect=/slides/%s/invite' % channel_id)
+            else:
+                return werkzeug.utils.redirect("/slides")
+        else:
+            return werkzeug.utils.redirect("/slides/%s" % (slug(channel)))
+
     @http.route('/slides/channel/enroll', type='http', auth='public', website=True)
     def slide_channel_join_http(self, channel_id):
         # TDE FIXME: why 2 routes ?
@@ -639,9 +659,10 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/channel/leave'], type='json', auth='user', website=True)
     def slide_channel_leave(self, channel_id):
         channel = request.env['slide.channel'].browse(channel_id)
+        is_channel_public = channel.visibility == "public"
         channel._remove_membership(request.env.user.partner_id.ids)
         self._channel_remove_session_answers(channel)
-        return True
+        return is_channel_public
 
     @http.route(['/slides/channel/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_channel_tag_search_read(self, fields, domain):

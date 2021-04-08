@@ -98,8 +98,12 @@ var SlideUnsubscribeDialog = Dialog.extend({
         this._rpc({
             route: '/slides/channel/leave',
             params: {channel_id: this.channelID},
-        }).then(function () {
-            window.location.reload();
+        }).then(function (isChannelPublic) {
+            if (!isChannelPublic) {
+                window.location.replace(window.location.origin + '/slides');
+            } else {
+                window.location.reload();
+            }
         });
     },
 

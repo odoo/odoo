@@ -29,7 +29,7 @@
         <td style="min-width: 590px;">
             <t t-raw="message.body"/>
             <div style="margin: 32px 0px 32px 0px; text-align: center;">
-                <a t-att-href="record.channel_id.website_url"
+                <a t-att-href="'%s/slides/%s/invite' % (record.channel_id.get_base_url(), record.channel_id.id)"
                     style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                     Click here to start the course
                 </a>
