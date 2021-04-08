@@ -423,6 +423,9 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
 # Emails
 #----------------------------------------------------------
 
+whitespaces_re = re.compile(r'\s+')
+dots_re = re.compile(r'\.+')
+
 # matches any email in a body of text
 email_re = re.compile(r"""([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63})""", re.VERBOSE)
 
@@ -438,6 +441,7 @@ discussion_re = re.compile("<.*-open(?:object|erp)-private[^>]*@([^>]*)>", re.UN
 mail_header_msgid_re = re.compile('<[^<>]+>')
 
 email_addr_escapes_re = re.compile(r'[\\"]')
+email_localpart_unsafe_chars_re = re.compile(r'[^a-zA-Z0-9_\.\-\+]')
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
@@ -595,3 +599,21 @@ def formataddr(pair, charset='utf-8'):
                 name=email_addr_escapes_re.sub(r'\\\g<0>', name),
                 addr=address)
     return address
+
+def localpartify(email_name):
+    """
+    Turn any ascii string into a rfc2822 compliant local-part.
+
+    >>> 'john.doe, MyCompany Inc.'
+    'john.doe-MyCompany-Inc'
+    """
+    email_name.encode('ascii')  # the email MUST be ascii
+
+    # https://www.jochentopf.com/email/chars.html
+    e = email_name
+    e = whitespaces_re.sub('-', e.strip())  # cannot have spaces, use hyphen instead
+    e = email_localpart_unsafe_chars_re.sub('', e)  # discard other unsafe characters
+    e = e.lstrip('-')  # could be interpreted as an option in a POSIX shell
+    e = e.strip('.')  # from RFC-2822, cannot starts or ends with a dot
+    e = dots_re.sub('.', e)  # two dots cannot be next to each other
+    return e

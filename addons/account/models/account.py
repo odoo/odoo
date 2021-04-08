@@ -7,7 +7,7 @@ import logging
 
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round as round
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, remove_accents
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, remove_accents, localpartify
 from odoo.exceptions import UserError, ValidationError
 from odoo import api, fields, models, _
 
@@ -610,7 +610,7 @@ class AccountJournal(models.Model):
         return {
             'alias_defaults': {'type': 'in_invoice', 'company_id': self.company_id.id},
             'alias_parent_thread_id': self.id,
-            'alias_name': re.sub(r'[^\w]+', '-', alias_name)
+            'alias_name': localpartify(alias_name)
         }
 
     @api.multi

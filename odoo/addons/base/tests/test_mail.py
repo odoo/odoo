@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo.tests.common import BaseCase
 from odoo.tests.common import SavepointCase
-from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split, misc, decode_smtp_header
+from odoo.tools import html_sanitize, append_content_to_html, plaintext2html, email_split, misc, decode_smtp_header, localpartify
 
 from . import test_mail_examples
 
@@ -328,6 +328,10 @@ class TestHtmlTools(BaseCase):
 
 class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
+
+    def test_email_localpartify(self):
+        self.assertEqual(localpartify('john.doe, MyCompany Inc.'), 'john.doe-MyCompany-Inc')
+        self.assertRaises(UnicodeEncodeError, localpartify, 'joé')
 
     def test_email_split(self):
         cases = [
