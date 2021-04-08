@@ -50,7 +50,7 @@ class ProductProduct(models.Model):
     def _compute_bom_price(self, bom, boms_to_recompute=False):
         self.ensure_one()
         if not bom:
-            return 0
+            return self.standard_price
         if not boms_to_recompute:
             boms_to_recompute = []
         total = 0
