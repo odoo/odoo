@@ -3073,6 +3073,20 @@ var exportVariable = (function (exports) {
             this.dispatchEvent(new Event('historyRevert'));
         }
 
+        /**
+         * Place the cursor on the last known cursor position from the history steps.
+         *
+         * @returns {boolean}
+         */
+        resetCursorOnLastHistoryCursor() {
+            const lastHistoryStep = this._historySteps[this._historySteps.length - 1];
+            if (lastHistoryStep && lastHistoryStep.cursor && lastHistoryStep.cursor.anchorNode) {
+                this.historySetCursor(lastHistoryStep);
+                return true;
+            }
+            return false;
+        }
+
         historySetCursor(step) {
             if (step.cursor && step.cursor.anchorNode) {
                 const anchorNode = this.idFind(step.cursor.anchorNode);
@@ -3388,11 +3402,11 @@ var exportVariable = (function (exports) {
         }
 
         _insertHTML(data) {
-            this._insert(data, false);
+            return this._insert(data, false);
         }
 
         _insertText(data) {
-            this._insert(data);
+            return this._insert(data);
         }
 
         /**
