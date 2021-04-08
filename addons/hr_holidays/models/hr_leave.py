@@ -452,7 +452,9 @@ class HolidaysRequest(models.Model):
     @api.depends('date_from', 'date_to', 'employee_id')
     def _compute_number_of_days(self):
         for holiday in self:
-            if holiday.date_from and holiday.date_to:
+            if holiday.request_unit_half:
+                holiday.number_of_days = 0.5
+            elif holiday.date_from and holiday.date_to:
                 holiday.number_of_days = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['days']
             else:
                 holiday.number_of_days = 0
