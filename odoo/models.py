@@ -1409,7 +1409,7 @@ class BaseModel(metaclass=MetaModel):
         # convert default values to the right format
         #
         # we explicitly avoid using _convert_to_write() for x2many fields,
-        # because the latter leaves values like [(Command.LINK, 2), 
+        # because the latter leaves values like [(Command.LINK, 2),
         # (Command.LINK, 3)], which are not supported by the web client as
         # default values; stepping through the cache allows to normalize
         # such a list to [(Command.SET, 0, [2, 3])], which is properly
@@ -2316,8 +2316,8 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def _read_group_format_result(self, data, annotated_groupbys, groupby, domain):
         """
-            Helper method to format the data contained in the dictionary data by 
-            adding the domain corresponding to its values, the groupbys in the 
+            Helper method to format the data contained in the dictionary data by
+            adding the domain corresponding to its values, the groupbys in the
             context and by properly formatting the date/datetime values.
 
         :param data: a single group
@@ -2396,10 +2396,10 @@ class BaseModel(metaclass=MetaModel):
                 The possible aggregation functions are the ones provided by PostgreSQL
                 (https://www.postgresql.org/docs/current/static/functions-aggregate.html)
                 and 'count_distinct', with the expected meaning.
-        :param list groupby: list of groupby descriptions by which the records will be grouped.  
+        :param list groupby: list of groupby descriptions by which the records will be grouped.
                 A groupby description is either a field (then it will be grouped by that field)
                 or a string 'field:groupby_function'.  Right now, the only functions supported
-                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for 
+                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for
                 date/datetime fields.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
@@ -2407,7 +2407,7 @@ class BaseModel(metaclass=MetaModel):
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
                              (supported only for many2one fields currently)
-        :param bool lazy: if true, the results are only grouped by the first groupby and the 
+        :param bool lazy: if true, the results are only grouped by the first groupby and the
                 remaining groupbys are put in the __context key.  If false, all the groupbys are
                 done in one call.
         :return: list of dictionaries(one dictionary for each record) containing:
@@ -4132,7 +4132,7 @@ Fields:
             # that this limit is well managed by PostgreSQL.
             # In INSERT queries, we inject integers (small) and larger data (TEXT blocks for
             # example).
-            # 
+            #
             # The problem then becomes: how to "estimate" the right size of the batch to have
             # good performance?
             #
@@ -6540,7 +6540,7 @@ Fields:
         field_generators = self._populate_factories()
         if not field_generators:
             return self.browse() # maybe create an automatic generator?
-            
+
         records_batches = []
         generator = populate.chain_factories(field_generators, self._name)
         while record_count <= min_size or not complete:
