@@ -1162,26 +1162,6 @@ exports.PosModel = Backbone.Model.extend({
         return server_ids;
     },
 
-    scan_product: function(parsed_code){
-        var selectedOrder = this.get_order();
-        var product = this.db.get_product_by_barcode(parsed_code.base_code);
-
-        if(!product){
-            return false;
-        }
-
-        if(parsed_code.type === 'price'){
-            selectedOrder.add_product(product, {price:parsed_code.value});
-        }else if(parsed_code.type === 'weight'){
-            selectedOrder.add_product(product, {quantity:parsed_code.value, merge:false});
-        }else if(parsed_code.type === 'discount'){
-            selectedOrder.add_product(product, {discount:parsed_code.value, merge:false});
-        }else{
-            selectedOrder.add_product(product);
-        }
-        return true;
-    },
-
     // Exports the paid orders (the ones waiting for internet connection)
     export_paid_orders: function() {
         return JSON.stringify({
@@ -1389,6 +1369,26 @@ exports.PosModel = Backbone.Model.extend({
 
     getCurrencySymbol() {
         return this.currency ? this.currency.symbol : '$';
+    },
+    /**
+     * Make the products corresponding to the given ids to be available_in_pos and
+     * fetch them to be added on the loaded products.
+     */
+    async _addProducts(ids){
+        await this.rpc({
+            model: 'product.product',
+            method: 'write',
+            args: [ids, {'available_in_pos': true}],
+            context: this.session.user_context,
+        });
+        let product_model = _.find(this.models, (model) => model.model === 'product.product');
+        let product = await this.rpc({
+            model: 'product.product',
+            method: 'read',
+            args: [ids, product_model.fields],
+            context: { ...this.session.user_context, ...product_model.context() },
+        });
+        product_model.loaded(this, product);
     },
 });
 

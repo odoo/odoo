@@ -64,15 +64,15 @@ odoo.define('point_of_sale.DebugWidget', function (require) {
             this.state.weightInput = '';
             this.env.pos.proxy.debug_reset_weight();
         }
-        barcodeScan() {
-            this.env.pos.barcode_reader.scan(this.state.barcodeInput);
+        async barcodeScan() {
+            await this.env.pos.barcode_reader.scan(this.state.barcodeInput);
         }
-        barcodeScanEAN() {
+        async barcodeScanEAN() {
             const ean = this.env.pos.barcode_reader.barcode_parser.sanitize_ean(
                 this.state.barcodeInput || '0'
             );
             this.state.barcodeInput = ean;
-            this.env.pos.barcode_reader.scan(ean);
+            await this.env.pos.barcode_reader.scan(ean);
         }
         async deleteOrders() {
             const { confirmed } = await this.showPopup('ConfirmPopup', {
