@@ -68,6 +68,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             'number': state.valuenow,
             'timePerTransaction': Math.round(dt/1000/state.valuemax),
             'context': state.context,
+            'bank_statement_id': state.bank_statement_id,
         }));
         $done.find('*').addClass('o_reward_subcontent');
         $done.find('.button_close_statement').click(this._onCloseBankStatement.bind(this));
