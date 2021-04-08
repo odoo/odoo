@@ -5,3 +5,13 @@
 #wrapwrap .o_layout.o_basic_theme {
     font-family: -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
+
+/* We don't want all links in the mass mail template to be underlined by default. This removes underlining for
+   most compatible browsers.
+*/
+a:link, a:visited {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
