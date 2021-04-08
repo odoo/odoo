@@ -821,6 +821,27 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         // We need to reload the existing type list.
         this.rerender = true;
     },
+    /**
+     * Prevents id duplication
+     * 
+     * @override
+     */
+    onClone: function () {
+        const currentInput = this.$target[0].querySelector('[id]:not(div)');
+        let copiedField = document.querySelectorAll(`#${CSS.escape(currentInput.id)}`)[1];
+        while (!copiedField.classList.contains('s_website_form_field')) {
+            copiedField = copiedField.parentElement;
+        }
+        const inputInTheCopiedField = copiedField.querySelectorAll('[id]:not(div)');
+        inputInTheCopiedField.forEach(element => {
+            const newId = Math.random().toString(36).substring(2, 15); //Big unique ID
+            const labelOfElement = copiedField.querySelector(`label[for="${element.id}"]`);
+            if (labelOfElement) {
+                labelOfElement.setAttribute('for', newId);
+            }
+            element.id = newId;
+        });
+    },
 
     //----------------------------------------------------------------------
     // Options
