@@ -6,6 +6,15 @@
     font-family: -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
+/* We don't want all links in the mass mail template to be underlined by default. This removes underlining for
+   most compatible browsers.
+*/
 a:-webkit-any-link {
+    text-decoration: none;
+}
+a:-moz-any-link {
+    text-decoration: none;
+}
+a:any-link {
     text-decoration: none;
 }
