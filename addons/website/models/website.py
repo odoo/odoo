@@ -18,7 +18,7 @@ from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, ur
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from odoo.osv.expression import FALSE_DOMAIN
@@ -268,7 +268,11 @@ class Website(models.Model):
         r['logo'] = False
         if company_id.logo and company_id.logo != company_id._get_logo():
             r['logo'] = company_id.logo.decode('utf-8')
-        r['industries'] = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.env.user.lang})['industries']
+        try:
+            result = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.env.user.lang})
+            r['industries'] = result['industries']
+        except AccessError as e:
+            logger.warning(e.args[0])
         return r
 
     @api.model
