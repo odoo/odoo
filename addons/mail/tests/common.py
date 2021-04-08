@@ -325,6 +325,9 @@ class MockEmail(common.BaseCase):
                 self.assertEqual(
                     found_mail[fname], fvalue,
                     'Mail: expected %s for %s, got %s' % (fvalue, fname, found_mail[fname]))
+        if status == 'sent':
+            for email_to in emails:
+                self.assertSentEmail(email_values['email_from'] if email_values and email_values.get('email_from') else author, [email_to], **(email_values or {}))
 
     def assertNoMail(self, recipients, mail_message=None, author=None):
         try:

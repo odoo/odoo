@@ -14,7 +14,9 @@ class TestMassMailCommon(MassMailCommon, TestMailCommon):
     def setUpClass(cls):
         super(TestMassMailCommon, cls).setUpClass()
 
-        cls.mailing_bl = cls.env['mailing.mailing'].create({
+        # enforce last update by user_marketing to match _process_mass_mailing_queue
+        # taking last writer as user running a batch
+        cls.mailing_bl = cls.env['mailing.mailing'].with_user(cls.user_marketing).create({
             'name': 'SourceName',
             'subject': 'MailingSubject',
             'body_html': '<p>Hello ${object.name}</p>',
