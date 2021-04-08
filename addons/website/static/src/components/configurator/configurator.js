@@ -388,14 +388,10 @@ const actions = {
 async function getInitialState() {
 
     // Load values from python and iap
-    try {
-        var results = await rpc.query({
-            model: 'website',
-            method: 'configurator_init',
-        });
-    } catch (_e) {
-        return {};
-    }
+    var results = await rpc.query({
+        model: 'website',
+        method: 'configurator_init',
+    });
     const r = {
         features: {},
         industries: results.industries,
