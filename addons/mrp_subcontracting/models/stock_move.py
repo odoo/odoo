@@ -126,8 +126,8 @@ class StockMove(models.Model):
             picking._subcontracted_produce(subcontract_details)
 
         # We avoid merging move due to complication with stock.rule.
-        super(StockMove, move_to_not_merge)._action_confirm(merge=False)
-        res = super(StockMove, self - move_to_not_merge)._action_confirm(merge=merge, merge_into=merge_into)
+        res = super(StockMove, move_to_not_merge)._action_confirm(merge=False)
+        res |= super(StockMove, self - move_to_not_merge)._action_confirm(merge=merge, merge_into=merge_into)
         if subcontract_details_per_picking:
             self.env['stock.picking'].concat(*list(subcontract_details_per_picking.keys())).action_assign()
         return res
