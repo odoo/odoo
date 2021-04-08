@@ -79,6 +79,10 @@ class SaleReport(models.Model):
         '''
         return from_
 
+    def _where_pos(self):
+        where_ = 'l.sale_order_line_id is NULL'
+        return where_
+
     def _group_by_pos(self):
         groupby_ = '''
             l.order_id,
@@ -108,7 +112,7 @@ class SaleReport(models.Model):
         if not fields:
             fields = {}
         res = super()._query(with_clause, fields, groupby, from_clause)
-        current = '(SELECT %s FROM %s GROUP BY %s)' % \
-                  (self._select_pos(fields), self._from_pos(), self._group_by_pos())
+        current = '(SELECT %s FROM %s WHERE %s GROUP BY %s)' % \
+                  (self._select_pos(fields), self._from_pos(), self._where_pos(), self._group_by_pos())
 
         return '%s UNION ALL %s' % (res, current)
