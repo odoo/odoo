@@ -113,10 +113,12 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         # subscribe second employee to the group to test notifications
         self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
-        with self.assertSinglePostNotifications([
-                {'partner': self.partner_1, 'type': 'email'},
-                {'partner': self.partner_2, 'type': 'email'},
-                {'partner': self.partner_admin, 'type': 'email'}], {'content': _body}, mail_unlink_sent=True):
+        with self.assertSinglePostNotifications(
+                [{'partner': self.partner_1, 'type': 'email'},
+                 {'partner': self.partner_2, 'type': 'email'},
+                 {'partner': self.partner_admin, 'type': 'email'}],
+                {'content': _body},
+                mail_unlink_sent=True):
             msg = self.test_record.with_user(self.user_employee).message_post(
                 body=_body, subject=_subject,
                 message_type='comment', subtype_xmlid='mail.mt_comment',
