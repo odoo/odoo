@@ -101,7 +101,7 @@ class AccountEdiFormat(models.Model):
                 name=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Name'),
                 phone=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:Telephone'),
                 mail=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:ElectronicMail'),
-                vat=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:ID'),
+                vat=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:CompanyID'),
             )
 
             # Regenerate PDF
