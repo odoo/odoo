@@ -328,8 +328,19 @@ var CrossTabBus = Longpolling.extend({
         // update channels
         else if (key === this._generateKey('channels')) {
             var channels = value;
-            _.each(_.difference(this._channels, channels), this.deleteChannel.bind(this));
-            _.each(_.difference(channels, this._channels), this.addChannel.bind(this));
+            /* if the channels have not changed, do nothing
+               else, sync the local attribute, and call restart polling
+               (the method does take care of synchronising the channels in both ways,
+               depending on if we are master or not) */
+            if (_.difference(this._channels, channels).length > 0 || _.difference(channels, this._channels).length > 0) {
+                this._channels = value;
+                if (this._pollRpc) {
+                    this._pollRpc.abort();
+                } else {
+                    this.startPolling();
+                }
+            }
+
         }
         // update options
         else if (key === this._generateKey('options')) {
@@ -362,4 +373,3 @@ var CrossTabBus = Longpolling.extend({
 return CrossTabBus;
 
 });
-
