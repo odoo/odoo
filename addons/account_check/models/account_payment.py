@@ -13,41 +13,35 @@ class AccountPayment(models.Model):
 
     _inherit = 'account.payment'
 
-    check_ids = fields.Many2many(
-        'account.check',
-        string='Checks',
-        copy=False,
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-        auto_join=True,
-    )
+    check_ids = fields.Many2many('account.check', string='Checks', copy=False, readonly=True,
+        states={'draft': [('readonly', False)]}, auto_join=True)
     # we add this field for better usability on issue checks and received
     # checks. We keep m2m field for backward compatibility where we allow to
     # use more than one check per payment
-    check_id = fields.Many2one(
-        'account.check',
-        compute='_compute_check',
-        string='Check',
-    )
-    check_deposit_type = fields.Selection(
-        [('consolidated', 'Consolidated'),
-         ('detailed', 'Detailed')],
-        default='detailed',
-        help="This option is relevant if you use bank statements. Detailed is"
-        " used when the bank credits one by one the checks, consolidated is"
-        " for when the bank credits all the checks in a single movement",
-    )
+    # check_id = fields.Many2one(
+    #     'account.check',
+    #     compute='_compute_check',
+    #     string='Check',
+    # )
+    # check_deposit_type = fields.Selection(
+    #     [('consolidated', 'Consolidated'),
+    #      ('detailed', 'Detailed')],
+    #     default='detailed',
+    #     help="This option is relevant if you use bank statements. Detailed is"
+    #     " used when the bank credits one by one the checks, consolidated is"
+    #     " for when the bank credits all the checks in a single movement",
+    # )
 
-    @api.depends('check_ids')
-    def _compute_check(self):
-        for rec in self:
-            rec.check_id = False
-            # we only show checks for issue checks or received thid checks
-            # if len of checks is 1
-            if rec.payment_method_code in (
-                    'received_third_check',
-                    'issue_check',) and len(rec.check_ids) == 1:
-                rec.check_id = rec.check_ids[0].id
+    # @api.depends('check_ids')
+    # def _compute_check(self):
+    #     for rec in self:
+    #         rec.check_id = False
+    #         # we only show checks for issue checks or received thid checks
+    #         # if len of checks is 1
+    #         if rec.payment_method_code in (
+    #                 'received_third_check',
+    #                 'issue_check',) and len(rec.check_ids) == 1:
+    #             rec.check_id = rec.check_ids[0].id
 
 # check fields, just to make it easy to load checks without need to create
 # them by a m2o record
