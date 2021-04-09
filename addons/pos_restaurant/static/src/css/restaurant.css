@@ -13,7 +13,7 @@
 
 /* ------ FLOOR SELECTOR ------- */
 
-.floor-selector { 
+.floor-selector {
     line-height: 48px;
     font-size: 18px;
     display: -webkit-flex;
@@ -572,4 +572,13 @@
 .multiprint-flex {
     display: flex;
     justify-content: space-between;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .order-button.floor-button {
+        min-width: initial;
+        margin-right: initial;
+        display: flex;
+        align-items: center;
+    }
 }
