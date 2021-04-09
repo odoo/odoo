@@ -5862,6 +5862,59 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('"false" bar is clickable after removing filter', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records.push({ id: 5, bar: true, foo: false, product_id: 5, state: "ghi" });
+        let checkRPC = false;
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test" default_group_by="bar">
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter string="Foo" name="foo"/>
+                    </search>`,
+            },
+            mockRPC: function (route, args) {
+                if (checkRPC && route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, [['bar', '=', true]],
+                        "nested search_read should be called with correct domain");
+                    checkRPC = false;
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+        assert.containsOnce(kanban, '.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]',
+            "should have false kanban color");
+
+        await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
+
+        checkRPC = true;
+        await cpHelpers.toggleFilterMenu(kanban);
+        await cpHelpers.toggleMenuItem(kanban, 'Foo');
+        await cpHelpers.removeFacet(kanban, "Foo");
+        assert.containsOnce(kanban, '.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]',
+            "should have false kanban color");
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'o_bar_has_records');
+
+        kanban.destroy();
+    });
+
     QUnit.test('column progressbars: "false" bar with sum_field', async function (assert) {
         assert.expect(4);
 

@@ -292,6 +292,13 @@ var KanbanModel = BasicModel.extend({
         if (element.parentID) {
             element.limit = this.loadParams.limit;
         }
+        // if list datapoint is reloaded then remove activeFilter from all child datapoint
+        if (element.type === 'list' && !element.parentID && !options || options && !('activeFilter' in options)) {
+            _.each(element.data, (elemId) => {
+                const elem = this.localData[elemId];
+                elem.activeFilter = { domain: [], value: false };
+            });
+        }
         // Register the domain extension in the element.
         if (options && options.activeFilter) {
             element.activeFilter = options.activeFilter || element.activeFilter;
