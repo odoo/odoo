@@ -2269,18 +2269,14 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="company_description" name="Company Description">
     <address itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <!-- TODO widget contact must add itemprop attributes -->
-        <div t-field="res_company.partner_id" t-options='{
-                "widget": "contact",
-                "fields": ["name", "address", "phone", "mobile", "email"]}'/>
-        <t t-if="not res_company.google_map_img()">
-            <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/>
-            <a t-att-href="res_company.google_map_link()" target="_BLANK">Google Maps</a>
-            <a t-if="editable"
-                class="fa fa-cog ml-1"
-                href="/web#action=website.action_website_configuration"
-                title="Add your key in the settings."/>
-        </t>
+        <section class="s_text_block" data-snippet="s_text_block">
+            My Company
+            <ul class="list-unstyled mb-0 pl-2">
+                <li><i class="fa fa-map-marker fa-fw mr-2"/><span class="o_force_ltr">Chaussée de Namur 40</span></li>
+                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr">+ 32 81 81 37 00</span></li>
+                <li><i class="fa fa-1x fa-fw fa-envelope mr-2"/><span>info@yourcompany.example.com</span></li>
+            </ul>
+        </section>
     </address>
 </template>
 
