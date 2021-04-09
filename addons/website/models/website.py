@@ -294,9 +294,13 @@ class Website(models.Model):
     @api.model
     def configurator_apply(self, **kwargs):
         def set_colors(selected_palette):
-            url = '/website/static/src/scss/options/user_values.scss'
-            custo = {'color-palettes-name': "'%s'" % selected_palette}
-            self.env['web_editor.assets'].make_scss_customization(url, custo)
+            if type(selected_palette) == list:
+                url = '/website/static/src/scss/options/colors/user_color_palette.scss'
+                values = {f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)}
+            else:
+                url = '/website/static/src/scss/options/user_values.scss'
+                values = {'color-palettes-name': "'%s'" % selected_palette}
+            self.env['web_editor.assets'].make_scss_customization(url, values)
 
         def set_features(selected_features):
             feature_ids = self.env['website.configurator.feature'].browse(selected_features)
@@ -349,7 +353,13 @@ class Website(models.Model):
 
         website = self.get_current_website()
 
-        url = self.env['ir.module.module'].search([('name', '=', kwargs['theme_name'])]).button_choose_theme()
+        theme = self.env['ir.module.module'].search([('name', '=', kwargs['theme_name'])])
+        url = theme.button_choose_theme()
+
+        # Force to refresh env after install of module
+        self._cr.commit()
+        api.Environment.reset()
+        self.env = api.Environment(theme._cr, theme._uid, theme._context)
 
         website.configurator_done = True
 

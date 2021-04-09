@@ -97,7 +97,7 @@
                 <div class="w-100 w-lg-25 order-lg-3 my-4 my-md-0 d-flex flex-column">
                     <div class="h4 text-center">
                         <b>Detect</b> from Logo</div>
-                    <div class="d-flex flex-column flex-grow-1">
+                    <div class="d-flex flex-column flex-grow-1 py-4">
                         <a href="#" t-on-click="uploadLogo" t-attf-class="o_configurator_logo_upload position-relative btn-link rounded bg-100 overflow-hidden d-flex flex-grow-1 justify-content-center align-items-center text-decoration-none {{state.logo? 'h-50' : ''}}">
                             <input type="file" class="logo_selection_input" t-on-change="changeLogo" style="display:none" name="logo_selection" t-ref="logoSelectionInput" accept="image/*"/>
                             <div class="o_configurator_logo_button text-center">
@@ -111,10 +111,11 @@
                         </a>
                         <div t-if="state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
                             <h6 class="text-center text-success d-block badge mb-0 mt-n2">Detected Colors</h6>
-                            <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex" t-on-click="selectPalette(state.recommendedPalette.id)" t-attf-style="background-color: {{state.recommendedPalette.color3}}">
-                                <div class="color_sample w-100 first" t-attf-style="background-color: {{state.recommendedPalette.color1}}"/>
-                                <div class="color_sample w-100 second" t-attf-style="background-color: {{state.recommendedPalette.color2}}"/>
-                                <div class="color_sample w-100 third" t-attf-style="background-color: {{state.recommendedPalette.color3}}"/>
+                            <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
+                                 t-on-click="selectPalette('recommendedPalette')" t-attf-style="background-color: {{state.recommendedPalette.color3}}">
+                                <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color1}}"/>
+                                <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color3}}"/>
+                                <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color2}}"/>
                             </div>
                         </div>
                     </div>
@@ -130,10 +131,11 @@
                     <div class="d-flex flex-wrap align-items-end">
                         <t t-foreach="getters.getPalettes()" t-as="palette" t-key="palette_index">
                             <div class="w-50 w-md-25 px-2 pt-3">
-                                <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex" t-on-click="selectPalette(palette.id)" t-attf-style="background-color: {{palette.color3}}">
-                                    <div class="color_sample w-100 first" t-attf-style="background-color: {{palette.color1}}"/>
-                                    <div class="color_sample w-100 second" t-attf-style="background-color: {{palette.color2}}"/>
-                                    <div class="color_sample w-100 third" t-attf-style="background-color: {{palette.color3}}"/>
+                                <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{getters.getSelectedPaletteName() == palette.name ? 'selected' : ''}}"
+                                     t-on-click="selectPalette(palette.name)" t-attf-style="background-color: {{palette.color3}}">
+                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color1}}"/>
+                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color3}}"/>
+                                    <div class="color_sample w-100" t-attf-style="background-color: {{palette.color2}}"/>
                                 </div>
                             </div>
                         </t>
