@@ -819,69 +819,27 @@ Reason(s) of this behavior could be:
         return False
 
     def _find_mail_template(self, force_confirmation_template=False):
-        template_id = False
+        """
+        Get the appropriate mail template.
 
-        if force_confirmation_template or (self.state == 'sale' and not self.env.context.get('proforma', False)):
+        :param force_confirmation_template False by default, this param allow to force the confirmation template to be used in any case.
+        :return: the correct mail template based on the current status.
+        """
+        if force_confirmation_template or (all(order.state == 'sale' for order in self) and not self.env.context.get('proforma', False)):
             template_id = int(self.env['ir.config_parameter'].sudo().get_param('sale.default_confirmation_template'))
-            template_id = self.env['mail.template'].search([('id', '=', template_id)]).id
-            if not template_id:
-                template_id = self.env['ir.model.data'].xmlid_to_res_id('sale.mail_template_sale_confirmation', raise_if_not_found=False)
-        if not template_id:
-            template_id = self.env['ir.model.data'].xmlid_to_res_id('sale.email_template_edi_sale', raise_if_not_found=False)
-
-        return template_id
-
-    def action_send_quotation(self):
-        ''' Opens a wizard to compose an email, with relevant mail template loaded by default.
-        If there is more than one email selected, create a batch of emails to send at once, using the chosen template. '''
-        if len(self) == 0:
-            raise UserError('You have to select at least one quotation.')
-        if len(self) == 1:
-            template_id = self._find_mail_template()
-            lang = self.env.context.get('lang')
-            template = self.env['mail.template'].browse(template_id)
-            if template.lang:
-                lang = template._render_lang(self.ids)[self.id]
-            ctx = {
-                'default_model': 'sale.order',
-                'default_res_id': self.ids[0],
-                'default_use_template': bool(template_id),
-                'default_template_id': template_id,
-                'default_composition_mode': 'comment',
-                'mark_so_as_sent': True,
-                'custom_layout': "mail.mail_notification_paynow",
-                'proforma': self.env.context.get('proforma', False),
-                'force_email': True,
-                'model_description': self.with_context(lang=lang).type_name,
-            }
-            return {
-                'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'res_model': 'mail.compose.message',
-                'views': [(False, 'form')],
-                'view_id': False,
-                'target': 'new',
-                'context': ctx,
-            }
-
-        ctx={}
-        for record in self:
-            pass
-            # TODO : adding each record to the ctx
-        return {
-            'type': 'ir.action.act_window',
-            'view_mode': 'form',
-            'res_model': '', # TODO : create new model
-            'views': [(False, 'form')],
-            'view_id': False,
-            'target': 'new',
-            'context': ctx,
-        }
+            default_template = self.env['mail.template'].search([('id', '=', template_id)])
+            return default_template if default_template else self.env.ref('sale.mail_template_sale_confirmation')
+        return self.env.ref('sale.email_template_edi_sale')
     
-    def action_send_and_print(self):
-        template_id = self[0]._find_mail_template()
-        dictionnaire = {
-            'name': _('Send Invoice'),
+    def action_send_quotation(self):
+        """
+        Get the informations of the mail(s) to be send and open a wizard for confirmation.
+        
+        :return wizard's view
+        """
+        template_id = self._find_mail_template().id
+        view = {
+            'name': _('Send Quotation(s)'),
             'res_model': 'sale.quotation.send',
             'view_mode': 'form',
             'context': {
@@ -896,8 +854,7 @@ Reason(s) of this behavior could be:
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
-        import ipdb; ipdb.set_trace()
-        return dictionnaire
+        return view
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
@@ -909,7 +866,7 @@ Reason(s) of this behavior could be:
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
-        template_id = self._find_mail_template(force_confirmation_template=True)
+        template_id = self._find_mail_template(force_confirmation_template=True).id
         if template_id:
             for order in self:
                 order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")

@@ -15,17 +15,16 @@ class SaleQuotationSend(models.TransientModel):
     composer_id = fields.Many2one('mail.compose.message', string='Composer', required=True, ondelete='cascade')
     template_id = fields.Many2one(
         'mail.template', 'Use template', index=True,
-        domain="[('model', '=', 'account.move')]"
-    ) # TODO : change the template, this on is for invoices
-
+        domain="[('model', '=', 'sale.order')]"
+    )
 
     @api.model
     def default_get(self, fields):
-        import ipdb; ipdb.set_trace()
         res = super(SaleQuotationSend, self).default_get(fields)
         res_ids = self._context.get('active_ids')
-        import ipdb; ipdb.set_trace()
-        quotation = self.env['sale.order'].browse(res_ids).filtered(lambda selected: selected.state == 'draft')
+
+        #TODO check if they all got the same state (error message if not all same state ?)
+        quotation = self.env['sale.order'].browse(res_ids)
         if not quotation:
             raise UserError(_('You should select at least one quotation.'))
 
@@ -45,7 +44,6 @@ class SaleQuotationSend(models.TransientModel):
 
 
     def _compute_quotation_without_email(self):
-        import ipdb; ipdb.set_trace()
         for wizard in self:
             if len(wizard.quotation_ids) > 1:
                 quotation = self.env['sale.order'].search([
@@ -73,8 +71,10 @@ class SaleQuotationSend(models.TransientModel):
     def _send_email(self):
         # with_context : we don't want to reimport the file we just exported.
         self.composer_id.with_context(mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids).send_mail()
-
-    def send_and_print_action(self):
+        if self.env.context.get('mark_so_as_sent'):
+            self.quotation_ids.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
+            
+    def send_quotation_action(self):
         self.ensure_one()
         # Send the mails in the correct language by splitting the ids per lang.
         # This should ideally be fixed in mail_compose_message, so when a fix is made there this whole commit should be reverted.
