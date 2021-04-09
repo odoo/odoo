@@ -377,18 +377,24 @@ class ProductProduct(models.Model):
             ('company_id', '=', company.id),
         ], order='create_date, id')
         as_svls = []
+        if not svls_to_vacuum:
+            return
+
+        domain = [
+            ('company_id', '=', company.id),
+            ('product_id', '=', self.id),
+            ('remaining_qty', '>', 0),
+            ('create_date', '>=', svls_to_vacuum[0].create_date),
+        ]
+        all_candidates = self.env['stock.valuation.layer'].sudo().search(domain)
+
         for svl_to_vacuum in svls_to_vacuum:
-            domain = [
-                ('company_id', '=', svl_to_vacuum.company_id.id),
-                ('product_id', '=', self.id),
-                ('remaining_qty', '>', 0),
-                '|',
-                    ('create_date', '>', svl_to_vacuum.create_date),
-                    '&',
-                        ('create_date', '=', svl_to_vacuum.create_date),
-                        ('id', '>', svl_to_vacuum.id)
-            ]
-            candidates = self.env['stock.valuation.layer'].sudo().search(domain)
+            # We don't use search to avoid executing _flush_search and to decrease interaction with DB
+            candidates = all_candidates.filtered(
+                lambda r: r.create_date > svl_to_vacuum.create_date
+                or r.create_date == svl_to_vacuum.create_date
+                and r.id > svl_to_vacuum.id
+            )
             if not candidates:
                 break
             qty_to_take_on_candidates = abs(svl_to_vacuum.remaining_qty)
@@ -408,6 +414,8 @@ class ProductProduct(models.Model):
                     'remaining_value': new_remaining_value
                 }
                 candidate.write(candidate_vals)
+                if not (candidate.remaining_qty > 0):
+                    all_candidates -= candidate
 
                 qty_to_take_on_candidates -= qty_taken_on_candidate
                 tmp_value += value_taken_on_candidate
@@ -441,11 +449,6 @@ class ProductProduct(models.Model):
             }
             vacuum_svl = self.env['stock.valuation.layer'].sudo().create(vals)
 
-            # If some negative stock were fixed, we need to recompute the standard price.
-            product = self.with_company(company.id)
-            if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
-                product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
-
             if self.valuation != 'real_time':
                 continue
             as_svls.append((vacuum_svl, svl_to_vacuum))
@@ -454,6 +457,12 @@ class ProductProduct(models.Model):
 
         for vacuum_svl, svl_to_vacuum in as_svls:
             self._create_fifo_vacuum_anglo_saxon_expense_entry(vacuum_svl, svl_to_vacuum)
+
+        # If some negative stock were fixed, we need to recompute the standard price.
+        product = self.with_company(company.id)
+        if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+            product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+
 
     def _create_fifo_vacuum_anglo_saxon_expense_entry(self, vacuum_svl, svl_to_vacuum):
         """ When product is delivered and invoiced while you don't have units in stock anymore, there are chances of that
