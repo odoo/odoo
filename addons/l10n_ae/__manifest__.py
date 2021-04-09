@@ -4,7 +4,7 @@
 # Copyright (C) 2014 Tech Receptives (<http://techreceptives.com>)
 
 {
-    'name': 'U.A.E. - Accounting',
+    'name': 'UAE - Accounting',
     'author': 'Tech Receptives',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
