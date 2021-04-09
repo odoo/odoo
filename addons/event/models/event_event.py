@@ -24,6 +24,29 @@ class EventType(models.Model):
     _description = 'Event Template'
     _order = 'sequence, id'
 
+    def _default_event_mail_type_ids(self):
+        return [(0, 0,
+                 {'notification_type': 'mail',
+                  'interval_nbr': 0,
+                  'interval_unit': 'now',
+                  'interval_type': 'after_sub',
+                  'template_ref': 'mail.template, %i' % self.env.ref('event.event_subscription').id,
+                 }),
+                (0, 0,
+                 {'notification_type': 'mail',
+                  'interval_nbr': 1,
+                  'interval_unit': 'hours',
+                  'interval_type': 'before_event',
+                  'template_ref': 'mail.template, %i' % self.env.ref('event.event_reminder').id,
+                 }),
+                (0, 0,
+                 {'notification_type': 'mail',
+                  'interval_nbr': 3,
+                  'interval_unit': 'days',
+                  'interval_type': 'before_event',
+                  'template_ref': 'mail.template, %i' % self.env.ref('event.event_reminder').id,
+                 })]
+
     name = fields.Char('Event Template', required=True, translate=True)
     note = fields.Html(string='Note')
     sequence = fields.Integer()
@@ -43,7 +66,9 @@ class EventType(models.Model):
     default_timezone = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
     # communication
-    event_type_mail_ids = fields.One2many('event.type.mail', 'event_type_id', string='Mail Schedule')
+    event_type_mail_ids = fields.One2many(
+        'event.type.mail', 'event_type_id', string='Mail Schedule',
+        default=_default_event_mail_type_ids)
     # ticket reports
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,
         help="This information will be printed on your tickets.")
@@ -68,6 +93,9 @@ class EventEvent(models.Model):
 
     def _default_description(self):
         return self.env['ir.ui.view']._render_template('event.event_default_descripton')
+
+    def _default_event_mail_ids(self):
+        return self.env['event.type']._default_event_mail_type_ids()
 
     name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Html(string='Note', store=True, compute="_compute_note", readonly=False)
@@ -371,7 +399,7 @@ class EventEvent(models.Model):
         """
         for event in self:
             if not event.event_type_id and not event.event_mail_ids:
-                event.event_mail_ids = False
+                event.event_mail_ids = self._default_event_mail_ids()
                 continue
 
             # lines to keep: those with already sent emails or registrations
