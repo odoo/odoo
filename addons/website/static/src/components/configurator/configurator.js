@@ -84,7 +84,7 @@ class DescriptionScreen extends Component {
         super(...arguments);
         this.industrySelection = useRef('industrySelection');
         this.state = useStore((state) => state);
-        this.labelToName = {};
+        this.labelToId = {};
         this.getters = useGetters();
         this.dispatch = useDispatch();
     }
@@ -111,7 +111,7 @@ class DescriptionScreen extends Component {
             return val.label.startsWith(lcTerm);
         });
         let results = matches.slice(0, limit);
-        this.labelToName = {};
+        this.labelToId = {};
         let labels = results.map((val) => val.label);
         if (labels.length < limit) {
             let relaxedMatches = this.state.industries.filter((val) => {
@@ -122,20 +122,20 @@ class DescriptionScreen extends Component {
             labels = results.map((val) => val.label);
         }
         results.forEach((r) => {
-            this.labelToName[r.label] = r.name;
+            this.labelToId[r.label] = r.id;
         });
         response(labels);
     }
 
     selectIndustry(_, ui) {
-        this.dispatch('selectIndustry', this.labelToName[ui.item.label]);
+        this.dispatch('selectIndustry', this.labelToId[ui.item.label]);
         this.checkDescriptionCompletion();
     }
 
     blurIndustrySelection(ev) {
-        const name = this.labelToName[ev.target.outerText];
-        this.dispatch('selectIndustry', name);
-        if (name === undefined) {
+        const id = this.labelToId[ev.target.outerText];
+        this.dispatch('selectIndustry', id);
+        if (id === undefined) {
             this.industrySelection.el.textContent = '';
         } else {
             this.checkDescriptionCompletion();
@@ -143,7 +143,7 @@ class DescriptionScreen extends Component {
     }
 
     inputIndustrySelection(ev) {
-        this.dispatch('selectIndustry', this.labelToName[ev.target.outerText]);
+        this.dispatch('selectIndustry', this.labelToId[ev.target.outerText]);
     }
 
     selectWebsiteType(ev) {
@@ -233,13 +233,13 @@ class FeaturesSelectionScreen extends Component {
     }
 
     async buildWebsite() {
-        const industryName = this.state.selectedIndustry;
-        if (!industryName) {
+        const industryId = this.state.selectedIndustry;
+        if (!industryId) {
             this.env.router.navigate({to: 'CONFIGURATOR_DESCRIPTION_SCREEN'});
             return;
         }
         const params = {
-            industry_name: industryName,
+            industry_id: industryId,
             palette: this.state.selectedPalette
         };
         const themes = await rpc.query({
@@ -295,12 +295,11 @@ Object.assign(App, {
 //---------------------------------------------------------
 
 const ROUTES = [
-    {name: 'CONFIGURATOR_WELCOME_SCREEN', path: '/website/configurator/1', component: WelcomeScreen},
+    {name: 'CONFIGURATOR_WELCOME_SCREEN', path: '/website/configurator', component: WelcomeScreen},
     {name: 'CONFIGURATOR_DESCRIPTION_SCREEN', path: '/website/configurator/2', component: DescriptionScreen},
     {name: 'CONFIGURATOR_PALETTE_SELECTION_SCREEN', path: '/website/configurator/3', component: PaletteSelectionScreen},
     {name: 'CONFIGURATOR_FEATURES_SELECTION_SCREEN', path: '/website/configurator/4', component: FeaturesSelectionScreen},
     {name: 'CONFIGURATOR_THEME_SELECTION_SCREEN', path: '/website/configurator/5', component: ThemeSelectionScreen},
-    {name: 'CONFIGURATOR_WELCOME_SCREEN_LANG', path: '/{{lang}}/website/configurator/1', component: WelcomeScreen},
 ];
 
 //---------------------------------------------------------
@@ -347,8 +346,8 @@ const actions = {
     selectWebsitePurpose({state}, id) {
         state.selectedPurpose = id;
     },
-    selectIndustry({state}, name) {
-        state.selectedIndustry = name;
+    selectIndustry({state}, id) {
+        state.selectedIndustry = id;
     },
     changeLogo({state}, data) {
         state.logo = data;
@@ -471,7 +470,7 @@ async function applyConfigurator(self, themeName) {
         const data = {
             selected_features: selectedFeatures,
             logo: self.state.logo,
-            industry: self.state.selectedIndustry,
+            industry_id: self.state.selectedIndustry,
             selected_palette: self.state.selectedPalette.id,
             theme_name: themeName,
         };
