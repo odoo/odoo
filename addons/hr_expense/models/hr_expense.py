@@ -219,7 +219,7 @@ class HrExpense(models.Model):
         """
         self.ensure_one()
         journal = self.sheet_id.bank_journal_id if self.payment_mode == 'company_account' else self.sheet_id.journal_id
-        account_date = self.sheet_id.accounting_date or self.date
+        account_date = fields.Date.context_today(self)
         move_values = {
             'journal_id': journal.id,
             'company_id': self.env.user.company_id.id,
@@ -283,7 +283,7 @@ class HrExpense(models.Model):
             move_line_name = expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64]
             account_src = expense._get_expense_account_source()
             account_dst = expense._get_expense_account_destination()
-            account_date = expense.sheet_id.accounting_date or expense.date or fields.Date.context_today(expense)
+            account_date = fields.Date.context_today(expense)
 
             company_currency = expense.company_id.currency_id
             different_currency = expense.currency_id and expense.currency_id != company_currency
