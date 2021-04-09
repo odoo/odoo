@@ -35,56 +35,66 @@
 
 // The 'div.dropdown-menu' part is needed to override default bootstrap rule as
 // this file is unfortunately placed in common assets.
-div.dropdown-menu.bootstrap-datetimepicker-widget{
+div.dropdown-menu.bootstrap-datetimepicker-widget {
+    min-width: 0;
+    padding: 0;
+    border-top: 0;
+
+    &.bottom {
+        &:before, &:after {
+            transform: translateY(1px);
+        }
+    }
+
     // Need to put datetimepicker widget above everything else
     z-index: $zindex-modal + 1;
 
     // Also fix the dropdown width
-    width: 19rem;
+    width: 22rem;
 }
 
-.datepicker {
-    .table-sm {
-        > thead {
-            color: white;
-            background-color: $o-brand-odoo;
+.bootstrap-datetimepicker-widget .datepicker table {
+    th, td {
+        border-radius: 0;
+        border-bottom-width: $border-width;
+        width: percentage(1/8);
+        height: 30px;
+        line-height: 30px;
+        color: gray('900');
 
-            > tr {
-                &:first-child {
-                    th:hover {
-                        color: white;
-                        background-color: darken($o-brand-odoo, 10%);
-                    }
-                }
+        &.prev, &.next, &.old, &.new {
+            @include o-hover-opacity(.5);
+        }
+    }
 
-                &:last-child {
-                    color: $o-datepicker-week-color;
-                    background-color: $o-datepicker-week-bg-color;
-                }
-                > th {
-                    border-radius: 0;
-                }
-            }
+    thead tr:nth-child(2) th {
+        height: 20px;
+        line-height: 20px;
+    }
+
+    thead tr:nth-child(2) th, td.cw {
+        background-color: gray('100');
+        font-size: $font-size-sm;
+        font-weight: $font-weight-bold;
+        color: $o-main-text-color;
+    }
+
+    td {
+        font-size: ($font-size-base + $font-size-sm) * .5;
+
+        &.today:before {
+            border-bottom-color: $o-brand-primary;
         }
 
-        > tbody {
-            > tr {
-                > td {
-                    &.active, .active {
-                        background-color: $o-brand-primary;
-                        border-radius: 100px;
-                    }
-
-                    &.today:before {
-                        border-bottom-color: $o-brand-primary;
-                    }
-                }
-            }
+        &.active {
+            border-bottom-color: $bs-datetimepicker-active-color;
         }
     }
 }
 
 .picker-switch {
+    font-size: $font-size-lg;
+
     span.fa {
         margin: 0;
         @include transition($btn-transition);
