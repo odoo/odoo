@@ -29,6 +29,13 @@ class SaleOrder(models.Model):
     website_id = fields.Many2one('website', string='Website', readonly=True,
                                  help='Website through which this order was placed.')
 
+    @api.model
+    def _default_note_url(self):
+        website = self.env['website'].get_current_website()
+        if website:
+            return website.get_base_url()
+        return super()._default_note_url()
+
     @api.depends('order_line')
     def _compute_website_order_line(self):
         for order in self:
