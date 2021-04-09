@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_checkbook_tree" model="ir.ui.view">
+        <field name="name">account.checkbook.tree</field>
+        <field name="model">account.checkbook</field>
+        <field name="arch" type="xml">
+            <tree string="Checkbooks" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" editable="bottom">
+                <field name="issue_check_subtype"/>
+                <field name="next_number" force_save="1" attrs="{'readonly': [('issue_check_subtype', '==', 'electronic')]}"/>
+                <field name="range_to" force_save="1" attrs="{'readonly': [('issue_check_subtype', '==', 'electronic')]}"/>
+                <field name="numerate_on_printing"/>
+                <!-- <field name="block_manual_number"/> -->
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_checkbook_form" model="ir.ui.view">
+        <field name="name">account.checkbook.form</field>
+        <field name="model">account.checkbook</field>
+        <field name="arch" type="xml">
+            <form string="Checkbooks">
+                <header string="Checkbooks">
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet string="Checkbooks">
+                    <group>
+                        <field name="name" invisible="1"/>
+                        <field name="sequence_id" groups="base.group_no_one"/>
+                        <field name="next_number"/>
+                        <field name="issue_check_subtype"/>
+                        <field name="range_to"/>
+                        <field name="numerate_on_printing"/>
+                        <!-- <field name="block_manual_number"/> -->
+                        <field name="report_template"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
