@@ -9,7 +9,7 @@ class StockQuantityHistory(models.TransientModel):
     _name = 'stock.quantity.history'
     _description = 'Stock Quantity History'
 
-    inventory_datetime = fields.Datetime('Inventory at Date',
+    inventory_datetime = fields.Datetime('Inventory At Date',
         help="Choose a date to get the inventory at that date",
         default=fields.Datetime.now)
 

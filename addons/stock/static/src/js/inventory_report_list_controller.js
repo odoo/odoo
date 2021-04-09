@@ -36,7 +36,7 @@ var InventoryReportListController = ListController.extend({
     // -------------------------------------------------------------------------
 
     /**
-     * Handler called when the user clicked on the 'Inventory at Date' button.
+     * Handler called when the user clicked on the 'Inventory At Date' button.
      * Opens wizard to display, at choice, the products inventory or a computed
      * inventory at a given date.
      */
