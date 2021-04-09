@@ -1,0 +1,147 @@
+# Account Check Management
+
+## Resumen de circuitos y operaciones:
+
+### Cheques de terceros depositado
+Cobro (account.voucher) / diario "Cheques de terceros" / Estado "En mano"
+* Valores en cartera
+*       a deudores x venta
+
+#### Deposito y rechazo
+Depósito (account.move) / diario "Bancos" / Estado "Depositado"
+* Banco
+*       a Valores en cartera
+
+Rechazo (account.move) / diario "Bancos" / Estado "Rechazado"
+* valores rechazadods   500
+* gastos                100
+*       a Bancos            600
+
+Nota de débito (ND) / 
+* deudores x venta    600
+*       a gastos              100
+*       a valores rechazadods 500
+
+#### Entrega y rechazo
+Pago a proveedor (PAGO)
+    proveedores
+        a valores en cartera
+
+Rechazo cheque pasado (nota de debito)
+    valores rechazados
+    gasto
+        a proveedores
+
+Nota de debito a cliente (idem arriba)
+    deudores x venta    600
+        gastos                100
+        a valores rechazadods 500
+
+#### Devolución
+TODO
+
+#### Cambio
+TODO
+
+
+VALORES PROPIOS
+
+PAGO
+    proveedores
+        a cheques dif
+
+DEBITO
+    cheq dif
+        a banco
+
+RECHAZO Nota de débito
+    cheques dif
+    gastos
+        a proveed
+
+
+
+
+Debito
+    cheq dif
+        a banco
+
+Rechazo (ASIENTO DE RECHAZO)
+    banco
+        a valores propios rechazados
+    (aca podriamos agregar el gasto bancario tmb=)
+
+
+
+
+
+
+Rechazo 
+Valores 3ros rechazados
+    a valores en cartera
+
+
+
+Rechazo cheque pasado
+    Marco cheque como rechazado
+        Valores 3ros rechazados
+            a proveedores
+
+
+Alternativas:
+    Seguimos como estabamos:
+        no se permiten múltiples medios de pago
+        retenciones en mismo asiento y mismo diario de pago
+        habría que extender para poder pagar cosas que no sean facturas?
+    
+    Como estabamos + cheques con efectivo:
+        considerar a cheques como efectivo y permitir mezclar de alguna manera
+        retenciones (idem)
+        extender pagos (idem)
+
+    Nueva clase múltiples medios de pago:
+        un asiento para cada medio de pago utilizado
+        un asiento para cada retención? O todas las retenciones en uno?
+        un asiento/pago para cada cheque o todos en uno?
+        un asiento para ajuste? Diario particular? Debería exigir NC o ND?
+        extender pagos (idem)
+
+Preguntas:
+     como debería ser un asiento cuando se usa múltiples medios de pago (muchos asientos? donde va la retención? en otro diario?)
+
+DEFINIR:
+    Nombre de múltiples medios de pago (Payments / pagos / accunt.payment el oficial)
+        Pagos Múltiples
+        Pagos ??
+    Circuitos y posibilidades con cheques (que documento interviene en cada uno)
+        cobro cheque de tercero
+            pago entrante (vencimiento, cuit, )
+    Esta bien deposito de cheques análogo a transferencia? gastos? Circuito de cociliación y demás
+
+
+Ver como odoo conciliac paracialmente en la v9
+
+Definiticiones:
+    Sumar conciliaciones parciales
+    No permitimos ajustes en el pago, el ajuste va en la caja y luego va. Los AJUSTES SE HACEN CON UN DIARIO SI SE NECESITA
+
+
+Descripción de la nueva propuesta:
+    La idea es hacerlo más a la odoo way, por ej:
+        https://www.odoo.com/documentation/user/9.0/accounting/receivables/customer_payments/check.html
+        https://www.odoo.com/documentation/user/9.0/accounting/payables/pay/check.html
+        https://www.odoo.com/documentation/user/9.0/accounting/bank/misc/batch.html
+        https://github.com/OCA/account-financial-tools/blob/8.0/account_check_deposit
+    Entonces proponemos hacer un cheque un account.payment
+    La idea sería:
+        1. Crear diario tipo "cash" con Debit Methods y payment methods "Third Check"
+            TODO que la cuenta que se crea sea reconciliable y que no deje elegir manual tmb
+        2- Luego el cheque:
+            a) se puede usar para pagar
+            a) se puede usar para depositar
+    Para cheques de terceros:
+
+TODO:
+Podemos tratar de hacer que el cheque en si sea el apunte contable. De esta manera es mas facil dar de alta datos inciales y no dependemos de cambios de objetos ni nada.
+
+Tratamos de mantener la logica de https://www.odoo.com/documentation/user/9.0/accounting/receivables/customer_payments/check.html
