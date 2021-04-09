@@ -25,6 +25,7 @@
         'security/ir.model.access.csv',
         'data/digest_data.xml',
         'report/project_report_views.xml',
+        'report/project_task_burndown_chart_report_views.xml',
         'views/analytic_views.xml',
         'views/digest_views.xml',
         'views/rating_views.xml',
@@ -56,6 +57,7 @@
             'project/static/src/js/project_task_kanban_examples.js',
             'project/static/src/js/tours/project.js',
             'project/static/src/js/project_calendar.js',
+            'project/static/src/js/burndown_chart/*',
             'project/static/src/scss/project_dashboard.scss',
             'project/static/src/scss/project_form.scss',
         ],
@@ -66,5 +68,8 @@
         'web.assets_qweb': [
             'project/static/src/xml/**/*',
         ],
+        'web.qunit_suite_tests': [
+            'project/static/tests/burndown_chart_tests.js',
+        ]
     }
 }
