@@ -8,7 +8,7 @@
         <field name="priority">100</field>
         <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'" decoration-bf="state == 'handed'" decoration-danger="state == 'hrejected'" decoration-muted="state == 'cancel'" create="false" string="Checks">
+            <tree decoration-info="state == 'draft'" decoration-bf="state == 'handed'" decoration-danger="state == 'hrejected'" decoration-muted="state == 'cancel'" create="false" delete="false" edit="false" string="Checks">
                 <field name="checkbook_id" invisible="context.get('default_type',False) != 'issue_check'"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="name"/>
@@ -28,103 +28,70 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_account_check_create_tree">
-        <field name="name">account.check.create.tree</field>
-        <field name="model">account.check</field>
-        <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
-        <field name="inherit_id" ref="view_account_check_tree"/>
-        <field name="arch" type="xml">
-                <tree position="attributes">
-                <attribute name="create">true</attribute>
-            </tree>
-        </field>
-    </record>
-
     <record model="ir.ui.view" id="view_account_check_form">
         <field name="name">account.check.form</field>
         <field name="model">account.check</field>
         <field name="arch" type="xml">
-            <form string="Checks" create="false">
+            <form string="Checks" create="false" delete="false" edit="false" >
                 <field name="id" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="company_currency_id" invisible="1"/>
-            <header>
-                
-            </header>
-            <sheet string="Checks">
-                <h1>
-                    <field name="name"/>
-                </h1>
-                <group>
+                <header>
+                    
+                </header>
+                <sheet string="Checks">
+                    <h1>
+                        <field name="name"/>
+                    </h1>
                     <group>
-                        <field name="journal_id"/>
-                        <field name="checkbook_id" attrs="{'invisible':[('type','!=','issue_check')],'required':[('type','=','issue_check')]}" domain="[('journal_id', '=', journal_id)]"/>
-                        <field name="bank_id"/>
-                        <field name="number"/>
-                        <label for="amount"/>
-                        <div name="amount_div" class="o_row">
-                            <field name="amount"/>
-                            <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
-                        </div>
-                        <field name="amount_company_currency"/>
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="checkbook_id" attrs="{'invisible':[('type','!=','issue_check')], 'required':[('type','=','issue_check')]}" domain="[('journal_id', '=', journal_id)]"/>
+                            <field name="bank_id" attrs="{'invisible': [('type', '!=', 'third_check')]}"/>
+                            <!-- <field name="number"/> -->
+                            <label for="amount"/>
+                            <div name="amount_div" class="o_row">
+                                <field name="amount"/>
+                                <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
+                            </div>
+                            <field name="amount_company_currency"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="owner_name" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
+                            <field name="owner_vat" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
+                            <field name="issue_date"/>
+                            <field name="payment_date"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="state"/>
-                        <field name="owner_name" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
-                        <field name="owner_vat" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
-                        <field name="issue_date"/>
-                        <field name="payment_date"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                </group>
-                <group string="Operations">
-                    <field name="operation_ids" nolabel="1" readonly="1">
-                        <tree>
-                            <field name="date"/>
-                            <field name="operation"/>
-                            <field name="origin_name" string="Origin"/>
-                            <field name="partner_id"/>
-                        </tree>
-                        <form>
-                            <group>
+                    <group string="Operations">
+                        <field name="operation_ids" nolabel="1">
+                            <tree>
                                 <field name="date"/>
                                 <field name="operation"/>
-                                <field name="origin"/>
+                                <field name="origin_name" string="Origin"/>
                                 <field name="partner_id"/>
-                                <field name="notes"/>
-                            </group>
-                        </form>
-                    </field>
-                </group>
-            </sheet>    
-            <div class="oe_chatter">
-                <field name="message_follower_ids" widget="mail_followers"/>
-                <field name="activity_ids" widget="mail_activity"/>
-                <field name="message_ids" widget="mail_thread"/>
-            </div>                
+                            </tree>
+                            <form>
+                                <group>
+                                    <field name="date"/>
+                                    <field name="operation"/>
+                                    <field name="origin"/>
+                                    <field name="partner_id"/>
+                                    <field name="notes"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
-        </field>
-    </record> 
-
-    <record model="ir.ui.view" id="view_account_check_create_form">
-        <field name="name">account.check.create.form</field>
-        <field name="model">account.check</field>
-        <field name="inherit_id" ref="view_account_check_form"/>
-        <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
-        <field name="arch" type="xml">
-                <form position="attributes">
-                <attribute name="create">true</attribute>
-            </form>
-            <sheet position="before">
-                <!-- Si está creando un cheque a mano le damos este mensaje -->
-                <p class="alert alert-info" role="alert" style="margin-bottom:0px;" attrs="{'invisible':[('id','!=',False)]}">Recuerde que los cheques se crean con los pagos.<br/><b>Solamente</b> debe crear cheques manualmente para realizar algún <b>ajuste</b> o para la <b>carga incial</b> de los mismos.<br/>Podrá cargar las operaciones correspondientes una vez que haya guardado el cheque.</p>
-                <p class="alert alert-info oe_edit_only" role="alert" style="margin-bottom:0px;" attrs="{'invisible':[('id','=', False)]}"><b>IMPORTANTE:</b> las operaciones de cheques se crean automáticamente con los pagos, transferencias o los botones disponibles sobre el cheque.<br/><b>SOLO</b> debe crear o modificar operaciones para <b>carga de cheques inciales</b> o ajustes sobre <b>circuitos no convencionales.</b></p>
-            </sheet>
-            <field name="operation_ids" position="attributes">
-                <attribute name="readonly">0</attribute>
-                <attribute name="attrs">{'readonly':[('id','=',False)]}</attribute>
-            </field>
         </field>
     </record>
 
@@ -189,7 +156,6 @@
             <pivot string="Check">
                 <field name="payment_date" type="row" interval="month"/>
                 <field name="payment_date" type="row" interval="week"/>
-                 <!-- pylint:disable=duplicate-xml-fields -->
                <field name="amount" type="measure"/>
             </pivot>
         </field>
