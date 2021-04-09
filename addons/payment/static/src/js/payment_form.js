@@ -290,7 +290,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                         if (result) {
                             // if the server sent us the html form, we create a form element
                             var newForm = document.createElement('form');
-                            newForm.setAttribute("method", self._get_redirect_form_method());
+                            newForm.setAttribute("method", self._get_redirect_form_method(newForm));
                             newForm.setAttribute("provider", checked_radio.dataset.provider);
                             newForm.hidden = true; // hide it
                             newForm.innerHTML = result; // put the html sent by the server inside the form
@@ -349,7 +349,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @private
      * @return {string} The HTTP method, "post" by default
      */
-    _get_redirect_form_method: function () {
+    _get_redirect_form_method: function (newForm) {
+        var action_method = $(newForm).find('input[name="data_set"]').data('actionMethod');
+        if (typeof action_method !== typeof undefined && action_method !== false) {
+            return action_method; // set it to custom method
+        }
         return "post";
     },
     /**
