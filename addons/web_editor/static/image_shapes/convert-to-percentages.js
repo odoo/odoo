@@ -72,19 +72,35 @@ submitButton.addEventListener('click', async (ev) => {
 
     clipPath.setAttribute('clipPathUnits', 'objectBoundingBox');
     const backgroundEl = svgDocumentElement.getElementById('background');
-    const bgBbox = backgroundEl.getBBox();
-    const svgBackground = document.createElement('svg');
-    const strokeWidth = backgroundEl.getAttribute('stroke-width');
-    if (strokeWidth) {
-      const adj = parseFloat(strokeWidth) / 2;
-      svgBackground.setAttributeNS('http://www.w3.org/2000/svg', 'viewBox',
-      `${bgBbox.x - adj} ${bgBbox.y - adj} ${bgBbox.width + (adj * 2)} ${bgBbox.height + (adj * 2)}`);
-    } else {
-      svgBackground.setAttributeNS('http://www.w3.org/2000/svg', 'viewBox', `${bgBbox.x} ${bgBbox.y} ${bgBbox.width} ${bgBbox.height}`);
-    }
-    svgBackground.setAttributeNS('http://www.w3.org/2000/svg', 'preserveAspectRatio', 'none');
-    svgBackground.appendChild(backgroundEl);
-    svgDocumentElement.appendChild(svgBackground);
+    const backgroundEls = svgDocumentElement.getElementsByClassName('background')
+    Array.from(backgroundEls).forEach(el => {
+      const bgBbox = el.getBBox();
+      const svgBackground = document.createElement('svg');
+      const strokeWidth = el.getAttribute('stroke-width');
+      if (strokeWidth) {
+        const adj = parseFloat(strokeWidth) / 2;
+        svgBackground.setAttributeNS('http://www.w3.org/2000/svg', 'viewBox',
+        `${bgBbox.x - adj} ${bgBbox.y - adj} ${bgBbox.width + (adj * 2)} ${bgBbox.height + (adj * 2)}`);
+      } else {
+        svgBackground.setAttributeNS('http://www.w3.org/2000/svg', 'viewBox', `${bgBbox.x} ${bgBbox.y} ${bgBbox.width} ${bgBbox.height}`);
+      }
+      svgBackground.setAttributeNS('http://www.w3.org/2000/svg', 'preserveAspectRatio', 'none');
+      svgBackground.appendChild(el);
+      svgDocumentElement.appendChild(svgBackground);
+    });
+    // const bgBbox = backgroundEl.getBBox();
+    // const svgBackground = document.createElement('svg');
+    // const strokeWidth = backgroundEl.getAttribute('stroke-width');
+    // if (strokeWidth) {
+    //   const adj = parseFloat(strokeWidth) / 2;
+    //   svgBackground.setAttributeNS('http://www.w3.org/2000/svg', 'viewBox',
+    //   `${bgBbox.x - adj} ${bgBbox.y - adj} ${bgBbox.width + (adj * 2)} ${bgBbox.height + (adj * 2)}`);
+    // } else {
+    //   svgBackground.setAttributeNS('http://www.w3.org/2000/svg', 'viewBox', `${bgBbox.x} ${bgBbox.y} ${bgBbox.width} ${bgBbox.height}`);
+    // }
+    // svgBackground.setAttributeNS('http://www.w3.org/2000/svg', 'preserveAspectRatio', 'none');
+    // svgBackground.appendChild(backgroundEl);
+    // svgDocumentElement.appendChild(svgBackground);
 
     clipPath.appendChild(path);
     const image = document.createElement('image');

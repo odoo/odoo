@@ -12,6 +12,7 @@ const weUtils = require('web_editor.utils');
 const {
     normalizeColor,
     getBgImageURL,
+    DEFAULT_PALETTE,
 } = weUtils;
 var weWidgets = require('wysiwyg.widgets');
 const {
@@ -4438,7 +4439,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
  * Controls image width and quality.
  */
 registry.ImageOptimize = ImageHandlerOption.extend({
-
+    /**
+     * @override
+     */
     willStart() {
         const img = this._getImg();
         if (img.dataset.shape && img.dataset.originalMimetype) {
@@ -4446,7 +4449,6 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         }
         return this._super(...arguments);
     },
-
     /**
      * @override
      */
@@ -4462,31 +4464,31 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         this.$target.off('.ImageOptimization');
         return this._super(...arguments);
     },
-
     /**
      * @see this.selectClass for parameters
      */
     async shape(previewMode, widgetValue, params) {
-        if (previewMode === undefined) {
-            return;
-        }
         await this._applyShape(widgetValue, previewMode);
         this._getImg().classList.add('o_modified_image_to_save');
     },
     /**
-     * @see this.selectClass
+     * @see this.selectClass for parameters
      */
     async color(previewMode, widgetValue, params) {
-        if (this._getImg().dataset.shape) {
-            if (!widgetValue) {
-                await this._applyShape(this._getImg().dataset.shape);
-            } else {
-                await this._applyColor(widgetValue);
-            }
-            this._getImg().classList.add('o_modified_image_to_save');
+        const img = this._getImg();
+        if (widgetValue === undefined) {
+            return;
         }
+        const newColorId = parseInt(params.colorId);
+        if (widgetValue === "") {
+            widgetValue = weUtils.getCSSVariableValue('o-color-' + (newColorId + 1));
+        }
+        const oldColors = img.dataset.shapeColors.split(',');
+        const newColors = oldColors.slice(0);
+        newColors[newColorId] = normalizeColor(widgetValue);
+        await this._applyColor(newColors, oldColors);
+        img.classList.add('o_modified_image_to_save');
     },
-
     /**
      * @override
      */
@@ -4497,7 +4499,6 @@ registry.ImageOptimize = ImageHandlerOption.extend({
             img.dataset.mimetype = 'image/svg+xml';
         }
     },
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -4510,91 +4511,89 @@ registry.ImageOptimize = ImageHandlerOption.extend({
             await this._applyShape(img.dataset.shape, 'reset');
         }
     },
-
     /**
      * Applies the shape to the current image by converting the image to base 64 and including it into the svg
-     * @param {string} shape Part of the path to the svg file
-     * @param {*} previewMode state of the current editor
+     * @param {string} shapeName identifier of the shape
+     * @param {boolean|string} previewMode state of the current editor
      * @returns Returns a promise
      */
-    async _applyShape(shape, previewMode) {
+    async _applyShape(shapeName, previewMode) {
         const img = this._getImg();
-        if (!shape) {
+        if (!shapeName) {
             if (!img.dataset.shape) {
                 return;
             }
-            const svgUrl = img.getAttribute('src');
-            const svgText = await (await fetch(svgUrl)).text();
-            const SVGParser = new DOMParser();
-            const svg = SVGParser.parseFromString(svgText, 'image/svg+xml').documentElement;
-            const svgImage = svg.querySelector('image');
-            img.src = svgImage.getAttribute('xlink:href');
-            img.mimetype = 'image/jpeg';
+            img.src = img.dataset.originalSrc;
             delete img.dataset.shape;
             return;
         }
-        const [module, fileName] = shape.split('/');
-        const clipShapeURL = `/${module}/static/image_shapes/${fileName}.svg`;
-        const clipShape = await (await fetch(clipShapeURL)).text();
-        const SVGParser = new DOMParser();
-        const svg = SVGParser.parseFromString(clipShape, 'image/svg+xml').documentElement;
+        const [module, fileName] = shapeName.split('/');
+        const shapeURL = `/${module}/static/image_shapes/${fileName}.svg`;
+        const shape = await (await fetch(shapeURL)).text();
+        const svg = new DOMParser().parseFromString(shape, 'image/svg+xml').documentElement;
 
         const base64 = await applyModifications(img);
 
-        const svgImage = svg.querySelector('image');
-        svgImage.setAttribute('xlink:href', base64);
+        svg.querySelector('image').setAttribute('xlink:href', base64);
         svg.setAttribute('width', img.naturalWidth);
         svg.setAttribute('height', img.naturalHeight);
-        img.dataset.shape = shape;
-        await this._writeSvg(svg.outerHTML, fileName);
-        return this._applyColor(img.dataset.shapeColor, true, previewMode);
+        img.dataset.shape = shapeName;
+
+        const colorIds = [];
+        for (const colorID in DEFAULT_PALETTE) {
+            const match = shape.match(DEFAULT_PALETTE[colorID]);
+            if (match) {
+                colorIds.push(match[0]);
+            } else {
+                colorIds.push(null);
+            }
+        }
+        await this._writeSvg(svg.outerHTML);
+        return this._applyColor(false, colorIds, previewMode);
     },
 
     /**
-     * Applies the correct color to the shape by looking for the default palette's hexcode inside the OG svg files
-     * @param {string} color HEX Code for the color of the background shape
-     * @param {bool} newShape wether it's a new shape or not so we know to look for default colors or previous ones
-     * @param {string} previewMode state of the editor to know which colors to look for
+     * Replace the previous hex color values with new ones or current theme ones
+     * @param {String[]} newColors Array of HEX color code, can be false if no new colors are applied
+     * @param {String[]} oldColors Array of HEX color code value that we need to replace
+     * @param {boolean|string} previewMode state of the editor to know which colors to look for
      */
-    async _applyColor(color, newShape, previewMode) {
+    async _applyColor(newColors, oldColors, previewMode) {
         const img = this._getImg();
-        if (!img.dataset.shape) {
-            return;
-        }
+        const shapeURL = img.src;
+        let shape = await (await fetch(shapeURL)).text();
 
-        const fileName = img.dataset.shape.split('/')[1];
-        const clipShapeURL = img.src;
-        let clipShape = await (await fetch(clipShapeURL)).text();
-        let newColor = color && normalizeColor(color);
-        if (newShape) {
-            const DEFAULT_PALETTE = weUtils.DEFAULT_PALETTE;
-            const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');
-            if (previewMode === 'reset' && img.dataset.shapeColor) {
-                clipShape = clipShape.replace(combinedColorsRegex, img.dataset.shapeColor);
-            } else {
-                clipShape = clipShape.replace(combinedColorsRegex, match => {
-                    const colorId = Object.keys(DEFAULT_PALETTE).find(key => DEFAULT_PALETTE[key] === match.toUpperCase());
-                    return newColor = weUtils.getCSSVariableValue('o-color-' + colorId);
-                });
-            }
-        } else {
-            clipShape = clipShape.replace(img.dataset.shapeColor, newColor);
+        if (previewMode === "reset") {
+            newColors = img.dataset.shapeColors.split(',');
         }
-        await this._writeSvg(clipShape, fileName);
+        if (!newColors) {
+            newColors = [];
+            for (const oldColorId in oldColors) {
+                if (oldColors[oldColorId]) {
+                    newColors.push(weUtils.getCSSVariableValue('o-color-' + (parseInt(oldColorId) + 1)));
+                } else {
+                    newColors.push(null);
+                }
+            }
+        }
+        for (const colorId in newColors) {
+            if (newColors[colorId]) {
+                shape = shape.replace(oldColors[colorId], newColors[colorId]);
+            }
+        }
+        await this._writeSvg(shape);
         if (!previewMode) {
-            img.dataset.shapeColor = newColor;
+            img.dataset.shapeColors = newColors.join(',');
         }
     },
-
     /**
      * Replace the URL with a dataURL of the SVG converted in base64
-     * @param {string} svgText svg XML file as a string (inner content)
-     * @param {string} fileName name the file will take place as
-     * @returns returns a promise that's resolved once the svg is properly loaded in the document
+     * @param {string} svgText svg file as text (string)
+     * @returns {Promise} resolved once the svg is properly loaded in the document
      */
-    async _writeSvg(svgText, fileName) {
+    async _writeSvg(svgText) {
         const img = this._getImg();
-        const file = new File([svgText], fileName, {
+        const blob = new Blob([svgText], {
             type: 'image/svg+xml',
         });
 
@@ -4602,7 +4601,7 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         const readPromise = new Promise(resolve => {
             reader.addEventListener('load', () => resolve(reader.result));
         });
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(blob);
         const dataURL = await readPromise;
         const wrotePromise = new Promise((resolve, reject) => {
             img.addEventListener('load', () => resolve(), {once: true});
@@ -4631,14 +4630,30 @@ registry.ImageOptimize = ImageHandlerOption.extend({
         return displayWidth;
     },
     /**
+     * @overrid
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'colors') {
+            const shapeName = this._getImg().dataset.shape;
+            if (!shapeName) {
+                return false;
+            }
+            const colors = this._getImg().dataset.shapeColors.split(',');
+            return colors[parseInt(params.colorId)];
+        }
+        return this._super();
+    },
+    /**
      * @override
      */
     _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'shape':
                 return this._getImg().dataset.shape || '';
-            case 'color':
-                return this._getImg().dataset.shapeColor || '';
+            case 'color': {
+                const img = this._getImg();
+                return (img.dataset.shapeColors && img.dataset.shapeColors.split(',')[parseInt(params.colorId)]) || '';
+            }
         }
         return this._super(...arguments);
     },

@@ -389,11 +389,18 @@
             <we-button data-shape="web_editor/organic_2_pattern_dot" data-select-label="Organic Dot 01">Organic Dot</we-button>
             <we-button data-shape="web_editor/organic_3_pattern_cross" data-select-label="Organic Cross 01">Organic Cross</we-button>
             <we-button data-shape="web_editor/organic_4_pattern_caps" data-select-label="Organic Caps 01">Organic Caps</we-button>
-            <we-button data-shape="web_editor/oval_1_solid_rd" data-select-label="Oval 1">Oval 1</we-button>
-            <we-button data-shape="web_editor/oval_2_line" data-select-label="Oval 1">Oval 2</we-button>
-            <we-button data-shape="web_editor/oval_3_pattern_line" data-select-label="Oval 1">Oval 3</we-button>
+            <we-button data-shape="web_editor/oval_1_solid_rd">Oval 1</we-button>
+            <we-button data-shape="web_editor/oval_2_line">Oval 2</we-button>
+            <we-button data-shape="web_editor/oval_3_pattern_line">Oval 3</we-button>
+            <we-button data-shape="web_editor/fixed_random_blob">Multiple Colors</we-button>
         </we-select>
-        <we-colorpicker string=" ⌙ Background color" data-color="true" data-dependencies="shape" data-color-name="c1" />
+        <we-row string="Colors">
+            <we-colorpicker data-color="true" data-dependencies="shape" data-name="colors" data-color-id="0" />
+            <we-colorpicker data-color="true" data-dependencies="shape" data-name="colors" data-color-id="1" />
+            <we-colorpicker data-color="true" data-dependencies="shape" data-name="colors" data-color-id="2" />
+            <we-colorpicker data-color="true" data-dependencies="shape" data-name="colors" data-color-id="3" />
+            <we-colorpicker data-color="true" data-dependencies="shape" data-name="colors" data-color-id="4" />
+        </we-row>
     </div>
 
     <div data-js="DynamicSvg" data-selector="img">
