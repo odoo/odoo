@@ -9,7 +9,7 @@
     'description': """
         Test
         """,
-    'depends': ['website'],
+    'depends': ['website', 'website_form'],
     'data': [
         'test.xml',
     ],

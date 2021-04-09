@@ -15,6 +15,7 @@
         'views/snippets/snippets.xml',
         'views/snippets/s_website_form.xml',
         'views/website_form_templates.xml',
+        'data/website_form_data.xml',
     ],
     'installable': True,
     'auto_install': True,

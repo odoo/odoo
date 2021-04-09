@@ -10,13 +10,21 @@ from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 @tests.tagged('post_install', '-at_install')
 class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
     def test_visitor_banner_history(self):
+        # create a new page for testing purpose
+        test_page = self.env['website.page'].create({
+                'name': 'test_page',
+                'type': 'qweb',
+                'key': 'test_page',
+                'url': '/test',
+                'is_published': True,
+        })
         # create visitor history
         self.env['website.track'].create([{
             'page_id': self.env.ref('website.homepage_page').id,
             'visitor_id': self.visitor.id,
             'visit_datetime': self.base_datetime,
         }, {
-            'page_id': self.env.ref('website.contactus_page').id,
+            'page_id': test_page.id,
             'visitor_id': self.visitor.id,
             'visit_datetime': self.base_datetime - datetime.timedelta(minutes=10),
         }, {
@@ -27,7 +35,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
 
         handmade_history = "%s (21:10) → %s (21:20) → %s (21:30)" % (
             self.env.ref('website.homepage_page').name,
-            self.env.ref('website.contactus_page').name,
+            test_page.name,
             self.env.ref('website.homepage_page').name,
         )
         history = self.env['mail.channel']._get_visitor_history(self.visitor)
