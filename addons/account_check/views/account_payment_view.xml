@@ -8,17 +8,61 @@
         <field name="arch" type="xml">
             <form>
                 <field name="check_type" invisible="1"/>
-                <field name="check_subtype" invisible="1"/>
-                <!-- <field name="checkbook_block_manual_number" invisible="1"/> -->
-                <field name="checkbook_numerate_on_printing" invisible="1"/>
             </form>
             <xpath expr="//div[@name='amount_div']//field[@name='amount']" position="attributes">
-                <attribute name="attrs">{'readonly': [('payment_method_code', '=', 'delivered_third_check')]}</attribute>
+                <attribute name="attrs">{'readonly': [('check_type', '!=', False)]}</attribute>
                 <attribute name="force_save">1</attribute>
             </xpath>
-            <field name="payment_method_id" position="after">
-                <field name="check_deposit_type" widget="radio" attrs="{'invisible': ['|', ('payment_type', '!=', 'transfer'), ('payment_method_code', '!=', 'delivered_third_check')]}"/>
+            <field name="destination_journal_id" position="after">
+                <field
+                    name="delivery_check_ids"
+                    attrs="{'invisible': [('payment_method_code', '!=', 'delivered_third_check')]}"
+                    options="{'no_create': True}"
+                    domain="[('journal_id', '=', journal_id), ('state', '=', 'holding'), ('type', '=', 'third_check')]"
+                >
+                    <tree >
+                    <!-- <tree edit="false"> -->
+                        <field name="name"/>
+                        <field name="payment_date"/>
+                        <field name="amount" sum="Total"/>
+                        <field name="state" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <!-- this fields are only needed so that they are actually saved one creating throught check_ids field -->
+                        <field name="partner_id" invisible="1"/>
+                        <field name="type" invisible="1"/>
+                        <field name="journal_id" invisible="1"/>
+                        <field name="issue_date" invisible="1"/>
+                        <field name="bank_id" invisible="1"/>
+                        <field name="owner_name" invisible="1"/>
+                        <field name="owner_vat" invisible="1"/>
+                        <field name="checkbook_id" invisible="1"/>
+                    </tree>
+                </field>
             </field>
+            <group>
+                <label for="check_ids" attrs="{'invisible': [('payment_method_code', 'not in', ['received_third_check', 'issue_check'])]}"/>
+                <field context="{'default_partner_id': partner_id, 'default_journal_id': journal_id, 'default_currency_id': currency_id, 'default_type': check_type}" name="check_ids" widget="one2many" attrs="{'invisible': [('payment_method_code', 'not in', ['received_third_check', 'issue_check'])]}">
+                    <tree editable="bottom">
+                        <field name="checkbook_id" attrs="{'required': [('parent.check_type', '=', 'issue_check')], 'column_invisible': [('parent.check_type', '!=', 'issue_check')]}" domain="[('journal_id', '=', journal_id), ('state', '=', 'active')]"/>
+                        <field name="number"/>
+                        <field name="name"/>
+                        <field name="issue_date"/>
+                        <field name="payment_date"/>
+                        <field name="bank_id" attrs="{'required': [('parent.check_type', '=', 'third_check')], 'column_invisible': [('parent.check_type', '!=', 'third_check')]}"/>
+                        <field name="owner_vat" attrs="{'required': [('parent.check_type', '=', 'third_check')],'column_invisible': [('parent.check_type', '!=', 'third_check')]}"/>
+                        <field name="owner_name" attrs="{'required': [('parent.check_type', '=', 'third_check')],'column_invisible': [('parent.check_type', '!=', 'third_check')]}"/>
+                        <field name="amount"/>
+                        <field name="type" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="state" invisible="1"/>
+                        <field name="journal_id" invisible="1"/>
+                        <field name="partner_id" invisible="1"/>
+                    </tree>
+                </field>
+            </group>
+            <!-- <field name="payment_method_id" position="after">
+                <field name="check_deposit_type" widget="radio" attrs="{'invisible': ['|', ('payment_type', '!=', 'transfer'), ('payment_method_code', '!=', 'delivered_third_check')]}"/>
+            </field> -->
         </field>
     </record>
 
@@ -31,9 +75,9 @@
             <field name="name" position="after">
                 <field name="check_ids"/>
             </field>
-            <xpath expr="//filter[@name='state_sent']" position="before">
+            <!-- <xpath expr="//filter[@name='state_sent']" position="before">
                 <filter string="Checks To Print and Numerate" domain="[('payment_method_id.code', '=', 'issue_check'), ('state','=','draft'), ('check_name', '=', False)]" name="checks_to_numerate"/>
-            </xpath>
+            </xpath> -->
         </field>
     </record>
 
