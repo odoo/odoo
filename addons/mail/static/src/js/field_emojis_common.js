@@ -19,7 +19,7 @@ var FieldEmojiCommon = {
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._triggerOnchange = _.throttle(this._triggerOnchange, 1000, {leading: false});
+        this._triggerOnchange = _.debounce(this._triggerOnchange, 2000);
         this.emojis = emojis;
     },
 
@@ -91,7 +91,7 @@ var FieldEmojiCommon = {
 
     /**
      * Triggers the 'change' event to refresh the value.
-     * This method is throttled to run at most once every second.
+     * This method is debounced to run 2 seconds after typing ends.
      * (to avoid spamming the server while the user is typing his message)
      *
      * @private
