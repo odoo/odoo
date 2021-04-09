@@ -1,64 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="sale_quotation_send_views_form" model="ir.ui.view">
-            <field name="name">sale.quotation.send.form</field>
-            <field name="model">sale.quotation.send</field>
-            <field name="arch" type="xml">
-                <form string="Send Quotation(s)">
-                    <!-- truly invisible fields for control and options -->
-                    <field name="composition_mode" invisible="1"/>
-                    <field name="quotation_ids" invisible="1"/>
-                    <field name="email_from" invisible="1" />
-                    <field name="mail_server_id" invisible="1"/>
-                    <div class="text-left d-inline-block mr8" attrs="{'invisible': [('quotation_without_email', '=', False)]}">
-                        <field name="quotation_without_email" class="mr4"/>
-                    </div>
-                    <div name="mail_form">
-                        <!-- visible wizard -->
-                        <div attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
-                            <group>
-                                <label for="partner_ids" string="Recipients" groups="base.group_user"/>
-                                <div groups="base.group_user">
-                                    <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
-                                        <strong>Email mass mailing</strong> on
-                                        <span>the selected records</span>
-                                    </span>
-                                    <span>Followers of the document and</span>
-                                    <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
-                                        context="{'force_email':True, 'show_email':True}" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
-                                </div>
-                                <field name="subject" placeholder="Subject..." attrs="{'required': [('composition_mode', '=', 'comment')]}"/>
-                            </group>
-                            <field name="body" style="border:none;" options="{'style-inline': true}"/>
-                        </div>
-                        <group>
-                            <group attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
-                                <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
-                            </group>
-                            <group>
-                                <field name="template_id" options="{'no_create': True, 'no_edit': True}"
-                                    context="{'default_model': 'account.move'}"/>
-                            </group>
-                        </group>
-                    </div>
+    <record id="sale_quotation_send_views_form" model="ir.ui.view">
+        <field name="name">sale.quotation.send.form</field>
+        <field name="model">sale.quotation.send</field>
+        <field name="arch" type="xml">
+            <form string="Send By Email">
+                <!-- If there is draft, this is visible -->
+                            <!-- template for draft -->
+                <!-- If there is sale, this is visible -->
+                            <!-- template for sale -->
 
-                    <footer>
-                        <button string="Send"
-                            name="send_quotation_action" type="object" class="send btn-primary o_mail_send"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
-                    </footer>
-                </form>
-            </field>
-        </record>
+                <footer>
+                    <button string="Send"
+                        name="send_quotation_action" type="object" class="send btn-primary o_mail_send"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
 
-        <record id="model_sale_order_action_send_quotation" model="ir.actions.server">
-            <field name="name">Send Quotations by Email</field>
-            <field name="model_id" ref="model_sale_order"/>
-            <field name="binding_model_id" ref="model_sale_order"/>
-            <field name="binding_view_types">list</field>
-            <field name="state">code</field>
-            <field name="code">action = records.action_send_quotation()</field>
-        </record>
-    </data>
+    <record id="model_sale_order_action_send_quotation" model="ir.actions.server">
+        <field name="name">Send by Email</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_send_quotation()</field>
+    </record>
 </odoo>

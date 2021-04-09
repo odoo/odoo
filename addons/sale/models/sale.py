@@ -819,13 +819,17 @@ Reason(s) of this behavior could be:
         return False
 
     def _find_mail_template(self, force_confirmation_template=False):
-        """
-        Get the appropriate mail template.
+        """ 
+        Get the appropriate mail template for the current sale's order(s) based on their state.
 
-        :param force_confirmation_template False by default, this param allow to force the confirmation template to be used in any case.
-        :return: the correct mail template based on the current status.
+        If all SOs are 'done', the mail template is that of ...
+        blabla
+
+        :param bool force_confirmation_template: Allows to force the confirmation template to be used in any case
+        :return: The correct mail template based on the current status
+        :rtype: record of `mail.template`
         """
-        if force_confirmation_template or (all(order.state == 'sale' for order in self) and not self.env.context.get('proforma', False)):
+        if force_confirmation_template or (all(order.state == 'sale' for order in self) and not self.env.context.get('proforma')):
             template_id = int(self.env['ir.config_parameter'].sudo().get_param('sale.default_confirmation_template'))
             default_template = self.env['mail.template'].search([('id', '=', template_id)])
             return default_template if default_template else self.env.ref('sale.mail_template_sale_confirmation')
@@ -835,21 +839,31 @@ Reason(s) of this behavior could be:
         """
         Get the informations of the mail(s) to be send and open a wizard for confirmation.
 
-        :return wizard's view
+        :return: wizard's view
         """
-        template_id = self._find_mail_template().id
+        if any(o.state in ['done', 'cancel'] for o in self):
+            raise UserError(_('You cannot send a cancelled AND/OR a locked quotation or sales order by email.'))
+
+        active_draft = self.filtered(lambda o: o.state in ['draft', 'sent'])
+        active_sale = self.filtered(lambda o: o.state == 'sale')
+
+        template_draft = active_draft._find_mail_template()
+        template_sale = active_sale._find_mail_template()
         view = {
-            'name': _('Send Quotation(s)'),
+            'name': _('Send By Email'),
             'res_model': 'sale.quotation.send',
             'view_mode': 'form',
             'context': {
-                'default_template_id': template_id,
+                'default_draft_template_id': template_draft.id,
+                'default_sale_template_id': template_sale.id,
                 'mark_so_as_sent': True,
                 'active_model': 'sale.order',
                 # Setting both active_id and active_ids is required, mimicking how direct call to
                 # ir.actions.act_window works
-                'active_id': self.ids[0],
+                'active_id': self.ids[0], 
                 'active_ids': self.ids,
+                'active_draft_ids': active_draft.ids,
+                'active_sale_ids': active_sale.ids,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
