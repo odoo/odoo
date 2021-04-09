@@ -830,11 +830,11 @@ Reason(s) of this behavior could be:
             default_template = self.env['mail.template'].search([('id', '=', template_id)])
             return default_template if default_template else self.env.ref('sale.mail_template_sale_confirmation')
         return self.env.ref('sale.email_template_edi_sale')
-    
+
     def action_send_quotation(self):
         """
         Get the informations of the mail(s) to be send and open a wizard for confirmation.
-        
+
         :return wizard's view
         """
         template_id = self._find_mail_template().id

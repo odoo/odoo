@@ -73,7 +73,7 @@ class SaleQuotationSend(models.TransientModel):
         self.composer_id.with_context(mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids).send_mail()
         if self.env.context.get('mark_so_as_sent'):
             self.quotation_ids.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
-            
+
     def send_quotation_action(self):
         self.ensure_one()
         # Send the mails in the correct language by splitting the ids per lang.
