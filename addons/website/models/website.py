@@ -272,15 +272,14 @@ class Website(models.Model):
         return r
 
     @api.model
-    def configurator_recommended_themes(self, industry_name, palette):
+    def configurator_recommended_themes(self, industry_id, palette):
         domain = [('name', '=like', 'theme%'), ('name', 'not in', ['theme_default', 'theme_common'])]
         client_themes = request.env['ir.module.module'].search(domain).mapped('name')
         params = {
-            'industry_name': industry_name,
             'palette': palette,
             'client_themes': client_themes,
         }
-        return self._website_api_rpc('/api/website/1/configurator/recommended_themes', params)
+        return self._website_api_rpc('/api/website/1/configurator/recommended_themes/%s' % industry_id, params)
 
     @api.model
     def configurator_skip(self):
@@ -362,12 +361,13 @@ class Website(models.Model):
         pages_views = set_features(kwargs.get('selected_features'))
 
         # Load suggestion from iap for selected pages
+        requested_pages = list(pages_views.keys())
+        requested_pages.append('homepage')
         params = {
             'theme': kwargs.get('theme_name'),
-            'industry': kwargs.get('industry'),
-            'pages': list(pages_views.keys()),
+            'pages': requested_pages,
         }
-        custom_resources = self._website_api_rpc('/api/website/1/configurator/custom_resources', params)
+        custom_resources = self._website_api_rpc('/api/website/1/configurator/custom_resources/%s' % kwargs.get('industry_id'), params)
 
         # Update pages
         pages = custom_resources.get('pages', {})

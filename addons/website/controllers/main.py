@@ -223,7 +223,7 @@ class Website(Home):
         }
         return request.render('website.website_info', values)
 
-    @http.route(['/website/configurator/<int:step>'], type='http', auth="user", website=True)
+    @http.route(['/website/configurator', '/website/configurator/<int:step>'], type='http', auth="user", website=True, multilang=False)
     def website_configurator(self, step=1, **kwargs):
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
