@@ -1,7 +1,3 @@
-##############################################################################
-# For copyright and license notices, see __manifest__.py file in module root
-# directory
-##############################################################################
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError, ValidationError
 import logging

@@ -75,14 +75,6 @@ class AccountCheckbook(models.Model):
         default='draft',
         copy=False,
     )
-    # TODO depreciar esta funcionalidad que no estamos usando
-    block_manual_number = fields.Boolean(
-        default=True,
-        string='Block manual number?',
-        # readonly=True,
-        # states={'draft': [('readonly', False)]},
-        help='Block user to enter manually another number than the suggested'
-    )
     numerate_on_printing = fields.Boolean(
         default=False,
         string='Numerate on printing?',

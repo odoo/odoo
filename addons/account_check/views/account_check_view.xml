@@ -50,17 +50,7 @@
                 <field name="journal_id" invisible="1"/>
                 <field name="company_currency_id" invisible="1"/>
             <header>
-                <!-- usamos la accion en vez del metodo directamente para pedir una fecha -->
-                <button context="{'default_action_type': 'claim'}" name="%(action_account_check_action_wizard)d" type="action" string="Claim to Customer" attrs="{'invisible': ['|', ('state', '!=', 'rejected'), ('type', '!=', 'third_check')]}" help="It will create a draft debit note to customer and change check state"/>
-                <button context="{'default_action_type': 'customer_return'}" name="%(action_account_check_action_wizard)d" type="action" string="Return to Customer" attrs="{'invisible': ['|', ('state', '!=', 'holding'), ('type', '!=', 'third_check')]}" help="It will create a draft debit note to customer and change check state"/>
-                <!-- por ahora no permitimos debito si el cheque es corriente, lo que se hace es conciliar desde el banco solamente, si lo implementamos deberiamos implementar tmb que si el extracto lo hace entonces genere el debito, lo podemos hacer chequeando si se pasa el payment a conciliado o desde el extracto -->
-                <!-- al final hicimos debito directo para cheques corrientes, porque si no en el dashboard nos quedaba mal tambien, como cheques entregados -->
-                <button context="{'default_action_type': 'bank_debit'}" name="%(action_account_check_action_wizard)d" type="action" string="Bank Debit" states="handed" help="It will create a journal entry from Deferred Check Account to bank account and change check state"/>
-                <!-- rejections -->
-                <button context="{'default_action_type': 'reject'}" name="%(action_account_check_action_wizard)d" type="action" string="Supplier Return/Rejection" states="handed" help="It will create a draft debit note from supplier and change check state"/>
-                <button context="{'default_action_type': 'reject'}" name="%(action_account_check_action_wizard)d" type="action" string="Supplier Rejection" states="delivered" help="It will create a debit note from supplier in draft state and change check state"/>
-                <button context="{'default_action_type': 'reject'}" name="%(action_account_check_action_wizard)d" type="action" string="Bank Rejection" states="deposited" help="It will create an account entry from bank account to company rejection account and change check state"/>
-                <button context="{'default_action_type': 'reject'}" name="%(action_account_check_action_wizard)d" type="action" string="Sell Rejection" states="selled" help="It will create an account entry from cash account to company rejection account and change check state"/>
+                
             </header>
             <sheet string="Checks">
                 <h1>
@@ -218,7 +208,7 @@
         action="action_third_check"
         id="menu_third_check"
         sequence="40"
-        parent="account_payment_fix.menu_finance_bank_and_cash"/>
+        parent="account.menu_finance_receivables"/>
 
     <!-- Issued Check Menu -->
     <record model="ir.actions.act_window" id="action_issue_check">
@@ -233,6 +223,6 @@
         action="action_issue_check"
         id="menu_issue_check"
         sequence="50"
-        parent="account_payment_fix.menu_finance_bank_and_cash"/>
+        parent="account.menu_finance_payables"/>
 
 </odoo>

@@ -19,34 +19,35 @@
 ##############################################################################
 {
     'name': 'Account Check Management',
-    'version': "13.0.1.3.0",
+    'version': "1.0.0",
     'category': 'Accounting',
-    'summary': 'Accounting, Payment, Check, Third, Issue',
-    'author': 'ADHOC SA, AITIC S.A.S',
+    'summary': 'Checks Management',
+    'description': """
+This module add checks management including functionality for issue and third checks.
+
+To see option of checks to print on accounting dashboard you need to create a report named "check_report"
+
+NOTA: En la lógica de impresón de cheques y en general, solo se tienen en cuenta cheques pre-impresos ya que es el único requerimiento que tenemos por ahora. De requerirse, se podría implementar no pre-impreso básicamente haciendo que no se pueda editar el número y que se asigne automáticamente.
+""",
+    'author': 'ADHOC SA',
     'license': 'AGPL-3',
     'images': [
     ],
     'depends': [
-        # 'account',
-        # for bank and cash menu and also for better usability
-        'account_payment_fix',
-        # TODO we should move field amount_company_currency to
-        # account_payment_fix so that we dont need to depend on
-        # account_payment_group
-        'account_payment_group',
+        'account',
     ],
     'data': [
         'data/account_payment_method_data.xml',
-        'data/ir_actions_server_data.xml',
-        'wizard/account_check_action_wizard_view.xml',
-        'wizard/print_pre_numbered_checks_view.xml',
-        'wizard/res_config_settings_view.xml',
+        # 'data/ir_actions_server_data.xml',
+        # 'wizard/account_check_action_wizard_view.xml',
+        # 'wizard/print_pre_numbered_checks_view.xml',
+        # 'wizard/res_config_settings_view.xml',
         'views/account_payment_view.xml',
         'views/account_check_view.xml',
-        'views/account_journal_dashboard_view.xml',
+        # 'views/account_journal_dashboard_view.xml',
         'views/account_journal_view.xml',
         'views/account_checkbook_view.xml',
-        'views/account_chart_template_view.xml',
+        # 'views/account_chart_template_view.xml',
         'security/ir.model.access.csv',
         'security/account_check_security.xml',
     ],
