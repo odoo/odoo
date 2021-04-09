@@ -214,14 +214,14 @@ class ProjectTaskRecurrence(models.Model):
 
     def _create_next_task(self):
         for recurrence in self:
-            task = self.sudo().task_ids[-1]
+            task = recurrence.sudo().task_ids[-1]
             create_values = recurrence._new_task_values(task)
             new_task = self.env['project.task'].sudo().create(create_values)
             if not new_task.parent_id and task.child_ids:
                 children = []
                 # copy the subtasks of the original task
                 for child in task.child_ids:
-                    child_values = self._new_task_values(child)
+                    child_values = recurrence._new_task_values(child)
                     child_values['parent_id'] = new_task.id
                     children.append(child_values)
                 self.env['project.task'].create(children)
