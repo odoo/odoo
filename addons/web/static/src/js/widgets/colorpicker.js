@@ -654,6 +654,25 @@ ColorpickerWidget.isCSSColor = function (cssColor) {
     return ColorpickerWidget.convertCSSColorToRgba(cssColor) !== false;
 };
 
+/**
+ * Mixes two colors by applying a weighted average of their red, green and blue
+ * components.
+ *
+ * @static
+ * @param {string} cssColor1 - hexadecimal code or rgb() or rgba()
+ * @param {string} cssColor2 - hexadecimal code or rgb() or rgba()
+ * @param {number} weight - a number between 0 and 1
+ * @returns {string} - mixed color in hexadecimal format
+ */
+ColorpickerWidget.mixCssColors = function (cssColor1, cssColor2, weight) {
+    const rgba1 = ColorpickerWidget.convertCSSColorToRgba(cssColor1);
+    const rgba2 = ColorpickerWidget.convertCSSColorToRgba(cssColor2);
+    const rgb1 = [rgba1.red, rgba1.green, rgba1.blue];
+    const rgb2 = [rgba2.red, rgba2.green, rgba2.blue];
+    const [r, g, b] = rgb1.map((_, idx) => Math.round(rgb2[idx] + (rgb1[idx] - rgb2[idx]) * weight));
+    return ColorpickerWidget.convertRgbaToCSSColor(r, g, b);
+};
+
 const ColorpickerDialog = Dialog.extend({
     /**
      * @override

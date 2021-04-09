@@ -4,14 +4,13 @@ import rpc from 'web.rpc';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
 import session from 'web.session';
+import {ColorpickerWidget} from 'web.Colorpicker';
 import {_t, _lt} from 'web.core';
 
 const {Component, Store, mount, QWeb} = owl;
 const {useDispatch, useStore, useGetters, useRef} = owl.hooks;
 const {Router, RouteComponent} = owl.router;
 const {whenReady} = owl.utils;
-
-const MAX_PALETTES = 16;
 
 const WEBSITE_TYPES = {
     1: {id: 1, label: _lt("a business website"), name: 'business'},
@@ -28,28 +27,28 @@ const WEBSITE_PURPOSES = {
     4: {id: 4, label: _lt("inform customers"), name: 'inform_customers'}
 };
 
-const hex2lab = (hex) => {
-    let r = parseInt(hex.substring(1, 3), 16) / 255, g = parseInt(hex.substring(3, 5), 16) / 255, b = parseInt(hex.substring(5, 7), 16) / 255, x, y, z;
-    [r, g, b] = [r, g, b].map((x) => (x > 0.04045) ? Math.pow((x + 0.055) / 1.055, 2.4) : x / 12.92);
-    x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047;
-    y = (r * 0.2126 + g * 0.7152 + b * 0.0722) / 1.00000;
-    z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883;
-    [x, y, z] = [x, y, z].map((x) => (x > 0.008856) ? Math.pow(x, 1 / 3) : (7.787 * x) + 16 / 116);
-    return [(116 * y) - 16, 500 * (x - y), 200 * (y - z)];
-};
-
-const deltaE = (hexA, hexB) => {
-    let labA = hex2lab(hexA), labB = hex2lab(hexB);
-    let deltaL = labA[0] - labB[0], deltaA = labA[1] - labB[1], deltaB = labA[2] - labB[2];
-    let c1 = Math.sqrt(labA[1] * labA[1] + labA[2] * labA[2]), c2 = Math.sqrt(labB[1] * labB[1] + labB[2] * labB[2]);
-    let deltaC = c1 - c2;
-    let deltaH = deltaA * deltaA + deltaB * deltaB - deltaC * deltaC;
-    deltaH = deltaH < 0 ? 0 : Math.sqrt(deltaH);
-    let sc = 1.0 + 0.045 * c1, sh = 1.0 + 0.015 * c1;
-    let deltaLKlsl = deltaL / (1.0), deltaCkcsc = deltaC / (sc), deltaHkhsh = deltaH / (sh);
-    let i = deltaLKlsl * deltaLKlsl + deltaCkcsc * deltaCkcsc + deltaHkhsh * deltaHkhsh;
-    return i < 0 ? 0 : Math.sqrt(i);
-};
+const PALETTE_NAMES = [
+    'avantgarde-2',
+    'bistro-6',
+    'bookstore-4',
+    'generic-4',
+    'bookstore-5',
+    'beauty-3',
+    'cobalt-1',
+    'odoo-experts-2',
+    'artists-4',
+    'bewise-1',
+    'generic-16',
+    'generic-12',
+    'clean-2',
+    'generic-8',
+    'vehicle-1',
+    'anelusia-4',
+    'nano-2',
+    'notes-3',
+    'graphene-2',
+    'enark-4',
+];
 
 //---------------------------------------------------------
 // Components
@@ -215,8 +214,8 @@ class PaletteSelectionScreen extends Component {
         this.dispatch('setRecommendedPalette', color1, color2);
     }
 
-    selectPalette(paletteId) {
-        this.dispatch('selectPalette', paletteId);
+    selectPalette(paletteName) {
+        this.dispatch('selectPalette', paletteName);
         this.env.router.navigate({to: 'CONFIGURATOR_FEATURES_SELECTION_SCREEN'});
     }
 }
@@ -335,7 +334,16 @@ const getters = {
 
     getThemeName({state}, idx) {
         return state.themes.length > idx ? state.themes[idx].name : undefined;
-    }
+    },
+    /**
+     * @param {Object} obj
+     * @param {string|undefined} [obj.state]
+     * @returns {string|false}
+     */
+    getSelectedPaletteName({state}) {
+        const palette = state.selectedPalette;
+        return palette ? (palette.name || 'recommendedPalette') : false;
+    },
 };
 
 const actions = {
@@ -354,8 +362,12 @@ const actions = {
     changeLogo({state}, data) {
         state.logo = data;
     },
-    selectPalette({state}, paletteId) {
-        state.selectedPalette = state.allPalettes[paletteId];
+    selectPalette({state}, paletteName) {
+        if (paletteName === 'recommendedPalette') {
+            state.selectedPalette = state.recommendedPalette;
+        } else {
+            state.selectedPalette = state.palettes[paletteName];
+        }
     },
     toggleFeature({state}, featureId) {
         const feature = state.features[featureId];
@@ -364,23 +376,20 @@ const actions = {
         feature.selected = !feature.selected || forceFeatureActive;
     },
     setRecommendedPalette({state}, color1, color2) {
-        let palettes = [];
         if (color1 && color2) {
-            Object.values(state.allPalettes).forEach(palette => {
-                const delta1 = deltaE(color1, palette.color1);
-                const delta2 = deltaE(color2, palette.color2);
-                palette.score = (delta1 + delta2) / 2;
-            });
-            palettes = Object.values(state.allPalettes).sort((a, b) => a.score - b.score);
-            state.recommendedPalette = palettes[0];
+            if (color1 === color2) {
+                color2 = ColorpickerWidget.mixCssColors('#FFFFFF', color1, 0.2);
+            }
+            state.recommendedPalette = {
+                color1: color1,
+                color2: color2,
+                color3: ColorpickerWidget.mixCssColors('#FFFFFF', color2, 0.9),
+                color4: '#FFFFFF',
+                color5: ColorpickerWidget.mixCssColors(color1, '#000000', 0.75),
+            };
         } else {
-            palettes = Object.values(state.allPalettes);
+            state.recommendedPalette = undefined;
         }
-        const selectedPalettes = {};
-        palettes.slice(1, MAX_PALETTES + 1).forEach((palette) => {
-            selectedPalettes[palette.id] = palette;
-        });
-        state.palettes = selectedPalettes;
     },
     updateRecommendedThemes({state}, themes) {
         state.themes = themes.slice(0, 3);
@@ -406,31 +415,18 @@ async function getInitialState() {
     });
 
     // Load palettes from the current CSS
-    const allPalettes = {}, palettes = {};
+    const palettes = {};
     const style = window.getComputedStyle(document.documentElement);
-    const allPaletteNames = weUtils.getCSSVariableValue('palette-names', style).split(' ').map((name) => {
-        return name.replace(/'/g, "");
-    });
-    allPaletteNames.forEach((paletteName) => {
+
+    PALETTE_NAMES.forEach((paletteName) => {
         const palette = {
-            id: paletteName
+            name: paletteName
         };
         for (let j = 1; j <= 5; j += 1) {
             const color = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${j}`, style);
             palette[`color${j}`] = color;
         }
-        let duplicate = false;
-        for (const validatedPalette of Object.values(allPalettes)) {
-            if (validatedPalette.color1.toLowerCase() === palette.color1.toLowerCase() && validatedPalette.color2.toLowerCase() === palette.color2.toLowerCase()) {
-                duplicate = true;
-            }
-        }
-        if (!duplicate) {
-            allPalettes[paletteName] = palette;
-            if (Object.keys(palettes).length < MAX_PALETTES) {
-                palettes[paletteName] = allPalettes[paletteName];
-            }
-        }
+        palettes[paletteName] = palette;
     });
 
     return Object.assign(r, {
@@ -440,7 +436,6 @@ async function getInitialState() {
         selectedPalette: undefined,
         recommendedPalette: undefined,
         palettes: palettes,
-        allPalettes: allPalettes,
         themes: [],
     });
 }
@@ -465,11 +460,21 @@ async function applyConfigurator(self, themeName) {
     if (themeName !== undefined) {
         $('body').append(self.env.loader);
         const selectedFeatures = Object.values(self.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
+        let selectedPalette = self.state.selectedPalette.name;
+        if (!selectedPalette) {
+            selectedPalette = [
+                self.state.selectedPalette.color1,
+                self.state.selectedPalette.color2,
+                self.state.selectedPalette.color3,
+                self.state.selectedPalette.color4,
+                self.state.selectedPalette.color5,
+            ];
+        }
         const data = {
             selected_features: selectedFeatures,
             logo: self.state.logo,
             industry_id: self.state.selectedIndustry,
-            selected_palette: self.state.selectedPalette.id,
+            selected_palette: selectedPalette,
             theme_name: themeName,
         };
         const resp = await rpc.query({
