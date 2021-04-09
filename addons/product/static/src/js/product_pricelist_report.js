@@ -91,7 +91,7 @@ var GeneratePriceList = AbstractAction.extend(StandaloneFieldManagerMixin, {
         StandaloneFieldManagerMixin.init.call(this);
         this.context = params.context;
         // in case the window got refreshed
-        if (params.params && params.params.active_ids && typeof(params.params.active_ids === 'string')) {
+        if (params.params && params.params.active_ids && typeof params.params.active_ids === 'string') {
             try {
                 this.context.active_ids = params.params.active_ids.split(',').map(id => parseInt(id));
                 this.context.active_model = params.params.active_model;
