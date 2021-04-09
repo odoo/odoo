@@ -86,6 +86,7 @@ class TestEventData(TestEventCommon):
             'name': 'Event Update Type',
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+            'event_mail_ids': False,
         })
         self.assertEqual(event.date_tz, self.env.user.tz)
         self.assertFalse(event.seats_limited)
@@ -148,13 +149,12 @@ class TestEventData(TestEventCommon):
         # setup test records
         event_type_default = self.env['event.type'].create({
             'name': 'Type Default',
-            'auto_confirm': True
+            'auto_confirm': True,
+            'event_type_mail_ids': False,
         })
         event_type_mails = self.env['event.type'].create({
             'name': 'Type Mails',
-            'auto_confirm': False
-        })
-        event_type_mails.write({
+            'auto_confirm': False,
             'event_type_mail_ids': [
                 Command.clear(),
                 Command.create({
@@ -164,7 +164,7 @@ class TestEventData(TestEventCommon):
                     'interval_type': 'after_event',
                     'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder'),
                 })
-            ]
+            ],
         })
         event = self.env['event.event'].create({
             'name': 'Event',
@@ -306,6 +306,36 @@ class TestEventData(TestEventCommon):
             set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
             set(['Registration Ticket'])
         )
+
+    @users('user_eventmanager')
+    def test_event_mail_default_config(self):
+        event = self.env['event.event'].create({
+            'name': 'Event Update Type',
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+        })
+        self.assertEqual(event.date_tz, self.env.user.tz)
+        self.assertFalse(event.seats_limited)
+        self.assertFalse(event.auto_confirm)
+
+        #Event Communications: when no event type, default configuration
+        self.assertEqual(len(event.event_mail_ids), 3)
+        self.assertEqual(event.event_mail_ids[0].interval_unit, 'now')
+        self.assertEqual(event.event_mail_ids[0].interval_type, 'after_sub')
+        self.assertEqual(event.event_mail_ids[0].template_ref, self.env.ref('event.event_subscription'))
+        self.assertEqual(event.event_mail_ids[1].interval_nbr, 1)
+        self.assertEqual(event.event_mail_ids[1].interval_unit, 'hours')
+        self.assertEqual(event.event_mail_ids[1].interval_type, 'before_event')
+        self.assertEqual(event.event_mail_ids[1].template_ref, self.env.ref('event.event_reminder'))
+        self.assertEqual(event.event_mail_ids[2].interval_nbr, 3)
+        self.assertEqual(event.event_mail_ids[2].interval_unit, 'days')
+        self.assertEqual(event.event_mail_ids[2].interval_type, 'before_event')
+        self.assertEqual(event.event_mail_ids[2].template_ref, self.env.ref('event.event_reminder'))
+
+        event.write({
+            'event_mail_ids': False
+        })
+        self.assertEqual(event.event_mail_ids, self.env['event.mail'])
 
     def test_event_mail_filter_template_on_event(self):
         """Test that the mail template are filtered to show only those which are related to the event registration model.
