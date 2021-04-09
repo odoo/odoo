@@ -107,11 +107,14 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).get_empty_list_help(help)
 
     @api.model
+    def _default_note_url(self):
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
+    @api.model
     def _default_note(self):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
         if use_invoice_terms and self.env.company.terms_type == "html":
-            baseurl = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            return _('Terms & Conditions: %s/terms', baseurl)
+            return _('Terms & Conditions: %s/terms', self._default_note_url())
         return use_invoice_terms and self.env.company.invoice_terms or ''
 
     @api.model
