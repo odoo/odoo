@@ -478,7 +478,7 @@ class MailComposer(models.TransientModel):
         if self.template_id:
             template_values = self.generate_email_for_composer(
                 self.template_id.id, res_ids,
-                ['email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'])
+                ['subject', 'body_html', 'email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'])
         else:
             template_values = {}
 
@@ -488,6 +488,8 @@ class MailComposer(models.TransientModel):
                 results[res_id].pop('partner_ids', None)
                 results[res_id].pop('email_to', None)
                 results[res_id].pop('email_cc', None)
+                results[res_id].pop('subject')
+                results[res_id].pop('body')
                 # remove attachments from template values as they should not be rendered
                 template_values[res_id].pop('attachment_ids', None)
             else:
