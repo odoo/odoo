@@ -6,9 +6,9 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2019
 # Ondřej Skuhravý <ondra.sk@volny.cz>, 2019
 # Ondřej Janovský <ondrej.janovsky@alarex.cz>, 2019
+# Martin N <nedbalm@gmail.com>, 2019
 # Ladislav Tomm <tomm@helemik.cz>, 2019
 # Chris <krystof.reklamy13@gmail.com>, 2019
-# Martin N <nedbalm@gmail.com>, 2019
 # milda dvorak <milda.dvorak@optimal4.cz>, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2019
@@ -16,9 +16,9 @@
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # David Kliment <daklime@gmail.com>, 2021
 # trendspotter, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: trendspotter, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6340,7 +6340,7 @@ msgstr "Deník"
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "Položky deníku"
+msgstr "Vnitřní účetní doklady"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -6383,7 +6383,7 @@ msgstr "Skupina deníků"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_group_list
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 msgid "Journal Groups"
-msgstr "Skupiny časopisů"
+msgstr "Skupiny účetních deníků"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -6425,7 +6425,7 @@ msgstr "Označení položky deníku"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 #, python-format
 msgid "Journal Items"
-msgstr "Položky deníku"
+msgstr "Účetní deník"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
@@ -6438,7 +6438,7 @@ msgstr "Položky deníku pro daňový audit"
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
-msgstr "Položky deníku k vyrovnání"
+msgstr "Účetní deník k vyrovnání"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -8386,7 +8386,7 @@ msgstr "Zkontrolujte, zda je v podniku nastaveno pole Převodní účet."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Please define a sequence on your journal."
-msgstr ""
+msgstr "Definujte sekvenci v deníku."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -8485,7 +8485,7 @@ msgstr "Rozdíl příspěvku v"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Zaúčtovat položky deníku"
+msgstr "Zaúčtovat vnitřní účetní doklady"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -8509,12 +8509,12 @@ msgstr "Zaúčtované"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Zaúčtované položky deníku"
+msgstr "Zaúčtované vnitřní účetní doklady"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Zaúčtované položky deníku"
+msgstr "Zaúčtovaný účetní deník"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12349,7 +12349,7 @@ msgstr "Účet dodavatele vytvořen"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, python-format
 msgid "Vendor Bills"
-msgstr "Faktury dodavatele"
+msgstr "Přijaté faktury"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -13038,6 +13038,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
 msgstr "Před odesláním příspěvku musíte přidat řádek."
 
@@ -13313,7 +13319,7 @@ msgstr "nesladěné položky"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "vendor bills"
-msgstr "prodejní poukázky"
+msgstr "Přijaté faktury"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form

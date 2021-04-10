@@ -68,10 +68,10 @@
 # Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Caroline Renson <car@odoo.com>, 2020
-# Martin Trigaux, 2020
 # Dany Lopez <almustafa.net@gmail.com>, 2020
 # Carles Antoli <carlesantoli@hotmail.com>, 2021
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
@@ -79,7 +79,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -427,7 +427,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
 " aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Pendiente de pago</span>"
+"-md-inline\"> Esperando Pago</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -13356,6 +13356,12 @@ msgstr ""
 #, python-format
 msgid "You must first define an opening move."
 msgstr "Debe primero definir un movimiento de apertura. "
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

@@ -62,7 +62,7 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # rejen he <251442037@qq.com>, 2020
 # as co02 <asco02@163.com>, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # 
@@ -22379,6 +22379,16 @@ msgid "Odoo helps you easily track all activities related to a vendor."
 msgstr "Odoo帮助您轻松跟踪与供应商相关的所有活动。"
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Odoo引荐方案"
@@ -26955,6 +26965,12 @@ msgstr "国家全名"
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
 msgstr "负责此联系人的内部用户。"
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids

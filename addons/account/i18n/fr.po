@@ -43,7 +43,6 @@
 # Daniel Deyris <daniel.deyris@phidias.fr>, 2019
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
-# Alexandra Jubert <aju@odoo.com>, 2020
 # Brice Reul <brice@bluerice.be>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
 # Fabien FML, 2020
@@ -70,6 +69,7 @@
 # adrien didenot <adrien.didenot@horanet.com>, 2021
 # Benjamin Stienon <tsb@odoo.com>, 2021
 # Jonathan Castillo <jcs@odoo.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -77,7 +77,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jonathan Castillo <jcs@odoo.com>, 2021\n"
+"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10888,6 +10888,8 @@ msgid ""
 "Technical field used to have a dynamic domain on journal / taxes in the form"
 " view."
 msgstr ""
+"Champ technique utilisé pour avoir un domaine dynamique sur le journal / les"
+" taxes dans la vue formulaire."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
@@ -10963,6 +10965,8 @@ msgid ""
 "Technical field used to restrict the domain of account tags for tax "
 "repartition lines created for this tax."
 msgstr ""
+"Champ technique utilisé pour resteindre le domaine des étiquettes de compte "
+"pour la répartition des lignes de taxe crées pour cette taxe."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__is_rounding_line
@@ -11210,6 +11214,8 @@ msgid ""
 "The combination of reference model and reference type on the journal is not "
 "implemented"
 msgstr ""
+"La combinaison du modèle de référence et du type de référence sur le journal"
+" n'est pas implémentée."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -13307,6 +13313,12 @@ msgstr ""
 #, python-format
 msgid "You must first define an opening move."
 msgstr "Vous devez d'abord définir un mouvement d'ouverture."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
