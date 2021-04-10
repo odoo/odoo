@@ -1,32 +1,59 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_livechat
+# 	* website_livechat
 #
-# Translators:
-# Martin Trigaux, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
-# Hamid Darabi, 2018
+# Amir <kenevist>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: Hamid Darabi, 2018\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
-"Language: fa\n"
+"POT-Creation-Date: 2021-04-05 12:11+0000\n"
+"PO-Revision-Date: 2021-04-05 16:54+0430\n"
+"Last-Translator: Amir <kenevist>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__session_count
+msgid "# Sessions"
+msgstr "تعداد نشست‌ها"
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
+msgid "%s has left the conversation."
+msgstr "%s گفتگو را ترک کرد."
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
+msgid ""
+"%s has started a conversation with %s. \n"
+"                        The chat request has been canceled."
+msgstr ""
+"%s گفتگو را با %s آغاز کرد.\n"
+"در خواست چت لغو شد."
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "<span class=\"fa fa-comments mr-2\"/>Speaking With"
+msgstr "<span class=\"fa fa-comments mr-2\"/>در حال گفتگو با"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Live Chat</span>\n"
-"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set "
-"here are website-specific.\" groups=\"website.group_multi_website\"/>"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set"
+" here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">گفتگوی زنده</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set"
+" here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -34,14 +61,46 @@ msgid "<span>Livechat Channel</span>"
 msgstr "<span>کانال گفتگوی زنده</span>"
 
 #. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
+msgid "Available"
+msgstr "موجود"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Avatar"
+msgstr "آواتار"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Bad"
+msgstr "بد"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
+msgid "Busy"
+msgstr "مشغول"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__can_publish
+msgid "Can Publish"
+msgstr "می‌تواند منتشر کند "
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Channel"
 msgstr "کانال"
 
 #. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Chat"
+msgstr "چت"
+
+#. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "تنظیمات پیکربندی"
 
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
@@ -49,12 +108,77 @@ msgid "Description of the channel displayed on the website page"
 msgstr "شرح کانال نمایش داده شده در صفحه وب‌سایت"
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Happy face"
-msgstr ""
+#: model:ir.model,name:website_livechat.model_mail_channel
+msgid "Discussion Channel"
+msgstr "کانال بحث"
 
 #. module: website_livechat
-#: model:website.menu,name:website_livechat.menu_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_website__display_name
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__display_name
+msgid "Display Name"
+msgstr "نام نمایشی"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Great"
+msgstr "بزرگ"
+
+#. module: website_livechat
+#: model:ir.model,name:website_livechat.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسیریابی HTTP"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Happy face"
+msgstr "صورتک خندان"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "History"
+msgstr "تاریخچه"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
+#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__id
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_livechat.field_website__id
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__id
+msgid "ID"
+msgstr "شناسه"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
+msgid "Is Published"
+msgstr "منتشر شده است"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Lang"
+msgstr "زبان"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_ir_http____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_mail_channel____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_website____last_update
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor____last_update
+msgid "Last Modified on"
+msgstr "آخرین تغییر در"
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/website.py:0
+#, python-format
 msgid "Live Support"
 msgstr "پشتیبانی زنده"
 
@@ -66,7 +190,7 @@ msgstr "کانال چت زنده وب‌سایت شما"
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
-msgstr "کانال گفتگوی زنده"
+msgstr "کانال چت آنلاین"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
@@ -75,7 +199,7 @@ msgstr "کانا‌ل‌های گفتگوی زنده"
 
 #. module: website_livechat
 #. openerp-web
-#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:30
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:0
 #, python-format
 msgid "Name"
 msgstr "نام"
@@ -83,19 +207,85 @@ msgstr "نام"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Neutral face"
-msgstr ""
+msgstr "صورتک خنثی"
 
 #. module: website_livechat
 #. openerp-web
-#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:29
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:0
 #, python-format
 msgid "New Channel"
+msgstr "کانال جدید"
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/website_visitor.py:0
+#, python-format
+msgid "No Livechat Channel allows you to send a chat request for website %s."
 msgstr ""
+"هیچ کانال گفتگوی زنده‌ای به شما امکان ارسال درخواست چت برای وب‌سایت %s را"
+" نمی‌دهد"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Not rated yet"
+msgstr "هنوز امتیازدهی نشده"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Okay"
+msgstr "تایید"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Online"
+msgstr "آنلاین"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
+msgid "Operator Name"
+msgstr "نام اپراتور"
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/website_visitor.py:0
+#, python-format
+msgid ""
+"Recipients are not available. Please refresh the page to get latest visitors"
+" status."
+msgstr ""
+"گیرندگان در دسترس نیستند. لطفا صفحه را ریفرش کنید تا آخرین وضعیت بازدید"
+" کنندگان را دریافت کنید."
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Sad face"
-msgstr ""
+msgstr "صورتک غمگین"
+
+#. module: website_livechat
+#: model:ir.actions.server,name:website_livechat.website_livechat_send_chat_request_action_server
+msgid "Send Chat Requests"
+msgstr "ارسال درخواست چت"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
+msgid "Send chat request"
+msgstr "ارسال درخواست چت"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
+msgid "Sessions"
+msgstr "نشست‌ها"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Speaking With"
+msgstr "در حال گفتگو با"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_id
+msgid "Speaking with"
+msgstr "در حال گفتگو با"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -113,17 +303,63 @@ msgid "The Team"
 msgstr "تیم"
 
 #. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_url
+msgid "The full URL to access the document through the website."
+msgstr "آدرس اینترنتی کامل برای دسترسی سند در وب‌سایت."
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
+msgid "The visitor"
+msgstr "بازدید کننده"
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
-msgid "There is no public livechat channel to show."
-msgstr "هیچ کانال گفتگوی زنده‌ای برای نمایش نیست."
+msgid "There are no public livechat channels to show."
+msgstr "هیچ کانال گفتگوی زنده‌ی عمومی برای نشان دادن وجود ندارد."
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "There is no rating for this channel for now."
-msgstr ""
+msgid "There are no ratings for this channel for now."
+msgstr "هیچ امتیازدهی برای این کانال در حال حاضر وجود ندارد."
 
 #. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_published
+msgid "Visible on current website"
+msgstr "قابل رویت در وب‌سایت کنونی"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_mail_channel__livechat_visitor_id
+msgid "Visitor"
+msgstr "بازدید کنندگان"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Visitor is online"
+msgstr "بازدید کننده آنلاین است"
+
+#. module: website_livechat
+#: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
+msgid "Visitor's Sessions"
+msgstr "نشست‌های بازدید کننده"
+
+#. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_website_visitor__mail_channel_ids
+msgid "Visitor's livechat channels"
+msgstr "کانال گفتگوی زنده بازدید کننده"
+
+#. module: website_livechat
+#: model:ir.ui.menu,name:website_livechat.website_livechat_visitor_menu
+msgid "Visitors"
+msgstr "بازدید کنندگان"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
 #: model:ir.model,name:website_livechat.model_website
+#, python-format
 msgid "Website"
 msgstr "وب‌سایت"
 
@@ -138,9 +374,27 @@ msgid "Website Live Chat Channel"
 msgstr "کانال گفتگوی زنده وب‌سایت"
 
 #. module: website_livechat
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
+msgid "Website URL"
+msgstr "آدرس اینترنتی وب‌سایت"
+
+#. module: website_livechat
+#: code:addons/website_livechat/tests/test_livechat_basic_flow.py:0
+#: model:ir.model,name:website_livechat.model_website_visitor
+#, python-format
+msgid "Website Visitor"
+msgstr "بازدید کننده وب‌سایت"
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
 msgid "Website description"
 msgstr "شرح وب‌سایت"
+
+#. module: website_livechat
+#: code:addons/website_livechat/models/mail_channel.py:0
+#, python-format
+msgid "an operator"
+msgstr "اپراتور"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
