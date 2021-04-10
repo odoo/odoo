@@ -5294,11 +5294,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Dashboard di abbonamento\n"
-"===========================\n"
-"Aggiunta di dashboard per:\n"
-"1) Analizzare i redditi ricorrenti e altri parametri per gli abbonamenti\n"
-"2) Aalizzare le modifiche di abbonamenti per venditore e calcolare il loro valore.\n"
+"Bacheca per vendite in abbonamento\n"
+"===================================\n"
+"Aggiunge bacheche per:\n"
+"1) analisi di ricavi ricorrenti e di altre misure per le sottoscrizioni\n"
+"2) analisi di modifiche delle sottoscrizioni per venditore e calcolo del valore.\n"
 "    "
 
 #. module: base
@@ -6647,12 +6647,12 @@ msgid ""
 "    - Generate invoice automatically at fixed intervals\n"
 msgstr ""
 "\n"
-"Modulo di gestione degli abbonamenti.\n"
+"Questo modulo consente di gestione le sottoscrizioni.\n"
 "\n"
 "Funzionalità:\n"
-"    - Crea & modifica abbonamenti\n"
-"    - Modifica abbonamenti con ordini di vendita\n"
-"    - Genera automaticamente fatture a intervalli fissi\n"
+"    - creazione e modifica sottoscrizioni\n"
+"    - modifica sottoscrizioni con ordini di vendita\n"
+"    - generazione automatica di fatture a intervalli fissi\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -9873,14 +9873,13 @@ msgstr "In archivio"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts ?"
-msgstr "Sei sicuro di eseguire la fusione automatica dei tuoi contatti?"
+msgstr "Eseguire veramente l'unione automatica dei contatti ?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
-msgstr ""
-"Sei sicuro di eseguire la lista della fusione automatica dei tuoi contatti?"
+msgstr "Eseguire veramente l'elenco delle unioni automatiche dei contatti?"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -11754,7 +11753,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
-msgstr ""
+msgstr "Configura le commissioni dei rivenditori sulle vendite in abbonamento"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -12880,7 +12879,7 @@ msgstr "Deduplica contatti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Deduplicate the other Contacts"
-msgstr "Deduplicare gli altri contatti"
+msgstr "Deduplica gli altri contatti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -14179,7 +14178,7 @@ msgstr "Esempi"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Exclude contacts having"
-msgstr "Esclude contacts having"
+msgstr "Escludere contatti con"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__exclusion_id
@@ -16517,7 +16516,7 @@ msgstr "Immagine a 512"
 #. module: base
 #: model:ir.model,name:base.model_image_mixin
 msgid "Image Mixin"
-msgstr ""
+msgstr "Mixin immagine"
 
 #. module: base
 #: code:addons/image.py:0
@@ -18818,7 +18817,7 @@ msgstr "Mauritius"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__maximum_group
 msgid "Maximum of Group of Contacts"
-msgstr "Massimo del gruppo di contatti"
+msgstr "Massimo per gruppo di contatti"
 
 #. module: base
 #: model:res.country,name:base.yt
@@ -18879,7 +18878,7 @@ msgstr "Unisci automaticamente"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge Automatically all process"
-msgstr "Unisci Automaticamente tutti i processi"
+msgstr "Unisci tutti con elaborazione automatica"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -18899,7 +18898,7 @@ msgstr "Procedura per unire i partner"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Merge the following contacts"
-msgstr "Unisci i seguenti contatti"
+msgstr "Unire i seguenti contatti"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -21358,6 +21357,16 @@ msgid ""
 msgstr ""
 "Odoo sta ora elaborando un'azione programmata.\n"
 "Al momento non sono possibili operazioni sui moduli, riprovare più tardi o contattare l'amministratore di sistema."
+
+#. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
@@ -24090,7 +24099,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
 msgid "Sale Subscription Dashboard"
-msgstr "Dashboard dell'Abbonamento"
+msgstr "Bacheca vendite in abbonamento"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase
@@ -24338,7 +24347,7 @@ msgstr "Rif. vista di ricerca"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Search duplicates based on duplicated data in"
-msgstr "Cerca duplicati basati sulla data di duplicazione"
+msgstr "Ricercare duplicati in base a copie di dati in"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -24412,10 +24421,10 @@ msgid ""
 "                            Odoo will propose you to merge only those having\n"
 "                            all these fields in common. (not one of the fields)."
 msgstr ""
-"Seleziona l’elenco di campi per cercare\n"
-"                             i record duplicati. Se selezioni più campi,\n"
-"                             Odoo ti proporrà di unire solo quelli che hanno\n"
-"                             tutti questi campi in comune. (non uno dei campi)."
+"Selezionare l'elenco dei campi utilizzati per\n"
+"                            la ricerca di record duplicati. Se viene selezionato\n"
+"                            più di un contatto, Odoo proporrà di unire solo quelli\n"
+"                            che hanno in comune tutti questi campi. (non solo uno)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__selectable
@@ -24431,9 +24440,9 @@ msgid ""
 "                                You can remove contacts from this list to avoid merging them."
 msgstr ""
 "I contatti selezionati verranno uniti insieme.\n"
-"                                 Tutti i documenti collegati a uno di questi contatti\n"
-"                                 saranno reindirizzati al contatto di destinazione.\n"
-"                                 Puoi rimuovere i contatti da questo elenco per evitare di unirli."
+"                                Tutti i documenti collegati a uno di questi contatti\n"
+"                                verranno reindirizzati a quello di destinazione.\n"
+"                                Per evitarne l'unione, è possibile rimuovere contatti dall'elenco."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -26088,6 +26097,12 @@ msgid "The internal user in charge of this contact."
 msgstr "L'utente interno responsabile di questo contatto. "
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr "Lo schema contiene una chiave di formato non valido"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "L'elenco dei modelli che estende il modello attuale."
@@ -26374,7 +26389,7 @@ msgstr "Negozio temi"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "There are no more contacts to merge for this request"
-msgstr "Nessun altro contatto da unire in relazione alla richiesta"
+msgstr "Nessun altro contatto da unire per la richiesta"
 
 #. module: base
 #: code:addons/base/models/ir_filters.py:0
@@ -26623,6 +26638,9 @@ msgid ""
 "This module ensure that data (such as analytic accounts) defined on the sale"
 " order via timesheet app are correctly set also on subscriptions"
 msgstr ""
+"Il modulo garantisce che i dati (come i conti analitici) indicati "
+"nell'ordine di vendita tramite l'applicazione foglio ore siano impostati "
+"correttamente anche nelle sottoscrizioni."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_taxcloud

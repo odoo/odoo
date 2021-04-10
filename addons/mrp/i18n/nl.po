@@ -38,12 +38,12 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
-"* Ontwerp: de MO is nog niet bevestigd.\n"
-"* Bevestigd: de MO is bevestigd, de voorraadregels en de herschikking van de componenten worden uitgevoerd.\n"
-"* In uitvoering: De productie is gestart (op de MO of op de WO).\n"
-"* Om te sluiten: de productie is klaar, de MO moet worden gesloten.\n"
-"* Klaar: de MO is gesloten, de voorraadbewegingen zijn geboekt.\n"
-"* Geannuleerd: de MO is geannuleerd, kan niet meer worden bevestigd."
+"* Concept: de productieorder is nog niet bevestigd.\n"
+"* Bevestigd: de productieorder is bevestigd, de voorraadregels en de bestelling van de componenten worden getriggerd.\n"
+"* In uitvoering: De productie is gestart (op de productieorder of op de werkorder).\n"
+"* Om te sluiten: de productie is klaar, de productieorder moet worden gesloten.\n"
+"* Klaar: de productieorder is gesloten, de voorraadbewegingen zijn geboekt.\n"
+"* Geannuleerd: de productieorder is geannuleerd, kan niet meer worden bevestigd."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -103,7 +103,7 @@ msgstr "# Stuklijsten waar gebruikt"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s Child MO's"
-msgstr "%s Onderliggende MO's"
+msgstr "%s Onderliggende productieorders"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -204,7 +204,7 @@ msgstr "<span class=\"o_stat_text\">Backorders</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr "<span class=\"o_stat_text\">Onderliggende MO</span>"
+msgstr "<span class=\"o_stat_text\">Onderliggende productieorder</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -246,7 +246,7 @@ msgstr "<span class=\"o_stat_text\">Uitval</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
-msgstr "<span class=\"o_stat_text\">Bron MO</span>"
+msgstr "<span class=\"o_stat_text\">Bron productieorder</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -488,7 +488,8 @@ msgstr "Voeg kwaliteitscontroles toe aan uw werkorders"
 #, python-format
 msgid "Add some materials to consume before marking this MO as to do."
 msgstr ""
-"Voeg materialen toe om te verbruiken voordat u deze MO als te doen aanduid."
+"Voeg materialen toe om te verbruiken voordat u deze productieorder als te "
+"doen aanduid."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -534,7 +535,7 @@ msgstr "Toegestaan"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__allowed_mo_ids
 msgid "Allowed Mo"
-msgstr "Toegestane Mo"
+msgstr "Toegestane productieorder"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__allowed_operation_ids
@@ -721,13 +722,13 @@ msgstr "Backorder bevestigingsregels"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr "Backorder MO"
+msgstr "Backorder productieorder"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
-msgstr "Backorder MO's"
+msgstr "Backorder productieorders"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
@@ -1083,7 +1084,7 @@ msgstr "Component beschikbaar"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
 msgid "Component of Draft MO"
-msgstr "Onderdeel van ontwerp-MO"
+msgstr "Onderdeel van concept productieorder"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_raw_ids
@@ -1107,8 +1108,8 @@ msgstr "Locatie componenten"
 msgid ""
 "Components will be reserved first for the MO with the highest priorities."
 msgstr ""
-"Onderdelen worden als eerste gereserveerd voor de MO met de hoogste "
-"prioriteiten."
+"Onderdelen worden als eerste gereserveerd voor de productieorder met de "
+"hoogste prioriteiten."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
@@ -2298,7 +2299,7 @@ msgstr "Te late activiteiten"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Late MO or Late delivery of components"
-msgstr "Te late MO of te late levering van componenten."
+msgstr "Te late productieorder of te late levering van componenten."
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_wood_ply
@@ -2415,13 +2416,13 @@ msgstr "Laag"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr "MO backorder"
+msgstr "Productieorder backorder"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "MO Generated by %s"
-msgstr "MO gegenereerd door %s"
+msgstr "Productieorder gegenereerd door %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -2859,7 +2860,7 @@ msgstr "Aantal fouten"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_child_count
 msgid "Number of generated MO"
-msgstr "Nummer gegenereerde MO"
+msgstr "Nummer van gegenereerde productieorder"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
@@ -3177,6 +3178,12 @@ msgstr "Planningsproblemen"
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
 msgid "Plastic Laminate"
 msgstr "Plastic laminaat"
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:0
+#, python-format
+msgid "Please delete the Manufacture Order first."
+msgstr "Verwijder eerst de productieorder."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_ply
@@ -4927,7 +4934,7 @@ msgid ""
 "used for a MO (related to the bom)"
 msgstr ""
 "Wizard in geval van verbruik in waarschuwing/strikt en meer component is "
-"gebruikt voor een MO (gerelateerd aan de stuklijst)"
+"gebruikt voor een productieorder (gerelateerd aan de stuklijst)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder

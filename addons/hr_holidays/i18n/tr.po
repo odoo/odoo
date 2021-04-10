@@ -9,18 +9,18 @@
 # Umur Akın <umura@projetgrup.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Martin Trigaux, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Mehmet Demirel <mdemirell@gmail.com>, 2020
 # Abdullah Onur Uğur <aonurugur@outlook.com>, 2020
 # Thermo Dynamic <emirhanayar2004@gmail.com>, 2020
 # Buket Şeker <buket_skr@hotmail.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Levent Karakaş <levent@mektup.at>, 2021
+# Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
+"Last-Translator: Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,38 +90,41 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(leave_type)s are only valid between %(start)s and %(end)s"
-msgstr "%(leave_type)s are only valid between %(start)s and %(end)s"
+msgstr "Sadece %(start)s ve %(end)s aralığında%(leave_type)sgeçerlidir."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(leave_type)s are only valid starting from %(date)s"
-msgstr "%(leave_type)s are only valid starting from %(date)s"
+msgstr "%(leave_type)ssadece  %(date)s tarihinden itibaren geçerlidir"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(leave_type)s are only valid until %(date)s"
-msgstr "%(leave_type)s are only valid until %(date)s"
+msgstr "%(leave_type)s sadece  %(date)s tarihine kadar geçerlidir."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(leave_type)s: %(duration).2f days (%(start)s)"
-msgstr "%(leave_type)s: %(duration).2f days (%(start)s)"
+msgstr "%(leave_type)s: %(duration).2f gün (%(start)s)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)"
-msgstr "%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)"
+msgstr ""
+"%(person)s ,  %(leave_type)siznindedir: %(duration).2f gün (%(start)s)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s"
-msgstr "%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s"
+msgstr ""
+"%(person)s , %(leave_type)s iznindedir: %(duration).2f saat,  %(date)s "
+"tarihinde"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
@@ -253,13 +256,13 @@ msgstr "12:00 Öğleden Sonra"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__0_5
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__0_5
 msgid "12:30 AM"
-msgstr ""
+msgstr "12:30 Ögleden Önce"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__12_5
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_to__12_5
 msgid "12:30 PM"
-msgstr ""
+msgstr "12:30 Öğleden Sonra"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_hour_from__1
@@ -622,7 +625,7 @@ msgstr "<span class=\"text-muted\">itibaren </span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">to </span>"
-msgstr "<span class=\"text-muted\">için </span>"
+msgstr "<span class=\"text-muted\">'den </span>'e kadar"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
@@ -632,7 +635,7 @@ msgstr "<span>Ekle</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span>Days</span>"
-msgstr "<span>Days</span>"
+msgstr "<span>Gün</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -645,8 +648,8 @@ msgid ""
 "A great way to keep track on employee’s PTOs, sick days, and approval "
 "status."
 msgstr ""
-"A great way to keep track on employee’s PTOs, sick days, and approval "
-"status."
+"Çalışanların ücretli izinlerini, hastalık izinlerini ve onay durumlarını "
+"takip etmek için mükemmel bir yöntem."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -655,14 +658,14 @@ msgid ""
 "A great way to keep track on your time off requests, sick days, and approval"
 " status."
 msgstr ""
-"A great way to keep track on your time off requests, sick days, and approval"
-" status."
+"Yıllık izin ve mazeret izni talepleri ve onay durumlarını takip etmek için "
+"mükemmel bir yol."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "A time off cannot be duplicated."
-msgstr "A time off cannot be duplicated."
+msgstr "İzin kopyalanamaz"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
@@ -687,9 +690,7 @@ msgstr "Bugün İzinliler"
 msgid ""
 "Absent Employee(s), Whose time off requests are either confirmed or "
 "validated on today"
-msgstr ""
-"Absent Employee(s), Whose time off requests are either confirmed or "
-"validated on today"
+msgstr "İzinli Personel, izin istekleri bugün doğrulanmış veya onaylanmış"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -912,13 +913,13 @@ msgstr ""
 msgid ""
 "Allocation request must be confirmed (\"To Approve\") in order to approve "
 "it."
-msgstr "Tahsis talebinin onaylanması için (\"Onaylama\") onaylanması gerekir"
+msgstr "Tahsis isteğini onaylamak için doğrulanmış (\"Onaylanacak\") olmalıdır."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Allocation request must be confirmed in order to approve it."
-msgstr "Tahsis talebinin onaylanması için onaylanması gerekir."
+msgstr "Onaylamak için tahsis talebinin doğrulanmış olması gereklidir."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -935,8 +936,7 @@ msgid ""
 "Allocation request must be in Draft state (\"To Submit\") in order to "
 "confirm it."
 msgstr ""
-"Tahsis talebinin onaylanması için Taslak durumunda (\"Göndermek\") olması "
-"gerekir."
+"Tahsis isteğini doğrulamak için taslak durumunda ('Gönderilecek') olmalıdır."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -945,6 +945,8 @@ msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
 "be reset to Draft."
 msgstr ""
+"Tahsis isteğini taslağa ayarlamak için durumu \"Reddedildi\" veya "
+"\"Onaylanacak\" olmalıdır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -960,7 +962,7 @@ msgstr "Tahsisler"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed_allocation
 msgid "Allow Employees Requests"
-msgstr "Allow Employees Requests"
+msgstr "Personel Taleplerine İzin Ver"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__holiday_type
@@ -1109,13 +1111,13 @@ msgstr "Personel Etiketine"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__manager
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
 msgid "By Employee's Manager"
-msgstr "By Employee's Manager"
+msgstr "Personelin Yöneticisi tarafından"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Manager and Time Off Officer"
-msgstr "By Employee's Manager and Time Off Officer"
+msgstr "Personelin Yöneticisi ve İzin Yetkilisi tarafından"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1130,7 +1132,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "By Time Off Officer"
+msgstr "İzin Yetkilisi tarafından"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1157,12 +1159,12 @@ msgstr "İptal et"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__cancel_leaves
 msgid "Cancel Future Leaves"
-msgstr "Cancel Future Leaves"
+msgstr "Gelecekteki İzinleri İptal Et"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_departure_wizard_view_form
 msgid "Cancel all time off after this date"
-msgstr "Cancel all time off after this date"
+msgstr "Bu tarihten sonraki tüm izinleri iptal et"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
@@ -1207,7 +1209,7 @@ msgstr "Şirket"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__mode_company_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__mode_company_id
 msgid "Company Mode"
-msgstr "Company Mode"
+msgstr "Firma modu"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_comp
@@ -1862,7 +1864,7 @@ msgstr "İzin Türü"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
 msgid "Leave Validation"
-msgstr "Leave Validation"
+msgstr "İzin Onayı"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
@@ -2094,14 +2096,15 @@ msgstr "Yeni"
 msgid ""
 "New %(leave_type)s Request created by %(user)s from %(start)s to %(end)s"
 msgstr ""
-"New %(leave_type)s Request created by %(user)s from %(start)s to %(end)s"
+"%(user)s  tarafından oluşturulan başlangıç %(start)s bitiş %(end)syeni "
+"%(leave_type)s talebi"
 
 #. module: hr_holidays
 #. openerp-web
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "New Allocation"
-msgstr "New Allocation"
+msgstr "Yeni Tahsis"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2110,7 +2113,7 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"New Allocation Request created by %(user)s: %(count)s Days of "
+"%(user)s tarafından oluşturulan Yeni Tahsis Talebi: %(count)s gün "
 "%(allocation_type)s"
 
 #. module: hr_holidays
@@ -2118,7 +2121,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "New Time Off"
-msgstr "New Time Off"
+msgstr "Yeni İzin"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
@@ -2263,7 +2266,7 @@ msgstr "Kapalı"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__hr_icon_display__presence_holiday_absent
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__hr_icon_display__presence_holiday_absent
 msgid "On leave"
-msgstr "On leave"
+msgstr "İzinli"
 
 #. module: hr_holidays
 #. openerp-web
@@ -2271,31 +2274,33 @@ msgstr "On leave"
 #: code:addons/hr_holidays/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Online"
-msgstr "Online"
+msgstr "Çevrimiçi"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can approve/refuse its own requests."
-msgstr "Only a Time Off Manager can approve/refuse its own requests."
+msgstr ""
+"Yalnızca bir İzin Yöneticisi kendi isteklerini onaylayabilir / reddedebilir."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset a refused leave."
-msgstr "Only a Time Off Manager can reset a refused leave."
+msgstr "Yalnızca bir İzin Yöneticisi reddedilen izni sıfırlayabilir"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset a started leave."
-msgstr "Only a Time Off Manager can reset a started leave."
+msgstr "Yalnızca bir İzin Yöneticisi başlamış izni sıfırlayabilir."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset other people leaves."
-msgstr "Only a Time Off Manager can reset other people leaves."
+msgstr ""
+"Yalnızca bir İzin Yöneticisi diğer kişilerin izinlerini sıfırlayabilir."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2304,8 +2309,7 @@ msgid ""
 "Only a Time off Approver can apply the second approval on allocation "
 "requests."
 msgstr ""
-"Only a Time off Approver can apply the second approval on allocation "
-"requests."
+"Tahsis talepleri için ikinci bir onayı sadece İzin Yöneticisi uygulayabilir."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2353,7 +2357,7 @@ msgstr "Ofis dışında"
 #: code:addons/hr_holidays/static/src/components/thread_view/thread_view.js:0
 #, python-format
 msgid "Out of office until %s."
-msgstr ""
+msgstr " 1%s tarihine kadar ofis dışında"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
@@ -2581,8 +2585,8 @@ msgid ""
 "Select the user responsible for approving \"Time Off\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
-"Select the user responsible for approving \"Time Off\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
+"Bu personelin \"İzin\" onayından sorumlu kullanıcıyı seçin.\n"
+"Eğer boşsa, onay bir Yönetici veya Onaylayıcı (ayarlar/kullanıcılar kısmında belirlenen) tarafından yapılır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__sequence
@@ -2592,7 +2596,7 @@ msgstr "Sıra"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed
 msgid "Set by Time Off Officer"
-msgstr "Set by Time Off Officer"
+msgstr "İzin Yetkilisi tarafından Belirlenmiş"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2659,7 +2663,7 @@ msgstr "Toplam"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_leaves_taken
 msgid "Sum of validated and non validated time off requests."
-msgstr "Sum of validated and non validated time off requests."
+msgstr "Doğrulanan ve doğrulanmayan izin taleplerinin toplamı."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_request_unit
@@ -2686,6 +2690,8 @@ msgid ""
 "The following employees are not supposed to work during that period:\n"
 " %s"
 msgstr ""
+"Aşağıdaki çalışanların bu dönem içerisinde çalışmıyor olmaları gerekiyor :\n"
+" %s"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_interval_number_check
@@ -2776,7 +2782,7 @@ msgstr ""
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
 msgstr ""
-"This area is automatically filled by the user who validates the allocation"
+"Bu alan, tahsisi doğrulayan kullanıcı tarafından otomatik olarak doldurulur"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -2784,6 +2790,8 @@ msgid ""
 "This area is automatically filled by the user who validates the allocation "
 "with second level (If allocation type need second validation)"
 msgstr ""
+"Bu alan (tahsis türü ikinci doğrulama gerektiriyorsa) ikinci düzey "
+"doğrulamayı yapan kullanıcı tarafından otomatik olarak doldurulur"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color_name
@@ -2813,6 +2821,9 @@ msgid ""
 "only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
 " and Time Off Officer'"
 msgstr ""
+"Bu kullanıcı, bu tür izinleri onaylamaktan sorumlu olacaktır. Bu yalnızca "
+"doğrulama 'İzin Yetkilisi Tarafından' veya 'Personelin Yöneticisi veya İzin "
+"Yetkilisi tarafından' olduğunda kullanılır"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -2850,7 +2861,7 @@ msgstr "İzin"
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "Time Off : %s"
-msgstr "Time Off : %s"
+msgstr " İzin : %s"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation
@@ -2883,7 +2894,7 @@ msgstr "İzin Takvimi"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
 msgid "Time Off Description"
-msgstr "Time Off Description"
+msgstr "İzin Tanımı"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_notif_subtype_id
@@ -2997,7 +3008,7 @@ msgstr "Time off Taken/Total Allocated"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Time off of people you are manager of"
-msgstr "Yönetici olduğunuz kişilerin izin süresi"
+msgstr "Yöneticisi olduğunuz kişilerin izin süresi"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3147,7 +3158,7 @@ msgstr "Tz"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz_mismatch
 msgid "Tz Mismatch"
-msgstr "Tz Mismatch"
+msgstr "Tz Uyuşmazlığı"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__unit_per_interval
@@ -3289,13 +3300,13 @@ msgstr "Yıl"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You can allocate %(allocation_type)s only before %(date)s."
-msgstr "You can allocate %(allocation_type)s only before %(date)s."
+msgstr "%(allocation_type)s sadece %(date)s'dan önce tahsis edebilirsiniz'."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You can not have 2 time off that overlaps on the same day."
-msgstr "You can not have 2 time off that overlaps on the same day."
+msgstr "Aynı günle örtüşen 2 izin olamaz."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3303,21 +3314,19 @@ msgstr "You can not have 2 time off that overlaps on the same day."
 msgid ""
 "You can not set 2 time off that overlaps on the same day for the same "
 "employee."
-msgstr ""
-"You can not set 2 time off that overlaps on the same day for the same "
-"employee."
+msgstr "Aynı personel için aynı günle örtüşen 2 izin olamaz."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off which is in %s state"
-msgstr "%s durumda bir izini silemezsiniz."
+msgstr "%s durumundaki bir izini silemezsiniz."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr "%s durumda bir tahsis talebini silemezsiniz."
+msgstr "%s durumundaki bir tahsis talebini silemezsiniz."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3325,17 +3334,14 @@ msgstr "%s durumda bir tahsis talebini silemezsiniz."
 msgid ""
 "You cannot first approve a time off for %s, because you are not his time off"
 " manager"
-msgstr ""
-"You cannot first approve a time off for %s, because you are not his time off"
-" manager"
+msgstr "%s için izne ön onay veremezsiniz, çünkü izin yöneticisi değilsiniz"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
-msgstr ""
-"You don't have the rights to apply second approval on a time off request"
+msgstr "İzin talebinde ikinci onay uygulama hakkınız yok"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3343,7 +3349,7 @@ msgstr ""
 msgid ""
 "You must be either %s's manager or Time off Manager to approve this leave"
 msgstr ""
-"You must be either %s's manager or Time off Manager to approve this leave"
+"Bu izni onaylamak için %s's yöneticisi veya İzin yöneticisi olmalısınız"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -3367,13 +3373,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your %(leave_type)s planned on %(date)s has been accepted"
-msgstr "Your %(leave_type)s planned on %(date)s has been accepted"
+msgstr "%(date)s tarihinde planlanan %(leave_type)skabul edildi"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your %(leave_type)s planned on %(date)s has been refused"
-msgstr "Your %(leave_type)s planned on %(date)s has been refused"
+msgstr "%(date)s tarihinde planlanan %(leave_type)s reddedildi"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
@@ -3391,7 +3397,7 @@ msgstr "Türe göre"
 #: code:addons/hr_holidays/static/src/xml/leave_stats_templates.xml:0
 #, python-format
 msgid "day(s)"
-msgstr "Günler"
+msgstr "gün(ler)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3408,19 +3414,19 @@ msgstr "gün"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "e.g. Public Holiday Allocation"
-msgstr "e.g. Public Holiday Allocation"
+msgstr "ör. Resmi Tatil Tahsisi"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
 msgid "e.g. Report to the next month..."
-msgstr "Örnek: Sonraki ay gösterilsin..."
+msgstr "ör: Sonraki ay raporlansın..."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "hours"
-msgstr "Saatler"
+msgstr "saat"
 
 #. module: hr_holidays
 #. openerp-web
@@ -3439,14 +3445,14 @@ msgstr "e kadar"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "refused"
-msgstr "refused"
+msgstr "reddedildi"
 
 #. module: hr_holidays
 #. openerp-web
 #: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "taken"
-msgstr "taken"
+msgstr "alındı"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
