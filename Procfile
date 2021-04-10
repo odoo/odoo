@@ -1,1 +1,1 @@
-odoo-bin
+web: odoo-bin
