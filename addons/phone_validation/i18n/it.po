@@ -69,7 +69,7 @@ msgstr "Data lista nera"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr "Telefono in lista nera è un cellulare"
+msgstr "Il telefono in lista nera è un cellulare"
 
 #. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
@@ -79,7 +79,7 @@ msgstr "Numeri di telefono in lista nera"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr "Telefono in lista nera è un telefono"
+msgstr "Il telefono in lista nera è un telefono fisso"
 
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
@@ -87,6 +87,8 @@ msgid ""
 "Blacklisted phone numbers means that the recipient won't receive SMS "
 "Marketing anymore."
 msgstr ""
+"Un numero di telefono in lista nera significa che il destinatario non "
+"riceverà più SMS di marketing."
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -297,7 +299,7 @@ msgstr "Numero di messaggi non letti"
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__number
 msgid "Number should be E164 formatted"
-msgstr ""
+msgstr "Il numero deve avere il formato E.164"
 
 #. module: phone_validation
 #: model:ir.ui.menu,name:phone_validation.phone_menu_main
@@ -315,7 +317,7 @@ msgstr "Lista nera telefoni"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "Mixin lista nera telefono"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
@@ -332,13 +334,13 @@ msgstr "Numero di telefono"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_validation_mixin
 msgid "Phone Validation Mixin"
-msgstr ""
+msgstr "Mixin convalida telefono"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Reason"
-msgstr "Causale"
+msgstr "Motivo"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
@@ -365,7 +367,7 @@ msgstr ""
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid "Unblacklisting Reason: %s"
-msgstr ""
+msgstr "Motivo rimozione da lista nera: %s"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_unread

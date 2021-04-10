@@ -5,7 +5,6 @@
 # Translators:
 # Datasource International <Hennessy@datasourcegroup.com>, 2020
 # waveyeung <waveyeung@qq.com>, 2020
-# keecome <7017511@qq.com>, 2020
 # 开阖软件 Jeff Wang <jeff@osbzr.com>, 2020
 # 开源智造OSCG-老杨 <yangxunbo@163.com>, 2020
 # WK Leong <zsdicky@gmail.com>, 2020
@@ -18,12 +17,11 @@
 # John An <johnxan@163.com>, 2020
 # ryan ryan <itechr@outlook.com>, 2020
 # 笔 陈 <cowboycb@qq.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
+# r <263737@qq.com>, 2020
 # Qin LIU <liu.qin@falinwa.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # 黎伟杰 <674416404@qq.com>, 2020
 # yuan wenpu <1140021222@qq.com>, 2020
-# r <263737@qq.com>, 2020
 # Liping Wang <lynn.config@gmail.com>, 2020
 # Manga Tsang <mts@odoo.com>, 2020
 # as co02 <asco02@163.com>, 2020
@@ -42,6 +40,8 @@
 # Martin Trigaux, 2021
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # Titan Li <lghbeta@gmail.com>, 2021
+# keecome <7017511@qq.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -49,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Titan Li <lghbeta@gmail.com>, 2021\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -367,7 +367,7 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr "<i class=\"fa fa-download\"/> 已下载"
+msgstr "<i class=\"fa fa-download\"/> 下载"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -516,8 +516,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"此值仅针对当前公司。\" aria-"
-"label=\"此值仅针对当前公司。\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1997,7 +1998,7 @@ msgstr "会计匹配"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__match_total_amount_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_total_amount_param
 msgid "Amount Matching %"
-msgstr "会计匹配%"
+msgstr "会计匹配 %"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_max
@@ -2910,7 +2911,7 @@ msgstr "可以分组付款"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__visible
 msgid "Can be Visible?"
-msgstr "可显示？"
+msgstr "是否显示？"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -3187,12 +3188,12 @@ msgstr "一旦您的账户开具了结算单，不可更改名字。如需执行
 #: model:ir.model.fields,field_description:account.field_account_tax_template__chart_template_id
 #: model:ir.model.fields,field_description:account.field_res_company__chart_template_id
 msgid "Chart Template"
-msgstr "表模板"
+msgstr "科目模板"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr "表模板"
+msgstr "科目模板"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -3488,7 +3489,7 @@ msgstr "此报告行的完整名称，将在报告中使用。"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__composer_id
 msgid "Composer"
-msgstr "邮件撰写者"
+msgstr "生成器"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composition_mode
@@ -3526,18 +3527,18 @@ msgstr "银行对账单明细条件"
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr "配置设置"
+msgstr "配置设定"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Configuration review"
-msgstr "配置检查"
+msgstr "检查配置"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
@@ -3566,7 +3567,7 @@ msgstr "确认这个之后就会自动创建一个带有在现金日记账中设
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
 msgid "Congratulations! You are all set."
-msgstr "恭喜！看来一切都准备好了。"
+msgstr "恭喜恭喜！大吉大利，今晚吃鸡。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3688,7 +3689,7 @@ msgstr "适用于此税标的国家/地区。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Coverage"
-msgstr "覆蓋範圍"
+msgstr "覆盖范围"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4435,7 +4436,7 @@ msgstr "默认收入账户"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Incoterm of your company"
-msgstr "贵公司违反国际贸易术语解释通则"
+msgstr "贵司的默认的国际贸易术语"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
@@ -6260,7 +6261,7 @@ msgstr "库存计价的入库科目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
-msgstr " 在这里插入你的条款和条件…"
+msgstr "在这里插入你的条款和条件…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8406,6 +8407,12 @@ msgid "Original Bills"
 msgstr "原始账单"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr "原始货币"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "发起人付款"
@@ -8467,7 +8474,7 @@ msgstr "传出付款"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__mail_server_id
 msgid "Outgoing mail server"
-msgstr "邮件发送服务器"
+msgstr "发件服务器"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_credit_account_id
@@ -8784,7 +8791,7 @@ msgstr "付款方式"
 #: model:ir.model.fields,field_description:account.field_account_move__qr_code_method
 #: model:ir.model.fields,field_description:account.field_account_payment__qr_code_method
 msgid "Payment QR-code"
-msgstr "支付二维码"
+msgstr "收付款二维码"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_payment_receipt
@@ -8849,47 +8856,47 @@ msgstr "对客户解释的付款条款..."
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment terms: 15 Days"
-msgstr "付款条款：15天"
+msgstr "付款条件：15天"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_2months
 msgid "Payment terms: 2 Months"
-msgstr "付款条款： 2个月"
+msgstr "付款条件： 2个月"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_21days
 msgid "Payment terms: 21 Days"
-msgstr "支付条款：21天"
+msgstr "支付条件：21天"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_30days
 msgid "Payment terms: 30 Days"
-msgstr "支付条款：30天"
+msgstr "支付条件：30天"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr "付款条款：次月月底预付30%"
+msgstr "付款条件：次月月底预付30%"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "支付条款:现付30%，余款60天"
+msgstr "支付条件:现付30%，余款60天"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_45days
 msgid "Payment terms: 45 Days"
-msgstr "付款条款：45天"
+msgstr "付款条件：45天"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_end_following_month
 msgid "Payment terms: End of Following Month"
-msgstr "付款条款：次月月底"
+msgstr "付款条件：次月月底"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr "付款条款：立即支付"
+msgstr "付款条件：立即支付"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -8985,7 +8992,7 @@ msgstr "期间"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_plaid
 msgid "Plaid Connector"
-msgstr "Plaid 接口"
+msgstr "Plaid 连接器"
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0
@@ -9993,7 +10000,7 @@ msgstr "SEPA 信用转移 (SCT)"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA Direct Debit (SDD)"
-msgstr "SEPA借记交易"
+msgstr "SEPA借记交易(SDD)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_sms_error
@@ -10475,7 +10482,7 @@ msgstr "序列确定报告中的行的顺序（较小的行首先出现）。 �
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__secure_sequence_id
 msgid "Sequence to use to ensure the securisation of data"
-msgstr "用於確保資料安全的序列"
+msgstr "确保数据安全的顺序"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__service
@@ -10917,7 +10924,7 @@ msgstr "主题..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "Sublines"
-msgstr "副线"
+msgstr "子行"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report__root_line_ids
@@ -11491,9 +11498,9 @@ msgid ""
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
 "用于强制执行系统通常会误解的复杂序列构成的技术领域。\n"
-"这是一个正则表达式，可以包括以下所有捕获组：prefix1，year，prefix2，month，prefix3，seq，suffix。\n"
-"前缀*组是年，月与实际递增序号（seq）之间的分隔符。\n"
-"e.g\\: ^(?P<prefix1>.*?)(?P<year>\\\\d{4})(?P<prefix2>\\\\D*?)(?P<month>\\\\d{2})(?P<prefix3>\\\\D+?)(?P<seq>\\\\d+)(?P<suffix>\\\\D*?)$"
+"这是一个正则表达式，可以包括以下所有捕获组: 前缀1, 年, 前缀2, 月, 前缀3, 序号, 后缀.\n"
+"前缀*组是年月与实际递增序号（seq）之间的分隔符\n"
+"例如: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__exclude_from_invoice_tab
@@ -11713,7 +11720,7 @@ msgid ""
 "The 'Internal Type' is used for features available on different types of "
 "accounts: liquidity type is for cash or bank accounts, payable/receivable is"
 " for vendor/customer accounts."
-msgstr " '内部类型' 用于不同类型科目的功能: 流动性用于现金或银行科目, 应付/应收用于供应商/客户科目."
+msgstr "'内部类型' 用于不同类型科目的功能: 流动性用于现金或银行科目, 应付/应收用于供应商/客户科目."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
@@ -11866,7 +11873,7 @@ msgstr "银行对账单行用来银行对账"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__chart_template_id
 msgid "The chart template for the company (if any)"
-msgstr "公司的表单模板"
+msgstr "贵司的科目模板（如果有的话）"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12032,7 +12039,7 @@ msgstr "以下结算单将不会通过电子邮件发送，因为客户没有电
 #, python-format
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
-msgstr ""
+msgstr "以下正则表达式对于创建合作伙伴映射无效: %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12211,7 +12218,7 @@ msgstr ""
 "映射使用正则表达式。\n"
 "- 要匹配行初的文本（在标签或注释中），只需填写文本即可。\n"
 "- 要匹配任意位置的文本（在标签或注释中），请将文本放在 .* 之间。\n"
-"  e.g: .*N°48748 abc123.*"
+"  例如: .*N°48748 abc123.*"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -12767,7 +12774,7 @@ msgid ""
 "with few new accounts (You don't need to define the whole structure that is "
 "common to both several times)."
 msgstr ""
-"这个可选字段的功能是，您可以把一个科目模版链接到另一个与当前根所属模版不一样的科目模版。这样您就可以扩展另一个科目模版，只需要定义本模板里要新增的会计科目即可，不用全部重来。"
+"这个可选字段的功能是，您可以把一个科目模版链接到另一个与当前根所属模版不一样的科目模版。这样您就可以扩展另一个科目模版，只需要定义本模板里要新增的会计科目即可(不用全部重来)。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -12918,7 +12925,7 @@ msgstr "应收总计"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_signed
 msgid "Total Signed"
-msgstr "总签字"
+msgstr "总计签名"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
@@ -13226,7 +13233,7 @@ msgstr "上传您自己的账单"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
 msgid "Use Anglo-Saxon accounting"
-msgstr "使用anglo-saxon会计"
+msgstr "使用盎格鲁撒克逊 Anglo-Saxon 会计"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
@@ -13821,7 +13828,7 @@ msgstr "无法注册付款，因为所选日记帐项目已无任何付款。"
 msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
-msgstr "您无法为所有入站项目（所有出站）登记付款。"
+msgstr "您不能为全部的入站或全部的出站的日记帐登记付款。"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -14047,7 +14054,7 @@ msgstr "在局部调账还在挂账状态，你不能切换一个科目到回避
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot use a deprecated account."
-msgstr "你不能使用作废的科目"
+msgstr "你不能使用作废的科目。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14163,7 +14170,7 @@ msgstr "邮编范围到"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "[Not set]"
-msgstr "[Not set]"
+msgstr "[未设置]"
 
 #. module: account
 #. openerp-web
@@ -14213,7 +14220,7 @@ msgstr "例如 中国银行"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g GEBABEBB"
-msgstr "e.g GEBABEBB"
+msgstr "例如 GEBABEBB"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -14228,7 +14235,7 @@ msgstr "例如 GAAP, IFRS, ..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "e.g. Give a phone call, check with others , ..."
-msgstr "e.g. 打个电话，和别人核实 , ..."
+msgstr "例如 打个电话，和别人核实 , ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14270,7 +14277,7 @@ msgstr "下月"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "on"
-msgstr "on"
+msgstr "在"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

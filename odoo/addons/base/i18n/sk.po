@@ -3,7 +3,7 @@
 # 	* base
 # 
 # Translators:
-# Rastislav Brenčič <rastislav.brencic99@gmail.com>, 2020
+# rastislav Brencic <rastislav.brencic99@gmail.com>, 2020
 # Radoslav Sloboda <rado.sloboda@gmail.com>, 2020
 # Filip Boskovič <filip.boskovic@26house.com>, 2020
 # Robert Kirschner <robertkirschner@yahoo.com>, 2020
@@ -4064,10 +4064,10 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Viesť k lístkom\n"
+"Potenciálny zákazník do požiadaviek\n"
 "===============\n"
 "\n"
-"Prepojiť modul s mapou vedie k lístkom\n"
+"Prepojiť modul aby sa prepojili potenciálni zákazníci do požiadaviek\n"
 "        "
 
 #. module: base
@@ -9174,7 +9174,7 @@ msgstr "Alokujte si voľné dni a sledujte žiadosti o voľné dni"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
-msgstr "Povoliť generovanie úloh fsm z lístka"
+msgstr "Povoliť generovanie úloh z požiadavky"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
@@ -11835,7 +11835,7 @@ msgstr "Vytvárajte reporty pracovníkov v teréne"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_helpdesk
 msgid "Create Tickets from Leads"
-msgstr "Vytvorte lístky z potenciálnych zákazníkov"
+msgstr "Vytvorte požiadavky z potenciálnych zákazníkov"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
@@ -17568,7 +17568,7 @@ msgstr "Vyhodnocovanie iniciatívy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
 msgid "Lead to Tickets"
-msgstr "Lead to Tickets"
+msgstr "Potenciálny zákazník do požiadaviek"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -20759,6 +20759,16 @@ msgstr ""
 "Operácie s modulmi nie sú v súčasnosti možné, skúste to znova neskôr alebo kontaktujte svojho správcu systému."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Program odporúčaní Odoo"
@@ -20882,7 +20892,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event Ticketing"
-msgstr "Online cestovný lístok na udalosti"
+msgstr "Online lístok na udalosť"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr_recruitment
@@ -20902,7 +20912,7 @@ msgstr "Online zadanie úlohy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_form
 msgid "Online Ticket Submission"
-msgstr "Online odoslanie lístka"
+msgstr "Online odoslanie požiadavky"
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -25447,6 +25457,12 @@ msgid "The internal user in charge of this contact."
 msgstr "Interný užívateľ, ktorý má na starosti komunikáciu s týmto kontaktom."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Zoznam modelov ktoré rozširujú súčasný model."
@@ -26088,7 +26104,7 @@ msgstr "Štvrtok"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
 msgid "Ticketing, Support, Livechat"
-msgstr "Predaj lístkov, podpora, živý chat"
+msgstr "Požiadavky, podpora, živý chat"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_slides
