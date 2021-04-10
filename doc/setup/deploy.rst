@@ -305,7 +305,7 @@ in ``/etc/nginx/sites-enabled/odoo.conf`` set:
   }
 
   server {
-   listen 443;
+   listen 443 ssl;
    server_name odoo.mycompany.com;
    proxy_read_timeout 720s;
    proxy_connect_timeout 720s;
@@ -318,7 +318,6 @@ in ``/etc/nginx/sites-enabled/odoo.conf`` set:
    proxy_set_header X-Real-IP $remote_addr;
 
    # SSL parameters
-   ssl on;
    ssl_certificate /etc/ssl/nginx/server.crt;
    ssl_certificate_key /etc/ssl/nginx/server.key;
    ssl_session_timeout 30m;
