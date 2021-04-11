@@ -17,7 +17,6 @@
 # 夏 冰 <qndym@126.com>, 2019
 # ryan ryan <itechr@outlook.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # Qin LIU <liu.qin@falinwa.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
@@ -37,6 +36,7 @@
 # ZhouYouliang <DavisJoe@vip.qq.com>, 2020
 # keecome <7017511@qq.com>, 2021
 # Titan Li <lghbeta@gmail.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Titan Li <lghbeta@gmail.com>, 2021\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8743,7 +8743,7 @@ msgstr "用于税金的递归 '%s'."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Ref"
-msgstr "参考"
+msgstr "编号"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__ref
@@ -10900,6 +10900,9 @@ msgid ""
 "However, the holder of \"%s\" is \"%s\".\n"
 "Please select another bank account or change the holder of \"%s\"."
 msgstr ""
+"“银行”类型日记帐的银行帐户持有人必须是公司 (%s)。\n"
+"但是,  \"%s\" 的持有者是 \"%s\"。\n"
+"请选择其他银行帐户或更改 \"%s\"的持有人。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -12645,6 +12648,12 @@ msgstr "您应该已经在收银机日记账上定义了一个 '内部转账科�
 #, python-format
 msgid "You must first define an opening move."
 msgstr "您必须首先定义一个打开动作。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr "条目 %s (id %s) 已过账。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

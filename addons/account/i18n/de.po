@@ -49,12 +49,12 @@
 # Serkan Oezcan <serkan.oezcan@braintec-group.com>, 2020
 # Damian Bürgin <damian.buergin@braintec-group.com>, 2020
 # Florian Pose <fp@igh.de>, 2020
-# Martin Trigaux, 2020
-# Felix Schubert <felix.schubert@go-erp.com>, 2020
 # Udo Hennig <info@udohennig.de>, 2021
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2021
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2021
 # Wolfgang Taferner, 2021
+# Martin Trigaux, 2021
+# Felix Schubert <felix.schubert@go-erp.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -62,7 +62,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Wolfgang Taferner, 2021\n"
+"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4662,7 +4662,7 @@ msgid ""
 "%s"
 msgstr ""
 "Doppelte Lieferantenreferenz entdeckt. Sie haben wahrscheinlich zweimal "
-"dieselbe Lieferantenrechnung/Gutschrift verwendet"
+"dieselbe Lieferantenrechnung/Gutschrift verwendet %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -4774,7 +4774,7 @@ msgstr "Buchungen sortiert nach"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Entries are hashed from %s (%s)"
-msgstr "Einträge werden von"
+msgstr "Einträge werden von %s (%s) gehashed."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -6409,7 +6409,7 @@ msgid ""
 " entry. You should create the credit note manually instead."
 msgstr ""
 "Es sieht so aus als wären die Steuern seid der Erstellung des Eintrages "
-"geändert worden. Sie sollten eine manuelle Kostenbuchung erstellen."
+"geändert worden. Sie sollten eine manuelle Gutschrift erstellen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8004,7 +8004,7 @@ msgstr "Originalrechnungen"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Original Currency"
-msgstr ""
+msgstr "Originalwährung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -8594,7 +8594,7 @@ msgstr "Voreinstellung Bitte stellen Sie einen positiven Rundungswert ein."
 #: code:addons/account/models/account_cash_rounding.py:33
 #, python-format
 msgid "Please set a strictly positive rounding value."
-msgstr "Bitte geben Sie einen rein positiven Rundungswert an."
+msgstr "Bitte geben Sie einen positiven Rundungswert an."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -9858,7 +9858,7 @@ msgstr "Quittung per E-Mail senden"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
 msgid "Send receipts by email"
-msgstr "Sende Quittung/Rechnung per e-Mail."
+msgstr "Sende Beleg per E-Mail."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10332,8 +10332,9 @@ msgid ""
 "Tag name %(tag)s is used by more than one tax report line in %(country)s. "
 "Each tag name should only be used once per country."
 msgstr ""
-"Der Tag-Name %(tag)s wird von mehr als einer Steuerberichtszeile in %(Land) "
-"verwendet. Jeder Tag-Name sollte nur einmal pro Land verwendet werden."
+"Der Tag-Name %(tag)s wird von mehr als einer Steuerberichtszeile in "
+"%(country)s verwendet. Jeder Tag-Name sollte nur einmal pro Land verwendet "
+"werden."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -11005,7 +11006,7 @@ msgstr "Geschäftsbedingungen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__narration
 msgid "Terms and Conditions"
-msgstr "Bedingungen und Konditionen"
+msgstr "Allgemeine Geschäftsbedingungen"
 
 #. module: account
 #. openerp-web
@@ -11357,8 +11358,8 @@ msgid ""
 "The following payment(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr ""
-"Die folgenden Zahlungen werden nicht per e-Mail gesendet, da der Kunde keine"
-" e-Mail Adresse hat."
+"Die folgenden Zahlungsavis werden nicht per e-Mail gesendet, da der Kunde "
+"keine e-Mail Adresse hat."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12944,7 +12945,7 @@ msgstr "Sie können nur Rechnungen versenden."
 #: code:addons/account/wizard/account_payment_send.py:0
 #, python-format
 msgid "You can only send payments."
-msgstr "Sie können nur Zahlungen senden."
+msgstr "Sie können nur Zahlungsavis senden."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13095,8 +13096,8 @@ msgstr "Sie können einen einmal gebuchten Eintrag nicht löschen."
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
 msgstr ""
-"Sie können keinen Eintrag löschen der mit einem gebuchtem Eintrag verbunden "
-"ist."
+"Sie können keinen Eintrag löschen, der mit einem gebuchtem Eintrag verbunden"
+" ist."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -13371,6 +13372,12 @@ msgstr "Sie müssen zuerst eine Eröffnungsbuchung definieren."
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr "Der Eintrag %s (id %s) wurde bereits gebucht."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
 msgstr "Sie müssen vor der Buchung eine Zeile hinzufügen."
 
@@ -13611,6 +13618,9 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"Das ausgewählte Journaltyp ist nicht mit Ihrem Rechnungstyp kompatibel. "
+"Verkäufe müssen in einem Verkaufsjournal und Einkäufe in einem "
+"Einkaufsjournal verbucht werden."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

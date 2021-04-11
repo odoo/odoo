@@ -11612,6 +11612,7 @@ msgstr "Procedure di configurazione"
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
 msgstr ""
+"Configura le commissioni dei rivenditori sulle vendite di sottoscrizioni"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -16072,7 +16073,7 @@ msgstr "Immagine 512"
 #. module: base
 #: model:ir.model,name:base.model_image_mixin
 msgid "Image Mixin"
-msgstr ""
+msgstr "Mixin immagine"
 
 #. module: base
 #: code:addons/image.py:0
@@ -20988,6 +20989,16 @@ msgstr ""
 "fornitore."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Programma referenze Odoo"
@@ -25555,6 +25566,12 @@ msgstr "Il nome completo della nazione."
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
 msgstr "L'utente interno responsabile di questo contatto. "
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr "Lo schema contiene una chiave di formato non valido"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
