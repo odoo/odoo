@@ -317,7 +317,7 @@ msgstr "Затверджувачі"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
 msgid "Archive Private Address"
-msgstr ""
+msgstr "Архівувати приватну адресу"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -650,30 +650,30 @@ msgstr "Відділи"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Departure"
-msgstr "Від'їзд"
+msgstr "Звільнення"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Departure Date"
-msgstr ""
+msgstr "Дата звільнення"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Departure Info"
-msgstr ""
+msgstr "Інформація про звільнення"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_reason
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_reason
 msgid "Departure Reason"
-msgstr "Причина від'їзду"
+msgstr "Причина звільнення"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_wizard
 msgid "Departure Wizard"
-msgstr "Помічник від'їзду"
+msgstr "Помічник звільнення"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -792,7 +792,7 @@ msgstr "Підрахунок співробітників"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
 msgid "Employee Editing"
-msgstr ""
+msgstr "Редагування співробітника"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -985,7 +985,7 @@ msgstr "Згенерувати"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
 msgid "Graduate"
-msgstr "Випускник"
+msgstr "Середня освіта"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -1013,6 +1013,9 @@ msgid ""
 "Your document has not been created because your email address is not recognized.<br/>\n"
 "Please send emails with the email address recorded on your employee information, or contact your HR manager."
 msgstr ""
+"Вітаємо,<br/>\n"
+"Ваш документ не було створено, тому що адреса електронної пошти не підтверджена.<br/>\n"
+"Надішліть листи з адреси електронної пошти, що вказана в інформації вашого співробітника, або зв'яжіться з менеджером відділу кадрів."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
@@ -1023,7 +1026,7 @@ msgstr "Найняті співробітники"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 #: model:ir.model.fields,field_description:hr.field_res_users__km_home_work
 msgid "Home-Work Distance"
-msgstr ""
+msgstr "Відстань з дому до роботи"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -1428,7 +1431,7 @@ msgstr "Тип наступної дії"
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "No specific user given on activity %s."
-msgstr ""
+msgstr "На дії не вказано конкретного користувача %s."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_job__state__open
@@ -1517,6 +1520,9 @@ msgid ""
 "                    related to employees by departments: expenses, timesheets,\n"
 "                    leaves, recruitments, etc."
 msgstr ""
+"Структура відділу Odoo використовується для управління всіма документами\n"
+"                 пов'язаними з працівниками відділів: витрати, табелі,\n"
+"                 відпустки, рекрутинг та ін."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -1525,6 +1531,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                time off, recruitments, etc."
 msgstr ""
+"Структура відділу Odoo використовується для управління всіма документами\n"
+"                 пов'язаними з працівниками відділів: витрати, табелі,\n"
+"                 відпустки, рекрутинг та ін."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -1680,7 +1689,7 @@ msgstr "Присутній"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_absent_active
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_absent_active
 msgid "Present but not active"
-msgstr ""
+msgstr "Присутній, але не активний"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -1771,7 +1780,7 @@ msgstr "Рекрутинг в процесі"
 #: model:ir.actions.act_window,name:hr.hr_departure_wizard_action
 #, python-format
 msgid "Register Departure"
-msgstr "Відділ реєстру"
+msgstr "Зареєструвати звільнення"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1881,6 +1890,8 @@ msgid ""
 "Select the \"Employee\" who is the coach of this employee.\n"
 "The \"Coach\" has no specific rights or responsibilities by default."
 msgstr ""
+"Виберіть \"Співробітника\", який є тренером цього працівника.\n"
+"\"Тренер\" за замовчуванням не має конкретних прав чи обов'язків."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2113,7 +2124,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_to_define
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_to_define
 msgid "To define"
-msgstr ""
+msgstr "Визанчити"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -2142,7 +2153,7 @@ msgstr "Тип дії виключення на записі."
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__hr_icon_display__presence_undetermined
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_icon_display__presence_undetermined
 msgid "Undetermined"
-msgstr ""
+msgstr "Невизначено"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
@@ -2331,6 +2342,8 @@ msgid ""
 "You are only allowed to update your preferences. Please contact a HR officer"
 " to update other information."
 msgstr ""
+"Вам дозволяється оновлювати лише свої уподобання. Будь ласка, зв'яжіться з "
+"працівником відділу кадрів, щоб оновити іншу інформацію."
 
 #. module: hr
 #. openerp-web
@@ -2338,6 +2351,8 @@ msgstr ""
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
 msgstr ""
+"Ви можете спілкуватися лише з тими співробітниками, які мають пов'язаного "
+"користувача."
 
 #. module: hr
 #: code:addons/hr/models/hr_department.py:0
@@ -2385,4 +2400,4 @@ msgstr "план"
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"
-msgstr ""
+msgstr "обмежено для співробітників"

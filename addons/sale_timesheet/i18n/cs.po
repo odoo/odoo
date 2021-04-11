@@ -3,13 +3,12 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Chris <krystof.reklamy13@gmail.com>, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
 # Martin Trigaux, 2021
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # trendspotter, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-18 14:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: trendspotter, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +68,8 @@ msgid ""
 "<em class=\"font-weight-normal text-muted\">Timesheets for sales order "
 "item:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Pracovní výkazy pro položku "
+"objednávky odběratele:</em>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -109,7 +110,7 @@ msgid ""
 "                                                            </span>"
 msgstr ""
 "<span class=\"btn-link\" style=\"font-weight:normal;\">\n"
-"                                                                Nezúčtovatelné časové rozvrhy\n"
+"                                                                Neúčtovatelné pracovní výkazy\n"
 "                                                            </span>"
 
 #. module: sale_timesheet
@@ -169,8 +170,8 @@ msgid ""
 "All revenues that are not from timesheets and that are linked to the "
 "analytic account of the project."
 msgstr ""
-"Všechny výnosy, které nejsou z časových výkazů a jsou spojeny s analytickým "
-"účtem projektu."
+"Všechny výnosy, které nejsou z pracovních výkazů a jsou spojeny s "
+"analytickým účtem projektu."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -179,7 +180,7 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be removed from Sales "
 "Order on save. Discard to avoid the change."
 msgstr ""
-"Všechny hodiny časového rozvrhu, které ještě nejsou fakturovány, budou při "
+"Všechny hodiny pracovního výkazu, které ještě nejsou fakturovány, budou při "
 "uložení odstraněny z prodejní objednávky. Zrušte, abyste se vyhnuli změně."
 
 #. module: sale_timesheet
@@ -279,7 +280,7 @@ msgstr "Účtováno za pevnou cenu"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr "Účtováno na pracovních listech"
+msgstr "Účtováno podle pracovních výkazu"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -647,7 +648,7 @@ msgstr "Fakturace"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
 msgid "Invoicing Timesheet Enabled"
-msgstr "Časový výkaz fakturace povolen"
+msgstr "Pracovní výkaz fakturace povolen"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
@@ -706,6 +707,7 @@ msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: sale_timesheet
+#. openerp-web
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Late"
@@ -808,14 +810,14 @@ msgstr "Nezúčtovatelné úkoly"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable timesheets"
-msgstr "Nezúčtovatelné časové rozvrhy"
+msgstr "Neúčtovatelné pracovní výkazy"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_count
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_count
 msgid "Number of timesheets"
-msgstr "Počet časových rozvrhů"
+msgstr "Počet pracovních výkazu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
@@ -827,10 +829,10 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
-"Fakturovány budou pouze časové rozvrhy, které z tohoto období dosud nebyly "
+"Fakturovány budou pouze pracovní výkazy, které z tohoto období dosud nebyly "
 "fakturovány (a případně ověřeny). Není-li období uvedeno, budou fakturovány "
-"všechny časové rozvrhy, které ještě nebyly fakturovány (a případně ověřeny) "
-"bez rozdílu."
+"všechny pracovní výkazy, které ještě nebyly fakturovány (a případně ověřeny)"
+" bez rozdílu."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -1048,12 +1050,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Revenues linked to Timesheets already invoiced."
-msgstr "Výnosy spojené s časovými výkazy již fakturovány."
+msgstr "Výnosy spojené s pracovnými výkazy již fakturovány."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Revenues linked to Timesheets not yet invoiced."
-msgstr "Výnosy spojené s časovými výkazy, které ještě nebyly fakturovány."
+msgstr "Výnosy spojené s pracovnými výkazy, které ještě nebyly fakturovány."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
@@ -1194,7 +1196,7 @@ msgstr "Zásady fakturace služby"
 #: model:product.product,name:sale_timesheet.time_product
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheet"
-msgstr "Služba v časovém rozvrhu"
+msgstr "Služba podle pracovního výkazu"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -1247,7 +1249,8 @@ msgid ""
 "The %s product is required by the Timesheet app and cannot be "
 "archived/deleted."
 msgstr ""
-"The %s produkt vyžaduje aplikace Timesheet a nelze jej archivovat / mazat."
+"The %s produkt vyžaduje aplikace pracovní výkaz a nelze jej archivovat / "
+"mazat."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1372,22 +1375,22 @@ msgstr "Časové služby"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet"
-msgstr "Výkaz"
+msgstr "Pracovní výkaz"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Náklady na časový rozvrh"
+msgstr "Náklady podle pracovního výkazu"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet Costs"
-msgstr "Náklady na časový rozvrh"
+msgstr "Náklady podle pracovního výkazu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
 msgid "Timesheet Duration"
-msgstr "Doba trvání časového rozvrhu"
+msgstr "Doba trvání podle pracovního výkazu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
@@ -1398,7 +1401,7 @@ msgstr "Jednotka pro kódování časového rozvrhu"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__timesheet_product_id
 msgid "Timesheet Product"
-msgstr "Produkt časového rozvrhu"
+msgstr "Produkt pracovního výkazu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
@@ -1408,17 +1411,17 @@ msgstr "Celková doba trvání časového rozvrhu"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
 msgid "Timesheet activities"
-msgstr "Činnosti podle časového rozvrhu"
+msgstr "Činnosti podle pracovního výkazu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr "Činnosti časového rozvrhu spojené s tímto prodejem"
+msgstr "Činnosti pracovního výkazu spojené s tímto prodejem"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Timesheet costs"
-msgstr "Náklady na časový rozvrh"
+msgstr "Náklady podle pracovního výkazu"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account_move.py:0
@@ -1431,7 +1434,7 @@ msgstr "Náklady na časový rozvrh"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #, python-format
 msgid "Timesheets"
-msgstr "Časové přehledy"
+msgstr "Pracovní výkazy"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
@@ -1441,7 +1444,7 @@ msgstr "Pracovní výkazy podle typu fakturace"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
 msgid "Timesheets Period"
-msgstr "Období pracovních výkazů"
+msgstr "Období podle pracovních výkazů"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1521,7 +1524,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_order_portal_content_inherit
 msgid "View Timesheets"
-msgstr ""
+msgstr "Zobrazit pracovní výkazy"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0

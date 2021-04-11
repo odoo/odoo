@@ -9,6 +9,7 @@
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # 开源智造OSCG-老杨 <yangxunbo@163.com>, 2021
 # John An <johnxan@163.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-18 14:29+0000\n"
 "PO-Revision-Date: 2021-02-18 15:03+0000\n"
-"Last-Translator: John An <johnxan@163.com>, 2021\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,30 +29,30 @@ msgstr ""
 #: code:addons/account_edi_extended/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
-msgstr ""
+msgstr "电子发票错误"
 
 #. module: account_edi_extended
 #: code:addons/account_edi_extended/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
-msgstr ""
+msgstr "电子发票信息"
 
 #. module: account_edi_extended
 #: code:addons/account_edi_extended/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr ""
+msgstr "电子发票警告"
 
 #. module: account_edi_extended
 #: code:addons/account_edi_extended/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
-msgstr ""
+msgstr "已取消EDi申请。"
 
 #. module: account_edi_extended
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_edi_document__blocking_level
 msgid "Blocking Level"
-msgstr ""
+msgstr "故障级别"
 
 #. module: account_edi_extended
 #: model:ir.model.fields,help:account_edi_extended.field_account_edi_document__blocking_level
@@ -61,11 +62,15 @@ msgid ""
 "  * Warning : there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error : there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
+"根据错误严重性阻止文档当前操作：\n"
+"  * 信息：文档未被阻止，一切正常。\n"
+"  * 警告：存在一个错误，该错误不会阻止当前的电子发票操作成功。\n"
+"  * 错误：存在阻止当前电子发票操作的错误。"
 
 #. module: account_edi_extended
 #: model_terms:ir.ui.view,arch_db:account_edi_extended.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr ""
+msgstr "取消EDI"
 
 #. module: account_edi_extended
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_edi_document__display_name
@@ -79,26 +84,26 @@ msgstr "显示名称"
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_move__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr ""
+msgstr "Edi故障级别"
 
 #. module: account_edi_extended
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_bank_statement_line__edi_error_message
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr ""
+msgstr "Edi错误信息"
 
 #. module: account_edi_extended
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_bank_statement_line__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_move__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi_extended.field_account_payment__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr ""
+msgstr "Edi 显示放弃取消按钮"
 
 #. module: account_edi_extended
 #: model:ir.model,name:account_edi_extended.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr "电子文档的account.move"
+msgstr "电子文档account.move"
 
 #. module: account_edi_extended
 #: model:ir.model.fields.selection,name:account_edi_extended.selection__account_edi_document__blocking_level__error

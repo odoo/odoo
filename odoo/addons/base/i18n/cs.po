@@ -10,8 +10,8 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
 # Martin Trigaux, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # trendspotter, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-18 14:47+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: trendspotter, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1441,7 +1441,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-" Modul propojující modul Docházky s časovým rozvrhem"
+" Modul propojující modul docházka s pracovní výkazy"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_saft
@@ -1569,8 +1569,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"* Předkládání a validace časového rozvrhu * \n"
-"Aktivace zobrazení mřížky pro časové rozvrhy "
+"* Předkládání a validace pracovního výkazu * \n"
+"Aktivace zobrazení mřížky pro pracovní výkazy "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -12283,7 +12283,7 @@ msgstr "Porovnat k zobrazení"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
 msgid "Compare timesheets and forecast for your projects"
-msgstr "Porovnat časové rozvrhy a prognózy pro své projekty"
+msgstr "Porovnat pracovní výkazy a prognózy pro své projekty"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_forecast
@@ -12406,7 +12406,7 @@ msgstr "Nakonfigurujte provize prodejců při prodeji předplatného"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
 msgid "Configure timesheet invoicing"
-msgstr "Konfigurovat  časový rozvrh fakturace"
+msgstr "Konfigurovat pracovní výkaz fakturace"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_configurator
@@ -16415,7 +16415,7 @@ msgstr "Helpdesk Stock"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_timesheet
 msgid "Helpdesk Timesheet"
-msgstr "Časový rozvrh zákaznické podpory"
+msgstr "Pracovní výkaz zákaznické podpory"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_forum
@@ -16460,7 +16460,7 @@ msgstr "Pomáhá vám řídit docházku."
 #. module: base
 #: model:ir.module.category,description:base.module_category_services_timesheets
 msgid "Helps you manage the timesheets."
-msgstr "Pomáhá vám spravovat časové rozvrhy."
+msgstr "Pomáhá vám spravovat pracovní výkazy."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_user_type
@@ -21860,6 +21860,16 @@ msgstr ""
 "Operace modulů v tuto chvíli nejsou možné, zkuste to prosím později nebo se obraťte na správce systému."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__padding
 msgid ""
 "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
@@ -23421,7 +23431,7 @@ msgstr "Projekt, úkoly, zásoby"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
 msgid "Project, Tasks, Timesheet"
-msgstr "Projekt, úkoly, časový rozvrh"
+msgstr "Projekt, úkoly, pracovní výkaz"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -24644,12 +24654,12 @@ msgstr "Obchodní týmy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr "Prodejní výkaz"
+msgstr "Obchodní pracovní výkazy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_purchase
 msgid "Sales Timesheet Purchase"
-msgstr "Nákup časového rozvrhu prodeje"
+msgstr "Nákup pracovního výkazu prodeje"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_enterprise
@@ -25889,7 +25899,7 @@ msgstr "Odebírání SEPA inkaso"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
 msgid "Subscription and Timesheet"
-msgstr "Předplatné a časový rozvrh"
+msgstr "Předplatné a pracovní výkaz"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscriptions
@@ -26017,12 +26027,12 @@ msgstr "Umístění symbolu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_synchro
 msgid "Synchronization with the external timesheet application"
-msgstr "Synchronizace s aplikací externího časového rozvrhu"
+msgstr "Synchronizace s aplikací externího pracovního výkazu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_timesheet
 msgid "Synchronize data between timesheet and subscriptions"
-msgstr "Synchronizace dat mezi časovým rozvrhem a předplatnými"
+msgstr "Synchronizace dat mezi pracovním výkazem a předplatnými"
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -27282,7 +27292,7 @@ msgstr "Testy časovače: testy funkcí a výkonu časovače"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast
 msgid "Timesheet and Planning"
-msgstr "Časový rozvrh a plánování"
+msgstr "Pracovní výkaz a plánování"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_holidays
@@ -27293,12 +27303,12 @@ msgstr "Pracovní výkazy když jsou volné dny"
 #: model:ir.module.category,name:base.module_category_services_timesheets
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
 msgid "Timesheets"
-msgstr "Časové přehledy"
+msgstr "Pracovní výkazy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
 msgid "Timesheets/attendances reporting"
-msgstr "Přehled časových rozvrhů / docházky"
+msgstr "Přehled pracovních výkazu / docházky"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__tz

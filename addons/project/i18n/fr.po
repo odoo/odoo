@@ -1558,12 +1558,14 @@ msgstr "Date de fin"
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
 msgid "Error! Project start date must be before project end date."
 msgstr ""
+"Erreur! La date de début du projet doit être antérieure à la date de fin du "
+"projet."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr ""
+msgstr "Erreur! Vous ne pouvez pas créer une hiérarche récursive de tâches."
 
 #. module: project
 #. openerp-web
@@ -1786,6 +1788,11 @@ msgid ""
 "\n"
 "Don't forget to set up the email templates on the stages for which you want to get customer feedback."
 msgstr ""
+"Comment avoir un retour client?\n"
+"- évaluation lors d'un changement d'étape: un email sera envoyé lorsqu'une tâche est poussée dans une autre étape.\n"
+"- évaluation périodique: des emails seront envoyés périodiquement.\n"
+"\n"
+"N'oubliez pas de configurer les modèles d'emails sur les étapes auxquelles vous désirez les retours clients."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1869,6 +1876,8 @@ msgid ""
 "If set, an email will be sent to the customer when the task or issue reaches"
 " this step."
 msgstr ""
+"Si cette option est active, un email sera envoyé au client lorsque la tâche "
+"ou l'anomalie atteint cette étape."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
@@ -1965,7 +1974,7 @@ msgstr "Version de l'incident"
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that some tasks are part of a recurrence."
-msgstr ""
+msgstr "Il semblerait que certaines tâches fassent partie d'une récurrence."
 
 #. module: project
 #. openerp-web
@@ -1973,7 +1982,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that this task is part of a recurrence."
-msgstr ""
+msgstr "Il semblerait que cette tâche fasse partie d'une récurrence."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -2306,7 +2315,7 @@ msgstr "Nom"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks"
-msgstr ""
+msgstr "Nom des tâches"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2374,7 +2383,7 @@ msgstr "Type d'Activités à Venir"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Next Occurrences:"
-msgstr ""
+msgstr "Prochaines occurrences:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__next_recurrence_date
@@ -2444,7 +2453,7 @@ msgstr "Nombre d'actions"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
 msgid "Number of Documents Attached"
-msgstr ""
+msgstr "Nombre de documents joints"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__after
@@ -2455,12 +2464,12 @@ msgstr "Nombre de répétitions"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__tasks_count
 msgid "Number of Tasks"
-msgstr ""
+msgstr "Nombre de tâches"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__recurrence_left
 msgid "Number of Tasks Left to Create"
-msgstr ""
+msgstr "Nombre de tâches restant à créer"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_close
@@ -2470,7 +2479,7 @@ msgstr "Nombre de jours ouvrés pour clôturer la tâche"
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
 msgid "Number of Working Days to open the task"
-msgstr ""
+msgstr "Nombre de jours ouvrés pour ouvrir la tâche"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
@@ -2553,6 +2562,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection when the task or issue is in that stage."
 msgstr ""
+"Remplacez la valeur par défaut affichée pour l'état 'bloqué' dans la vue "
+"Kanban lorsque la tâche ou l'incident sont dans cette étape."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
@@ -2561,6 +2572,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban selection"
 " when the task or issue is in that stage."
 msgstr ""
+"Remplacez la valeur par défaut affichée pour l'état 'terminé' dans la "
+"sélection kanban quand la tâche ou l'incident est dans cette étape."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -2569,6 +2582,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection when the task or issue is in that stage."
 msgstr ""
+"Remplacez la valeur par défaut affichée pour l'état 'normal' dans la "
+"sélection kanban quand la tâche ou l'incident est dans cette étape."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
@@ -2623,7 +2638,7 @@ msgstr "Pourcentage de notes satisfaites sur les 30 derniers jours."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodic rating"
-msgstr ""
+msgstr "Évaluation périodique"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
@@ -3146,7 +3161,7 @@ msgstr "Restaurer"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ribbon_message
 msgid "Ribbon Message"
-msgstr ""
+msgstr "Message du ruban"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_sms_error
@@ -3278,7 +3293,7 @@ msgstr "Partager"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
 msgid "Show Project on Dashboard"
-msgstr ""
+msgstr "Afficher le projet sur le tableau de bord"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -3413,12 +3428,12 @@ msgstr ""
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "Stop Recurrence"
-msgstr ""
+msgstr "Arrêter la récurrence"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
 msgid "Sub-task Count"
-msgstr ""
+msgstr "Nombre de sous-tâche"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
@@ -3446,6 +3461,9 @@ msgid ""
 "Sum of the time planned of all the sub-tasks linked to this task. Usually "
 "less than or equal to the initially planned time of this task."
 msgstr ""
+"Somme du temps planifié pour toutes les sous-tâches liées à cette tâche. Est"
+" habituellement égal ou inférieur au temps initialement prévu pour cette "
+"tâche."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sun
@@ -3727,7 +3745,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "There are no more occurrences."
-msgstr ""
+msgstr "Il n'y a plus d'occurrences."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -3962,7 +3980,7 @@ msgstr "Utilisez les <b>activités</b> pour organiser votre travail quotidien."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
 msgid "Use Email Alias"
-msgstr ""
+msgstr "Utiliser l'alias d'email"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -4089,22 +4107,22 @@ msgstr "Si ce projet devrait être affiché sur votre tableau de bord."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 msgid "Working Days to Assign"
-msgstr ""
+msgstr "Jours de travail pour attribuer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 msgid "Working Days to Close"
-msgstr ""
+msgstr "Jours de travail pour clôturer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 msgid "Working Hours to Assign"
-msgstr ""
+msgstr "Heures de travail pour attribuer"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 msgid "Working Hours to Close"
-msgstr ""
+msgstr "Heures de travail pour clôturer une tâche"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -4155,6 +4173,8 @@ msgstr ""
 msgid ""
 "You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
+"Vous ne pouvez pas archiver des tâches récurrentes. Veuillez désactiver la "
+"récurrence d'abord."
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -4163,6 +4183,8 @@ msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
 msgstr ""
+"Vous ne pouvez pas modifier la société d'un compte analytique s'il est lié à"
+" un projet."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4180,6 +4202,8 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please disable the recurrence first."
 msgstr ""
+"Vous ne pouvez pas supprimer des tâches récurrentes. Veuillez désactiver la "
+"récurrence d'abord."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
