@@ -3605,7 +3605,7 @@ class AccountMoveLine(models.Model):
             )
             FROM %(from)s
             WHERE %(where)s
-        """ % {'from': from_clause, 'where': where_clause, 'order_by': order_string}
+        """ % {'from': from_clause, 'where': where_clause or 'TRUE', 'order_by': order_string}
         self.env.cr.execute(sql, where_clause_params)
         result = {r[0]: r[1] for r in self.env.cr.fetchall()}
         for record in self:
