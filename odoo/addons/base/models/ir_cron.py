@@ -456,6 +456,7 @@ class ir_cron(models.Model):
 class ir_cron_trigger(models.Model):
     _name = 'ir.cron.trigger'
     _description = 'Triggered actions'
+    _rec_name = 'cron_id'
 
     cron_id = fields.Many2one("ir.cron", index=True)
     call_at = fields.Datetime()
