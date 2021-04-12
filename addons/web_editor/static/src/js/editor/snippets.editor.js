@@ -507,6 +507,8 @@ var SnippetEditor = Widget.extend({
             if (!this.displayHandles) {
                 this.$el.find('.o_handle').addClass('d-none');
                 this.$el.find('.o_overlay_options_wrap').addClass('o_inside_parent');
+            } else {
+                this.$el.find('.o_handle').removeClass('d-none');
             }
         }
 
@@ -686,7 +688,7 @@ var SnippetEditor = Widget.extend({
                 this.$el.add($optionsSection).find('.oe_snippet_remove').addClass('d-none');
             }
 
-            if (option.displayHandles) {
+            if (option.displayHandles || option.data.displayHandles) {
                 this.displayHandles = true;
             }
 
@@ -1731,13 +1733,19 @@ var SnippetsMenu = Widget.extend({
                 // ... then enable the right editor or look if some have been
                 // enabled previously by a click
                 if (editorToEnable) {
-                    editorToEnable.toggleOverlay(true, previewMode);
                     if (!previewMode && !editorToEnable.displayHandles) {
+                        // If the editor to enable does not need the handles overlay,
+                        // display the first parent that needs it.
                         const parentEditor = editorToEnableHierarchy.find(ed => ed.displayHandles);
                         if (parentEditor) {
                             parentEditor.toggleOverlay(true, previewMode);
+                        // If there is none, the editor is a root container and needs
+                        // the handles overlay to be displayed
+                        } else {
+                            editorToEnable.displayHandles = true;
                         }
                     }
+                    editorToEnable.toggleOverlay(true, previewMode);
                     editorToEnable.toggleOptions(true);
                 } else {
                     this.snippetEditors.forEach(editor => {
