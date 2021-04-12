@@ -932,7 +932,7 @@ class Meeting(models.Model):
                 data = self._rrule_default_values()
                 data['recurrency'] = True
                 data.update(self._rrule_parse(meeting.rrule, data, meeting.start))
-                meeting.update(data)
+                meeting.write(data)
 
     @api.model
     def _event_tz_get(self):
