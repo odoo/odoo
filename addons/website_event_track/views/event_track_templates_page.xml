@@ -45,12 +45,10 @@
                 </span>
             </div>
         </div>
-        <div t-elif="track.track_start_remaining" class="pt-3">
-            <div class="mx-3 alert alert-warning">
-                Starting in
-                <span t-esc="track.track_start_remaining"
-                    t-options="{'widget': 'duration', 'digital': False, 'unit': 'second', 'round': 'minute'}"/>
-            </div>
+        <div t-elif="track.track_start_remaining">
+            <t t-call="website_event.display_timer_alert_widget">
+                <t t-set="time_to_live" t-value="track.track_start_remaining"/>
+            </t>
         </div>
         <!-- TRACK DESCRIPTION -->
         <div class="o_wesession_track_main_description overflow-auto">
@@ -135,9 +133,9 @@
 <!-- ============================================================ -->
 
 <template id="event_track_aside" name="Track: Aside">
-    <div t-att-class="'col-12 pl-0 pr-0 pr-md-3 o_wevent_online_page_aside o_wesession_track_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+    <div t-att-class="'col-12 pl-0 pr-0 o_wevent_online_page_aside o_wesession_track_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
         <div class="bg-white pt-0 pt-md-3 o_wevent_online_page_aside_content">
-            <div class="mx-2" t-if="track.website_cta">
+            <div class="mx-2" t-if="track.date and track.website_cta">
                 <t t-set="cta_coundown" t-value="bool(track.website_cta_start_remaining)"/>
                 <div t-if="cta_coundown" class="text-center mt-2 mt-md-0 w-100 btn btn-primary d-none">
                     <t t-call="website_event.display_timer_widget">

@@ -121,6 +121,13 @@ class EventTrackController(http.Controller):
             tracks_announced = tracks_announced.sorted('wishlisted_by_default', reverse=True)
             tracks_by_day.append({'date': False, 'name': _('Coming soon'), 'tracks': tracks_announced})
 
+        for tracks_group in tracks_by_day:
+            # the tracks group is folded if all tracks are done (and if it's not "today")
+            tracks_group['default_collapsed'] = (today_tz != tracks_group['date']) and all(
+                track.is_track_done and not track.is_track_live
+                for track in tracks_group['tracks']
+            )
+
         # return rendering values
         return {
             # event information
@@ -353,11 +360,11 @@ class EventTrackController(http.Controller):
     @http.route("/event/track/toggle_reminder", type="json", auth="public", website=True)
     def track_reminder_toggle(self, track_id, set_reminder_on):
         """ Set a reminder a track for current visitor. Track visitor is created or updated
-        if it already exists. Exception made if un-wishlisting and no track_visitor
+        if it already exists. Exception made if un-favoriting and no track_visitor
         record found (should not happen unless manually done).
 
         :param boolean set_reminder_on:
-          If True, set as a wishlist, otherwise un-wishlist track;
+          If True, set as a favorite, otherwise un-favorite track;
           If the track is a Key Track (wishlisted_by_default):
             if set_reminder_on = False, blacklist the track_partner
             otherwise, un-blacklist the track_partner

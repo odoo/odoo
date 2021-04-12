@@ -89,10 +89,10 @@
             </t>
         </div>
         <!-- SPONSOR DESCRIPTION -->
-        <span class="h5 d-inline-block mx-3 mt-3 mb-0">
+        <div class="h5 m-3">
             About <t t-esc="sponsor.name"/>
-        </span>
-        <hr class="mt-2 mb-0"/>
+        </div>
+        <hr class="my-0"/>
         <div class="ml-3 clearfix">
             <div class="float-left pt-3">
                 <span t-if="sponsor.image_512" t-field="sponsor.image_512" class="o_wevent_online_page_avatar"
@@ -149,7 +149,7 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_aside" name="Exhibitor: Aside">
-    <div t-att-class="'col-12 pl-0 pr-0 pr-md-3 o_wevent_online_page_aside o_wesponsor_exhibitor_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+    <div t-att-class="'col-12 pl-0 pr-0 o_wevent_online_page_aside o_wesponsor_exhibitor_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
         <div class="bg-white o_wevent_online_page_aside_content">
             <div class="d-flex align-items-center justify-content-between mx-2">
                 <span class="h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2">Other exhibitors</span>

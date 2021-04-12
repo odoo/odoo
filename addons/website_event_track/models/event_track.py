@@ -74,8 +74,11 @@ class Track(models.Model):
     partner_company_name = fields.Char(
         'Company Name', compute='_compute_partner_company_name',
         readonly=False, store=True)
+    partner_tag_line = fields.Char(
+        'Tag Line', compute='_compute_partner_tag_line',
+        help='Description of the partner (name, function and company name)')
     image = fields.Image(
-        string="Speaker Photo", compute="_compute_speaker_image",
+        string="Speaker Photo", compute="_compute_partner_image",
         readonly=False, store=True,
         max_width=256, max_height=256)
     # contact information
@@ -91,7 +94,7 @@ class Track(models.Model):
     # time information
     date = fields.Datetime('Track Date')
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
-    duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
+    duration = fields.Float('Duration', default=0.5, help="Track duration in hours.")
     is_track_live = fields.Boolean(
         'Is Track Live', compute='_compute_track_time_data',
         help="Track has started and is ongoing")
@@ -134,7 +137,7 @@ class Track(models.Model):
         groups="event.group_event_user")
     wishlisted_by_default = fields.Boolean(
         string='Always Wishlisted',
-        help="""If set, the talk will be starred for each attendee registered to the event. The attendee won't be able to un-star this talk.""")
+        help="""If set, the talk will be set as favorite for each attendee registered to the event.""")
     # Call to action
     website_cta = fields.Boolean('Magic Button',
                                  help="Display a Call to Action button to your Attendees while they watch your Track.")
@@ -199,8 +202,32 @@ class Track(models.Model):
             elif not track.partner_company_name:
                 track.partner_company_name = track.partner_id.parent_id.name
 
+    @api.depends('partner_name', 'partner_function', 'partner_company_name')
+    def _compute_partner_tag_line(self):
+        for track in self:
+            if not track.partner_name:
+                track.partner_tag_line = False
+                continue
+
+            tag_line = track.partner_name
+            if track.partner_function:
+                if track.partner_company_name:
+                    tag_line = _('%(name)s, %(function)s at %(company)s',
+                                 name=track.partner_name,
+                                 function=track.partner_function,
+                                 company=track.partner_company_name
+                                )
+                else:
+                    tag_line = '%s, %s' % (track.partner_name, track.partner_function)
+            elif track.partner_company_name:
+                tag_line = _('%(name)s from %(company)s',
+                             name=tag_line,
+                             company=track.partner_company_name
+                            )
+            track.partner_tag_line = tag_line
+
     @api.depends('partner_id')
-    def _compute_speaker_image(self):
+    def _compute_partner_image(self):
         for track in self:
             if not track.image:
                 track.image = track.partner_id.image_256
