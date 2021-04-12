@@ -9,9 +9,13 @@
                 <div class="pos-branding" t-if= "!env.isMobile">
                     <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
                          src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
-                    <TicketButton isTicketScreenShown="isTicketScreenShown" />
+                    <div class="status-button">
+                        <OrderManagementButton t-if="state.uiState === 'READY' and env.pos.config.manage_orders" />
+                        <TicketButton isTicketScreenShown="isTicketScreenShown" />
+                    </div>
                 </div>
                 <div class="pos-rightheader">
+                    <OrderManagementButton t-if="env.isMobile and state.uiState === 'READY' and env.pos.config.manage_orders" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }" />
                     <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile and !state.mobileSearchBarIsShown" />
                     <div class="search-bar-portal" />
                     <div class="status-buttons-portal" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }"/>
@@ -21,7 +25,6 @@
                 <Portal target="'.pos .status-buttons-portal'">
                     <div class="status-buttons">
                         <CashierName />
-                        <OrderManagementButton t-if="env.pos.config.manage_orders" />
                         <SaleDetailsButton t-if="env.pos.proxy.printer" />
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
                         <ClientScreenButton t-if="clientScreenButtonIsShown" />

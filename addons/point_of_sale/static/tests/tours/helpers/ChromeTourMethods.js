@@ -16,12 +16,12 @@ odoo.define('point_of_sale.tour.ChromeTourMethods', function (require) {
             return [
                 {
                     content: 'check order management button is shown',
-                    trigger: '.pos .pos-rightheader .order-management',
+                    trigger: '.pos .pos-topheader .order-management',
                     run: () => {},
                 },
                 {
                     content: 'click order management button',
-                    trigger: '.pos .pos-rightheader .order-management',
+                    trigger: '.pos .pos-topheader .order-management',
                 },
             ];
         }
