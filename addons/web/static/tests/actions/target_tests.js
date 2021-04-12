@@ -271,72 +271,74 @@ QUnit.module("ActionManager", (hooks) => {
     }
   );
 
-  QUnit.test('button with confirm attribute in act_window action in target="new"', async function (
-    assert
-  ) {
-    assert.expect(5);
+  QUnit.test(
+    'button with confirm attribute in act_window action in target="new"',
+    async function (assert) {
+      assert.expect(5);
 
-    testConfig.serverData.actions[999] = {
-      id: 999,
-      name: "A window action",
-      res_model: "partner",
-      target: "new",
-      type: "ir.actions.act_window",
-      views: [[999, "form"]],
-    };
-    testConfig.serverData.views["partner,999,form"] = `
+      testConfig.serverData.actions[999] = {
+        id: 999,
+        name: "A window action",
+        res_model: "partner",
+        target: "new",
+        type: "ir.actions.act_window",
+        views: [[999, "form"]],
+      };
+      testConfig.serverData.views["partner,999,form"] = `
             <form>
                 <button name="method" string="Call method" type="object" confirm="Are you sure?"/>
             </form>`;
-    testConfig.serverData.views["partner,1000,form"] = `<form>Another action</form>`;
+      testConfig.serverData.views["partner,1000,form"] = `<form>Another action</form>`;
 
-    const mockRPC = (route, args) => {
-      if (args.method === "method") {
-        return Promise.resolve({
-          id: 1000,
-          name: "Another window action",
-          res_model: "partner",
-          target: "new",
-          type: "ir.actions.act_window",
-          views: [[1000, "form"]],
-        });
-      }
-    };
-    const webClient = await createWebClient({ testConfig, mockRPC });
+      const mockRPC = (route, args) => {
+        if (args.method === "method") {
+          return Promise.resolve({
+            id: 1000,
+            name: "Another window action",
+            res_model: "partner",
+            target: "new",
+            type: "ir.actions.act_window",
+            views: [[1000, "form"]],
+          });
+        }
+      };
+      const webClient = await createWebClient({ testConfig, mockRPC });
 
-    await doAction(webClient, 999);
+      await doAction(webClient, 999);
 
-    assert.containsOnce(document.body, ".modal button[name=method]");
+      assert.containsOnce(document.body, ".modal button[name=method]");
 
-    await testUtils.dom.click($(".modal button[name=method]"));
+      await testUtils.dom.click($(".modal button[name=method]"));
 
-    assert.containsN(document.body, ".modal", 2);
-    assert.strictEqual($(".modal:last .modal-body").text(), "Are you sure?");
+      assert.containsN(document.body, ".modal", 2);
+      assert.strictEqual($(".modal:last .modal-body").text(), "Are you sure?");
 
-    await testUtils.dom.click($(".modal:last .modal-footer .btn-primary"));
-    assert.containsOnce(document.body, ".modal");
-    assert.strictEqual($(".modal:last .modal-body").text().trim(), "Another action");
+      await testUtils.dom.click($(".modal:last .modal-footer .btn-primary"));
+      assert.containsOnce(document.body, ".modal");
+      assert.strictEqual($(".modal:last .modal-body").text().trim(), "Another action");
 
-    webClient.destroy();
-  });
+      webClient.destroy();
+    }
+  );
 
   QUnit.module('Actions in target="inline"');
-  QUnit.test('form views for actions in target="inline" open in edit mode', async function (
-    assert
-  ) {
-    assert.expect(6);
-    const mockRPC = async (route, args) => {
-      assert.step(args.method || route);
-    };
-    const webClient = await createWebClient({ testConfig, mockRPC });
-    await doAction(webClient, 6);
-    assert.containsOnce(
-      webClient,
-      ".o_form_view.o_form_editable",
-      "should have rendered a form view in edit mode"
-    );
-    assert.verifySteps(["/web/webclient/load_menus", "/web/action/load", "load_views", "read"]);
-  });
+  QUnit.test(
+    'form views for actions in target="inline" open in edit mode',
+    async function (assert) {
+      assert.expect(6);
+      const mockRPC = async (route, args) => {
+        assert.step(args.method || route);
+      };
+      const webClient = await createWebClient({ testConfig, mockRPC });
+      await doAction(webClient, 6);
+      assert.containsOnce(
+        webClient,
+        ".o_form_view.o_form_editable",
+        "should have rendered a form view in edit mode"
+      );
+      assert.verifySteps(["/web/webclient/load_menus", "/web/action/load", "load_views", "read"]);
+    }
+  );
 
   QUnit.test("breadcrumbs and actions with target inline", async function (assert) {
     assert.expect(4);
@@ -356,17 +358,18 @@ QUnit.module("ActionManager", (hooks) => {
   });
 
   QUnit.module('Actions in target="fullscreen"');
-  QUnit.test('correctly execute act_window actions in target="fullscreen"', async function (
-    assert
-  ) {
-    assert.expect(3);
-    testConfig.serverData.actions[1].target = "fullscreen";
-    const webClient = await createWebClient({ testConfig });
-    await doAction(webClient, 1);
-    assert.containsOnce(webClient.el, ".o_control_panel", "should have rendered a control panel");
-    assert.containsOnce(webClient, ".o_kanban_view", "should have rendered a kanban view");
-    assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
-  });
+  QUnit.test(
+    'correctly execute act_window actions in target="fullscreen"',
+    async function (assert) {
+      assert.expect(3);
+      testConfig.serverData.actions[1].target = "fullscreen";
+      const webClient = await createWebClient({ testConfig });
+      await doAction(webClient, 1);
+      assert.containsOnce(webClient.el, ".o_control_panel", "should have rendered a control panel");
+      assert.containsOnce(webClient, ".o_kanban_view", "should have rendered a kanban view");
+      assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
+    }
+  );
 
   QUnit.test('fullscreen on action change: back to a "current" action', async function (assert) {
     assert.expect(3);
@@ -402,33 +405,34 @@ QUnit.module("ActionManager", (hooks) => {
     assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
   });
 
-  QUnit.test('fullscreen on action change: back to another "current" action', async function (
-    assert
-  ) {
-    assert.expect(8);
-    testConfig.serverData.menus = {
-      root: { id: "root", children: [1], name: "root", appID: "root" },
-      1: { id: 1, children: [], name: "MAIN APP", appID: 1, actionID: 6 },
-    };
-    testConfig.serverData.actions[1].target = "fullscreen";
-    testConfig.serverData.views["partner,false,form"] =
-      '<form><button name="24" type="action" class="oe_stat_button"/></form>';
-    const webClient = await createWebClient({ testConfig });
-    await testUtils.nextTick(); // wait for the load state (default app)
-    await legacyExtraNextTick();
-    assert.containsOnce(webClient, "nav .o_menu_brand");
-    assert.strictEqual($(webClient.el).find("nav .o_menu_brand").text(), "MAIN APP");
-    assert.doesNotHaveClass(webClient.el, "o_fullscreen");
-    await testUtils.dom.click($(webClient.el).find('button[name="24"]'));
-    await legacyExtraNextTick();
-    assert.doesNotHaveClass(webClient.el, "o_fullscreen");
-    await testUtils.dom.click($(webClient.el).find('button[name="1"]'));
-    await legacyExtraNextTick();
-    assert.hasClass(webClient.el, "o_fullscreen");
-    await testUtils.dom.click($(webClient.el).find(".breadcrumb li a")[1]);
-    await legacyExtraNextTick();
-    assert.doesNotHaveClass(webClient.el, "o_fullscreen");
-    assert.containsOnce(webClient, "nav .o_menu_brand");
-    assert.strictEqual($(webClient.el).find("nav .o_menu_brand").text(), "MAIN APP");
-  });
+  QUnit.test(
+    'fullscreen on action change: back to another "current" action',
+    async function (assert) {
+      assert.expect(8);
+      testConfig.serverData.menus = {
+        root: { id: "root", children: [1], name: "root", appID: "root" },
+        1: { id: 1, children: [], name: "MAIN APP", appID: 1, actionID: 6 },
+      };
+      testConfig.serverData.actions[1].target = "fullscreen";
+      testConfig.serverData.views["partner,false,form"] =
+        '<form><button name="24" type="action" class="oe_stat_button"/></form>';
+      const webClient = await createWebClient({ testConfig });
+      await testUtils.nextTick(); // wait for the load state (default app)
+      await legacyExtraNextTick();
+      assert.containsOnce(webClient, "nav .o_menu_brand");
+      assert.strictEqual($(webClient.el).find("nav .o_menu_brand").text(), "MAIN APP");
+      assert.doesNotHaveClass(webClient.el, "o_fullscreen");
+      await testUtils.dom.click($(webClient.el).find('button[name="24"]'));
+      await legacyExtraNextTick();
+      assert.doesNotHaveClass(webClient.el, "o_fullscreen");
+      await testUtils.dom.click($(webClient.el).find('button[name="1"]'));
+      await legacyExtraNextTick();
+      assert.hasClass(webClient.el, "o_fullscreen");
+      await testUtils.dom.click($(webClient.el).find(".breadcrumb li a")[1]);
+      await legacyExtraNextTick();
+      assert.doesNotHaveClass(webClient.el, "o_fullscreen");
+      assert.containsOnce(webClient, "nav .o_menu_brand");
+      assert.strictEqual($(webClient.el).find("nav .o_menu_brand").text(), "MAIN APP");
+    }
+  );
 });

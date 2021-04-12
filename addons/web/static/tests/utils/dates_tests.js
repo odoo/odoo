@@ -213,7 +213,11 @@ QUnit.module("utils", () => {
     dateStr = "2017-05-08 09:12:34";
     date1 = parseDateTime(dateStr);
     date2 = DateTime.fromFormat(dateStr, "yyyy-MM-dd HH:mm:ss");
-    assert.equal(date1.toISO(), date2.toISO(), "Date SQL format, check date is not confused with month");
+    assert.equal(
+      date1.toISO(),
+      date2.toISO(),
+      "Date SQL format, check date is not confused with month"
+    );
 
     unpatch(localization, "default loc");
   });
