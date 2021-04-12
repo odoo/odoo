@@ -99,7 +99,7 @@ class Users(models.Model):
         })
         activity_data = self.env.cr.dictfetchall()
         model_ids = [a['id'] for a in activity_data]
-        model_names = {n[0]: n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
+        model_names = {n[0]: n[1] for n in self.env['ir.model'].sudo().browse(model_ids).name_get()}
 
         user_activities = {}
         for activity in activity_data:

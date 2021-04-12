@@ -740,7 +740,8 @@ class MailActivity(models.Model):
                 'o_closest_deadline': group['date_deadline'],
             }
         activity_type_infos = []
-        activity_type_ids = self.env['mail.activity.type'].search(['|', ('res_model_id.model', '=', res_model), ('res_model_id', '=', False)])
+        activity_type_ids = self.env['mail.activity.type'].sudo().search(
+            ['|', ('res_model_id.model', '=', res_model), ('res_model_id', '=', False)])
         for elem in sorted(activity_type_ids, key=lambda item: item.sequence):
             mail_template_info = []
             for mail_template_id in elem.mail_template_ids:

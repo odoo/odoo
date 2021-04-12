@@ -154,7 +154,7 @@ class GoogleDrive(models.Model):
         '''
         # TO DO in master: fix my signature and my model
         if isinstance(res_model, str):
-            res_model = self.env['ir.model'].search([('model', '=', res_model)]).id
+            res_model = self.env['ir.model'].sudo().search([('model', '=', res_model)]).id
         if not res_id:
             raise UserError(_("Creating google drive may only be done by one at a time."))
         # check if a model is configured with a template
