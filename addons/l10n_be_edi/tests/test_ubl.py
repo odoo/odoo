@@ -107,6 +107,7 @@ class TestL10nBeEdi(AccountEdiTestCommon):
                 </AccountingCustomerParty>
                 <PaymentMeans>
                     <PaymentMeansCode listID="UN/ECE 4461">31</PaymentMeansCode>
+                    <InstructionID>INV/2017/01/0001</InstructionID>
                     <PaymentDueDate>2017-01-01</PaymentDueDate>
                 </PaymentMeans>
                 <TaxTotal>
