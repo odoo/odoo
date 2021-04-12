@@ -205,6 +205,7 @@
             'website/static/src/snippets/s_embed_code/options.js',
             'website/static/src/snippets/s_website_form/options.js',
             'website/static/src/snippets/s_searchbar/options.js',
+            'website/static/src/snippets/s_process_steps/options.js',
             'website/static/src/js/editor/wysiwyg.js',
             'website/static/src/js/editor/widget_link.js',
             'website/static/src/js/widgets/media.js',
