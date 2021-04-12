@@ -4,7 +4,7 @@ import base64
 import random
 import re
 
-from odoo import api, fields, models, modules
+from odoo import api, fields, models, modules, _
 
 
 class ImLivechatChannel(models.Model):
@@ -231,7 +231,7 @@ class ImLivechatChannel(models.Model):
         if info['available']:
             info['options'] = self._get_channel_infos()
             info['options']['current_partner_id'] = self.env.user.partner_id.id
-            info['options']["default_username"] = username
+            info['options']["default_username"] = username if username != 'Visitor' else _('Visitor')
         return info
 
 
