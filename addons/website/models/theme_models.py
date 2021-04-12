@@ -231,7 +231,6 @@ class Theme(models.AbstractModel):
         self.disable_view('website.template_header_sidebar')
         self.disable_view('website.template_header_slogan')
         self.disable_view('website.template_header_contact')
-        self.disable_view('website.template_header_minimalist')
         self.disable_view('website.template_header_boxed')
         self.disable_view('website.template_header_centered_logo')
         self.disable_view('website.template_header_image')
