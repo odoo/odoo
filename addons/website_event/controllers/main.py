@@ -302,9 +302,13 @@ class WebsiteEventController(http.Controller):
             Attendees += Attendees.sudo().create(
                 Attendees._prepare_attendee_values(registration))
 
+        return request.redirect('/event/%s/registration/%s/success' % (event.id, Attendees.sudo().id))
+
+    @http.route(['/event/<model("event.event"):event>/registration/<model("event.registration"):registration>/success'], type='http', auth="public", website=True)
+    def event_registration_success(self, registration, event):
         urls = event._get_event_resource_urls()
         return request.render("website_event.registration_complete", {
-            'attendees': Attendees.sudo(),
+            'attendees': registration.sudo(),
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')
