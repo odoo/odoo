@@ -641,6 +641,16 @@ class PurchaseOrderLine(models.Model):
         if not seller:
             if self.product_id.seller_ids.filtered(lambda s: s.name.id == self.partner_id.id):
                 self.price_unit = 0.0
+
+            if self.product_uom:
+                price_unit = self.env['account.tax']._fix_tax_included_price_company(
+                    self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_id.uom_po_id),
+                    self.product_id.supplier_taxes_id,
+                    self.taxes_id,
+                    self.company_id,
+                )
+                self.price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom)
+
             return
 
         price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, self.product_id.supplier_taxes_id, self.taxes_id, self.company_id) if seller else 0.0
