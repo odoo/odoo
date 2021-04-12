@@ -4497,27 +4497,10 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        const isLocalURL = href => new URL(href, window.location.origin).origin === window.location.origin;
-
         const img = this._getImg();
         if (!this.originalSrc || !['image/png', 'image/jpeg'].includes(img.dataset.mimetype)) {
-            return [...uiFragment.childNodes].forEach(node => {
-                if (node.matches('.o_we_external_warning')) {
-                    node.classList.remove('d-none');
-                    if (isLocalURL(img.getAttribute('src'))) {
-                        const title = node.querySelector('we-title');
-                        title.textContent = ` ${_t("Quality options unavailable")}`;
-                        $(title).prepend('<i class="fa fa-warning" />');
-                        if (img.dataset.mimetype) {
-                            title.setAttribute('title', _t("Only PNG and JPEG images support quality options and image filtering"));
-                        } else {
-                            title.setAttribute('title', _t("Due to technical limitations, you can only change optimization settings on this image by choosing it again in the media-dialog or reuploading it (double click on the image)"));
-                        }
-                    }
-                } else {
-                    node.remove();
-                }
-            });
+            [...uiFragment.childNodes].forEach(node => node.remove());
+            return;
         }
         const $select = $(uiFragment).find('we-select[data-name=width_select_opt]');
         (await this._computeAvailableWidths()).forEach(([value, label]) => {

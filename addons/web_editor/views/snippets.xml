@@ -48,12 +48,6 @@
 </template>
 
 <template id="snippet_options_image_optimization_widgets">
-    <div class="o_we_external_warning d-none">
-        <we-title title="Quality options are unavailable for external images. If you want to change this image's quality, please first download it from the original source and upload it in Odoo.">
-            <i class="fa fa-warning" /> External Image
-        </we-title>
-    </div>
-
     <t t-set="filter_label">Filter</t>
     <we-select t-att-string="indent and (' ⌙ %s' % filter_label) or filter_label">
         <we-button data-gl-filter="">None</we-button>
