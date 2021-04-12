@@ -164,30 +164,38 @@ class TestAllowedUsers(TestAccessRights):
 
     def test_project_permission_added(self):
         self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
-        self.assertIn(self.user.partner_id, self.task.message_partner_ids)
+        self.assertIn(self.user.partner_id, self.project_pigs.message_partner_ids)
+        # Subscribing to a project should not cause subscription to existing tasks in the project.
+        self.assertNotIn(self.user.partner_id, self.task.message_partner_ids)
 
     def test_project_default_permission(self):
         self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
-        task = self.create_task("Review the end of the world")
-        self.assertIn(self.user.partner_id, self.task.message_partner_ids)
+        created_task = self.create_task("Review the end of the world")
+        # Subscribing to a project should cause subscription to new tasks in the project.
+        self.assertIn(self.user.partner_id, created_task.message_partner_ids)
 
     def test_project_default_customer_permission(self):
         self.project_pigs.privacy_visibility = 'portal'
         self.project_pigs.message_subscribe(partner_ids=[self.portal.partner_id.id])
-        self.assertIn(self.portal.partner_id, self.task.message_partner_ids)
+        # Subscribing a default customer to a project should not cause its subscription to existing tasks in the project.
+        self.assertNotIn(self.portal.partner_id, self.task.message_partner_ids)
         self.assertIn(self.portal.partner_id, self.project_pigs.message_partner_ids)
 
     def test_project_permission_removed(self):
         self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
         self.project_pigs.message_unsubscribe(partner_ids=[self.user.partner_id.id])
-        self.assertNotIn(self.user.partner_id, self.task.message_partner_ids)
+        # Unsubscribing to a project should not cause unsubscription of existing tasks in the project.
+        self.assertNotIn(self.user.partner_id, self.project_pigs.message_partner_ids)
 
     def test_project_specific_permission(self):
         self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
         john = mail_new_test_user(self.env, 'John')
         self.project_pigs.message_subscribe(partner_ids=[john.partner_id.id])
         self.project_pigs.message_unsubscribe(partner_ids=[self.user.partner_id.id])
-        self.assertIn(john.partner_id, self.task.message_partner_ids, "John should still be allowed to read the task")
+        # User specific subscribing to a project should not cause its subscription to existing tasks in the project.
+        self.assertNotIn(john.partner_id, self.task.message_partner_ids, "John should not be allowed to read the task")
+        task = self.create_task("New task")
+        self.assertIn(john.partner_id, task.message_partner_ids, "John should allowed to read the task")
 
     def test_project_specific_remove_mutliple_tasks(self):
         self.project_pigs.message_subscribe(partner_ids=[self.user.partner_id.id])
@@ -197,7 +205,8 @@ class TestAllowedUsers(TestAccessRights):
         self.project_pigs.message_unsubscribe(partner_ids=[self.user.partner_id.id])
         self.assertIn(john.partner_id, self.task.message_partner_ids)
         self.assertNotIn(john.partner_id, task.message_partner_ids)
-        self.assertNotIn(self.user.partner_id, task.message_partner_ids)
+        # Unsubscribing to a project should not cause unsubscription of existing tasks in the project.
+        self.assertIn(self.user.partner_id, task.message_partner_ids)
         self.assertNotIn(self.user.partner_id, self.task.message_partner_ids)
 
     def test_visibility_changed(self):
