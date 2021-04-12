@@ -739,7 +739,7 @@ return AbstractRenderer.extend({
                                 delay: {show: 300, hide: 0},
                                 content: function () {
                                     return $('<img>', {
-                                        src: `/web/image/${options.avatar_model}/${filter.value}/${options.avatar_field}}`,
+                                        src: `/web/image/${options.avatar_model}/${filter.value}/${options.avatar_field}`,
                                         class: 'mx-auto',
                                     });
                                 },
