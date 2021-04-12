@@ -77,7 +77,7 @@ tour.register('edit_link_popover', {
         trigger: '#top_menu a:contains("Home")',
     },
     {
-        content: "Popover should be shown",
+        content: "Popover should be shown (2)",
         trigger: '.o_edit_menu_popover .o_we_url_link:contains("Home")',
         run: function () {}, // it's a check
     },
@@ -111,6 +111,57 @@ tour.register('edit_link_popover', {
     {
         content: "Edit Menu (tree) should open",
         trigger: '.js_add_menu',
+        run: function () {}, // it's a check
+    },
+    {
+        content: "Close modal",
+        trigger: '.modal-footer .btn-secondary',
+    },
+    // 3. Test other links (CTA in navbar & links in footer)
+    {
+        content: "Click CTA in navbar",
+        trigger: '#top_menu_container a.btn-primary[href="/contactus"]',
+    },
+    {
+        content: "Popover should be shown (3)",
+        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
+        run: function () {}, // it's a check
+    },
+    {
+        content: "Click 'Home' link in footer",
+        trigger: 'footer a[href="/"]',
+    },
+    {
+        content: "Popover should be shown (4)",
+        trigger: '.o_edit_menu_popover .o_we_url_link:contains("Home")',
+        run: function () {}, // it's a check
+    },
+    // 4. Popover should close when clicking non-link element
+    {
+        content: "Ensure popover is closed",
+        trigger: 'footer h5',
+    },
+    // 5. Double click shouldn't do anything
+    {
+        content: "Double click on link",
+        trigger: 'html:not(:has(.o_edit_menu_popover))', // popover should be closed
+        run: function () {
+            const $footerHomeLink = $('footer a[href="/"]').first();
+
+            // Create range to simulate real double click, see pull request
+            const range = document.createRange();
+            range.selectNodeContents($footerHomeLink[0]);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+
+            $footerHomeLink.click().dblclick();
+        },
+    },
+    {
+        content: "Ensure nothing happened on double click (except showing popover)",
+        extra_trigger: 'html:not(:has(#o_link_dialog_url_input))',
+        trigger: '.o_edit_menu_popover',
         run: function () {}, // it's a check
     },
 ]);

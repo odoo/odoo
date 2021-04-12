@@ -120,12 +120,14 @@ const Wysiwyg = Widget.extend({
 
             self.openMediaDialog(params);
         });
-        this.$editable.on('dblclick', 'a', function () {
-            if (!this.getAttribute('data-oe-model') && self.toolbar.$el.is(':visible')) {
-                self.showTooltip = false;
-                self.toggleLinkTools(true, this);
-            }
-        });
+        if (!this.options.preventLinkDoubleClick) {
+            this.$editable.on('dblclick', 'a', function () {
+                if (!this.getAttribute('data-oe-model') && self.toolbar.$el.is(':visible')) {
+                    self.showTooltip = false;
+                    self.toggleLinkTools(true, this);
+                }
+            });
+        }
 
         if (options.snippets) {
             $('body').addClass('editor_enable');
@@ -961,7 +963,7 @@ const Wysiwyg = Widget.extend({
             this._updateFaResizeButtons();
         }
         const link = getInSelection(this.odooEditor.document, 'a');
-        if (link || isInMedia) {
+        if (isInMedia || link && !this.options.preventLinkDoubleClick) {
             // Handle the media/link's tooltip.
             this.showTooltip = true;
             setTimeout(() => {
