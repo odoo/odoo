@@ -1244,7 +1244,7 @@ class Lead(models.Model):
         for lead in self:
             title = "%s : %s\n" % (_('Merged opportunity') if lead.type == 'opportunity' else _('Merged lead'), lead.name)
             body = [title]
-            _fields = self.env['ir.model.fields'].search([
+            _fields = self.env['ir.model.fields'].sudo().search([
                 ('name', 'in', self._merge_get_fields()),
                 ('model_id.model', '=', lead._name),
             ])
