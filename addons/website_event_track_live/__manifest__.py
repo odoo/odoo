@@ -26,6 +26,7 @@
     'assets': {
         'web.assets_frontend': [
             'website_event_track_live/static/src/scss/website_event_track_live.scss',
+            'website_event_track_live/static/src/js/website_event_track_replay_suggestion.js',
             'website_event_track_live/static/src/js/website_event_track_suggestion.js',
             'website_event_track_live/static/src/js/website_event_track_live.js',
         ],

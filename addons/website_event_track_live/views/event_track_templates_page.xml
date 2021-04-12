@@ -20,8 +20,9 @@
         <t t-set="show_youtube_frame" t-value="track.youtube_video_url and (track.is_youtube_replay or track.is_track_soon or track.is_track_live or track.is_track_done)" />
         <div t-if="show_youtube_frame" class="flex-grow-1 o_wevent_event_track_live"
             t-att-data-track-id="track.id"
-            t-att-data-youtube-video-id="track.youtube_video_id"
-            t-att-data-has-next-suggestion="bool(track._get_track_suggestions(restrict_domain=[('youtube_video_url', '!=', False), ('is_published', '=', True)], limit=1))">
+            t-att-data-track-name="track.name"
+            t-att-data-track-website-image-url="track.website_image_url"
+            t-att-data-youtube-video-id="track.youtube_video_id">
             <div class="position-absolute o_wevent_event_track_live_loading w-100 d-flex align-items-center justify-content-center text-white h4">
                 <i class="fa fa-spin fa-spinner position-relative"/>
                 <span class="pl-2">Loading Video...</span>
