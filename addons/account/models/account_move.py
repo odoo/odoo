@@ -1784,7 +1784,7 @@ class AccountMove(models.Model):
 
             is_invoice = vals.get('move_type') in self.get_invoice_types(include_receipts=True)
 
-            if 'line_ids' in vals:
+            if vals.get('line_ids'):
                 vals.pop('invoice_line_ids', None)
                 new_vals_list.append(vals)
                 continue
