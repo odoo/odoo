@@ -924,20 +924,22 @@ class MailThread(models.AbstractModel):
         #    if destination = alias with different model -> consider it is a forward and not a reply
         #    if destination = alias with same model -> check contact settings as they still apply
         if reply_model and reply_thread_id:
+            reply_model_id = self.env['ir.model']._get_id(reply_model)
             other_model_aliases = self.env['mail.alias'].search([
                 '&', '&',
                 ('alias_name', '!=', False),
                 ('alias_name', 'in', email_to_localparts),
-                ('alias_model_id.model', '!=', reply_model),
+                ('alias_model_id', '!=', reply_model_id),
             ])
             if other_model_aliases:
                 is_a_reply = False
                 rcpt_tos_valid_localparts = [to for to in rcpt_tos_valid_localparts if to in other_model_aliases.mapped('alias_name')]
 
         if is_a_reply:
+            reply_model_id = self.env['ir.model']._get_id(reply_model)
             dest_aliases = self.env['mail.alias'].search([
                 ('alias_name', 'in', rcpt_tos_localparts),
-                ('alias_model_id.model', '=', reply_model)
+                ('alias_model_id', '=', reply_model_id)
             ], limit=1)
 
             user_id = self._mail_find_user_for_gateway(email_from, alias=dest_aliases).id or self._uid
@@ -972,7 +974,7 @@ class MailThread(models.AbstractModel):
                 routes = []
                 for alias in dest_aliases:
                     user_id = self._mail_find_user_for_gateway(email_from, alias=alias).id or self._uid
-                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, ast.literal_eval(alias.alias_defaults), user_id, alias)
+                    route = (alias.sudo().alias_model_id.model, alias.alias_force_thread_id, ast.literal_eval(alias.alias_defaults), user_id, alias)
                     route = self._routing_check_route(message, message_dict, route, raise_exception=True)
                     if route:
                         _logger.info(
@@ -1536,7 +1538,7 @@ class MailThread(models.AbstractModel):
 
         if alias and alias.alias_parent_model_id and alias.alias_parent_thread_id:
             followers = self.env['mail.followers'].search([
-                ('res_model', '=', alias.alias_parent_model_id.model),
+                ('res_model', '=', alias.alias_parent_model_id.sudo().model),
                 ('res_id', '=', alias.alias_parent_thread_id)]
             ).mapped('partner_id')
         else:
