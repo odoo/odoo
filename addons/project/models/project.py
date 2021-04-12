@@ -526,20 +526,20 @@ class Project(models.Model):
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """
-        Subscribe to all existing active tasks when subscribing to a project
+        Subscribe to newly created task but not all existing active task when subscribing to a project.
+        User update notification preference of project its propagated to all the tasks that the user is
+        currently following.
         """
         res = super(Project, self).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
-        project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids) if subtype_ids else None
-        task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
-        if not subtype_ids or task_subtypes:
-            self.mapped('tasks').message_subscribe(
-                partner_ids=partner_ids, subtype_ids=task_subtypes)
+        if subtype_ids:
+            project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids)
+            task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids
+            if task_subtypes:
+                for task in self.task_ids:
+                    partners = set(task.message_partner_ids.ids) & set(partner_ids)
+                    if partners:
+                        task.message_subscribe(partner_ids=list(partners), subtype_ids=task_subtypes)
         return res
-
-    def message_unsubscribe(self, partner_ids=None):
-        """ Unsubscribe from all tasks when unsubscribing from a project """
-        self.mapped('tasks').message_unsubscribe(partner_ids=partner_ids)
-        return super(Project, self).message_unsubscribe(partner_ids=partner_ids)
 
     def _alias_get_creation_values(self):
         values = super(Project, self)._alias_get_creation_values()
@@ -1187,6 +1187,17 @@ class Task(models.Model):
                     stage = stages[0]
                 personal_stage_by_user[user_id].sudo().write({'stage_id': stage.id})
 
+    def message_subscribe(self, partner_ids=None, subtype_ids=None):
+        """ Set task notification based on project notification preference if user follow the project"""
+        if not subtype_ids:
+            project_followers = self.project_id.message_follower_ids.filtered(lambda f: f.partner_id.id in partner_ids)
+            for project_follower in project_followers:
+                project_subtypes = project_follower.subtype_ids
+                task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
+                partner_ids.remove(project_follower.partner_id.id)
+                super().message_subscribe(project_follower.partner_id.ids, task_subtypes)
+        return super().message_subscribe(partner_ids, subtype_ids)
+
     @api.constrains('depend_on_ids')
     def _check_no_cyclic_dependencies(self):
         if not self._check_m2m_recursion('depend_on_ids'):
@@ -1675,7 +1686,7 @@ class Task(models.Model):
                     or key[8:] in self.SELF_WRITABLE_FIELDS
             }
             self = self.with_context(ctx).sudo()
-        tasks = super(Task, self).create(vals_list)
+        tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         tasks._populate_missing_personal_stages()
         if is_portal_user:
             # since we use sudo to create tasks, we need to check
