@@ -197,6 +197,7 @@ longpollingCommunication.start();
 // TODO SEB there don't seem to be any disconnect event, but is it an issue to post messages on dead ports?
 // const ports = new Set();
 self.addEventListener('connect', function (ev) {
+    console.log('service worker message');
     for (const port of ev.ports) {
         // ports.add(port);
         port.addEventListener('message', function (ev) {
@@ -212,3 +213,17 @@ self.addEventListener('connect', function (ev) {
     }
 });
 
+self.addEventListener('install', function (ev) {
+    console.log('service worker install');
+    // ev.waitUntil(self.skipWaiting()); // Activate worker immediately
+});
+
+self.addEventListener('activate', function (ev) {
+    console.log('service worker activate');
+    // ev.waitUntil(self.clients.claim()); // Become available to all pages
+});
+
+self.addEventListener('message', function (ev) {
+    console.log('service worker message', ev.ports, ev.data);
+    ev.source.postMessage("Hi client");
+});

@@ -41,7 +41,7 @@ class BusController(Controller):
     def im_status(self, partner_ids):
         return request.env['res.partner'].with_context(active_test=False).search([('id', 'in', partner_ids)]).read(['im_status'])
 
-    @route('/bus/server_communication_shared_worker.js', type='http', auth='public')
+    @route('/server_communication_shared_worker.js', type='http', auth='public')
     def server_communication_shared_worker(self, **kwargs):
         # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
         bundle = 'bus.server_communication_shared_worker'

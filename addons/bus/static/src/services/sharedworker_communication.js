@@ -48,15 +48,34 @@ export class SharedWorkerCommunication {
         }
         // TODO replace window by env.browser
         if (!this._sharedWorker) {
-            this._sharedWorker = new window.SharedWorker('/bus/server_communication_shared_worker.js');
-            this._sharedWorker.port.addEventListener('message', ev => {
+            navigator.serviceWorker.register('/server_communication_shared_worker.js').then(function(registration) {
+                // Registration was successful
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+                // registration failed :(
+                console.log('ServiceWorker registration failed: ', err);
+            });
+            // return;
+            // this._sharedWorker = new window.SharedWorker('/bus/server_communication_shared_worker.js');
+            // this._sharedWorker.port.addEventListener('message', ev => {
+            //     const { payload, type } = ev.data;
+            //     if (type === 'bus_message') {
+            //         this._notifyHandlers(payload);
+            //     }
+            // });
+            navigator.serviceWorker.addEventListener('message', ev => {
                 const { payload, type } = ev.data;
                 if (type === 'bus_message') {
                     this._notifyHandlers(payload);
+                } else {
+                    console.log('received worker message', ev.data);
                 }
             });
+            navigator.serviceWorker.ready.then(registration => {
+                registration.active.postMessage("test post from client");
+            });
         }
-        this._sharedWorker.port.start();
+        // this._sharedWorker.port.start();
         this._isActive = true;
     }
 
@@ -64,7 +83,7 @@ export class SharedWorkerCommunication {
      * Stops.
      */
     stop() {
-        this._sharedWorker.port.stop();
+        // this._sharedWorker.port.stop();
         this._isActive = false;
     }
 
