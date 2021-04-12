@@ -4398,6 +4398,10 @@ registry['sizing_x'] = registry.sizing.extend({
                 this.$target.addClass('offset-lg-' + offset);
             }
         }
+        this.trigger_up('option_update', {
+            optionName: 'StepsConnector',
+            name: 'change_column_size',
+        });
         this._super.apply(this, arguments);
     },
 });
@@ -4518,6 +4522,10 @@ registry.layout_column = SnippetOptionWidget.extend({
         } else if (previousNbColumns === 0) {
             this.trigger_up('activate_snippet', {$snippet: this.$('> .row').children().first()});
         }
+        this.trigger_up('option_update', {
+            optionName: 'StepsConnector',
+            name: 'change_columns',
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -4650,6 +4658,10 @@ registry.SnippetMove = SnippetOptionWidget.extend({
                 duration: 550,
             });
         }
+        this.trigger_up('option_update', {
+            optionName: 'StepsConnector',
+            name: 'move_snippet',
+        });
     },
 });
 
@@ -6621,6 +6633,10 @@ registry.ContainerWidth = SnippetOptionWidget.extend({
         } else if (previewMode) {
             this.$target.addClass('o_container_preview');
         }
+        this.trigger_up('option_update', {
+            optionName: 'StepsConnector',
+            name: 'change_container_width',
+        });
     },
 });
 
