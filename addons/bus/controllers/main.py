@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import base64
+
 from odoo import exceptions, _
 from odoo.http import Controller, request, route
+from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.bus.models.bus import dispatch
 
 
@@ -37,3 +40,19 @@ class BusController(Controller):
     @route('/longpolling/im_status', type="json", auth="user")
     def im_status(self, partner_ids):
         return request.env['res.partner'].with_context(active_test=False).search([('id', 'in', partner_ids)]).read(['im_status'])
+
+    @route('/bus/server_communication_shared_worker.js', type='http', auth='public')
+    def server_communication_shared_worker(self, **kwargs):
+        # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
+        bundle = 'bus.server_communication_shared_worker'
+        files, remains = request.env["ir.qweb"]._get_asset_content(bundle, options=request.context)
+        asset = AssetsBundle(bundle, files)
+
+        mock_attachment = getattr(asset, 'js')()
+        if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
+            mock_attachment = mock_attachment[0]
+        # can't use /web/content directly because we don't have attachment ids (attachments must be created)
+        status, headers, content = request.env['ir.http'].binary_content(id=mock_attachment.id, unique=asset.checksum)
+        content_base64 = base64.b64decode(content) if content else ''
+        headers.append(('Content-Length', len(content_base64)))
+        return request.make_response(content_base64, headers)

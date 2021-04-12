@@ -4,12 +4,14 @@ import { crossTabCommunicationService } from '@bus/services/crosstab_communicati
 import { localStorageCommunicationService } from '@bus/services/localstorage_communication';
 import { longpollingCommunicationService } from '@bus/services/longpolling_communication';
 import { serverCommunicationService } from '@bus/services/server_communication';
+import { sharedWorkerCommunicationService } from '@bus/services/sharedworker_communication';
 import { userPresenceService } from '@bus/services/user_presence';
 
 import env from 'web.commonEnv';
 
 // deployment order is important (should respect dependencies of services)
 const services = [
+    sharedWorkerCommunicationService,
     localStorageCommunicationService,
     crossTabCommunicationService,
     userPresenceService,

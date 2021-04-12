@@ -15,6 +15,7 @@ export class ServerCommunication {
          *   through a longpolling request.
          * 'crosstab': this tab is in indirect communication with the server
          *   through another tab.
+         * 'sharedworker'
          */
         this._communicationType;
         /**
@@ -41,11 +42,13 @@ export class ServerCommunication {
 
         this._handleBusMessageFromCrosstab = this._handleBusMessageFromCrosstab.bind(this);
         this._handleBusMessageFromLongpolling = this._handleBusMessageFromLongpolling.bind(this);
+        this._handleBusMessageFromSharedworker = this._handleBusMessageFromSharedworker.bind(this);
         this._handleServiceMessageFromCrosstab = this._handleServiceMessageFromCrosstab.bind(this);
         this._handleUserPresenceChange = this._handleUserPresenceChange.bind(this);
         this.env.services['bus.crosstab_communication'].registerHandler(this._crosstabTypeForBusMessage, this._handleBusMessageFromCrosstab);
         this.env.services['bus.crosstab_communication'].registerHandler(this._crosstabTypeForServiceMessage, this._handleServiceMessageFromCrosstab);
         this.env.services['bus.longpolling_communication'].registerHandler(this._handleBusMessageFromLongpolling);
+        this.env.services['bus.sharedworker_communication'].registerHandler(this._handleBusMessageFromSharedworker);
         this.env.services['bus.user_presence'].registerHandler(this._handleUserPresenceChange);
 
         this._selectCommunicationType();
@@ -106,6 +109,12 @@ export class ServerCommunication {
      * @private
      */
     _selectCommunicationType() {
+        if (window.SharedWorker) {
+            console.warn('selecting sharedworker');
+            this._communicationType = 'sharedworker';
+            this.env.services['bus.sharedworker_communication'].start(this._lastBusMessageId);
+            return;
+        }
         // TODO SEB better handle longpolling/crosstab switch
         if (this.env.services['bus.user_presence'].isCurrentPageVisible()) {
             console.warn('selecting longpolling');
@@ -177,6 +186,20 @@ export class ServerCommunication {
     }
 
     /**
+     * Handles a new bus message specifically received from sharedworker.
+     *
+     * @private
+     * @param {*} busMessage
+     */
+    _handleBusMessageFromSharedworker(busMessage) {
+        console.log('_handleBusMessageFromSharedworker', busMessage);
+        if (this._communicationType !== 'sharedworker') {
+            console.warn(`bus.server_communication message received while sharedworker was inactive: ${busMessage}`);
+        }
+        this._handleBusMessage(busMessage);
+    }
+
+    /**
      * Handles change in user presence.
      *
      * @private
@@ -192,6 +215,7 @@ export const serverCommunicationService = {
     dependencies: [
         'bus.crosstab_communication',
         'bus.longpolling_communication',
+        'bus.sharedworker_communication',
         'bus.user_presence',
     ],
     deploy: env => new ServerCommunication(env),
