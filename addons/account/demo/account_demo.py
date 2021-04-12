@@ -344,7 +344,7 @@ class AccountChartTemplate(models.Model):
         :return (Model<account.account>): the most appropriate record found
         """
         return (
-            self.env['account.account'].browse(self.env['ir.model.data'].search([
+            self.env['account.account'].browse(self.env['ir.model.data'].sudo().search([
                 ('name', '=', '%d_%s' % (company.id, xml_id)),
                 ('model', '=', 'account.account'),
                 ('module', '=like', 'l10n%')
