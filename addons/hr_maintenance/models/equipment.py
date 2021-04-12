@@ -110,17 +110,21 @@ class MaintenanceRequest(models.Model):
         return super(MaintenanceRequest, self).write(vals)
 
     @api.model
-    def message_new(self, msg, custom_values=None):
-        """ Overrides mail_thread message_new that is called by the mailgateway
-            through message_process.
-            This override updates the document according to the email.
-        """
-        if custom_values is None:
-            custom_values = {}
-        email = tools.email_split(msg.get('from')) and tools.email_split(msg.get('from'))[0] or False
-        user = self.env['res.users'].search([('login', '=', email)], limit=1)
+    def message_new(self, msg_dict, custom_values=None):
+        """ Find an employee based on email_from. """
+        defaults = {}
+        if custom_values:
+            defaults.update(custom_values)
+
+        user = None
+        from_normalized = tools.email_normalize(msg_dict.get('email_from'))
+        if from_normalized:
+            user = self.env['res.users'].search([
+                '&',
+                '|', ('login', '=', from_normalized), ('email_normalized', '=', from_normalized),
+                ('employee_id', '!=', False)
+            ], limit=1)
         if user:
-            employee = self.env.user.employee_id
-            if employee:
-                custom_values['employee_id'] = employee and employee[0].id
-        return super(MaintenanceRequest, self).message_new(msg, custom_values=custom_values)
+            defaults['employee_id'] = user.employee_id.id
+
+        return super(MaintenanceRequest, self).message_new(msg_dict, custom_values=defaults)

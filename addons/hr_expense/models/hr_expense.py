@@ -4,7 +4,7 @@
 import re
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import email_split, float_is_zero, float_repr
+from odoo.tools import email_normalize, float_is_zero, float_repr
 from odoo.tools.misc import clean_context, format_date
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
@@ -669,13 +669,16 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
-        email_address = email_split(msg_dict.get('email_from', False))[0]
+        from_normalized = email_normalize(msg_dict.get('email_from'))
 
-        employee = self.env['hr.employee'].search([
-            '|',
-            ('work_email', 'ilike', email_address),
-            ('user_id.email', 'ilike', email_address)
-        ], limit=1)
+        employee = self.env['hr.employee']
+        if from_normalized:
+            employee = self.env['hr.employee'].search([
+                '|',
+                ('work_email', 'ilike', from_normalized),
+                ('user_id.email_normalized', '=', from_normalized)
+            ], limit=1)
+
 
         expense_description = msg_dict.get('subject', '')
 
@@ -694,7 +697,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         self = self.with_company(company)
 
         product, price, currency_id, expense_description = self._parse_expense_subject(expense_description, currencies)
-        vals = {
+        defaults = {
             'employee_id': employee.id,
             'name': expense_description,
             'unit_amount': price,
@@ -708,9 +711,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
 
         account = product.product_tmpl_id._get_product_accounts()['expense']
         if account:
-            vals['account_id'] = account.id
+            defaults['account_id'] = account.id
 
-        expense = super(HrExpense, self).message_new(msg_dict, dict(custom_values or {}, **vals))
+        expense = super(HrExpense, self).message_new(msg_dict, custom_values=dict(custom_values or {}, **defaults))
         self._send_expense_success_mail(msg_dict, expense)
         return expense
 
@@ -974,12 +977,12 @@ class HrExpenseSheet(models.Model):
             return self.env.ref('hr_expense.mt_expense_paid')
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
-    def _message_auto_subscribe_followers(self, updated_values, subtype_ids):
-        res = super(HrExpenseSheet, self)._message_auto_subscribe_followers(updated_values, subtype_ids)
+    def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
+        res = super(HrExpenseSheet, self)._message_auto_subscribe_followers(updated_values, default_subtype_ids)
         if updated_values.get('employee_id'):
             employee = self.env['hr.employee'].browse(updated_values['employee_id'])
             if employee.user_id:
-                res.append((employee.user_id.partner_id.id, subtype_ids, False))
+                res.append((employee.user_id.partner_id.id, default_subtype_ids, False))
         return res
 
     # --------------------------------------------

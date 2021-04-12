@@ -1131,45 +1131,42 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
-        """Called by ``message_process`` when a new message is received
-           for a given thread model, if the message did not belong to
-           an existing thread.
-           The default behavior is to create a new record of the corresponding
-           model (based on some very basic info extracted from the message).
-           Additional behavior may be implemented by overriding this method.
+        """ Called by ``message_process`` when a new message is received for
+        a given thread model if the incoming message did not belong to an
+        existing thread. Default behavior is to create a new record of the
+        corresponding model based on information extracted from the message.
+        Additional behavior may be implemented by overriding this method.
 
-           :param dict msg_dict: a map containing the email details and
-                                 attachments. See ``message_process`` and
-                                ``mail.message.parse`` for details.
-           :param dict custom_values: optional dictionary of additional
-                                      field values to pass to create()
-                                      when creating the new thread record.
-                                      Be careful, these values may override
-                                      any other values coming from the message.
-           :rtype: int
-           :return: the id of the newly created thread object
+        :param dict msg_dict: a map containing the message details and
+          attachments. See ``message_parse`` for more details.
+        :param dict custom_values: optional dictionary of additional field
+          values to pass to create() when creating the new thread record.
+          Be careful, these values may override any other values coming from
+          the message.
+
+        :return: the newly created record
         """
-        data = {}
-        if isinstance(custom_values, dict):
-            data = custom_values.copy()
-        fields = self.fields_get()
+        values = custom_values.copy() if isinstance(custom_values, dict) else {}
+
         name_field = self._rec_name or 'name'
-        if name_field in fields and not data.get('name'):
-            data[name_field] = msg_dict.get('subject', '')
-        return self.create(data)
+        if name_field in self and not values.get(name_field):
+            values[name_field] = msg_dict.get('subject', '')
+
+        return self.create(values)
 
     def message_update(self, msg_dict, update_vals=None):
-        """Called by ``message_process`` when a new message is received
-           for an existing thread. The default behavior is to update the record
-           with update_vals taken from the incoming email.
-           Additional behavior may be implemented by overriding this
-           method.
-           :param dict msg_dict: a map containing the email details and
-                               attachments. See ``message_process`` and
-                               ``mail.message.parse()`` for details.
-           :param dict update_vals: a dict containing values to update records
-                              given their ids; if the dict is None or is
-                              void, no write operation is performed.
+        """ Called by ``message_process`` when a new message is received for
+        an existing thread. The default behavior is to update the record with
+        update_vals taken from the incoming email.
+
+        Additional behavior may be implemented by overriding this method. They
+        should full the ``update_vals`` parameter with values given directly
+        to a ``write`` operation.
+
+       :param dict msg_dict: a map containing the message details and
+         attachments. See ``message_parse`` for more details.
+       :param dict update_vals: values uysed to update records. If it is void
+         no write operation is performed.
         """
         if update_vals:
             self.write(update_vals)
@@ -1353,17 +1350,21 @@ class MailThread(models.AbstractModel):
     @api.model
     def message_parse(self, message, save_original=False):
         """ Parses an email.message.Message representing an RFC-2822 email
-        and returns a generic dict holding the message details.
+        and returns a dictionary holding the message details. Most of its
+        content match a ``MailMessage`` model as it uses its field naming.
+        See also ``_message_parse_extract_payload`` that returns body and
+        attachments. Additional information is provided notably through
+        ``_message_parse_extract_bounce`` that returns bounce information.
 
         :param message: email to parse
         :type message: email.message.Message
         :param bool save_original: whether the returned dict should include
-            an ``original`` attachment containing the source of the message
+          an ``original`` attachment containing the source of the message
         :rtype: dict
         :return: A dict with the following structure, where each field may not
-            be present if missing in original message::
+          be present if missing in original message::
 
-            { 'message_id': msg_id,
+            { 'message_id': msg_id (if not found in email a random one is generated),
               'subject': subject,
               'email_from': from,
               'to': to + delivered-to,
@@ -1378,6 +1379,12 @@ class MailThread(models.AbstractModel):
               'date': date,
               'attachments': [('file1', 'bytes'),
                               ('file2', 'bytes')}
+              'message_type': 'email',
+              # bounce information
+              'bounced_email': bounced_email,
+              'bounced_partner': bounced_partner,
+              'bounced_msg_id': bounced_msg_id,
+              'bounced_message': bounced_message,
             }
         """
         if not isinstance(message, EmailMessage):
