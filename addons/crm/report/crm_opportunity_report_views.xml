@@ -143,8 +143,10 @@
             }</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),
-                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')})]"/>
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead'), 'sequence': 0}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead'), 'sequence': 1}),
+                         (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads'), 'sequence': 3}),
+                           (0, 0, {'view_mode': 'form', 'view_id': ref('crm_lead_view_form')})]"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No data found!
