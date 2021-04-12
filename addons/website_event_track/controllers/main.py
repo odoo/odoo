@@ -159,4 +159,11 @@ class WebsiteEventTrackController(http.Controller):
             partner = request.env['res.partner'].sudo().search([('email', '=', post['email_from'])])
             if partner:
                 track.sudo().message_subscribe(partner_ids=partner.ids)
+        return request.redirect('/event/%s/track_proposal/%s/success' % (event.id, track.id))
+
+    @http.route(['/event/<model("event.event"):event>/track_proposal/<model("event.track"):track>/success'], type='http', auth="public", website=True)
+    def event_track_proposal_success(self, track, event):
+        if not event.can_access_from_current_website():
+            raise NotFound()
+
         return request.render("website_event_track.event_track_proposal_success", {'track': track, 'event': event})
