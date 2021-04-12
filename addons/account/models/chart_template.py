@@ -426,15 +426,6 @@ class AccountChartTemplate(models.Model):
         """
         return [{'acc_name': _('Cash'), 'account_type': 'cash'}, {'acc_name': _('Bank'), 'account_type': 'bank'}]
 
-    def open_select_template_wizard(self):
-        # Add action to open wizard to select between several templates
-        if not self.company_id.chart_template_id:
-            todo = self.env['ir.actions.todo']
-            action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_wizard_multi_chart')
-            if action_rec:
-                todo.create({'action_id': action_rec.id, 'name': _('Choose Accounting Template')})
-        return True
-
     @api.model
     def _prepare_transfer_account_for_direct_creation(self, name, company):
         """ Prepare values to create a transfer account directly, based on the
