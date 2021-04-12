@@ -7,7 +7,8 @@ from odoo.addons.mail.tests.common import MailCase, MailCommon, mail_new_test_us
 
 class MassMailCase(MailCase, MockLinkTracker):
 
-    def assertMailTraces(self, recipients_info, mailing, records, check_mail=True):
+    def assertMailTraces(self, recipients_info, mailing, records,
+                         check_mail=True, author=None):
         """ Check content of traces.
 
         :param recipients_info: list[{
@@ -19,6 +20,15 @@ class MassMailCase(MailCase, MockLinkTracker):
             'failure_type': optional: UPDATE ME
             }, { ... }]
         """
+        # map trace state to email state
+        state_mapping = {
+            'sent': 'sent',
+            'replied': 'sent',  # replied imply something has been sent
+            'ignored': 'cancel',
+            'exception': 'exception',
+            'canceled': 'canceled',
+        }
+
         traces = self.env['mailing.trace'].search([
             ('mass_mailing_id', 'in', mailing.ids),
             ('res_id', 'in', records.ids)
@@ -47,22 +57,17 @@ class MassMailCase(MailCase, MockLinkTracker):
             )
 
             if check_mail:
+                if author is None:
+                    author = self.env.user.partner_id
+
                 fields_values = {'mailing_id': mailing}
                 if 'failure_type' in recipient_info:
                     fields_values['failure_type'] = recipient_info['failure_type']
 
-                if state == 'sent':
-                    self.assertMailMailWEmails([email], 'sent', content, fields_values=fields_values)
-                elif state == 'replied':  # replied imply something has been sent
-                    self.assertMailMailWEmails([email], 'sent', content, fields_values=fields_values)
-                elif state == 'ignored':
-                    self.assertMailMailWEmails([email], 'cancel', content, fields_values=fields_values)
-                elif state == 'exception':
-                    self.assertMailMailWEmails([email], 'exception', content, fields_values=fields_values)
-                elif state == 'canceled':
-                    self.assertMailMailWEmails([email], 'canceled', content, fields_values=fields_values)
+                if partner:
+                    self.assertMailMail(partner, state_mapping[state], author=author, content=content, fields_values=fields_values)
                 else:
-                    raise NotImplementedError()
+                    self.assertMailMailWEmails([email], state_mapping[state], author=author, content=content, fields_values=fields_values)
 
 
 class MassMailCommon(MailCommon, MassMailCase):
