@@ -48,18 +48,17 @@
         <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, languages))[0]"/>
         <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
         <div t-attf-class="js_language_selector #{_div_classes}" t-if="language_selector_visible">
-            <button class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button t-attf-class="btn btn-sm btn-outline-secondary border-0 dropdown-toggle #{_btn_class}" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span t-if="not no_text"
                         class="align-middle"
                         t-esc="active_lang[2].split('/').pop()"/>
             </button>
-            <div class="dropdown-menu" role="menu">
+            <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
                 <t t-foreach="languages" t-as="lg">
                     <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])"
-                    class="dropdown-item js_change_lang"
-                    t-att-data-url_code="lg[1]">
-                        <span t-if="not no_text"
-                              t-esc="lg[2].split('/').pop()"/>
+                       t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
+                       t-att-data-url_code="lg[1]">
+                        <span t-if="not no_text" t-esc="lg[2].split('/').pop()"/>
                     </a>
                 </t>
             </div>

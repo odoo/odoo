@@ -569,12 +569,14 @@ options.Class.include({
         const allXmlIDs = this._getXMLIDsFromPossibleValues(params.possibleValues);
         const enableXmlIDs = xmlID.split(/\s*,\s*/);
         const disableXmlIDs = allXmlIDs.filter(xmlID => !enableXmlIDs.includes(xmlID));
+        const resetViewArch = !!params.resetViewArch;
 
         return this._rpc({
             route: '/website/theme_customize',
             params: {
                 'enable': enableXmlIDs,
                 'disable': disableXmlIDs,
+                'reset_view_arch': resetViewArch,
             },
         });
     },

@@ -508,25 +508,17 @@ class Website(models.Model):
                     </data>
                 """ % (cta_data['cta_btn_href'], cta_data['cta_btn_text'])
             })
-            header_ids = [
-                'website.template_header_default_oe_structure_header_default_1',
-                'website.template_header_hamburger_oe_structure_header_hamburger_1',
-                'website.template_header_slogan_oe_structure_header_slogan_2',
-                'website.template_header_boxed_oe_structure_header_boxed_2',
-                'website.template_header_image_oe_structure_header_image_2',
-            ]
-            for header_id in header_ids:
-                try:
-                    view_id = self.env['website'].viewref(header_id)
-                    if view_id:
-                        el = etree.fromstring(view_id.arch_db)
-                        btn_cta_el = el.xpath("//a[hasclass('btn_cta')]")
-                        if btn_cta_el:
-                            btn_cta_el[0].attrib['href'] = cta_data['cta_btn_href']
-                            btn_cta_el[0].text = cta_data['cta_btn_text']
-                        view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(el)})
-                except ValueError as e:
-                    logger.warning(e)
+            try:
+                view_id = self.env['website'].viewref('website.header_call_to_action')
+                if view_id:
+                    el = etree.fromstring(view_id.arch_db)
+                    btn_cta_el = el.xpath("//a[hasclass('btn_cta')]")
+                    if btn_cta_el:
+                        btn_cta_el[0].attrib['href'] = cta_data['cta_btn_href']
+                        btn_cta_el[0].text = cta_data['cta_btn_text']
+                    view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(el)})
+            except ValueError as e:
+                logger.warning(e)
 
         # modules
         pages_views = set_features(kwargs.get('selected_features'))
