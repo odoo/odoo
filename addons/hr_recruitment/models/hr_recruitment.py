@@ -409,7 +409,7 @@ class Applicant(models.Model):
         return recipients
 
     @api.model
-    def message_new(self, msg, custom_values=None):
+    def message_new(self, msg_dict, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
             This override updates the document according to the email.
@@ -419,18 +419,26 @@ class Applicant(models.Model):
         # want the gateway user to be responsible if no other responsible is
         # found.
         self = self.with_context(default_user_id=False)
-        val = msg.get('from').split('<')[0]
+
         defaults = {
-            'name': msg.get('subject') or _("No Subject"),
-            'partner_name': val,
-            'email_from': msg.get('from'),
-            'partner_id': msg.get('author_id', False),
+            'name': msg_dict.get('subject') or _("No Subject"),
+            'email_from': msg_dict.get('from'),
         }
-        if msg.get('priority'):
-            defaults['priority'] = msg.get('priority')
+        if msg_dict.get('author_id'):
+            partner = self.env['res.partner'].browse(msg_dict['author_id'])
+            defaults.update({
+                'partner_id': partner.id,
+                'partner_name': partner.name,
+            })
+        else:
+            from_split = tools.email_split_tuples(msg_dict.get('email_from'))
+            if from_split:
+                defaults['partner_name'] = from_split[0]
+
         if custom_values:
             defaults.update(custom_values)
-        return super(Applicant, self).message_new(msg, custom_values=defaults)
+
+        return super(Applicant, self).message_new(msg_dict, custom_values=defaults)
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:

@@ -1248,7 +1248,7 @@ class Task(models.Model):
         return [x for x in email_list if x.split('@')[0] not in aliases]
 
     @api.model
-    def message_new(self, msg, custom_values=None):
+    def message_new(self, msg_dict, custom_values=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
             This override updates the document according to the email.
@@ -1257,30 +1257,29 @@ class Task(models.Model):
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
-        create_context = dict(self.env.context or {})
-        create_context['default_user_id'] = False
-        if custom_values is None:
-            custom_values = {}
         defaults = {
-            'name': msg.get('subject') or _("No Subject"),
-            'email_from': msg.get('from'),
+            'name': msg_dict.get('subject') or _("No Subject"),
+            'email_from': msg_dict.get('from'),
             'planned_hours': 0.0,
-            'partner_id': msg.get('author_id')
         }
-        defaults.update(custom_values)
+        if msg_dict.get('author_id'):
+            defaults['partner_id'] = msg_dict['author_id']
+        if custom_values:
+            defaults.update(custom_values)
 
-        task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
-        email_list = task.email_split(msg)
+        task = super(Task, self.with_context(default_user_id=False)).message_new(msg_dict, custom_values=defaults)
+
+        email_list = task.email_split(msg_dict)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
         task.message_subscribe(partner_ids)
         return task
 
-    def message_update(self, msg, update_vals=None):
+    def message_update(self, msg_dict, update_vals=None):
         """ Override to update the task according to the email. """
-        email_list = self.email_split(msg)
+        email_list = self.email_split(msg_dict)
         partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=self, force_create=False) if p]
         self.message_subscribe(partner_ids)
-        return super(Task, self).message_update(msg, update_vals=update_vals)
+        return super(Task, self).message_update(msg_dict, update_vals=update_vals)
 
     def _message_get_suggested_recipients(self):
         recipients = super(Task, self)._message_get_suggested_recipients()

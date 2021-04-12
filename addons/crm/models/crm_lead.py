@@ -1738,20 +1738,20 @@ class Lead(models.Model):
         # alias_user_id). It also allows to exclude portal / public users.
         self = self.with_context(default_user_id=False)
 
-        if custom_values is None:
-            custom_values = {}
         defaults = {
             'name':  msg_dict.get('subject') or _("No Subject"),
-            'email_from': msg_dict.get('from'),
-            'partner_id': msg_dict.get('author_id', False),
+            'email_from': msg_dict.get('email_from'),
         }
-        if msg_dict.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
-            defaults['priority'] = msg_dict.get('priority')
-        defaults.update(custom_values)
+        if msg_dict.get('author_id'):
+            defaults['partner_id'] = msg_dict['author_id']
+
+        if custom_values:
+            defaults.update(custom_values)
 
         # assign right company
         if 'company_id' not in defaults and 'team_id' in defaults:
             defaults['company_id'] = self.env['crm.team'].browse(defaults['team_id']).company_id.id
+
         return super(Lead, self).message_new(msg_dict, custom_values=defaults)
 
     def _message_post_after_hook(self, message, msg_vals):
