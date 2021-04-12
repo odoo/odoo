@@ -80,13 +80,14 @@ class IapTransaction(object):
     def __init__(self):
         self.credit = None
 
-def authorize(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None):
+def authorize(env, key, account_token, credit, dbuuid=False, description=None, credit_template=None, ttl=4320):
     endpoint = get_endpoint(env)
     params = {
         'account_token': account_token,
         'credit': credit,
         'key': key,
         'description': description,
+        'ttl': ttl
     }
     if dbuuid:
         params.update({'dbuuid': dbuuid})
