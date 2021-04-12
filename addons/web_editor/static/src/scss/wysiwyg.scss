@@ -80,6 +80,9 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             margin-bottom: 0.125rem;
         }
     }
+    .dropdown-toggle::after {
+        display: none;
+    }
     .dropdown-menu.show { // To overcome .note-XXX .dropdown-menu rules
         min-width: 0;
     }
