@@ -698,9 +698,10 @@ td {
     flex-grow: 1;
 }
 .pos .actionpad .button {
+    --btnheightsize: 54px;
     position: relative;
     display: block;
-    height: 54px;
+    height: var(--btnheightsize);
     width: 100%;
     font-weight: bold;
     vertical-align: middle;
@@ -732,12 +733,17 @@ td {
     border-bottom-left-radius: 4px;
 }
 .pos .actionpad .button.pay {
-    height: 162px;
+    height: calc(var(--btnheightsize) * 3);
+}
+@media screen and (max-width: 768px) {
+    .pos .actionpad .button.pay {
+        height: calc(var(--btnheightsize) * 2);
+    }
 }
 .pos .actionpad .button.pay .pay-circle {
     display: block;
     font-size: 32px;
-    line-height: 54px;
+    line-height: var(--btnheightsize);
     padding-top: 6px;
     background: rgb(86, 86, 86);
     color: white;

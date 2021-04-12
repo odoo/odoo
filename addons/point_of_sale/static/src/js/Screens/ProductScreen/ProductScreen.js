@@ -39,8 +39,10 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             // We don't do this in the `mounted` lifecycle method because it is called before
             // the callbacks in `onMounted` hook.
             onMounted(() => NumberBuffer.reset());
-            this.state = useState({ numpadMode: 'quantity' });
-            this.mobile_pane = this.props.mobile_pane || 'right';
+            this.state = useState({
+                numpadMode: 'quantity',
+                mobile_pane: this.props.mobile_pane || 'right',
+            });
         }
         mounted() {
             if(this.env.pos.config.cash_control && this.env.pos.pos_session.state == 'opening_control') {
@@ -360,14 +362,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             this.showScreen('PaymentScreen');
         }
         switchPane() {
-            if (this.mobile_pane === "left") {
-                this.mobile_pane = "right";
-                this.render();
-            }
-            else {
-                this.mobile_pane = "left";
-                this.render();
-            }
+            this.state.mobile_pane = this.state.mobile_pane === "left" ? "right" : "left";
         }
     }
     ProductScreen.template = 'ProductScreen';

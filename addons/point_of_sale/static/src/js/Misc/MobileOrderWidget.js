@@ -7,7 +7,6 @@ odoo.define('point_of_sale.MobileOrderWidget', function(require) {
     class MobileOrderWidget extends PosComponent {
         constructor() {
             super(...arguments);
-            this.pane = this.props.pane;
             this.update();
         }
         get order() {

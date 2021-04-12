@@ -19,6 +19,10 @@
                 </div>
                 <t t-esc="props.actionName" />
             </button>
+            <button t-if="env.isMobile" class="button back-button" t-on-click="trigger('switchpane')">
+                <i class="fa fa-angle-double-left"/>
+                Back
+            </button>
         </div>
     </t>
 
