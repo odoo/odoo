@@ -1684,6 +1684,114 @@ options.registry.layout_column = options.Class.extend({
     },
 });
 
+options.registry.ConnectorChoice = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        if(!this.$target[0].dataset.currentConnector) {
+            this.$target[0].dataset.currentConnector = "Line";
+            //this.$target.addClass();
+        }
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Changes the connector between all the steps.
+     *
+     * @see this.selectClass for parameters
+     */
+    chooseConnector: function (previewMode, widgetValue, params) {
+        this.$target[0].dataset.currentConnector = widgetValue;
+        //const rows = this.$('.row');
+        const row = this.$target.children().first().children().first();
+        const lines = row.children().find('.s_process_step_line')
+        switch (widgetValue) {
+                case 'None': {
+                    //document.write(Object.keys(rows));
+                    //debugger;
+                    lines.css('border-top-style', 'none');
+                    break;
+                    //document.write(widgetValue);
+                    //rows.childNode;
+                    /**
+                    for (var i=0; i<rows.children().length; i++) {
+                        rows[i].find('.s_process_step_line').css('border-top-style', 'none');
+                        document.write(Object.keys(rows[0]));
+                    }
+                    **/
+                    /**
+                    var child;
+                    for (child in rows.children()) {
+                        rows[child].children().first().children().first().css('border-top-style', 'none');
+                    }
+                    **/
+                }
+                case 'Line': {
+                    lines.css('border-top-style', 'solid');
+                    break;
+                    //document.write(widgetValue);
+                    /**
+                    var child;
+                    for (child in rows.children()) {
+                        child.$('.s_process_step_line').css('border-top-style', 'solid');
+                    }
+                    **/
+                }
+                case 'Straight arrow': {
+                    lines.css('border-top-style', 'dotted');
+                    break;
+                    //document.write(widgetValue);
+                }
+                case 'Curved arrow': {
+                    lines.css('border-top-style', 'solid');
+                    lines.css('border-top-left-radius', '-150px');
+                    lines.css('border-top-right-radius', '150px');
+                    break;
+                }
+                default: {
+                    lines.css('border-top-style', 'solid');
+                    break;
+                    /**
+                    var child;
+                    for (child in rows.children()) {
+                        child.$('.s_process_step_line').css('border-top-style', 'solid');
+                    }
+                    **/
+                }
+            }
+        /**
+        if (previewMode === true) {
+            this.$currentConnector = container.children().clone();
+            container.empty().append($template);
+        } else if (previewMode === 'reset') {
+            container.empty().append(this.$currentView);
+        } else {
+            container.empty().append($template);
+            this.$currentView = container.children().clone();
+        }
+        **/
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'chooseConnector') {
+            return this.$target[0].dataset.currentConnector;
+        }
+        return this._super(...arguments);
+    },
+});
+
 options.registry.Parallax = options.Class.extend({
     /**
      * @override
