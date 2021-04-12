@@ -91,42 +91,41 @@ Tracing code execution
 ======================
 
 Instead of sending the SIGQUIT signal to an Odoo process often enough, to check
-where the processes are performing worse than expected, we can use the pyflame tool to
+where the processes are performing worse than expected, we can use the `py-spy`_ tool to
 do it for us.
 
-Install pyflame and flamegraph
-------------------------------
+Install py-spy
+--------------
 
 .. code:: bash
 
-    # These instructions are given for Debian/Ubuntu distributions
-    sudo apt install autoconf automake autotools-dev g++ pkg-config python-dev python3-dev libtool make
-    git clone https://github.com/uber/pyflame.git
-    git clone https://github.com/brendangregg/FlameGraph.git
-    cd pyflame
-    ./autogen.sh
-    ./configure
-    make
-    sudo make install
+    python3 -m pip install py-spy
 
 Record executed code
 --------------------
 
-As pyflame is installed, we now record the executed code lines with pyflame.
+As py-spy is installed, we now record the executed code lines.
 This tool will record, multiple times a second, the stacktrace of the process.
-Once done, we'll display them as an execution graph.
 
 .. code:: bash
 
-    pyflame --exclude-idle -s 3600 -r 0.2 -p <PID> -o test.flame
+    # record to raw file
+    py-spy record -o profile.json -f speedscope --pid <PID>
 
-where <PID> is the process ID of the odoo process you want to graph. This will
-wait until the dead of the process, with a maximum of one hour, and and get 5
-traces a second. With the output of pyflame, we can produce an SVG graph with
-the flamegraph tool:
+    # OR record directly to svg
+    py-spy record -o profile.svg --pid <PID>
 
-.. code:: bash
+where <PID> is the process ID of the odoo process you want to graph.
 
-    flamegraph.pl ./test.flame > ~/mycode.svg
+To open profile.json you can use online tool `speedscope.app`_.
+
+To open profile.svg you should use browser, because other viewer may not
+support interactive part.
+
 
 .. image:: profile/flamegraph.svg
+
+
+.. _py-spy: https://github.com/benfred/py-spy
+
+.. _speedscope.app: https://www.speedscope.app/
