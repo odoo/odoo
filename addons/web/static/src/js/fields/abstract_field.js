@@ -644,7 +644,10 @@ var AbstractField = Widget.extend({
                 // changes in multiple edition) confirmed the modal without any intentionnal user input.
                 ev.preventDefault();
                 ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'next_line'});
+                this.trigger_up('navigation_move', {
+                	direction: 'next_line',
+                	keepPosition: !ev.shiftKey,
+                });
                 break;
             case $.ui.keyCode.ESCAPE:
                 this.trigger_up('navigation_move', {direction: 'cancel', originalEvent: ev});

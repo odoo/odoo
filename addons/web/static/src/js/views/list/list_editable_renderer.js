@@ -969,6 +969,8 @@ ListRenderer.include({
      *   navigating with ENTER ; in this case, if the next row is the 'Add a
      *   row' one, always create a new record (never skip it, like TAB does
      *   under some conditions)
+     * @param {boolean} [options.keepPosition=false] set to true to set the cell
+     *   index to the same postion as before
      */
     _moveToSideLine: function (next, options) {
         options = options || {};
@@ -988,7 +990,8 @@ ListRenderer.include({
             // compute the index of the next (record) row to select, if any
             const side = next ? 'first' : 'last';
             const borderRowIndex = this._getBorderRow(side).prop('rowIndex') - 1;
-            const cellIndex = next ? 0 : this.allFieldWidgets[recordID].length - 1;
+            const cellIndex = options.keepPosition ? this.currentFieldIndex : next ? 
+            		0 : this.allFieldWidgets[recordID].length - 1;
             const cellOptions = { inc: next ? 1 : -1, force: true };
             const $currentRow = this._getRow(recordID);
             const $nextRow = this._getNearestEditableRow($currentRow, next);
@@ -1631,7 +1634,10 @@ ListRenderer.include({
                     this._getRecordID(this.currentRow) === ev.target.dataPointID) {
                     this.unselectRow();
                 } else {
-                    this._moveToNextLine({ forceCreate: true });
+                    this._moveToNextLine({ 
+                    	keepPosition: ev.data.keepPosition,
+                    	forceCreate: true,
+                    });
                 }
                 break;
             case 'cancel':
