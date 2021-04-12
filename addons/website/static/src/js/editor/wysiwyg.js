@@ -50,6 +50,7 @@ Wysiwyg.include({
      */
     start: function () {
         this.options.toolbarHandler = $('#web_editor-top-edit');
+        this.options.preventLinkDoubleClick = true;
 
 
         $(document.body).on('mousedown', (ev) => {
@@ -57,28 +58,15 @@ Wysiwyg.include({
             // Keep popover open if clicked inside it, but not on a button
             if (!($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length)) {
                 $('.o_edit_menu_popover').popover('hide');
+                $('.o_edit_menu_popover').find('[data-toggle="tooltip"]').tooltip('hide');
             }
 
-            if ($target.is('a') && $target.closest('#wrap').length) {
+            if ($target.is('a') && !$target.attr('data-oe-model') && !$target.find('> [data-oe-model]').length && $target.closest('#wrapwrap').length) {
                 if (!$target.data('popover-widget-initialized')) {
                     weWidgets.LinkPopoverWidget.createFor(this, ev.target);
                     $target.data('popover-widget-initialized', true);
                 }
             }
-            $(document).on('mousedown.website_link_popup',  (e) => {
-                // Keep popover open if clicked inside it, but not on a button
-                const $currTarget = $(e.target);
-                if (!($currTarget.parents('.o_edit_menu_popover').length && !$currTarget.parent('a').addBack('a').length)) {
-                    $('.o_edit_menu_popover').popover('hide');
-                } else {
-                    return;
-                }
-
-                if ($target.is(e.target)) {
-                    return;
-                }
-                $(document).off('mousedown.website_link_popup');
-            });
         });
 
         // Dropdown menu initialization: handle dropdown openings by hand
