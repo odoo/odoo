@@ -6,16 +6,12 @@ import collections
 import datetime
 import hashlib
 import pytz
-import threading
 import re
-
 import requests
-from lxml import etree
-from random import randint
+
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
-from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 
@@ -39,94 +35,6 @@ def _lang_get(self):
 _tzs = [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 def _tz_get(self):
     return _tzs
-
-
-class FormatAddressMixin(models.AbstractModel):
-    _name = "format.address.mixin"
-    _description = 'Address Format'
-
-    def _fields_view_get_address(self, arch):
-        # consider the country of the user, not the country of the partner we want to display
-        address_view_id = self.env.company.country_id.address_view_id.sudo()
-        if address_view_id and not self._context.get('no_address_format') and (not address_view_id.model or address_view_id.model == self._name):
-            #render the partner address accordingly to address_view_id
-            doc = etree.fromstring(arch)
-            for address_node in doc.xpath("//div[hasclass('o_address_format')]"):
-                Partner = self.env['res.partner'].with_context(no_address_format=True)
-                sub_view = Partner.fields_view_get(
-                    view_id=address_view_id.id, view_type='form', toolbar=False, submenu=False)
-                sub_view_node = etree.fromstring(sub_view['arch'])
-                #if the model is different than res.partner, there are chances that the view won't work
-                #(e.g fields not present on the model). In that case we just return arch
-                if self._name != 'res.partner':
-                    try:
-                        self.env['ir.ui.view'].postprocess_and_fields(sub_view_node, model=self._name)
-                    except ValueError:
-                        return arch
-                address_node.getparent().replace(address_node, sub_view_node)
-            arch = etree.tostring(doc, encoding='unicode')
-        return arch
-
-class PartnerCategory(models.Model):
-    _description = 'Partner Tags'
-    _name = 'res.partner.category'
-    _order = 'name'
-    _parent_store = True
-
-    def _get_default_color(self):
-        return randint(1, 11)
-
-    name = fields.Char(string='Tag Name', required=True, translate=True)
-    color = fields.Integer(string='Color Index', default=_get_default_color)
-    parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
-    child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
-    active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
-    parent_path = fields.Char(index=True)
-    partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners')
-
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
-        if not self._check_recursion():
-            raise ValidationError(_('You can not create recursive tags.'))
-
-    def name_get(self):
-        """ Return the categories' display name, including their direct
-            parent by default.
-
-            If ``context['partner_category_display']`` is ``'short'``, the short
-            version of the category name (without the direct parent) is used.
-            The default is the long version.
-        """
-        if self._context.get('partner_category_display') == 'short':
-            return super(PartnerCategory, self).name_get()
-
-        res = []
-        for category in self:
-            names = []
-            current = category
-            while current:
-                names.append(current.name)
-                current = current.parent_id
-            res.append((category.id, ' / '.join(reversed(names))))
-        return res
-
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = args or []
-        if name:
-            # Be sure name_search is symetric to name_get
-            name = name.split(' / ')[-1]
-            args = [('name', operator, name)] + args
-        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
-
-
-class PartnerTitle(models.Model):
-    _name = 'res.partner.title'
-    _order = 'name'
-    _description = 'Partner Title'
-
-    name = fields.Char(string='Title', required=True, translate=True)
-    shortcut = fields.Char(string='Abbreviation', translate=True)
 
 
 class Partner(models.Model):
@@ -991,13 +899,3 @@ class Partner(models.Model):
 
     def _get_country_name(self):
         return self.country_id.name or ''
-
-
-class ResPartnerIndustry(models.Model):
-    _description = 'Industry'
-    _name = "res.partner.industry"
-    _order = "name"
-
-    name = fields.Char('Name', translate=True)
-    full_name = fields.Char('Full Name', translate=True)
-    active = fields.Boolean('Active', default=True)
