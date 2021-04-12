@@ -54,6 +54,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 uiState: 'LOADING', // 'LOADING' | 'READY' | 'CLOSING'
                 debugWidgetIsShown: true,
                 mobileSearchBarIsShown: false,
+                startScreenIsShown: true,
                 hasBigScrollBars: false,
                 sound: { src: null },
                 notification: {
@@ -256,6 +257,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
             // 2. Set some options
             this.chromeContext.showOrderSelector = !component.hideOrderSelector;
+            this.state.startScreenIsShown = !this.env.isMobile || this.startScreen.name === name;
 
             // 3. Save the screen to the order.
             //  - This screen is shown when the order is selected.

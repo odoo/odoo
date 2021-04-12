@@ -26,7 +26,7 @@
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
                         <ClientScreenButton t-if="clientScreenButtonIsShown" />
                         <SyncNotification />
-                        <HeaderButton />
+                        <HeaderButton t-if="state.startScreenIsShown" />
                     </div>
                 </Portal>
                 <div class="pos-content">
