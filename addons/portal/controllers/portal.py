@@ -405,7 +405,7 @@ class CustomerPortal(Controller):
         if report_type not in ('html', 'pdf', 'text'):
             raise UserError(_("Invalid report type: %s", report_type))
 
-        report_sudo = request.env.ref(report_ref).sudo()
+        report_sudo = request.env.ref(report_ref).with_user(SUPERUSER_ID)
 
         if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
             raise UserError(_("%s is not the reference of a report", report_ref))
