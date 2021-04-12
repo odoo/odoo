@@ -48,6 +48,9 @@ QUnit.module("utils", () => {
       /is not a correct/,
       "Dates after 9999 should be invalid"
     );
+    assert.throws(function () {
+      parseDateTime("invalid value");
+    }, /is not a correct/);
     let dateStr = "01/13/2019 10:05:45";
     let date1 = parseDateTime(dateStr);
     let date2 = DateTime.fromFormat(dateStr, "MM/dd/yyyy HH:mm:ss");

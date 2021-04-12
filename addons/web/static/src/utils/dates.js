@@ -102,7 +102,7 @@ export function parseDateTime(value, options = {}) {
         (check(DateTime.fromFormat(woSeps.val, woSeps.fmt)) ||
           check(DateTime.fromFormat(woSeps.val, woSeps.fmt.slice(0, woSeps.val.length))))) ||
       check(DateTime.fromSQL(value)) ||
-      DateTime.fromISO(value) || // last try: ISO8601
+      check(DateTime.fromISO(value)) || // last try: ISO8601
       DateTime.invalid("mandatory but unused string");
   }
   const timezone = "timezone" in options ? options.timezone : false;
