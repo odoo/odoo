@@ -1018,10 +1018,11 @@ class IrModelFields(models.Model):
             by_label = {}
             for field in model._fields.values():
                 if field.string in by_label:
-                    _logger.warning('Two fields (%s, %s) of %s have the same label: %s.',
-                                    field.name, by_label[field.string], model, field.string)
+                    other = by_label[field.string]
+                    _logger.warning('Two fields (%s, %s) of %s have the same label: %s. [Modules: %s and %s]',
+                                    field.name, other.name, model, field.string, field._module, other._module)
                 else:
-                    by_label[field.string] = field.name
+                    by_label[field.string] = field
 
         # determine expected and existing rows
         rows = []
