@@ -4,7 +4,7 @@ import base64
 import random
 import re
 
-from odoo import api, fields, models, modules
+from odoo import api, fields, models, modules, _
 
 
 class ImLivechatChannel(models.Model):
@@ -221,9 +221,11 @@ class ImLivechatChannel(models.Model):
             "channel_id": self.id,
         }
 
-    def get_livechat_info(self, username='Visitor'):
+    def get_livechat_info(self, username=None):
         self.ensure_one()
 
+        if username is None:
+            username = _('Visitor')
         info = {}
         info['available'] = len(self._get_available_users()) > 0
         info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
