@@ -705,14 +705,18 @@ class Website(Home):
         return views.filtered('active').mapped('key')
 
     @http.route(['/website/theme_customize'], type='json', auth='user', website=True)
-    def theme_customize(self, enable=None, disable=None):
+    def theme_customize(self, enable=None, disable=None, reset_view_arch=False):
         """
         Enables and/or disables views according to list of keys.
 
         :param enable: list of views' keys to enable
         :param disable: list of views' keys to disable
+        :param reset_view_arch: restore the default template after disabling
         """
-        self._get_customize_views(disable).filtered('active').write({'active': False})
+        disabled_views = self._get_customize_views(disable).filtered('active')
+        if reset_view_arch:
+            disabled_views.reset_arch(mode='hard')
+        disabled_views.write({'active': False})
         self._get_customize_views(enable).filtered(lambda x: not x.active).write({'active': True})
 
     @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True)
