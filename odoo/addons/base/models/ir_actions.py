@@ -393,11 +393,6 @@ class IrActionsServer(models.Model):
 #  - Command: x2Many commands namespace
 # To return an action, assign: action = {...}\n\n\n\n"""
 
-    @api.model
-    def _select_objects(self):
-        records = self.env['ir.model'].search([])
-        return [(record.model, record.name) for record in records] + [('', '')]
-
     name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
@@ -679,8 +674,7 @@ class IrServerObjectLines(models.Model):
 
     @api.model
     def _selection_target_model(self):
-        models = self.env['ir.model'].search([])
-        return [(model.model, model.name) for model in models]
+        return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
     @api.depends('col1.relation', 'value', 'evaluation_type')
     def _compute_resource_ref(self):
