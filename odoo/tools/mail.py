@@ -472,46 +472,6 @@ def generate_tracking_message_id(res_id):
     rndstr = ("%.15f" % rnd)[2:]
     return "<%s.%.15f-openerp-%s@%s>" % (rndstr, time.time(), res_id, socket.gethostname())
 
-def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attachments=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', headers=None,
-               smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None, cr=None, uid=None):
-    """Low-level function for sending an email (deprecated).
-
-    :deprecate: since OpenERP 6.1, please use ir.mail_server.send_email() instead.
-    :param email_from: A string used to fill the `From` header, if falsy,
-                       config['email_from'] is used instead.  Also used for
-                       the `Reply-To` header if `reply_to` is not provided
-    :param email_to: a sequence of addresses to send the mail to.
-    """
-
-    # If not cr, get cr from current thread database
-    local_cr = None
-    if not cr:
-        db_name = getattr(threading.currentThread(), 'dbname', None)
-        if db_name:
-            local_cr = cr = odoo.registry(db_name).cursor()
-        else:
-            raise Exception("No database cursor found, please pass one explicitly")
-
-    # Send Email
-    try:
-        mail_server_pool = odoo.registry(cr.dbname)['ir.mail_server']
-        res = False
-        # Pack Message into MIME Object
-        email_msg = mail_server_pool.build_email(email_from, email_to, subject, body, email_cc, email_bcc, reply_to,
-                   attachments, message_id, references, openobject_id, subtype, headers=headers)
-
-        res = mail_server_pool.send_email(cr, uid or 1, email_msg, mail_server_id=None,
-                       smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password,
-                       smtp_encryption=('ssl' if ssl else None), smtp_debug=debug)
-    except Exception:
-        _logger.exception("tools.email_send failed to deliver email")
-        return False
-    finally:
-        if local_cr:
-            cr.close()
-    return res
-
 def email_split_tuples(text):
     """ Return a list of (name, email) address tuples found in ``text``"""
     if not text:

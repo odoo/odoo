@@ -871,11 +871,6 @@ class Partner(models.Model):
             return False
         return base64.b64encode(res.content)
 
-    def _email_send(self, email_from, subject, body, on_error=None):
-        for partner in self.filtered('email'):
-            tools.email_send(email_from, [partner.email], subject, body, on_error)
-        return True
-
     def address_get(self, adr_pref=None):
         """ Find contacts/addresses of the right type(s) by doing a depth-first-search
         through descendants within company boundaries (stop at entities flagged ``is_company``)
@@ -922,12 +917,6 @@ class Partner(models.Model):
                 category=self.env['res.partner.category'].browse(self.env.context['category_id']).name,
             )
         return super().view_header_get(view_id, view_type)
-
-    @api.model
-    @api.returns('self')
-    def main_partner(self):
-        ''' Return the main partner '''
-        return self.env.ref('base.main_partner')
 
     @api.model
     def _get_default_address_format(self):
