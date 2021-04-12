@@ -660,6 +660,9 @@ const Wysiwyg = Widget.extend({
                     break;
             }
         };
+        if (!this.options.snippets) {
+            $toolbar.find('#justify, #table, #media-insert').remove();
+        }
         $toolbar.find('#create-link, #media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#image-shape div, #fa-spin').click(e => {
             if (!this.lastMediaClicked) {
