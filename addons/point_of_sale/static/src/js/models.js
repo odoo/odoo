@@ -2133,21 +2133,7 @@ exports.Orderline = Backbone.Model.extend({
 
         taxes = collect_taxes(taxes);
 
-        // 2) Avoid dealing with taxes mixing price_include=False && include_base_amount=True
-        // with price_include=True
-
-        var base_excluded_flag = false; // price_include=False && include_base_amount=True
-        var included_flag = false;      // price_include=True
-        _(taxes).each(function(tax){
-            if(tax.price_include)
-                included_flag = true;
-            else if(tax.include_base_amount)
-                base_excluded_flag = true;
-            if(base_excluded_flag && included_flag)
-                throw new Error('Unable to mix any taxes being price included with taxes affecting the base amount but not included in price.');
-        });
-
-        // 3) Deal with the rounding methods
+        // 2) Deal with the rounding methods
 
         var round_tax = this.pos.company.tax_calculation_rounding_method != 'round_globally';
 
@@ -2155,7 +2141,7 @@ exports.Orderline = Backbone.Model.extend({
         if(!round_tax)
             currency_rounding = currency_rounding * 0.00001;
 
-        // 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
+        // 3) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
         var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount){
              return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
         }
@@ -2210,9 +2196,11 @@ exports.Orderline = Backbone.Model.extend({
         var total_excluded = round_pr(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), initial_currency_rounding);
         var total_included = total_excluded;
 
-        // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
+        // 4) Iterate the taxes in the sequence order to fill missing base/amount values.
 
         base = total_excluded;
+
+        var skip_checkpoint = false;
 
         var taxes_vals = [];
         i = 0;
@@ -2223,7 +2211,7 @@ exports.Orderline = Backbone.Model.extend({
             else
                 var tax_base_amount = total_excluded;
 
-            if(tax.price_include && total_included_checkpoints[i] !== undefined){
+            if(!skip_checkpoint && tax.price_include && total_included_checkpoints[i] !== undefined){
                 var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
                 cumulated_tax_included_amount = 0;
             }else
@@ -2241,8 +2229,11 @@ exports.Orderline = Backbone.Model.extend({
                 'base': sign * round_pr(tax_base_amount, currency_rounding),
             });
 
-            if(tax.include_base_amount)
+            if(tax.include_base_amount){
                 base += tax_amount;
+                if(!tax.price_include)
+                    skip_checkpoint = true;
+            }
 
             total_included += tax_amount;
             i += 1;
