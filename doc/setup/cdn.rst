@@ -42,7 +42,8 @@ activate the CDN support and copy/paste your zone URL in the
 :guilabel:`CDN Base URL` field. This field is only visible and configurable if
 you have developer mode activated.
 
-.. image:: cdn/odoo_cdn_base_url.png
+.. image:: ![28293266](https://user-images.githubusercontent.com/61477595/114610704-1269aa00-9c55-11eb-9496-863f9edcd2ef.png)
+
    :class: img-responsive
 
 Now your website is using the CDN for the resources matching the
