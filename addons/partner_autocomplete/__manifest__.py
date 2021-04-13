@@ -20,6 +20,8 @@
         'views/res_company_views.xml',
         'views/res_config_settings_views.xml',
         'data/cron.xml',
+        'data/ir_action.xml',
+        'data/mail_templates.xml',
     ],
     'auto_install': True,
     'assets': {

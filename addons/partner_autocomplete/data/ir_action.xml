@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="action_enrich_mail" model="ir.actions.server" >
+            <field name="name">Partner Autocomplete</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">
+    if records:
+        records.autocomplete_on_demand()
+            </field>
+        </record>
+
+    </data>
+</odoo>
