@@ -7,7 +7,6 @@
     'summary': 'Send text messages as event reminders',
     'description': "Send text messages as event reminders",
     'category': 'Hidden',
-    'version': '1.0',
     'depends': ['calendar', 'sms'],
     'data': [
         'security/sms_security.xml',
