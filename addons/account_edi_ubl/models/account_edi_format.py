@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+    _inherit = 'edi.format'
 
     ####################################################
     # Helpers
@@ -213,7 +213,7 @@ class AccountEdiFormat(models.Model):
         })
 
     ####################################################
-    # Account.edi.format override
+    # edi.format override
     ####################################################
 
     def _create_invoice_from_xml_tree(self, filename, tree):

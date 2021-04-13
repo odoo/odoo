@@ -52,7 +52,7 @@ class AccountEdiFormat(models.Model):
     ''' This edi_format is "abstract" meaning that it provides an additional layer for similar edi_format (formats
     deriving from EN16931) that share some functionalities but needs to be extended to be used.
     '''
-    _inherit = 'account.edi.format'
+    _inherit = 'edi.format'
 
     ####################################################
     # Export

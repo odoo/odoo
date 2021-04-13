@@ -21,7 +21,7 @@ DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 
 
 class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+    _inherit = 'edi.format'
 
     def _post_invoice_edi(self, invoices, test_mode=False):
         self.ensure_one()

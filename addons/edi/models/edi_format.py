@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountEdiFormat(models.Model):
-    _name = 'account.edi.format'
+    _name = 'edi.format'
     _description = 'EDI format'
 
     name = fields.Char()
@@ -24,25 +24,6 @@ class AccountEdiFormat(models.Model):
     _sql_constraints = [
         ('unique_code', 'unique (code)', 'This code already exists')
     ]
-
-
-    ####################################################
-    # Low-level methods
-    ####################################################
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        edi_formats = super().create(vals_list)
-
-        # activate by default on journal
-        journals = self.env['account.journal'].search([])
-        journals._compute_edi_format_ids()
-
-        # activate cron
-        if any(edi_format._needs_web_services() for edi_format in edi_formats):
-            self.env.ref('account_edi.ir_cron_edi_network').active = True
-
-        return edi_formats
 
     ####################################################
     # Export method to override based on EDI Format
@@ -391,6 +372,8 @@ class AccountEdiFormat(models.Model):
                     return res
         return self.env['account.move']
 
+
+    # TODO: make generic: invoice -> edimixin
     def _update_invoice_from_attachment(self, attachment, invoice):
         """Decodes an ir.attachment to update an invoice.
 

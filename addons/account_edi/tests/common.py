@@ -82,7 +82,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         if edi_format_ref:
             cls.edi_format = cls.env.ref(edi_format_ref)
         else:
-            cls.edi_format = cls.env['account.edi.format'].sudo().create({
+            cls.edi_format = cls.env['edi.format'].sudo().create({
                 'name': 'Test EDI format',
                 'code': 'test_edi',
             })
@@ -134,7 +134,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
             pass
 
     def edi_cron(self):
-        self.env['account.edi.document'].sudo().with_context(edi_test_mode=True).search([('state', 'in', ('to_send', 'to_cancel'))])._process_documents_web_services(with_commit=False)
+        self.env['edi.document'].sudo().with_context(edi_test_mode=True).search([('state', 'in', ('to_send', 'to_cancel'))])._process_documents_web_services(with_commit=False)
 
     def _create_empty_vendor_bill(self):
         invoice = self.env['account.move'].create({
@@ -191,7 +191,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         :param move_type:   If move is None, the type of the invoice to create, defaults to 'out_invoice'.
         """
         move = move or self.init_invoice(move_type or 'out_invoice', products=self.product_a)
-        return self.env['account.edi.document'].create({
+        return self.env['edi.document'].create({
             'edi_format_id': edi_format.id,
             'move_id': move.id,
             'state': state

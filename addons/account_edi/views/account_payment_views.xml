@@ -4,7 +4,7 @@
 
         <record id="account_edi.action_open_payment_edi_documents" model="ir.actions.act_window">
             <field name="name">Electronic invoicing</field>
-            <field name="res_model">account.edi.document</field>
+            <field name="res_model">edi.document</field>
             <field name="view_mode">tree</field>
             <field name="domain">[('move_id.payment_id', '=', active_id), ('error', '!=', False)]</field>
         </record>

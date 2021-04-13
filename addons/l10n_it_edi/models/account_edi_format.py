@@ -18,7 +18,7 @@ DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 
 
 class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+    _inherit = 'edi.format'
 
     # -------------------------------------------------------------------------
     # Export

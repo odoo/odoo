@@ -11,13 +11,11 @@ the transmission of said documents to various parties involved in the exchange (
 governements, etc.)
     """,
     'version' : '1.0',
-    'category': 'Accounting/Accounting',
-    'depends' : ['account', 'edi'],
+    'category': 'EDI',
+    'depends' : ['base'],
     'data': [
         'security/ir.model.access.csv',
-        'views/account_move_views.xml',
-        'views/account_payment_views.xml',
-        'views/account_journal_views.xml',
+        'views/account_edi_document_views.xml',
         'data/cron.xml'
     ],
     'installable': True,

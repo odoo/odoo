@@ -22,7 +22,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
 
     def test_prepare_jobs(self):
 
-        edi_docs = self.env['account.edi.document']
+        edi_docs = self.env['edi.document']
         edi_docs |= self.create_edi_document(self.edi_format, 'to_send')
         edi_docs |= self.create_edi_document(self.edi_format, 'to_send')
 
@@ -33,7 +33,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
             to_process = edi_docs._prepare_jobs()
             self.assertEqual(len(to_process), 1)
 
-        other_edi = self.env['account.edi.format'].sudo().create({
+        other_edi = self.env['edi.format'].sudo().create({
             'name': 'Batchable EDI format 2',
             'code': 'test_batch_edi_2',
         })
@@ -177,7 +177,7 @@ class TestAccountEdi(AccountEdiTestCommon, CronMixinCase):
 
         with self.mock_edi(_get_batch_key_method=_get_batch_key_method,
                            _support_batching_method=_generate_mocked_support_batching(True)):
-            edi_docs = self.env['account.edi.document']
+            edi_docs = self.env['edi.document']
             doc1 = self.create_edi_document(self.edi_format, 'to_send')
             edi_docs |= doc1
             doc2 = self.create_edi_document(self.edi_format, 'to_send')

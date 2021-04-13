@@ -6,7 +6,7 @@ import base64
 
 
 class AccountEdiFormat(models.Model):
-    _inherit = 'account.edi.format'
+    _inherit = 'edi.format'
 
     ####################################################
     # Import
@@ -78,7 +78,7 @@ class AccountEdiFormat(models.Model):
         })
 
     ####################################################
-    # Account.edi.format override
+    # edi.format override
     ####################################################
 
     def _check_move_configuration(self, invoice):
