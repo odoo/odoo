@@ -5,3 +5,4 @@ from . import edi_document
 from . import ir_actions_report
 from . import mail_template
 from . import ir_attachment
+from . import edi_config
