@@ -43,7 +43,7 @@ class SaleQuotationSend(models.TransientModel):
         draft_template_id = self._context.get('default_draft_template_id')
         sale_template_id = self._context.get('default_sale_template_id')
 
-        if not active_draft_ids and not self.active_sale_ids:
+        if not active_draft_ids and not active_sale_ids:
             raise UserError(_("You should select at least one quotation."))
 
         default.update({
@@ -105,7 +105,7 @@ class SaleQuotationSend(models.TransientModel):
         if self.active_sale_ids:
             for sale_order in self.active_sale_ids:
                 lang = sale_order.partner_id.lang if sale_order.partner_id.lang else default_lang
-                self.draft_template_id.lang = lang
+                self.sale_template_id.lang = lang
                 self.sale_template_id.send_mail(sale_order.id, force_send=True)
 
             # langs_sale = self.active_sale_ids.mapped('partner_id.lang')
