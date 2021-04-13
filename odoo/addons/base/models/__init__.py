@@ -38,6 +38,7 @@ from . import image_mixin
 
 from . import res_country
 from . import res_identity
+from . import res_identity_mixin
 from . import res_lang
 from . import res_partner
 from . import res_partner_category
