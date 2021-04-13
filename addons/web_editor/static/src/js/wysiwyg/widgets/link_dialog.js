@@ -177,14 +177,14 @@ const _DialogLinkWidget = Link.extend({
 /**
  * Allows to customize link content and style.
  */
- const LinkDialog = Dialog.extend({
+const LinkDialog = Dialog.extend({
     init: function (parent, ...args) {
         this._super(...arguments);
         this.linkWidget = new _DialogLinkWidget(this, ...args);
     },
     start: async function () {
         const res = await this._super(...arguments);
-        this.linkWidget.appendTo(this.$el);
+        await this.linkWidget.appendTo(this.$el);
         return res;
     },
 
