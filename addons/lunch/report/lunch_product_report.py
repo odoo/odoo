@@ -41,7 +41,7 @@ class LunchProductReport(models.Model):
             else:
                 product_r.image_128 = False
 
-    def compute_concurrency_field(self):
+    def _compute_concurrency_field(self):
         """Image caching is based on the `__last_update` field (=self.CONCURRENCY_CHECK_FIELD)
         But the image is never cached by the browser because the value fallbacks to
         `now` when access logging is disabled. This override sets a "real" value based on the
