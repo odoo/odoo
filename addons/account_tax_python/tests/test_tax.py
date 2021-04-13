@@ -33,6 +33,9 @@ class TestTaxPython(TestTaxCommon):
 
     def test_tax_python_price_include(self):
         self.python_tax.price_include = True
+
+        python_tax2 = self.python_tax.copy()[0]
+
         res = self.python_tax.compute_all(130.0)
         self._check_compute_all_results(
             130,    # 'total_included'
@@ -46,7 +49,7 @@ class TestTaxPython(TestTaxCommon):
             res
         )
 
-        res = (self.python_tax + self.python_tax).compute_all(130.0)
+        res = (python_tax2 + self.python_tax).compute_all(130.0)
         self._check_compute_all_results(
             130,    # 'total_included'
             116.07, # 'total_excluded'

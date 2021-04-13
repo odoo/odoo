@@ -180,28 +180,6 @@ class TestTaxCommon(AccountTestInvoicingCommon):
 @tagged('post_install', '-at_install')
 class TestTax(TestTaxCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super(TestTax, cls).setUpClass()
-
-    def test_tax_group_of_group_tax(self):
-        self.fixed_tax.include_base_amount = True
-        res = self.group_of_group_tax.compute_all(200.0)
-        self._check_compute_all_results(
-            263,    # 'total_included'
-            200,    # 'total_excluded'
-            [
-                # base , amount     | seq | amount | incl | incl_base
-                # ---------------------------------------------------
-                (200.0, 10.0),    # |  1  |    10  |      |     t
-                (210.0, 21.0),    # |  3  |    10% |      |
-                (210.0, 10.0),    # |  1  |    10  |      |     t
-                (220.0, 22.0),    # |  3  |    10% |      |
-                # ---------------------------------------------------
-            ],
-            res
-        )
-
     def test_tax_group(self):
         res = self.group_tax.compute_all(200.0)
         self._check_compute_all_results(
@@ -1044,4 +1022,32 @@ class TestTax(TestTaxCommon):
                 # ---------------
             ],
             res3
+        )
+
+    def test_mixing_price_included_excluded_with_affect_base(self):
+        tax_10_fix = self.env['account.tax'].create({
+            'name': "tax_10_fix",
+            'amount_type': 'fixed',
+            'amount': 10.0,
+            'include_base_amount': True,
+        })
+        tax_21 = self.env['account.tax'].create({
+            'name': "tax_21",
+            'amount_type': 'percent',
+            'amount': 21.0,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        self._check_compute_all_results(
+            1210.0,     # 'total_included'
+            1000.0,     # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (1200.0, 10.0),
+                (1000.0, 210.0),
+                # ---------------
+            ],
+            (tax_10_fix + tax_21).compute_all(1200),
         )
