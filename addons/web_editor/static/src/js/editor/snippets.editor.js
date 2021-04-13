@@ -593,6 +593,7 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
 
         $clone.trigger('content_changed');
+        this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         this.options.wysiwyg.odooEditor.historyStep();
     },
 
