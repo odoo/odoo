@@ -1726,4 +1726,6 @@ class APIKeyDescription(models.TransientModel):
 class APIKeyShow(models.AbstractModel):
     _name = _description = 'res.users.apikeys.show'
 
+    # the field 'id' is necessary for the onchange that returns the value of 'key'
+    id = fields.Id()
     key = fields.Char(readonly=True)
