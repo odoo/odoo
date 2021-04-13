@@ -37,6 +37,7 @@ const Link = Widget.extend({
 
         this.data.className = this.data.className || "";
         this.data.iniClassName = this.data.iniClassName || "";
+        this.needLabel = this.data.needLabel || false;
 
         // Using explicit type 'link' to preserve style when the target is <button class="...btn-link"/>.
         this.colorsData = [
@@ -174,7 +175,7 @@ const Link = Widget.extend({
     getOrCreateLink: function (editable) {
         const doc = editable.ownerDocument;
         const range = getDeepRange(editable, {splitText: true, select: true, correctTripleClick: true});
-        this.needLabel = false;
+        this.needLabel = this.needLabel || false;
         let link = getInSelection(doc, 'a');
         const $link = $(link);
         if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
