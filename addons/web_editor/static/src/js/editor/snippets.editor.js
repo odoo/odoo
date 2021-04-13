@@ -78,6 +78,9 @@ $.fn.extend({
         return this;
     },
     selectContent: function () {
+        if (this.length && !this[0].hasChildNodes()) {
+            return this.selectElement();
+        }
         if (this.length) {
             const selection = document.getSelection();
             selection.removeAllRanges();
