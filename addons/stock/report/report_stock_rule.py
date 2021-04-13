@@ -14,7 +14,7 @@ class ReportStockRule(models.AbstractModel):
         if 'product_id' not in data:
             return {
                 'docs': self.env['product.product'],
-                'locations': [],
+                'locations': self.env['stock.location'],
                 'header_lines': {},
                 'route_lines': [],
             }
