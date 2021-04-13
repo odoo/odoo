@@ -18,6 +18,9 @@ class ResIdentity(models.Model):
     email_formatted = fields.Char(string='Formatted Email', compute="_compute_email_formatted", store=False)
     email_normalized = fields.Char(string='Normalized Email', compute="_compute_email_normalized", store=True)
     phone = fields.Char(string='Phone')
+    # link with other contact models
+    partner_id = fields.Many2one('res.partner', string='Partner')
+    partner_ids = fields.One2many('res.partner', 'identity_id', 'Partners')
     # security / access
     token = fields.Char(string='Token')
 
@@ -119,6 +122,7 @@ class ResIdentity(models.Model):
             parsed_email = self.default_get(['email'])['email']
         if not parsed_name:
             parsed_name = self.default_get(['name'])['name']
+        related_partner = self.env['res.partner']
 
         if parsed_email:
             email_normalized = tools.email_normalize(parsed_email)
@@ -126,10 +130,12 @@ class ResIdentity(models.Model):
                 identity = self.search([('email_normalized', '=', email_normalized)], limit=1)
                 if identity:
                     return identity
+                related_partner = self.env['res.partner'].search([('email_normalized', '=', email_normalized)], limit=1)
 
         identity_values = {
             'name': parsed_name or parsed_email,
             'email': parsed_email,
+            'partner_id': related_partner.id,
         }
 
         return self.create(identity_values)

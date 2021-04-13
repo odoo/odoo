@@ -39,7 +39,11 @@ def _tz_get(self):
 
 class Partner(models.Model):
     _description = 'Contact'
-    _inherit = ['format.address.mixin', 'image.mixin']
+    _inherit = [
+        'format.address.mixin',
+        'image.mixin',
+        'res.identity.mixin',
+    ]
     _name = "res.partner"
     _order = "display_name"
 
@@ -59,14 +63,16 @@ class Partner(models.Model):
             values['lang'] = values.get('lang') or parent.lang or self.env.lang
         return values
 
-    # identity
-    name = fields.Char(index=True)
-    email = fields.Char()
-    email_formatted = fields.Char(
-        'Formatted Email', compute='_compute_email_formatted',
-        help='Format email address "Name <email@domain>"')
+    # identity: identity_id coming from ``res.identity.mixin``
+    # identity_id = fields.Many2one(
+    #     'res.identity', 'Identity',
+    #     auto_join=True, required=True, ondelete='restrict')
+    # - name: store as we have a constraint + used for ordering (need a column)
+    name = fields.Char(related='identity_id.name', readonly=False, store=True)
+    email = fields.Char(related='identity_id.email', readonly=False)
+    email_formatted = fields.Char(related='identity_id.email_formatted', readonly=False)
     mobile = fields.Char()
-    phone = fields.Char()
+    phone = fields.Char(related='identity_id.phone', readonly=False)
     # status
     active = fields.Boolean(default=True)
     type = fields.Selection(
@@ -471,11 +477,13 @@ class Partner(models.Model):
     def create(self, vals_list):
         if self.env.context.get('import_file'):
             self._check_import_consistency(vals_list)
+
         for vals in vals_list:
             if vals.get('website'):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
+
         partners = super(Partner, self).create(vals_list)
 
         if self.env.context.get('_partners_skip_fields_sync'):
@@ -615,33 +623,8 @@ class Partner(models.Model):
         return res
 
     def _parse_partner_name(self, text):
-        """ Parse partner name (given by text) in order to find a name and an
-        email. Supported syntax:
-
-          * Raoul <raoul@grosbedon.fr>
-          * "Raoul le Grand" <raoul@grosbedon.fr>
-          * Raoul raoul@grosbedon.fr (strange fault tolerant support from df40926d2a57c101a3e2d221ecfd08fbb4fea30e)
-
-        Otherwise: default, everything is set as the name. Starting from 13.3
-        returned email will be normalized to have a coherent encoding.
-         """
-        name, email = '', ''
-        split_results = tools.email_split_tuples(text)
-        if split_results:
-            name, email = split_results[0]
-
-        if email and not name:
-            fallback_emails = tools.email_split(text.replace(' ', ','))
-            if fallback_emails:
-                email = fallback_emails[0]
-                name = text[:text.index(email)].replace('"', '').replace('<', '').strip()
-
-        if email:
-            email = tools.email_normalize(email)
-        else:
-            name, email = text, ''
-
-        return name, email
+        """ Backward compatible tool method """
+        return self.env['res.identity']._identity_parse_email(text)
 
     @api.model
     def name_create(self, name):
