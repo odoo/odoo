@@ -438,6 +438,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
               >>> str(datetime.datetime.utcnow())
               '2013-06-18 08:31:32.821177'
         """
+        if self._abstract:
+            return
+
         def add(name, field):
             """ add ``field`` with the given ``name`` if it does not exist yet """
             if name not in self._fields:
@@ -2534,6 +2537,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return True
 
     def _check_removed_columns(self, log=False):
+        if self._abstract:
+            return
         # iterate on the database columns to drop the NOT NULL constraints of
         # fields which were required but have been removed (or will be added by
         # another module)
@@ -2714,7 +2719,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.model
     def _add_inherited_fields(self):
         """ Determine inherited fields. """
-        if not self._inherits:
+        if self._abstract or not self._inherits:
             return
 
         # determine which fields can be inherited

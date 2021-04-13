@@ -495,10 +495,15 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # special cases of inherited fields
         if self.inherited:
+            self.inherited_field = field
             if not self.states:
                 self.states = field.states
             if field.required:
                 self.required = True
+            # add modules from delegate and target fields; the first one ensures
+            # that inherited fields introduced via an abstract model (_inherits
+            # being on the abstract model) are assigned an XML id
+            self._modules.update(model._fields[self.related[0]]._modules)
             self._modules.update(field._modules)
 
         if self._depends_context is not None:
