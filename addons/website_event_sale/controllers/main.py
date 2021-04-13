@@ -55,14 +55,17 @@ class WebsiteEventSaleController(WebsiteEventController):
 
         return res
 
-    def _add_event(self, event_name="New Event", context=None, **kwargs):
+    def _prepare_event_values(self, name, event_start, event_end, address_values=None):
+        values = super(WebsiteEventSaleController, self)._prepare_event_values(name, event_start, event_end, address_values)
         product = request.env.ref('event_sale.product_product_event', raise_if_not_found=False)
         if product:
-            context = dict(context or {}, default_event_ticket_ids=[[0, 0, {
-                'name': _('Registration'),
-                'product_id': product.id,
-                'end_sale_datetime': False,
-                'seats_max': 1000,
-                'price': 0,
-            }]])
-        return super(WebsiteEventSaleController, self)._add_event(event_name, context, **kwargs)
+            values.update({
+                'event_ticket_ids': [[0, 0, {
+                    'name': _('Registration'),
+                    'product_id': product.id,
+                    'end_sale_datetime': False,
+                    'seats_max': 1000,
+                    'price': 0,
+                }]]
+            })
+        return values
