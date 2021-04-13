@@ -64,7 +64,7 @@ class TSConfig(Command):
                 "checkJs": True,
                 "allowJs": True,
                 "noEmit": True,
-                "typeRoots": ["community/addons/web/static/types/*.d.ts"],
+                "typeRoots": ["community/addons/web/static/types"],  # TODO make this path dynamic
                 "paths": self.generate_imports(modules)
             }, "exclude": self.generate_excludes()
         }
