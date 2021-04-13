@@ -2865,7 +2865,8 @@ class AccountMove(models.Model):
         }
         for line in preview_vals['items_vals']:
             if 'partner_id' in line[2]:
-                line[2]['partner_id'] = self.env['res.partner'].browse(line[2]['partner_id']).display_name
+                # sudo is needed to compute display_name in a multi companies environment
+                line[2]['partner_id'] = self.env['res.partner'].browse(line[2]['partner_id']).sudo().display_name
             line[2]['account_id'] = self.env['account.account'].browse(line[2]['account_id']).display_name or _('Destination Account')
             line[2]['debit'] = currency_id and formatLang(self.env, line[2]['debit'], currency_obj=currency_id) or line[2]['debit']
             line[2]['credit'] = currency_id and formatLang(self.env, line[2]['credit'], currency_obj=currency_id) or line[2]['debit']
