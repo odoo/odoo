@@ -1633,7 +1633,6 @@ QUnit.module('fields', {}, function () {
                             '</form>' +
                         '</field>' +
                     '</form>',
-                debug: 1,
             });
 
 
@@ -4665,6 +4664,55 @@ QUnit.module('fields', {}, function () {
             // then we render the control panel (also in owl), so we have to wait again for the
             // next animation frame
             await testUtils.owlCompatibilityExtraNextTick();
+            form.destroy();
+        });
+
+        QUnit.test('parent data is properly sent on an onchange rpc (existing x2many record)', async function (assert) {
+            assert.expect(4);
+
+            this.data.partner.onchanges = {
+                display_name: function () {},
+            };
+            this.data.partner.records[0].p = [1];
+            this.data.partner.records[0].turtles = [2];
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="foo"/>
+                        <field name="p">
+                            <tree editable="top">
+                                <field name="display_name"/>
+                                <field name="turtles" widget="many2many_tags"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                mockRPC(route, args) {
+                    if (args.method === 'onchange') {
+                        const fieldValues = args.args[1];
+                        assert.strictEqual(fieldValues.trululu.foo, "yop");
+                        // we only send fields that changed inside the reverse many2one
+                        assert.deepEqual(fieldValues.trululu.p, [
+                            [1, 1, { display_name: 'new val' }],
+                        ]);
+                    }
+                    return this._super(...arguments);
+                },
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            assert.containsOnce(form, '.o_data_row');
+
+            await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first'));
+
+            assert.containsOnce(form, '.o_data_row.o_selected_row');
+            await testUtils.fields.editInput(form.$('.o_selected_row .o_field_widget[name=display_name]'), "new val");
+
             form.destroy();
         });
 
