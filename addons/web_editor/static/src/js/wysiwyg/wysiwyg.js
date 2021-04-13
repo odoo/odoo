@@ -821,7 +821,7 @@ const Wysiwyg = Widget.extend({
         } else if (!ColorpickerWidget.isCSSColor(color)) {
             color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
         }
-        this.odooEditor.applyColor(color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
+        this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
         const hexColor = this._colorToHex(color);
         this.odooEditor.updateColorpickerLabels({
             [eventName === 'foreColor' ? 'foreColor' : 'hiliteColor']: hexColor,
