@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import babel.dates
+import pytz
 import re
 import werkzeug
 
 from ast import literal_eval
 from collections import defaultdict
 from datetime import datetime, timedelta
+from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
@@ -380,22 +382,34 @@ class WebsiteEventController(http.Controller):
     # ------------------------------------------------------------
 
     @http.route('/event/add_event', type='json', auth="user", methods=['POST'], website=True)
-    def add_event(self, event_name="New Event", **kwargs):
-        event = self._add_event(event_name, request.context)
+    def add_event(self, name, event_start, event_end, address_values, **kwargs):
+        values = self._prepare_event_values(name, event_start, event_end, address_values)
+        event = request.env['event.event'].create(values)
         return "/event/%s/register?enable_editor=1" % slug(event)
 
-    def _add_event(self, event_name=None, context=None, **kwargs):
-        if not event_name:
-            event_name = _("New Event")
-        date_begin = datetime.today() + timedelta(days=(14))
-        vals = {
-            'name': event_name,
-            'date_begin': fields.Date.to_string(date_begin),
-            'date_end': fields.Date.to_string((date_begin + timedelta(days=(1)))),
+    def _prepare_event_values(self, name, event_start, event_end, address_values=None):
+        """
+        Return the values to create a new event.
+        event_start,event_date are datetimes in the user tz.
+        address_values is used to either choose an existing location or create one as we allow it in the frontend.
+        """
+        date_begin = parse(event_start).astimezone(pytz.utc).replace(tzinfo=None)
+        date_end = parse(event_end).astimezone(pytz.utc).replace(tzinfo=None)
+        address_id = request.env['res.partner']
+        if address_values:
+            (address_pid, address_vals) = int(address_values[0]), address_values[1]
+            address_id = address_pid
+            if address_pid == 0:
+                address_id = request.env['res.partner'].create(address_vals).id
+        return {
+            'name': name,
+            'date_begin': date_begin,
+            'date_end': date_end,
+            'address_id': address_id,
             'seats_available': 1000,
             'website_id': request.website.id,
+            'event_ticket_ids': request.env['event.event.ticket'],
         }
-        return request.env['event.event'].with_context(context or {}).create(vals)
 
     # ------------------------------------------------------------
     # TOOLS (JSON)
