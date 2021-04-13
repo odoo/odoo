@@ -15,31 +15,31 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li id="paragraph-dropdown-item">
-                        <a class="dropdown-item" href="#" id="paragraph">Normal</a>
+                        <a class="dropdown-item" href="#" id="paragraph" data-call="setTag" data-arg1="p">Normal</a>
                     </li>
                     <li id="pre-dropdown-item">
-                        <a class="dropdown-item" href="#" id="pre"><pre>Code</pre></a>
+                        <a class="dropdown-item" href="#" id="pre" data-call="setTag" data-arg1="pre"><pre>Code</pre></a>
                     </li>
                     <li id="heading1-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading1"><h1>Header 1</h1></a>
+                        <a class="dropdown-item" href="#" id="heading1" data-call="setTag" data-arg1="h1"><h1>Header 1</h1></a>
                     </li>
                     <li id="heading2-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading2"><h2>Header 2</h2></a>
+                        <a class="dropdown-item" href="#" id="heading2" data-call="setTag" data-arg1="h2"><h2>Header 2</h2></a>
                     </li>
                     <li id="heading3-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading3"><h3>Header 3</h3></a>
+                        <a class="dropdown-item" href="#" id="heading3" data-call="setTag" data-arg1="h3"><h3>Header 3</h3></a>
                     </li>
                     <li id="heading4-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading4"><h4>Header 4</h4></a>
+                        <a class="dropdown-item" href="#" id="heading4" data-call="setTag" data-arg1="h4"><h4>Header 4</h4></a>
                     </li>
                     <li id="heading5-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading5"><h5>Header 5</h5></a>
+                        <a class="dropdown-item" href="#" id="heading5" data-call="setTag" data-arg1="h5"><h5>Header 5</h5></a>
                     </li>
                     <li id="heading6-dropdown-item">
-                        <a class="dropdown-item" href="#" id="heading6"><h6>Header 6</h6></a>
+                        <a class="dropdown-item" href="#" id="heading6" data-call="setTag" data-arg1="h6"><h6>Header 6</h6></a>
                     </li>
                     <li id="blockquote-dropdown-item">
-                        <a class="dropdown-item" href="#" id="blockquote">
+                        <a class="dropdown-item" href="#" id="blockquote" data-call="setTag" data-arg1="blockquote">
                             <blockquote>Quote</blockquote>
                         </a>
                     </li>
@@ -47,10 +47,10 @@
             </div>
 
             <div id="decoration" class="btn-group">
-                <div id="bold" title="Toggle bold" class="btn fa fa-bold fa-fw"></div>
-                <div id="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
-                <div id="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
-                <div id="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
+                <div id="bold" data-call="bold" title="Toggle bold" class="btn fa fa-bold fa-fw"></div>
+                <div id="italic" data-call="italic" title="Toggle italic" class="btn fa fa-italic fa-fw"></div>
+                <div id="underline" data-call="underline" title="Toggle underline" class="btn fa fa-underline fa-fw"></div>
+                <div id="removeFormat" data-call="removeFormat" title="Remove format" class="btn fa fa-eraser fa-fw"></div>
             </div>
 
             <div id="colorInputButtonGroup" class="btn-group">
@@ -83,18 +83,18 @@
                     <span id="fontSizeCurrentValue"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#" data-font-size="medium">default</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="8px">8</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="9px">9</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="10px">10</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="11px">11</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="12px">12</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="14px">14</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="18px">18</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="24px">24</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="36px">36</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="48px">48</a></li>
-                    <li><a class="dropdown-item" href="#" data-font-size="62px">62</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="medium">default</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="8px">8</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="9px">9</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="10px">10</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="11px">11</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="12px">12</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="14px">14</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="18px">18</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="24px">24</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="36px">36</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="48px">48</a></li>
+                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="62px">62</a></li>
                 </ul>
             </div>
 
@@ -106,10 +106,10 @@
                 </button>
                 <div class="dropdown-menu">
                     <div class="btn-group">
-                        <div id="justifyLeft" class="btn"><i class="fa fa-align-left fa-fw"></i></div>
-                        <div id="justifyCenter" class="btn"><i class="fa fa-align-center fa-fw"></i></div>
-                        <div id="justifyRight" class="btn"><i class="fa fa-align-right fa-fw"></i></div>
-                        <div id="justifyFull" class="btn"><i class="fa fa-align-justify fa-fw"></i></div>
+                        <div class="btn" id="justifyLeft" data-call='justifyLeft'><i class="fa fa-align-left fa-fw btn"></i></div>
+                        <div class="btn" id="justifyCenter" data-call='justifyCenter'><i class="fa fa-align-center fa-fw btn"></i></div>
+                        <div class="btn" id="justifyRight" data-call='justifyRight'><i class="fa fa-align-right fa-fw btn"></i></div>
+                        <div class="btn" id="justifyFull" data-call='justifyFull'><i class="fa fa-align-justify fa-fw btn"></i></div>
                     </div>
                 </div>
             </div>
@@ -122,9 +122,9 @@
                 </button>
                 <div class="dropdown-menu">
                     <div class="btn-group">
-                        <div id="unordered" title="Toggle unordered list" class="btn"><i class="fa fa-list-ul fa-fw"></i></div>
-                        <div id="ordered" title="Toggle ordered list" class="btn"><i class="fa fa-list-ol fa-fw"></i></div>
-                        <div id="checklist" title="Toggle checklist" class="btn"><i class="fa fa-check-square-o fa-fw"></i></div>
+                        <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="fa fa-list-ul fa-fw btn"></div>
+                        <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="fa fa-list-ol fa-fw btn"></div>
+                        <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="fa fa-tasks fa-fw btn"></div>
                     </div>
                 </div>
             </div>
@@ -149,13 +149,13 @@
                         <i class="fa fa-columns fa-fw"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" id="table-add-column-left">Add a column left</a></li>
-                        <li><a class="dropdown-item" href="#" id="table-add-column-right">Add a column right</a></li>
-                        <li><a class="dropdown-item" href="#" id="table-add-row-above">Add a row above</a></li>
-                        <li><a class="dropdown-item" href="#" id="table-add-row-below">Add a row below</a></li>
-                        <li><a class="dropdown-item" href="#" id="table-remove-column">Remove current column</a></li>
-                        <li><a class="dropdown-item" href="#" id="table-remove-row">Remove current row</a></li>
-                        <li><a class="dropdown-item" href="#" id="table-delete-table">Delete current table</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-column-left" data-call="addColumnLeft">Add a column left</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-column-right" data-call="addColumnRight">Add a column right</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-row-above" data-call="addRowAbove">Add a row above</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-row-below" data-call="addRowBelow">Add a row below</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-remove-column" data-call="removeColumn">Remove current column</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-remove-row" data-call="removeRow">Remove current row</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-delete-table" data-call="deleteTable">Delete current table</a></li>
                     </ul>
                 </div>
             </div>
@@ -163,7 +163,7 @@
             <div id="link" class="btn-group">
                 <div id="media-insert" title="Insert media" class="fa fa-file-image-o fa-fw btn editor-ignore"></div>
                 <div id="create-link" title="Insert or edit link" class="fa fa-link fa-fw btn editor-ignore"></div>
-                <div id="unlink" title="Remove link" class="fa fa-unlink fa-fw btn"></div>
+                <div id="unlink" data-call="unlink" title="Remove link" class="fa fa-unlink fa-fw btn"></div>
                 <a id="media-description" href="#" title="Edit media description" class="btn editor-ignore">Description</a>
             </div>
 
