@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
@@ -89,9 +88,12 @@ class SaleQuotationSend(models.TransientModel):
         # basically self.body (which could be manually edited) extracts self.template_id,
         # which is then not translated for each customer.
 
-        #default_lang = get_lang(self.env)
+        default_lang = get_lang(self.env)
+
         if self.active_draft_ids:
             for quotation in self.active_draft_ids:
+                lang = quotation.partner_id.lang if quotation.partner_id.lang else default_lang
+                self.draft_template_id.lang = lang
                 self.draft_template_id.send_mail(quotation.id, force_send=True)
 
             # langs_draft = self.active_draft_ids.mapped('partner_id.lang')
@@ -102,6 +104,8 @@ class SaleQuotationSend(models.TransientModel):
 
         if self.active_sale_ids:
             for sale_order in self.active_sale_ids:
+                lang = sale_order.partner_id.lang if sale_order.partner_id.lang else default_lang
+                self.draft_template_id.lang = lang
                 self.sale_template_id.send_mail(sale_order.id, force_send=True)
 
             # langs_sale = self.active_sale_ids.mapped('partner_id.lang')
