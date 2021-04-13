@@ -26,6 +26,12 @@ class ChannelUsersRelation(models.Model):
     completed_slides_count = fields.Integer('# Completed Slides')
     partner_id = fields.Many2one('res.partner', index=True, required=True, ondelete='cascade')
     partner_email = fields.Char(related='partner_id.email', readonly=True)
+    # channel-related information (for UX purpose)
+    channel_user_id = fields.Many2one('res.users', string='Responsible', related='channel_id.user_id')
+    channel_type = fields.Selection(related='channel_id.channel_type')
+    channel_visibility = fields.Selection(related='channel_id.visibility')
+    channel_enroll = fields.Selection(related='channel_id.enroll')
+    channel_website_id = fields.Many2one('website', string='Website', related='channel_id.website_id')
 
     def _recompute_completion(self):
         read_group_res = self.env['slide.slide.partner'].sudo().read_group(
@@ -517,21 +523,22 @@ class Channel(models.Model):
     # Business / Actions
     # ---------------------------------------------------------
 
-    def action_redirect_to_members(self, state=None):
+    def action_redirect_to_members(self, completed=False):
+        """ Redirects to attendees of the course. If completed is True, a filter
+        will be added in action that will display only attendees who have completed
+        the course. """
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
-        action['domain'] = [('channel_id', 'in', self.ids)]
+        action_ctx = {'active_test': False}
+        if completed:
+            action_ctx['search_default_filter_completed'] = 1
         if len(self) == 1:
             action['display_name'] = _('Attendees of %s', self.name)
-            action['context'] = {'active_test': False, 'default_channel_id': self.id}
-        if state:
-            action['domain'] += [('completed', '=', state == 'completed')]
+            action_ctx['search_default_channel_id'] = self.id
+        action['context'] = action_ctx
         return action
 
-    def action_redirect_to_running_members(self):
-        return self.action_redirect_to_members('running')
-
     def action_redirect_to_done_members(self):
-        return self.action_redirect_to_members('completed')
+        return self.action_redirect_to_members(completed=True)
 
     def action_channel_invite(self):
         self.ensure_one()
