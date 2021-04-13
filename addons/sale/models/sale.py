@@ -819,7 +819,7 @@ Reason(s) of this behavior could be:
         return False
 
     def _find_mail_template(self, force_confirmation_template=False):
-        """ 
+        """
         Get the appropriate mail template for the current sale's order(s) based on their state.
 
         If all SOs are 'done', the mail template is that of ...
@@ -844,7 +844,7 @@ Reason(s) of this behavior could be:
         if any(o.state in ['done', 'cancel'] for o in self):
             raise UserError(_('You cannot send a cancelled AND/OR a locked quotation or sales order by email.'))
 
-        active_quote = self.filtered(lambda o: o.state in ['draft', 'sale','sent'])
+        active_quote = self.filtered(lambda o: o.state in ['draft', 'sale', 'sent'])
 
         view = {
             'name': _('Send By Email'),
@@ -864,7 +864,7 @@ Reason(s) of this behavior could be:
             view.update({
                 'res_model': 'mail.compose.message',
             })
-            
+
             view['context'].update({
                 'default_model': 'sale.order',
                 'default_res_id': self.ids[0],
@@ -874,7 +874,7 @@ Reason(s) of this behavior could be:
             })
 
             return view
-        
+
         # Else return the wizard for the batch sending
         active_draft = self.filtered(lambda o: o.state in ['draft', 'sent'])
         active_sale = self.filtered(lambda o: o.state == 'sale')
@@ -891,7 +891,7 @@ Reason(s) of this behavior could be:
             'default_sale_template_id': template_sale.id,
             # Setting both active_id and active_ids is required, mimicking how direct call to
             # ir.actions.act_window works
-            'active_id': self.ids[0], 
+            'active_id': self.ids[0],
             'active_ids': self.ids,
             'active_draft_ids': active_draft.ids,
             'active_sale_ids': active_sale.ids,

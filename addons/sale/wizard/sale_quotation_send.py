@@ -16,21 +16,21 @@ class SaleQuotationSend(models.TransientModel):
         relation='sale_order_draft_sale_quotation_send_rel',
         help="List of the selected quotation's ids in the state \"draft\".",
     )
-    active_sale_ids = fields.Many2many( 
-        string="Sale Orders", 
-        comodel_name='sale.order', 
+    active_sale_ids = fields.Many2many(
+        string="Sale Orders",
+        comodel_name='sale.order',
         relation='sale_order_sale_sale_quotation_send_rel',
         help="List of the selected quotation's ids in the state \"sent\" or \"sale\".",
     )
     draft_template_id = fields.Many2one(
-        string="Use template for Quotations", 
-        comodel_name='mail.template', 
+        string="Use template for Quotations",
+        comodel_name='mail.template',
         index=True,
         domain='[("model", "=", "sale.order")]'
     )
     sale_template_id = fields.Many2one(
         string="Use template for Sale Orders",
-        comodel_name='mail.template',  
+        comodel_name='mail.template',
         index=True,
         domain='[("model", "=", "sale.order")]'
     )
@@ -51,7 +51,7 @@ class SaleQuotationSend(models.TransientModel):
             'active_draft_ids': active_draft_ids,
             'active_sale_ids': active_sale_ids,
             'draft_template_id': draft_template_id,
-            'sale_template_id': sale_template_id, 
+            'sale_template_id': sale_template_id,
         })
 
         return default
@@ -88,27 +88,26 @@ class SaleQuotationSend(models.TransientModel):
         # This should ideally be fixed in mail_compose_message, so when a fix is made there this whole commit should be reverted.
         # basically self.body (which could be manually edited) extracts self.template_id,
         # which is then not translated for each customer.
-        
+
         #default_lang = get_lang(self.env)
         if self.active_draft_ids:
             for quotation in self.active_draft_ids:
-                self.draft_template_id.send_mail(quotation.id, force_send = True)
+                self.draft_template_id.send_mail(quotation.id, force_send=True)
 
             # langs_draft = self.active_draft_ids.mapped('partner_id.lang')
             # for lang in (set(langs_draft) or [default_lang]):
             #     active_ids_lang = self.active_draft_ids.filtered(lambda r: r.partner_id.lang == lang).ids
             #     self_lang = self.with_context(active_ids=active_ids_lang, lang=lang)
             #     self_lang.with_context(force_send=True).message_post_with_template(self.draft_template_id)
-                
+
         if self.active_sale_ids:
             for sale_order in self.active_sale_ids:
-                self.sale_template_id.send_mail(sale_order.id, force_send = True)
-                
+                self.sale_template_id.send_mail(sale_order.id, force_send=True)
+
             # langs_sale = self.active_sale_ids.mapped('partner_id.lang')
             # for lang in (set(langs_sale) or [default_lang]):
             #     active_ids_lang = self.active_sale_ids.filtered(lambda r: r.partner_id.lang == lang).ids
             #     self_lang = self.with_context(active_ids=active_ids_lang, lang=lang)
             #     self_lang.with_context(force_send=True).message_post_with_template(self.sale_template_id)
-            
+
         return {'type': 'ir.actions.act_window_close'}
-            
