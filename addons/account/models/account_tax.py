@@ -357,22 +357,10 @@ class AccountTax(models.Model):
         # 1) Flatten the taxes.
         taxes, groups_map = self.flatten_taxes_hierarchy(create_map=True)
 
-        # 2) Avoid mixing taxes having price_include=False && include_base_amount=True
-        # with taxes having price_include=True. This use case is not supported as the
-        # computation of the total_excluded would be impossible.
-        base_excluded_flag = False  # price_include=False && include_base_amount=True
-        included_flag = False  # price_include=True
-        for tax in taxes:
-            if tax.price_include:
-                included_flag = True
-            elif tax.include_base_amount:
-                base_excluded_flag = True
-            if base_excluded_flag and included_flag:
-                raise UserError(_('Unable to mix any taxes being price included with taxes affecting the base amount but not included in price.'))
-
-        # 3) Deal with the rounding methods
+        # 2) Deal with the rounding methods
         if not currency:
             currency = company.currency_id
+
         # By default, for each tax, tax amount will first be computed
         # and rounded at the 'Account' decimal precision for each
         # PO/SO/invoice line and then these rounded amounts will be
@@ -395,7 +383,7 @@ class AccountTax(models.Model):
         if not round_tax:
             prec *= 1e-5
 
-        # 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
+        # 3) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
         #     tax  |  base  |  amount  |
         # /\ ----------------------------
         # || tax_1 |  XXXX  |          | <- we are looking for that, it's the total_excluded
@@ -502,9 +490,14 @@ class AccountTax(models.Model):
 
         total_excluded = currency.round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount))
 
-        # 5) Iterate the taxes in the sequence order to compute missing tax amounts.
+        # 4) Iterate the taxes in the sequence order to compute missing tax amounts.
         # Start the computation of accumulated amounts at the total_excluded value.
         base = total_included = total_void = total_excluded
+
+        # Flag indicating the checkpoint used in price_include to avoid rounding issue must be skipped since the base
+        # amount has changed because we are currently mixing price-included and price-excluded include_base_amount
+        # taxes.
+        skip_checkpoint = False
 
         taxes_vals = []
         i = 0
@@ -516,7 +509,7 @@ class AccountTax(models.Model):
             price_include = self._context.get('force_price_include', tax.price_include)
 
             #compute the tax_amount
-            if price_include and total_included_checkpoints.get(i):
+            if not skip_checkpoint and price_include and total_included_checkpoints.get(i):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
@@ -581,6 +574,8 @@ class AccountTax(models.Model):
             # Affect subsequent taxes
             if tax.include_base_amount:
                 base += factorized_tax_amount
+                if not price_include:
+                    skip_checkpoint = True
 
             total_included += factorized_tax_amount
             i += 1
