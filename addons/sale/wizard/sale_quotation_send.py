@@ -65,7 +65,8 @@ class SaleQuotationSend(models.TransientModel):
                 ])
                 if quotation:
                     wizard.quotation_has_email = "%s\n%s" % (
-                        _("The following quotation(s) will not be sent by email, because the customer(s) don't have email address."),
+                        _("The following quotation(s) will not be sent by email, \
+                            because the customer(s) don't have email address."),
                         "\n".join([q.name for q in quotation])
                         )
                     raise UserError(_(wizard.quotation_has_email))
@@ -74,44 +75,29 @@ class SaleQuotationSend(models.TransientModel):
             else:
                 wizard.quotation_has_email = False
 
-    def _send_email(self):
-        # with_context : we don't want to reimport the file we just exported.
-        self.composer_id.with_context(mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids).send_mail()
-        if self.env.context.get('mark_so_as_sent'):
-            #TODO ADD .with_context(tracking_disable=True) ?
-            self.quotation_ids.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
 
     def send_quotation_action(self):
         self.ensure_one()
-        # Send the mails in the correct language by splitting the ids per lang.
-        # This should ideally be fixed in mail_compose_message, so when a fix is made there this whole commit should be reverted.
-        # basically self.body (which could be manually edited) extracts self.template_id,
-        # which is then not translated for each customer.
-
-        default_lang = get_lang(self.env)
 
         if self.active_draft_ids:
             for quotation in self.active_draft_ids:
-                lang = quotation.partner_id.lang if quotation.partner_id.lang else default_lang
-                self.draft_template_id.lang = lang
-                self.draft_template_id.send_mail(quotation.id, force_send=True)
-
-            # langs_draft = self.active_draft_ids.mapped('partner_id.lang')
-            # for lang in (set(langs_draft) or [default_lang]):
-            #     active_ids_lang = self.active_draft_ids.filtered(lambda r: r.partner_id.lang == lang).ids
-            #     self_lang = self.with_context(active_ids=active_ids_lang, lang=lang)
-            #     self_lang.with_context(force_send=True).message_post_with_template(self.draft_template_id)
+                responsible_emails = {user.email for user in filter(None, \
+                    (quotation.user_id, self.env.ref('base.user_admin', raise_if_not_found=False)))}
+                mail_id = self.draft_template_id.with_context(**{
+                    'default_email_to': ','.join(responsible_emails), 
+                    'default_reply_to': ','.join(responsible_emails),
+                }).send_mail(quotation.id, force_send=True)
+                import ipdb; ipdb.set_trace()
+                if mail_id and quotation.state == 'draft':
+                    quotation.write({'state': 'sent'})
 
         if self.active_sale_ids:
             for sale_order in self.active_sale_ids:
-                lang = sale_order.partner_id.lang if sale_order.partner_id.lang else default_lang
-                self.sale_template_id.lang = lang
-                self.sale_template_id.send_mail(sale_order.id, force_send=True)
-
-            # langs_sale = self.active_sale_ids.mapped('partner_id.lang')
-            # for lang in (set(langs_sale) or [default_lang]):
-            #     active_ids_lang = self.active_sale_ids.filtered(lambda r: r.partner_id.lang == lang).ids
-            #     self_lang = self.with_context(active_ids=active_ids_lang, lang=lang)
-            #     self_lang.with_context(force_send=True).message_post_with_template(self.sale_template_id)
+                responsible_emails = {user.email for user in filter(None, \
+                    (sale_order.user_id, self.env.ref('base.user_admin', raise_if_not_found=False)))}
+                self.sale_template_id.with_context(**{
+                    'default_email_to': ','.join(responsible_emails),
+                    'default_reply_to': ','.join(responsible_emails),
+                    }).send_mail(sale_order.id, force_send=True)
 
         return {'type': 'ir.actions.act_window_close'}

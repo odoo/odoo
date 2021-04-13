@@ -829,7 +829,8 @@ Reason(s) of this behavior could be:
         :return: The correct mail template based on the current status
         :rtype: record of `mail.template`
         """
-        if force_confirmation_template or (all(order.state == 'sale' for order in self) and not self.env.context.get('proforma')):
+        if force_confirmation_template or (all(order.state == 'sale' for order in self) \
+                                            and not self.env.context.get('proforma')):
             template_id = int(self.env['ir.config_parameter'].sudo().get_param('sale.default_confirmation_template'))
             default_template = self.env['mail.template'].search([('id', '=', template_id)])
             return default_template if default_template else self.env.ref('sale.mail_template_sale_confirmation')
@@ -895,6 +896,8 @@ Reason(s) of this behavior could be:
             'active_ids': self.ids,
             'active_draft_ids': active_draft.ids,
             'active_sale_ids': active_sale.ids,
+            'default_email_to': '',
+            'default_reply_to': '',
         })
         return view
 
