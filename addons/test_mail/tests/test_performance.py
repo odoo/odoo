@@ -847,14 +847,14 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'res_id': record.id
         } for record in records])
 
-        with self.assertQueryCount(emp=5):
+        with self.assertQueryCount(emp=4):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 
         messages.flush()
         messages.invalidate_cache()
 
-        with self.assertQueryCount(emp=15):
+        with self.assertQueryCount(emp=14):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 
