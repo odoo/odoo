@@ -58,8 +58,8 @@
         <t t-jquery="div#colorInputButtonGroup" t-operation="replace"/>
         <t t-jquery="div#toolbar" t-operation="append">
             <div id="history" class="btn-group">
-                <div id="undo" class="btn fa fa-undo"/>
-                <div id="redo" class="btn fa fa-repeat"/>
+                <div id="undo" data-call="undo" class="btn fa fa-undo"/>
+                <div id="redo" data-call="redo" class="btn fa fa-repeat"/>
             </div>
         </t>
     </t>
