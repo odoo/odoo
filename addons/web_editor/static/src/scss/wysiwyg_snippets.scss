@@ -45,12 +45,11 @@ body.editor_enable.editor_has_snippets {
     $-text-tools-gap: 3px;
     $-text-tools-header-height: 35px;
 
-    padding: $-text-tools-header-height $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
-    margin-bottom: $o-we-sidebar-content-padding-base;
-    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
     z-index: $o-we-zindex;
+    flex: 1 0 auto;
     display: flex;
-    flex: 1;
+    padding: $-text-tools-header-height $o-we-sidebar-content-padding-base ($o-we-sidebar-content-padding-base * 3) $o-we-sidebar-content-indent;
+    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
     overflow-y: auto;
 
     .popover {
@@ -1410,7 +1409,7 @@ body.editor_enable.editor_has_snippets {
                     }
                 }
             }
-        }   
+        }
 
         .o_we_color_btn, .o_we_color_combination_btn {
             float: left;
