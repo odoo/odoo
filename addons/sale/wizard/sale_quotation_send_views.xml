@@ -5,11 +5,25 @@
         <field name="model">sale.quotation.send</field>
         <field name="arch" type="xml">
             <form string="Send By Email">
-                <!-- If there is draft, this is visible -->
-                            <!-- template for draft -->
-                <!-- If there is sale, this is visible -->
-                            <!-- template for sale -->
+                <field name="active_draft_ids" invisible="1"/>
+                <field name="active_sale_ids" invisible="1"/>
+                
+                <!-- If there is at least a draft, this is visible -->
+                <div attrs="{'invisible': [('active_draft_ids', '=', [])]}">
+                    <group>
+                        <field name="draft_template_id" options="{'no_create': True, 'no_edit': True}"
+                            context="{'default_model': 'sale.order'}"/>
+                    </group>
+                </div>
 
+                <!-- If there is at least a sale, this is visible -->
+                <div attrs="{'invisible': [('active_sale_ids', '=', [])]}">
+                    <group>
+                        <field name="sale_template_id" options="{'no_create': True, 'no_edit': True}"
+                            context="{'default_model': 'sale.order'}"/>
+                    </group>
+                </div>
+                
                 <footer>
                     <button string="Send"
                         name="send_quotation_action" type="object" class="send btn-primary o_mail_send"/>

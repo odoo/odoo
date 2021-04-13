@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tools.misc import get_lang
 
 class SaleQuotationSend(models.TransientModel):
-    _name = 'sale.quotation.send'
+    _name = 'sale.quotation.send.test'
     _inherits = {'mail.compose.message':'composer_id'}
     _description = 'Sale Quotation Send'
 

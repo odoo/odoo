@@ -844,30 +844,58 @@ Reason(s) of this behavior could be:
         if any(o.state in ['done', 'cancel'] for o in self):
             raise UserError(_('You cannot send a cancelled AND/OR a locked quotation or sales order by email.'))
 
+        active_quote = self.filtered(lambda o: o.state in ['draft', 'sale','sent'])
+
+        view = {
+            'name': _('Send By Email'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'context': {
+                'mark_so_as_sent': True,
+                'active_model': 'sale.order',
+            },
+            'target': 'new',
+        }
+
+        # If there is only 1 quotation, return the appropriate wizard
+        if len(active_quote) == 1:
+            template_quote = active_quote._find_mail_template()
+
+            view.update({
+                'res_model': 'mail.compose.message',
+            })
+            
+            view['context'].update({
+                'default_model': 'sale.order',
+                'default_res_id': self.ids[0],
+                'default_use_template': bool(template_quote),
+                'default_template_id': template_quote.id,
+                'default_composition_mode': 'comment',
+            })
+
+            return view
+        
+        # Else return the wizard for the batch sending
         active_draft = self.filtered(lambda o: o.state in ['draft', 'sent'])
         active_sale = self.filtered(lambda o: o.state == 'sale')
 
         template_draft = active_draft._find_mail_template()
         template_sale = active_sale._find_mail_template()
-        view = {
-            'name': _('Send By Email'),
+
+        view.update({
             'res_model': 'sale.quotation.send',
-            'view_mode': 'form',
-            'context': {
-                'default_draft_template_id': template_draft.id,
-                'default_sale_template_id': template_sale.id,
-                'mark_so_as_sent': True,
-                'active_model': 'sale.order',
-                # Setting both active_id and active_ids is required, mimicking how direct call to
-                # ir.actions.act_window works
-                'active_id': self.ids[0], 
-                'active_ids': self.ids,
-                'active_draft_ids': active_draft.ids,
-                'active_sale_ids': active_sale.ids,
-            },
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-        }
+        })
+
+        view['context'].update({
+            'default_draft_template_id': template_draft.id,
+            'default_sale_template_id': template_sale.id,
+            # Setting both active_id and active_ids is required, mimicking how direct call to
+            # ir.actions.act_window works
+            'active_id': self.ids[0], 
+            'active_ids': self.ids,
+            'active_draft_ids': active_draft.ids,
+            'active_sale_ids': active_sale.ids,
+        })
         return view
 
     @api.returns('mail.message', lambda value: value.id)
