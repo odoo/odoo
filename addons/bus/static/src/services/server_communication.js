@@ -109,12 +109,12 @@ export class ServerCommunication {
      * @private
      */
     _selectCommunicationType() {
-        if (window.SharedWorker) {
+        // if (true || window.SharedWorker) {
             console.warn('selecting sharedworker');
             this._communicationType = 'sharedworker';
             this.env.services['bus.sharedworker_communication'].start(this._lastBusMessageId);
             return;
-        }
+        // }
         // TODO SEB better handle longpolling/crosstab switch
         if (this.env.services['bus.user_presence'].isCurrentPageVisible()) {
             console.warn('selecting longpolling');
