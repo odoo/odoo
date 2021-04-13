@@ -267,7 +267,7 @@ class MailPluginController(http.Controller):
 
     def _get_partner_data(self, partner):
 
-        fields_list = ['id', 'name', 'email', 'phone', 'mobile']
+        fields_list = ['id', 'name', 'email', 'phone', 'mobile', 'is_company']
 
         partner_values = dict((fname, partner[fname]) for fname in fields_list)
         partner_values['image'] = partner.image_128
