@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('post_install', '-at_install')
@@ -126,3 +126,12 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         # Try to set the account as a not-reconcile one.
         with self.assertRaises(UserError), self.cr.savepoint():
             account.reconcile = False
+
+    def test_toggle_reconcile_outstanding_account(self):
+        ''' Test the feature when the user sets an account as not reconcilable when a journal
+        is configured with this account as the payment credit or debit account.
+        Since such an account should be reconcilable by nature, a ValidationError is raised.'''
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.company_data['default_journal_bank'].payment_debit_account_id.reconcile = False
+        with self.assertRaises(ValidationError), self.cr.savepoint():
+            self.company_data['default_journal_bank'].payment_credit_account_id.reconcile = False
