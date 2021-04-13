@@ -174,6 +174,7 @@
             'website/static/src/snippets/s_facebook_page/options.js',
             'website/static/src/snippets/s_image_gallery/options.js',
             'website/static/src/snippets/s_countdown/options.js',
+            'website/static/src/snippets/s_masonry_block/options.js',
             'website/static/src/snippets/s_popup/options.js',
             'website/static/src/snippets/s_product_catalog/options.js',
             'website/static/src/snippets/s_chart/options.js',
