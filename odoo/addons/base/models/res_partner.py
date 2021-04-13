@@ -126,7 +126,6 @@ class Partner(models.Model):
     credit_limit = fields.Float(string='Credit Limit')
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
     # misc description fields
-    date = fields.Date(index=True)
     ref = fields.Char(string='Reference', index=True)
     website = fields.Char('Website Link')
     comment = fields.Text(string='Notes')
