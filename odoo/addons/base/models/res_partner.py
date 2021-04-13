@@ -133,7 +133,6 @@ class Partner(models.Model):
                                     column2='category_id', string='Tags', default=_default_category)
     color = fields.Integer(string='Color Index', default=0)
     # user
-    employee = fields.Boolean(help="Check this box if this contact is an Employee.")
     user_ids = fields.One2many('res.users', 'partner_id', string='Users', auto_join=True)
     partner_share = fields.Boolean(
         'Share Partner', compute='_compute_partner_share', store=True,
