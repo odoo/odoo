@@ -28,7 +28,7 @@ class ProductTemplate(models.Model):
     def _compute_used_in_bom_count(self):
         for template in self:
             template.used_in_bom_count = self.env['mrp.bom'].search_count(
-                [('bom_line_ids.product_id', 'in', template.product_variant_ids.ids)])
+                [('bom_line_ids.product_tmpl_id', '=', template.id)])
 
     def write(self, values):
         if 'active' in values:
