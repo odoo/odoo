@@ -1562,7 +1562,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         View = self.env['ir.ui.view'].sudo()
         result = {
             'model': self._name,
-            'field_parent': False,
         }
 
         # try to find a view_id if none provided
@@ -1589,12 +1588,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if view_id:
             # read the view with inherited views applied
-            root_view = View.browse(view_id).read_combined(['id', 'name', 'field_parent', 'type', 'model', 'arch'])
+            root_view = View.browse(view_id).read_combined(['id', 'name', 'type', 'model', 'arch'])
             result['arch'] = root_view['arch']
             result['name'] = root_view['name']
             result['type'] = root_view['type']
             result['view_id'] = root_view['id']
-            result['field_parent'] = root_view['field_parent']
             result['base_model'] = root_view['model']
         else:
             # fallback on default views methods if no ir.ui.view could be found
