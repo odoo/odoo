@@ -2953,36 +2953,37 @@ td {
     position: relative;
     text-align: center;
     margin: 0.2rem;
+    display: flex;
+    align-items:center;
+    border: 1px solid #cecbcb;
+    background: #fff;
+    border-radius: 20px;
 }
 
 .order-management-screen .control-panel .search-box .clear {
-    position: relative;
-    right: 25px;
+    margin-right: 25px;
     cursor: pointer;
     color: #808080;
     font-size: 13px;
 }
 
 .order-management-screen .control-panel .search-box .icon {
-    position: relative;
-    left: 25px;
+    margin-left: 25px;
     color: #808080;
     font-size: 13px;
 }
 
 .order-management-screen .control-panel .search-box input {
-    border: 1px solid #cecbcb;
-    padding: 10px 30px;
+    padding: 10px;
+    width: 100%;
+    border: 0;
     margin: auto;
-    background-color: white;
-    border-radius: 20px;
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     font-size: 13px;
 }
 
 .order-management-screen .control-panel .search-box input:focus {
     outline: none;
-    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
     color: rgb(153, 153, 255);
 }
 
@@ -3669,6 +3670,11 @@ td {
         width: 0;
     }
 
+    .pos .rightpane,
+    .pos .rightpane-header {
+        width: 100%;
+    }
+
     .ticket-screen .pos-search-bar .search input {
         padding-left: 10px;
     }
@@ -3720,6 +3726,11 @@ td {
         margin: 5px;
     }
 
+    .pos .order-management-screen .order-list {
+        display: flex;
+        flex-direction: column;
+    }
+
     .pos .ticket-screen .order-table .order-row .col:first-child {
         font-weight:bold;
     }
@@ -3729,6 +3740,38 @@ td {
     }
 
     .pos .ticket-screen .order-table .order-row.delete-button {
-        background: #DDD;
+        background: #bfbfbf;
+    }
+    .pos .order-management-screen .order-table.order-row {
+        display: initial;
+        justify-content: initial;
+        margin: 10px;
+        border: 1px solid black;
+    }
+    .pos .order-management-screen .order-row.item {
+        border: 0;
+        justify-content: space-between;
+        background: white;
+    }
+    .pos .order-management-screen .order-row.item:nth-child(odd) {
+        background: rgb(230, 230, 230);
+    }
+    .pos .order-management-screen .order-table.highlight .order-row.item {
+        background: rgb(110,200,155);
+    }
+    .pos .order-management-screen .order-table.highlight .order-row.item:nth-child(odd)  {
+        background: rgb(110, 200, 100);
+    }
+    .pos .product-list {
+        justify-content: space-between;
+    }
+    .pos .rightpane-header > .category-list.simple {
+        flex-wrap: nowrap;
+    }
+    .pos .order-row {
+        flex-direction: initial;
+    }
+    .pos .ticket-screen .orders .col.end {
+        text-align: end;
     }
 }
