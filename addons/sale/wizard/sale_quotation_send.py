@@ -83,11 +83,11 @@ class SaleQuotationSend(models.TransientModel):
             for quotation in self.active_draft_ids:
                 responsible_emails = {user.email for user in filter(None, \
                     (quotation.user_id, self.env.ref('base.user_admin', raise_if_not_found=False)))}
-                mail_id = self.draft_template_id.with_context(**{
-                    'default_email_to': ','.join(responsible_emails), 
-                    'default_reply_to': ','.join(responsible_emails),
-                }).send_mail(quotation.id, force_send=True)
-                import ipdb; ipdb.set_trace()
+                email_values = {'email_to': responsible_emails, 'reply_to':responsible_emails}
+                mail_id = self.draft_template_id.send_mail(quotation.id,
+                                                email_values=email_values,
+                                                force_send=True
+                                            )
                 if mail_id and quotation.state == 'draft':
                     quotation.write({'state': 'sent'})
 
