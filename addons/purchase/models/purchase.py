@@ -1058,6 +1058,10 @@ class PurchaseOrderLine(models.Model):
                     self.order_id.company_id,
                     self.date_order or fields.Date.today(),
                 )
+
+            if self.product_uom:
+                price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom)
+
             self.price_unit = price_unit
             return
 

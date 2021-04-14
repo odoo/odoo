@@ -26,7 +26,12 @@ class TestReInvoice(TestSaleCommon):
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
-        cls.AccountMove = cls.env['account.move'].with_context(default_move_type='in_invoice', mail_notrack=True, mail_create_nolog=True)
+        cls.AccountMove = cls.env['account.move'].with_context(
+            default_move_type='in_invoice',
+            default_invoice_date=cls.sale_order.date_order,
+            mail_notrack=True,
+            mail_create_nolog=True,
+        )
 
     def test_at_cost(self):
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
