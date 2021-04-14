@@ -173,7 +173,7 @@ class Partner(models.Model):
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     bank_ids = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
     website = fields.Char('Website Link')
-    comment = fields.Text(string='Notes')
+    comment = fields.Html(string='Notes')
 
     category_id = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)

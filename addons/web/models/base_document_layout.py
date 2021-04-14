@@ -29,8 +29,8 @@ class BaseDocumentLayout(models.TransientModel):
 
     logo = fields.Binary(related='company_id.logo', readonly=False)
     preview_logo = fields.Binary(related='logo', string="Preview logo")
-    report_header = fields.Text(related='company_id.report_header', readonly=False)
-    report_footer = fields.Text(related='company_id.report_footer', readonly=False)
+    report_header = fields.Html(related='company_id.report_header', readonly=False)
+    report_footer = fields.Html(related='company_id.report_footer', readonly=False)
 
     # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)

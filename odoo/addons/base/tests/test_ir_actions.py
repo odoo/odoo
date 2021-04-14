@@ -35,6 +35,7 @@ class TestServerActionsBase(common.TransactionCase):
         # Model data
         Model = self.env['ir.model']
         Fields = self.env['ir.model.fields']
+        self.comment_html = '<p>MyComment</p>'
         self.res_partner_model = Model.search([('model', '=', 'res.partner')])
         self.res_partner_name_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'name')])
         self.res_partner_city_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'city')])
@@ -54,7 +55,7 @@ class TestServerActionsBase(common.TransactionCase):
             'model_id': self.res_partner_model.id,
             'model_name': 'res.partner',
             'state': 'code',
-            'code': 'record.write({"comment": "MyComment"})',
+            'code': 'record.write({"comment": "%s"})' % self.comment_html,
         })
 
 
@@ -62,7 +63,7 @@ class TestServerActions(TestServerActionsBase):
 
     def test_00_action(self):
         self.action.with_context(self.context).run()
-        self.assertEqual(self.test_partner.comment, 'MyComment', 'ir_actions_server: invalid condition check')
+        self.assertEqual(self.test_partner.comment, self.comment_html, 'ir_actions_server: invalid condition check')
         self.test_partner.write({'comment': False})
 
         # Do: create contextual action

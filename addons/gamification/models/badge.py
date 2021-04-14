@@ -74,7 +74,7 @@ class GamificationBadge(models.Model):
 
     name = fields.Char('Badge', required=True, translate=True)
     active = fields.Boolean('Active', default=True)
-    description = fields.Text('Description', translate=True)
+    description = fields.Html('Description', translate=True)
     level = fields.Selection([
         ('bronze', 'Bronze'), ('silver', 'Silver'), ('gold', 'Gold')],
         string='Forum Badge Level', default='bronze')
