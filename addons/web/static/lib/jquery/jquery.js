@@ -4666,8 +4666,11 @@ jQuery.event = {
 
                 // Find delegate handlers
                 // Black-hole SVG <use> instance trees (#13180)
-                // Avoid non-left-click bubbling in Firefox (#3861)
-                if ( delegateCount && cur.nodeType && (!event.button || event.type !== "click") ) {
+                // ODOO CHANGE: cherry-picking https://github.com/jquery/jquery/commit/c82a6685bb9
+                // Support: Firefox<=42+
+                // Avoid non-left-click in FF but don't block IE radio events (#3861, gh-2343)
+                if ( delegateCount && cur.nodeType &&
+                        ( event.type !== "click" || isNaN( event.button ) || event.button < 1 ) ) {
 
                         /* jshint eqeqeq: false */
                         for ( ; cur != this; cur = cur.parentNode || this ) {
