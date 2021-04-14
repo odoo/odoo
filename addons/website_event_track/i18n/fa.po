@@ -1,30 +1,51 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_track
+# 	* website_event_track
 #
-# Translators:
-# Zahed Alfak <tamass4116@gmail.com>, 2018
-# Morovat Guivi <tarjomac@gmail.com>, 2018
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# Maziar Niaki <maziarmn@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
-# Hamid Darabi, 2018
-# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2019
-#
+# Amir <kenevist>, 2021.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Hamid Reza Kaveh <hamidrkp@riseup.net>, 2019\n"
-"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
-"Language: fa\n"
+"POT-Creation-Date: 2021-04-12 05:43+0000\n"
+"PO-Revision-Date: 2021-04-12 18:33+0430\n"
+"Last-Translator: Amir <kenevist>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
+"Language: en_GB\n"
+"X-Generator: Lokalize 19.12.3\n"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "\"Events App Name\" field is required."
+msgstr "فیلد \"نام اپ رویداد\" الزامیست."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
+msgid "# Wishlisted"
+msgstr "تعداد موارد لیست خواسته‌ها"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "%s Events"
+msgstr "رویدادهای %s"
+
+#. module: website_event_track
+#: code:addons/website_event_track/controllers/webmanifest.py:0
+#, python-format
+msgid "%s Online Events Application"
+msgstr "درخواست‌های رویدادهای آنلاین %s "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
 
 #. module: website_event_track
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
@@ -32,84 +53,144 @@ msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<div>\n"
 "    Dear ${object.partner_name or ''}<br/>\n"
-"    We are pleased to inform you that your proposal ${object.name} has been "
-"accepted and confirmed for the event ${object.event_id.name}.\n"
+"    We are pleased to inform you that your proposal ${object.name} has been"
+" accepted and confirmed for the event ${object.event_id.name}.\n"
 "    <br/>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 16px "
-"8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; "
-"background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"            View Event\n"
+"        <a href=\"/event/${object.event_id.id}/track/${object.id}\""
+" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF;"
+" text-decoration: none !important; background-color: #875A7B; border: 0px"
+" solid #875A7B; border-radius:3px\">\n"
+"            View Talk\n"
 "        </a>\n"
 "    </div>\n"
 "    <br/><br/>\n"
 "    Thank you,\n"
-"</div>\n"
-"            "
+"    % if user.signature\n"
+"        <br/>\n"
+"        ${user.signature | safe}\n"
+"    % endif\n"
+"</div>"
 msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "<b>Date</b><br/>"
-msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    ${object.partner_name or ''} عزیز<br/>\n"
+"    ما خوشحالیم که به شما اطلاع دهیم پروپوزال ${object.name} شما برای رویداد"
+" $ {object.event_id.name} پذیرفته و تایید شد.\n"
+"    <br/>\n"
+"    جزئیات بیشتر را در اینجا خواهید یافت:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/event/${object.event_id.id}/track/${object.id}\""
+" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF;"
+" text-decoration: none !important; background-color: #875A7B; border: 0px"
+" solid #875A7B; border-radius:3px\">\n"
+"            نمایش گفتگو\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    با تشکر،\n"
+"    % if user.signature\n"
+"        <br/>\n"
+"        ${user.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
-msgstr ""
+msgstr "<b>ایمیل</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Phone</b>:"
-msgstr ""
+msgstr "<b>شماره تماس</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Proposed By</b>:"
-msgstr ""
+msgstr "<b>پیشنهاد شده توسط</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speakers Biography</b>:"
-msgstr ""
+msgstr "<b>بیوگرافی سخنرانان</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Talk Introduction</b>:"
-msgstr ""
+msgstr "<b>مقدمه گفتگو</b>:"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
+msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
+msgstr "<i class=\"fa fa-ban mr-2\"/>منتشر نشده"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
+msgid "<i class=\"fa fa-bell mr-2 text-muted\"/> Wishlisted Talks"
+msgstr ""
+"<i class=\"fa fa-bell mr-2 text-muted\"/> گفتگوی قرار گرفته در لیست خواسته‌ها"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "<i class=\"fa fa-folder-open\"/> Favorites"
+msgstr "<i class=\"fa fa-folder-open\"/> موارد دلخواه"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
-"<br/>\n"
-"                            <b>Duration</b><br/>"
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                You can add multiple speakers by separating"
+" names, emails and phones with commas."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                با جدا کردن نام، ایمیل و تلفن با ویرگول،"
+" می‌توانید چندین سخنران اضافه کنید."
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "<span class=\"d-none d-md-block ml-2\">&amp;bull;</span>"
+msgstr "<span class=\"d-none d-md-block ml-2\">&amp;bull;</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid ""
-"<br/>\n"
-"                            <b>Location</b><br/>"
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"مقادیری که در اینجا تنظیم می‌شود "
+"مشخصه‌های وب‌سایت می‌باشد.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
-msgid "<span id=\"search_number\">0</span> Found"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "<span id=\"search_number\" class=\"mr-1\">0</span>Results"
+msgstr "<span id=\"search_number\" class=\"mr-1\">0</span>نتیجه"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<span>&amp;nbsp;at&amp;nbsp;</span>"
+msgstr "<span>&amp;nbsp;در&amp;nbsp;</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "<span>hours</span>"
+msgstr "<span>ساعت</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
-"                                    different topics. Most topics are "
-"accepted in lightning talks."
+"                                    different topics. Most topics are"
+" accepted in lightning talks."
 msgstr ""
+"<strong>گفتگو‌ی سریع</strong>. اینها 30 دقیقه مکالمه در مورد موضوعات مختلف\n"
+" هستند. بیشتر مباحث در گفتگوی سریع پذیرفته می‌شوند."
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid "<strong>Participate on Twitter</strong>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<strong>Location:</strong>"
+msgstr "<strong>مکان:</strong>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -117,11 +198,13 @@ msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
 msgstr ""
+"<strong> گفتگوهای معمولی</strong>.این گفتگوی استاندارد با اسلایدهایی است که"
+" در اسلات‌های 60 دقیقه‌ای اختصاص داده شده است."
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track7
-msgid "A technical explanation of how to use computer design apps"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid ">e.g. : https://www.odoo.com"
+msgstr ">به عنوان مثال : https://www.kenevist.com"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
@@ -131,93 +214,138 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
+"وضعیت کانبان سخنرانی، نشان دهنده وضعیت ویژه‌ایست آن را تحت تاثیر قرار داده"
+" است: \n"
+"  * خاکستری وضعیت پیش‌فرض است \n"
+"  * قرمز نشان می‌دهد که چیزی از جلو رفتن این سخنرانی جلوگیری می‌کند \n"
+"  * رنگ سبز نشان می‌دهد که سخنرانی آماده است تا به مرحله بعدی برده شود شود"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "About The Author"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_accepted
 msgid "Accepted Stage"
-msgstr ""
+msgstr "مراحل پذیرفته شده"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_accepted
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_accepted
+msgid "Accepted tracks are displayed in agenda views but not accessible."
+msgstr ""
+"سخنرانی‌های پذیرفته شده در نماهای موضوع مورد بحث روز نمایش داده می‌شوند، اما"
+" در دسترس نیستند."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_needaction
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
 msgid "Action Needed"
 msgstr "نیازمند اقدام"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__active
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__active
 msgid "Active"
 msgstr "فعال"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
 msgid "Activities"
 msgstr "فعالیت‌ها"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_exception_decoration
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "نوع نمایش اقدام ناموفق"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_state
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
 msgid "Activity State"
 msgstr "وضعیت فعالیت"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_type_icon
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "آیکون نوع اقدام"
+
+#. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid "Add a new stage in the task pipeline"
-msgstr ""
+msgstr "یک مرحله جدید به وظایف پایپ‌لاین اضافه کنید"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid "Add a new track"
-msgstr ""
+msgstr "افزودن سخنرانی جدید"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track19
-msgid "Advanced lead management : tips and tricks from the fields"
-msgstr ""
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid "Add a new track visitor"
+msgstr "افزودن بازدیدکننده جدید سخنرانی"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track13
-msgid "Advanced reporting"
-msgstr ""
-
-#. module: website_event_track
-#: code:addons/website_event_track/models/event.py:97
+#: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Agenda"
 msgstr "دستور کار"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_filter
-msgid "All Tags"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "All Talks"
+msgstr "تمامی گفتگوها"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Allow Track Proposals"
+msgstr "امکان ارائه پیشنهاد سخنرانی"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Allow video and audio recording of their\n"
-"                                    presentation, for publishing on our "
-"website."
+"                                    presentation, for publishing on our"
+" website."
 msgstr ""
+"امکان ضبط فیلم و صدا از پرزنتیشن آنها،\n"
+" برای انتشار در وب‌سایت ما."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Always Wishlisted"
+msgstr "همیشه در لیست خواسته‌ها"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
 msgid "Announced"
-msgstr ""
+msgstr "اعلام شده"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "Application"
-msgstr "برنامه"
+msgstr "فرم درخواست"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Archived"
 msgstr "بایگانی شده"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
+msgid ""
+"As key track cannot be un-wishlisted, this field store the partner choice to"
+" remove the reminder for key tracks."
+msgstr ""
+"از آنجا که نمی‌توان سخنرانی اصلی را از لیست خواسته‌ها خارج کرد، این فیلد"
+" انتخاب مخاطب را برای حذف یادآوری برای سخنرانی اصلی را ذخیره می‌کند."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_attachment_count
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
 msgid "Attachment Count"
 msgstr "شمارش پیوست"
@@ -225,22 +353,63 @@ msgstr "شمارش پیوست"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
 msgid "Available Track Tags"
-msgstr ""
+msgstr "برچسب‌های موجود برای سخنرانی"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
+msgid "Biography"
+msgstr "بیوگرافی"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Book your seats to the best talks"
+msgstr "برای بهترین گفتگو، جای خود را رزرو کنید "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Book your talks"
+msgstr "گفتگوی خود را رزرو کنید"
 
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type1
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_sponsor_type__display_ribbon_style__bronze
 msgid "Bronze"
 msgstr "برنز"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
+msgid "Button Target URL"
+msgstr "آدرس اینترنتی هدف دکمه"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
+msgid "Button Title"
+msgstr "عنوان دکمه"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
+msgid "Button appears"
+msgstr "دکمه نمایش داده می‌شود"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
+msgid "CTA button is available"
+msgstr "دکمه CTA موجود می‌باشد"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Call for Proposals"
-msgstr ""
+msgstr "فراخوانی برای پرپوزال"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+msgid "Can Publish"
+msgstr "می‌تواند منتشر کند "
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
 msgid "Canceled Stage"
-msgstr ""
+msgstr "مرحله لغو شده"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
@@ -248,25 +417,61 @@ msgid "Cancelled"
 msgstr "لغو شد"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__color
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
-msgid "Color Index"
-msgstr "رنگ پس زمینه"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
+msgid "Category"
+msgstr "دسته‌بندی"
 
 #. module: website_event_track
-#: model:event.type,name:website_event_track.event_type_data_tracks
-msgid "Conference"
-msgstr "کنفرانس"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__color
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
+msgid "Color"
+msgstr "رنگ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
+msgid "Color Index"
+msgstr "رنگ پس‌زمینه"
+
+#. module: website_event_track
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, python-format
+msgid "Coming soon"
+msgstr "به زودی"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Coming soon ..."
+msgstr "به زودی..."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
+msgid "Company"
+msgstr "شرکت"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
+msgid "Company Name"
+msgstr "نام شرکت"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_res_config_settings
+msgid "Config Settings"
+msgstr "تنظیمات پیکربندی"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of ${object.name}"
-msgstr ""
+msgstr "تاییدیه‌ی ${object.name}"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
 msgid "Confirmed"
 msgstr "تایید شد"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
+msgid "Create a Sponsor / Exhibitor"
+msgstr "ایجاد حامی‌مالی/غرفه‌دار جدید"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_uid
@@ -275,7 +480,8 @@ msgstr "تایید شد"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_uid
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
 msgid "Created by"
 msgstr "ایجاد شده توسط"
 
@@ -286,9 +492,15 @@ msgstr "ایجاد شده توسط"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_date
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
 msgid "Created on"
 msgstr "ایجاد شده در"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Customer"
+msgstr "مشتری"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -299,10 +511,14 @@ msgstr "تاریخ"
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid ""
 "Define the steps that will be used in the event from the\n"
-"                creation of the track, up to the closing of the track.\n"
-"                You will use these stages in order to track the progress in\n"
-"                solving an event track."
+"            creation of the track, up to the closing of the track.\n"
+"            You will use these stages in order to track the progress in\n"
+"            solving an event track."
 msgstr ""
+"مراحلی را که از زمان ایجاد سخنرانی تا زمان بسته شدن\n"
+" سخنرانی مورد استفاده قرار می‌گیرند، مشخص کنید.\n"
+"شما برای پیگیری پیشرفت، در حل یک سخنرانی رویداد، از این مراحل استفاده خواهید"
+" کرد."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -310,40 +526,34 @@ msgid "Delete"
 msgstr "حذف"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track25
-msgid "Design contest (entire afternoon)"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Description"
+msgstr "شرح"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track24
-msgid "Design contest (entire day)"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track6
-msgid "Detailed roadmap of our new products"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track11
-msgid "Discover our new design team"
-msgstr ""
-
-#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "Documents"
-msgstr "اسناد"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+msgid "Done"
+msgstr "انجام شده"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -358,7 +568,14 @@ msgstr "مدت"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Edit Track"
-msgstr ""
+msgstr "ویرایش سخنرانی"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_email
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Email"
+msgstr "ایمیل"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
@@ -366,113 +583,148 @@ msgid "Email Template"
 msgstr "قالب ایمیل"
 
 #. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Error"
+msgstr "خطا"
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
 msgstr "رویداد"
 
 #. module: website_event_track
-#: model:ir.model,name:website_event_track.model_event_type
-msgid "Event Category"
-msgstr "طبقه بندی رویداد"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "Event Location"
-msgstr ""
+msgstr "مکان رویداد"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_location
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 msgid "Event Locations"
-msgstr ""
+msgstr "مکان رویداد‌ها"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
-#: selection:website.event.menu,menu_type:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
 msgid "Event Proposals Menus"
-msgstr ""
+msgstr "منوی پیشنهاد‌های رویداد"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor
 msgid "Event Sponsor"
-msgstr ""
+msgstr "حامی‌مالی رویداد"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor_type
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_tree
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_type_view_tree
 msgid "Event Sponsor Type"
-msgstr ""
+msgstr "نوع حامی‌مالی رویداد"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_type_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_type_view_form
 msgid "Event Sponsor Types"
-msgstr ""
+msgstr "انواع حامی‌مالی رویداد"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_sponsor_search
+#: model:ir.actions.act_window,name:website_event_track.event_sponsor_action_from_event
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 msgid "Event Sponsors"
-msgstr ""
+msgstr "حامی‌‌های مالی رویداد"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_type
+msgid "Event Template"
+msgstr "قالب رویداد"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Event Track"
-msgstr ""
+msgstr "سخنرانی رویداد"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Event Track Location"
-msgstr ""
+msgstr "مکان سخنرانی رویداد"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
 msgid "Event Track Stage"
-msgstr ""
+msgstr "مرحله سخنرانی رویداد"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
 msgid "Event Track Tag"
-msgstr ""
+msgstr "برچسب سخنرانی رویداد"
 
 #. module: website_event_track
-#: model:ir.actions.act_window,name:website_event_track.action_event_sponsor_from_event
+#: model:ir.model,name:website_event_track.model_event_track_tag_category
+msgid "Event Track Tag Category"
+msgstr "دسته برچسب سخنرانی رویداد"
+
+#. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_from_event
-#: model:ir.ui.menu,name:website_event_track.menu_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event Tracks"
-msgstr ""
+msgstr "سخنرانی‌های رویداد"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
-#: selection:website.event.menu,menu_type:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
 msgid "Event Tracks Menus"
-msgstr ""
+msgstr "منوهای سخنرانی‌های رویداد"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
+msgid "Events App Name"
+msgstr "نام اپ رویداد"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Events PWA"
+msgstr "وب اپ پیشرفته رویدادها"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Favorite On"
+msgstr "مورد علاقه در"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Favorites"
+msgstr "علاقه‌مندی‌ها"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Fill this form to propose your talk."
-msgstr ""
+msgstr "برای پیشنهاد سخنرانی این فرم را پر کنید"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Filter Tracks..."
-msgstr ""
+msgstr "\فیلتر کردن سخنرانی‌ها..."
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid ""
-"Find out what people see and say about this event,\n"
-"                        and join the conversation."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Finished"
+msgstr "تمام شد"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
@@ -480,19 +732,28 @@ msgid "Folded in Kanban"
 msgstr "جمع شده در کانبان"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_follower_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
 msgid "Followers"
 msgstr "دنبال‌کنندگان"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_channel_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_channel_ids
 msgid "Followers (Channels)"
 msgstr "دنبال‌ کنندگان (کانال‌ها)"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_partner_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "دنبال‌ کنندگان (مخاطبین)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__activity_type_icon
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -500,106 +761,95 @@ msgid "Future Activities"
 msgstr "اقدامات آتی"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Get prepared and"
+msgstr "آماده شوید و"
+
+#. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_sponsor_type__display_ribbon_style__gold
 msgid "Gold"
 msgstr "طلا"
 
 #. module: website_event_track
-#: selection:event.track,kanban_state:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
 msgid "Green"
 msgstr "سبز"
 
 #. module: website_event_track
-#: selection:event.track,kanban_state:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
 msgid "Grey"
 msgstr "خاکستری"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
 msgstr "گروه‌بندی برمبنای"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
 msgid "High"
 msgstr "بالا"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
-msgstr ""
+msgstr "بالاترین"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track21
-msgid "House of World Cultures"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "صفحه نخست"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track18
-msgid "How to build your marketing strategy within a competitive environment"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track15
-msgid "How to communicate with your community"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track1
-msgid "How to design a new piece of furniture"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track4
-msgid "How to develop automated processes"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track16
-msgid "How to follow us on the social media"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track9
-msgid "How to improve your quality processes"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track2
-msgid "How to integrate hardware materials in your pieces of furniture"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track8
-msgid "How to optimize your sales, from leads to sales orders"
-msgstr ""
-
-#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_event_track.field_website__id
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__id
 msgid "ID"
 msgstr "شناسه"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
-msgid "If checked new messages require your attention."
-msgstr ""
-"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_exception_icon
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon"
+msgstr "آیکون"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__activity_exception_icon
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "آیکون برای نشان دادن استثنای یک اقدام."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_needaction
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_unread
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "اگر این گزینه علامت خورده باشد، پیام‌های جدیدی نیاز به توجه شما دارند."
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_has_sms_error
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "اگر این گزینه علامت خورده باشد، تحویل برخی از پیام‌ها با خطا مواجه شده است."
+msgstr ""
+"اگر این گزینه علامت خورده باشد، تحویل برخی از پیام‌ها با خطا مواجه شده است."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
@@ -607,11 +857,56 @@ msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
 msgstr ""
+"در صورت تنظیم، با رسیدن سخنرانی به این مرحله، برای مشتری ایمیل ارسال می‌شود."
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
-msgid "Image"
-msgstr "تصویر"
+#: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
+msgid ""
+"If set, the talk will be starred for each attendee registered to the event. "
+"The attendee won't be able to un-star this talk."
+msgstr ""
+"در صورت تنظیم، گفتگو برای هر شرکت کننده‌ای که در این رویداد ثبت نام کرده است،"
+" ستاره گذاری می‌شود. شرکت کننده نمی‌تواند این گفتگو را از ستاره خارج کند."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
+msgid "Image 128"
+msgstr "تصویر 128"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_256
+msgid "Image 256"
+msgstr "تصویر 256"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__website_image_url
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
+msgid "Image URL"
+msgstr "آدرس اینترنتی تصویر"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
+msgid "In"
+msgstr "در"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install"
+msgstr "نصب "
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install Application"
+msgstr "نصب اپ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Interactivity"
+msgstr "تعامل"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -619,14 +914,75 @@ msgid "Introduction"
 msgstr "مقدمه"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_accepted
+msgid "Is Accepted"
+msgstr "پذیرفته شده است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
+msgid "Is CTA Live"
+msgstr "CTA به صورت مستقیم است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
+msgid "Is Done"
+msgstr "انجام شده است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_is_follower
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
 msgid "Is Follower"
 msgstr "دنبال‌کننده است"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
-msgid "Is published"
-msgstr ""
+msgid "Is Published"
+msgstr "منتشر شده است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
+msgid "Is Reminder On"
+msgstr "یادآوری روشن است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
+msgid "Is Track Done"
+msgstr "سخنرانی انجام شده است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
+msgid "Is Track Live"
+msgstr "سخنرانی به صورت زنده است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
+msgid "Is Track Soon"
+msgstr "سخنرانی به زودی آغاز می‌شود"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
+msgid "Is Track Today"
+msgstr "سخنرانی برای امروز است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
+msgid "Is Track Upcoming"
+msgstr "سخنرانی درآینده انجام خواهد شد"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
+msgid "Is Wishlisted"
+msgstr "از موارد لیست خواسته‌ها است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
+msgid "Is reminder off"
+msgstr "یادآوری خاموش است"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
+msgid "Job Position"
+msgstr "موقعیت شغلی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
@@ -634,18 +990,21 @@ msgid "Kanban State"
 msgstr "وضعیت کانبان"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track23
-msgid "Key Success factors selling our furniture"
-msgstr ""
-
-#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_type____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor____last_update
 msgid "Last Modified on"
 msgstr "آخرین تغییر در"
 
@@ -656,7 +1015,8 @@ msgstr "آخرین تغییر در"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
 msgid "Last Updated by"
 msgstr "آخرین تغییر توسط"
 
@@ -667,7 +1027,8 @@ msgstr "آخرین تغییر توسط"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_date
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
 msgid "Last Updated on"
 msgstr "آخرین به‌روزرسانی در"
 
@@ -677,183 +1038,224 @@ msgid "Late Activities"
 msgstr "اقدامات مهلت‌گذشته"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track12
-msgid "Latest trends"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_kanban
+msgid "Level:"
+msgstr "مرحله:"
 
 #. module: website_event_track
-#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
-msgid "Locations"
-msgstr "مکان‌ها"
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Live"
+msgstr "زنده"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_medium
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Live Now"
+msgstr "هم‌اکنون زنده"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Location"
+msgstr "مکان"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_512
 msgid "Logo"
-msgstr "نشان"
+msgstr "لوگو"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
 msgid "Low"
 msgstr "پایین"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track31
-msgid "Lunch"
-msgstr "ناهار"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
+msgid "Magic Button"
+msgstr "دکمه جادویی"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "پیوست اصلی"
 
 #. module: website_event_track
-#: selection:event.track,priority:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
 msgstr "متوسط"
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_sponsor__image_medium
-#: model:ir.model.fields,help:website_event_track.field_event_track__image
-msgid ""
-"Medium-sized image of this contact. It is automatically resized as a "
-"128x128px image, with aspect ratio preserved. Use this field in form views "
-"or some kanban views."
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_id
-msgid "Menu"
-msgstr "منو"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
 msgid "Menu Type"
-msgstr ""
+msgstr "نوع منو"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_error
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "خطا در تحویل پیام"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
 msgid "Messages"
 msgstr "پیام‌ها"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track22
-msgid "Minimal but efficient design"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Minutes before CTA starts"
+msgstr "دقیقه قبل از شروع CTA"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track30
-msgid "Morning break"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
+msgid "Minutes before track starts"
+msgstr "دقیقه قبل از شروع سخنرانی"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
+msgid "Minutes compare to track start"
+msgstr "دقیقه در مقایسه شروع سخنرانی"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_mobile
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Mobile"
+msgstr "تلفن همراه"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "My Activities"
-msgstr "فعالیت‌های من"
+msgid "My Tracks"
+msgstr "سخنرانی‌های من"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track27
-msgid "My Company global presentation"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name"
+msgstr "نام"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track20
-msgid "New Certification Program"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name of your website's Events Progressive Web Application"
+msgstr "نام وب اپ پیشرفته رویدادهای وب‌سایت شما"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
 msgid "New Track"
-msgstr ""
+msgstr "سخنرانی جدید"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_event_track
 msgid "New Track Created"
-msgstr ""
+msgstr "سخنرانی جدید ایجاد شد"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "New track proposal"
-msgstr ""
+msgstr "پیشنهاد سخنرانی جدید"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_date_deadline
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "مهلت انجام اقدام بعدی"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_summary
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "خلاصه اقدام بعدی"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_type_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "نوع اقدام بعدی"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks
-msgid "No tracks found!"
-msgstr ""
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_sponsor_type__display_ribbon_style__no_ribbon
+msgid "No Ribbon"
+msgstr "بدون ربان"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "No track found."
+msgstr "هیچ سخنرانی یافت نشد"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
+msgid "No track wishlisted by this visitor"
+msgstr "هیچ سخنرانی در لیست خواسته‌ها توسط این بازدید کننده قرار نگرفته است"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+msgid "Not Accepted"
+msgstr "پذیرفته نشده است"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
+msgid "Note that colorless tags won't be available on the website."
+msgstr "توجه داشته باشید که برچسب‌های بی رنگ در وب‌سایت در دسترس نخواهند بود."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_needaction_counter
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
 msgid "Number of Actions"
 msgstr "تعداد اقدامات"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_error_counter
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "تعداد خطاها"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_needaction_counter
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr "تعداد پیام‌هایی که نیاز به اقدام دارند"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_has_error_counter
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "تعداد پیام‌هایی که خطا در تحویل دارند"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_unread_counter
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_unread_counter
 msgid "Number of unread messages"
 msgstr "تعداد پیام‌های خوانده‌نشده"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor
-msgid "Our Sponsors"
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Partner"
+msgstr "شخص"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_phone
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Phone"
+msgstr "تلفن"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Plan your experience by adding your favorites talks to your wishlist"
 msgstr ""
+"با افزودن گفتگوی مورد علاقه خود به لیست خواسته‌ها، تجربه خود را برنامه‌ریزی"
+" کنید"
 
 #. module: website_event_track
-#: selection:event.track,activity_state:0
-msgid "Overdue"
-msgstr "سررسید گذشته"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track14
-msgid "Partnership programs"
-msgstr ""
-
-#. module: website_event_track
-#: selection:event.track,activity_state:0
-msgid "Planned"
-msgstr "برنامه ریزی شده"
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track3
-msgid "Portfolio presentation"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "Practical Info"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Previous page"
+msgstr "صفحه قبلی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__priority
@@ -868,17 +1270,12 @@ msgstr "پروپوزال"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Proposals are closed!"
-msgstr ""
+msgstr "پرپوزال‌ها بسته شده است!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
 msgid "Proposals on Website"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid "Proposed by"
-msgstr ""
+msgstr "پرپوزال‌های برروی وب‌سایت"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage3
@@ -886,27 +1283,29 @@ msgid "Published"
 msgstr "منتشر شده"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_view
-msgid ""
-"Put here the list of documents, like slides of\n"
-"                            the presentations. Remove the above t-if when\n"
-"                            it's implemented."
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track10
-msgid "Raising qualitive insights from your customers"
-msgstr ""
-
-#. module: website_event_track
-#: selection:event.track,kanban_state:0
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
 msgid "Red"
 msgstr "قرمز"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage4
 msgid "Refused"
-msgstr ""
+msgstr "پذیرش‌نشده"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
+msgid "Relative time compared to track start (seconds)"
+msgstr "زمان نسبی در مقایسه با شروع سخنرانی (ثانیه)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Remaining time before CTA starts (seconds)"
+msgstr "زمان باقیمانده قبل از شروع CTA (ثانیه)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
+msgid "Remaining time before track starts (seconds)"
+msgstr "زمان باقیمانده قبل از شروع سخنرانی (ثانیه)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
@@ -915,27 +1314,55 @@ msgid "Responsible"
 msgstr "پاسخگو"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_user_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_user_id
 msgid "Responsible User"
 msgstr "کاربر مسئول"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
-msgid "Room"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__display_ribbon_style
+msgid "Ribbon Style"
+msgstr "استایل ربان"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "سئو بهینه شده"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_sms_error
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "خطای تحویل پیامک"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "Schedule some tracks to get started !"
+msgstr "برای شروع برخی از سخنرانی‌ها را زمان‌بندی کنید!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
+msgid "Seo name"
+msgstr "نام سئو"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
 msgid "Sequence"
-msgstr "دنباله"
+msgstr "ترتیب"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Set Favorite"
+msgstr "انتخاب به عنوان مورد علاقه "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -943,85 +1370,148 @@ msgid "Show all records which has next action date is before today"
 msgstr "نمایش تمام رکوردهایی که تاریخ اقدام بعدی آنها قبل از امروز است"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Showcase Tracks"
+msgstr "پنجره سخنرانی‌ها"
+
+#. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_sponsor_type__display_ribbon_style__silver
 msgid "Silver"
 msgstr "نقره"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid "Social Stream"
-msgstr ""
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
 msgid "Speaker"
-msgstr ""
+msgstr "سخنران"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Speaker Biography"
-msgstr ""
-
-#. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:164
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speaker Email"
-msgstr ""
+msgstr "ایمیل سخنران"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
-msgid "Speaker Name"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
+msgid "Speaker Photo"
+msgstr "عکس سخنران"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
-msgid "Speaker Phone"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Biography"
+msgstr "بیوگرافی سخنران(ها)"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event_track.py:184
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Email"
+msgstr "ایمیل سخنران(ها)"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Name"
+msgstr "نام سخنران(ها)"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Phone"
+msgstr "تلفن سخنران(ها)"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Picture"
+msgstr "عکس سخنران(ها)"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_track.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #, python-format
 msgid "Speakers"
-msgstr ""
+msgstr "سخنران‌ها"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_sponsor.py:0
+#, python-format
+msgid "Sponsor"
+msgstr "حامی‌مالی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_count
 msgid "Sponsor Count"
-msgstr ""
+msgstr "شمارش حامی‌مالی"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__email
+msgid "Sponsor Email"
+msgstr "ایمیل حامی‌مالی"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__mobile
+msgid "Sponsor Mobile"
+msgstr "مبایل حامی‌مالی"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Sponsor Name"
+msgstr "نام حامی‌مالی"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__phone
+msgid "Sponsor Phone"
+msgstr "تلفن حامی‌مالی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__name
 msgid "Sponsor Type"
-msgstr ""
+msgstr "نوع حامی‌مالی"
 
 #. module: website_event_track
-#: model:ir.actions.act_window,name:website_event_track.action_event_sponsor_type
+#: model:ir.actions.act_window,name:website_event_track.event_sponsor_type_action
 #: model:ir.ui.menu,name:website_event_track.menu_event_sponsor_type
 msgid "Sponsor Types"
-msgstr ""
+msgstr "انواع حامی‌مالی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__url
 msgid "Sponsor Website"
-msgstr ""
+msgstr "وب‌سایت حامی‌مالی"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_kanban
+msgid "Sponsor image"
+msgstr "عکس حامی‌مالی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_id
 msgid "Sponsor/Customer"
-msgstr ""
+msgstr "حامی‌مالی/مشتری"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__sponsor_type_id
 msgid "Sponsoring Type"
-msgstr ""
+msgstr "نوع حمایت مالی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "Sponsors"
+msgstr "حامی‌های مالی"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
+msgid ""
+"Sponsors might be advertised on your event pages footer.<br>\n"
+"    Exhibitors might have a dedicated page with chat room for people to"
+" connect with them."
 msgstr ""
+"حامیان مال می‌توانند در پایین صفحات رویداد شما از تبلیغ شوند. <br> \n"
+"     غرفه داران می‌توانند یک صفحه اختصاصی با اتاق گفتگو داشته باشند تا افراد"
+" بتوانند با آنها ارتباط برقرار کنند."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+msgid "Sponsorship"
+msgstr "حامی‌مالی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -1035,11 +1525,12 @@ msgid "Stage Name"
 msgstr "نام مرحله"
 
 #. module: website_event_track
-#: model:event.track,name:website_event_track.event_track28
-msgid "Status & Strategy"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "Starting in"
+msgstr "شروع در"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__activity_state
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
 msgid ""
 "Status based on activities\n"
@@ -1055,81 +1546,118 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Submission Agreement"
-msgstr ""
+msgstr "توافق نامه ارسال"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Submit Proposal"
-msgstr ""
+msgstr "ارسال پروپوزال"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
-msgid "Tag"
-msgstr "برچسب"
+msgid "Tag Name"
+msgstr "نام برچسب"
 
 #. module: website_event_track
-#: sql_constraint:event.track.tag:0
+#: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
 msgid "Tag name already exists !"
 msgstr "نام برچسب از قبل وجود دارد!"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
 msgid "Tags"
 msgstr "برچسب‌ها"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Introduction"
-msgstr ""
+msgstr "مقدمه گفتگو"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:102
+#: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Talk Proposals"
-msgstr ""
+msgstr "پیشنهادهای گفتگو"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talk Title"
-msgstr ""
+msgstr "عنوان گفتگو"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:96
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk added to your Favorites"
+msgstr "گفتگو به موارد دلخواه شما افزوده شد"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk already in your Favorites"
+msgstr "گفتگو از قبل به موارد دلخواه شما افزوده شده بود."
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk removed from your Favorites"
+msgstr "گفتگو از موارد دلخواه شما حذف شد"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
 #, python-format
 msgid "Talks"
-msgstr ""
+msgstr "گفتگو"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talks Types"
-msgstr ""
+msgstr "نوع گفتگو"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "Thank you for your proposal."
-msgstr ""
+msgstr "از پروپوزال شما متشکریم."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track17
-#: model:event.track,name:website_event_track.event_track29
-msgid "The new marketing strategy"
-msgstr ""
-
-#. module: website_event_track
-#: model:event.track,name:website_event_track.event_track5
-msgid "The new way to promote your creations"
-msgstr ""
+msgstr "آدرس اینترنتی کامل برای دسترسی سند در وب‌سایت."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "This event does not accept proposals."
+msgstr "این رویداد پروپوزال را قبول نمی‌کند."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_website__app_icon
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
 msgstr ""
+"این فیلد تصویری را که به عنوان نماد برنامه تلفن همراه در وب‌سایت (قالب PNG)"
+" استفاده می‌شود، نگه می‌دارد."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,help:website_event_track.field_website__events_app_name
+msgid "This fields holds the Event's Progressive Web App name."
+msgstr "این فیلد نام رویداد وب اپ پیشرفته را در خود دارند."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
+msgstr ""
+"این صفحه هنوز برای خواندن آفلاین ذخیره نشده است. <br/> لطفا اتصال شبکه خود را"
+" بررسی کنید."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
@@ -1137,13 +1665,15 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"این مرحله در نمای کانبان بسته است مگر اینکه آیتمی برای نمایش در آن موجود "
+"باشد."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Timely release of presentation material (slides),\n"
 "                                    for publishing on our website."
-msgstr ""
+msgstr "انتشار به موقع مطالب ارائه (اسلایدها)،\n برای انتشار در وب‌سایت ما."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
@@ -1151,139 +1681,253 @@ msgid "Title"
 msgstr "عنوان"
 
 #. module: website_event_track
-#: selection:event.track,activity_state:0
-msgid "Today"
-msgstr "امروز"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Today Activities"
 msgstr "اقدامات امروز"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Track"
-msgstr ""
+msgstr "سخنرانی"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_visitor
+msgid "Track / Visitor Link"
+msgstr "لینک سخنرانی / بازدیدکننده"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
 msgid "Track Blocked"
-msgstr ""
+msgstr "سخنرانی مسدود شده است"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
 msgid "Track Count"
-msgstr ""
+msgstr "شمارش سخنرانی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date
 msgid "Track Date"
-msgstr ""
+msgstr "تاریخ سخنرانی"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
-msgid "Track Description"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
+msgid "Track End Date"
+msgstr "تاریخ پایان سخنرانی"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
-msgid "Track Proposals on Website"
-msgstr ""
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr "مکان‌های سخنرانی"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
-msgstr ""
+msgstr "سخنرانی آماده است"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_ready
 msgid "Track Ready for Next Stage"
-msgstr ""
+msgstr "سخنرانی برای مرحله بعد آماده است"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
 msgid "Track Stage"
-msgstr ""
+msgstr "مرحله سخنرانی"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
 #: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 msgid "Track Stages"
-msgstr ""
+msgstr "مراحل سخنرانی"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
+#: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
+msgid "Track Tag Categories"
+msgstr "دسته‌بندی برچسب سخنرانی"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Track Tag Category"
+msgstr "دسته‌بندی برچسب سخنرانی"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
 #: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
 msgid "Track Tags"
+msgstr "برچسب‌های سخنرانی"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
+msgid "Track Tags Category"
+msgstr "دسته‌بندی برچسب‌های سخنرانی"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
+msgid "Track Visitor"
+msgstr "بازدیدکننده سخنرانی"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_track_visitor_ids
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_visitor_ids
+#: model:ir.ui.menu,name:website_event_track.event_track_visitor_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Track Visitors"
+msgstr "بازدیدکنندگان سخنرانی"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"Track Visitors store statistics on track attendance, including\n"
+"              wishlist management."
 msgstr ""
+"بازدیدکنندگان سخنرانی، آماری از حضور در سخنرانی را ذخیره می‌کند، از جمله\n"
+"   مدیریت لیست خواسته‌ها."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_soon
+msgid "Track begins soon"
+msgstr "سخنرانی به زودی آغاز می‌شود"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_today
+msgid "Track begins today"
+msgstr "سخنرانی امروز آغاز می‌شود"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
 msgid "Track blocked"
-msgstr ""
+msgstr "سخنرانی مسدود شده است"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__duration
+msgid "Track duration in hours."
+msgstr "مدت زمان سخنرانی به ساعت."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_live
+msgid "Track has started and is ongoing"
+msgstr "سخنرانی آغاز شده است و در حال انجام است"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_done
+msgid "Track is finished"
+msgstr "سخنرانی پایان یافته است"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_upcoming
+msgid "Track is not yet started"
+msgstr "سخنرانی هنوز شروع نشده است"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__track_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
+#: model:ir.ui.menu,name:website_event_track.menu_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
 msgid "Tracks"
-msgstr ""
+msgstr "سخنرانی‌ها"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
 msgid "Tracks Proposals on Website"
-msgstr ""
+msgstr "پیشنهادهای سخنرانی در وب‌سایت"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid ""
-"Tracks define the schedule of your event. These can be a talk, a round "
+"Tracks define the schedule of your event.<br>These can be a talk, a round "
 "table, a meeting, etc."
 msgstr ""
+"سخنرانی‌ها زمان‌بندی رویداد شما را مشخص می‌کنند. <br> اینها می‌توانند یک"
+" گفتگو، یک میز گرد، یک جلسه و غیره باشند."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Tracks on Website"
-msgstr ""
+msgstr "سخنرانی‌های در وب‌سایت"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__activity_exception_decoration
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "نوع کنش ناموفق برروی رکورد."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Unpublished"
+msgstr "منتشر نشده"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_unread
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_unread
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Unread Messages"
 msgstr "پیام‌های خوانده‌نشده"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_unread_counter
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid "Use this tag:"
-msgstr ""
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "View Track"
-msgstr ""
+msgstr "نمایش سخنرانی"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
 msgid "Visible on current website"
+msgstr "قابل رویت در وب‌سایت کنونی"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Visitor"
+msgstr "بازدید کنندگان"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
+msgid "Visitor Wishlist"
+msgstr "لیست خواسته‌ها بازدیدکننده"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
+msgid "Visitors Wishlist"
+msgstr "لیست خواسته‌ها بازدیدکنندگان"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
+msgid "Wait for visitors to wishlist your tracks"
 msgstr ""
+"منتظر باشید تا بازدیدکنندگان سخنرانی‌های شما را به لیست خواسته‌های خود اضافه"
+" کنند"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We did not find any track matching your"
+msgstr "ما هیچ سخنرانی مطابق با "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "We require speakers to accept an agreement in which they commit to:"
 msgstr ""
+"ما از سخنرانان می‌خواهیم توافقی را قبول كنند كه در آن متعهد می‌شوند به:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1296,18 +1940,46 @@ msgid ""
 "                                audience, it will be considered for\n"
 "                                inclusion in the programme."
 msgstr ""
+"ما طیف گسترده‌ای از پرزنتیشن‌ها را می‌پذیریم،\n"
+" از گزارشات مربوط به پروژه‌های دانشگاهی و \n"
+"تجاری گرفته تا آموزش‌ها و مطالعات موردی.\n"
+" تا زمانی که ارائه برای مخاطب جالب و مفید باشد،\n"
+" برای درج در برنامه در نظر گرفته خواهد شد."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
 msgid "We will evaluate your proposition and get back to you shortly."
-msgstr ""
+msgstr "ما پیشنهاد شما را ارزیابی خواهیم کرد و به زودی به شما پاسخ خواهیم داد."
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_tree
+msgid "Website"
+msgstr "وب‌سایت"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
+msgid "Website App Icon"
+msgstr "آیکون اپ وب‌سایت"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
 msgid "Website Event Menu"
-msgstr ""
+msgstr "منوی وب‌سایت رویداد"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
+msgid "Website Image"
+msgstr "تصویر وب‌سایت"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "منوی وب‌سایت"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__website_message_ids
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
 msgid "Website Messages"
 msgstr "پیام‌های وب‌سایت"
@@ -1318,6 +1990,12 @@ msgid "Website URL"
 msgstr "آدرس اینترنتی وب‌سایت"
 
 #. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_visitor
+msgid "Website Visitor"
+msgstr "بازدید کننده وب‌سایت"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__website_message_ids
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
 msgid "Website communication history"
 msgstr "تاریخچه ارتباط با وب‌سایت"
@@ -1343,38 +2021,84 @@ msgid "Website opengraph image"
 msgstr "تصویر اپن‌گراف وب‌سایت"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Your Email"
-msgstr "ایمیل شما"
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Wishlisted By"
+msgstr "در لیست خواسته‌ها قرار گرفته شده توسط"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Your Name"
-msgstr "نام"
+#: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_kanban
+msgid "Wishlisted Tracks"
+msgstr "سخنرانی‌هایی که در لیست خواسته‌ها قرار گرفته شده"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Your Phone"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "You're offline!"
+msgstr "شما آفلاین می‌باشید"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
+msgid "ago"
+msgstr "قبل"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "e.g. : OpenWood Decoration"
+msgstr "به عنوان مثال: صنایع خانگی چوبان"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "e.g. : open.wood.decoration@example.com"
+msgstr "به عنوان مثال: chooban.decoration@example.com"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Get Yours Now !"
+msgstr "به عنوان مثال: همین حالا اقدام کنید!"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr ""
+msgstr "به عنوان مثال، صحبت‌های تجاری انگیزشی"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. http://www.example.com"
+msgstr "به عنوان مثال، http://www.example.com"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "hours"
 msgstr "ساعت"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
-msgid "talks"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "minutes after talk start"
+msgstr "دقیقه بعد از شروع گفتگو"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks
-msgid "unpublished"
-msgstr "منتشر نشده"
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "اکنون در گفتگوی مورد علاقه خود ثبت نام کنید."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "search."
+msgstr "جستجو."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts in"
+msgstr "شروع در"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts on"
+msgstr "شروع در"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "tracks"
+msgstr "سخنرانی‌ها"
