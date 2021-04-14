@@ -185,7 +185,18 @@ class ComposerTextInput extends Component {
      */
     _updateHeight() {
         this._mirroredTextareaRef.el.value = this.composer.textInputContent;
-        this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
+        // Fill the first line of the composer completely and hit "enter"
+        // the scrollbar will appear (before we reach max-height), specifically in firefox, ubuntu
+        var scrollHeight = this._mirroredTextareaRef.el.scrollHeight;
+        if (
+            this.composer.thread &&
+            this.composer.thread.model !== 'mail.channel' &&
+            navigator.userAgent.indexOf("Firefox") != -1 &&
+            navigator.userAgent.indexOf("Linux") != -1
+        ) {
+            scrollHeight += 20;
+        }
+        this._textareaRef.el.style.height = scrollHeight + "px";
     }
 
     //--------------------------------------------------------------------------
