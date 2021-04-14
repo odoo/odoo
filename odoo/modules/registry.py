@@ -135,6 +135,7 @@ class Registry(Mapping):
         # field dependencies
         self.field_depends = Collector()
         self.field_depends_context = Collector()
+        self.field_inverses = Collector()
 
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
@@ -271,20 +272,23 @@ class Registry(Mapping):
         for model in models:
             model._prepare_setup()
 
-        # do the actual setup from a clean state
-        self._m2m = defaultdict(list)
+        self.field_depends.clear()
+        self.field_depends_context.clear()
+        self.field_inverses.clear()
+
+        # do the actual setup
         for model in models:
             model._setup_base()
 
+        self._m2m = defaultdict(list)
         for model in models:
             model._setup_fields()
+        del self._m2m
 
         for model in models:
             model._setup_complete()
 
         # determine field_depends and field_depends_context
-        self.field_depends.clear()
-        self.field_depends_context.clear()
         for model in models:
             for field in model._fields.values():
                 depends, depends_context = field.get_depends(model)
