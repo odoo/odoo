@@ -1,23 +1,37 @@
-odoo.define('hr_timesheet.task_with_hours', function (require) {
-"use strict";
+/** @odoo-module alias=hr_timesheet.task_with_hours **/
 
-var field_registry = require('web.field_registry');
-var relational_fields = require('web.relational_fields');
-var FieldMany2One = relational_fields.FieldMany2One;
+import field_registry from 'web.field_registry';
+import { FieldMany2One } from 'web.relational_fields';
 
-var TaskWithHours = FieldMany2One.extend({
+const TaskWithHours = FieldMany2One.extend({
     /**
      * @override
      */
     init: function () {
         this._super.apply(this, arguments);
         this.additionalContext.hr_timesheet_display_remaining_hours = true;
+        // By default, we keep the no_quick_create value or we set to false.
+        this.nodeOptions.no_quick_create = this.nodeOptions.no_quick_create || false;
     },
     /**
      * @override
      */
     _getDisplayNameWithoutHours: function (value) {
         return value.split(' ‒ ')[0];
+    },
+    /**
+     * @override
+     * @private
+     */
+    _onInputClick: function () {
+        const context = Object.assign(
+            this.record.getContext(this.recordParams),
+            this.additionalContext
+        );
+        // We don't want to quick create if no project is set in the timesheet
+        this.nodeOptions.no_quick_create =
+            this.nodeOptions.no_quick_create || (!('default_project_id' in context) || !context.default_project_id);
+        this._super.apply(this, arguments);
     },
     /**
      * @override
@@ -31,6 +45,4 @@ var TaskWithHours = FieldMany2One.extend({
 
 field_registry.add('task_with_hours', TaskWithHours);
 
-return TaskWithHours;
-
-});
+export default TaskWithHours;
