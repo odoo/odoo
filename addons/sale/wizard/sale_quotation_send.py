@@ -55,27 +55,6 @@ class SaleQuotationSend(models.TransientModel):
 
         return default
 
-    def _compute_quotation_has_email(self):
-        # TODO REFACTOR (delete quotation_has_email, to only get a variable)
-        for wizard in self:
-            if len(wizard.quotation_ids) >= 1:
-                quotation = self.env['sale.order'].search([
-                    ('id', 'in', self.env.context.get('active_ids')),
-                    ('partner_id.email', '=', False)
-                ])
-                if quotation:
-                    wizard.quotation_has_email = "%s\n%s" % (
-                        _("The following quotation(s) will not be sent by email, \
-                            because the customer(s) don't have email address."),
-                        "\n".join([q.name for q in quotation])
-                        )
-                    raise UserError(_(wizard.quotation_has_email))
-                else:
-                    wizard.quotation_has_email = False
-            else:
-                wizard.quotation_has_email = False
-
-
     def send_quotation_action(self):
         self.ensure_one()
 

@@ -819,8 +819,7 @@ Reason(s) of this behavior could be:
         return False
 
     def _find_mail_template(self, force_confirmation_template=False):
-        """
-        Get the appropriate mail template for the current sale's order(s) based on their state.
+        """Get the appropriate mail template for the current sale's order(s) based on their state.
 
         If all SOs are 'done', the mail template is that of ...
         blabla
@@ -878,6 +877,15 @@ Reason(s) of this behavior could be:
             return view
 
         # Else return the wizard for the batch sending
+        quotation_without_email = self.filtered(lambda o: o.partner_id.email == False)
+        
+        if quotation_without_email:
+            message = "%s\n\t - %s" % (
+                _("The following customer don't have email address:"),
+                "\n\t - ".join(set(q.partner_id.name for q in quotation_without_email))
+            )
+            raise UserError(_(message))
+
         active_draft = self.filtered(lambda o: o.state in ['draft', 'sent'])
         active_sale = self.filtered(lambda o: o.state == 'sale')
 

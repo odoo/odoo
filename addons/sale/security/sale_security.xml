@@ -213,5 +213,11 @@
         <field name="model_id" ref="model_sale_order_cancel"/>
         <field name="domain_force">[('create_uid', '=', user.id)]</field>
     </record>
+    
+    <record id="sale_quotation_send_rule" model="ir.rule">
+        <field name="name">Sales Quotation Send Rule</field>
+        <field name="model_id" ref="model_sale_quotation_send"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+    </record>
 </data>
 </odoo>
