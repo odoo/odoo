@@ -38,6 +38,11 @@ class ProjectMilestone(models.Model):
         for ms in self:
             ms.is_deadline_future = ms.deadline and ms.deadline > fields.Date.context_today(self)
 
+    def toggle_is_reached(self, is_reached):
+        self.ensure_one()
+        self.update({'is_reached': is_reached})
+        return self._get_data()
+
     @api.model
     def _get_fields_to_export(self):
         return ['id', 'name', 'deadline', 'is_reached', 'reached_date', 'is_deadline_exceeded', 'is_deadline_future']

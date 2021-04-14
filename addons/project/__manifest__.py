@@ -63,9 +63,12 @@
             'project/static/src/js/tours/project.js',
             'project/static/src/js/project_calendar.js',
             'project/static/src/js/burndown_chart/*',
+            'project/static/src/js/right_panel/*',
+            'project/static/src/js/update/*',
             'project/static/src/js/widgets/*',
             'project/static/src/scss/project_dashboard.scss',
             'project/static/src/scss/project_form.scss',
+            'project/static/src/scss/project_rightpanel.scss',
             'project/static/src/scss/project_widgets.scss',
         ],
         'web.assets_frontend': [
