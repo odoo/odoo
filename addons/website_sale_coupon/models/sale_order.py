@@ -51,6 +51,7 @@ class SaleOrder(models.Model):
         """
         super()._compute_website_order_line()
         for order in self:
+            touched = False
             # TODO: potential performance bottleneck downstream
             programs = order._get_applied_programs_with_rewards_on_current_order()
             for program in programs:
@@ -70,8 +71,12 @@ class SaleOrder(models.Model):
                         'product_uom': program_lines[0].product_uom.id,
                         'order_id': order.id,
                         'is_reward_line': True,
+                        'sequence': program_lines[0].sequence,
                     })
                     order.website_order_line -= program_lines
+                    touched = True
+            if touched:
+                order.website_order_line = order.website_order_line.sorted('sequence')
 
     def _compute_cart_info(self):
         super(SaleOrder, self)._compute_cart_info()

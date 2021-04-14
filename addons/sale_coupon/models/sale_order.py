@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.tools.misc import formatLang
 
+REWARD_SALE_ORDER_LINE_SEQUENCE = 100
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -110,6 +111,7 @@ class SaleOrder(models.Model):
             'name': _("Free Product") + " - " + program.reward_product_id.name,
             'product_uom': program.reward_product_id.uom_id.id,
             'tax_id': [(4, tax.id, False) for tax in taxes],
+            'sequence': REWARD_SALE_ORDER_LINE_SEQUENCE,
         }
 
     def _get_paid_order_lines(self):
@@ -151,6 +153,7 @@ class SaleOrder(models.Model):
                 'product_uom': program.discount_line_product_id.uom_id.id,
                 'is_reward_line': True,
                 'tax_id': [(4, tax.id, False) for tax in taxes],
+                'sequence': REWARD_SALE_ORDER_LINE_SEQUENCE,
             }]
         reward_dict = {}
         lines = self._get_paid_order_lines()
@@ -170,6 +173,7 @@ class SaleOrder(models.Model):
                         'product_uom': program.discount_line_product_id.uom_id.id,
                         'is_reward_line': True,
                         'tax_id': [(4, tax.id, False) for tax in taxes],
+                        'sequence': REWARD_SALE_ORDER_LINE_SEQUENCE,
                     }
         elif program.discount_apply_on in ['specific_products', 'on_order']:
             if program.discount_apply_on == 'specific_products':
@@ -201,6 +205,7 @@ class SaleOrder(models.Model):
                             'product_uom': program.discount_line_product_id.uom_id.id,
                             'is_reward_line': True,
                             'tax_id': [(4, tax.id, False) for tax in taxes],
+                            'sequence': REWARD_SALE_ORDER_LINE_SEQUENCE,
                         }
                         currently_discounted_amount += discount_line_amount
 

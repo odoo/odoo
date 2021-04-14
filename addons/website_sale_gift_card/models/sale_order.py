@@ -7,11 +7,6 @@ from odoo import models
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _compute_website_order_line(self):
-        super()._compute_website_order_line()
-        for order in self:
-            order.website_order_line = order.website_order_line.sorted(lambda ol: ol.gift_card_id.id)
-
     def _compute_cart_info(self):
         super()._compute_cart_info()
         for order in self:
