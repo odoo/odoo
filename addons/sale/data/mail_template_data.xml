@@ -196,7 +196,7 @@
                 </td>
             </tr>
         </table>
-        % if object.carrier_id:
+        % if object.carrier_id and object.carrier_id.delivery_type == 'fixed':
         <table width="100%" style="color: #454748; font-size: 12px;">
             <tr>
                 <td>
