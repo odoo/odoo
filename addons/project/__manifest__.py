@@ -29,6 +29,8 @@
         'views/analytic_views.xml',
         'views/digest_views.xml',
         'views/rating_views.xml',
+        'views/project_update_views.xml',
+        'views/project_update_templates.xml',
         'views/project_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
@@ -60,6 +62,7 @@
             'project/static/src/js/widgets/*',
             'project/static/src/scss/project_dashboard.scss',
             'project/static/src/scss/project_form.scss',
+            'project/static/src/scss/project_widgets.scss',
         ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
