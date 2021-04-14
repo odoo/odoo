@@ -544,6 +544,19 @@ def email_references(references):
             is_private = True
     return (ref_match, model, thread_id, hostname, is_private)
 
+
+def email_domain_extract(email):
+    """Return the domain of the given email."""
+    if not email:
+        return
+
+    email_split = getaddresses([email])
+    if not email_split or not email_split[0]:
+        return
+
+    _, _, domain = email_split[0][1].rpartition('@')
+    return domain
+
 # was mail_message.decode()
 def decode_smtp_header(smtp_header, quoted=False):
     """Returns unicode() string conversion of the given encoded smtp header
@@ -574,3 +587,29 @@ def decode_smtp_header(smtp_header, quoted=False):
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
     return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+
+def encapsulate_email(old_email, new_email):
+    """Change the FROM of the message and use the old one as name.
+
+    e.g.
+    * Old From: "Admin" <admin@gmail.com>
+    * New From: notifications@odoo.com
+    * Output:   "Admin (admin@gmail.com)" <notifications@odoo.com>
+    """
+    old_email_split = getaddresses([old_email])
+    if not old_email_split or not old_email_split[0]:
+        return old_email
+
+    new_email_split = getaddresses([new_email])
+    if not new_email_split or not new_email_split[0]:
+        return
+
+    if old_email_split[0][0]:
+        name_part = '%s (%s)' % old_email_split[0]
+    else:
+        name_part = old_email_split[0][1]
+
+    return formataddr((
+        name_part,
+        new_email_split[0][1],
+    ))
