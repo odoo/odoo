@@ -255,7 +255,7 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
 });
 
 publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
-    selector: 'header.o_header_fixed',
+    selector: 'header.o_header_fixed:not(.o_header_sidebar)',
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -367,7 +367,7 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
 });
 
 publicWidget.registry.DisappearingHeader = BaseDisappearingHeader.extend({
-    selector: 'header.o_header_disappears',
+    selector: 'header.o_header_disappears:not(.o_header_sidebar)',
 
     //--------------------------------------------------------------------------
     // Private
@@ -390,7 +390,7 @@ publicWidget.registry.DisappearingHeader = BaseDisappearingHeader.extend({
 });
 
 publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
-    selector: 'header.o_header_fade_out',
+    selector: 'header.o_header_fade_out:not(.o_header_sidebar)',
 
     //--------------------------------------------------------------------------
     // Private
