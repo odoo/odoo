@@ -11,12 +11,9 @@
                     </t>
                 </div>
                 <div class="subpads">
-                    <ActionpadWidget client="selectedClient" />
+                    <ActionpadWidget client="selectedClient" t-on-switchpane="mobileState.showDetails = false" />
                     <NumpadWidget />
                 </div>
-            </div>
-            <div class="back-to-list" t-on-click="mobileState.showDetails = false">
-                <span>Back to list</span>
             </div>
         </div>
         <div t-else="" class="rightpane">

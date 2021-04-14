@@ -3,7 +3,7 @@
 
     <t t-name="SaleOrderList" owl="1">
         <div class="orders">
-            <div class="order-row header">
+            <div class="order-row header" t-att-class="{ oe_hidden: env.isMobile }">
                 <div class="header name">Order</div>
                 <div class="header date">Date</div>
                 <div class="header customer">Customer</div>

@@ -3636,6 +3636,11 @@ td {
 
 @media screen and (max-width: 768px) {
 
+    .pos .rightpane,
+    .pos .rightpane-header {
+        width: 100%;
+    }
+
     .pos .search-bar-portal .search-box .icon .fa-search {
         color: #f0f0f0;
     }
@@ -3649,6 +3654,11 @@ td {
         margin: 5px;
     }
 
+    .pos .order-management-screen .order-list {
+        display: flex;
+        flex-direction: column;
+    }
+
     .pos .ticket-screen .order-table .order-row .col:first-child {
         font-weight:bold;
     }
@@ -3658,7 +3668,39 @@ td {
     }
 
     .pos .ticket-screen .order-table .order-row.delete-button {
-        background: #DDD;
+        background: #bfbfbf;
+    }
+    .pos .order-management-screen .order-table.order-row {
+        display: initial;
+        justify-content: initial;
+        margin: 10px;
+        border: 1px solid black;
+    }
+    .pos .order-management-screen .order-row.item {
+        border: 0;
+        justify-content: space-between;
+        background: white;
+    }
+    .pos .order-management-screen .order-row.item:nth-child(odd) {
+        background: rgb(230, 230, 230);
+    }
+    .pos .order-management-screen .order-table.highlight .order-row.item {
+        background: rgb(110,200,155);
+    }
+    .pos .order-management-screen .order-table.highlight .order-row.item:nth-child(odd)  {
+        background: rgb(110, 200, 100);
+    }
+    .pos .product-list {
+        justify-content: space-between;
+    }
+    .pos .rightpane-header > .category-list.simple {
+        flex-wrap: nowrap;
+    }
+    .pos .order-row {
+        flex-direction: initial;
+    }
+    .pos .ticket-screen .orders .col.end {
+        text-align: end;
     }
 }
 

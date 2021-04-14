@@ -3,14 +3,56 @@
 
     <t t-name="SaleOrderRow" owl="1">
         <div class="order-row"
-        t-att-class="{ highlight: highlighted }"
+        t-att-class="{ highlight: highlighted, 'order-table': env.isMobile }"
         t-on-click="trigger('click-sale-order', props.order)">
-            <div class="item name"><t t-esc="name" /></div>
-            <div class="item date"><t t-esc="date" /></div>
-            <div class="item customer"><t t-esc="customer" /></div>
-            <div class="item salesman"><t t-esc="salesman" /></div>
-            <div class="item total"><t t-esc="total" /></div>
-            <div class="item state"><t t-esc="state" /></div>
+            <div class="item name" t-att-class="{ 'order-row': env.isMobile }">
+                <div class="col" t-if="env.isMobile">
+                    Order
+                </div>
+                <div t-att-class="{ col: env.isMobile, end: env.isMobile }">
+                    <t t-esc="name"/>
+                </div>
+            </div>
+            <div class="item date" t-att-class="{ 'order-row': env.isMobile }">
+                <div class="col" t-if="env.isMobile">
+                    Date
+                </div>
+                <div t-att-class="{ col: env.isMobile, end: env.isMobile }">
+                    <t t-esc="date"/>
+                </div>
+            </div>
+            <div class="item customer" t-att-class="{ 'order-row': env.isMobile }">
+                <div class="col" t-if="env.isMobile">
+                    Customer
+                </div>
+                <div t-att-class="{ col: env.isMobile, end: env.isMobile }">
+                    <t t-esc="customer"/>
+                </div>
+            </div>
+            <div class="item salesman" t-att-class="{ 'order-row': env.isMobile }">
+                <div class="col" t-if="env.isMobile">
+                    Salesman
+                </div>
+                <div t-att-class="{ col: env.isMobile, end: env.isMobile }">
+                    <t t-esc="salesman"/>
+                </div>
+            </div>
+            <div class="item total" t-att-class="{ 'order-row': env.isMobile }">
+                <div class="col" t-if="env.isMobile">
+                    Total
+                </div>
+                <div t-att-class="{ col: env.isMobile, end: env.isMobile }">
+                    <t t-esc="total"/>
+                </div>
+            </div>
+            <div class="item state" t-att-class="{ 'order-row': env.isMobile }">
+                <div class="col" t-if="env.isMobile">
+                    State
+                </div>
+                <div t-att-class="{ col: env.isMobile, end: env.isMobile }">
+                    <t t-esc="state"/>
+                </div>
+            </div>
         </div>
     </t>
 
