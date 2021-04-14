@@ -5,4 +5,39 @@
         Create Sales Order
     </button>
 
+    <t t-inherit="project.ProjectRightPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_rightpanel_section')][1]" position="before">
+            <t t-if="state.data.user.is_project_manager &amp;&amp; state.data.profitability_items.data.length > 0">
+                <t t-set="profitability_items" t-value="state.data.profitability_items"/>
+                <div class="o_rightpanel_section">
+                    <div class="o_rightpanel_header">
+                        <div class="o_rightpanel_title">
+                            <t t-if="profitability_items.allow_billable">Profitability</t>
+                            <t t-else="">Recorded Hours</t>
+                        </div>
+                        <span class="o_rightpanel_button" t-if="profitability_items.action">
+                            <a t-on-click="onProjectActionClick"
+                            t-att-data-action="profitability_items.action"
+                            data-type="object">
+                            See Overview
+                            </a>
+                        </span>
+                    </div>
+
+                    <div class="o_rightpanel_data">
+                        <div t-foreach="profitability_items.data" t-as="profitability" t-key="profitability.name" class="o_rightpanel_data_row">
+                            <span class="o_rightpanel_left_col o_rightpanel_left_text"><t t-esc="profitability.name"/></span>
+                            <t t-if="profitability.color">
+                                <span t-attf-class="o_rightpanel_right_col o_color_{{profitability.color}}"><b><t t-esc="profitability.value"/></b></span>
+                            </t>
+                            <t t-else="">
+                                <span class="o_rightpanel_right_col"><t t-esc="profitability.value"/></span>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
 </templates>
