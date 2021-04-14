@@ -154,42 +154,49 @@ def _hasclass(context, *cls):
     return node_classes.issuperset(cls)
 
 
-def get_view_arch_from_file(filename, xmlid):
-    doc = etree.parse(filename)
+def get_view_arch_from_file(filepath, xmlid):
+    module, view_id = xmlid.split('.')
 
-    xmlid_search = (xmlid, xmlid.split('.')[1])
+    xpath = f"//*[@id='{xmlid}' or @id='{view_id}']"
+    # when view is created from model with inheritS of ir_ui_view, the
+    # xmlid has been suffixed by '_ir_ui_view'. We need to also search
+    # for views without this prefix.
+    if view_id.endswith('_ir_ui_view'):
+        # len('_ir_ui_view') == 11
+        xpath = xpath[:-1] + f" or @id='{xmlid[:-11]}' or @id='{view_id[:-11]}']"
 
-    # when view is created from model with inheritS of ir_ui_view, the xml id has been suffixed by '_ir_ui_view'
-    suffix = '_ir_ui_view'
-    if xmlid.endswith(suffix):
-        xmlid_search += (xmlid.rsplit(suffix, 1)[0], xmlid.split('.')[1].rsplit(suffix, 1)[0])
+    document = etree.parse(filepath)
+    for node in document.xpath(xpath):
+        if node.tag == 'record':
+            field_arch = node.find('field[@name="arch"]')
+            if field_arch is not None:
+                _fix_multiple_roots(field_arch)
+                inner = ''.join(
+                    etree.tostring(child, encoding='unicode')
+                    for child in field_arch.iterchildren()
+                )
+                return field_arch.text + inner
 
-    for node in doc.xpath('//*[%s]' % ' or '.join(["@id='%s'" % _id for _id in xmlid_search])):
-        if node.tag in ('template', 'record'):
-            if node.tag == 'record':
-                field = node.find('field[@name="arch"]')
-                if field is None:
-                    if node.find('field[@name="view_id"]') is not None:
-                        view_id = node.find('field[@name="view_id"]').attrib.get('ref')
-                        ref_id = '%s%s' % ('.' not in view_id and xmlid.split('.')[0] + '.' or '', view_id)
-                        return get_view_arch_from_file(filename, ref_id)
-                    else:
-                        return None
-                _fix_multiple_roots(field)
-                inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
-                return field.text + inner
-            elif node.tag == 'template':
-                # The following dom operations has been copied from convert.py's _tag_template()
-                if not node.get('inherit_id'):
-                    node.set('t-name', xmlid)
-                    node.tag = 't'
-                else:
-                    node.tag = 'data'
-                node.attrib.pop('id', None)
-                return etree.tostring(node, encoding='unicode')
-    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid_search)
+            field_view = node.find('field[@name="view_id"]')
+            if field_view is not None:
+                ref_module, _, ref_view_id = field_view.attrib.get('ref').rpartition('.')
+                ref_xmlid = f'{ref_module or module}.{ref_view_id}'
+                return get_view_arch_from_file(filepath, ref_xmlid)
+
+            return None
+
+        elif node.tag == 'template':
+            # The following dom operations has been copied from convert.py's _tag_template()
+            if not node.get('inherit_id'):
+                node.set('t-name', xmlid)
+                node.tag = 't'
+            else:
+                node.tag = 'data'
+            node.attrib.pop('id', None)
+            return etree.tostring(node, encoding='unicode')
+
+    _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filepath, xmlid)
     return None
-
 
 
 xpath_utils = etree.FunctionNamespace(None)
