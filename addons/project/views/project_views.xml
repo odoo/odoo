@@ -261,6 +261,16 @@
                                 Burndown Chart
                             </span>
                         </button>
+                        <button class="oe_stat_button" name="%(project.project_milestone_all)d" type="action" icon="fa-check-square-o">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="milestone_count" nolabel="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Milestones
+                                </span>
+                            </div>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
@@ -399,6 +409,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
                         <filter string="Customer" name="Partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by': 'last_update_status'}"/>
                     </group>
                 </search>
             </field>
@@ -419,6 +430,9 @@
                     <field name="privacy_visibility" optional="hide"/>
                     <field name="label_tasks" optional="hide"/>
                     <field name="company_id" optional="show"  groups="base.group_multi_company"/>
+                    <field name="date" string="Deadline"/>
+                    <field name="last_update_color" invisible="1"/>
+                    <field name="last_update_status" string="Status" optional="show" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
                 </tree>
             </field>
         </record>
@@ -521,6 +535,8 @@
                     <field name="date"/>
                     <field name="doc_count"/>
                     <field name="privacy_visibility"/>
+                    <field name="last_update_color"/>
+                    <field name="last_update_status"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
@@ -589,13 +605,20 @@
                                     <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /></span>
                                 </div>
 
-                                <div class="o_project_kanban_boxes">
-                                    <a class="o_project_kanban_box" name="action_view_tasks" type="object">
-                                        <div>
-                                            <span class="o_value"><t t-esc="record.task_count.value"/></span>
-                                            <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <div class="o_project_kanban_boxes">
+                                            <a class="o_project_kanban_box" name="action_view_tasks" type="object">
+                                                <div>
+                                                    <span class="o_value"><t t-esc="record.task_count.value"/></span>
+                                                    <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
+                                                </div>
+                                            </a>
                                         </div>
-                                    </a>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
+                                    </div>
                                 </div>
                             </div>
                         </t>
