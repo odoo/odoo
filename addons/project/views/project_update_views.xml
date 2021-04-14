@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="project_update_view_search" model="ir.ui.view">
+        <field name="name">project.update.view.search</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <search string="Search Update">
+                <field name="name"/>
+                <field name="project_id" invisible="1"/>
+            </search>
+        </field>
+    </record>
+
     <record id="project_update_view_form" model="ir.ui.view">
         <field name="name">project.update.view.form</field>
         <field name="model">project.update</field>
@@ -32,6 +43,60 @@
                     <field name="message_ids"/>
                 </div>
             </form>
+        </field>
+    </record>
+
+    <record id="project_update_view_kanban" model="ir.ui.view">
+        <field name="name">project.update.view.kanban</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <kanban class="o_pupdate_kanban" sample="1">
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_global_click o_pupdate_kanban_card">
+                            <!-- Project Update Kanban View is always ungrouped - see js_class -->
+                            <div class="o_kanban_detail_ungrouped row">
+                                <div class="col-lg-4 o_pupdate_name">
+                                    <b><field name="name_cropped"/></b>
+                                    <div>
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                        <t t-esc="record.user_id.value"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <field name="color" invisible="1"/>
+                                    <b><field name="status" widget="status_with_color" options="{'color_field': 'color'}"/></b>
+                                </div>
+                                <div class="col-lg-2">
+                                    <b><field name="progress_percentage" widget="percentage"/></b>
+                                    <div>Progress</div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <b><field name="date"/></b>
+                                    <div>Date</div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="project_update_all_action" model="ir.actions.act_window">
+        <field name="name">Project Updates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">project.update</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="search_view_id" ref="project_update_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            No updates found. Let's create one!
+            </p><p>
+            Get a snapshot of the status of your project and share its progress with key stakeholders.
+            </p>
         </field>
     </record>
 

@@ -17,4 +17,23 @@
 
     <span t-name="project.statusWithColor" t-att-class="'o_status_bubble o_color_bubble_' + color"></span>
 
+    <div t-name="project.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
+            <t t-call="project.ControlPanelContent"/>
+        </xpath>
+    </div>
+
+    <t t-name="project.ControlPanelContent" owl="1">
+        <t t-if="show_project_update">
+            <li t-if="is_project_manager" class="o_project_updates_breadcrumb o_project_updates_clickable" t-on-click="onStatusClick">
+                <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}} position-relative'"/>
+                <span class="font-italic"><t t-esc="data.status"/></span>
+            </li>
+            <li t-else="" class="o_project_updates_breadcrumb">
+                <span t-attf-class="o_status_bubble o_color_bubble_{{data.color}} position-relative'"/>
+                <span class="font-italic"><t t-esc="data.status"/></span>
+            </li>
+        </t>
+    </t>
+
 </templates>

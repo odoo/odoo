@@ -5,6 +5,7 @@ import Dialog from 'web.Dialog';
 import ListView from 'web.ListView';
 import ListController from 'web.ListController';
 import viewRegistry from 'web.view_registry';
+import { ProjectControlPanel } from '@project/js/project_control_panel';
 
 const ProjectListController = ListController.extend({
     _getActionMenuItems(state) {
@@ -100,6 +101,7 @@ const ProjectListController = ListController.extend({
 export const ProjectListView = ListView.extend({
     config: Object.assign({}, ListView.prototype.config, {
         Controller: ProjectListController,
+        ControlPanel: ProjectControlPanel,
     }),
 });
 

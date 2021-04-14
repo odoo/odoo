@@ -498,6 +498,18 @@ class Project(models.Model):
         action_context['search_default_project_id'] = self.id
         return dict(action, context=action_context)
 
+    # ---------------------------------------------
+    #  PROJECT UPDATES
+    # ---------------------------------------------
+
+    def get_last_update_or_default(self):
+        self.ensure_one()
+        labels = dict(self._fields['last_update_status']._description_selection(self.env))
+        return {
+            'status': labels[self.last_update_status],
+            'color': self.last_update_color,
+        }
+
     def _get_tasks_analysis_counts(self, created=False, updated=False):
         tasks = self.env['project.task'].search([('display_project_id', '=', self.id)])
         open_tasks_count = created_tasks_count = updated_tasks_count = 0
@@ -516,6 +528,7 @@ class Project(models.Model):
             updated_tasks_count=updated_tasks_count,
             tasks_count=tasks_count
         )
+
     # ---------------------------------------------------
     #  Business Methods
     # ---------------------------------------------------

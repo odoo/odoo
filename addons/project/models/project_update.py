@@ -48,6 +48,7 @@ class ProjectUpdate(models.Model):
     description = fields.Html()
     date = fields.Date(default=fields.Date.context_today, tracking=True)
     project_id = fields.Many2one('project.project', required=True)
+    name_cropped = fields.Char(compute="_compute_name_cropped")
 
     @api.depends('status')
     def _compute_color(self):
@@ -58,6 +59,11 @@ class ProjectUpdate(models.Model):
     def _compute_progress_percentage(self):
         for u in self:
             u.progress_percentage = u.progress / 100
+
+    @api.depends('name')
+    def _compute_name_cropped(self):
+        for u in self:
+            u.name_cropped = (u.name[:57] + '...') if len(u.name) > 60 else u.name
 
     # ---------------------------------
     # ORM Override
