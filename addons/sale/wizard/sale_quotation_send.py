@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.misc import get_lang
 
 class SaleQuotationSend(models.TransientModel):
     _name = 'sale.quotation.send'

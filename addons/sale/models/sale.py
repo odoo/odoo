@@ -878,8 +878,8 @@ Reason(s) of this behavior could be:
             return view
 
         # Else return the wizard for the batch sending
-        quotation_without_email = self.filtered(lambda o: o.partner_id.email == False)
-        
+        quotation_without_email = self.filtered(lambda o: not o.partner_id.email)
+
         if quotation_without_email:
             message = "%s\n\t - %s" % (
                 _("The following customer don't have email address:"),
