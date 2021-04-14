@@ -965,7 +965,7 @@ class Module(models.Model):
                     [('id', 'not in', excluded_category_ids)],
                 ])
 
-            records = self.env['ir.module.category'].search_read(domain, ['display_name'], order="sequence")
+            records = self.env['ir.module.category'].search_read(domain, ['display_name'], order=kwargs.get('order', "sequence"))
 
             values_range = OrderedDict()
             for record in records:

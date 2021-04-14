@@ -1979,6 +1979,7 @@ QUnit.module('Views', {
                         expand: true,
                         filter_domain: [],
                         search_domain: [],
+                        order: false,
                         comodel_domain: [['parent_id', '=', false]],
                         group_domain: [],
                         enable_counters: true,
@@ -2663,6 +2664,93 @@ QUnit.module('Views', {
         assert.containsNone(document.body, '.modal .o_search_panel');
 
         form.destroy();
+    });
+
+    QUnit.test('search panel sorting on categories and filters', async function (assert) {
+        assert.expect(6);
+
+        let searchPanelSelectRangeCount = 0;
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="company_id" order="category_id"/>
+                            <field select="multi" name="category_id" order="name"/>
+                            <field name="state"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_kw/partner/search_panel_select_range") {
+                    searchPanelSelectRangeCount += 1;
+                    if (searchPanelSelectRangeCount === 1) {
+                        assert.deepEqual(args.args, ["company_id"],
+                            'search_panel_select_range called for company_id');
+                        assert.deepEqual(args.kwargs,
+                            {
+                              "category_domain": [],
+                              "enable_counters": false,
+                              "expand": false,
+                              "filter_domain": [],
+                              "hierarchize": true,
+                              "limit": 200,
+                              "order": "category_id",
+                              "search_domain": []
+                            },
+                            'should pass order argument to sort categories by category_id.');
+                    }
+                    if (searchPanelSelectRangeCount === 2) {
+                        assert.deepEqual(args.args, ["state"],
+                            'search_panel_select_range called for state');
+                        assert.deepEqual(args.kwargs,
+                            {
+                              "category_domain": [],
+                              "enable_counters": false,
+                              "expand": false,
+                              "filter_domain": [],
+                              "hierarchize": true,
+                              "limit": 200,
+                              "order": false,
+                              "search_domain": []
+                            },
+                            'should pass order argument to sort categories by name.');
+                    }
+                }
+                if (route === "/web/dataset/call_kw/partner/search_panel_select_multi_range") {
+                    assert.deepEqual(args.args, ["category_id"],
+                        'search_panel_select_range called for category_id');
+                    assert.deepEqual(args.kwargs, {
+                        "category_domain": [],
+                        "comodel_domain": [],
+                        "enable_counters": false,
+                        "expand": false,
+                        "filter_domain": [],
+                        "group_by": false,
+                        "group_domain": [],
+                        "limit": 200,
+                        "order": "name",
+                        "search_domain": []
+                      }, 'should pass order argument to sort the filters by name.');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        kanban.destroy();
     });
 
 

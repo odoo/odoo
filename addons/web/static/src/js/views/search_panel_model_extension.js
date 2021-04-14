@@ -55,6 +55,7 @@
      * @prop {boolean} expand
      * @prop {string} fieldName
      * @prop {string} icon
+     * @prop {string} order
      * @prop {number} id
      * @prop {number} index
      * @prop {number} limit
@@ -427,6 +428,7 @@
                     expand: !!pyUtils.py_eval(attrs.expand || "0"),
                     fieldName: attrs.name,
                     icon: attrs.icon,
+                    order: attrs.order,
                     id: nextSectionId++,
                     index,
                     limit: pyUtils.py_eval(attrs.limit || String(DEFAULT_LIMIT)),
@@ -508,6 +510,7 @@
                         expand: category.expand,
                         filter_domain: filterDomain,
                         hierarchize: category.hierarchize,
+                        order: category.order || false,
                         limit: category.limit,
                         search_domain: this.searchDomain,
                     },
@@ -544,6 +547,7 @@
                         filter_domain: this._getFilterDomain(filter.id),
                         expand: filter.expand,
                         group_by: filter.groupBy || false,
+                        order: filter.order || false,
                         group_domain: this._getGroupDomain(filter),
                         limit: filter.limit,
                         search_domain: this.searchDomain,
