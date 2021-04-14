@@ -34,7 +34,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             // So the result is only accurate if each row is just single line.
             const flexContainer = this.el.querySelector('.flex-container');
             const cpEl = this.el.querySelector('.control-panel');
-            const headerEl = this.el.querySelector('.order-row.header');
+            const headerEl = this.el.querySelector('.header-row');
             const val = Math.trunc(
                 (flexContainer.offsetHeight - cpEl.offsetHeight - headerEl.offsetHeight) /
                     headerEl.offsetHeight
