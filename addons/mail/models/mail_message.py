@@ -1047,11 +1047,11 @@ class Message(models.Model):
             limit=limit, orderby=orderby, lazy=lazy,
         )
 
-    def export_data(self, fields_to_export):
+    def export_data(self, fields_to_export, raw_data=False):
         if not self.env.user._is_admin():
             raise AccessError(_("Only administrators are allowed to export mail message"))
 
-        return super(Message, self).export_data(fields_to_export)
+        return super(Message, self).export_data(fields_to_export, raw_data)
 
     #------------------------------------------------------
     # Messaging API
