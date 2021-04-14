@@ -378,7 +378,9 @@ class AccountPayment(models.Model):
                 available_payment_methods = pay.journal_id.outbound_payment_method_ids
 
             # Select the first available one by default.
-            if available_payment_methods:
+            if pay.payment_method_id in available_payment_methods:
+                pay.payment_method_id = pay.payment_method_id
+            elif available_payment_methods:
                 pay.payment_method_id = available_payment_methods[0]._origin
             else:
                 pay.payment_method_id = False
