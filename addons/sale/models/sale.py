@@ -885,7 +885,7 @@ Reason(s) of this behavior could be:
                 _("The following customer don't have email address:"),
                 "\n\t - ".join(set(q.partner_id.name for q in quotation_without_email))
             )
-            raise UserError(_(message))
+            raise UserError(message)
 
         active_draft = self.filtered(lambda o: o.state in ['draft', 'sent'])
         active_sale = self.filtered(lambda o: o.state == 'sale')
