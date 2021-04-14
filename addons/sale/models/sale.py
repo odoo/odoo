@@ -854,6 +854,7 @@ Reason(s) of this behavior could be:
             'context': {
                 'mark_so_as_sent': True,
                 'active_model': 'sale.order',
+                'custom_layout': 'mail.mail_notification_light',
             },
             'target': 'new',
         }
