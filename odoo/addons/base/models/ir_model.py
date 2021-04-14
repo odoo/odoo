@@ -756,7 +756,7 @@ class IrModelFields(models.Model):
                 for dep in model._dependent_fields(field):
                     if dep.manual:
                         failed_dependencies.append((field, dep))
-                for inverse in model._field_inverses.get(field, ()):
+                for inverse in model.pool.field_inverses[field]:
                     if inverse.manual and inverse.type == 'one2many':
                         failed_dependencies.append((field, inverse))
 

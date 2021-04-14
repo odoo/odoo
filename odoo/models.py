@@ -2898,8 +2898,6 @@ class BaseModel(metaclass=MetaModel):
         self._add_inherited_fields()
 
         # 4. initialize more field metadata
-        cls._field_inverses = Collector()   # inverse fields for related fields
-
         cls._setup_done = True
 
         for field in cls._fields.values():
@@ -3690,7 +3688,7 @@ Fields:
                 # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
                 # TODO: check whether still necessary
                 records_to_inverse[field] = self.filtered('id')
-            if field.relational or self._field_inverses[field]:
+            if field.relational or self.pool.field_inverses[field]:
                 relational_names.append(fname)
             if field.inverse or (field.compute and not field.readonly):
                 if field.store or field.type not in ('one2many', 'many2many'):
@@ -4079,7 +4077,7 @@ Fields:
                 else:
                     cache_value = field.convert_to_cache(value, record)
                     self.env.cache.set(record, field, cache_value)
-                    if field.type in ('many2one', 'many2one_reference') and record._field_inverses[field]:
+                    if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
                         inverses_update[(field, cache_value)].append(record.id)
 
         for (field, value), record_ids in inverses_update.items():
@@ -5230,7 +5228,7 @@ Fields:
                 inv_recs = self[field.name].filtered(lambda r: not r.id)
                 if not inv_recs:
                     continue
-                for invf in self._field_inverses[field]:
+                for invf in self.pool.field_inverses[field]:
                     # DLE P98: `test_40_new_fields`
                     # /home/dle/src/odoo/master-nochange-fp/odoo/addons/test_new_api/tests/test_new_fields.py
                     # Be careful to not break `test_onchange_taxes_1`, `test_onchange_taxes_2`, `test_onchange_taxes_3`
@@ -5813,7 +5811,7 @@ Fields:
 
         # invalidate fields and inverse fields, too
         spec = [(f, ids) for f in fields] + \
-               [(invf, None) for f in fields for invf in self._field_inverses[f]]
+               [(invf, None) for f in fields for invf in self.pool.field_inverses[f]]
         self.env.cache.invalidate(spec)
 
     def modified(self, fnames, create=False, before=False):
@@ -5914,7 +5912,7 @@ Fields:
             else:
                 # val is another tree of dependencies
                 model = self.env[key.model_name]
-                for invf in model._field_inverses[key]:
+                for invf in model.pool.field_inverses[key]:
                     # use an inverse of field without domain
                     if not (invf.type in ('one2many', 'many2many') and invf.domain):
                         if invf.type == 'many2one_reference':
