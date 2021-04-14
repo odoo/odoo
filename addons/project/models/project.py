@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import json
 from collections import defaultdict
 from datetime import timedelta, datetime
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
-from odoo.tools.misc import format_date, get_lang
 from odoo.osv.expression import OR
 
 from .project_task_recurrence import DAYS, WEEKS
@@ -508,6 +508,58 @@ class Project(models.Model):
         return {
             'status': labels[self.last_update_status],
             'color': self.last_update_color,
+        }
+
+    def get_panel_data(self):
+        self.ensure_one()
+        return {
+            'user': self._get_user_values(),
+            'tasks_analysis': self._get_tasks_analysis(),
+            'milestones': self._get_milestones(),
+        }
+
+    def _get_user_values(self):
+        return {
+            'is_project_manager': self.user_has_groups('project.group_project_manager'),
+        }
+
+    def _get_tasks_analysis(self):
+        self.ensure_one()
+        counts = self._get_tasks_analysis_counts(updated=True)
+        data = [{
+            'name': _("Open Tasks"),
+            'action': {
+                'action': "project.action_project_task_user_tree",
+                'additional_context': json.dumps({
+                    'search_default_project_id': self.id,
+                    'active_id': self.id,
+                    'search_default_open_tasks': True,
+                    'search_default_Stage': True,
+                    'search_default_User': True
+                }),
+            },
+            'value': counts['open_tasks_count']
+        }, {
+            'name': _("Updated (Last 30 Days)"),
+            'action': {
+                'action': "project.action_project_task_burndown_chart_report",
+                'additional_context': json.dumps({
+                    'search_default_project_id': self.id,
+                    'active_id': self.id,
+                    'search_default_last_month': 1,
+                    'graph_mode': 'bar'
+                }),
+            },
+            'value': counts['updated_tasks_count']
+        }]
+        return {
+            'data': data,
+        }
+
+    def _get_milestones(self):
+        self.ensure_one()
+        return {
+            'data': self.milestone_ids._get_data_list(),
         }
 
     def _get_tasks_analysis_counts(self, created=False, updated=False):

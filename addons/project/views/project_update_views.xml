@@ -50,7 +50,7 @@
         <field name="name">project.update.view.kanban</field>
         <field name="model">project.update</field>
         <field name="arch" type="xml">
-            <kanban class="o_pupdate_kanban" sample="1">
+            <kanban class="o_pupdate_kanban" sample="1" js_class="project_update_kanban">
                 <field name="color"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -81,6 +81,21 @@
                     </t>
                 </templates>
             </kanban>
+        </field>
+    </record>
+
+    <record id="project_update_view_tree" model="ir.ui.view">
+        <field name="name">project.update.view.tree</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <tree sample="1" js_class="project_update_list">
+                <field name="name"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="progress_percentage" string="Progress" widget="percentage" optional="show"/>
+                <field name="date" optional="show"/>
+                <field name="color" invisible="1"/>
+                <field name="status" widget="status_with_color" options="{'color_field': 'color'}"/>
+            </tree>
         </field>
     </record>
 
