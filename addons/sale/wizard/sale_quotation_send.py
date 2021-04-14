@@ -81,8 +81,9 @@ class SaleQuotationSend(models.TransientModel):
 
         if self.active_draft_ids:
             for quotation in self.active_draft_ids:
-                responsible_emails = {user.email for user in filter(None, \
+                responsible_emails_set = {user.email for user in filter(None, \
                     (quotation.user_id, self.env.ref('base.user_admin', raise_if_not_found=False)))}
+                responsible_emails = ', '.join(responsible_emails_set)
                 email_values = {'email_to': responsible_emails, 'reply_to':responsible_emails}
                 mail_id = self.draft_template_id.send_mail(quotation.id,
                                                 email_values=email_values,
