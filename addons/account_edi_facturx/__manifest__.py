@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 {
+    'installable': False,
     'name' : 'Import/Export invoices with Factur-X',
     'version' : '1.0',
     'category': 'Accounting/Accounting',
@@ -8,7 +9,6 @@
         'data/account_edi_data.xml',
         'data/facturx_templates.xml',
     ],
-    'installable': True,
     'application': False,
     'auto_install': True,
 }

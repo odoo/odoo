@@ -4,6 +4,7 @@
 # Copyright 2015 Eezee-It
 
 {
+    'installable': False,
     'name': 'Worldline SIPS',
     'version': '1.1',
     'author': 'Eezee-It',
@@ -21,7 +22,6 @@ not guaranteed.""",
         'views/payment_sips_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
-    'installable': True,
     'application': True,
     'post_init_hook': 'create_missing_journal_for_acquirers',
     'uninstall_hook': 'uninstall_hook',

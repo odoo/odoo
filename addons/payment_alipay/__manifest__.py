@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
+    'installable': False,
     'name': 'Alipay Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
     'sequence': 345,

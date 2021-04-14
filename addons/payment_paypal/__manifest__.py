@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
+    'installable': False,
     'name': 'Paypal Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
     'sequence': 365,
@@ -14,7 +15,6 @@
         'data/payment_acquirer_data.xml',
         'data/payment_paypal_email_data.xml',
     ],
-    'installable': True,
     'application': True,
     'post_init_hook': 'create_missing_journal_for_acquirers',
     'uninstall_hook': 'uninstall_hook',
