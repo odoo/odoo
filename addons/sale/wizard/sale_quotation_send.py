@@ -87,18 +87,22 @@ class SaleQuotationSend(models.TransientModel):
                 email_values = {'email_to': responsible_emails, 'reply_to':responsible_emails}
                 mail_id = self.draft_template_id.send_mail(quotation.id,
                                                 email_values=email_values,
-                                                force_send=True
+                                                notif_layout='mail.mail_notification_light', # This should add the template (header and footer)
+                                                force_send=True,
                                             )
                 if mail_id and quotation.state == 'draft':
                     quotation.write({'state': 'sent'})
 
         if self.active_sale_ids:
             for sale_order in self.active_sale_ids:
-                responsible_emails = {user.email for user in filter(None, \
-                    (sale_order.user_id, self.env.ref('base.user_admin', raise_if_not_found=False)))}
-                self.sale_template_id.with_context(**{
-                    'default_email_to': ','.join(responsible_emails),
-                    'default_reply_to': ','.join(responsible_emails),
-                    }).send_mail(sale_order.id, force_send=True)
+                responsible_emails_set = {user.email for user in filter(None, \
+                    (quotation.user_id, self.env.ref('base.user_admin', raise_if_not_found=False)))}
+                responsible_emails = ', '.join(responsible_emails_set)
+                email_values = {'email_to': responsible_emails, 'reply_to':responsible_emails}
+                self.sale_template_id.send_mail(quotation.id,
+                                                email_values=email_values,
+                                                notif_layout='mail.mail_notification_light', # This should add the template (header and footer)
+                                                force_send=True,
+                                            )
 
         return {'type': 'ir.actions.act_window_close'}
