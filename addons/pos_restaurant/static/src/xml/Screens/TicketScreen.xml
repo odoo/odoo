@@ -2,18 +2,41 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
+        <!-- DESKTOP -->
         <xpath expr="//div[hasclass('header-row')]//div[@name='delete']" position="before">
-            <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">Table</div>
-            <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">Tip</div>
+            <t t-if="!env.isMobile">
+                <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">Table</div>
+                <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">Tip</div>
+            </t>
         </xpath>
         <xpath expr="//div[hasclass('order-row')]//div[@name='delete']" position="before">
-            <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">
-                <t t-esc="getTable(order)"></t>
-            </div>
-            <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">
-                <TipCell order="order" />
-            </div>
+            <t t-if="!env.isMobile">
+                <div t-if="env.pos.config.iface_floorplan" class="col start" name="table">
+                    <t t-esc="getTable(order)"></t>
+                </div>
+                <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">
+                    <TipCell order="order" />
+                </div>
+            </t>
         </xpath>
+        <!-- MOBILE -->
+        <xpath expr="//div[hasclass('order-row') and hasclass('delete-button')]" position="before">
+            <t t-if="env.isMobile">
+                <div t-if="env.pos.config.iface_floorplan" class="order-row">
+                    <div class="col">Table</div>
+                    <div class="col end" name="table">
+                        <t t-esc="getTable(order)"></t>
+                    </div>
+                </div>
+                <div t-if="filter === 'Tipping'" class="order-row">
+                    <div class="col" name="tip">Tip</div>
+                    <div class="col end narrow" name="tip">
+                        <TipCell order="order" />
+                    </div>
+                </div>
+            </t>
+        </xpath>
+
         <xpath expr="//div[hasclass('buttons')]" position="inside">
             <button class="settle-tips" t-if="_state.ui.filter == 'TIPPING'" t-on-click="settleTips">Settle</button>
         </xpath>
