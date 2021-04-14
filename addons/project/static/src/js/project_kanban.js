@@ -5,6 +5,7 @@ import KanbanView from 'web.KanbanView';
 import KanbanColumn from 'web.KanbanColumn';
 import viewRegistry from 'web.view_registry';
 import KanbanRecord from 'web.KanbanRecord';
+import { ProjectControlPanel } from '@project/js/project_control_panel';
 
 KanbanRecord.include({
     //--------------------------------------------------------------------------
@@ -50,6 +51,7 @@ export const ProjectKanbanController = KanbanController.extend({
 const ProjectKanbanView = KanbanView.extend({
     config: Object.assign({}, KanbanView.prototype.config, {
         Controller: ProjectKanbanController,
+        ControlPanel: ProjectControlPanel,
     }),
 });
 
