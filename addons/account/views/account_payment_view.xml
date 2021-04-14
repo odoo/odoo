@@ -160,7 +160,7 @@
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('payment_method_code', '!=', 'manual')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False)]}">
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['|','|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False),('state','!=','draft')]}">
                         A second payment will be created automatically in the destination journal.
                     </div>
                     <div class="alert alert-warning text-center" role="alert" attrs="{
@@ -282,7 +282,7 @@
                                         }"/>
                                 <field name="destination_journal_id" context="{'default_partner_id': partner_id}"
                                        attrs="{'invisible': [('is_internal_transfer', '=', False)],
-                                       'readonly': [('state', '!=', 'draft')], 'required': [('is_internal_transfer', '=', True)]}"/>
+                                       'readonly': [('state', '!=', 'draft')], 'required': [('is_internal_transfer', '=', True),('state', '=', 'draft')]}"/>
                             </group>
                             <group>
                                 <field name="qr_code" invisible="1"/>
