@@ -7,4 +7,5 @@ from . import ir_http
 from . import res_company
 from . import res_config_settings
 from . import project
+from . import project_update
 from . import uom
