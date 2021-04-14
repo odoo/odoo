@@ -983,7 +983,6 @@ class Module(models.Model):
                 'parent_field': 'parent_id',
                 'values': list(values_range.values()),
             }
-
         return super(Module, self).search_panel_select_range(field_name, **kwargs)
 
 
