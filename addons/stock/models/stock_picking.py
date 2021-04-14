@@ -328,8 +328,9 @@ class Picking(models.Model):
     picking_type_code = fields.Selection(
         related='picking_type_id.code',
         readonly=True)
-    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs',
-        readonly=True)
+    picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs')
+    use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
+    use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots')
     hide_picking_type = fields.Boolean(compute='_compute_hide_pickign_type')
     partner_id = fields.Many2one(
         'res.partner', 'Contact',
@@ -361,7 +362,6 @@ class Picking(models.Model):
     show_validate = fields.Boolean(
         compute='_compute_show_validate',
         help='Technical field used to decide whether the button "Validate" should be displayed.')
-    use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots')
     owner_id = fields.Many2one(
         'res.partner', 'Assign Owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
