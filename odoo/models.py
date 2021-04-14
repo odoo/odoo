@@ -472,7 +472,7 @@ class BaseModel(metaclass=MetaModel):
         * If :attr:`._name` is set, name(s) of parent models to inherit from
         * If :attr:`._name` is unset, name of a single model to extend in-place
     """
-    _inherits = {}
+    _inherits = frozendict()
     """dictionary {'parent_model': 'm2o_field'} mapping the _name of the parent business
     objects to the names of the corresponding foreign key fields to use::
 
@@ -519,7 +519,7 @@ class BaseModel(metaclass=MetaModel):
     as attribute.
     """
 
-    _depends = {}
+    _depends = frozendict()
     """dependencies of models backed up by SQL views
     ``{model_name: field_names}``, where ``field_names`` is an iterable.
     This is only used to determine the changes to flush to database before
@@ -699,8 +699,8 @@ class BaseModel(metaclass=MetaModel):
         cls._table = cls._name.replace('.', '_')
         cls._sequence = None
         cls._log_access = cls._auto
-        cls._inherits = {}
-        cls._depends = {}
+        inherits = {}
+        depends = {}
         cls._sql_constraints = {}
 
         for base in reversed(cls.__base_classes):
@@ -713,16 +713,22 @@ class BaseModel(metaclass=MetaModel):
                 cls._sequence = base._sequence or cls._sequence
                 cls._log_access = getattr(base, '_log_access', cls._log_access)
 
-            cls._inherits.update(base._inherits)
+            inherits.update(base._inherits)
 
             for mname, fnames in base._depends.items():
-                cls._depends.setdefault(mname, []).extend(fnames)
+                depends.setdefault(mname, []).extend(fnames)
 
             for cons in base._sql_constraints:
                 cls._sql_constraints[cons[0]] = cons
 
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
         cls._sql_constraints = list(cls._sql_constraints.values())
+
+        # avoid assigning an empty dict to save memory
+        if inherits:
+            cls._inherits = inherits
+        if depends:
+            cls._depends = depends
 
         # update _inherits_children of parent models
         for parent_name in cls._inherits:
@@ -2841,7 +2847,7 @@ class BaseModel(metaclass=MetaModel):
                     field.required = True
                 if field.ondelete.lower() not in ('cascade', 'restrict'):
                     field.ondelete = 'cascade'
-                self._inherits[field.comodel_name] = field.name
+                type(self)._inherits = {**self._inherits, field.comodel_name: field.name}
                 self.pool[field.comodel_name]._inherits_children.add(self._name)
 
     @api.model
