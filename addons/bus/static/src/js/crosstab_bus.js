@@ -327,9 +327,7 @@ var CrossTabBus = Longpolling.extend({
         }
         // update channels
         else if (key === this._generateKey('channels')) {
-            var channels = value;
-            _.each(_.difference(this._channels, channels), this.deleteChannel.bind(this));
-            _.each(_.difference(channels, this._channels), this.addChannel.bind(this));
+            this._channels = value;
         }
         // update options
         else if (key === this._generateKey('options')) {
