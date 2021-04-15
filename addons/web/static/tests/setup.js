@@ -19,6 +19,8 @@ export async function setupTests() {
     odoo = makeTestOdoo();
     const originalLocale = luxon.Settings.defaultLocale;
     luxon.Settings.defaultLocale = "en";
+    const originalZoneName = luxon.Settings.defaultZoneName;
+    luxon.Settings.defaultZoneName = "Europe/Brussels";
 
     // Here we keep track of listeners added on the window and document objects.
     // Some stuff with permanent state (e.g. services) may register
@@ -38,6 +40,7 @@ export async function setupTests() {
     registerCleanup(() => {
       odoo = originalOdoo;
       luxon.Settings.defaultLocale = originalLocale;
+      luxon.Settings.defaultZoneName = originalZoneName;
       // Cleanup the listeners added on window in the current test.
       for (const [obj, store] of listeners.entries()) {
         for (const args of store) {

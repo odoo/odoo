@@ -4,65 +4,7 @@ import { browser } from "../core/browser";
 import { serviceRegistry } from "../webclient/service_registry";
 import { localization } from "./localization_settings";
 import { translatedTerms } from "./translation";
-
-const normalizeFormatTable = {
-  // Python strftime to luxon.js conversion table
-  // See openerp/addons/base/views/res_lang_views.xml
-  // for details about supported directives
-  a: "ccc",
-  A: "cccc",
-  b: "MMM",
-  B: "MMMM",
-  d: "dd",
-  H: "HH",
-  I: "hh",
-  j: "o",
-  m: "MM",
-  M: "mm",
-  p: "a",
-  S: "ss",
-  W: "WW",
-  w: "c",
-  y: "yy",
-  Y: "yyyy",
-  c: "ccc MMM d HH:mm:ss yyyy",
-  x: "MM/dd/yy",
-  X: "HH:mm:ss",
-};
-
-const _normalize_format_cache = {};
-
-/**
- * Convert Python strftime to escaped luxon.js format.
- *
- * @param {string} value original format
- * @returns {string} valid Luxon format
- */
-export function strftimeToLuxonFormat(value) {
-  if (_normalize_format_cache[value] === undefined) {
-    const isletter = /[a-zA-Z]/,
-      output = [];
-    let inToken = false;
-    for (let index = 0; index < value.length; ++index) {
-      let character = value[index];
-      if (character === "%" && !inToken) {
-        inToken = true;
-        continue;
-      }
-      if (isletter.test(character)) {
-        if (inToken && normalizeFormatTable[character] !== undefined) {
-          character = normalizeFormatTable[character];
-        } else {
-          character = "[" + character + "]"; // moment.js escape
-        }
-      }
-      output.push(character);
-      inToken = false;
-    }
-    _normalize_format_cache[value] = output.join("");
-  }
-  return _normalize_format_cache[value];
-}
+import { strftimeToLuxonFormat } from "../utils/dates";
 
 export const localizationService = {
   dependencies: ["user"],
