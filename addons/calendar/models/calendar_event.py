@@ -97,9 +97,9 @@ class Meeting(models.Model):
     # description
     name = fields.Char('Meeting Subject', required=True)
     description = fields.Text('Description')
-    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user)
     partner_id = fields.Many2one(
-        'res.partner', string='Responsible Contact', related='user_id.partner_id', readonly=True)
+        'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
     videocall_location = fields.Char('Join Video Call', default=_default_videocall_location)
     # visibility
