@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class SlidePartnerRelation(models.Model):
@@ -46,6 +47,12 @@ class Slide(models.Model):
         ('check_survey_id', "CHECK(slide_type != 'certification' OR survey_id IS NOT NULL)", "A slide of type 'certification' requires a certification."),
         ('check_certification_preview', "CHECK(slide_type != 'certification' OR is_preview = False)", "A slide of type certification cannot be previewed."),
     ]
+
+    @api.constrains('survey_id')
+    def _check_survey_is_certification(self):
+        if self.slide_type == 'certification' and self.survey_id and not self.survey_id.certificate:
+            raise ValidationError(_('You cannot set as certification a survey that is not set as a certification.'
+                                  ' Please activate a scoring method and the certification option on the selected survey.'))
 
     @api.onchange('survey_id')
     def _on_change_survey_id(self):

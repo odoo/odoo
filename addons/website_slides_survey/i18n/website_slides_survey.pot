@@ -393,6 +393,25 @@ msgid "What type of wood is the best for furniture?"
 msgstr ""
 
 #. module: website_slides_survey
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"You cannot remove the certificate status of a survey that is still "
+"referenced by a course as its certification. Please reactivate the "
+"certificate status or remove the survey as a certification for the courses:"
+msgstr ""
+
+#. module: website_slides_survey
+#: code:addons/website_slides_survey/models/slide_slide.py:0
+#, python-format
+msgid ""
+"You cannot set as certification a survey that is not set as a certification."
+" Please activate a scoring method and the certification option on the "
+"selected survey."
+msgstr ""
+
+
+#. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
 msgid "You have failed the course: ${object.slide_partner_id.channel_id.name}"
 msgstr ""
