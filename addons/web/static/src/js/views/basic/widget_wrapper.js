@@ -9,10 +9,15 @@ odoo.define('web.WidgetWrapper', function (require) {
         // Public
         //----------------------------------------------------------------------
 
+        /**
+         * This function should be used to update the "widget" Component's props,
+         * not its state!
+         *
+         * @param {any} state
+         * @returns Promise
+         */
         updateState(state) {
-            if (this.componentRef.comp.updateState) {
-                this.componentRef.comp.updateState(state);
-            }
+            return this.update(Object.assign({}, this.props, { record: state }));
         }
     }
     return WidgetWrapper;
