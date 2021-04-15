@@ -32,7 +32,7 @@ class SmsApi(models.AbstractModel):
             'numbers': numbers,
             'message': message,
         }
-        return self._contact_iap('/iap/message_send', params)
+        return self._contact_iap('/api/sms/0/message_send', params)
 
     @api.model
     def _send_sms_batch(self, messages):
@@ -55,7 +55,7 @@ class SmsApi(models.AbstractModel):
         params = {
             'messages': messages
         }
-        return self._contact_iap('/iap/sms/2/send', params)
+        return self._contact_iap('/api/sms/2/send', params)
 
     @api.model
     def _get_sms_api_error_messages(self):

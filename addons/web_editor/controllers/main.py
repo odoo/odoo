@@ -637,7 +637,7 @@ class Web_Editor(http.Controller):
         ICP = request.env['ir.config_parameter'].sudo()
         endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
         params['dbuuid'] = ICP.get_param('database.uuid')
-        response = requests.post('%s/media-library/1/search' % endpoint, data=params)
+        response = requests.post('%s/api/media_library/1/search' % endpoint, data=params)
         if response.status_code == requests.codes.ok and response.headers['content-type'] == 'application/json':
             return response.json()
         else:
@@ -665,7 +665,7 @@ class Web_Editor(http.Controller):
             'dbuuid': ICP.get_param('database.uuid'),
             'media_ids': media_ids,
         }
-        response = requests.post('%s/media-library/1/download_urls' % library_endpoint, data=params)
+        response = requests.post('%s/api/media_library/1/download_urls' % library_endpoint, data=params)
         if response.status_code != requests.codes.ok:
             raise Exception(_("ERROR: couldn't get download urls from media library."))
 

@@ -8,7 +8,7 @@ from odoo.addons.iap.tools import iap_tools
 from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
-PRINT_ENDPOINT = '/iap/snailmail/1/print'
+PRINT_ENDPOINT = '/api/snailmail/1/print'
 DEFAULT_TIMEOUT = 30
 
 ERROR_CODES = [

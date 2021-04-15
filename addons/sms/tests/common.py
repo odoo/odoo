@@ -25,14 +25,14 @@ class MockSMS(common.BaseCase):
 
         def _contact_iap(local_endpoint, params):
             # mock single sms sending
-            if local_endpoint == '/iap/message_send':
+            if local_endpoint == '/api/sms/0/message_send':
                 self._sms += [{
                     'number': number,
                     'body': params['message'],
                 } for number in params['numbers']]
                 return True  # send_message v0 API returns always True
             # mock batch sending
-            if local_endpoint == '/iap/sms/2/send':
+            if local_endpoint == '/api/sms/2/send':
                 result = []
                 for to_send in params['messages']:
                     res = {'res_id': to_send['res_id'], 'state': 'success', 'credit': 1}
