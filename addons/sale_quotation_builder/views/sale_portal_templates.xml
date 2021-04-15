@@ -71,7 +71,7 @@
                                     <div t-field="option_line.website_description" class="oe_no_empty"/>
                                 </t>
                             </t>
-                            <section id="terms" class="container" t-if="template.note">
+                            <section id="terms" class="container" t-if="not is_html_empty(template.note)">
                                 <h1 t-ignore="True">Terms &amp; Conditions</h1>
                                 <p t-field="template.note"/>
                             </section>
