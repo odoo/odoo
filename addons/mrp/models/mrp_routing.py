@@ -72,3 +72,9 @@ class MrpRoutingWorkcenter(models.Model):
         count_data = dict((item['operation_id'][0], item['operation_id_count']) for item in data)
         for operation in self:
             operation.workorder_count = count_data.get(operation.id, 0)
+
+    def copy_to_bom(self):
+        if 'bom_id' in self.env.context:
+            bom_id = self.env.context.get('bom_id')
+            for operation in self:
+                operation.copy({'name': _("%s (copy)", operation.name), 'bom_id': bom_id})
