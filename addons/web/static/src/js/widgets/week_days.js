@@ -19,9 +19,12 @@ odoo.define('web.WeekDays', function (require) {
 
         /**
          * @override
+         * @param {Object} nextProps
+         * @param {Object} nextProps.record
          */
-        updateState(state) {
-            this.state.days = this._prepareData(state.data);
+        async willUpdateProps(nextProps) {
+            this.state.days = this._prepareData(nextProps.record.data);
+            this.mode = nextProps.options.mode;
         }
 
         //--------------------------------------------------------------------------
