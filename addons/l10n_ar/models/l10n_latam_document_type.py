@@ -68,7 +68,11 @@ class L10nLatamDocumentType(models.Model):
 
         msg = "'%s' " + _("is not a valid value for") + " '%s'.<br/>%s"
 
-        if not self.code:
+
+        # This two represent documents used only in vendor bills: "Importation Invoices" and "(99) Otros Documentos.."
+        # documents, thouse two documents not need to have the regular invoice document format, the user can enter any
+        # value
+        if not self.code or self.code == '99':
             return document_number
 
         # Import Dispatch Number Validator
