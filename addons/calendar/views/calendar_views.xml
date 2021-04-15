@@ -163,8 +163,9 @@
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                                     <field name="location" />
                                     <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                                    <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
                                 </group>
-
                             </group>
                             <label for="description"/>
                             <field name="description"/>
@@ -253,12 +254,6 @@
                                 </kanban>
                             </field>
                         </page>
-                        <page name="page_misc" string="Misc" groups="base.group_no_one">
-                            <group>
-                                <label for="user_id"/>
-                                <field name="user_id" nolabel="1" widget="many2one_avatar_user"/>
-                            </group>
-                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -277,11 +272,11 @@
             <calendar js_class="attendee_calendar" string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
                 event_open_popup="true"
                 event_limit="5"
-                color="user_id">
+                color="partner_id">
                 <field name="location" attrs="{'invisible': [('location', '=', False)]}"/>
                 <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" />
                 <field name="attendee_status" invisible="1"/>
-                <field name="user_id" string="Responsible" filters="1" widget="many2one_avatar_user"/>
+                <field name="partner_id" string="Organizer"/>
                 <field name="partner_ids" widget="many2manyattendee" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
                 <field name="is_highlighted" invisible="1"/>
                 <field name="description" attrs="{'invisible': [('description', '=', False)]}"/>
