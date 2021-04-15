@@ -47,7 +47,7 @@ class Partner(models.Model):
                               'default_name': city,
                               'default_zipcode': zip,
                               'default_state_id': state_id}"
-                    domain="[('country_id', '=', country_id)]"
+                    domain="['|', ('state_id', '=', False), ('state_id', '=', state_id), ('country_id', '=', country_id)]"
                     attrs="{
                         'invisible': [('country_enforce_cities', '=', False)],
                         'readonly': [('type', '=', 'contact')%(parent_condition)s]
