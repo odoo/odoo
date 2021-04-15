@@ -518,6 +518,7 @@ return AbstractRenderer.extend({
                 $(self.calendarElement).find(self._computeEventSelector(mouseLeaveInfo)).removeClass('o_cw_custom_hover');
             },
             eventDragStart: function (mouseDragInfo) {
+                mouseDragInfo.el.classList.add(mouseDragInfo.view.type);
                 $(self.calendarElement).find(`[data-event-id=${mouseDragInfo.event.id}]`).addClass('o_cw_custom_hover');
                 self._unselectEvent();
             },
