@@ -191,6 +191,20 @@
             </field>
         </record>
 
+        <record id="account_tax_group_view_search" model="ir.ui.view">
+            <field name="name">account.tax.group.search.filters</field>
+            <field name="model">account.tax.group</field>
+            <field name="arch" type="xml">
+                <search string="Search Group">
+                    <field name="name"/>
+                    <field name="country_id"/>
+                    <group string="Group By">
+                        <filter string="Country" name="group_by_country" domain="[]" context="{'group_by': 'country_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="view_tax_group_tree" model="ir.ui.view">
             <field name="name">account.tax.group.tree</field>
             <field name="model">account.tax.group</field>
@@ -198,6 +212,7 @@
                 <tree string="Account Tax Group" editable="bottom" create="false">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
+                    <field name="country_id"/>
                     <field name="property_tax_payable_account_id"/>
                     <field name="property_tax_receivable_account_id"/>
                     <field name="property_advance_tax_payment_account_id"/>
