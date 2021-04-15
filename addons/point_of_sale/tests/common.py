@@ -176,7 +176,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.other_receivable_account = cls.env['account.account'].create({
             'name': 'Other Receivable',
             'code': 'RCV00' ,
-            'user_type_id': cls.env['account.account.type'].create({'name': 'RCV type', 'type': 'receivable', 'internal_group': 'asset'}).id,
+            'user_type_id': cls.env['account.account.type'].sudo().create({'name': 'RCV type', 'type': 'receivable', 'internal_group': 'asset'}).id,
             'internal_group': 'asset',
             'reconcile': True,
         })
