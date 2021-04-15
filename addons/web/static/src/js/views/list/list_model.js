@@ -40,9 +40,9 @@
          * @param {string} referenceRecordId the record datapoint used to
          *  generate the changes to apply to recordIds
          * @param {string[]} recordIds a list of record datapoint ids
-         * @param {string} fieldName the field to write
+         * @param {string[]} listFieldNames the fields to write
          */
-        saveRecords: function (listDatapointId, referenceRecordId, recordIds, fieldName) {
+        saveRecords: function (listDatapointId, referenceRecordId, recordIds, listFieldNames) {
             var self = this;
             var referenceRecord = this.localData[referenceRecordId];
             var list = this.localData[listDatapointId];
@@ -51,7 +51,11 @@
             // reset same value, we still want to save this value on the other
             // record)
             var allChanges = this._generateChanges(referenceRecord, {changesOnly: false});
-            var changes = _.pick(allChanges, fieldName);
+            const changes = Object.assign({},
+                ...listFieldNames.map(
+                    fieldName => allChanges.hasOwnProperty(fieldName) ? { [fieldName]: allChanges[fieldName] } : {}
+                )
+            );
             var records = recordIds.map(function (recordId) {
                 return self.localData[recordId];
             });

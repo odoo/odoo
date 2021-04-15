@@ -127,6 +127,24 @@ QUnit.module('Views', {
                     name: 'foo,foo'
                 }]
             },
+            daterange: {
+                fields: {
+                    date_start: {string: "Date Start", type: "date"},
+                    date_end: { string: "Date End", type: 'date' },
+                },
+                records: [
+                    {
+                        id: 1,
+                        date_start: "2017-01-25",
+                        date_end: "2017-01-26",
+                    },
+                    {
+                        id: 2,
+                        date_start: '2017-01-02',
+                        date_end: '2017-01-03',
+                    },
+                ],
+            }
         };
     }
 }, function () {
@@ -8532,6 +8550,102 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('.o_data_cell:first').text(), "OOF",
             "Value of the m2o should be updated in the list");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list: multi-edit field with daterange widget', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            View: ListView,
+            model: 'daterange',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="date_start" widget="daterange" options="{'related_end_date': 'date_end'}" />
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date_start'}"/>
+                </tree>`,
+            session: {
+                getTZOffset: function () {
+                    return 330;
+                },
+            },
+        });
+
+        await testUtils.dom.click(list.$('thead .o_list_record_selector:first input'));
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0) .o_field_date_range'));
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0) .o_field_date_range'));
+
+        // change dates via the daterangepicker
+        await testUtils.dom.triggerMouseEvent($('.daterangepicker:first .drp-calendar.left .available:contains("16")'), 'mousedown');
+        await testUtils.dom.triggerMouseEvent($('.daterangepicker:first .drp-calendar.right .available:contains("12")'), 'mousedown');
+
+
+        const $applyBtn = $('.daterangepicker:first .applyBtn');
+        assert.ok($applyBtn.length === 1 && !$applyBtn.disabled, 'Should only have 1 apply button in the daterangepicker and this button should be enabled.');
+
+        // daterange selected
+        const daterange = $('.daterangepicker:first .drp-selected').text();
+        let [dateStart, dateEnd] = daterange.split(' - ');
+        const dateFormat = "MM/DD/YYYY";
+
+        testUtils.mock.intercept(list, "field_changed", function (ev) {
+            const changes = ev.data.changes;
+            assert.ok(changes.hasOwnProperty('date_start') && changes.hasOwnProperty('date_end'));
+            const actualDateStart = changes.date_start.format(dateFormat);
+            const actualDateEnd = changes.date_end.format(dateFormat);
+            assert.strictEqual(actualDateStart, dateStart.trim());
+            assert.strictEqual(actualDateEnd, dateEnd.trim());
+        }, true);
+
+        // Apply the changes
+        await testUtils.dom.click($applyBtn);
+
+        assert.containsOnce(document.body, '.modal', 'The confirm dialog should appear to confirm the multi edition.');
+
+        // Valid the confirm dialog
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        assert.containsNone(document.body, '.modal', 'No confirm dialog should be visible in the dom.');
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list: multi-edit field with daterange widget, user edits without using daterange picker', async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            View: ListView,
+            model: 'daterange',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="date_start" widget="daterange" options="{'related_end_date': 'date_end'}" />
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date_start'}"/>
+                </tree>`,
+            session: {
+                getTZOffset: function () {
+                    return 330;
+                },
+            },
+        });
+        // Test manually edit the date without using the daterange picker
+        await testUtils.dom.click(list.$('thead .o_list_record_selector:first input'));
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0) .o_field_date_range'));
+
+        // Change the date in the first datetime
+        await testUtils.fields.editInput(list.$('.o_data_row:first .o_data_cell:eq(0) .o_field_date_range'), "2021-04-01 11:00:00");
+        await testUtils.dom.click($('.modal .btn-primary'));
+
+        const newDate = moment.utc("2021-04-01", "YYYY-MM-DD");
+        assert.ok(Object.keys(list.model.localData).every(key => {
+            const record = list.model.localData[key];
+            if (record.data.hasOwnProperty('date_start')) {
+                return record.data.date_start.isSame(newDate);
+            }
+            return true; // if the record has no the property than no change for this one.
+        }));
 
         list.destroy();
     });

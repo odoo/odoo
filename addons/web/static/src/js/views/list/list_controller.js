@@ -476,20 +476,41 @@ var ListController = BasicController.extend({
      * @returns {Promise}
      */
     _saveMultipleRecords: function (recordId, node, changes) {
-        var fieldName = Object.keys(changes)[0];
-        var value = Object.values(changes)[0];
         var recordIds = _.union([recordId], this.selectedRecords);
+        const nodes = [node];
+        const isDateRangeWidget = node.attrs.widget === 'daterange';
+        let relatedFieldName;
+        if (isDateRangeWidget) {
+            const options = this.model.get(recordId).fieldsInfo.list[node.attrs.name].options;
+            let fieldName;
+            if (options.hasOwnProperty('related_end_date')) {
+                fieldName = options.related_end_date;
+            } else if (options.hasOwnProperty('related_start_date')) {
+                fieldName = options.related_start_date;
+            }
+
+            if (fieldName && changes.hasOwnProperty(fieldName)) {
+                relatedFieldName = fieldName;
+                const modifiers = this.renderer.allModifiersData.find(modifiers => modifiers.node.attrs.name === relatedFieldName);
+                if (modifiers) {
+                    nodes.push(modifiers.node);
+                }
+            }
+        }
         var validRecordIds = recordIds.reduce((result, nextRecordId) => {
             var record = this.model.get(nextRecordId);
-            var modifiers = this.renderer._registerModifiers(node, record);
-            if (!modifiers.readonly && (!modifiers.required || value)) {
+            const isValid = nodes.every(node => {
+                const modifiers = this.renderer._registerModifiers(node, record);
+                return !modifiers.readonly && (!modifiers.required || changes[node.attrs.name]);
+            });
+            if (isValid) {
                 result.push(nextRecordId);
             }
             return result;
         }, []);
         return new Promise((resolve, reject) => {
             const saveRecords = () => {
-                this.model.saveRecords(this.handle, recordId, validRecordIds, fieldName)
+                this.model.saveRecords(this.handle, recordId, validRecordIds, nodes.map(node => node.attrs.name))
                     .then(async () => {
                         this.updateButtons('readonly');
                         const state = this.model.get(this.handle);
@@ -527,10 +548,11 @@ var ListController = BasicController.extend({
                 const record = this.model.get(recordId);
                 const dialogChanges = {
                     isDomainSelected: this.isDomainSelected,
-                    fieldLabel: node.attrs.string || record.fields[fieldName].string,
+                    fieldLabel: node.attrs.string || record.fields[node.attrs.name].string,
                     fieldName: node.attrs.name,
                     nbRecords: recordIds.length,
                     nbValidRecords: validRecordIds.length,
+                    relatedFieldName,
                 };
                 new ListConfirmDialog(this, record, dialogChanges, dialogOptions)
                     .open({ shouldFocusButtons: true });

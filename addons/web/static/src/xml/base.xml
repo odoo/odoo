@@ -872,6 +872,19 @@
     </main>
 </t>
 
+<t t-name="ListView.confirmModal.relatedField">
+    <tr>
+        <td>Field:</td>
+        <td><t t-esc="fieldLabel"/></td>
+    </tr>
+    <tr>
+        <td>Update to:</td>
+        <td>
+            <div class="o_changes_related_widget"/>
+        </td>
+    </tr>
+</t>
+
 <t t-name="FormView.buttons">
     <div class="o_form_buttons_view" role="toolbar" aria-label="Main actions">
         <button t-if="widget.is_action_enabled('edit')" type="button"

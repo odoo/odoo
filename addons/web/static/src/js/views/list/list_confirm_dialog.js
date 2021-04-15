@@ -68,18 +68,42 @@ const ListConfirmDialog = Dialog.extend(WidgetAdapterMixin, {
                 options: widgetOptions,
             });
         }
+
+        this.relatedFieldWidget = undefined;
+        if (this.fieldWidget.attrs.widget === 'daterange' && changes.relatedFieldName) {
+            const fieldName = changes.relatedFieldName;
+            const fieldLabel = record.fields[fieldName].string;
+            this.$content.find('table.o_modal_changes tbody').append(qweb.render('ListView.confirmModal.relatedField', { fieldLabel }));
+            const RelatedWidget = record.fieldsInfo.list[fieldName].Widget;
+
+            if (this.isLegacyWidget) { // the related widget is the same (= DateRange widget) then we don't need to recheck it
+                this.relatedFieldWidget = new RelatedWidget(this, fieldName, record, widgetOptions);
+            } else {
+                this.relatedFieldWidget = new FieldWrapper(this, Widget, {
+                    fieldName,
+                    record,
+                    options: widgetOptions,
+                });
+            }
+        }
     },
     /**
      * @override
      */
     willStart: function () {
-        let widgetProm;
+        const widgetPromises = [];
         if (this.isLegacyWidget) {
-            widgetProm = this.fieldWidget._widgetRenderAndInsert(function () {});
+            widgetPromises.push(this.fieldWidget._widgetRenderAndInsert(function () {}));
+            if (this.relatedFieldWidget) {
+                widgetPromises.push(this.relatedFieldWidget._widgetRenderAndInsert(function () {}));
+            }
         } else {
-            widgetProm = this.fieldWidget.mount(document.createDocumentFragment());
+            widgetPromises.push(this.fieldWidget.mount(document.createDocumentFragment()));
+            if (this.relatedFieldWidget) {
+                widgetPromises.push(this.relatedFieldWidget.mount(document.createDocumentFragment()));
+            }
         }
-        return Promise.all([widgetProm, this._super.apply(this, arguments)]);
+        return Promise.all([...widgetPromises, this._super.apply(this, arguments)]);
     },
     /**
      * @override
@@ -87,6 +111,10 @@ const ListConfirmDialog = Dialog.extend(WidgetAdapterMixin, {
     start: function () {
         this.$content.find('.o_changes_widget').replaceWith(this.fieldWidget.$el);
         this.fieldWidget.el.style.pointerEvents = 'none';
+        if (this.relatedFieldWidget) {
+            this.$content.find('.o_changes_related_widget').replaceWith(this.relatedFieldWidget.$el);
+            this.relatedFieldWidget.el.style.pointerEvents = 'none';
+        }
         return this._super.apply(this, arguments);
     },
     /**
