@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Geoff Petkus geoff@blue-bird.cloud https://github.com/geoff-bbc
+Geoff Petkus geoff-bbc@blue-bird.cloud https://github.com/geoff-bbc
