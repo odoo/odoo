@@ -526,7 +526,7 @@
                 </div>
             </section>
 
-            <section id="terms" class="mt-5" t-if="sale_order.note">
+            <section id="terms" class="mt-5" t-if="not is_html_empty(sale_order.note)">
                 <h3 class="">Terms &amp; Conditions</h3>
                 <hr class="mt-0 mb-1"/>
                 <t t-if="sale_order.terms_type == 'html'">
