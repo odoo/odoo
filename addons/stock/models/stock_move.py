@@ -1386,7 +1386,9 @@ class StockMove(models.Model):
         reserved_availability = {move: move.reserved_availability for move in self}
         roundings = {move: move.product_id.uom_id.rounding for move in self}
         move_line_vals_list = []
-        for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
+        for move in self:
+            if move.state not in ['confirmed', 'waiting', 'partially_available']:
+                continue
             rounding = roundings[move]
             missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
             missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
