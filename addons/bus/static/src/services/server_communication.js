@@ -109,6 +109,10 @@ export class ServerCommunication {
      * @private
      */
     _selectCommunicationType() {
+        console.warn('selecting longpolling');
+        this._communicationType = 'longpolling';
+        this.env.services['bus.longpolling_communication'].start(this._lastBusMessageId);
+        return;
         // if (true || window.SharedWorker) {
             console.warn('selecting sharedworker');
             this._communicationType = 'sharedworker';

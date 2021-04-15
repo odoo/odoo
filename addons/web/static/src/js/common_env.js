@@ -26,9 +26,12 @@ odoo.define("web.commonEnv", function (require) {
     const utils = require("web.utils");
 
     const browser = {
+        AbortController: window.AbortController,
+        AbortError: window.AbortError,
         clearInterval: window.clearInterval.bind(window),
         clearTimeout: window.clearTimeout.bind(window),
         Date: window.Date,
+        DOMException: window.DOMException,
         fetch: (window.fetch || (() => { })).bind(window),
         Notification: window.Notification,
         requestAnimationFrame: window.requestAnimationFrame.bind(window),

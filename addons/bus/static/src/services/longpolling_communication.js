@@ -40,6 +40,13 @@ export class LongpollingCommunication {
          * Set of currently registered handlers.
          */
         this._handlers = new Set();
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/server_communication_shared_worker.js').then((reg) => {
+                console.log('Registration succeeded. Scope is ' + reg.scope);
+            }).catch((error) => {
+                console.log('Registration failed with ' + error);
+            });
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -73,57 +80,14 @@ export class LongpollingCommunication {
         this._isActive = true;
         this._lastBusMessageId = lastBusMessageId;
         while (this._isActive) {
-            // Isolate RPC result handling and error handling outside of its
-            // try/catch/finally block to avoid incorrectly catching exceptions
-            // that are not RPC related.
-            let hasError;
-            let busMessages;
-            this._currentRpcPromise = this.env.services.rpc({
-                params: {
-                    // TODO SEB handle new channels (only for livechat?)
-                    channels: [],
-                    last_bus_message_id: this._lastBusMessageId,
-                },
-                route: '/longpolling/poll',
-            }, {
-                shadow: true,
-                timeout: 60000,
-            });
-            const catchFn = error => {
-                // ajax.js is using exception to communicate actual information
-                if (error && error.message === "XmlHttpRequestError abort") {
-                    // Necessary to prevent other parts of the code from
-                    // handling this as a "business exception".
-                    // Note that Firefox will still report this as an
-                    // "Uncaught (in promise)" even though it is caught here.
-                    error.event.preventDefault();
-                } else if (error && error.message && error.message.data && error.message.data.arguments && error.message.data.arguments[0] === "bus.Bus not available in test mode") {
-                    // TODO SEB detect test mode beforehand and don't even start polling
-                    // or even better, bus should be available in test mode...
-                    this._isInTestMode = true;
-                    this.stop();
-                    // Necessary to prevent other parts of the code from
-                    // handling this as a "business exception".
-                    // Note that Firefox will still report this as an
-                    // "Uncaught (in promise)" even though it is caught here.
-                    error.event.preventDefault();
-                } else {
-                    console.error(error);
-                    hasError = true;
-                }
-            };
-            await this._currentRpcPromise.then(res => {
-                busMessages = res;
-            }).guardedCatch(catchFn).catch(catchFn).finally(() => {
-                this._currentRpcPromise = undefined;
-            });
-            if (busMessages) {
+            try {
+                const busMessages = await this._performRpcLongpollingPoll();
                 for (const busMessage of busMessages) {
                     this._lastBusMessageId = Math.max(busMessage.id, this._lastBusMessageId);
                     this._notifyHandlers(busMessage);
                 }
-            }
-            if (hasError) {
+            } catch (error) {
+                console.error(error);
                 // Randomize the retry delay between 10s and 30s to avoid
                 // deny of service if there are many other clients that would
                 // otherwise all retry at the same time.
@@ -141,8 +105,8 @@ export class LongpollingCommunication {
     stop() {
         this._isActive = false;
         clearTimeout(this._retryTimeoutId);
-        if (this._currentRpcPromise) {
-            this._currentRpcPromise.abort();
+        if (this._abortController) {
+            this._abortController.abort();
         }
     }
 
@@ -160,6 +124,20 @@ export class LongpollingCommunication {
     // -------------------------------------------------------------------------
 
     /**
+     * Returns whether an abort error is given as param.
+
+     * @param {*} error
+     * @returns {boolean}
+     */
+    _isAbortError(error) {
+        // AbortError not existing on Firefox, and AbortError existing in Chrome (but not actually used).
+        if (this.env.browser.AbortError && error instanceof this.env.browser.AbortError) {
+            return true;
+        }
+        return error instanceof this.env.browser.DOMException;
+    }
+
+    /**
      * Notifies the currently registered handlers.
      *
      * @param {*} busMessage
@@ -173,6 +151,67 @@ export class LongpollingCommunication {
             // for all handlers to terminate.
             setTimeout(() => handler(busMessage));
         }
+    }
+
+    /**
+     * Performs the `/longpolling/poll` RPC.
+     *
+     * @throw {Error}
+     * @returns {Object[]} busMessages
+     */
+    async _performRpcLongpollingPoll() {
+        this._abortController = new this.env.browser.AbortController();
+        window.ab = this._abortController;
+        try {
+            const response = await this.env.browser.fetch('/longpolling/poll', {
+                body: JSON.stringify({
+                    params: {
+                        // TODO SEB handle new channels (only for livechat?)
+                        channels: [],
+                        last_bus_message_id: this._lastBusMessageId,
+                    },
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+                signal: this._abortController.signal,
+            });
+            if (!response) {
+                throw Error('_performRpcLongpollingPoll: missing response');
+            }
+            if (!response.ok) {
+                throw Error(response);
+            }
+            const data = await response.json();
+            if (data.error) {
+                throw Error(data.error);
+            }
+            return data.result;
+        } catch (error) {
+            if (this._isAbortError(error)) {
+                return [];
+            }
+            throw error;
+        } finally {
+            this._abortController = undefined;
+        }
+        // const catchFn = error => {
+        //     } else if (error && error.message && error.message.data && error.message.data.arguments && error.message.data.arguments[0] === "bus.Bus not available in test mode") {
+        //         // TODO SEB detect test mode beforehand and don't even start polling
+        //         // or even better, bus should be available in test mode...
+        //         this._isInTestMode = true;
+        //         this.stop();
+        //         // Necessary to prevent other parts of the code from
+        //         // handling this as a "business exception".
+        //         // Note that Firefox will still report this as an
+        //         // "Uncaught (in promise)" even though it is caught here.
+        //         error.event.preventDefault();
+        //     } else {
+        //         console.error(error);
+        //         hasError = true;
+        //     }
+        // };
     }
 
 }
