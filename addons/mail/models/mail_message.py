@@ -382,7 +382,7 @@ class Message(models.Model):
                     model_record_ids.setdefault(vals['model'], set()).add(vals['res_id'])
             return model_record_ids
 
-        if self.env.is_superuser():
+        if self.env.is_admin():
             return
         # Non employees see only messages with a subtype (aka, not internal logs)
         if not self.env['res.users'].has_group('base.group_user'):
