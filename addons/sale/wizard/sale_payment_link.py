@@ -24,6 +24,17 @@ class PaymentLinkWizard(models.TransientModel):
             })
         return res
 
+    @api.depends('company_id', 'partner_id', 'currency_id')
+    def _compute_available_acquirer_ids(self):
+        sale_links = self.filtered(lambda link: link.res_model == 'sale.order')
+        super(PaymentLinkWizard, self-sale_links)._compute_available_acquirer_ids()
+        for link in sale_links:
+            link.available_acquirer_ids = link.env['payment.acquirer']._get_compatible_acquirers(
+                company_id=link.company_id.id,
+                partner_id=link.partner_id.id,
+                currency_id=link.currency_id.id,
+                sale_order_id=link.res_id)
+
     def _generate_link(self):
         """ Override of payment to add the sale_order_id in the link. """
         for payment_link in self:
@@ -35,6 +46,7 @@ class PaymentLinkWizard(models.TransientModel):
                                     f'?reference={urls.url_quote(payment_link.description)}' \
                                     f'&amount={payment_link.amount}' \
                                     f'&sale_order_id={payment_link.res_id}' \
+                                    f'{"&acquirer_id=" + str(payment_link.acquirer_id.id) if payment_link.acquirer_id else "" }' \
                                     f'&access_token={payment_link.access_token}'
                 # Order-related fields are retrieved in the controller
             else:

@@ -42,6 +42,22 @@ class PaymentLinkWizard(models.TransientModel):
     description = fields.Char('Payment Ref')
     access_token = fields.Char(compute='_compute_values')
     company_id = fields.Many2one('res.company', compute='_compute_company')
+    available_acquirer_ids = fields.Many2many(
+        comodel_name='payment.acquirer',
+        string="Payment Acquirers Available",
+        compute='_compute_available_acquirer_ids',
+        compute_sudo=True,
+    )
+    acquirer_id = fields.Many2one(
+        comodel_name='payment.acquirer',
+        string="Specific Payment Acquirer",
+        domain="[('id', 'in', available_acquirer_ids)]",
+        help="Leave blank to select all acquirers"
+    )
+    has_multiple_acquirers = fields.Boolean(
+        string="Has Multiple Acquirers",
+        compute='_compute_has_multiple_acquirers',
+    )
 
     @api.onchange('amount', 'description')
     def _onchange_amount(self):
@@ -50,7 +66,7 @@ class PaymentLinkWizard(models.TransientModel):
         if self.amount <= 0:
             raise ValidationError(_("The value of the payment amount must be positive."))
 
-    @api.depends('amount', 'description', 'partner_id', 'currency_id')
+    @api.depends('amount', 'description', 'partner_id', 'currency_id', 'acquirer_id')
     def _compute_values(self):
         for payment_link in self:
             payment_link.access_token = payment_utils.generate_access_token(
@@ -65,6 +81,20 @@ class PaymentLinkWizard(models.TransientModel):
             record = self.env[link.res_model].browse(link.res_id)
             link.company_id = record.company_id if 'company_id' in record else False
 
+    @api.depends('company_id', 'partner_id', 'currency_id')
+    def _compute_available_acquirer_ids(self):
+        for link in self:
+            link.available_acquirer_ids = link.env['payment.acquirer']._get_compatible_acquirers(
+                company_id=link.company_id.id,
+                partner_id=link.partner_id.id,
+                currency_id=link.currency_id.id
+            )
+
+    @api.depends('available_acquirer_ids')
+    def _compute_has_multiple_acquirers(self):
+        for link in self:
+            link.has_multiple_acquirers = len(link.available_acquirer_ids) > 1
+
     def _generate_link(self):
         for payment_link in self:
             related_document = self.env[payment_link.res_model].browse(payment_link.res_id)
@@ -75,4 +105,5 @@ class PaymentLinkWizard(models.TransientModel):
                    f'&currency_id={payment_link.currency_id.id}' \
                    f'&partner_id={payment_link.partner_id.id}' \
                    f'&company_id={payment_link.company_id.id}' \
+                   f'{"&acquirer_id=" + str(payment_link.acquirer_id.id) if payment_link.acquirer_id else "" }' \
                    f'&access_token={payment_link.access_token}'
