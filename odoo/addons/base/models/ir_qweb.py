@@ -159,7 +159,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         if len(el):
             raise SyntaxError("t-call-assets cannot contain children nodes")
 
-        # nodes = self._get_asset_nodes(bundle, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
+        # nodes = self.get_asset_nodes(bundle, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
         #
         # for index, (tagName, t_attrs, content) in enumerate(nodes):
         #     if index:
@@ -194,7 +194,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                 value=ast.Call(
                     func=ast.Attribute(
                         value=ast.Name(id='self', ctx=ast.Load()),
-                        attr='_get_asset_nodes',
+                        attr='get_asset_nodes',
                         ctx=ast.Load()
                     ),
                     args=[
@@ -284,7 +284,8 @@ class IrQWeb(models.AbstractModel, QWeb):
     def get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True):
         return AssetsBundle(bundle_name, files, env=env, css=css, js=js)
 
-    def _get_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+    @api.model
+    def get_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
@@ -315,7 +316,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
 
     def _get_asset_link_urls(self, bundle, options):
-        asset_nodes = self._get_asset_nodes(bundle, options, js=False)
+        asset_nodes = self.get_asset_nodes(bundle, options, js=False)
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
     @tools.ormcache_context('bundle', 'options.get("lang", "en_US")', keys=("website_id",))

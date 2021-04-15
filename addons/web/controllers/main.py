@@ -44,6 +44,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, serialize_exce
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db, security
+from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 _logger = logging.getLogger(__name__)
 
@@ -1010,6 +1011,24 @@ class WebClient(http.Controller):
             ('Cache-Control', 'public, max-age=' + str(CONTENT_MAXAGE)),
         ])
         return response
+
+    @http.route('/web/webclient/transpiled_js', type='json', auth="public")
+    def transpiled_js(self, paths=[], debug=False):
+        files = []
+        names = []
+        for path in paths:
+            # TODO: check that path points to /module/static
+            segments = [segment for segment in path.split('/') if segment]
+            names.append('_'.join(segments))
+            files.append({
+                'atype': 'text/javascript',
+                'url': path,
+                'filename': get_resource_path(*segments) if segments else None,
+                'content': '',
+                'media': False,
+            })
+        bundle = AssetsBundle(','.join(sorted(names)), files)
+        return bundle.to_node(css=False, debug=debug)
 
     @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):

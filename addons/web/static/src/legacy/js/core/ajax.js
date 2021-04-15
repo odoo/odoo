@@ -566,6 +566,86 @@ function loadLibs(libs, context, tplRoute) {
     return mutex.getUnlockedDef();
 }
 
+// TODO: move this somewhere it makes more sense
+/**
+ * Loads the given odoo modules, going through the odoo module transpilation.
+ * This function should be used when you're trying to load a single file that
+ * uses the new odoo module system that requires transpilation. If it is still
+ * using the old syntax, use loadJS instead.
+ *
+ * @param {String} moduleId the canonical id of the module in the form
+ *      "@module/path/to/file/in/static", note the absence of ending ".js"
+ * @returns {Promise<OdooModule[]>} when the modules are loaded, the returned
+ *      promise resolves to an array of the corresponding modules.
+ */
+async function loadOdooModules(moduleIds) {
+    const paths = moduleIds.map(moduleId => {
+        const match = moduleId.match(/^@([^/]+)(.*)$/);
+        if (!match) {
+            throw new Error(`"${moduleId}" is not a valid module identifier`);
+        }
+        const [, moduleName, path] = match;
+        return `/${moduleName}/static/src${path}.js`;
+    });
+    const scripts = await rpc('/web/webclient/transpiled_js', { paths });
+    await loadLibs({ jsLibs: scripts.map(([, { src }]) => src) });
+    // TODO: accessing defined modules through __DEBUG__.services seems super hacky
+    return moduleIds.map(moduleId => odoo.__DEBUG__.services[moduleId]);
+}
+
+// TODO: move this somewhere it makes more sense
+/**
+ * Loads the given bundle id, going through the odoo module transpilation.
+ *
+ * @param {String} bundleId the id of the bundle as declared in the manifest.
+ * @returns {Promise<Function>} when the bundle is loaded, the returned promise
+ *      will resolve to a function that can be used to access the odoo modules
+ *      defined in the bundle (in a similar fashion to require). Note that you
+ *      should probably not name that returned function "require" as this will
+ *      cause the odoo module system to create dependencies that will prevent
+ *      your module from loading.
+ */
+const loadBundle = (() => {
+    const loadedBundles = {};
+    const getModule = (moduleId) => {
+        const { services } = odoo.__DEBUG__;
+        if (!(moduleId in services)) {
+            throw new Error(`Attempted to use non-loaded module "${moduleId}"`);
+        }
+        return services[moduleId];
+    };
+    return async function _loadBundle(bundleId) {
+        if (!loadedBundles[bundleId]) {
+            const nodes = await rpc('/web/dataset/call_kw', {
+                model: 'ir.qweb',
+                method: 'get_asset_nodes',
+                args: [bundleId, {}],
+                kwargs: {
+                    // TODO: quid of debug=assets?
+                    debug: config.isDebug(),
+                },
+            });
+            const jsLibs = [];
+            const cssLibs = [];
+            nodes.forEach(([type, attributes]) => {
+                switch (type) {
+                    case 'script':
+                        jsLibs.push(attributes.src);
+                        break;
+                    case 'link':
+                        cssLibs.push(attributes.href);
+                        break;
+                    default:
+                        throw new Error(`Unrecognized asset node type "${type}": expected "script" or "link"`);
+                }
+            });
+            await loadLibs({ jsLibs, cssLibs });
+            loadedBundles[bundleId] = true;
+        }
+        return getModule;
+    };
+})();
+
 _.extend(ajax, {
     jsonRpc: jsonRpc,
     rpc: rpc,
@@ -574,6 +654,8 @@ _.extend(ajax, {
     loadXML: loadXML,
     loadAsset: loadAsset,
     loadLibs: loadLibs,
+    loadOdooModules: loadOdooModules,
+    loadBundle: loadBundle,
     get_file: get_file,
     post: post,
 });
