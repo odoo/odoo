@@ -12,7 +12,7 @@
                     <field name="workcenter_id"/>
                     <field name="time_mode" optional="show"/>
                     <field name="time_computed_on" optional="hide"/>
-                    <field name="time_cycle" widget="float_time" string="Duration (minutes)" sum="Total Duration" width="1.5"/>
+                    <field name="time_cycle" widget="float_time" string="Duration (minutes)" width="1.5"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -29,6 +29,27 @@
                     <field name="sequence" widget="handle"/>
                 </xpath>
                 <xpath expr="//field[@name='bom_id']" position="replace"/>
+                <xpath expr="//field[@name='time_cycle']" position="attributes">
+                    <attribute name="sum">Total Duration</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mrp_routing_workcenter_copy_to_bom_tree_view" model="ir.ui.view">
+            <field name="name">mrp.routing.workcenter.copy_to_bom.tree</field>
+            <field name="model">mrp.routing.workcenter</field>
+            <field name="inherit_id" ref="mrp_routing_workcenter_tree_view"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="create">0</attribute>
+                    <attribute name="export_xlsx">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='name']" position="before">
+                    <header>
+                        <button name="copy_to_bom" type="object" string="Copy selected operations"/>
+                    </header>
+                </xpath>
             </field>
         </record>
 
@@ -97,6 +118,7 @@
             <field name="model">mrp.routing.workcenter</field>
             <field name="arch" type="xml">
                 <search string="Operations Search Filters">
+                    <field name="name"/>
                     <field name="bom_id"/>
                     <field name="workcenter_id"/>
                     <group>
