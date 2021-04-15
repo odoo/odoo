@@ -389,6 +389,19 @@ class WebsiteEventController(http.Controller):
         registrations = self._process_attendees_form(event, post)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations)
 
+        return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
+
+    @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
+    def event_registration_success(self, event, registration_ids):
+        # fetch the related registrations, make sure they belong to the correct visitor / event pair
+        visitor = request.env['website.visitor']._get_visitor_from_request()
+        if not visitor:
+            raise NotFound()
+        attendees_sudo = request.env['event.registration'].sudo().search([
+            ('id', 'in', [str(registration_id) for registration_id in registration_ids.split(',')]),
+            ('event_id', '=', event.id),
+            ('visitor_id', '=', visitor.id),
+        ])
         return request.render("website_event.registration_complete",
             self._get_registration_confirm_values(event, attendees_sudo))
 

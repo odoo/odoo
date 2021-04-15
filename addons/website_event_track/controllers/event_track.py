@@ -455,7 +455,19 @@ class EventTrackController(http.Controller):
         if request.env.user != request.website.user_id:
             track.sudo().message_subscribe(partner_ids=request.env.user.partner_id.ids)
 
-        return request.render("website_event_track.event_track_proposal", {'track': track, 'event': event, 'main_object': event})
+        return request.redirect('/event/%s/track_proposal/success/%s' % (event.id, track.id))
+
+    @http.route(['/event/<model("event.event"):event>/track_proposal/success/<int:track_id>'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
+    def event_track_proposal_success(self, event, track_id):
+        track = request.env['event.track'].sudo().search([
+            ('id', '=', track_id),
+            ('partner_id', '=', request.env['website.visitor']._get_visitor_from_request().partner_id.id),
+            ('event_id', '=', event.id),
+        ])
+        if not event.can_access_from_current_website() or not track:
+            raise NotFound()
+
+        return request.render("website_event_track.event_track_proposal", {'track': track, 'event': event})
 
     # ACL : This route is necessary since rpc search_read method in js is not accessible to all users (e.g. public user).
     @http.route(['''/event/track_tag/search_read'''], type='json', auth="public", website=True)
