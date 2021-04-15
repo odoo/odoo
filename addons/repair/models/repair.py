@@ -360,7 +360,7 @@ class Repair(models.Model):
                 if not invoice_vals['narration']:
                     invoice_vals['narration'] = narration
                 else:
-                    invoice_vals['narration'] += '\n' + narration
+                    invoice_vals['narration'] += '<br/>' + narration
 
             # Create invoice lines from operations.
             for operation in repair.operations.filtered(lambda op: op.type == 'add'):
