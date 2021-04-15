@@ -1,3 +1,4 @@
+
 odoo.define('web_tour.TourManager', function(require) {
 "use strict";
 
@@ -7,7 +8,6 @@ var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
 var utils = require('web_tour.utils');
 var TourStepUtils = require('web_tour.TourStepUtils');
-var RainbowMan = require('web.RainbowMan');
 var RunningTourActionHelper = require('web_tour.RunningTourActionHelper');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
@@ -433,7 +433,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 message = _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
             }
             const fadeout = this.tours[tour_name].fadeout;
-            new RainbowMan({message, fadeout}).appendTo(this.$body);
+            core.bus.trigger('show-effect', {message, fadeout});
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));

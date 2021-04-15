@@ -57,7 +57,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/kanban.xml',
             'web/static/src/legacy/xml/notification.xml',
             'web/static/src/legacy/xml/pivot.xml',
-            'web/static/src/legacy/xml/rainbow_man.xml',
             'web/static/src/legacy/xml/report.xml',
             'web/static/src/legacy/xml/search_panel.xml',
             'web/static/src/legacy/xml/web_calendar.xml',
@@ -176,6 +175,7 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/legacy/action_adapters.js',
             'web/static/src/legacy/debug_manager.js',
+            'web/static/src/legacy/service_provider_adapter.js',
             'web/static/src/legacy/legacy_client_actions.js',
             'web/static/src/legacy/legacy_dialog.js',
             'web/static/src/legacy/legacy_setup.js',
@@ -246,6 +246,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
+
+            ('include', 'web.website_legacy'),
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
@@ -342,7 +344,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/mimetypes.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/legacy/scss/animation.scss',
-            'web/static/src/legacy/scss/rainbow.scss',
             'web/static/src/legacy/scss/datepicker.scss',
             'web/static/src/legacy/scss/daterangepicker.scss',
             'web/static/src/legacy/scss/banner.scss',
@@ -437,10 +438,16 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
             'web/static/src/legacy/js/widgets/notification.js',
-            'web/static/src/legacy/js/widgets/rainbow_man.js',
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/js/widgets/colorpicker.js',
             'web/static/src/legacy/js/widgets/translation_dialog.js',
+        ],
+
+        # Used during the transition of the web architecture
+        'web.website_legacy': [
+            # Old rainbow man kept for website compatibility
+            'web/static/src/legacy/frontend/rainbowman/*.js',
+            'web/static/src/legacy/frontend/rainbowman/*.scss',
         ],
 
         # ---------------------------------------------------------------------

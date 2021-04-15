@@ -31,7 +31,7 @@ export class RainbowMan extends Component {
     hooks.onMounted(() => {
       if (this.delay !== false) {
         browser.setTimeout(() => {
-          if (!this.__owl__.status === 5 /* DESTROYED */) {
+          if (this.__owl__.status !== 5 /* DESTROYED */) {
             this.el.classList.add("o_reward_fading");
           }
         }, this.delay);
