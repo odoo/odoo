@@ -890,6 +890,11 @@ class AccountReconcileModel(models.Model):
         the most prioritary are kept.
         """
         candidates_by_priority = self._sort_reconciliation_candidates_by_priority(candidates, aml_ids_to_exclude, reconciled_amls_ids)
+
+        # This can happen if the candidates were already reconciled at this point
+        if not candidates_by_priority:
+            return [], set()
+
         max_priority = min(candidates_by_priority.keys())
 
         filtered_candidates = candidates_by_priority[max_priority]
