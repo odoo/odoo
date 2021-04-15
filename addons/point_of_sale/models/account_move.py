@@ -17,6 +17,14 @@ class AccountMove(models.Model):
             stock_moves += invoice.sudo().mapped('pos_order_ids.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return stock_moves
 
+<<<<<<< HEAD
+=======
+    def _compute_amount(self):
+        super(AccountMove, self)._compute_amount()
+        for inv in self:
+            if inv.type in ['out_invoice', 'out_refund'] and inv.pos_order_ids and any(s != 'closed' for s in inv.pos_order_ids.mapped('session_id.state')):
+                inv.invoice_payment_state = 'paid'
+>>>>>>> 1f4e9f24b89... temp
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
