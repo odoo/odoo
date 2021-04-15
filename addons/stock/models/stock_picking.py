@@ -255,7 +255,7 @@ class Picking(models.Model):
         'Source Document', index=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Reference of the document")
-    note = fields.Text('Notes')
+    note = fields.Html('Notes')
     backorder_id = fields.Many2one(
         'stock.picking', 'Back Order of',
         copy=False, index=True, readonly=True,
