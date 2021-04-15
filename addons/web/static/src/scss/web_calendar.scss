@@ -37,6 +37,11 @@ $o-cw-filter-avatar-size: 20px;
             color: $body-color;
         }
 
+        &.fc-dragging.fc-day-grid-event.dayGridMonth .fc-content {
+            @include text-truncate();
+            margin: 4px 4px 3px;
+        }
+
         .fc-bg {
             background-color: mix(theme-color('primary'), white); // Used for placeholder events only (on creation)
             @include size(101%); // Compensate border
