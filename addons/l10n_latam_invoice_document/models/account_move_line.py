@@ -16,9 +16,9 @@ class AccountMoveLine(models.Model):
 
     l10n_latam_document_type_id = fields.Many2one(
         related='move_id.l10n_latam_document_type_id', auto_join=True, store=True, index=True)
-    l10n_latam_price_unit = fields.Monetary(compute='compute_l10n_latam_prices_and_taxes')
+    l10n_latam_price_unit = fields.Float(compute='compute_l10n_latam_prices_and_taxes', digits='Product Price')
     l10n_latam_price_subtotal = fields.Monetary(compute='compute_l10n_latam_prices_and_taxes')
-    l10n_latam_price_net = fields.Monetary(compute='compute_l10n_latam_prices_and_taxes')
+    l10n_latam_price_net = fields.Float(compute='compute_l10n_latam_prices_and_taxes', digits='Product Price')
     l10n_latam_tax_ids = fields.One2many(compute="compute_l10n_latam_prices_and_taxes", comodel_name='account.tax')
 
     @api.depends('price_unit', 'price_subtotal', 'move_id.l10n_latam_document_type_id')
