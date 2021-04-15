@@ -581,7 +581,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.company.anglo_saxon_accounting = True
         self.partner = self.env['res.partner'].create({'name': 'My Test Partner'})
         self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category','property_valuation': 'real_time', 'property_cost_method': 'fifo'})
-        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
+        account_type = self.env['account.account.type'].sudo().create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
         self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type.id, 'reconcile': True})
         account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type.id, 'reconcile': True})
         account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type.id, 'reconcile': True})
@@ -1645,7 +1645,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.company.anglo_saxon_accounting = True
         self.partner = self.env['res.partner'].create({'name': 'My Test Partner'})
         self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category', 'property_valuation': 'real_time', 'property_cost_method': 'fifo'})
-        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
+        account_type = self.env['account.account.type'].sudo().create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
         self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'user_type_id': account_type.id, 'reconcile': True})
         account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'user_type_id': account_type.id, 'reconcile': True})
         account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00', 'user_type_id': account_type.id, 'reconcile': True})
