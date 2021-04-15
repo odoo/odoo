@@ -17,7 +17,7 @@
             <div class="media-body px-3">
                 <t t-set="description" t-value="widget.displayDescription and product['description_sale']"/>
                 <h6 t-attf-class="font-weight-bold #{description ? '' : 'mb-0'}" t-esc="product['name']"/>
-                <p t-if="description" class="mb-0" t-esc="description"/>
+                <p t-if="description" class="mb-0" t-raw="description"/>
             </div>
             <div t-if="widget.displayPrice" class="flex-shrink-0">
                 <t t-if="product['has_discounted_price']">
