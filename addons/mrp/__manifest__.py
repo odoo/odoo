@@ -67,6 +67,7 @@
             'mrp/static/src/js/mrp_documents_kanban_renderer.js',
             'mrp/static/src/js/mrp_document_kanban_view.js',
             'mrp/static/src/js/mrp_should_consume.js',
+            'mrp/static/src/js/mrp_field_one2many_with_copy.js',
         ],
         'web.assets_common': [
             'mrp/static/src/scss/mrp_bom_report.scss',
