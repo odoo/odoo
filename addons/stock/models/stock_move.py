@@ -1326,7 +1326,7 @@ class StockMove(models.Model):
 
     def _should_bypass_reservation(self):
         self.ensure_one()
-        return self.location_id.should_bypass_reservation() or self.product_id.type != 'product'
+        return self.location_id.should_bypass_reservation() or self.product_id.type != 'product' or self.product_uom_qty < 0
 
     # necessary hook to be able to override move reservation to a restrict lot, owner, pack, location...
     def _get_available_quantity(self, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -1353,10 +1353,10 @@ class StockMove(models.Model):
             missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
-                if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
+                if move.product_id.tracking == 'serial' and move.product_uom_qty > 0 and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
                     for i in range(0, int(missing_reserved_quantity)):
                         move_line_vals_list.append(move._prepare_move_line_vals(quantity=1))
-                else:
+                elif move.product_uom_qty > 0:
                     to_update = move.move_line_ids.filtered(lambda ml: ml.product_uom_id == move.product_uom and
                                                             ml.location_id == move.location_id and
                                                             ml.location_dest_id == move.location_dest_id and
@@ -1609,6 +1609,7 @@ class StockMove(models.Model):
 
     def unlink(self):
         # With the non plannified picking, draft moves could have some move lines.
+        self.filtered(lambda m: m.product_uom_qty < 0)._action_cancel()
         self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
         return super(StockMove, self).unlink()
 
