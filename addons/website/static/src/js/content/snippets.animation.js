@@ -1028,6 +1028,60 @@ registry.HeaderHamburgerFull = publicWidget.Widget.extend({
     },
 });
 
+registry.BottomFixedElement = publicWidget.Widget.extend({
+    selector: '#wrapwrap',
+
+    /**
+     * @override
+     */
+    async start() {
+        this.$scrollingElement = $().getScrollingElement();
+        this.__hideBottomFixedElements = _.debounce(() => this._hideBottomFixedElements(), 500);
+        this.$scrollingElement.on('scroll.bottom_fixed_element', this.__hideBottomFixedElements);
+        $(window).on('resize.bottom_fixed_element', this.__hideBottomFixedElements);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.$scrollingElement.off('.bottom_fixed_element');
+        $(window).off('.bottom_fixed_element');
+        $('.o_bottom_fixed_element').removeClass('o_bottom_fixed_element_hidden');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Hides the elements that are fixed at the bottom of the screen if the
+     * scroll reaches the bottom of the page and if the elements hide a button.
+     *
+     * @private
+     */
+    _hideBottomFixedElements() {
+        // Note: check in the whole DOM instead of #wrapwrap as unfortunately
+        // some things are still put outside of the #wrapwrap (like the livechat
+        // button which is the main reason of this code).
+        const $bottomFixedElements = $('.o_bottom_fixed_element');
+        if (!$bottomFixedElements.length) {
+            return;
+        }
+
+        $bottomFixedElements.removeClass('o_bottom_fixed_element_hidden');
+        if ((this.$scrollingElement[0].offsetHeight + this.$scrollingElement[0].scrollTop) >= (this.$scrollingElement[0].scrollHeight - 2)) {
+            const buttonEls = [...this.$('.btn:visible')];
+            for (const el of $bottomFixedElements) {
+                if (buttonEls.some(button => dom.areColliding(button, el))) {
+                    el.classList.add('o_bottom_fixed_element_hidden');
+                }
+            }
+        }
+    },
+});
+
 return {
     Widget: publicWidget.Widget,
     Animation: Animation,
