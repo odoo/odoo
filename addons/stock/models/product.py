@@ -856,7 +856,7 @@ class UoM(models.Model):
                               for f in {'category_id'}))
             if changed:
                 error_msg = _(
-                    "You cannot change the ratio of this unit of mesure"
+                    "You cannot change the ratio of this unit of measure"
                     " as some products with this UoM have already been moved"
                     " or are currently reserved."
                 )
