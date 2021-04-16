@@ -8,6 +8,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
     disabledInEditableMode: false,
     events: {
         'click .s_donation_btn': '_onClickPrefilledButton',
+        'click .s_donation_donate_btn': '_onClickDonateNowButton',
         'input #s_donation_range_slider': '_onInputRangeSlider',
     },
 
@@ -17,8 +18,9 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
     async start() {
         await this._super(...arguments);
         this.$rangeSlider = this.$('#s_donation_range_slider');
+        this.defaultAmount = this.$target[0].dataset.defaultAmount;
         if (this.$rangeSlider.length) {
-            this.$rangeSlider.val(this.$target[0].dataset.defaultAmount);
+            this.$rangeSlider.val(this.defaultAmount);
             this._setBubble(this.$rangeSlider);
         }
         await this._displayCurrencies();
@@ -29,6 +31,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
     destroy() {
         this.$target.find('.s_donation_currency').remove();
         this._deselectPrefilledButtons();
+        this.$('.alert-danger').remove();
         this._super(...arguments);
     },
 
@@ -99,6 +102,50 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
             this.$rangeSlider.val($button[0].dataset.donationValue);
             this._setBubble(this.$rangeSlider);
         }
+    },
+    /**
+     * @private
+     */
+    _onClickDonateNowButton(ev) {
+        if (this.editableMode) {
+            return;
+        };
+        this.$('.alert-danger').remove();
+        const $buttons = this.$('.s_donation_btn');
+        const $selectedButton = $buttons.filter('.active');
+        let amount = $selectedButton.length ? $selectedButton[0].dataset.donationValue : 0;
+        if (this.$target[0].dataset.displayOptions && !amount) {
+            if (this.$rangeSlider.length) {
+                amount = this.$rangeSlider.val();
+            } else if ($buttons.length) {
+                amount = parseFloat(this.$('#s_donation_amount_input').val());
+                let errorMessage = '';
+                const minAmount = this.$target[0].dataset.minimumAmount;
+                if (!amount) {
+                    errorMessage = _t("Please select or enter an amount");
+                } else if (amount < parseFloat(minAmount)) {
+                    const before = this.currency.position === "before" ? this.currency.symbol : "";
+                    const after = this.currency.position === "after" ? this.currency.symbol : "";
+                    errorMessage = _.str.sprintf(_t("The minimum donation amount is %s%s%s"), before, minAmount, after);
+                }
+                if (errorMessage) {
+                    $(ev.currentTarget).before($('<p>', {
+                        class: 'alert alert-danger',
+                        text: errorMessage,
+                    }));
+                    return;
+                }
+            }
+        }
+        if (!amount) {
+            amount = this.defaultAmount;
+        }
+        const $form = this.$('.s_donation_form');
+        $('<input>').attr({type: 'hidden', name: 'amount', value: amount}).appendTo($form);
+        $('<input>').attr({type: 'hidden', name: 'currency_id', value: this.currency.id}).appendTo($form);
+        $('<input>').attr({type: 'hidden', name: 'csrf_token', value: odoo.csrf_token}).appendTo($form);
+        $('<input>').attr({type: 'hidden', name: 'donation_options', value: JSON.stringify(this.el.dataset)}).appendTo($form);
+        $form.submit();
     },
     /**
      * @private
