@@ -101,7 +101,9 @@ Wysiwyg.include({
                 var $iframeTarget = self.$iframe.contents().find('#iframe_target');
                 // copy the html in itself to have the node prototypes relative
                 // to this window rather than the iframe window.
-                $iframeTarget.html($iframeTarget.html());
+                const $targetClone = $iframeTarget.clone();
+                $targetClone.find('script').remove();
+                $iframeTarget.html($targetClone.html());
                 self.$iframeBody = $iframeTarget;
                 $iframeTarget.attr("isMobile", config.device.isMobile);
                 const $utilsZone = $('<div class="iframe-utils-zone">');
