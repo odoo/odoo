@@ -13,7 +13,7 @@
         <field name="visible" eval="0"/>
     </record>
 
-    <record id="do_chart_template_enterprise" model="account.chart.template">
+    <record id="do_chart_template" model="account.chart.template">
         <field name="name">Catálogo de Cuentas Dominicano (NIIF)</field>
         <field name="code_digits">8</field>
         <field name="cash_account_code_prefix">110101</field>
@@ -25,6 +25,7 @@
 
     <record id="do_chart_template_gubernamental" model="account.chart.template">
         <field name="name">Localización Gubernamental Dominicana</field>
+        <field name="code_digits">12</field>
         <field name="cash_account_code_prefix">110101</field>
         <field name="bank_account_code_prefix">110102</field>
         <field name="transfer_account_code_prefix">11010100</field>
