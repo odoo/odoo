@@ -22,7 +22,7 @@ class MockLinkTracker(common.BaseCase):
         self.addCleanup(link_tracker_title_patch.stop)
 
     def _get_href_from_anchor_id(self, body, anchor_id):
-        html = etree.fromstring(body)
+        html = etree.fromstring(body, parser=etree.HTMLParser())
         return html.xpath("//*[@id='%s']" % anchor_id)[0].attrib.get('href')
 
     def _get_tracker_from_short_url(self, short_url):
@@ -41,7 +41,7 @@ class MockLinkTracker(common.BaseCase):
         )
         """
         (anchor_id, url, is_shortened) = link_info
-        anchor_href = self._get_href_from_anchor_id("<div>%s</div>" % body, anchor_id)
+        anchor_href = self._get_href_from_anchor_id(body, anchor_id)
         if is_shortened:
             self.assertTrue('/r/' in anchor_href, '%s should be shortened: %s' % (anchor_id, anchor_href))
             link_tracker = self._get_tracker_from_short_url(anchor_href)
