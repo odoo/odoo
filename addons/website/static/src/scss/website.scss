@@ -87,11 +87,6 @@ $-seen-urls: ();
 }
 
 #wrapwrap {
-    // When the modal is in #wrapwrap, position top should be size of the navbar
-    .modal:not(.s_popup_bottom) {
-        top: $o-navbar-height;
-    }
-
     @if o-website-value('body-image') {
         background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
         background-position: center;
@@ -178,6 +173,13 @@ $-seen-urls: ();
                 }
             }
         }
+    }
+}
+
+#oe_main_menu_navbar:not(.o_hidden) + #wrapwrap {
+    .o_header_affixed, .modal:not(.s_popup_bottom) {
+        // For these elements, in #wrapwrap, position top should be size of the navbar
+        top: $o-navbar-height;
     }
 }
 
@@ -769,9 +771,6 @@ $-transition-duration: 200ms;
             }
         }
     }
-}
-#oe_main_menu_navbar + #wrapwrap .o_header_affixed {
-    top: $o-navbar-height;
 }
 
 // Navbar
