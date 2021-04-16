@@ -291,6 +291,7 @@ class Message extends Component {
              * Field types that are not listed here are not supported by
              * tracking in Python. Also see `create_tracking_values` in Python.
              */
+            debugger;
             switch (value.field_type) {
                 case 'boolean':
                     value.old_value = format.boolean(value.old_value, undefined, { forceString: true });

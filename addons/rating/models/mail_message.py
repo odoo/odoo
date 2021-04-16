@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class MailMessage(models.Model):
     _inherit = 'mail.message'
-
+    #TODO: move project/mail_message to here
     rating_ids = fields.One2many('rating.rating', 'message_id', groups='base.group_user', string='Related ratings')
     rating_value = fields.Float(
         'Rating Value', compute='_compute_rating_value', compute_sudo=True,

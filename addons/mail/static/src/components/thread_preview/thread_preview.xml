@@ -48,7 +48,9 @@
                                     threadLocalId="thread.localId"
                                 />
                             </t>
-                            <t t-esc="inlineLastMessageBody"/>
+                            <span class="o_ThreadPreview_messageBody">
+                                <t t-esc="inlineLastMessageBody"/>
+                            </span>
                         </span>
                         <span class="o-autogrow"/>
                         <t t-if="thread.localMessageUnreadCounter > 0">
