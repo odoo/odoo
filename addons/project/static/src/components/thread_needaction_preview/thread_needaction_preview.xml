@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ThreadNeedactionPreview" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_ThreadNeedactionPreview_messageBody')]" position="replace">
+            <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.isRating">
+                rating
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>
