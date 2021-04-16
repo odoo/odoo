@@ -169,7 +169,16 @@ odoo.define('website_form.s_website_form', function (require) {
             }
 
             // Post form and handle result
+<<<<<<< HEAD:addons/website_form/static/src/snippets/s_website_form/000.js
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
+=======
+            self.post_form(form_values)
+        },
+
+        post_form: function(form_values) {
+            var self = this;
+            ajax.post(this.$target.attr('action') + (this.$target.data('force_action')||this.$target.data('model_name')), form_values)
+>>>>>>> 7ee49896f7c... temp:addons/website_form/static/src/js/website_form.js
             .then(function (result_data) {
                 // Restore send button behavior
                 self.$target.find('.s_website_form_send, .o_website_form_send')
@@ -331,4 +340,6 @@ odoo.define('website_form.s_website_form', function (require) {
             })));
         },
     });
+
+    return publicWidget.registry.form_builder_send
 });
