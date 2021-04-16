@@ -454,10 +454,11 @@ calendar view are:
   * ``avatar_field``
     only for x2many field, to display the avatar instead of the display_name
     in the cards
-  * ``write_model`` and ``write_field``
+  * ``write_model`` and ``write_field`` and ``filter_field``
 
     you can add a filter and save the result in the defined model, the
-    filter is added in the sidebar
+    filter is added in the sidebar. The ``filter_field`` is optionnal and allows
+    you to specify the field that will hold the status of the filter.
   * ``filter`` and ``color``
 
     use "True" to add this field in filter in the sidebar. You can specify

@@ -46,7 +46,7 @@ $o-cw-filter-avatar-size: 20px;
 
         .fc-content {
             white-space: normal;
-            margin: 8px 4px;
+            margin: 0.25rem;
             font-size: 1.1em;
             font-weight: 500;
         }
@@ -105,6 +105,20 @@ $o-cw-filter-avatar-size: 20px;
 
         .fc-event-container {
             color: white;
+        }
+
+        .fc-more-popover {
+            .fc-header {
+                padding-left: 1rem;
+                .fc-title {
+                    font-weight: bold;
+                }
+            }
+
+            .fc-body {
+                max-height: 500px;
+                overflow: auto;
+            }
         }
 
         .o_calendar_disabled {
@@ -214,6 +228,10 @@ $o-cw-filter-avatar-size: 20px;
             &.fc-short {
                 padding-top: 0;
                 padding-bottom: 0;
+            }
+
+            .fc-content {
+                margin-top: 1px!important;
             }
         }
 
@@ -361,6 +379,37 @@ $o-cw-filter-avatar-size: 20px;
                 padding-left: 5px;
             }
 
+            @for $i from 1 through length($o-colors-complete) {
+                $color: nth($o-colors-complete, $i);
+                .o_cw_popover_link.o_calendar_color_#{$i - 1} {
+                    border: solid 2px;
+                    padding-left: 5px;
+                    border-color: $color;
+                    margin-top: 2px;
+                    background: $color;
+                    color: black;
+
+                    &.o_attendee_status_tentative {
+                        color: color-yiq($color);
+                        background: repeating-linear-gradient(
+                                    45deg,
+                                    $color,
+                                    $color 10px,
+                                    rgba($color, 0.7) 10px,
+                                    rgba($color, 0.7) 20px) !important;
+                    }
+
+                    &.o_attendee_status_needsAction {
+                        background-color: rgba(white, 0.9)!important;
+                    }
+
+                    &.o_attendee_status_declined {
+                        text-decoration: line-through;
+                        background-color: rgba(white, 0.9)!important;
+                    }
+                }
+            }
+
             > table {
                 height: 100%;
             }
@@ -421,6 +470,10 @@ $o-cw-filter-avatar-size: 20px;
 
                     .fc-dayGridMonth-view {
                         padding-left: unset;
+
+                        .fc-has-event {
+                            background-color: #B4DFF5;
+                        }
                     }
 
                     .fc-week.fc-row {
@@ -759,7 +812,13 @@ $o-cw-filter-avatar-size: 20px;
             ) !important;
 
             .fc-bg {
-                background: rgba(white, 0.5);
+                background: repeating-linear-gradient(
+                    45deg,
+                    $color,
+                    $color 10px,
+                    rgba($color, 0.5) 10px,
+                    rgba($color, 0.5) 20px
+                );
             }
         }
         .fc-bgevent.o_calendar_color_#{$i - 1} {
@@ -770,7 +829,7 @@ $o-cw-filter-avatar-size: 20px;
         .fc-event.o_calendar_color_#{$i - 1} {
             border-color: $color;
             color: darken($color, 45%);
-            opacity: 0.75;
+            opacity: 1;
 
             &.o_event_hightlight {
                 opacity: 1;
@@ -790,15 +849,48 @@ $o-cw-filter-avatar-size: 20px;
             &.o_cw_custom_hover, &.o_cw_custom_highlight {
                 box-shadow: 0 12px 12px -5px rgba($color, 0.3);
                 color: color-yiq($color);
+                z-index: 10!important;
+                opacity: 1;
+                right: 1px!important;
+                left: 1px!important;
+                margin-right: 0!important;
+            }
 
+            &.o_attendee_status_needsAction, &.o_attendee_status_tentative, &.o_attendee_status_declined, &.o_attendee_status_alone {
+                border-width: 2px 2px 2px !important;
+
+                &.o_cw_custom_highlight {
+                    background-color: $color;
+                }
+            }
+        
+            &.o_attendee_status_tentative {
+                color: color-yiq($color);
                 .fc-bg {
                     background: repeating-linear-gradient(
                         45deg,
                         $color,
                         $color 10px,
-                        rgba($color, 0.5) 10px,
-                        rgba($color, 0.5) 20px
-                    );
+                        rgba(white, 0.4) 10px,
+                        rgba(white, 0.4) 20px
+                    ) !important;
+                }
+            }
+
+            &.o_attendee_status_alone, &.o_attendee_status_needsAction {
+                background-color: rgba(white, 0.9)!important;
+                color: black;
+                .fc-bg {
+                    background-color: rgba(white, 0.9)!important;
+                }
+            }
+
+            &.o_attendee_status_declined {
+                text-decoration: line-through;
+                background-color: rgba(white, 0.9)!important;
+                color: black;
+                .fc-bg {
+                    background-color: rgba(white, 0.9)!important;
                 }
             }
         }

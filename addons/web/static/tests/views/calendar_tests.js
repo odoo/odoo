@@ -116,11 +116,12 @@ QUnit.module('Views', {
                     id: {string: "ID", type: "integer"},
                     user_id: {string: "user", type: "many2one", relation: 'user'},
                     partner_id: {string: "partner", type: "many2one", relation: 'partner'},
+                    partner_checked: {string: "checked", type: "boolean"}
                 },
                 records: [
-                    {id: 1, user_id: session.uid, partner_id: 1},
-                    {id: 2, user_id: session.uid, partner_id: 2},
-                    {id: 3, user_id: 4, partner_id: 3}
+                    {id: 1, user_id: session.uid, partner_id: 1, partner_checked: true},
+                    {id: 2, user_id: session.uid, partner_id: 2, partner_checked: true},
+                    {id: 3, user_id: 4, partner_id: 3, partner_checked: true}
                 ]
             },
         };
@@ -2140,6 +2141,40 @@ QUnit.module('Views', {
         assert.strictEqual($('#ui-datepicker-div:empty').length, 0, "should have a clean body");
     });
 
+    QUnit.test('check filters with filter_field specified', async function (assert) {
+        assert.expect(5);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: `
+                <calendar class="o_calendar_test"
+                        event_open_popup="true"
+                        date_start="start"
+                        date_stop="stop"
+                        all_day="allday"
+                        mode="week"
+                        color="partner_id">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" filter_field="partner_checked"/>
+                </calendar>`,
+        });
+
+        assert.containsOnce(calendar, '.o_calendar_filter_item[data-id="2"] input:checked',
+            "checkbox should be checked");
+        await testUtils.dom.click(calendar.$('.o_calendar_filter_item[data-id="2"] input'));
+        assert.containsNone(calendar, '.o_calendar_filter_item[data-id="2"] input:checked',
+            "checkbox should not be checked");
+        assert.strictEqual(this.data.filter_partner.records.find(r => r.id === 2).partner_checked, false,
+            "the status of this filter should now be false");
+        await calendar.reload();
+        assert.containsNone(calendar, '.o_calendar_filter_item[data-id="2"] input:checked',
+            "checkbox should not be checked after the reload");
+        assert.strictEqual(this.data.filter_partner.records.find(r => r.id === 2).partner_checked, false,
+            "the status of this filter should still be false after the reload");
+        calendar.destroy();
+    });
+
     QUnit.test('"all" filter', async function (assert) {
         assert.expect(8);
 
@@ -3832,7 +3867,7 @@ QUnit.module('Views', {
         assert.containsOnce(calendar, '.o_cw_popover');
         popoverText = calendar.el.querySelector('.o_cw_popover')
             .textContent.replace(/\s{2,}/g, ' ').trim();
-        assert.strictEqual(popoverText, 'December 12, 2016 event 2 event 3');
+        assert.strictEqual(popoverText, 'December 12, 2016 event 2 10:55 event 3 15:55');
         await testUtils.dom.click(calendar.el.querySelector('.o_cw_popover_close'));
         assert.containsNone(calendar, '.o_cw_popover');
 

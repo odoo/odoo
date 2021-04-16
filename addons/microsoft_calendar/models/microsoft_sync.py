@@ -56,6 +56,7 @@ class MicrosoftSync(models.AbstractModel):
     _description = "Synchronize a record with Microsoft Calendar"
 
     microsoft_id = fields.Char('Microsoft Calendar Id', copy=False)
+    # This field helps to known when a microsoft event need to be resynced
     need_sync_m = fields.Boolean(default=True, copy=False)
     active = fields.Boolean(default=True)
 

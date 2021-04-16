@@ -132,10 +132,13 @@
                 <div class="font-weight-bold mt-2" t-esc="groupKey"/>
                 <t t-foreach="groupedEvents[groupKey]" t-as="event">
                     <t t-set="record" t-value="event.extendedProps.record"/>
-                    <a href="#" class="o_cw_popover_link btn-link d-block"
+                    <t t-set="color" t-value="event.extendedProps.color_index"/>
+                    <a href="#"
+                        t-attf-class="o_cw_popover_link o_calendar_color_#{typeof color === 'number' ? _.str.sprintf('%s', color) : '1'} o_attendee_status_#{record.is_alone ? 'alone' : record.attendee_status} btn-link d-block"
                         t-att-data-id="record.id"
-                        t-att-data-title="record.display_name"
-                        t-esc="record.display_name"/>
+                        t-att-data-title="record.display_name">
+                        <t t-esc="record.display_name"/> <t t-esc="record.start_hour"/>
+                    </a>
                 </t>
             </t>
             <div class="mt-2">

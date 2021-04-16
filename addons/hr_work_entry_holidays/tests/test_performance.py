@@ -31,7 +31,7 @@ class TestWorkEntryHolidaysPerformance(TestWorkEntryHolidaysBase):
         self.richard_emp.generate_work_entries(date(2018, 1, 1), date(2018, 1, 2))
         leave = self.create_leave(datetime(2018, 1, 1, 7, 0), datetime(2018, 1, 1, 18, 0))
 
-        with self.assertQueryCount(__system__=92, admin=99):
+        with self.assertQueryCount(__system__=94, admin=99):
             leave.action_validate()
         leave.action_refuse()
 

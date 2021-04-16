@@ -1,7 +1,7 @@
 odoo.define('microsoft_calendar.MicrosoftCalendarPopover', function(require) {
     "use strict";
 
-    const CalendarPopover = require('web.CalendarPopover');
+    const CalendarPopover = require('calendar.CalendarRenderer').AttendeeCalendarPopover;
 
     const MicrosoftCalendarPopover = CalendarPopover.include({
         events: _.extend({}, CalendarPopover.prototype.events, {
@@ -15,9 +15,9 @@ odoo.define('microsoft_calendar.MicrosoftCalendarPopover', function(require) {
          */
         isMEventSyncedAndArchivable() {
             if (this.event.extendedProps.record.google_id === undefined) {
-                return this.event.extendedProps.record.microsoft_id;
+                return this.isCurrentPartnerOrganizer() && this.event.extendedProps.record.microsoft_id;
             }
-            return !this.event.extendedProps.record.google_id && this.event.extendedProps.record.microsoft_id
+            return this.isCurrentPartnerOrganizer() && !this.event.extendedProps.record.google_id && this.event.extendedProps.record.microsoft_id
         },
 
         isEventDeletable() {
