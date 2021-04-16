@@ -5,11 +5,25 @@ odoo.define('project.ProjectFormView', function (require) {
     const FormView = require('web.FormView');
     const FormController = require('web.FormController');
     const core = require('web.core');
+    const { device } = require('web.config');
     const view_registry = require('web.view_registry');
 
     const _t = core._t;
 
     const ProjectFormController = FormController.extend({
+        init() {
+            this._super(...arguments);
+            if (!device.isMobile) {
+                core.bus.on("DOM_updated", this, () => {
+                    const $editable = this.$el.find('.note-editable');
+                    if ($editable.length) {
+                        const resizerHeight = this.$el.find('.o_wysiwyg_resizer').outerHeight();
+                        const newHeight = window.innerHeight - $editable.offset().top - resizerHeight - 1;
+                        $editable.outerHeight(newHeight);
+                    }
+                });
+            }
+        },
         _getActionMenuItems(state) {
             if (!this.archiveEnabled || !state.data['recurrence_id']) {
                 return this._super(...arguments);
@@ -32,7 +46,7 @@ odoo.define('project.ProjectFormView', function (require) {
 
         _onDeleteRecord() {
             const record = this.model.get(this.handle);
-            
+
             if(!record.data.recurrence_id) {
                 return this._super(...arguments);
             }
