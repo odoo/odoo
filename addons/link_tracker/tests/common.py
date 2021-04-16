@@ -52,6 +52,25 @@ class MockLinkTracker(common.BaseCase):
             self.assertTrue('/r/' not in anchor_href, '%s should not be shortened: %s' % (anchor_id, anchor_href))
             self.assertEqual(anchor_href, url)
 
+    def assertLinkShortenedText(self, body, link_info, link_params=None):
+        """ Find shortened links in an text content. Usage :
+
+        self.assertLinkShortenedText(
+            message.body,
+            ('http://www.odoo.com',  True),
+            {'utm_campaign': self.utm_c.name, 'utm_medium': self.utm_m.name}
+        )
+        """
+        (url, is_shortened) = link_info
+        link_tracker = self.env['link.tracker'].search([('url', '=', url)])
+        if is_shortened:
+            self.assertEqual(len(link_tracker), 1)
+            self.assertIn(link_tracker.short_url, body, '%s should be shortened' % (url))
+            self.assertLinkParams(url, link_tracker, link_params=link_params)
+        else:
+            self.assertEqual(len(link_tracker), 0)
+            self.assertIn(url, body)
+
     def assertLinkParams(self, url, link_tracker, link_params=None):
         """ Usage
 
