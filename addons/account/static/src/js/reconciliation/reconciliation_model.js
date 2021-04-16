@@ -235,6 +235,7 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         line.st_line.partner_id = partner && partner.id;
         line.st_line.partner_name = partner && partner.display_name || '';
+        line.mv_lines_match = [];
         line.mv_lines_match_rp = [];
         line.mv_lines_match_other = [];
         return Promise.resolve(partner && this._changePartner(handle, partner.id))
