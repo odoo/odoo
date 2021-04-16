@@ -819,14 +819,17 @@ Reason(s) of this behavior could be:
         return False
 
     def _find_mail_template(self, force_confirmation_template=False):
-        """Get the appropriate mail template for the current sale's order(s) based on their state.
+        """ Get the appropriate mail template for the current sale's order(s) based on their state.
 
-        If all SOs are 'done', the mail template is that of ...
-        blabla
+        If all SOs are 'sale' or there is the ``force_confirmation_template``,
+        the mail template is that of the sale confirmation.
+        Else, it returns the quotation's email template.
 
-        :param bool force_confirmation_template: Allows to force the confirmation template to be used in any case
+        :param force_confirmation_template: Allows to force the confirmation template to be used in
+        any case, defaults to False
+        :type force_confirmation_template: bool, optional
         :return: The correct mail template based on the current status
-        :rtype: record of `mail.template`
+        :rtype: record of :class:`mail.template`
         """
         if force_confirmation_template or (all(order.state == 'sale' for order in self) \
                                             and not self.env.context.get('proforma')):
@@ -836,10 +839,12 @@ Reason(s) of this behavior could be:
         return self.env.ref('sale.email_template_edi_sale')
 
     def action_send_quotation(self):
-        """
-        Get the informations of the mail(s) to be send and open a wizard for confirmation.
+        """ Get the informations of the mail(s) to be send and open a wizard for confirmation.
 
-        :return: wizard's view
+        :raises UserError: If the state of the active quotation is done or cancel
+        :raises UserError: If the customer has no email address when sending in batch
+        :return: Appropriate wizard's view
+        :rtype: Window Actions :class:`ir.actions.act_window`
         """
         if any(o.state in ['done', 'cancel'] for o in self):
             raise UserError(_('You cannot send a cancelled AND/OR a locked quotation or sales order by email.'))
