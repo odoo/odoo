@@ -7,6 +7,7 @@ const customColors = require('web_editor.custom_colors');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const concurrency = require('web.concurrency');
+const { device } = require('web.config');
 const weContext = require('web_editor.context');
 const OdooEditorLib = require('web_editor.odoo-editor');
 const snippetsEditor = require('web_editor.snippet.editor');
@@ -177,7 +178,7 @@ const Wysiwyg = Widget.extend({
     renderElement: function () {
         this.$editable = this.options.editable || $('<div class="note-editable">');
 
-        if (this.options.resizable) {
+        if (this.options.resizable && !device.isMobile) {
             const $wrapper = $('<div class="o_wysiwyg_wrapper odoo-editor">');
             $wrapper.append(this.$editable);
             this.$resizer = $(`<div class="o_wysiwyg_resizer">
