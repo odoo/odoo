@@ -668,15 +668,35 @@ var exportVariable = (function (exports) {
         return range;
     }
 
+    function getNextVisibleNode(node) {
+        while (node && !isVisible(node)) {
+            node = node.nextSibling;
+        }
+        return node;
+    }
+
     function getDeepestPosition(node, offset) {
+        let found = false;
         while (node.hasChildNodes()) {
-            let newNode = node.childNodes[offset - 1] || node.firstChild;
-            while (newNode && !isVisible(newNode)) {
-                newNode = newNode.nextSibling;
+            let newNode = node.childNodes[offset];
+            if (newNode) {
+                newNode = getNextVisibleNode(newNode);
+                if (!newNode || isEmptyBlock(newNode)) break;
+                found = true;
+                node = newNode;
+                offset = 0;
+            } else {
+                break;
             }
-            if (!newNode || isEmptyBlock(newNode)) break;
-            node = newNode;
-            offset = offset === 0 ? 0 : nodeSize(node);
+        }
+        if (!found) {
+            while (node.hasChildNodes()) {
+                let newNode = node.childNodes[offset - 1];
+                newNode = getNextVisibleNode(newNode);
+                if (!newNode || isEmptyBlock(newNode)) break;
+                node = newNode;
+                offset = nodeSize(node);
+            }
         }
         let didMove = false;
         let reversed = false;
@@ -1950,8 +1970,9 @@ var exportVariable = (function (exports) {
             }
         }
 
-        // Propagate the split until reaching a block element
-        if (!isBlock(this)) {
+        // Propagate the split until reaching a block element (or continue to the
+        // closest list item element if there is one).
+        if (!isBlock(this) || (this.nodeName !== 'LI' && this.closest('LI'))) {
             if (this.parentElement) {
                 this.parentElement.oEnter(childNodeIndex(this) + 1, !didSplit);
             } else {
@@ -4106,6 +4127,14 @@ var exportVariable = (function (exports) {
                     this.historyRollback();
                     ev.preventDefault();
                     this._applyCommand('oDeleteForward');
+                } else if (ev.inputType === 'insertParagraph' || (ev.inputType === 'insertText' && ev.data === null)) {
+                    // Sometimes the browser wrongly triggers an insertText
+                    // input event with null data on enter.
+                    this.historyRollback();
+                    ev.preventDefault();
+                    if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
+                        this._applyCommand('oShiftEnter');
+                    }
                 } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
                     // insertCompositionText, courtesy of Samsung keyboard.
                     const selection = this.document.defaultView.getSelection();
@@ -4120,12 +4149,6 @@ var exportVariable = (function (exports) {
                     }
                     this.sanitize();
                     this.historyStep();
-                } else if (ev.inputType === 'insertParagraph') {
-                    this.historyRollback();
-                    ev.preventDefault();
-                    if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
-                        this._applyCommand('oShiftEnter');
-                    }
                 } else if (ev.inputType === 'insertLineBreak') {
                     this.historyRollback();
                     ev.preventDefault();
@@ -4196,7 +4219,10 @@ var exportVariable = (function (exports) {
             this._computeHistoryCursor();
 
             const selection = this.document.defaultView.getSelection();
-            this._updateToolbar(!selection.isCollapsed);
+            const isSelectionInEditable = !selection.isCollapsed &&
+                this.editable.contains(selection.anchorNode) &&
+                this.editable.contains(selection.focusNode);
+            this._updateToolbar(isSelectionInEditable);
 
             if (this._currentMouseState === 'mouseup') {
                 this._fixFontAwesomeSelection();
@@ -4311,7 +4337,7 @@ var exportVariable = (function (exports) {
         _onPaste(ev) {
             ev.preventDefault();
             const pastedText = (ev.originalEvent || ev).clipboardData.getData('text/plain');
-            this._insertText(pastedText);
+            insertText(pastedText);
             this.historyStep();
         }
 
@@ -4344,7 +4370,7 @@ var exportVariable = (function (exports) {
                         const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
                         setCursor(range.startContainer, range.startOffset);
                     }
-                    editorCommands.insertHTML(this, pastedText.replace(/\n+/g, '<br/>'));
+                    insertText(pastedText);
                 });
             }
             this.historyStep();
