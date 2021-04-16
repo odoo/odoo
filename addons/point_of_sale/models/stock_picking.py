@@ -69,6 +69,10 @@ class StockPicking(models.Model):
             pickings |= negative_picking
         return pickings
 
+    @api.model
+    def _get_stock_move_quantity_from_pos_order_line(self, order_lines):
+        return abs(sum(order_lines.mapped('qty')))
+
     def _prepare_stock_move_vals(self, first_line, order_lines):
         return {
             'name': first_line.name,
@@ -76,7 +80,7 @@ class StockPicking(models.Model):
             'picking_id': self.id,
             'picking_type_id': self.picking_type_id.id,
             'product_id': first_line.product_id.id,
-            'product_uom_qty': abs(sum(order_lines.mapped('qty'))),
+            'product_uom_qty': self._get_stock_move_quantity_from_pos_order_line(order_lines),
             'state': 'draft',
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
