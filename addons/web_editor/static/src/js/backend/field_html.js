@@ -192,7 +192,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
             tabsize: 0,
             height: 380,
-            resizable: true,
+            resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : true,
         });
     },
     /**
