@@ -14,13 +14,15 @@
             data-maximum-amount="100"
             data-slider-step="5"
             data-default-amount="25">
-        <span id="s_donation_description_inputs">
-            <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions[]" value="A year of cultural awakening."/>
-            <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions[]" value="Caring for a baby for 1 month."/>
-            <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions[]" value="One year in elementary school."/>
-            <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions[]" value="One year in high school."/>
-        </span>
-        <a href="#" class="s_donation_donate_btn btn btn-secondary btn-lg mb-2">Donate Now</a>
+        <form class="s_donation_form" action="/donation/pay" method="post" enctype="multipart/form-data">
+            <span id="s_donation_description_inputs">
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="A year of cultural awakening."/>
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="Caring for a baby for 1 month."/>
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="One year in elementary school."/>
+                <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="One year in high school."/>
+            </span>
+            <a href="#" type="button" class="s_donation_donate_btn btn btn-secondary btn-lg mb-2">Donate Now</a>
+        </form>
     </div>
 </template>
 

@@ -142,7 +142,10 @@ class PaymentPortal(portal.CustomerPortal):
             'invoice_id': invoice_id,
             **self._get_custom_rendering_context_values(**kwargs),
         }
-        return request.render('payment.pay', rendering_context)
+        return request.render(self._get_payment_page_template_xmlid(**kwargs), rendering_context)
+
+    def _get_payment_page_template_xmlid(self, **kwargs):
+        return 'payment.pay'
 
     @http.route('/my/payment_method', type='http', methods=['GET'], auth='user', website=True)
     def payment_method(self, **kwargs):
@@ -205,16 +208,9 @@ class PaymentPortal(portal.CustomerPortal):
         tx_sudo = self._create_transaction(
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
-
-        # The generic landing route require the tx id and access token to be provided, since there
-        # is no document to rely on. The access token is recomputed in case we are dealing with a
-        # validation transaction (acquirer-specific amount and currency).
-        access_token = payment_utils.generate_access_token(
-            tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
-        )
-        tx_sudo.landing_route = f'{tx_sudo.landing_route}' \
-                                f'?tx_id={tx_sudo.id}&access_token={access_token}'
-
+        if tx_sudo.operation == 'validation':
+            # The amount and currency have been chosen for the validation, recompute the access token
+            self._update_landing_route(tx_sudo)
         return tx_sudo._get_processing_values()
 
     def _create_transaction(
@@ -307,6 +303,24 @@ class PaymentPortal(portal.CustomerPortal):
         PaymentPostProcessing.monitor_transactions(tx_sudo)
 
         return tx_sudo
+
+    @staticmethod
+    def _update_landing_route(tx_sudo):
+        """ Recompute the access token stored in the landing route of validation transactions.
+
+        The generic landing route require the tx id and access token to be provided, since there is
+        no document to rely on. The access token is recomputed in case we are dealing with a
+        validation transaction (acquirer-specific amount and currency).
+
+        :param recordset tx_sudo: The transaction whose landing routes to update, as a
+                                  `payment.transaction` record.
+        :return: None
+        """
+        access_token = payment_utils.generate_access_token(
+            tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
+        )
+        tx_sudo.landing_route = f'{tx_sudo.landing_route}' \
+                                f'?tx_id={tx_sudo.id}&access_token={access_token}'
 
     @http.route('/payment/confirmation', type='http', methods=['GET'], auth='public', website=True)
     def payment_confirm(self, tx_id, access_token, **kwargs):
