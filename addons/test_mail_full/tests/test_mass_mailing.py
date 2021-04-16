@@ -116,4 +116,8 @@ class TestMassMailing(TestMailFullCommon):
                 check_mail=True,)
 
         # sent: 13, 2 bl, 2 opt-out, 3 invalid -> 6 remaining
+<<<<<<< HEAD
         self.assertMailingStatistics(mailing, expected=13, delivered=6, sent=6, ignored=7)
+=======
+        self.assertMailingStatistics(mailing, expected=6, delivered=6, sent=6, ignored=7)
+>>>>>>> [IMP] mail, (test)_mass_mailing, test_mail_full: improve email-based mailing tests
