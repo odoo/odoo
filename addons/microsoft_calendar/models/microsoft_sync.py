@@ -254,9 +254,12 @@ class MicrosoftSync(models.AbstractModel):
             dict(self._microsoft_to_odoo_values(e, default_reminders, default_values), need_sync_m=False)
             for e in (new - new_recurrent)
         ]
-        new_odoo = self.create(odoo_values)
+        new_odoo = self.with_context(dont_notify=True).create(odoo_values)
 
-        synced_recurrent_records = self._sync_recurrence_microsoft2odoo(new_recurrent)
+        synced_recurrent_records = self.with_context(dont_notify=True)._sync_recurrence_microsoft2odoo(new_recurrent)
+        if not self._context.get("dont_notify"):
+            new_odoo._notify_attendees()
+            synced_recurrent_records._notify_attendees()
 
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
@@ -365,5 +368,14 @@ class MicrosoftSync(models.AbstractModel):
     def _restart_microsoft_sync(self):
         """ Turns on the microsoft synchronization for all the events of
         a given user.
+        """
+
+    def _notify_attendees(self):
+        """ Notify calendar event partners.
+        This is called when creating new calendar events in _sync_microsoft2odoo.
+        At the initialization of a synced calendar, Odoo requests all events for a specific
+        MicrosoftCalendar. Among those there will probably be lots of events that will never triggers a notification
+        (e.g. single events that occured in the past). Processing all these events through the notification procedure
+        of calendar.event.create is a possible performance bottleneck. This method aimed at alleviating that.
         """
         raise NotImplementedError()
