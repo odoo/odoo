@@ -83,10 +83,10 @@ export const localizationService = {
 
     // FIXME We flatten the result of the python route.
     // Eventually, we want a new python route to return directly the good result.
-    let terms = {}
+    let terms = {};
     for (const addon of Object.keys(modules)) {
       for (const message of modules[addon].messages) {
-        terms[message.id] = message.string
+        terms[message.id] = message.string;
       }
     }
 
