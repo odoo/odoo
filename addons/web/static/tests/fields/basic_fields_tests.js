@@ -3099,6 +3099,36 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('Datetime field manually input invalid value should clear input value', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.datetime_end = { string: 'Datetime End', type: 'datetime' };
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                </form>`,
+        });
+
+        await testUtils.nextTick();
+        // Enter invalid date in input
+        await testUtils.fields.editAndTrigger(form.$('.o_field_date_range:first'), 'blabla', ['input', 'change']);
+
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '',
+            "the start date should be clear when invalid date entered");
+
+        await testUtils.fields.editAndTrigger(form.$('.o_field_date_range:last'), 'blabla', ['input', 'change']);
+        assert.strictEqual(form.$('.o_field_date_range:last').text(), '',
+            "the end date should be clear when invalid date entered");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDate');
 
     QUnit.test('date field: toggle datepicker [REQUIRE FOCUS]', async function (assert) {

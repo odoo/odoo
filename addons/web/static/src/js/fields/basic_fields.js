@@ -632,7 +632,12 @@ var FieldDateRange = InputField.extend({
      * @returns {Moment|false}
      */
     _getValue: function () {
-        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        try {
+            return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
+        } catch (err) {
+            this.$input[0].value = "";
+            return false;
+        }
     },
 
     //--------------------------------------------------------------------------
