@@ -501,8 +501,13 @@ The ``XPath`` element takes a ``position`` attribute with the following supporte
     the node's body is inserted right before the context node
 ``after``
     the node's body is inserted right after the context node
+``replace``
+    the node's body is used to replace the context node itself
 ``attributes``
-    allows modifying the context node's attributes, example::
+    the nodes's body should be any number of ``attribute`` elements,
+    each with a ``name`` attribute and some textual content, the named
+    attribute of the context node will be set to the specified value
+    (either replaced if it already existed or added if not), example:
 
         <t t-inherit="base.template" t-inherit-mode="extension">
             <xpath expr="button[@disabled]" position="attributes">
