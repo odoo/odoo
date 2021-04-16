@@ -8,6 +8,7 @@ from odoo.tests import common
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sms.models.sms_api import SmsApi
+from odoo.addons.sms.models.sms_sms import SmsSms
 
 
 class MockSMS(common.BaseCase):
@@ -17,8 +18,10 @@ class MockSMS(common.BaseCase):
         self._clear_sms_sent()
 
     @contextmanager
-    def mockSMSGateway(self, sim_error=None, nbr_t_error=None):
+    def mockSMSGateway(self, sms_allow_unlink=False, sim_error=None, nbr_t_error=None):
         self._clear_sms_sent()
+        sms_create_origin = SmsSms.create
+        sms_unlink_origin = SmsSms.unlink
 
         def _contact_iap(local_endpoint, params):
             # mock single sms sending
@@ -52,14 +55,35 @@ class MockSMS(common.BaseCase):
                         })
                 return result
 
+        def _sms_sms_create(model, *args, **kwargs):
+            res = sms_create_origin(model, *args, **kwargs)
+            self._new_sms += res.sudo()
+            return res
+
+        def _sms_sms_unlink(records, *args, **kwargs):
+            if sms_allow_unlink:
+                return sms_unlink_origin(records, *args, **kwargs)
+            # hack: instead of unlink, update state to sent for tests
+            else:
+                records.filtered(lambda sms: sms.id in self._new_sms.ids).state = 'sent'
+            return True
+
         try:
-            with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap) as contact_iap_mock:
+            with patch.object(SmsApi, '_contact_iap', side_effect=_contact_iap), \
+                    patch.object(SmsSms, 'create', autospec=True, wraps=SmsSms, side_effect=_sms_sms_create), \
+                    patch.object(SmsSms, 'unlink', autospec=True, wraps=SmsSms, side_effect=_sms_sms_unlink):
                 yield
         finally:
             pass
 
     def _clear_sms_sent(self):
         self._sms = []
+        self._new_sms = self.env['sms.sms'].sudo()
+
+    def _clear_outoing_sms(self):
+        """ As SMS gateway mock keeps SMS, we may need to remove them manually
+        if there are several tests in the same tx. """
+        self.env['sms.sms'].sudo().search([('state', '=', 'outgoing')]).unlink()
 
 
 class SMSCase(MockSMS):
@@ -77,7 +101,9 @@ class SMSCase(MockSMS):
     def _find_sms_sms(self, partner, number, status):
         if number is None and partner:
             number = partner.phone_get_sanitized_number()
-        domain = [('partner_id', '=', partner.id), ('number', '=', number)]
+        domain = [('id', 'in', self._new_sms.ids),
+                  ('partner_id', '=', partner.id),
+                  ('number', '=', number)]
         if status:
             domain += [('state', '=', status)]
 
@@ -88,7 +114,7 @@ class SMSCase(MockSMS):
             raise NotImplementedError()
         return sms
 
-    def assertSMSSent(self, numbers, content=None):
+    def assertSMSIapSent(self, numbers, content=None):
         """ Check sent SMS. Order is not checked. Each number should have received
         the same content. Useful to check batch sending.
 
@@ -101,31 +127,48 @@ class SMSCase(MockSMS):
             if content is not None:
                 self.assertEqual(sent_sms['body'], content)
 
+    def assertNoSMS(self):
+        self.assertTrue(len(self._new_sms) == 0)
+
+    def assertSMS(self, partner, number, status, error_code=None,
+                  content=None, fields_values=None, check_sms=False):
+        """ Find a ``sms.sms`` record, based on given partner, number and status.
+
+        :param partner: optional partner, used to find a ``sms.sms`` and a number
+          if not given;
+        :param number: optional number, used to find a ``sms.sms``, notably if
+          partner is not given;
+        :param error_code: check error code if SMS is not sent or outgoing;
+        :param content: if given, should be contained in sms body;
+        :param fields_values: optional values allowing to check directly some
+          values on ``sms.sms`` record;
+        """
+        sms_sms = self._find_sms_sms(partner, number, status)
+        if error_code:
+            self.assertEqual(sms_sms.error_code, error_code)
+        if content is not None:
+            self.assertEqual(sms_sms.body, content)
+        for fname, fvalue in (fields_values or {}).items():
+            self.assertEqual(
+                sms_sms[fname], fvalue,
+                'SMS: expected %s for %s, got %s' % (fvalue, fname, sms_sms[fname]))
+        if status == 'sent' or check_sms:
+            self.assertSMSIapSent([sms_sms.number], content=content)
+
     def assertSMSCanceled(self, partner, number, error_code, content=None):
         """ Check canceled SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
-        sms = self._find_sms_sms(partner, number, 'canceled')
-        self.assertTrue(sms, 'SMS: not found canceled SMS for %s (number: %s)' % (partner, number))
-        self.assertEqual(sms.error_code, error_code)
-        if content is not None:
-            self.assertEqual(sms.body, content)
+        self.assertSMS(partner, number, 'canceled', error_code=error_code, content=content)
 
     def assertSMSFailed(self, partner, number, error_code, content=None):
         """ Check failed SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
-        sms = self._find_sms_sms(partner, number, 'error')
-        self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s)' % (partner, number))
-        self.assertEqual(sms.error_code, error_code)
-        if content is not None:
-            self.assertEqual(sms.body, content)
+        self.assertSMS(partner, number, 'error', error_code=error_code, content=content)
 
     def assertSMSOutgoing(self, partner, number, content=None):
         """ Check outgoing SMS. Search is done for a pair partner / number where
         partner can be an empty recordset. """
-        sms = self._find_sms_sms(partner, number, 'outgoing')
-        self.assertTrue(sms, 'SMS: not found failed SMS for %s (number: %s)' % (partner, number))
-        if content is not None:
-            self.assertEqual(sms.body, content)
+        self.assertSMS(partner, number, 'outgoing', content=content)
 
     def assertNoSMSNotification(self, messages=None):
         base_domain = [('notification_type', '=', 'sms')]
@@ -134,7 +177,7 @@ class SMSCase(MockSMS):
         self.assertEqual(self.env['mail.notification'].search(base_domain), self.env['mail.notification'])
         self.assertEqual(self._sms, [])
 
-    def assertSMSNotification(self, recipients_info, content, messages=None, check_sms=True):
+    def assertSMSNotification(self, recipients_info, content, messages=None, check_sms=True, sent_unlink=False):
         """ Check content of notifications.
 
           :param recipients_info: list[{
@@ -174,13 +217,16 @@ class SMSCase(MockSMS):
                 self.assertEqual(notif.failure_type, recipient_info['failure_type'])
             if check_sms:
                 if state == 'sent':
-                    self.assertSMSSent([number], content)
+                    if sent_unlink:
+                        self.assertSMSIapSent([number], content=content)
+                    else:
+                        self.assertSMS(partner, number, 'sent', content=content)
                 elif state == 'ready':
-                    self.assertSMSOutgoing(partner, number, content)
+                    self.assertSMS(partner, number, 'outgoing', content=content)
                 elif state == 'exception':
-                    self.assertSMSFailed(partner, number, recipient_info['failure_type'], content)
+                    self.assertSMS(partner, number, 'error', error_code=recipient_info['failure_type'], content=content)
                 elif state == 'canceled':
-                    self.assertSMSCanceled(partner, number, recipient_info.get('failure_type', False), content)
+                    self.assertSMS(partner, number, 'canceled', error_code=recipient_info['failure_type'], content=content)
                 else:
                     raise NotImplementedError('Not implemented')
 

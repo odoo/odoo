@@ -44,7 +44,8 @@ class TestSMSSchedule(TestEventCommon, SMSCase):
         })
 
     def test_sms_schedule(self):
-        self._create_registrations(self.event_0, 3)
+        with self.mockSMSGateway():
+            self._create_registrations(self.event_0, 3)
 
         # check subscription scheduler
         sub_scheduler = self.env['event.mail'].search([('event_id', '=', self.event_0.id), ('interval_type', '=', 'after_sub')])
@@ -60,7 +61,9 @@ class TestSMSSchedule(TestEventCommon, SMSCase):
         for registration in self.event_0.registration_ids:
             reg_sanitized_number = phone_validation.phone_format(registration.phone, 'BE', '32', force_format='E164')
             sanitized_numbers.append(reg_sanitized_number)
-            self.assertSMSOutgoing(self.env['res.partner'], reg_sanitized_number, '%s registration confirmation.' % self.event_0.organizer_id.name)
+            self.assertSMS(
+                self.env['res.partner'], reg_sanitized_number, 'outgoing',
+                content='%s registration confirmation.' % self.event_0.organizer_id.name)
         self.assertTrue(sub_scheduler.mail_done)
         self.assertEqual(sub_scheduler.mail_count_done, 3)
 
@@ -74,11 +77,14 @@ class TestSMSSchedule(TestEventCommon, SMSCase):
         self.assertEqual(before_scheduler.scheduled_date, self.event_0.date_begin + relativedelta(days=-3))
 
         # execute event reminder scheduler explicitly
-        before_scheduler.execute()
+        with self.mockSMSGateway():
+            before_scheduler.execute()
 
         # verify that subscription scheduler was auto-executed after each registration
         for registration in self.event_0.registration_ids:
             reg_sanitized_number = phone_validation.phone_format(registration.phone, 'BE', '32', force_format='E164')
-            self.assertSMSOutgoing(self.env['res.partner'], reg_sanitized_number, '%s reminder' % self.event_0.organizer_id.name)
+            self.assertSMS(
+                self.env['res.partner'], reg_sanitized_number, 'outgoing',
+                content='%s reminder' % self.event_0.organizer_id.name)
         self.assertTrue(before_scheduler.mail_done)
         self.assertEqual(before_scheduler.mail_count_done, 3)
