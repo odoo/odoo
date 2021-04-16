@@ -13,18 +13,11 @@ class Project(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         compute="_compute_sale_line_id", store=True, readonly=False,
-        domain="[('is_service', '=', True), ('is_expense', '=', False), ('order_id', '=', sale_order_id), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_partner_id', '=?', partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
-    sale_order_id = fields.Many2one('sale.order', 'Sales Order',
-        compute="_compute_sale_order_id", store=True, readonly=False,
-        domain="[('order_line.product_id.type', '=', 'service'), ('partner_id', '=', partner_id), ('state', 'in', ['sale', 'done'])]",
-        copy=False, help="Sales order to which the project is linked.")
+    sale_order_id = fields.Many2one(string='Sales Order', related='sale_line_id.order_id', help="Sales order to which the project is linked.")
     project_overview = fields.Boolean('Show Project Overview', compute='_compute_project_overview')
-
-    _sql_constraints = [
-        ('sale_order_required_if_sale_line', "CHECK((sale_line_id IS NOT NULL AND sale_order_id IS NOT NULL) OR (sale_line_id IS NULL))", 'The project should be linked to a sale order to select a sale order item.'),
-    ]
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -32,13 +25,14 @@ class Project(models.Model):
         defaults['sale_line_id'] = False
         return defaults
 
-    @api.depends('sale_order_id')
-    def _compute_sale_line_id(self):
-        self.filtered(lambda p: p.sale_line_id and (not p.sale_order_id or p.sale_order_id != p.sale_line_id.order_id)).update({'sale_line_id': False})
-
     @api.depends('partner_id')
-    def _compute_sale_order_id(self):
-        self.filtered(lambda p: p.sale_order_id and (not p.partner_id or p.sale_order_id.partner_id != p.partner_id)).update({'sale_order_id': False})
+    def _compute_sale_line_id(self):
+        self.filtered(
+            lambda p:
+                p.sale_line_id and (
+                    not p.partner_id or p.sale_line_id.order_partner_id.commercial_partner_id != p.partner_id.commercial_partner_id
+                )
+        ).update({'sale_line_id': False})
 
     @api.depends('analytic_account_id')
     def _compute_project_overview(self):
@@ -53,7 +47,7 @@ class ProjectTask(models.Model):
 
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', help="Sales order to which the task is linked.")
     sale_line_id = fields.Many2one(
-        'sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', project_sale_order_id)]",
+        'sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
         compute='_compute_sale_line', store=True, readonly=False, copy=False,
         help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
