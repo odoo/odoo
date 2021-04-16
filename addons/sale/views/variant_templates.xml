@@ -10,7 +10,8 @@
                     t-attf-class="variant_attribute #{'d-none' if len(ptal.product_template_value_ids._only_active()) == 1 and not ptal.product_template_value_ids._only_active()[0].is_custom else ''}">
 
                     <!-- Used to customize layout if the only available attribute value is custom -->
-                    <t t-set="single_and_custom" t-value="len(ptal.product_template_value_ids._only_active()) == 1 and ptal.product_template_value_ids._only_active()[0].is_custom" />
+                    <t t-set="single" t-value="len(ptal.product_template_value_ids._only_active()) == 1"/>
+                    <t t-set="single_and_custom" t-value="single and ptal.product_template_value_ids._only_active()[0].is_custom" />
                     <strong t-field="ptal.attribute_id.name" class="attribute_name"/>
 
                     <t t-if="ptal.attribute_id.display_type == 'select'">
@@ -25,6 +26,7 @@
                                     t-att-data-attribute_name="ptav.attribute_id.name"
                                     t-att-data-is_custom="ptav.is_custom"
                                     t-att-selected="ptav in combination"
+                                    t-att-data-is_single="single"
                                     t-att-data-is_single_and_custom="single_and_custom">
                                     <span t-field="ptav.name"/>
                                     <span t-if="ptav.price_extra" class="badge badge-pill badge-secondary">
@@ -65,6 +67,7 @@
                                                 t-att-data-value_name="ptav.name"
                                                 t-att-data-attribute_name="ptav.attribute_id.name"
                                                 t-att-data-is_custom="ptav.is_custom"
+                                                t-att-data-is_single="single"
                                                 t-att-data-is_single_and_custom="single_and_custom" />
                                             <div class="radio_input_value">
                                                 <span t-field="ptav.name"/>
@@ -101,6 +104,7 @@
                                         t-att-data-value_name="ptav.name"
                                         t-att-data-attribute_name="ptav.attribute_id.name"
                                         t-att-data-is_custom="ptav.is_custom"
+                                        t-att-data-is_single="single"
                                         t-att-data-is_single_and_custom="single_and_custom"/>
                                 </label>
                             </li>
