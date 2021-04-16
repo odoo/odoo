@@ -93,7 +93,7 @@ en Odoo):
         'data/account_group.xml',
         'data/account_account_tag_data.xml',
         'data/account.account.template-common.csv',
-        'data/account.account.template-enterprise.csv',
+        'data/account.account.template.csv',
         'data/account.account.template-gob.csv',
         'data/account_chart_template_data.xml',
         'data/account_data.xml',
