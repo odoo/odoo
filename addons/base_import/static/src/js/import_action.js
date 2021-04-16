@@ -755,14 +755,13 @@ var DataImport = AbstractAction.extend({
             if (!_.isEmpty(suggested)) {
                 basic = basic.concat({ text: _t("Suggested Fields"), children: suggested });
             }
-            basic = basic.concat([
+            return basic.concat([
                 { text: !_.isEmpty(suggested) ? _t("Additional Fields") : _t("Standard Fields"), children: regulars },
                 { text: _t("Relation Fields"), children: o2m },
             ]);
         } else {
-            basic.concat(suggested, regulars, o2m);
+            return basic.concat(suggested, regulars, o2m);
         }
-        return basic;
     },
     render_fields_matches: function (result, $fields) {
         if (_(result.matches).isEmpty()) { return; }
