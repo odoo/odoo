@@ -492,6 +492,24 @@ Extension inheritance (in-place transformation)::
         </xpath>
     </t>
 
+The ``XPath`` element takes a ``position`` attribute with the following supported values:
+
+``inside`` (default)
+    the node's body is appended at the end of the context node (after the
+    context node's last child)
+``before``
+    the node's body is inserted right before the context node
+``after``
+    the node's body is inserted right after the context node
+``attributes``
+    allows modifying the context node's attributes, example::
+
+        <t t-inherit="base.template" t-inherit-mode="extension">
+            <xpath expr="button[@disabled]" position="attributes">
+                <attribute name="disabled">false</attribute>
+            </xpath>
+        </t>
+
 Old inheritance mechanism (deprecated)
 ''''''''''''''''''''''''''''''''''''''
 
