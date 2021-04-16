@@ -18,6 +18,18 @@
             flex: 1;
             box-shadow: none;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            .oe_pad {
+                flex: 1;
+                margin-bottom: 0;
+                display: flex;
+                flex-direction: column;
+                .oe_pad_content {
+                    border: none;
+                    flex: 1;
+                }
+            }
         }
         .note-editable {
             border: none;
