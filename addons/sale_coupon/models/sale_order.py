@@ -95,7 +95,7 @@ class SaleOrder(models.Model):
                 order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
                 reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
-            reward_product_qty = min(max_product_qty, total_qty)
+            reward_product_qty = min(program.reward_product_quantity, total_qty)
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
         # Take the default taxes on the reward product, mapped with the fiscal position
