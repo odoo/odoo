@@ -14,7 +14,9 @@ This is a bridge module that adds multi-website support for payment acquirers.
         'portal',
     ],
     'data': [
+        'data/donation_data.xml',
         'views/payment_acquirer.xml',
+        'views/donation_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_donation.xml',
     ],
@@ -22,6 +24,10 @@ This is a bridge module that adds multi-website support for payment acquirers.
     'assets': {
         'website.assets_wysiwyg': [
             'website_payment/static/src/snippets/s_donation/options.js',
+        ],
+        'web.assets_frontend': [
+            'website_payment/static/src/js/website_payment_donation.js',
+            'website_payment/static/src/js/website_payment_form.js',
         ],
     },
     'license': 'LGPL-3',
