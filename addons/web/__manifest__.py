@@ -55,7 +55,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/file_upload_progress_bar.xml',
             'web/static/src/legacy/xml/file_upload_progress_card.xml',
             'web/static/src/legacy/xml/kanban.xml',
-            'web/static/src/legacy/xml/notification.xml',
             'web/static/src/legacy/xml/pivot.xml',
             'web/static/src/legacy/xml/report.xml',
             'web/static/src/legacy/xml/search_panel.xml',
@@ -121,7 +120,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/data_export.scss',
             'base/static/src/scss/onboarding.scss',
             'web/static/src/legacy/scss/attachment_preview.scss',
-            'web/static/src/legacy/scss/notification.scss',
             'web/static/src/legacy/scss/base_document_layout.scss',
             'web/static/src/legacy/scss/special_fields.scss',
             'web/static/src/legacy/scss/ribbon.scss',
@@ -230,7 +228,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/base_frontend.scss',
             'web/static/src/legacy/scss/lazyloader.scss',
             'web/static/src/legacy/scss/navbar_mobile.scss',
-            'web/static/src/legacy/scss/notification.scss',
 
             ('include', 'web.assets_frontend_minimal'),
 
@@ -426,14 +423,12 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/config.js',
             'web/static/src/legacy/js/services/core.js',
             'web/static/src/legacy/js/services/local_storage_service.js',
-            'web/static/src/legacy/js/services/notification_service.js',
             'web/static/src/legacy/js/services/crash_manager.js',
             'web/static/src/legacy/js/core/error_utils.js',
             'web/static/src/legacy/js/services/session_storage_service.js',
             'web/static/src/legacy/js/tools/debug_manager.js',
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
-            'web/static/src/legacy/js/widgets/notification.js',
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/js/widgets/colorpicker.js',
             'web/static/src/legacy/js/widgets/translation_dialog.js',
@@ -444,6 +439,9 @@ This module provides the core of the Odoo Web Client.
             # Old rainbow man kept for website compatibility
             'web/static/src/legacy/frontend/rainbowman/*.js',
             'web/static/src/legacy/frontend/rainbowman/*.scss',
+            # Old notification kept for website compatiblity
+            'web/static/src/legacy/frontend/notification/*.js',
+            'web/static/src/legacy/frontend/notification/*.scss',
         ],
 
         # ---------------------------------------------------------------------

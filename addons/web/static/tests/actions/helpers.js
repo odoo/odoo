@@ -121,6 +121,9 @@ function addLegacyMockEnvironment(env, testConfig, legacyParams = {}) {
   if (legacyParams.serviceRegistry) {
     const legacyServiceMap = legacy.core.serviceRegistry.map;
     legacy.core.serviceRegistry.map = legacyParams.serviceRegistry.map;
+    // notification isn't a deployed service, but it is added by `makeTestEnvironment`.
+    // Here, we want full control on the deployed services, so we simply remove it.
+    delete legacyEnv.services.notification;
     legacy.AbstractService.prototype.deployServices(legacyEnv);
     registerCleanup(() => {
       legacy.core.serviceRegistry.map = legacyServiceMap;

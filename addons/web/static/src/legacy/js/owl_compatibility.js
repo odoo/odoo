@@ -239,8 +239,16 @@ odoo.define('web.OwlCompatibility', function () {
                     args = args.concat(ev.target);
                 }
                 const service = this.env.services[payload.service];
-                const result = service[payload.method].apply(service, args);
-                payload.callback(result);
+                //If the service doesn't exist it means that it was translated to Owl
+                if (service) {
+                    const result = service[payload.method].apply(service, args);
+                    payload.callback(result);
+                } else {
+                    //Call the new Owl service (an adaptation is needed)
+                    //file: addons/web/static/src/legacy/service_provider_adapter.js
+                    //Note that this is only done for the backend
+                    this.trigger('call-service', payload);
+                }
             } else if (evType === 'get_session') {
                 if (payload.callback) {
                     payload.callback(this.env.session);

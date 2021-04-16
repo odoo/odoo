@@ -181,6 +181,35 @@ QUnit.test("can close sticky notification", async (assert) => {
   assert.containsNone(target, ".o_notification");
 });
 
+QUnit.test("can close sticky notification with wait", async (assert) => {
+  let timeoutCB;
+  patch(browser, "mock.settimeout.cb", {
+    setTimeout: (cb, t) => {
+      timeoutCB = cb;
+      assert.step("time: " + t);
+      return 1;
+    },
+  });
+  const env = await makeTestEnv({ serviceRegistry });
+  const notifService = env.services.notification;
+  await mount(NotificationContainer, { env, target });
+
+  let id = notifService.create("I'm a sticky notification", { sticky: true });
+  await nextTick();
+  assert.containsOnce(target, ".o_notification");
+
+  // close programmatically
+  notifService.close(id, 3000);
+  await nextTick();
+  assert.containsOnce(target, ".o_notification");
+  // simulate end of timeout
+  timeoutCB();
+  await nextTick();
+  assert.containsNone(target, ".o_notification");
+  assert.verifySteps(["time: 3000"]);
+  unpatch(browser, "mock.settimeout.cb");
+});
+
 QUnit.test("can close a non-sticky notification", async (assert) => {
   let timeoutCB;
   patch(browser, "mock.settimeout.cb", {

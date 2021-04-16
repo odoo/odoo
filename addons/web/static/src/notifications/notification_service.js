@@ -13,11 +13,18 @@ export const notificationService = {
     let notifications = [];
     const bus = new EventBus();
 
-    function close(id) {
-      const index = notifications.findIndex((n) => n.id === id);
-      if (index > -1) {
-        notifications.splice(index, 1);
-        bus.trigger("UPDATE", notifications);
+    function close(id, wait = 0) {
+      function _close() {
+        const index = notifications.findIndex((n) => n.id === id);
+        if (index > -1) {
+          notifications.splice(index, 1);
+          bus.trigger("UPDATE", notifications);
+        }
+      }
+      if (wait > 0) {
+        browser.setTimeout(_close, wait);
+      } else {
+        _close();
       }
     }
     function create(message, options) {
