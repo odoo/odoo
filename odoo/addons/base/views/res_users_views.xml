@@ -184,6 +184,7 @@
                     </header>
                     <sheet>
                         <field name="id" invisible="1"/>
+                        <field name="share" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
                                 <field string="Groups" name="groups_count" widget="statinfo"/>
@@ -252,7 +253,7 @@
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
                                         <field name="tz_offset" invisible="1"/>
                                     </group>
-                                    <group string="Menus Customization" groups="base.group_no_one">
+                                    <group string="Menus Customization" groups="base.group_no_one" attrs="{'invisible': [('share', '=', True)]}">
                                         <field name="action_id"/>
                                     </group>
                                 </group>
@@ -276,6 +277,7 @@
                     <field name="lang"/>
                     <field name="login_date"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="user_type"/>
                 </tree>
             </field>
         </record>
@@ -322,6 +324,7 @@
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Users" domain="[('share','=',False)]"/>
+                    <filter name="portal" string="Portal Users" domain="[('share', '=', True)]" groups="base.group_no_one"/>
                     <separator/>
                     <filter name="Inactive" string="Inactive Users" domain="[('active','=',False)]"/>
                 </search>

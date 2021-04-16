@@ -328,6 +328,8 @@ class Users(models.Model):
                                  compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
+    user_type = fields.Selection([('internal', 'Internal User'), ('portal', 'Portal'), ('public', 'Public')],
+                                 compute='_compute_user_type')
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
@@ -419,6 +421,16 @@ class Users(models.Model):
         internal_users = self.filtered_domain([('groups_id', 'in', [user_group_id])])
         internal_users.share = False
         (self - internal_users).share = True
+
+    def _compute_user_type(self):
+        for item in self:
+            if item.share:
+                if item.has_group('base.group_portal'):
+                    item.user_type = 'portal'
+                else:
+                    item.user_type = 'public'
+            else:
+                item.user_type = 'internal'
 
     def _compute_companies_count(self):
         self.companies_count = self.env['res.company'].sudo().search_count([])
@@ -1261,6 +1273,18 @@ class GroupsView(models.Model):
                 E.group(*(xml1), col="2"),
                 E.group(*(xml2), col="2", attrs=str(user_type_attrs)),
                 E.group(*(xml3), col="4", attrs=str(user_type_attrs)), name="groups_id", position="replace")
+
+            #hide groups if all their fields/groups are hidden
+            for group in xml:
+                has_only_no_ones = True
+                for element in group:
+                    if element.tag in ['field', 'group']:
+                        if not element.attrib or not element.attrib.get('groups') or element.attrib.get('groups') != 'base.group_no_one':
+                            has_only_no_ones = False
+                            break
+                if has_only_no_ones:
+                    group.attrib.update({"groups": "base.group_no_one"})
+
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
 
         # serialize and update the view

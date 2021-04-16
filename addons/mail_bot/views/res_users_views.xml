@@ -22,7 +22,7 @@
         <field name="arch" type="xml">
             <data>
                 <field name="signature" position="before">
-                    <field name="odoobot_state" readonly="0" groups="base.group_no_one"/>
+                    <field name="odoobot_state" readonly="0" attrs="{'invisible': [('share', '=', True)]}" groups="base.group_no_one"/>
                 </field>
             </data>
         </field>

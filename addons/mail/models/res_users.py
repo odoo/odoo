@@ -77,6 +77,8 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         # Auto-subscribe to channels unless skip explicitly requested
         if not self.env.context.get('mail_channel_nosubscribe'):
             self.env['mail.channel'].search([('group_ids', 'in', users.groups_id.ids)])._subscribe_users_automatically()
+        users._force_email_notifications_for_non_internal_users()
+
         return users
 
     def write(self, vals):
@@ -91,6 +93,10 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
             self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users_automatically()
         elif sel_groups:
             self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users_automatically()
+
+        if sel_groups or vals.get('notification_type'):
+            self._force_email_notifications_for_non_internal_users()
+
         return write_res
 
     def unlink(self):
@@ -153,6 +159,14 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
                 'name': 'Summary',
             }]
         return list(user_activities.values())
+
+    def _force_email_notifications_for_non_internal_users(self):
+        """
+        Forces notification type to emails for non internal users
+        """
+        for user in self:
+            if user.share and user.notification_type == 'inbox':
+                user.notification_type = 'email'
 
 
 class res_groups_mail_channel(models.Model):
