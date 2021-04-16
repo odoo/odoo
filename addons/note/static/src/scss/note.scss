@@ -4,18 +4,35 @@
 }
 
 .o_note_form_view.o_form_view {
-    .o_form_statusbar {
-        margin-bottom: 0;
+    .o_form_sheet_bg {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        .o_form_statusbar {
+            margin: 0;
+        }
+        .o_form_sheet {
+            margin: 0;
+            border: none;
+            max-width: none;
+            flex: 1;
+            box-shadow: none;
+            padding: 0;
+        }
+        .note-editable {
+            border: none;
+            padding: $o-sheet-vpadding $o-horizontal-padding;
+        }
     }
     .oe_form_field.oe_memo {
-        margin: 0;
         padding: 0;
+        margin: 0;
         min-height: 200px;
+        height: 100%
     }
     &.o_form_readonly {
         .oe_memo {
-            padding: $input-btn-padding-x-lg;
-            border-bottom: 1px solid gray('300');
+            padding: $o-sheet-vpadding $o-horizontal-padding;
         }
     }
 }
