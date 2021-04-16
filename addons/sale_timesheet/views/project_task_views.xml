@@ -10,7 +10,7 @@
                 <button string="Project Overview" class="oe_stat_button" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}" groups="project.group_project_manager"/>
                 <button class="d-none d-md-inline oe_stat_button"
                         type="object" name="action_view_so" icon="fa-dollar"
-                        attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('pricing_type', '=', 'task_rate')]}"
+                        attrs="{'invisible': ['|', ('allow_billable', '=', False), ('sale_order_id', '=', False)]}"
                         string="Sales Order"
                         groups="sales_team.group_sale_salesman_all_leads"/>
             </div>
@@ -22,18 +22,18 @@
                     <group>
                         <group>
                             <field name="display_create_order" invisible="1"/>
-                            <field name="pricing_type" attrs="{'invisible': [('allow_billable', '=', False)], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
+                            <field name="pricing_type" invisible="1" widget="radio"/>
                             <field name="timesheet_product_id" string="Default Service" invisible="1" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
-                            <field name="sale_order_id" attrs="{'invisible': [('pricing_type', '=', 'task_rate')], 'readonly': [('sale_order_id', '!=', False)]}" force_save="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
-                            <field name="sale_line_id" string="Default Sales Order Item" attrs="{'invisible': [('pricing_type', '=', 'task_rate')]}" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
+                            <field name="sale_order_id" invisible="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
+                            <field name="sale_line_id" string="Default Sales Order Item" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                         </group>
                     </group>
-                    <field name="sale_line_employee_ids" attrs="{'invisible': [('pricing_type', '!=', 'employee_rate')]}">
+                    <field name="sale_line_employee_ids">
                         <tree editable="bottom">
                             <field name="company_id" invisible="1"/>
-                            <field name="project_id" invisible="1"/>
+                            <field name="partner_id" invisible="1"/>
                             <field name="employee_id" options="{'no_create': True}"/>
-                            <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}" domain="[('order_id','=',parent.sale_order_id), ('is_service', '=', True)]"/>
+                            <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}"/>
                             <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
                             <field name="currency_id" invisible="1"/>
                         </tree>
@@ -62,9 +62,6 @@
         <field name="inherit_id" ref="sale_timesheet.project_project_view_form"/>
         <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="arch" type="xml">
-            <field name="sale_order_id" position="attributes">
-                <attribute name="options">{'no_create': True, 'no_edit': True, 'delete': False}</attribute>
-            </field>
             <field name="sale_line_id" position="attributes">
                 <attribute name="options">{'no_create': True, 'no_edit': True, 'delete': False}</attribute>
             </field>
@@ -154,7 +151,7 @@
                     <field name="so_line"
                         attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}"
                         context="{'with_remaining_hours': True, 'with_price_unit': True}" options="{'no_create': True, 'no_open': True}"
-                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', parent.project_sale_order_id)]"
+                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]"
                         optional="hide"/>
                 </xpath>
                 <xpath expr="//field[@name='remaining_hours']" position="after">

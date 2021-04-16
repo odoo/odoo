@@ -66,8 +66,8 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             4) Change the SOL in the task and check if the SOL in the timesheet has also changed.
         """
         # 1) Define a SO and SOL in the project
-        self.project_project_rate.write({
-            'sale_order_id': self.so.id,
+        self.project_project_rate = self.project_task_rate.copy({
+            'name': 'Project with pricing_type="project_rate"',
             'sale_line_id': self.so.order_line[0].id,
         })
 
@@ -107,8 +107,8 @@ class TestSoLineDeterminedInTimesheet(TestCommonSaleTimesheet):
             6) Change the SOL in the mapping and check if the timesheet conserne by the mapping has its SOL has been changed too.
         """
         # 1) Define a SO, SOL and mapping for an employee in the project,
-        self.project_employee_rate.write({
-            'sale_order_id': self.so.id,
+        self.project_employee_rate = self.project_task_rate.copy({
+            'name': 'Project with pricing_type="employee_rate"',
             'sale_line_id': self.so.order_line[0].id,
             'sale_line_employee_ids': [(0, 0, {
                 'employee_id': self.employee_user.id,

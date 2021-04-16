@@ -4,7 +4,8 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.osv import expression
+from odoo.exceptions import ValidationError, UserError
 
 
 # YTI PLEASE SPLIT ME
@@ -29,6 +30,8 @@ class Project(models.Model):
         ('fixed_rate', 'Project rate'),
         ('employee_rate', 'Employee rate')
     ], string="Pricing", default="task_rate",
+        compute='_compute_pricing_type',
+        search='_search_pricing_type',
         help='The task rate is perfect if you would like to bill different services to different customers at different rates. The fixed rate is perfect if you bill a service at a fixed rate per hour or day worked regardless of the employee who performed it. The employee rate is preferable if your employees deliver the same service at a different rate. For instance, junior and senior consultants would deliver the same service (= consultancy), but at a different rate because of their level of seniority.')
     sale_line_employee_ids = fields.One2many('project.sale.line.employee.map', 'project_id', "Sale line/Employee map", copy=False,
         help="Employee/Sale Order Item Mapping:\n Defines to which sales order item an employee's timesheet entry will be linked."
@@ -46,14 +49,67 @@ class Project(models.Model):
         compute="_compute_timesheet_product_id", store=True, readonly=False,
         default=_default_timesheet_product_id)
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
+    partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
 
-    @api.depends('allow_billable', 'sale_order_id', 'partner_id', 'pricing_type')
+    @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
+    def _compute_pricing_type(self):
+        billable_projects = self.filtered('allow_billable')
+        for project in billable_projects:
+            if project.sale_line_employee_ids:
+                project.pricing_type = 'employee_rate'
+            elif project.sale_line_id:
+                project.pricing_type = 'fixed_rate'
+            else:
+                project.pricing_type = 'task_rate'
+        (self - billable_projects).update({'pricing_type': False})
+
+    def _search_pricing_type(self, operator, value):
+        """ Search method for pricing_type field.
+
+            This method returns a domain based on the operator and the value given in parameter:
+            - operator = '=':
+                - value = 'task_rate': [('sale_line_employee_ids', '=', False), ('sale_line_id', '=', False), ('allow_billable', '=', True)]
+                - value = 'fixed_rate': [('sale_line_employee_ids', '=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', True)]
+                - value = 'employee_rate': [('sale_line_employee_ids', '!=', False), ('allow_billable', '=', True)]
+                - value is False: [('allow_billable', '=', False)]
+            - operator = '!=':
+                - value = 'task_rate': ['|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '!=', False), ('allow_billable', '=', True)]
+                - value = 'fixed_rate': ['|', ('sale_line_employee_ids', '!=', False), ('sale_line_id', '=', False), ('allow_billable', '=', True)]
+                - value = 'employee_rate': [('sale_line_employee_ids', '=', False), ('allow_billable', '=', True)]
+                - value is False: [('allow_billable', '!=', False)]
+
+            :param operator: the supported operator is either '=' or '!='.
+            :param value: the value than the field should be is among these values into the following tuple: (False, 'task_rate', 'fixed_rate', 'employee_rate').
+
+            :returns: the domain to find the expected projects.
+        """
+        if operator not in ('=', '!='):
+            raise UserError(_('Operation not supported'))
+        if not ((isinstance(value, bool) and value is False) or (isinstance(value, str) and value in ('task_rate', 'fixed_rate', 'employee_rate'))):
+            return UserError(_('Value does not exist in the pricing type'))
+        if value is False:
+            return [('allow_billable', operator, value)]
+
+        sol_cond = ('sale_line_id', '!=', False)
+        mapping_cond = ('sale_line_employee_ids', '!=', False)
+        if value == 'task_rate':
+            domain = [expression.NOT_OPERATOR, sol_cond, expression.NOT_OPERATOR, mapping_cond]
+        elif value == 'fixed_rate':
+            domain = [sol_cond, expression.NOT_OPERATOR, mapping_cond]
+        else:  # value == 'employee_rate'
+            domain = [sol_cond, mapping_cond]
+
+        domain = expression.normalize_domain(domain)
+        if operator != '=':
+            domain.insert(0, expression.NOT_OPERATOR)
+        domain = expression.distribute_not(domain)
+        domain = expression.AND([domain, [('allow_billable', '=', True)]])
+        return domain
+
+    @api.depends('partner_id', 'pricing_type')
     def _compute_display_create_order(self):
         for project in self:
-            show = True
-            if not project.partner_id or project.pricing_type == 'task_rate' or not project.allow_billable or project.sale_order_id:
-                show = False
-            project.display_create_order = show
+            project.display_create_order = project.partner_id and project.pricing_type == 'task_rate'
 
     @api.depends('allow_timesheets', 'allow_billable')
     def _compute_timesheet_product_id(self):
@@ -82,23 +138,36 @@ class Project(models.Model):
         for project in self.filtered(lambda p: not p.project_overview):
             project.project_overview = project.allow_billable or project.allow_timesheets
 
-    @api.constrains('sale_line_id', 'pricing_type')
-    def _check_sale_line_type(self):
+    @api.depends('sale_line_employee_ids.sale_line_id', 'sale_line_id')
+    def _compute_partner_id(self):
         for project in self:
-            if project.pricing_type == 'fixed_rate':
-                if project.sale_line_id and not project.sale_line_id.is_service:
-                    raise ValidationError(_("A billable project should be linked to a Sales Order Item having a Service product."))
-                if project.sale_line_id and project.sale_line_id.is_expense:
-                    raise ValidationError(_("A billable project should be linked to a Sales Order Item that does not come from an expense or a vendor bill."))
+            if project.partner_id:
+                continue
+            if project.allow_billable and project.allow_timesheets and project.pricing_type != 'task_rate':
+                sol = project.sale_line_id or project.sale_line_employee_ids.sale_line_id[:1]
+                project.partner_id = sol.order_partner_id
 
-    @api.onchange('allow_billable')
-    def _onchange_allow_billable(self):
-        if self.task_ids._get_timesheet() and self.allow_timesheets and not self.allow_billable:
-            message = _("All timesheet hours that are not yet invoiced will be removed from Sales Order on save. Discard to avoid the change.")
-            return {'warning': {
-                'title': _("Warning"),
-                'message': message
-            }}
+    @api.depends('partner_id')
+    def _compute_sale_line_id(self):
+        super()._compute_sale_line_id()
+        for project in self.filtered(lambda p: not p.sale_line_id and p.partner_id and p.pricing_type == 'employee_rate'):
+            # Give a SOL by default either the last SOL with service product and remaining_hours > 0
+            sol = self.env['sale.order.line'].search([
+                ('is_service', '=', True),
+                ('order_partner_id', 'child_of', project.partner_id.commercial_partner_id.id),
+                ('is_expense', '=', False),
+                ('state', 'in', ['sale', 'done']),
+                ('remaining_hours', '>', 0)
+            ], limit=1)
+            project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
+
+    @api.constrains('sale_line_id')
+    def _check_sale_line_type(self):
+        for project in self.filtered(lambda project: project.sale_line_id):
+            if not project.sale_line_id.is_service:
+                raise ValidationError(_("A billable project should be linked to a Sales Order Item having a Service product."))
+            if project.sale_line_id.is_expense:
+                raise ValidationError(_("A billable project should be linked to a Sales Order Item that does not come from an expense or a vendor bill."))
 
     def write(self, values):
         res = super(Project, self).write(values)
@@ -224,7 +293,7 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
 
-    @api.depends('sale_line_id', 'project_id', 'allow_billable')
+    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'commercial_partner_id')
     def _compute_sale_order_id(self):
         for task in self:
             if not task.allow_billable:
@@ -234,12 +303,15 @@ class ProjectTask(models.Model):
                     task.sale_order_id = task.sale_line_id.sudo().order_id
                 elif task.project_id.sale_order_id:
                     task.sale_order_id = task.project_id.sale_order_id
+                if task.commercial_partner_id != task.sale_order_id.partner_id.commercial_partner_id:
+                    task.sale_order_id = False
                 if task.sale_order_id and not task.partner_id:
                     task.partner_id = task.sale_order_id.partner_id
 
     @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         billable_tasks = self.filtered('allow_billable')
+        (self - billable_tasks).update({'sale_line_id': False})
         super(ProjectTask, billable_tasks)._compute_sale_line()
         for task in billable_tasks.filtered(lambda t: not t.sale_line_id):
             task.sale_line_id = task._get_last_sol_of_customer()
@@ -268,7 +340,7 @@ class ProjectTask(models.Model):
         if not self.commercial_partner_id or not self.allow_billable:
             return False
         domain = [('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('remaining_hours', '>', 0)]
-        if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id:
+        if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id and self.commercial_partner_id == self.project_id.partner_id.commercial_partner_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
         return self.env['sale.order.line'].search(domain, limit=1)
 
