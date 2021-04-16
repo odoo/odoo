@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ThreadPreview" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_ThreadPreview_messageBody')]" position="replace">
+            <t t-if="thread.lastMessage and thread.lastMessage.isRating">
+                rating
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>
