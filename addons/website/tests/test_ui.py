@@ -154,8 +154,8 @@ class TestUi(odoo.tests.HttpCase):
                 </xpath>
             """,
         })
-        self.start_tour("/?fw=%s" % website_default.id, "generic_website_editor", login='admin')
-        self.start_tour("/?fw=%s" % new_website.id, "specific_website_editor", login='admin')
+        self.start_tour("/website/force/%s" % website_default.id, "generic_website_editor", login='admin')
+        self.start_tour("/website/force/%s" % new_website.id, "specific_website_editor", login='admin')
 
     def test_06_public_user_editor(self):
         website_default = self.env['website'].search([], limit=1)
