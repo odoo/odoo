@@ -50,6 +50,20 @@ class TestUi(tests.HttpCase):
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_member.ready',
             login=user_portal.login)
 
+    def test_full_screen_edition_website_publisher(self):
+        # group_website_designer
+        user_demo = self.env.ref('base.user_demo')
+        user_demo.flush()
+        user_demo.write({
+            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website.group_website_publisher').id)]
+        })
+
+        self.phantom_js(
+            '/slides',
+            'odoo.__DEBUG__.services["web_tour.tour"].run("full_screen_web_editor")',
+            'odoo.__DEBUG__.services["web_tour.tour"].tours.full_screen_web_editor.ready',
+            login=user_demo.login)
+
 
 @tests.common.tagged('external', '-standard')
 class TestUiYoutube(tests.HttpCase):
