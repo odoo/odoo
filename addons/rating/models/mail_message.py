@@ -20,8 +20,8 @@ class MailMessage(models.Model):
             message.rating_value = mapping.get(message.id, 0.0)
 
     def _search_rating_value(self, operator, operand):
-        ratings = self.env['rating.rating'].sudo().search([
+        ratings = self.env['rating.rating'].sudo()._search([
             ('rating', operator, operand),
             ('message_id', '!=', False)
         ])
-        return [('id', 'in', ratings.mapped('message_id').ids)]
+        return [('id', 'in', ratings.mapped('message_id'))]

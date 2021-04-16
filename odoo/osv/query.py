@@ -143,6 +143,16 @@ class Query(object):
         where_clause = " AND ".join(self._where_clauses)
         return from_clause, where_clause, params + self._where_params
 
+    def mapped(self, path):
+        assert isinstance(path, str), "Method query.mapped cannot be called with function in argument. Convert it to a string or browse result first"
+        path_parts = path.split('.')
+        assert len(path_parts) == 1, "More than 1 field is not supported yet. Browse result first."
+
+        # TODO: add support for related/inherited fields?
+        last_field = path_parts[-1]
+        alias = next(iter(self._tables))
+        return self.select('"%s"."%s"' % (alias, last_field))
+
     @lazy_property
     def _result(self):
         query_str, params = self.select()
