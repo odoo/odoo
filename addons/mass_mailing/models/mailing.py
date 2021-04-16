@@ -193,6 +193,8 @@ class MassMailing(models.Model):
             self[key] = False
         if not self.ids:
             return
+        # ensure traces are sent to db
+        self.flush()
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,
