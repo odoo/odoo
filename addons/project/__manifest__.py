@@ -67,6 +67,8 @@
         ],
         'web.assets_qweb': [
             'project/static/src/xml/**/*',
+            'project/static/src/components/thread_needaction_preview/thread_needaction_preview.xml',
+            'project/static/src/components/thread_preview/thread_preview.xml',
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/burndown_chart_tests.js',
