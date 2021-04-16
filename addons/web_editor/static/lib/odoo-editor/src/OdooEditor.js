@@ -48,6 +48,7 @@ import {
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
 import { TablePicker } from './tablepicker/TablePicker.js';
+import uuidV4 from './utils/uuidV4.js';
 
 export * from './utils/utils.js';
 import { UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE } from './utils/constants.js';
@@ -60,6 +61,8 @@ const KEYBOARD_TYPES = { VIRTUAL: 'VIRTUAL', PHYSICAL: 'PHYSICAL', UNKNOWN: 'UKN
 const IS_KEYBOARD_EVENT_UNDO = ev => ev.key === 'z' && (ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_REDO = ev => ev.key === 'y' && (ev.ctrlKey || ev.metaKey);
 const IS_KEYBOARD_EVENT_BOLD = ev => ev.key === 'b' && (ev.ctrlKey || ev.metaKey);
+
+const FIRST_STEP_PREVIOUS_ID = 'FIRST_STEP_PREVIOUS_ID';
 
 const CLIPBOARD_BLACKLISTS = {
     unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
@@ -132,7 +135,6 @@ function defaultOptions(defaultObject, object) {
     }
     return newObject;
 }
-
 export class OdooEditor extends EventTarget {
     constructor(editable, options = {}) {
         super();
@@ -148,6 +150,7 @@ export class OdooEditor extends EventTarget {
                 defaultLinkAttributes: {},
                 getContentEditableAreas: () => [],
                 _t: string => string,
+                collaborative: false,
             },
             options,
         );
@@ -208,8 +211,17 @@ export class OdooEditor extends EventTarget {
 
         // Set contenteditable before clone as FF updates the content at this point.
         this._activateContenteditable();
-
-        this.idSet(editable);
+        // User id is only useful in collaborative mode, but to have effective
+        // tests, the editor should work in the same manner as much as possible
+        // in both mode.
+        this._userId = this.options.collaborative.userId || uuidV4();
+        // TODO: remove initCollaboration so that the editor is always
+        // initialised the same way, so that tests are more reliable
+        if (this.options.collaborative) {
+            this.initCollaboration();
+        } else {
+            this.idSet(editable);
+        }
 
         this._createCommandBar();
 
@@ -281,6 +293,25 @@ export class OdooEditor extends EventTarget {
             }
         }
     }
+    initCollaboration() {
+        // Create a first step containing all of the document
+        const editableContent = this.editable.innerHTML;
+        [...this.editable.childNodes].forEach(n => n.remove() || n);
+        this.observerActive();
+        this.document.getSelection().setPosition(this.editable);
+        this.execCommand('insertHTML', editableContent);
+        this.options.collaborative.initServerHistory(this._historySteps);
+        this._isCollaborativeActive = true;
+    }
+
+    historySynchronise(masterHistory) {
+        // Replace current history by parameter history
+        this.observerUnactive();
+        this.resetHistory();
+        [...this.editable.childNodes].forEach(n => n.remove());
+        this.observerActive();
+        masterHistory.forEach(step => this.historyReceive(step));
+    }
     /**
      * Releases anything that was initialized.
      *
@@ -297,7 +328,7 @@ export class OdooEditor extends EventTarget {
         this.observerFlush();
 
         // find common ancestror in this.history[-1]
-        const step = this._historySteps[this._historySteps.length - 1];
+        const step = this.historyGetCurrentStep();
         let commonAncestor, record;
         for (record of step.mutations) {
             const node = this.idFind(record.parentId || record.id) || this.editable;
@@ -322,9 +353,11 @@ export class OdooEditor extends EventTarget {
     // Assign IDs to src, and dest if defined
     idSet(node, testunbreak = false) {
         if (!node.oid) {
-            node.oid = (Math.random() * 2 ** 31) | 0; // TODO: uuid4 or higher number
-            this._idToNodeMap.set(node.oid, node);
+            node.oid = uuidV4();
         }
+        // Always add to _idNodeMap for nodes whose ids are created through by
+        // another client (in a collaboration setting)
+        this._idToNodeMap.set(node.oid, node);
         // Rollback if node.ouid changed. This ensures that nodes never change
         // unbreakable ancestors.
         node.ouid = node.ouid || getOuid(node, true);
@@ -346,14 +379,11 @@ export class OdooEditor extends EventTarget {
         return this._idToNodeMap.get(id);
     }
 
-    // Observer that syncs doms
-
-    // if not in collaboration mode, no need to serialize / unserialize
-    serialize(node) {
-        return this._isCollaborativeActive ? nodeToObject(node) : node;
+    serialize(node, nodesToStripFromChildren) {
+        return nodeToObject(node, nodesToStripFromChildren);
     }
     unserialize(obj) {
-        return this._isCollaborativeActive ? objectToNode(obj) : obj;
+        return objectToNode(obj);
     }
 
     automaticStepActive(label) {
@@ -403,10 +433,22 @@ export class OdooEditor extends EventTarget {
     }
 
     observerApply(records) {
+        const mutatedNodes = new Set();
+        for (const record of records) {
+            if (record.type === 'childList') {
+                record.removedNodes.forEach(node => {
+                    mutatedNodes.add(node.oid);
+                });
+                record.addedNodes.forEach(node => {
+                    this.idSet(node, this._checkStepUnbreakable);
+                    mutatedNodes.add(node.oid);
+                });
+            }
+        }
         for (const record of records) {
             switch (record.type) {
                 case 'characterData': {
-                    this._historySteps[this._historySteps.length - 1].mutations.push({
+                    this.historyGetCurrentStep().mutations.push({
                         'type': 'characterData',
                         'id': record.target.oid,
                         'text': record.target.textContent,
@@ -415,7 +457,7 @@ export class OdooEditor extends EventTarget {
                     break;
                 }
                 case 'attributes': {
-                    this._historySteps[this._historySteps.length - 1].mutations.push({
+                    this.historyGetCurrentStep().mutations.push({
                         'type': 'attributes',
                         'id': record.target.oid,
                         'attributeName': record.attributeName,
@@ -443,16 +485,15 @@ export class OdooEditor extends EventTarget {
                         } else {
                             return false;
                         }
-                        this.idSet(added, this._checkStepUnbreakable);
                         mutation.id = added.oid;
-                        mutation.node = this.serialize(added);
-                        this._historySteps[this._historySteps.length - 1].mutations.push(mutation);
+                        mutation.node = this.serialize(added, mutatedNodes);
+                        this.historyGetCurrentStep().mutations.push(mutation);
                     });
                     record.removedNodes.forEach(removed => {
                         if (!this._toRollback && containsUnremovable(removed)) {
                             this._toRollback = UNREMOVABLE_ROLLBACK_CODE;
                         }
-                        this._historySteps[this._historySteps.length - 1].mutations.push({
+                        this.historyGetCurrentStep().mutations.push({
                             'type': 'remove',
                             'id': removed.oid,
                             'parentId': record.target.oid,
@@ -498,19 +539,18 @@ export class OdooEditor extends EventTarget {
     }
 
     resetHistory() {
-        this._historySteps = [
-            {
-                cursor: {
-                    // cursor at beginning of step
-                    anchorNode: undefined,
-                    anchorOffset: undefined,
-                    focusNode: undefined,
-                    focusOffset: undefined,
-                },
-                mutations: [],
-                id: undefined,
+        this._historySteps = [];
+        this._currentStep = {
+            cursor: {
+                // cursor at beginning of step
+                anchorNode: undefined,
+                anchorOffset: undefined,
+                focusNode: undefined,
+                focusOffset: undefined,
             },
-        ];
+            mutations: [],
+            id: undefined,
+        };
         this._historyStepsStates = new Map();
     }
     //
@@ -530,20 +570,35 @@ export class OdooEditor extends EventTarget {
         }
 
         // push history
-        const latest = this._historySteps[this._historySteps.length - 1];
+        const latest = this.historyGetCurrentStep();
         if (!latest.mutations.length) {
             return false;
         }
 
-        latest.id = (Math.random() * 2 ** 31) | 0; // TODO: replace by uuid4 generator
-        this.historySend(latest);
-        this._historySteps.push({
+        latest.id = uuidV4();
+        latest.userId = this._userId;
+        let previousStepId;
+        for (let i = this._historySteps.length - 1; !previousStepId && i >= 0; i--) {
+            if (this._historySteps[i].userId === this._userId) {
+                previousStepId = this._historySteps[i].id;
+            }
+        }
+        // If we did not find a step belonging to us, it is our first step
+        latest.previousStepId = previousStepId || FIRST_STEP_PREVIOUS_ID;
+        latest.index = this._historySteps.length;
+        this._historySteps.push(latest);
+        this._historySend(latest);
+        this._currentStep = {
             cursor: {},
             mutations: [],
-        });
+        };
         this._checkStepUnbreakable = true;
         this._recordHistoryCursor();
         this.dispatchEvent(new Event('historyStep'));
+    }
+
+    historyGetCurrentStep() {
+        return this._currentStep;
     }
 
     // apply changes according to some records
@@ -565,22 +620,15 @@ export class OdooEditor extends EventTarget {
                     toremove.remove();
                 }
             } else if (record.type === 'add') {
-                const node = this.unserialize(record.node);
-                const newnode = node.cloneNode(1);
-                // preserve oid after the clone
-                this.idSet(node, newnode);
+                const node = this.idFind(record.oid) || this.unserialize(record.node);
+                this.idSet(node, true);
 
-                const destnode = this.idFind(record.node.oid);
-                if (destnode && record.node.parentNode.oid === destnode.parentNode.oid) {
-                    // TODO: optimization: remove record from the history to reduce collaboration bandwidth
-                    continue;
-                }
                 if (record.append && this.idFind(record.append)) {
-                    this.idFind(record.append).append(newnode);
+                    this.idFind(record.append).append(node);
                 } else if (record.before && this.idFind(record.before)) {
-                    this.idFind(record.before).before(newnode);
+                    this.idFind(record.before).before(node);
                 } else if (record.after && this.idFind(record.after)) {
-                    this.idFind(record.after).after(newnode);
+                    this.idFind(record.after).after(node);
                 } else {
                     continue;
                 }
@@ -588,92 +636,88 @@ export class OdooEditor extends EventTarget {
         }
     }
 
-    // send changes to server
-    historyFetch() {
+    /**
+     * history receive algo:
+     *
+     *  if we receive a step with an index higher than the current last index+1
+     *  or that matches a step we have but with a different index:
+     *      That's a problem, we need to resynchronize.
+     *
+     *  else if the received step is exactly the next one in the sequence:
+     *      we're not up to date but we're still synchronized so apply the step.
+     *
+     *  else if the received step index is smaller or equal to the current last
+     *  index:
+     *      someone introduced changes before us and the server reordered the
+     *      steps.
+     *      1. rollback all the changes after this index
+     *      2. apply the received changes
+     *      3. reapply the rollbacked steps, update their index
+     *      If the same nodes are modified, there will be problems, otherwise
+     *      everything should be fine.
+     *
+     *  else if newStep.id is the same as historyStep[newStep.index].id:
+     *      do nothing, we're up to date.
+     *
+     */
+    historyReceive(newStep) {
         if (!this._isCollaborativeActive) {
             return;
         }
-        window
-            .fetch(`/history-get/${this._collaborativeLastSynchronisedId || 0}`, {
-                headers: { 'Content-Type': 'application/json;charset=utf-8' },
-                method: 'GET',
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return Promise.reject();
-                }
-                return response.json();
-            })
-            .then(result => {
-                if (!result.length) {
-                    return false;
-                }
-                this.observerUnactive();
-
-                let index = this._historySteps.length;
-                let updated = false;
-                while (
-                    index &&
-                    this._historySteps[index - 1].id !== this._collaborativeLastSynchronisedId
-                ) {
-                    index--;
-                }
-
-                for (let residx = 0; residx < result.length; residx++) {
-                    const record = result[residx];
-                    this._collaborativeLastSynchronisedId = record.id;
-                    if (
-                        index < this._historySteps.length &&
-                        record.id === this._historySteps[index].id
-                    ) {
-                        index++;
-                        continue;
-                    }
-                    updated = true;
-
-                    // we are not synched with the server anymore, rollback and replay
-                    while (this._historySteps.length > index) {
-                        this.historyRollback();
-                        this._historySteps.pop();
-                    }
-
-                    if (record.id === 1) {
-                        this.editable.innerHTML = '';
-                    }
-                    this.historyApply(record.mutations);
-
-                    record.mutations = record.id === 1 ? [] : record.mutations;
-                    this._historySteps.push(record);
-                    index++;
-                }
-                if (updated) {
-                    this._historySteps.push({
-                        cursor: {},
-                        mutations: [],
-                    });
-                }
-                this.observerActive();
-                this.historyFetch();
-            })
-            .catch(() => {
-                // TODO: change that. currently: if error on fetch, fault back to non collaborative mode.
-                this._isCollaborativeActive = false;
+        this.observerUnactive();
+        const localStep = this._historySteps.find(({ id }) => id === newStep.id);
+        const localStepIsDesynchronized = localStep && localStep.index !== newStep.index;
+        if (localStepIsDesynchronized || newStep.index > this._historySteps.length) {
+            this.options.collaborative.requestSynchronization();
+        } else if (newStep.index === this._historySteps.length) {
+            // apply step
+            this.historyApply(newStep.mutations);
+            this._historySteps.push(newStep);
+        } else if (!localStep) {
+            this._computeHistoryCursor();
+            //rollback and apply
+            const currentStep = this.historyGetCurrentStep();
+            if (currentStep.mutations && currentStep.mutations.length) {
+                this.historyRevert(currentStep);
+            }
+            const stepsToReapply = [];
+            while (
+                this._historySteps.length &&
+                this._historySteps[this._historySteps.length - 1].index >= newStep.index
+            ) {
+                // Put the step at the beginning of the array, so that the first
+                // reverted step is the last reapplied
+                stepsToReapply.unshift(this._historySteps.pop());
+                this.historyRevert(stepsToReapply[0]);
+            }
+            this.historyApply(newStep.mutations);
+            this._historySteps.push(newStep);
+            stepsToReapply.forEach(step => {
+                this.historyApply(step.mutations);
+                this._historySteps.push({ ...step, index: step.index + 1 });
             });
+
+            if (currentStep.mutations && currentStep.mutations.length) {
+                this.historyApply(currentStep.mutations);
+            }
+            this.historySetCursor(currentStep);
+        }
+
+        this.observerActive();
     }
 
-    historySend(item) {
-        if (!this._isCollaborativeActive) {
-            return;
+    getHistorySteps() {
+        return this._historySteps;
+    }
+
+    _historySend(item) {
+        if (this._isCollaborativeActive) {
+            this.options.collaborative.send(item);
         }
-        window.fetch('/history-push', {
-            body: JSON.stringify(item),
-            headers: { 'Content-Type': 'application/json;charset=utf-8' },
-            method: 'POST',
-        });
     }
 
     historyRollback(until = 0) {
-        const step = this._historySteps[this._historySteps.length - 1];
+        const step = this.historyGetCurrentStep();
         this.observerFlush();
         this.historyRevert(step, until);
         this.observerFlush();
@@ -687,13 +731,13 @@ export class OdooEditor extends EventTarget {
      * this._historyStepsState is a map from it's location (index) in this.history to a state.
      * The state can be on of:
      * undefined: the position has never been undo or redo.
-     * 0: The position is considered as a redo of another.
-     * 1: The position is considered as a undo of another.
-     * 2: The position has been undone and is considered consumed.
+     * "redo": The position is considered as a redo of another.
+     * "undo": The position is considered as a undo of another.
+     * "consumed": The position has been undone and is considered consumed.
      */
     historyUndo() {
         // The last step is considered an uncommited draft so always revert it.
-        const lastStep = this._historySteps[this._historySteps.length - 1];
+        const lastStep = this.historyGetCurrentStep();
         this.historyRevert(lastStep);
         // Clean the last step otherwise if no other step is created after, the
         // mutations of the revert itself will be added to the same step and
@@ -703,11 +747,12 @@ export class OdooEditor extends EventTarget {
         const pos = this._getNextUndoIndex();
         if (pos >= 0) {
             // Consider the position consumed.
-            this._historyStepsStates.set(pos, 2);
+            this._historyStepsStates.set(this._historySteps[pos].id, 'consumed');
             this.historyRevert(this._historySteps[pos]);
-            // Consider the last position of the history as an undo.
-            this._historyStepsStates.set(this._historySteps.length - 1, 1);
             this.historyStep(true);
+            // Consider the last position of the history as an undo.
+            const undoStep = this._historySteps[this._historySteps.length - 1];
+            this._historyStepsStates.set(undoStep.id, 'undo');
             this.dispatchEvent(new Event('historyUndo'));
         }
     }
@@ -720,11 +765,12 @@ export class OdooEditor extends EventTarget {
     historyRedo() {
         const pos = this._getNextRedoIndex();
         if (pos >= 0) {
-            this._historyStepsStates.set(pos, 2);
+            this._historyStepsStates.set(this._historySteps[pos].id, 'consumed');
             this.historyRevert(this._historySteps[pos]);
-            this._historyStepsStates.set(this._historySteps.length - 1, 0);
             this.historySetCursor(this._historySteps[pos]);
             this.historyStep(true);
+            const lastStep = this._historySteps[this._historySteps.length - 1];
+            this._historyStepsStates.set(lastStep.id, 'redo');
             this.dispatchEvent(new Event('historyRedo'));
         }
     }
@@ -769,7 +815,11 @@ export class OdooEditor extends EventTarget {
                     break;
                 }
                 case 'remove': {
-                    const nodeToRemove = this.unserialize(mutation.node);
+                    let nodeToRemove = this.idFind(mutation.id);
+                    if (!nodeToRemove) {
+                        nodeToRemove = this.unserialize(mutation.node);
+                        this.idSet(nodeToRemove);
+                    }
                     if (mutation.nextId && this.idFind(mutation.nextId)) {
                         const node = this.idFind(mutation.nextId);
                         node && node.before(nodeToRemove);
@@ -801,7 +851,7 @@ export class OdooEditor extends EventTarget {
      * @returns {boolean}
      */
     resetCursorOnLastHistoryCursor() {
-        const lastHistoryStep = this._historySteps[this._historySteps.length - 1];
+        const lastHistoryStep = this.historyGetCurrentStep();
         if (lastHistoryStep && lastHistoryStep.cursor && lastHistoryStep.cursor.anchorNode) {
             this.historySetCursor(lastHistoryStep);
             return true;
@@ -966,7 +1016,7 @@ export class OdooEditor extends EventTarget {
                 } else {
                     next = firstLeaf(next);
                 }
-            }, this._historySteps[this._historySteps.length - 1].mutations.length);
+            }, this.historyGetCurrentStep().mutations.length);
             if ([UNBREAKABLE_ROLLBACK_CODE, UNREMOVABLE_ROLLBACK_CODE].includes(res)) {
                 restore();
                 break;
@@ -1154,7 +1204,7 @@ export class OdooEditor extends EventTarget {
      * @param {boolean} [useCache=false]
      */
     _recordHistoryCursor(useCache = false) {
-        const latest = this._historySteps[this._historySteps.length - 1];
+        const latest = this.historyGetCurrentStep();
         latest.cursor =
             (useCache ? this._latestComputedCursor : this._computeHistoryCursor()) || {};
     }
@@ -1163,29 +1213,46 @@ export class OdooEditor extends EventTarget {
      * Return -1 if no undo index can be found.
      */
     _getNextUndoIndex() {
-        let index = this._historySteps.length - 2;
-        // go back to first step that can be undoed (0 or undefined)
-        while (this._historyStepsStates.get(index)) {
-            index--;
+        // go back to first step that can be undone ("redo" or undefined)
+        for (let i = this._historySteps.length - 1; i >= 0; i--) {
+            if (this._historySteps[i] && this._historySteps[i].userId === this._userId) {
+                const state = this._historyStepsStates.get(this._historySteps[i].id);
+                if (state === 'redo' || !state) {
+                    return i;
+                }
+            }
         }
-        return index;
+        // There is no steps left to be undone, return an index that does not
+        // point to any step
+        return -1;
     }
     /**
      * Get the step index in the history to redo.
      * Return -1 if no redo index can be found.
      */
     _getNextRedoIndex() {
-        let pos = this._historySteps.length - 2;
         // We cannot redo more than what is consumed.
-        // Check if we have no more 2 than 0 until we get to a 1
+        // Check if we have no more "consumed" than "redo" until we get to an
+        // "undo"
         let totalConsumed = 0;
-        while (this._historyStepsStates.has(pos) && this._historyStepsStates.get(pos) !== 1) {
-            // here ._historyStepsState.get(pos) can only be 2 (consumed) or 0 (undoed).
-            totalConsumed += this._historyStepsStates.get(pos) === 2 ? 1 : -1;
-            pos--;
+        for (let index = this._historySteps.length - 1; index >= 0; index--) {
+            if (this._historySteps[index] && this._historySteps[index].userId === this._userId) {
+                const state = this._historyStepsStates.get(this._historySteps[index].id);
+                switch (state) {
+                    case 'undo':
+                        return totalConsumed <= 0 ? index : -1;
+                    case 'redo':
+                        totalConsumed -= 1;
+                        break;
+                    case 'consumed':
+                        totalConsumed += 1;
+                        break;
+                    default:
+                        return -1;
+                }
+            }
         }
-        const canRedo = this._historyStepsStates.get(pos) === 1 && totalConsumed <= 0;
-        return canRedo ? pos : -1;
+        return -1;
     }
 
     // COMMAND BAR
@@ -1633,7 +1700,7 @@ export class OdooEditor extends EventTarget {
         // Record the cursor position that was computed on keydown or before
         // contentEditable execCommand (whatever preceded the 'input' event)
         this._recordHistoryCursor(true);
-        const cursor = this._historySteps[this._historySteps.length - 1].cursor;
+        const cursor = this.historyGetCurrentStep().cursor;
         const { focusOffset, focusNode, anchorNode, anchorOffset } = cursor || {};
         const wasCollapsed = !cursor || (focusNode === anchorNode && focusOffset === anchorOffset);
 

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 // TODO: avoid empty keys when not necessary to reduce request size
-export function nodeToObject(node) {
+export function nodeToObject(node, nodesToStripFromChildren = new Set()) {
     let result = {
         nodeType: node.nodeType,
         oid: node.oid,
@@ -19,7 +19,9 @@ export function nodeToObject(node) {
         }
         let child = node.firstChild;
         while (child) {
-            result.children.push(nodeToObject(child));
+            if (!nodesToStripFromChildren.has(child.oid)) {
+                result.children.push(nodeToObject(child, nodesToStripFromChildren));
+            }
             child = child.nextSibling;
         }
     }
