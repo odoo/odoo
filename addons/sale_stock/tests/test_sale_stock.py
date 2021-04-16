@@ -491,25 +491,12 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(move1.product_uom.id, uom_unit.id)
         self.assertEqual(move1.product_qty, 24)
 
-        # force the propagation of the uom, sell 3 dozen
-        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', '1')
-        so1.write({
-            'order_line': [
-                (1, so1.order_line.id, {'product_uom_qty': 3}),
-            ]
-        })
-        move2 = so1.picking_ids.move_lines.filtered(lambda m: m.product_uom.id == uom_dozen.id)
-        self.assertEqual(move2.product_uom_qty, 1)
-        self.assertEqual(move2.product_uom.id, uom_dozen.id)
-        self.assertEqual(move2.product_qty, 12)
-
         # deliver everything
         move1.quantity_done = 24
-        move2.quantity_done = 1
         so1.picking_ids.button_validate()
 
         # check the delivered quantity
-        self.assertEqual(so1.order_line.qty_delivered, 3.0)
+        self.assertEqual(so1.order_line.qty_delivered, 2.0)
 
     def test_07_forced_qties(self):
         """ Make multiple sale order lines of the same product which isn't available in stock. On
@@ -551,29 +538,13 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         })
         so1.action_confirm()
 
-        self.assertEqual(len(so1.picking_ids.move_lines), 3)
+        self.assertEqual(len(so1.picking_ids.move_lines), 1)
         so1.picking_ids.write({
             'move_line_ids': [
                 (0, 0, {
                     'product_id': item1.id,
                     'product_uom_qty': 0,
-                    'qty_done': 1,
-                    'product_uom_id': uom_dozen.id,
-                    'location_id': so1.picking_ids.location_id.id,
-                    'location_dest_id': so1.picking_ids.location_dest_id.id,
-                }),
-                (0, 0, {
-                    'product_id': item1.id,
-                    'product_uom_qty': 0,
-                    'qty_done': 1,
-                    'product_uom_id': uom_dozen.id,
-                    'location_id': so1.picking_ids.location_id.id,
-                    'location_dest_id': so1.picking_ids.location_dest_id.id,
-                }),
-                (0, 0, {
-                    'product_id': item1.id,
-                    'product_uom_qty': 0,
-                    'qty_done': 1,
+                    'qty_done': 3,
                     'product_uom_id': uom_dozen.id,
                     'location_id': so1.picking_ids.location_id.id,
                     'location_dest_id': so1.picking_ids.location_dest_id.id,
@@ -730,11 +701,13 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(return_wizard.product_return_moves.quantity, 10)
 
         # Valids the return picking.
+
         res = return_wizard.create_returns()
         return_picking = self.env['stock.picking'].browse(res['res_id'])
         return_picking.move_lines.write({'quantity_done': 10})
         return_picking.button_validate()
         # Checks the delivery amount (must be 0).
+        sale_order.order_line._compute_qty_delivered()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
     def test_12_return_without_refund(self):

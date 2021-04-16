@@ -7,12 +7,6 @@ from odoo import api, models
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    def _prepare_stock_moves(self, picking):
-        res = super(PurchaseOrderLine, self)._prepare_stock_moves(picking)
-        for re in res:
-            re['sale_line_id'] = self.sale_line_id.id
-        return res
-
     def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         # if this is defined, this is a dropshipping line, so no
         # this is to correctly map delivered quantities to the so lines

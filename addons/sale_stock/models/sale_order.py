@@ -5,6 +5,7 @@ import json
 import logging
 from datetime import timedelta
 from collections import defaultdict
+from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_round
@@ -242,12 +243,13 @@ class SaleOrder(models.Model):
                 return True
         return res
 
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict', check_company=True)
-    move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
+    move_ids = fields.Many2many('stock.move', compute='_compute_move_ids', string='Stock Moves', store=True)
     product_type = fields.Selection(related='product_id.type')
     virtual_available_at_date = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
@@ -258,6 +260,20 @@ class SaleOrderLine(models.Model):
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit of Measure')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
+
+    @api.depends('order_id.picking_ids', 'order_id.picking_ids.move_lines', 'order_id.picking_ids.location_dest_id', 'order_id.picking_ids.location_id')
+    def _compute_move_ids(self):
+        sale_order_moves = set()
+        move_by_product_so = defaultdict(lambda: self.env['stock.move'])
+        for sale_order in self.order_id:
+            sale_order_moves |= set(sale_order.picking_ids.filtered(
+                lambda p: p.location_dest_id.usage == 'customer' or p.location_id.usage == 'customer'
+            ).move_lines.ids)
+            for move in self.env['stock.move'].browse(sale_order_moves):
+                move_by_product_so[(move.product_id, sale_order)] |= move
+
+        for sale_line in self:
+            sale_line.move_ids = move_by_product_so.get((sale_line.product_id, sale_line.order_id), self.env['stock.move'])
 
     @api.depends('product_type', 'product_uom_qty', 'qty_delivered', 'state', 'move_ids', 'product_uom')
     def _compute_qty_to_deliver(self):
@@ -382,19 +398,49 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
 
-        for line in self:  # TODO: maybe one day, this should be done in SQL for performance sake
-            if line.qty_delivered_method == 'stock_move':
-                qty = 0.0
-                outgoing_moves, incoming_moves = line._get_outgoing_incoming_moves()
-                for move in outgoing_moves:
-                    if move.state != 'done':
-                        continue
-                    qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
-                for move in incoming_moves:
-                    if move.state != 'done':
-                        continue
-                    qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
-                line.qty_delivered = qty
+        def group_func(line):
+            return (line.order_id.id, line.product_id.id)
+
+        for dummy, lines in groupby(sorted(self, key=group_func), key=group_func):
+            lines = self.env['sale.order.line'].concat(*lines)
+            lines.qty_delivered = 0
+            quantity_to_distribute = lines._get_moves_quantity()
+
+            line_negative_qty = sum(lines.filtered(
+                lambda l: l.product_uom_qty < 0).mapped('product_uom_qty'))
+            line_positive_qty = sum(lines.filtered(
+                lambda l: l.product_uom_qty > 0).mapped('product_uom_qty'))
+
+            free_qty_positive = min(abs(line_negative_qty), line_positive_qty)
+            free_qty_negative = free_qty_positive
+            for line in lines:
+                qty_delivered = 0
+                line_product_qty = line.product_uom._compute_quantity(
+                    line.product_uom_qty, line.product_id.uom_id, rounding_method='HALF-UP')
+                if line.product_uom_qty > 0 and free_qty_positive:
+                    qty_delivered = min(line_product_qty, free_qty_positive)
+                    free_qty_positive -= qty_delivered
+                if line.product_uom_qty < 0 and free_qty_negative:
+                    qty_delivered = min(line_product_qty, free_qty_negative)
+                    free_qty_negative -= qty_delivered
+                if qty_delivered:
+                    line.qty_delivered = line.product_id.uom_id._compute_quantity(
+                        qty_delivered, line.product_uom, rounding_method='HALF-UP')
+
+                if line.product_uom_qty > 0 and quantity_to_distribute and qty_delivered != line_product_qty:
+                    qty_delivered = min(
+                        line_product_qty - line.product_uom._compute_quantity(line.qty_delivered, line.product_id.uom_id, rounding_method='HALF-UP'),
+                        quantity_to_distribute)
+
+                    quantity_to_distribute -= qty_delivered
+                    line.qty_delivered += line.product_id.uom_id._compute_quantity(
+                        qty_delivered, line.product_uom, rounding_method='HALF-UP')
+                # TODO Manage line with -
+
+            if quantity_to_distribute:
+                lines[0].qty_delivered += lines[0].product_id.uom_id._compute_quantity(
+                    quantity_to_distribute, lines[0].product_uom, rounding_method='HALF-UP')
+
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -478,13 +524,11 @@ class SaleOrderLine(models.Model):
         be used in move/po creation.
         """
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
-        self.ensure_one()
         # Use the delivery date if there is else use date_order and lead time
-        date_deadline = self.order_id.commitment_date or (self.order_id.date_order + timedelta(days=self.customer_lead or 0.0))
+        date_deadline = self.order_id.commitment_date or (self.order_id.date_order + timedelta(days=self[0].customer_lead or 0.0))
         date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
             'group_id': group_id,
-            'sale_line_id': self.id,
             'date_planned': date_planned,
             'date_deadline': date_deadline,
             'route_ids': self.route_id,
@@ -497,13 +541,12 @@ class SaleOrderLine(models.Model):
         return values
 
     def _get_qty_procurement(self, previous_product_uom_qty=False):
-        self.ensure_one()
         qty = 0.0
         outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
         for move in outgoing_moves:
-            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_id.uom_id, rounding_method='HALF-UP')
         for move in incoming_moves:
-            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_id.uom_id, rounding_method='HALF-UP')
         return qty
 
     def _get_outgoing_incoming_moves(self):
@@ -518,6 +561,21 @@ class SaleOrderLine(models.Model):
                 incoming_moves |= move
 
         return outgoing_moves, incoming_moves
+
+    def _get_moves_quantity(self):
+        outgoing_moves, incoming_moves = self._get_outgoing_incoming_moves()
+        quantity = 0
+        for move in outgoing_moves:
+            if move.state != 'done':
+                continue
+            quantity += move.product_uom._compute_quantity(
+                move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+        for move in incoming_moves:
+            if move.state != 'done':
+                continue
+            quantity -= move.product_uom._compute_quantity(
+                move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+        return quantity
 
     def _get_procurement_group(self):
         return self.order_id.procurement_group_id
@@ -538,39 +596,52 @@ class SaleOrderLine(models.Model):
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         procurements = []
-        for line in self:
-            line = line.with_company(line.company_id)
-            if line.state != 'sale' or not line.product_id.type in ('consu','product'):
-                continue
-            qty = line._get_qty_procurement(previous_product_uom_qty)
-            if float_compare(qty, line.product_uom_qty, precision_digits=precision) == 0:
+
+        def group_func(line):
+            # TODO miss custom variant check
+            return (line.order_id.id, line.product_id.id, line.state, line.route_id.id, line.customer_lead)
+
+        sale_order_lines = self.order_id.order_line.filtered(
+            lambda l: l.product_id in self.product_id and
+            l.state == 'sale' and
+            l.product_id.type in ('consu', 'product'))
+
+        for dummy, lines in groupby(sorted(sale_order_lines, key=group_func), key=group_func):
+            lines = self.env['sale.order.line'].concat(*lines)
+            lines = lines.with_company(lines.company_id)
+
+            # TODO manage _get_qty_procurement
+            qty = lines._get_qty_procurement(previous_product_uom_qty)
+            if float_compare(qty, sum(lines.mapped('product_uom_qty')), precision_digits=precision) == 0:
                 continue
 
-            group_id = line._get_procurement_group()
+            group_id = lines._get_procurement_group()
             if not group_id:
-                group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
-                line.order_id.procurement_group_id = group_id
+                group_id = self.env['procurement.group'].create(lines._prepare_procurement_group_vals())
+                lines.order_id.procurement_group_id = group_id
             else:
                 # In case the procurement group is already created and the order was
                 # cancelled, we need to update certain values of the group.
                 updated_vals = {}
-                if group_id.partner_id != line.order_id.partner_shipping_id:
-                    updated_vals.update({'partner_id': line.order_id.partner_shipping_id.id})
-                if group_id.move_type != line.order_id.picking_policy:
-                    updated_vals.update({'move_type': line.order_id.picking_policy})
+                if group_id.partner_id != lines.order_id.partner_shipping_id:
+                    updated_vals.update({'partner_id': lines.order_id.partner_shipping_id.id})
+                if group_id.move_type != lines.order_id.picking_policy:
+                    updated_vals.update({'move_type': lines.order_id.picking_policy})
                 if updated_vals:
                     group_id.write(updated_vals)
 
-            values = line._prepare_procurement_values(group_id=group_id)
-            product_qty = line.product_uom_qty - qty
+            values = lines._prepare_procurement_values(group_id=group_id)
+            quant_uom = lines.product_id.uom_id
+            product_qty = 0
+            for line in lines:
+                product_qty += line.product_uom._compute_quantity(
+                    line.product_uom_qty, quant_uom, rounding_method='HALF-UP')
+            product_qty -= qty
 
-            line_uom = line.product_uom
-            quant_uom = line.product_id.uom_id
-            product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
             procurements.append(self.env['procurement.group'].Procurement(
-                line.product_id, product_qty, procurement_uom,
-                line.order_id.partner_shipping_id.property_stock_customer,
-                line.name, line.order_id.name, line.order_id.company_id, values))
+                lines.product_id, product_qty, quant_uom,
+                lines.order_id.partner_shipping_id.property_stock_customer,
+                lines[0].name, lines.order_id.name, lines.order_id.company_id, values))
         if procurements:
             self.env['procurement.group'].run(procurements)
 

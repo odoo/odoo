@@ -132,12 +132,11 @@ class SaleOrderLine(models.Model):
         return components
 
     def _get_qty_procurement(self, previous_product_uom_qty=False):
-        self.ensure_one()
         # Specific case when we change the qty on a SO for a kit product.
         # We don't try to be too smart and keep a simple approach: we compare the quantity before
         # and after update, and return the difference. We don't take into account what was already
         # sent, or any other exceptional case.
         bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')[self.product_id]
         if bom and previous_product_uom_qty:
-            return previous_product_uom_qty and previous_product_uom_qty.get(self.id, 0.0)
+            return sum([previous_product_uom_qty.get(id, 0.0) for id in self.ids])
         return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
