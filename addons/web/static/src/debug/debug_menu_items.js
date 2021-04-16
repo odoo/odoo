@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import startClickEverywhere from "@web/tools/test_menus_loader";
 import { browser } from "../core/browser";
 import { routeToUrl } from "../services/router_service";
 import { debugRegistry } from "./debug_registry";
@@ -36,9 +37,7 @@ export function runClickTestItem(env) {
     type: "item",
     description: env._t("Run Click Everywhere Test"),
     callback: () => {
-      console.log("Run Click Everywhere Test");
-      // TODO need to imp ?
-      // perform_click_everywhere_test
+      startClickEverywhere()
     },
     sequence: 30,
   };

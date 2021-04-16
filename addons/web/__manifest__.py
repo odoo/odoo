@@ -168,7 +168,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/notifications/**/*',
             'web/static/src/py_js/**/*',
             'web/static/src/services/**/*',
-            'web/static/src/tools/test_menus_loader.js*',
+            'web/static/src/tools/test_menus_loader.js',
             'web/static/src/utils/**/*',
             'web/static/src/views/**/*',
             'web/static/src/webclient/**/*',
