@@ -114,7 +114,7 @@ class Meeting(models.Model):
             user = google_event.owner(self.env)
             google_attendees += [{
                 'email': user.partner_id.email,
-                'status': {'response': 'accepted'},
+                'responseStatus': 'accepted',
             }]
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
@@ -195,7 +195,6 @@ class Meeting(models.Model):
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
         } for alarm in self.alarm_ids]
-        attendee_ids = self.attendee_ids.filtered(lambda a: a.partner_id not in self.user_id.partner_id)
         values = {
             'id': self.google_id,
             'start': start,
