@@ -276,3 +276,20 @@ class TestProjectFlow(TestProjectCommon):
         self.assertEqual(rating_good.parent_res_id, self.project_goats.id)
         self.assertEqual(self.project_goats.rating_percentage_satisfaction, 50)
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, -1)
+
+    def test_task_with_no_project(self):
+        task_without_project = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Test task without project'
+        })
+
+        for field in task_without_project._fields.keys():
+            try:
+                task_without_project[field]
+            except Exception as e:
+                raise AssertionError("Error raised unexpectedly while computing a field of the task ! Exception : " + e.args[0])
+
+        for field in self.project_pigs._fields.keys():
+            try:
+                self.project_pigs[field]
+            except Exception as e:
+                raise AssertionError("Error raised unexpectedly while computing a field of the project ! Exception : " + e.args[0])
