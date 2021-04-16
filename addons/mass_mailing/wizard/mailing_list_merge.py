@@ -36,6 +36,19 @@ class MassMailingListMerge(models.TransientModel):
     new_list_name = fields.Char('New Mailing List Name')
     archive_src_lists = fields.Boolean('Archive source mailing lists', default=True)
 
+<<<<<<< HEAD
+=======
+    @api.model
+    def default_get(self, fields):
+        res = super(MassMailingListMerge, self).default_get(fields)
+        src_list_ids = self.env.context.get('active_ids')
+        res.update({
+            'src_list_ids': [(6, 0, src_list_ids)],
+            'dest_list_id': src_list_ids and src_list_ids[0] or False,
+        })
+        return res
+
+>>>>>>> [FIX] mass_mailing: Traceback on mass mailing list merging
     def action_mailing_lists_merge(self):
         if self.merge_options == 'new':
             self.dest_list_id = self.env['mailing.list'].create({
