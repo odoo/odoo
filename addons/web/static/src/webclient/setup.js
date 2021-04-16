@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-const { loadFile } = owl.utils;
-
 export const SPECIAL_METHOD = Symbol("special_method");
 
 /**
@@ -98,8 +96,7 @@ async function _deployServices(env, toDeploy, timeoutId) {
  * @returns {Promise<string>}
  */
 export async function loadTemplates() {
-  const templatesUrl = `/web/webclient/qweb/${odoo.session_info.cache_hashes.qweb}`;
-  const templates = await loadFile(templatesUrl);
+  const templates = await odoo.loadTemplatesPromise;
   // as we currently have two qweb engines (owl and legacy), owl templates are
   // flagged with attribute `owl="1"`. The following lines removes the 'owl'
   // attribute from the templates, so that it doesn't appear in the DOM. For now,

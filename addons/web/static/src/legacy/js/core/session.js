@@ -217,24 +217,28 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             }
         });
     },
-    load_qweb: function (mods) {
-        var self = this;
-        var lock = this.qweb_mutex.exec(function () {
-            var cacheId = self.cache_hashes && self.cache_hashes.qweb;
-            var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now());
-            return $.get(route).then(function (doc) {
-                if (!doc) { return; }
-                const owlTemplates = [];
-                for (let child of doc.querySelectorAll("templates > [owl]")) {
-                    child.removeAttribute('owl');
-                    owlTemplates.push(child.outerHTML);
-                    child.remove();
-                }
-                qweb.add_template(doc);
-                self.owlTemplates = `<templates> ${owlTemplates.join('\n')} </templates>`;
-            });
+    load_qweb: function () {
+        return this.qweb_mutex.exec(async () => {
+            let templates;
+            if (odoo.loadTemplatesPromise) {
+                templates = await odoo.loadTemplatesPromise;
+            } else {
+                var cacheId = this.cache_hashes && this.cache_hashes.qweb;
+                templates = await (await fetch(`/web/webclient/qweb/${(cacheId ? cacheId : Date.now())}`)).text();
+            }
+            const doc = new DOMParser().parseFromString(templates, "text/xml");
+            if (!doc) {
+                return;
+            }
+            const owlTemplates = [];
+            for (let child of doc.querySelectorAll("templates > [owl]")) {
+                child.removeAttribute('owl');
+                owlTemplates.push(child.outerHTML);
+                child.remove();
+            }
+            qweb.add_template(doc);
+            this.owlTemplates = `<templates> ${owlTemplates.join('\n')} </templates>`;
         });
-        return lock;
     },
     get_currency: function (currency_id) {
         return this.currencies[currency_id];
