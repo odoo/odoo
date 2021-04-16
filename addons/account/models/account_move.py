@@ -2418,6 +2418,15 @@ class AccountMove(models.Model):
             result.append((move.id, name))
         return result
 
+    def _message_auto_subscribe_followers(self, updated_values, subtype_ids):
+        res = super(AccountMove, self)._message_auto_subscribe_followers(updated_values, subtype_ids)
+        if updated_values.get('invoice_user_id'):
+            subtype_ids.append(self.env.ref('account.mt_invoice_validated').id)
+            sale_person = self.env['res.users'].browse(updated_values['invoice_user_id'])
+            if sale_person:
+                res.append((sale_person.partner_id.id, subtype_ids, False))
+        return res
+
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
