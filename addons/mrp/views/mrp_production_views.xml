@@ -212,7 +212,7 @@
                     <notebook>
                         <page string="Components" name="components">
                             <field name="move_raw_ids"
-                                context="{'default_product_uom_qty': 1.0, 'default_date': date_planned_start, 'default_date_deadline': date_deadline, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
+                                context="{'default_date': date_planned_start, 'default_date_deadline': date_deadline, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
                                 attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done,sequence" editable="bottom">
                                     <field name="product_id" force_save="1" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', '|', ('has_move_lines', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>

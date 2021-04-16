@@ -194,6 +194,14 @@ class StockMove(models.Model):
                 defaults['additional'] = True
         return defaults
 
+    def write(self, vals):
+        if 'product_uom_qty' in vals and 'move_line_ids' in vals:
+            # first update lines then product_uom_qty as the later will unreserve
+            # so possibly unlink lines
+            move_line_vals = vals.pop('move_line_ids')
+            super().write({'move_line_ids': move_line_vals})
+        return super().write(vals)
+
     @api.ondelete(at_uninstall=False)
     def _unlink_only_if_not_active(self):
         # Avoid deleting move related to active MO
