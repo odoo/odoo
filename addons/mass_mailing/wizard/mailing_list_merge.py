@@ -22,7 +22,7 @@ class MassMailingListMerge(models.TransientModel):
         res = super(MassMailingListMerge, self).default_get(fields)
         src_list_ids = self.env.context.get('active_ids')
         res.update({
-            'src_list_ids': src_list_ids,
+            'src_list_ids': [(6, 0, src_list_ids)],
             'dest_list_id': src_list_ids and src_list_ids[0] or False,
         })
         return res
