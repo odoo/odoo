@@ -1755,6 +1755,9 @@ msgid ""
 "cancelling {percent:f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"Для цього рахунку було створено коригування записів:<ul><li>%(link1)s "
+"скасування {percent:f}%% {amount}</li><li>%(link0)s відкладаючи його до "
+"{new_date}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1771,19 +1774,20 @@ msgid ""
 "Adjusting Entry for {link}: {percent:f}% of {amount} recognized on "
 "{new_date}"
 msgstr ""
+"Запис коригування для {link}: {percent:f}% {amount} визнаний {new_date}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry of {date} ({percent:f}% recognized on {new_date})"
-msgstr ""
+msgstr "Корегуючий запис {date} ({percent:f}% визнаний {new_date})"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid ""
 "Adjusting Entry {link}: {percent:f}% of {amount} recognized from {date}"
-msgstr ""
+msgstr "Корегуючий запис {link}: {percent:f}% {amount} визнаний від {date}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
@@ -1869,7 +1873,7 @@ msgstr "Всі опубліковані проведення"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "All accounts on the lines must be of the same type."
-msgstr ""
+msgstr "Усі рахунки рядків повинні бути одного типу."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_bill_step
@@ -1889,6 +1893,8 @@ msgid ""
 "All the account entries lines must be processed in order to validate the "
 "statement."
 msgstr ""
+"Усі рядки бухгалтерських проведень повинні бути записані в журнал для того, "
+"щоби підтвердити виписку."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__reconcile
@@ -1952,6 +1958,8 @@ msgid ""
 "Always positive amount concerned by this matching expressed in the company "
 "currency."
 msgstr ""
+"Завжди позитивна сума, пов’язана з цим співставленням, виражена у валюті "
+"компанії."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__credit_amount_currency
@@ -12027,6 +12035,12 @@ msgstr ""
 "постачальників/клієнтів."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
 #: model:ir.model.fields,help:account.field_account_journal__country_code
@@ -12064,6 +12078,15 @@ msgstr ""
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "Рахунок %s (%s) застарілий."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12474,6 +12497,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
+"Запис журналу, з якого був створений цей запис журналу податку, нарахованого"
+" касовим методом."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12482,6 +12507,8 @@ msgid ""
 "The journal of a bank statement line must always be the same as the bank "
 "statement one."
 msgstr ""
+"Журнал рядка банківської виписки повинен завжди бути таким самим, як журнал "
+"банківської виписки. "
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -12587,7 +12614,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__report_id
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__report_id
 msgid "The parent tax report of this line"
-msgstr ""
+msgstr "Податковий звіт партнера цього рядка"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -12811,12 +12838,12 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The statement line has already been reconciled."
-msgstr ""
+msgstr "Рядок виписки вже узгоджено."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr ""
+msgstr "Рядок виписки, що створив цей запис"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_total_amount_param
@@ -14553,6 +14580,12 @@ msgid ""
 msgstr ""
 "Ви повинні визначити \"Внутрішній переказ рахунку\" у журналі вашого "
 "касового апарату."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

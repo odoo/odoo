@@ -7,9 +7,9 @@
 # Ladislav Tomm <tomm@helemik.cz>, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# Jiří Podhorecký, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,13 +45,13 @@ msgstr "Datum výstrahy"
 #. module: product_expiry
 #: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
 msgid "Alert Date Reached"
-msgstr ""
+msgstr "Bylo dosaženo výstražného data"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Alert Time"
-msgstr ""
+msgstr "Čas výstrahy"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
@@ -82,7 +82,7 @@ msgstr "Potvrdit"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
 msgid "Confirm Expiry"
-msgstr ""
+msgstr "Potvrďte vypršení platnosti"
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/stock_picking.py:0
@@ -243,6 +243,9 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Počet dní po přijetí produktů (od prodejce nebo na skladě po výrobě), po "
+"kterých se zboží může stát nebezpečným a nesmí být spotřebováno. Bude "
+"vypočítáno na šarži / sériovém čísle."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -252,6 +255,8 @@ msgid ""
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
 msgstr ""
+"Počet dní před datem vypršení platnosti, po kterém by mělo být upozorněno na"
+" šarži / sériové číslo. Bude vypočítáno na šarži / sériovém čísle."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -260,6 +265,8 @@ msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
+"Počet dní před datem vypršení platnosti, po kterém by mělo být zboží "
+"odebráno ze skladu. Bude vypočítáno na šarži / sériovém čísle."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -269,6 +276,9 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the "
 "lot/serial number."
 msgstr ""
+"Počet dní před datem vypršení platnosti, po kterém se zboží začne zhoršovat,"
+" aniž by to ještě bylo nebezpečné. Bude vypočítáno na šarži / sériovém "
+"čísle."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -320,7 +330,7 @@ msgstr "Datum odebrání"
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 msgid "Removal Time"
-msgstr ""
+msgstr "Čas odstranění"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
@@ -360,6 +370,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
+"Toto je datum, kdy by mělo být zboží s tímto sériovým číslem odebráno ze "
+"skladu. Toto datum bude použito ve strategii odstranění FEFO."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
@@ -397,6 +409,9 @@ msgid ""
 " product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
+"Když je toto políčko zaškrtnuto, máte možnost určit data pro správu vypršení"
+" platnosti produktu, na produktu a na odpovídajících číslech šarží / "
+"sériových čísel"
 
 #. module: product_expiry
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0

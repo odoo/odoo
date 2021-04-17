@@ -5722,6 +5722,8 @@ msgid ""
 "\n"
 "Time off documents will be automatically integrated to the Document app.\n"
 msgstr ""
+"\n"
+"Dokumenti odsotnosti bodo avtomatsko integrirani v dokumentarnem sistemu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_expiry
@@ -6576,6 +6578,14 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Naslov podjetja</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Naslov za računI</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Naslov za dostavo</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Drugi naslov</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Privatni naslov</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Naslov</b>\n"
+"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -6782,6 +6792,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "<strong>The contact linked to this user is still active</strong>"
 msgstr ""
+"<strong>Kontakt, ki je vezan na uporabnika, je še vedno aktiven</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -7262,7 +7273,7 @@ msgstr "Številka računa mora biti unikatna."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Account Security"
-msgstr ""
+msgstr "Varnost računa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
@@ -8541,7 +8552,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Authentication"
-msgstr ""
+msgstr "Avtentikacija"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
@@ -10705,7 +10716,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Create company"
-msgstr ""
+msgstr "Ustvari podjetje"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
@@ -11973,7 +11984,7 @@ msgstr "Dokumenti - podpisi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_documents_hr_holidays
 msgid "Documents - Time Off"
-msgstr ""
+msgstr "Dokumenti - Odsotnost"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_spreadsheet
@@ -14235,7 +14246,7 @@ msgstr "Pomaga pri upravljanju časovnic."
 #. module: base
 #: model:ir.module.category,description:base.module_category_user_type
 msgid "Helps you manage users."
-msgstr ""
+msgstr "Pomaga pri upravljanju uporabnikov."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing_events
@@ -15093,7 +15104,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr ""
+msgstr "Industrije"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -16186,7 +16197,7 @@ msgstr "Zadnja različica"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest authentication"
-msgstr ""
+msgstr "Zadnja avtentikacija"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__lato
@@ -20807,7 +20818,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
 msgid "Project Planning"
-msgstr ""
+msgstr "Projektno načrtovanje"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_project
@@ -20842,7 +20853,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_stock
 msgid "Project, Tasks, Stock"
-msgstr ""
+msgstr "Projekt, Opravila, Zaloga"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
@@ -23900,7 +23911,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
-msgstr ""
+msgstr "Privzeto podjetje za tega uporabnika"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -24589,7 +24600,7 @@ msgstr "Oblika zapisa časa"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr "Dopust"
+msgstr "Odsotnost"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_holidays
@@ -26899,7 +26910,7 @@ msgstr "eUčenje"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "email@yourcompany.com"
-msgstr "email@yourcompany.com"
+msgstr "email@podjetje.com"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0

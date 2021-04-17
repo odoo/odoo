@@ -3126,12 +3126,12 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Driver Hardware ESC/POS\n"
+"Driver hardware ESC/POS\n"
 "=======================\n"
 "\n"
-"Questo modulo consente a Odoo di stampare con stampanti compatibili ESC/POS e\n"
-"di aprire i cassetti del registratore di cassa controllati da ESC/POS nel modulo Punto di vendita e gli altri moduli\n"
-"che necessitano tale funzionalità.\n"
+"Questo modulo consente a Odoo di stampare su stampanti compatibili ESC/POS e di aprire casse contanti controllate ESC/POS, nel punto vendita e in altri\n"
+"moduli che necessitano di tale funzionalità.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_service
@@ -7729,6 +7729,8 @@ msgid ""
 "- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
 "%(values)s) belongs to another company."
 msgstr ""
+"- %(record)r appartiene all'azienda %(company)r e %(field)r (%(fname)s: "
+"%(values)s) appartiene a un'altra azienda."
 
 #. module: base
 #: code:addons/model.py:0
@@ -7791,7 +7793,7 @@ msgstr "- Questo modulo non crea menù."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not create report."
-msgstr "- Questo modulo non crea report."
+msgstr "- Questo modulo non crea resoconti."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -8215,7 +8217,7 @@ msgstr "<strong>Confermare la password per proseguire</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Reports :</strong>"
-msgstr "<strong>Report:</strong>"
+msgstr "<strong>Resoconti:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -8658,7 +8660,7 @@ msgstr "Accesso alla funzionalità di esportazione"
 #: code:addons/api.py:0 code:addons/api.py:0
 #, python-format
 msgid "Access to unauthorized or invalid companies."
-msgstr ""
+msgstr "Accesso ad aziende non autorizzate o non valide."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -8870,6 +8872,8 @@ msgid ""
 "Action %(action_reference)s (id: %(action_id)s) does not exist for button of"
 " type action."
 msgstr ""
+"Azione %(action_reference)s (ID: %(action_id)s) non esistente per pulsanti "
+"di tipo azione."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__help
@@ -13886,7 +13890,7 @@ msgstr "Controllo presenze dipendenti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_referral
 msgid "Employee Referral"
-msgstr "Referenze dipendente"
+msgstr "Referenza dipendente"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_employees
@@ -14038,6 +14042,9 @@ msgid ""
 "\n"
 "%(error)s"
 msgstr ""
+"Errore nella convalida della vista:\n"
+"\n"
+"%(error)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_menu.py:0
@@ -14230,12 +14237,12 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_human_resources_expenses
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expenses"
-msgstr "Note spese"
+msgstr "Spese"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_expense
 msgid "Expenses in Payslips"
-msgstr "Note spese in busta paga"
+msgstr "Spese in busta paga"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__report_ids
@@ -14405,7 +14412,7 @@ msgstr "Strumenti aggiuntivi"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_extract
 msgid "Extract data from expense scans to fill them automatically"
-msgstr ""
+msgstr "Estrae i dati dalle spese acquisite per compilarle in modo automatico"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_invoice_extract
@@ -15909,7 +15916,7 @@ msgstr "Aiuta a gestire i dipendenti."
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_expenses
 msgid "Helps you manage your expenses."
-msgstr "Aiuta a gestire le note spese."
+msgstr "Aiuta a gestire le spese."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_inventory_inventory
@@ -23486,7 +23493,7 @@ msgstr "Data di riferimento"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_referrals
 msgid "Referrals"
-msgstr ""
+msgstr "Referenze"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
@@ -25176,7 +25183,7 @@ msgstr "Codice stato"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__name
 msgid "State Name"
-msgstr "Nome stato"
+msgstr "Nome provincia"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_required
@@ -25373,8 +25380,7 @@ msgstr "Sottomenù"
 #: model:ir.module.module,summary:base.module_hr_expense
 #: model:ir.module.module,summary:base.module_hr_payroll_expense
 msgid "Submit, validate and reinvoice employee expenses"
-msgstr ""
-"Presentazione, conferma e rifatturazione delle note spese dei dipendenti"
+msgstr "Presentazione, conferma e rifatturazione delle spese dei dipendenti"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscription
@@ -26270,6 +26276,13 @@ msgid ""
 "Fields:\n"
 "%(fields_list)s"
 msgstr ""
+"Impossibile completare l'operazione richiesta a causa di restrizioni di sicurezza.\n"
+"\n"
+"Tipo di documento: %(document_kind)s (%(document_model)s)\n"
+"Operazione: %(operation)s\n"
+"Utente: %(user)s\n"
+"Campi:\n"
+"%(fields_list)s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rounding_gt_zero
@@ -26450,7 +26463,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "Il campo memorizza l'architettura della vista."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_prev
@@ -26535,7 +26548,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "This method can only be accessed over HTTP"
-msgstr ""
+msgstr "È possibile accedere al metodo solo via HTTP"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -26709,6 +26722,8 @@ msgid ""
 "This restriction is due to the following rules:\n"
 "%s"
 msgstr ""
+"La restrizione è causata dalle seguenti regole:\n"
+"%s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -27819,7 +27834,7 @@ msgstr "Utente:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "User: %s"
-msgstr ""
+msgstr "Utente: %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_user
@@ -29356,7 +29371,7 @@ msgstr "res.users.apikeys.show"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "second"
-msgstr ""
+msgstr "secondo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__selection

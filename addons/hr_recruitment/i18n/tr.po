@@ -11,7 +11,6 @@
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Mehmet Demirel <mdemirell@gmail.com>, 2020
-# Abdullah Onur Uğur <aonurugur@outlook.com>, 2020
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
 # Buket Şeker <buket_skr@hotmail.com>, 2020
@@ -1218,7 +1217,7 @@ msgstr "Belgeler"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
 msgid "Doesn't fit the job requirements"
-msgstr "Doesn't fit the job requirements"
+msgstr "İş gereksinimlerine uymuyor"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -1263,13 +1262,13 @@ msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
 msgstr ""
-"Bu iş pozisyonu için eposta rumuzu. Gelen epostalar otomatik olarak bu iş "
-"pozisyonu için yeni aday oluşturur."
+"Bu iş pozisyonu için e-posta rumuzu. Gelen yeni e-postalar otomatik olarak "
+"bu iş pozisyonu için yeni aday oluşturur."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
 msgid "Email cc"
-msgstr "E-Posta (cc)"
+msgstr "E-posta cc"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__name
@@ -1385,7 +1384,7 @@ msgstr "Generate Email"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_get_refuse_reason
 msgid "Get Refuse Reason"
-msgstr "Get Refuse Reason"
+msgstr "Reddetme Sebebini Al"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree__sequence
@@ -1483,7 +1482,7 @@ msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "İşaretliyse,bazı mesajlar gönderi hatası içermektedir."
+msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -1500,8 +1499,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"If set, this content will automatically be sent out to unauthorized users "
-"instead of the default message."
+"Eğer ayarlanırsa, standart mesaj yerine yetkili olmayan kullanıcılara bu "
+"içerik gönderilecektir."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__active
@@ -1735,8 +1734,9 @@ msgid ""
 "Let's create the position. An email will be setup for applications, and a "
 "public job description, if you use the Website app."
 msgstr ""
-"Let's create the position. An email will be setup for applications, and a "
-"public job description, if you use the Website app."
+"Hadi pozisyonu oluşturalım. Eğer websitesi uygulamasını kullanırsanız, "
+"başvuranlar için bir e-posta ve herkesin görebileceği iş tanımı "
+"oluşturulacak."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1745,28 +1745,28 @@ msgstr ""
 #, python-format
 msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
 msgstr ""
-"Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
+"Hadi <b>İşe alım sürecini </b>nasıl <b>geliştirebileceğine</b> bakalım."
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at the applications pipeline."
-msgstr "Let's have a look at the applications pipeline."
+msgstr "Başvurular hunisine bakalım."
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s create this new employee now."
-msgstr "Let’s create this new employee now."
+msgstr "Bu yeni personeli şimdi oluşturalım."
 
 #. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s go back to the dashboard."
-msgstr "Let’s go back to the dashboard."
+msgstr "Panoya geri dönelim."
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.hr_recruitment_linkedin_ceo
@@ -2026,8 +2026,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Yanıtlamasalar bile gelen mesajların ekleneceği isteğe bağlı başlık IDsi. "
-"Ayarlanırsa, yeni kayıtların oluşumunu tamamen engelleyecektir."
+"Yanıtlamasalar bile gelen mesajların ekleneceği isteğe bağlı başlık (kayıt) "
+"IDsi. Ayarlanırsa, yeni kayıtların oluşumunu tamamen engelleyecektir."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -2154,7 +2154,7 @@ msgstr "Kayıt Başlık ID"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__user_id
 msgid "Recruiter"
-msgstr "Recruiter"
+msgstr "İşe Alan"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
@@ -2225,18 +2225,18 @@ msgstr "Reddet"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #, python-format
 msgid "Refuse Reason"
-msgstr "Refuse Reason"
+msgstr "Reddetme Sebebi"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
 msgid "Refuse Reason of Applicant"
-msgstr "Refuse Reason of Applicant"
+msgstr "Başvuranın Reddetme Sebebi"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_applicant_refuse_reason
 msgid "Refuse Reasons"
-msgstr "Refuse Reasons"
+msgstr "Reddetme Sebepleri"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2301,7 +2301,7 @@ msgstr "İşletme Tarafından Önerilen Ücret Yan Hakları"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Save it !"
-msgstr "Save it !"
+msgstr "Kaydet !"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -2321,7 +2321,7 @@ msgstr "Adayları Arama"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_view_search
 msgid "Search Source"
-msgstr "Search Source"
+msgstr "Arama Kaynağı"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -2333,7 +2333,7 @@ msgstr "İkinci Görüşme"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Send your email. Followers will get a copy of the communication."
-msgstr "Send your email. Followers will get a copy of the communication."
+msgstr "E-postanızı gönderin. Takipçiler bir kopyasını alacaklar."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__sequence
@@ -2481,12 +2481,12 @@ msgstr "Etiketler"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
 msgid "The applicant gets a better offer"
-msgstr "The applicant gets a better offer"
+msgstr "Başvuran daha iyi bir teklif alır"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "The applicant is not interested anymore"
-msgstr "The applicant is not interested anymore"
+msgstr "Başvuran artık ilgilenmiyor"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -2515,7 +2515,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Eposta rumuzunun adı, ör. <kariyer@example.odoo.com> adresine gelen "
+"E-posta rumuzunun adı, ör. <kariyer@example.odoo.com> adresine gelen "
 "epostaları yakalamak için 'kariyer' "
 
 #. module: hr_recruitment
@@ -2567,7 +2567,7 @@ msgstr ""
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Tip: Let candidates apply by email"
-msgstr "Tip: Let candidates apply by email"
+msgstr "İpucu: Adayların e-posta ile başvurmasına izin ver"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -2628,9 +2628,9 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on the Survey app."
 msgstr ""
-"Use interview forms tailored to each job position during the recruitment "
-"process. Select the form to use in the job position detail form. This relies"
-" on the Survey app."
+"İşe alım sürecindeki her bir iş pozisyonu için özelleştirilmiş aday "
+"değerlendirme formlarını kullanın. İş pozisyonu ayrıntısı formunda "
+"kullanılacak formu seçin. Bu Anket uygulamasına bağlıdır."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
@@ -2662,7 +2662,7 @@ msgstr "Web Sitesi iletişim geçmişi"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
-msgstr "What do you want to recruit today? Choose a job title..."
+msgstr "Bugün işe ne almak istersin? Bir iş ünvanı seçiniz..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2699,7 +2699,7 @@ msgstr "ör. Satış Müdürü"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
-msgstr "e.g. sales-manager"
+msgstr "ör. satış mühendisi"
 
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server

@@ -148,7 +148,7 @@ msgid ""
 " from an expense or a vendor bill."
 msgstr ""
 "Un progetto fatturabile deve essere collegato a una voce dell'ordine di "
-"vendita che non proviene da una nota spese o da una fattura fornitore."
+"vendita che non proviene da una spesa o da una fattura fornitore."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -161,7 +161,7 @@ msgid ""
 msgstr ""
 "In base alla configurazione del prodotto, la quantità consegnata può essere calcolata automaticamente tramite una procedura.\n"
 "  - Manuale: quantità impostata manualmente sulla riga\n"
-"  - Analitica da note spese: quantità calcolata come somma delle note spese confermate\n"
+"  - Analitica da spese: quantità calcolata come somma delle spese confermate\n"
 "  - Foglio ore: quantità calcolata come somma delle ore registrate sui lavori collegati alla riga di vendita\n"
 "  - Movimenti di magazzino: quantità proveniente da prelievi confermati\n"
 
@@ -172,6 +172,8 @@ msgid ""
 "All revenues that are not from timesheets and that are linked to the "
 "analytic account of the project."
 msgstr ""
+"Tutti i ricavi che non provengono dai fogli ore e che sono collegati al "
+"conto analitico del progetto."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -180,6 +182,9 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be assigned to the "
 "selected Project on save. Discard to avoid the change."
 msgstr ""
+"Tutte le ore del foglio ore che non sono ancora state fatturate verranno "
+"assegnate al progetto selezionato al salvataggio. Abbandonare per evitare la"
+" modifica."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -188,6 +193,9 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be assigned to the "
 "selected Sales Order Item on save. Discard to avoid the change."
 msgstr ""
+"Tutte le ore del foglio ore che non sono ancora state fatturate verranno "
+"assegnate alla voce dell'ordine di vendita al salvataggio. Abbandonare per "
+"evitare la modifica."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -196,6 +204,9 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be removed from Sales "
 "Order on save. Discard to avoid the change."
 msgstr ""
+"Tutte le ore del foglio ore che non sono ancora state fatturate verranno "
+"rimosse dall'ordine di vendita al salvataggio. Abbandonare per evitare la "
+"modifica."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -204,6 +215,9 @@ msgid ""
 "All timesheet hours that are not yet invoiced will be removed from the "
 "selected Sales Order Item on save. Discard to avoid the change."
 msgstr ""
+"Tutte le ore del foglio ore che non sono ancora state fatturate verranno "
+"rimosse dalla voce selezionata dell'ordine di vendita al salvataggio. "
+"Abbandonare per evitare la modifica."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -212,6 +226,8 @@ msgid ""
 "All timesheet hours will be assigned to the selected Sales Order Item on "
 "save. Discard to avoid the change."
 msgstr ""
+"Tutte le ore del foglio ore verranno assegnate alla voce selezionata "
+"dell'ordine di vendita al salvataggio. Abbandonare per evitare la modifica."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -374,22 +390,22 @@ msgstr "Crea fattura"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_invoice
 msgid "Create Invoice from project"
-msgstr "Crea fattura dal progetto"
+msgstr "Creazione fattura da progetto"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
 msgid "Create SO Line from project"
-msgstr "Crea riga ordine di vendita dal progetto"
+msgstr "Creazione riga OdV da progetto"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order
 msgid "Create SO from project"
-msgstr "Crea ordine di vendita dal progetto"
+msgstr "Creazione OdV da progetto"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task_create_sale_order
 msgid "Create SO from task"
-msgstr ""
+msgstr "Creazione OdV da lavoro"
 
 #. module: sale_timesheet
 #. openerp-web
@@ -519,7 +535,7 @@ msgstr "Descrizione"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__display_create_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__display_create_order
 msgid "Display Create Order"
-msgstr ""
+msgstr "Visualizzare creazione ordine"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__display_name
@@ -812,6 +828,7 @@ msgid "Last Updated on"
 msgstr "Ultimo aggiornamento il"
 
 #. module: sale_timesheet
+#. openerp-web
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Late"
@@ -972,7 +989,7 @@ msgstr "Altri costi"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__other_revenues
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Other Revenues"
-msgstr "Altre entrate"
+msgstr "Altri ricavi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -989,7 +1006,7 @@ msgstr "Panoramica"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__pricing_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__pricing_type
 msgid "Pricing"
-msgstr "Prezzi"
+msgstr "Tariffazione"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
@@ -1150,12 +1167,12 @@ msgstr "Residue"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Revenues linked to Timesheets already invoiced."
-msgstr "Entrate collegate ai fogli ore già fatturati."
+msgstr "Ricavi collegati ai fogli ore già fatturati."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Revenues linked to Timesheets not yet invoiced."
-msgstr "Entrate collegate ai fogli ore non ancora fatturati."
+msgstr "Ricavi collegati ai fogli ore non ancora fatturati."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
@@ -1382,7 +1399,7 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project has already a sale order."
-msgstr ""
+msgstr "Il progetto ha già un ordine di vendita."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1410,7 +1427,7 @@ msgstr "L'ordine di vendita selezionato deve contenere qualcosa da fatturare."
 #: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
 #, python-format
 msgid "The task has already a sale order."
-msgstr ""
+msgstr "Il lavoro ha già un ordine di vendita."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
@@ -1593,7 +1610,7 @@ msgid ""
 "storables, expenses, ...)"
 msgstr ""
 "Importo totale da fatturare per l'ordine di vendita, incluse tutte le voci "
-"(servizi, conservabili, spese....)"
+"(servizi, conservabili, spese ecc....)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_total_duration
@@ -1699,7 +1716,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You can not modify timesheets from different employees"
-msgstr ""
+msgstr "Impossibile modificare fogli ore da dipendenti diversi"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
@@ -1723,12 +1740,12 @@ msgstr "Impossibile rimuovere un foglio ore che è già stato fatturato."
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__non_allow_billable
 msgid "Your timesheet will not be billed."
-msgstr ""
+msgstr "Il foglio ore non verrà fatturato."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__non_allow_billable
 msgid "Your timesheets linked to this task will not be billed."
-msgstr ""
+msgstr "I fogli ore collegati a questo lavoro non verranno fatturati."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0

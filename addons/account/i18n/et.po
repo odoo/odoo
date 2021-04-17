@@ -20,8 +20,8 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2020
 # Martin Trigaux, 2021
 # Triine Aavik <triine@avalah.ee>, 2021
-# Andre Roomet <andreroomet@gmail.com>, 2021
 # Piia Paurson <piia@avalah.ee>, 2021
+# Andre Roomet <andreroomet@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2021\n"
+"Last-Translator: Andre Roomet <andreroomet@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8579,7 +8579,7 @@ msgstr "Algsed arved"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Original Currency"
-msgstr ""
+msgstr "Algne valuuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -12010,6 +12010,12 @@ msgstr ""
 "on kasutusel tarnijate/klientide kontodel."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr "Tarvis on arvet/hüvitist antud dokumendi kinnitamiseks."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
 #: model:ir.model.fields,help:account.field_account_journal__country_code
@@ -12033,6 +12039,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Advisor can change it."
 msgstr ""
+"Registrikande järjestus ei ühildu käesoleva formaadiga. Seda saab muuta vaid"
+" Nõustaja."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -12041,11 +12049,21 @@ msgid ""
 "The account %(account_name)s can't be shared between multiple journals: "
 "%(journals)s"
 msgstr ""
+"Kontot %(account_name)s ei õnnestu jagada registrite vahel %(journals)s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The account %s (%s) is deprecated."
+msgstr "Konto %s (%s) on aegunud."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
 msgstr ""
 
 #. module: account
@@ -12055,6 +12073,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"Konto on juba kasutusel 'müügi' või 'ostude' registris. Tähendab, konto tüüp"
+" ei või olla 'laekumine' või 'maksmine'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12063,6 +12083,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"Sinu registris valitud konto sunnib määrama teisejärgulise valuuta. Peaksid "
+"teisejärgulise valuuta eemaldama oma kontolt."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14430,6 +14452,12 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr "Pead määrama 'Sisemise Siirde Konto' oma sularaha kassa registris."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

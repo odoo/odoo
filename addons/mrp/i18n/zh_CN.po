@@ -496,7 +496,7 @@ msgstr "添加副产品到物料清单。 这也可以用来获得几个成品�
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Add quality checks to your work orders"
-msgstr "工单质量检查"
+msgstr "质检【亲，这是付费企业版才有，当然你也可以请人开发一个功能模块自己用】"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -2562,8 +2562,8 @@ msgid ""
 "Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
 msgstr ""
-"制造作业在工作中心进行。 工作中心可以由\n"
-" 工人和/或机器，它们用于成本核算，计划，产能计划等。"
+"所有的制造订单作业都可以排到工作中心，安排制造计划到工作中心里去。 这工作中心是什么意思呢？工作中心它可以是\n"
+" 工人和/或机器的统称，意思是工作也可以叫一个工作中心，一台车床可以叫一个工作中心，它们用来做成本核算，排计划，产能计划等。"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -2572,9 +2572,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"制造作业在工作中心进行。 工作中心可以由\n"
-" 工人和/或机器，它们用于成本核算，计划，产能计划等。\n"
-" 可以通过配置菜单定义它们。"
+"所有的制造订单作业都可以排到工作中心，安排制造计划到工作中心里去。 这工作中心是什么意思呢？工作中心它可以是\n"
+" 工人和/或机器的统称，意思是工作也可以叫一个工作中心，一台车床可以叫一个工作中心，它们用来做成本核算，排计划，产能计划等。\n"
+"您可以通过配置菜单来设置并定义它。"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
@@ -2724,7 +2724,7 @@ msgstr "无数据可用"
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workcenter_load_report_graph
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
 msgid "No data yet!"
-msgstr "还没有数据！"
+msgstr "还没有数据耶！"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
@@ -3225,7 +3225,7 @@ msgstr "生产残留产品"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Produce residual products (A + B -&gt; C + D)"
-msgstr "产生残留产物(A + B -&gt; C + D)"
+msgstr "产生残留产物(A + B -&gt; C + D)【例如模具制作过程中产生的铜渣就是副产品，不能直接扔了，这都是钱啊】"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4019,7 +4019,7 @@ msgstr "子 BOM"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr "外包一些产品的生产"
+msgstr "外包一些产品的生产【不能工序外包，仅在创建产品BOM时就指定是否外包。】"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
@@ -4461,7 +4461,7 @@ msgstr "调拨"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Transfers"
-msgstr "转账"
+msgstr "物料流转"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__type
