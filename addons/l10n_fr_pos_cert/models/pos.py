@@ -32,7 +32,9 @@ class pos_session(models.Model):
         return True
 
     def open_frontend_cb(self):
-        for session in self.filtered(lambda s: s.config_id.company_id._is_accounting_unalterable()):
+        sessions_to_check = self.filtered(lambda s: s.config_id.company_id._is_accounting_unalterable())
+        sessions_to_check.filtered(lambda s: s.state == 'opening_control').start_at = fields.Datetime.now()
+        for session in sessions_to_check:
             session._check_session_timing()
         return super(pos_session, self).open_frontend_cb()
 
