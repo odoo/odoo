@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Copyright (c) 2009-2016 Salvatore Josué Trimarchi Pinto <trimarchi@bacgroup.net>
+# Copyright (c) 2009-2016 Salvatore Josué Trimarchi Pinto <salvatore.trimarchi@gmail.com>
 
 # This module provides a minimal Honduran chart of accounts that can be use
 # to build upon a more complex one.  It also includes a chart of taxes and
@@ -9,7 +9,7 @@
 
 {
     'name': 'Honduras - Accounting',
-    'version': '0.2',
+    'version': '0.3',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Honduras.
@@ -19,7 +19,7 @@ Agrega una nomenclatura contable para Honduras. También incluye impuestos y la
 moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes
 and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
-    'website': 'http://bacgroup.net',
+    'website': 'https://www.facebook.com/salvatore.py',
     'depends': ['base', 'account'],
     'data': [
         'data/l10n_hn_chart_data.xml',
