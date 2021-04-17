@@ -94,6 +94,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
+"- Immediatamente: tutte le possibili varianti vengono create non appena l'attributo e i relativi valori vengono aggiunti al prodotto.\n"
+"        - In modo dinamico: ciascuna variante viene creata solo quando i corrispondenti attributi e valori vengono aggiunti all'ordine di vendita.\n"
+"        - Mai: non vengono mai create varianti per l'attributo.\n"
+"        Nota: dopo aver utilizzato l'attributo in almeno un prodotto, la modalità di creazione delle varianti non può essere cambiata."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -419,6 +423,9 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
+"Codice a barre utilizzato per l'identificazione dell'imballaggio. "
+"Nell'applicazione, per movimentare tutte le unità contenute "
+"nell'imballaggio, acquisire il codice da un trasferimento"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -428,6 +435,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Prezzo di riferimento per il calcolo.\n"
+"Prezzo di vendita: il prezzo base è il prezzo di vendita.\n"
+"Prezzo di costo: il prezzo base è il prezzo di costo.\n"
+"Altro listino prezzi: prezzo di riferimento calcolato in base a un altro listino prezzi."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -460,12 +471,12 @@ msgstr "Calcola prezzo prodotto per unità basato sulla versione di listino."
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "È possibile ingrandire l'immagine a 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr ""
+msgstr "È possibile ingrandire l'immagine a 1024 della variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
@@ -532,7 +543,7 @@ msgstr "Indice colore"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "Indici di combinazione"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -571,7 +582,7 @@ msgstr "Sedia da conferenza (configurabile)"
 #: model:product.product,description_sale:product.consu_delivery_02
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Conference room table"
-msgstr ""
+msgstr "Tavolo per sala riunioni"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
@@ -860,7 +871,7 @@ msgstr "Cassetto nero"
 #: model:product.product,description:product.product_product_27
 #: model:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities."
-msgstr ""
+msgstr "Cassettiera con due percorsi possibili."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
@@ -876,6 +887,8 @@ msgstr "Dinamica"
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
 msgstr ""
+"Ciascun valore deve essere definito una sola volta per attributo e per "
+"prodotto."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -910,6 +923,8 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
 msgstr ""
+"Prezzo aggiuntivo per la variante con valore attributo nel prezzo di "
+"vendita, es. prezzo aggiuntivo 200, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -965,7 +980,7 @@ msgstr "Scrivania per quattro persone"
 #: model:product.product,description_sale:product.consu_delivery_03
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Four person modern office workstation"
-msgstr ""
+msgstr "Postazione da ufficio moderna per quattro persone"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1495,6 +1510,8 @@ msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
 msgstr ""
+"Impossibile, nel prodotto %s, associare il valore %s con l'attributo %s, non"
+" corrispondono."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2223,6 +2240,8 @@ msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
 msgstr ""
+"Impossibile cambiare l'attributo dopo aver utilizzato il valore in almeno un"
+" prodotto."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2927,7 +2946,7 @@ msgstr "l'azienda madre"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr ""
+msgstr "modello prodotto."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
