@@ -9,9 +9,9 @@
 # Cécile Collart <cco@odoo.com>, 2020
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2020
+# Lorenzo Battistini <lb@takobi.online>, 2020
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2020
-# Lorenzo Battistini <lb@takobi.online>, 2020
 # Martin Trigaux, 2020
 # Paolo Valier, 2020
 # David Minneci <david@numeko.it>, 2020
@@ -209,6 +209,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Ubicazione fornitore: ubicazione virtuale che rappresenta l'ubicazione di origine per prodotti provenienti dai fornitori\n"
+"* Vista: ubicazione virtuale usata per creare una struttura gerarchica per il magazzino, aggregando le ubicazioni secondarie; non può contenere direttamente prodotti\n"
+"* Ubicazione interna: ubicazioni fisiche all'interno dei propri magazzini\n"
+"* Ubicazione cliente: ubicazione virtuale che rappresenta l'ubicazione di destinazione per prodotti inviati ai clienti\n"
+"* Perdita di inventario: ubicazione virtuale che funge da controparte per le operazioni di inventario usate per correggere i livelli di giacenza (inventari fisici)\n"
+"* Produzione: ubicazione virtuale equivalente per le operazioni di produzione: utilizza i componenti e produce prodotti finiti\n"
+"* Ubicazione di transito: ubicazione equivalente che deve essere usata per operazioni interaziendali o tra magazzini"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -714,7 +721,7 @@ msgid ""
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
 "Aggiunge e personalizza operazioni sui percorsi per elaborare gli spostamenti prodotto nei magazzini: es. scarico → controllo qualità → giacenza per prodotti in entrata, prelievo → creazione collo → spedizione per prodotti in uscita.\n"
-" È anche possibile impostare strategie di stoccaggio per le ubicazioni di magazzino, in modo da inviare immediatamente i prodotti in entrata in specifiche ubicazioni (es. contenitori particolari, scaffali)."
+" È anche possibile impostare strategie di stoccaggio per le ubicazioni di magazzino, in modo da inviare immediatamente i prodotti in entrata in specifiche ubicazioni secondarie (es. contenitori particolari, scaffali)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -730,8 +737,8 @@ msgstr ""
 "giacenza per prodotti in entrata, prelievo → creazione collo → spedizione "
 "per prodotti in uscita. È anche possibile impostare strategie di stoccaggio "
 "per le ubicazioni di magazzino, in modo da inviare immediatamente i prodotti"
-" in entrata in specifiche ubicazioni (es. contenitori particolari, "
-"scaffali)."
+" in entrata in specifiche ubicazioni secondarie (es. contenitori "
+"particolari, scaffali)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1073,18 +1080,19 @@ msgid ""
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
 "Per impostazione predefinita, il sistema preleva dalla giacenza "
-"nell'ubicazione di origine e attende passivamente la disponibilità. L’altra "
-"possibilità consente la creazione diretta di un approvvigionamento "
-"nell'ubicazione di origine (ignorando quindi la giacenza attuale) per "
-"raggruppare i prodotti. Questa seconda opzione deve essere scelta per "
-"concatenare i movimenti, in modo che l'attuale attenda il precedente."
+"nell'ubicazione di origine e attende la disponibilità in modo passivo. È "
+"consentito, come altra possibilità, mettere insieme i prodotti creando un "
+"approvvigionamento diretto nell'ubicazione di origine (ignorando quindi la "
+"giacenza attuale). Per concatenare i movimenti e fare in modo che l'attuale "
+"resti in attesa di quello che lo precede, deve essere scelta questa seconda "
+"opzione."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
-"Deselezionando il campo «Attivo», è possibile nascondere un'ubicazione senza"
+"Deselezionando il campo «Attivo» è possibile nascondere una ubicazione senza"
 " eliminarla."
 
 #. module: stock
@@ -1170,7 +1178,7 @@ msgstr "Categoria"
 #: model:ir.model.fields,field_description:stock.field_product_product__route_from_categ_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
-msgstr "Categoria percorsi"
+msgstr "Percorsi da categoria"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -1658,10 +1666,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Quantità attuale di prodotti. \n"
-"In un contesto con una sola ubicazione di magazzino, questa include la merce nell'ubicazione o nei suoi figli.\n"
-"In un contesto con un singolo magazzino, questa include la merce dell'ubicazione di questo magazzino o dei suoi figli.\n"
-"In un contesto con un singolo punto vendita, questa include merce dell'ubicazione del magazzino del punto vendita o dei suoi figli.\n"
-"Altrimenti, questa include la merce da qualsiasi ubicazione di magazzino di tipo \"interna\"."
+"In un contesto di singola ubicazione delle giacenze, include la merce stoccata nell'ubicazione principale o in una delle secondarie.\n"
+"In un contesto di singolo magazzino, include la merce stoccata nell'ubicazione principale delle giacenze di magazzino o in una delle secondarie.\n"
+"In un contesto di singolo punto vendita, include la merce stoccata nell'ubicazione principale delle giacenze di magazzino del punto vendita o in una delle secondarie.\n"
+"Diversamente, include la merce stoccata in qualsiasi ubicazione di giacenza di tipo \"interno\"."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__custom
@@ -1846,9 +1854,8 @@ msgid ""
 msgstr ""
 "Definisce il metodo predefinito utilizzato per suggerire l'esatta ubicazione"
 " (scaffale) da cui prelevare i prodotti, quale lotto ecc. per questa "
-"ubicazione. Questo metodo può essere imposto a livello di categoria di "
-"prodotto e se nessuna di queste viene impostata si esegue un richiamo sulle "
-"posizioni di origine."
+"ubicazione. Il metodo può essere forzato a livello di categoria di prodotto."
+" Se non viene impostato qui, si ripiega sulle ubicazioni primarie."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2222,6 +2229,9 @@ msgid ""
 "Editing quantities in an Inventory Adjustment location is forbidden,those "
 "locations are used as counterpart when correcting the quantities."
 msgstr ""
+"È vietata la modifica delle quantità in una ubicazione per rettifiche di "
+"inventario. Queste ubicazioni sono usate come controparte quando vengono "
+"corrette le quantità."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2482,9 +2492,9 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Quantità prevista (calcolata come quantità a disposizione - in uscita + in entrata)\n"
-"In un contesto di singola ubicazione di giacenza, include le merci stoccate nell'ubicazione o in uno dei figli.\n"
-"In un contesto di singolo magazzino, include le merci stoccate nel'ubicazione di giacenza del magazzino o in uno dei figli.\n"
-"Diversamente, include le merci stoccate in tutte le ubicazioni di giacenza di tipo “interno”."
+"In un contesto di singola ubicazione delle giacenze, include la merce stoccata nell'ubicazione principale o in una delle secondarie.\n"
+"In un contesto di singolo magazzino, include la merce stoccata nel'ubicazione principale delle giacenze di magazzino o in una delle secondarie.\n"
+"Diversamente, include la merce stoccata in qualsiasi ubicazione di giacenza di tipo “interno”."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
@@ -2495,9 +2505,9 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Quantità prevista (calcolata come quantità a disposizione - quantità prenotata)\n"
-"In un contesto di singola ubicazione delle giacenze, include le merci stoccate nell'ubicazione o in uno dei figli.\n"
-"In un contesto di singolo magazzino, include le merci stoccate nel'ubicazione delle giacenze di magazzino o uno dei figli.\n"
-"Diversamente, include le merci stoccate in tutte le ubicazioni delle giacenze di tipo “interno”."
+"In un contesto di singola ubicazione delle giacenze, include la merce stoccata nell'ubicazione principale o in una delle secondarie.\n"
+"In un contesto di singolo magazzino, include la merce stoccata nel'ubicazione principale delle giacenze di magazzino o in una delle secondarie.\n"
+"Diversamente, include la merce stoccata in qualsiasi ubicazione di giacenza di tipo “interno”."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
@@ -2864,8 +2874,8 @@ msgid ""
 "If the inventory adjustment is not validated, date at which the theoritical quantities have been checked.\n"
 "If the inventory adjustment is validated, date at which the inventory adjustment has been validated."
 msgstr ""
-"Se la rettifica di inventario non è convalidata, data alla quale sono state controllate le quantità teoriche. \n"
-"Se la rettifica di inventario è convalidata, data alla quale la rettifica di inventario è stata convalidata. "
+"Se la rettifica di inventario non è validata, è la data in cui sono state controllate le quantità teoriche.\n"
+"Se la rettifica di inventario è validata, è la data di validazione."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3179,34 +3189,34 @@ msgstr "Data inventario"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
 msgid "Inventory Details"
-msgstr "Dettagli di inventario"
+msgstr "Dettagli inventario"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr "Riga di inventario"
+msgstr "Riga inventario"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "Inventory Lines"
-msgstr "Righe di inventario"
+msgstr "Righe inventario"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "Ubicazione inventario"
+msgstr "Ubicazione di inventario"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Ubicazioni di magazzino"
+msgstr "Ubicazioni di inventario"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
 msgid "Inventory Loss"
-msgstr "Perdita di magazzino"
+msgstr "Perdita di inventario"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
@@ -4198,6 +4208,7 @@ msgstr "A disposizione:"
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
 msgstr ""
+"Solo un supervisore magazzino può validare una rettifica di inventario."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -4568,12 +4579,12 @@ msgstr "Parametri"
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__parent_location_id
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Parent Location"
-msgstr "Ubicazione origine"
+msgstr "Ubicazione primaria"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__parent_path
 msgid "Parent Path"
-msgstr "Percorso padre"
+msgstr "Percorso primario"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__procurement_group__move_type__direct
@@ -4607,7 +4618,7 @@ msgstr "Inventario fisico per data"
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__pick_ids
 #, python-format
 msgid "Pick"
-msgstr "Preleva"
+msgstr "Prelievo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -4729,7 +4740,7 @@ msgstr "Stampa"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Print Count Sheet"
-msgstr ""
+msgstr "Stampa foglio totali"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
@@ -5221,9 +5232,9 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
 "Quantità di prodotti in entrata pianificati.\n"
-"In un contesto di singola ubicazione di giacenza, include le merci che arrivano in questa ubicazione o in uno dei suoi figli.\n"
-"In un contesto di singolo magazzino, include le merci che arrivano nell'ubicazione di giacenza del magazzino o in uno dei suoi figli.\n"
-"Diversamente, include le merci che arrivano in tutte le ubicazioni di giacenza di tipo “interno”."
+"In un contesto di singola ubicazione delle giacenze, include la merce che arriva nell'ubicazione principale o in una delle secondarie.\n"
+"In un contesto di singolo magazzino, include la merce che arriva nell'ubicazione principale delle giacenze di magazzino o in una delle secondarie.\n"
+"Diversamente, include la merce che arriva in qualsiasi ubicazione di giacenza di tipo “interno”."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty
@@ -5234,9 +5245,9 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
 "Quantità di prodotti in uscita pianificati.\n"
-"In un contesto di singola ubicazione di giacenza, include le merci che escono da questa ubicazione o da uno dei suoi figli.\n"
-"In un contesto di singolo magazzino, include le merci che escono dall'ubicazione di giacenza del magazzino o da uno dei suoi figli.\n"
-"Diversamente, include le merci che escono da tutte le ubicazioni di giacenza di tipo “interno”."
+"In un contesto di singola ubicazione delle giacenze, include la merce che esce dall'ubicazione principale o da una delle secondarie.\n"
+"In un contesto di singolo magazzino, include la merce che esce dall'ubicazione principale delle giacenze di magazzino o da una delle secondarie.\n"
+"Diversamente, include la merce che esce da qualsiasi ubicazione di giacenza di tipo “interno”."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity
@@ -5415,7 +5426,7 @@ msgstr "Aggiorna quantità"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 msgid "Register lots, packs, location"
-msgstr "Registrare lotti, pacchetti, ubicazioni"
+msgstr "Registra lotti, colli, ubicazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__stock_move_ids
@@ -5514,12 +5525,12 @@ msgstr "Rifornimenti"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr ""
+msgstr "Resoconto rifornimenti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
-msgstr ""
+msgstr "Ricerca resoconto rifornimenti"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
@@ -5662,7 +5673,7 @@ msgstr "Percorso"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_company_id
 msgid "Route Company"
-msgstr ""
+msgstr "Azienda del percorso"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
@@ -6055,10 +6066,10 @@ msgid ""
 " labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
-"I connettori di invio consentono di calcolare con precisione i costi di "
-"spedizione, stampare le etichette di spedizione e richiedere il prelievo del"
-" corriere nel magazzino per spedirlo al cliente. Per applicare un connettore"
-" di invio, accedere alle modalità di consegna. "
+"I connettori di spedizione consentono di calcolare con precisione i costi "
+"della spedizione stessa, stampare le relative etichette e richiedere al "
+"vettore di prelevare dal magazzino per spedire al cliente. Applicare il "
+"connettore di spedizione dai metodi di consegna."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__code
@@ -6163,7 +6174,7 @@ msgstr "Data posticipo"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
 msgid "Snooze Orderpoint"
-msgstr "Posticipa punto di riordino"
+msgstr "Posticipo punto di riordino"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__predefined_date
@@ -6338,12 +6349,12 @@ msgstr "Operazione di magazzino"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr "Destinazione collo di magazzino"
+msgstr "Destinazione colli di magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
 msgid "Stock Package Level"
-msgstr "Livello collo di magazzino"
+msgstr "Livello colli di magazzino"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
@@ -6371,7 +6382,7 @@ msgstr "Resoconto quantità in giacenza"
 #: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
 #: model:ir.model,name:stock.model_report_stock_report_product_template_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Resoconto rifornimenti di magazzino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -6422,7 +6433,7 @@ msgstr "Movimenti di magazzino elaborati"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr "Resoconto regola di magazzino"
+msgstr "Resoconto regola di giacenza"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__type__product
@@ -6667,7 +6678,7 @@ msgstr "La giacenza prevista al"
 #: code:addons/stock/static/src/js/inventory_validate_button_controller.js:0
 #, python-format
 msgid "The inventory has been validated"
-msgstr ""
+msgstr "L'inventario è stato validato"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -6705,8 +6716,8 @@ msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
 msgstr ""
-"L'ubicazione madre che include questa ubicazione. Ad esempio, la \"Zona di "
-"spedizione\" è l'ubicazione madre di \"Porta 1\"."
+"Ubicazione primaria che include questa ubicazione. Esempio: l'area di "
+"spedizione è l'ubicazione primaria dell'uscita 1."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__qty_multiple
@@ -6891,8 +6902,8 @@ msgstr ""
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
 msgstr ""
-"L'uso di questa ubicazione non può essere modificato nella vista perché "
-"contiene prodotti"
+"L'uso di questa ubicazione non può essere cambiato in vista, contiene "
+"prodotti."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -7197,6 +7208,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
 msgstr ""
+"I trasferimenti consentono di spostare i prodotti da una ubicazione a "
+"un'altra."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -7468,7 +7481,7 @@ msgstr "Valida"
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 #, python-format
 msgid "Validate Inventory"
-msgstr "Valida inventario"
+msgstr "Convalida inventario"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__state__done
@@ -7519,7 +7532,7 @@ msgstr "Vedi previsione"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
 msgid "View Location"
-msgstr "Visualizza ubicazione"
+msgstr "Ubicazione vista"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed
@@ -7608,7 +7621,7 @@ msgstr "Magazzino da propagare"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Warehouse view location"
-msgstr "Ubicazione vista magazzino"
+msgstr "Ubicazione vista del magazzino"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -7635,12 +7648,12 @@ msgstr "Magazzini"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty
 msgid "Warn Insufficient Quantity"
-msgstr "Avviso quantità insufficiente"
+msgstr "Avviso per quantità insufficiente"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
 msgid "Warn Insufficient Scrap Quantity"
-msgstr "Avviso quantità di scarti insufficiente"
+msgstr "Avviso per quantità di scarti insufficiente"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7945,6 +7958,8 @@ msgid ""
 "You can't validate the inventory '%s', maybe this inventory has been already"
 " validated or isn't ready."
 msgstr ""
+"Impossibile validare l'inventario \"%s\", forse è già stato validato oppure "
+"non è pronto."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -8013,7 +8028,7 @@ msgstr "Impossibile eliminare uno scarto già completato."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
-msgstr ""
+msgstr "Impossibile modificare la quantità della perdita di inventario"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8066,6 +8081,8 @@ msgid ""
 "You cannot take products from or deliver products to a location of type "
 "\"view\" (%s)."
 msgstr ""
+"Impossibile ricevere o consegnare prodotti da una ubicazione di tipo "
+"\"Vista\" (%s)."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8334,6 +8351,8 @@ msgid ""
 "You can't desactivate the multi-location if you have more than once "
 "warehouse by company"
 msgstr ""
+"Impossibile disattivare la multiubicazione in presenza di più di un "
+"magazzino per azienda."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -8342,3 +8361,5 @@ msgid ""
 "Creating a new warehouse will automatically activate the Storage Locations "
 "setting"
 msgstr ""
+"La creazione di un nuovo magazzino attiva in modo automatico la "
+"configurazione delle ubicazioni di stoccaggio"

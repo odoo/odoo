@@ -238,6 +238,8 @@ msgid ""
 "Forbidden product, unit price, quantity, and UoM on non-accountable sale "
 "quote line"
 msgstr ""
+"Prodotto, prezzo unitario, quantità e UdM vietati nella riga del preventivo "
+"di vendita"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -323,6 +325,7 @@ msgstr "Righe"
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
 msgstr ""
+"Prodotto e UdM obbligatori mancanti nelle righe dell'ordine di vendita."
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -554,6 +557,10 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
+"I termini e le condizioni predefinite possono essere stabilite "
+"dall'amministratore nelle impostazioni di vendita. Se viene selezionato "
+"questo modello di preventivo vengono invece mostrati i termini impostati "
+"qui."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -561,6 +568,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
+"Questo modello e-mail verrà inviato alla conferma, lasciare vuoto per non "
+"inviare nulla."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -630,6 +639,8 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Impossibile cambiare il tipo di riga in un preventivo di vendita. Eliminare "
+"invece la riga attuale e crearne una nuova del tipo corretto."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order.py:0
@@ -638,6 +649,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Il preventivo contiene prodotti dell'azienda %(product_company)s ma appartiene invece a %(quote_company)s. \n"
+" Cambiare l'azienda del preventivo o rimuovere i prodotti dalle altre (%(bad_products)s)."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -652,6 +665,8 @@ msgid ""
 "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"Il modello contiene prodotti dell'azienda %(product_company)s ma appartiene invece a %(template_company)s. \n"
+" Cambiare l'azienda del modello o rimuovere i prodotti dalle altre."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

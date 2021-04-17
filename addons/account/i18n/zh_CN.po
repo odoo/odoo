@@ -3,9 +3,9 @@
 # 	* account
 # 
 # Translators:
+# 开阖软件 Jeff Wang <jeff@osbzr.com>, 2020
 # Datasource International <Hennessy@datasourcegroup.com>, 2020
 # waveyeung <waveyeung@qq.com>, 2020
-# 开阖软件 Jeff Wang <jeff@osbzr.com>, 2020
 # 开源智造OSCG-老杨 <yangxunbo@163.com>, 2020
 # WK Leong <zsdicky@gmail.com>, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
@@ -2617,7 +2617,7 @@ msgstr "银行对账单"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Bank Suspense Account"
-msgstr "银行暂记帐户"
+msgstr "银行存款"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -6581,7 +6581,7 @@ msgstr "已与这些付款对账的会计分录的结算单。"
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "Invoices without Payment"
-msgstr "无付款的结算单"
+msgstr "未付款的结算单"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -11355,7 +11355,7 @@ msgstr "TaxCloud"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Taxes"
-msgstr "税设置"
+msgstr "税率设置"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11387,7 +11387,9 @@ msgstr "销售所用的税"
 msgid ""
 "Taxes, fiscal positions, chart of accounts &amp; legal statements for your "
 "country"
-msgstr "税务、财务状况、科目表 &amp; 国家的法定报表"
+msgstr ""
+"请安装并使用符合当地政府规定的符合法律法规的税务、财务制度、会计科目表 &amp; "
+"国家的法定报表。中国大陆请安装社区贡献的2021中国会计模块，网上开源了的。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__display_type
@@ -11723,6 +11725,12 @@ msgid ""
 msgstr "'内部类型' 用于不同类型科目的功能: 流动性用于现金或银行科目, 应付/应收用于供应商/客户科目."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr "需要帐单/退款日期才能验证此文档。"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
 #: model:ir.model.fields,help:account.field_account_journal__country_code
@@ -11760,6 +11768,15 @@ msgstr "科目%(account_name)s 不能在多个日记帐之间共享：%(journals
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "科目 %s (%s) 是废弃的."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12847,7 +12864,7 @@ msgstr "至"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "To Check"
-msgstr "勾选"
+msgstr "勾选核验"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -14117,6 +14134,12 @@ msgstr "您应该已经在收银机日记账上定义了一个 '内部转账科�
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr "条 %s (id %s) 已过账。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
 msgstr "您需要在过账前添加一行。"
 
@@ -14210,12 +14233,12 @@ msgstr "结算单日期后的几天"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g BE15001559627230"
-msgstr "例如 BE15001559627230"
+msgstr "例如 6222022002010246795"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid "e.g Bank of America"
-msgstr "例如 中国银行"
+msgstr "例如 中国工商银行"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -14327,7 +14350,7 @@ msgstr "按"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
-msgstr "勾选"
+msgstr "勾选核验"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
