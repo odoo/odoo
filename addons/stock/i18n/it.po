@@ -206,6 +206,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Ubicazione fornitore: ubicazione virtuale che rappresenta l'ubicazione di origine per prodotti provenienti dai fornitori\n"
+"* Vista: ubicazione virtuale usata per creare una struttura gerarchica per il magazzino, aggregando le ubicazioni figlie; non può contenere direttamente prodotti\n"
+"* Ubicazione interna: ubicazioni fisiche all'interno dei propri magazzini\n"
+"* Ubicazione cliente: ubicazione virtuale che rappresenta l'ubicazione di destinazione per prodotti inviati ai clienti\n"
+"* Perdita di inventario: ubicazione virtuale che funge da controparte per le operazioni di inventario usate per correggere i livelli di giacenza (inventari fisici)\n"
+"* Produzione: ubicazione virtuale equivalente per le operazioni di produzione: utilizza i componenti e produce prodotti finiti\n"
+"* Ubicazione di transito: ubicazione equivalente che deve essere usata per operazioni interaziendali o tra magazzini"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -2129,6 +2136,9 @@ msgid ""
 "Editing quantities in an Inventory Adjustment location is forbidden,those "
 "locations are used as counterpart when correcting the quantities."
 msgstr ""
+"È vietata la modifica delle quantità in una ubicazione per rettifiche di "
+"inventario. Queste ubicazioni sono usate come controparte quando vengono "
+"corrette le quantità."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3883,6 +3893,7 @@ msgstr ""
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
 msgstr ""
+"Solo un supervisore magazzino può validare una rettifica di inventario."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -6176,7 +6187,7 @@ msgstr ""
 #: code:addons/stock/static/src/js/inventory_validate_button_controller.js:0
 #, python-format
 msgid "The inventory has been validated"
-msgstr ""
+msgstr "L'inventario è stato validato"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_name_uniq
@@ -6697,6 +6708,8 @@ msgstr "Trasferimenti"
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Transfers allow you to move products from one location to another."
 msgstr ""
+"I trasferimenti consentono di spostare i prodotti da una ubicazione a "
+"un'altra."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
@@ -7389,6 +7402,8 @@ msgid ""
 "You can't validate the inventory '%s', maybe this inventory has been already"
 " validated or isn't ready."
 msgstr ""
+"Impossibile validare l'inventario \"%s\", forse è già stato validato oppure "
+"non è pronto."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -7456,7 +7471,7 @@ msgstr "Impossibile eliminare uno scarto già effettuato."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot modify inventory loss quantity"
-msgstr ""
+msgstr "Impossibile modificare la quantità della perdita di inventario"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

@@ -98,6 +98,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Preventivo - %s' % (object.name)) or"
+" 'Ordine - %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -302,6 +304,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Buongiorno,\n"
+"        <br/><br/>\n"
+"        la\n"
+"        % if ctx.get('proforma'):\n"
+"            fattura pro forma per ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (con riferimento: ${object.origin} )\n"
+"            % endif\n"
+"            di importo pari a <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> è disponibile.\n"
+"        % else:\n"
+"            ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (con riferimento: ${object.origin} )\n"
+"            % endif\n"
+"            di importo pari a <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> è pronta per essere esaminata.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Per ulteriori domande, non esiti a contattarci.\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -610,6 +637,8 @@ msgid ""
 "         according to their invoicing policy (based on ordered or delivered "
 "quantity)."
 msgstr ""
+"In base alla politica di fatturazione (quantità ordinate o consegnate) viene"
+" emessa una fattura ordinaria con tutte le righe ordine disponibili."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -1167,6 +1196,8 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Data di creazione ordini in bozza/inviati,\n"
+"Data di conferma ordini confermati."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
@@ -1393,6 +1424,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Data di consegna che può essere promessa al cliente. Per i prodotti servizio"
+" viene calcolata dal tempo di risposta minimo delle righe ordine. in caso di"
+" spedizione, per la politica dell'ordine viene preso in considerazione il "
+"tempo di risposta minimo o massimo delle righe ordine."
 
 #. module: sale
 #: model:product.product,name:sale.advance_product_0
@@ -1646,7 +1681,7 @@ msgstr "Chi sta seguendo (partner)"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "Valori vietati nella riga dell'ordine di vendita"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
@@ -1679,7 +1714,7 @@ msgstr "Attività future"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Generazione link di pagamento vendita"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
@@ -1733,6 +1768,8 @@ msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
 msgstr ""
+"Qui, se la tipologia attributo è \"Colore\", è possibile impostare uno "
+"specifico indice colore HTML da visualizzare (es. #ff0000)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1796,6 +1833,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
+"Se viene cambiato il listino prezzi, verranno interessate solo le nuove "
+"righe aggiunte."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2778,7 +2817,7 @@ msgstr "Attributo prodotto"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Valore cliente attributo prodotto"
+msgstr "Valore predefinito attributo prodotto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2998,7 +3037,7 @@ msgstr "Spese di ri-fatturazione"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "Politica di rifatturazione visibile"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3127,7 +3166,7 @@ msgstr "Ordini di vendita"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Procedura di attivazione sistema di pagamento vendita"
 
 #. module: sale
 #: model:utm.source,name:sale.utm_source_sale_order_0
@@ -3142,7 +3181,7 @@ msgstr "Avvisi vendita"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Metodo di pagamento selezionato nella configurazione di vendita"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -3586,12 +3625,12 @@ msgstr "Fase"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "Stato della fase di configurazione conferma ordine"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "Stato della fase di configurazione preventivo campione"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
@@ -3735,6 +3774,8 @@ msgid ""
 "The delivery date is sooner than the expected date.You may be unable to "
 "honor the delivery date."
 msgstr ""
+"Potrebbe non essere possibile rispettare la data di consegna, è prima di "
+"quella attesa."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_attribute__display_type
@@ -3767,6 +3808,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Quando la transazione è confermata dal sistema di pagamento, la fattura viene generata in modo automatico e resa disponibile nel portale clienti.\n"
+"Viene segnata come pagata e il pagamento inserito nel registro indicato nella configurazione del sistema di pagamento.\n"
+"Questa modalità è consigliata se la fattura finale viene emessa all'ordine e non dopo la consegna."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3979,7 +4023,7 @@ msgstr "Quantità da fatturare"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "Da incrementare"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4159,6 +4203,8 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
+"Incremento vendite da <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> "
+"per il cliente <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
