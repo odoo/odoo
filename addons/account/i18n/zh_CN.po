@@ -59,7 +59,6 @@
 # waveyeung <waveyeung@qq.com>, 2019
 # yuan wenpu <1140021222@qq.com>, 2019
 # ryan ryan <itechr@outlook.com>, 2019
-# keecome <7017511@qq.com>, 2020
 # WK Leong <zsdicky@gmail.com>, 2020
 # liulixia <liu.lixia@elico-corp.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
@@ -82,6 +81,7 @@
 # Martin Trigaux, 2021
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # Titan Li <lghbeta@gmail.com>, 2021
+# keecome <7017511@qq.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
@@ -8488,6 +8488,12 @@ msgid "Original Bills"
 msgstr "原始账单"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr "原始货币"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "发起人付款"
@@ -11853,6 +11859,15 @@ msgstr "科目 %s (%s) 是废弃的."
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr "该科目已经在“销售”或“购买”日记账中使用。这意味着该科目的类型不能是“应收”或“应付”。"
@@ -14188,6 +14203,12 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr "您应该已经在出纳机日记账上定义了一个 '内部转账科目' ！"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr "条 %s (id %s) 已过账。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

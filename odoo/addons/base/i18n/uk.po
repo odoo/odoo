@@ -1012,6 +1012,29 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"        E-Faktur Menu(Indonesia)\n"
+"        Формат : 010.000-16.00000001\n"
+"        * 2 (dua) digit pertama adalah Kode Transaksi\n"
+"        * 1 (satu) digit berikutnya adalah Kode Status\n"
+"        * 3 (tiga) digit berikutnya adalah Kode Cabang\n"
+"        * 2 (dua) digit pertama adalah Tahun Penerbitan\n"
+"        * 8 (delapan) digit berikutnya adalah Nomor Urut\n"
+"        \n"
+"        Щоби можна було експортувати клієнтські рахунки як e-Faktur,\n"
+"        вам необхідно проставити діапазон номерів, які були призначені\n"
+"        законодавством у Бухобліку > Клієнти > e-Faktur\n"
+"                    \n"
+"        Коли ви підтверджуєте рахунок, де партнер має позначене поле ID PKP,\n"
+"         номер податку буде призначено до того рахунку. \n"
+"        Після цього ви можете фільтрувати рахунки, а також експортувати у\n"
+"        список рахунків, натиснувши на Дія > Завантажити e-Faktur, щоби завантажити\n"
+"        csv-файл та завантажити його на сайт уряду. \n"
+"        \n"
+"        Ви можете замінити вже надісланий рахунок-фактуру іншим,\n"
+" вказавши замінений рахунок-фактуру та новий, і ви можете скинути рахунок,\n"
+" який ви ще не надіслали уряду, щоби повторно використовувати його номер.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -1059,6 +1082,12 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Створіть платіжні доручення, як це рекомендовано стандартом SEPA, завдяки повідомленням від pain. 001. Підтримувані варіанти pain. (країни): pain.001.001.03 (загальний), pain.001.001.03.ch.02 (Швейцарія) та pain.001.003.03 (Німеччина). Згенерований XML-файл може бути завантажений у ваш банк.\n"
+"\n"
+"        Цей модуль відповідає інструкціям щодо впровадження, викладеним Європейською Радою з оплати.\n"
+"        Для отримання додаткової інформації про стандарти SEPA: http://www.iso20022.org/ та http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1257,6 +1286,37 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"        Цей модуль дозволяє створювати відповідні XML-файли SEPA Direct Debit (SDD) (сумісні\n"
+"        зі специфікацією pain.008.001.02), щоби відправити у ваш банк для того, аби\n"
+"        збирати комплект платежів.\n"
+"\n"
+"        Щоби бути доступним для цього способу оплати, спочатку клієнт повинен мати\n"
+"        повернений мандат компанії, давши свою згоду на використання прямого дебету.\n"
+"        Ця згода повинна бути закодована як \"мандат замовника\" на Odoo.\n"
+"\n"
+"        Ви також повинні відповідати наступним вимогам, щоби правильно\n"
+"        згенерувати файл SDD:\n"
+"        - Рахунок вашої компанії має бути встановлений на дійсний номер IBAN\n"
+"        - Рахунок вашої компанії має бути пов'язаний з банком, який має дійсний BIC\n"
+"        - Ваша компанія повинна мати ідентифікатор кредитора (це можна зробити в меню \"Налаштування\" модуля бухгалтерського обліку)\n"
+"        - Ваша компанія повинна визначити журнал для отримання платежів SDD (знову ж таки, в \"налаштуваннях\" модуля бухобліку)\n"
+"        - Кожен клієнт, для якого ви створили платіж, повинен мати дійсний номер рахунку IBAN у банку, пов'язаному з правильним BIC.\n"
+"\n"
+"        Odoo повідомить вас, якщо будь-яке з цих вимог не виконується.\n"
+"\n"
+"        Будь-який рахунок-фактура, який отримує підтвердження для замовника з мандатом, буде\n"
+"        автоматично встановлюватися в \"оплачуваному\" стані, а платіж буде створений.\n"
+"        Опція на інформаційній панелі дозволить вам переглянути всі отримані платежі\n"
+"        через SDD і генерувати файл збору XML, групуючи це, як\n"
+"        ви вважаєте за потрібне.\n"
+"\n"
+"        Також доступний спеціальний метод оплати \"SEPA Direct Debit\"\n"
+"        відкривайте рахунки-фактури, коли вибираєте банківський рахунок у майстрі реєстрації платежів.\n"
+"        Використовуйте його, щоб створити платіж SDD для рахунків-фактур, якщо ви додали мандат\n"
+"        для його власника після його перевірки. Ви побачите повідомлення про помилку, якщо ви\n"
+"        спробуєте використати цей метод на рахунку-фактурі, для оплати якого мандат не може бути використаний.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -7734,6 +7794,12 @@ msgid ""
 "It adds a timer to a view for time recording purpose\n"
 "    "
 msgstr ""
+"\n"
+"Цей модуль встановлює таймер.\n"
+"==========================================\n"
+"\n"
+"Він додає таймер до вікна перегляду для запису часу\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -8180,6 +8246,8 @@ msgid ""
 "\n"
 "Use devices connected to an IoT Box to control the quality of your products.\n"
 msgstr ""
+"\n"
+"Використовуйте пристрої, підключені до IoT Box, щоб контролювати якість ваших товарів.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant_iot
@@ -8187,6 +8255,8 @@ msgid ""
 "\n"
 "Use receipt printers connected to an IoT Box to print orders in the kitchen or at the bar.\n"
 msgstr ""
+"\n"
+"Виористовуйте принтер чеків, підключений до IoT Box для друку замовлень на кухні чи барі.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sales_team
@@ -10225,12 +10295,12 @@ msgstr "Роздільник адреси"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_adyen
 msgid "Adds American style tipping to Adyen"
-msgstr ""
+msgstr "Додає американський тип чайових до Adyen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary_payroll
 msgid "Adds a Gross to Net Salary Simulaton"
-msgstr ""
+msgstr "Додає моделювання валової до чистої зарплати"
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts_enterprise
@@ -10406,7 +10476,7 @@ msgstr "Розширене форматування адреси"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_gantt
 msgid "Advanced Event Track Management"
-msgstr ""
+msgstr "Розширене керування відстеженням подій"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
@@ -10566,7 +10636,7 @@ msgstr "Дозволяє створювати завдання виїзного 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
 msgid "Allow per-order lead creation mode"
-msgstr ""
+msgstr "Дозволяє режим створення лідів на замовлення"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison
@@ -10591,7 +10661,7 @@ msgstr "Компанії"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp_subcontracting
 msgid "Allows the subcontracting process with the barcode views"
-msgstr ""
+msgstr "Дозволяє процес субпідряду з переглядом штрих-коду"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_quality_control
@@ -27460,6 +27530,12 @@ msgstr "Повна назва країни."
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
 msgstr "Внутрішній користувач, який відповідає за цей контакт."
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids

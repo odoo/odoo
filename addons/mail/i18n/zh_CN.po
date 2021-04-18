@@ -1428,6 +1428,9 @@ msgstr "配置你的活动类型"
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
 msgstr ""
+"配置您的邮件服务器参数【老天提醒：如使用腾讯邮箱或阿里免费企业邮箱，让odoo用smtp代理发件的模式，请保证以下两点前提"
+"：一是odoo系统中默认发件邮箱账号是postmaster-"
+"odoo@xxx.com二是从技术菜单下的系统参数中删除mail.bounce.alias这行不要，详见各种中文文章，仁杰有篇文章深入研究了odoo的邮件配置写得很清楚，可参考】"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -1530,7 +1533,7 @@ msgstr "创建Uid"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s"
-msgstr ""
+msgstr "新建 %(document)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -1614,7 +1617,7 @@ msgstr "创建时间"
 #: code:addons/mail/static/src/models/chatter/chatter.js:0
 #, python-format
 msgid "Creating a new record..."
-msgstr ""
+msgstr "创建了一条新消息"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2282,7 +2285,7 @@ msgstr "启用命令跟踪"
 #: code:addons/mail/static/src/components/notification_request/notification_request.xml:0
 #, python-format
 msgid "Enable desktop notifications to chat."
-msgstr ""
+msgstr "启用聊天桌面通知"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -3090,7 +3093,7 @@ msgstr "仅邀请人员"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
 msgid "Is Active"
-msgstr ""
+msgstr "处于启用状态"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search

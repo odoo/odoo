@@ -10,8 +10,8 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
 # Martin Trigaux, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# trendspotter, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-18 14:47+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1452,6 +1452,9 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"Norský SAF-T je standardní formát souboru pro export různých typů účetních transakčních dat pomocí formátu XML.\n"
+"První verze SAF-T Financial je omezena na úroveň hlavní účetní knihy, včetně transakcí se zákazníky a dodavateli. Zahrnuta jsou také nezbytná kmenová data."
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payumoney
@@ -2555,6 +2558,13 @@ msgid ""
 "\n"
 "The `pdfminer.six` Python library has to be installed in order to index PDF files\n"
 msgstr ""
+"\n"
+"Seznam příloh a indexace dokumentů\n"
+"=========================================\n"
+"* Zobrazit přílohu v horní části formulářů\n"
+"* Indexace dokumentů: odt, pdf, xlsx, docx\n"
+"\n"
+"Aby bylo možné indexovat soubory PDF, musí být nainstalována Python knihovna `pdfminer.six` \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au
@@ -3044,6 +3054,11 @@ msgid ""
 "Better plan your future schedules by considering time effectively spent on old plannings\n"
 "\n"
 msgstr ""
+"\n"
+"Porovnejte časové rozvrhy a plánování\n"
+"=================================\n"
+"\n"
+"Lepší plánování budoucích plánů tím, že vezmete v úvahu čas efektivně strávený starými plány\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -3493,6 +3508,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EDI chilská lokalizace\n"
+"==========================\n"
+"Tento kód umožňuje generovat dokument DTE pro chilskou fakturaci.\n"
+"- formát DTE (elektronický zdanitelný dokument) ve formátu XML\n"
+"- Přímá komunikace se SII (Servicio de Impuestos Internos) pro zasílání faktur a dalších daňových dokladů souvisejících s prodejem.\n"
+"- Komunikace se zákazníky za účelem zasílání prodejních DTE.\n"
+"- Komunikace s dodavateli (prodejci) za účelem přijetí DTE od nich.\n"
+"- Přímá komunikace se SII informující o přijetí nebo odmítnutí účtů prodejců nebo jiných DTE.\n"
+"\n"
+"Abyste na faktuře viděli čárový kód, potřebujete knihovnu pdf417gen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -3595,6 +3621,28 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EU Mini One Stop Shop (MOSS) DPH za telekomunikace, vysílání a elektronické služby\n"
+"================================================== ===========================================\n"
+"\n"
+"Od 1. ledna 2015 musí být telekomunikační, rozhlasové a elektronické služby prodávané v Evropské unii vždy zdaněny v zemi, kam zákazník patří. Za účelem zjednodušení uplatňování této směrnice EU umožňuje registrační režim Mini One Stop Shop (MOSS) podnikům podat jedinečné daňové přiznání.\n"
+"\n"
+"Tento modul umožňuje pomoc při vytváření požadovaných fiskálních pozic a daní v EU s cílem automaticky aplikovat a zaznamenávat požadované daně.\n"
+"\n"
+"Tento modul nainstaluje průvodce, který pomůže nastavit fiskální pozice a daně za prodej elektronických služeb v rámci EU.\n"
+"\n"
+"Průvodce vám umožní vybrat:\n"
+"- země EU, kterým tyto služby prodáváte\n"
+"- vaše národní daň z přidané hodnoty pro služby, která bude přiřazena k dani v cílové zemi\n"
+"- volitelně: fiskální pozice šablony za účelem kopírování mapování účtu. Měla by existovat vaše stávající fiskální pozice v rámci EU B2C. (výchozí nastavení není mapování účtu)\n"
+"- volitelně: účet, který se má použít k výběru částek daně (výchozí hodnota pro účet používaný vaší národní daní z DPH za služby)\n"
+"\n"
+"Vytváří odpovídající fiskální pozice a daně, automaticky použitelné pro prodej v EU se zákazníkem ve vybraných zemích. Průvodce lze znovu spustit a přidat další země.\n"
+"\n"
+"Reference\n"
+"++++++++++\n"
+"- směrnice 2008/8 / ES\n"
+"- prováděcí nařízení Rady (EU) č. 1042/2013"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -5055,6 +5103,19 @@ msgid ""
 "of recall defined. You can define different policies for different companies.\n"
 "\n"
 msgstr ""
+"\n"
+"Modul pro automatizaci dopisů pro nezaplacené faktury s víceúrovňovým stahováním.\n"
+"==========================================================================\n"
+"\n"
+"V nabídce můžete definovat několik úrovní vyvolání:\n"
+"---------------------------------------------------------------\n"
+"Úrovně konfigurace / sledování / sledování\n"
+"\n"
+"Jakmile je definováno, můžete automaticky tisknout svolávání každý den pouhým kliknutím na nabídku:\n"
+"---------------------------------------------------------------------------------------------------- -\n"
+"Následná platba / odeslání e-mailu a dopisů\n"
+"\n"
+"Bude generovat PDF / odesílat e-maily / nastavovat ruční akce podle různých definovaných úrovní odvolání. Můžete definovat různé zásady pro různé společnosti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -6094,6 +6155,14 @@ msgid ""
 "This should help for reconciliation on the bank statements where the old IBAN code is still used.\n"
 "    "
 msgstr ""
+"\n"
+"Švýcarská lokalizace\n"
+"===================\n"
+"Přidáno pole QR-IBAN na bankovní účet.\n"
+"Pokud je toto pole prázdné, ale samotné číslo bankovního účtu je platné číslo QR-IBAN, bude jej nadále používat jako QR-IBAN.\n"
+"Pokud je však vyplněno nové pole QR-IBAN, bude hodnota použita jako QR-IBAN.\n"
+"To by mělo pomoci při odsouhlasení bankovních výpisů, kde se stále používá starý kód IBAN.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -6399,6 +6468,16 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 "    "
 msgstr ""
+"\n"
+"Toto je modul Odoo pro správu účetnictví ve Finsku.\n"
+"============================================================\n"
+"\n"
+"Po instalaci tohoto modulu budete mít přístup k:\n"
+"* Finská účtová osnova\n"
+"* Fiskální pozice\n"
+"* Typy odkazů na platby na faktuře (finská standardní reference a finská reference věřitele (RF))\n"
+"\n"
+"Nastavte typ odkazu na platbu z prodejního deníku."
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -6968,6 +7047,11 @@ msgid ""
 "This shortcut allows you to generate a rental order based on the selected case.\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul přidává zástupce v jednom nebo několika případech příležitostí v CRM.\n"
+"================================================== ==========================\n"
+"\n"
+"Tato zkratka umožňuje vygenerovat objednávku pronájmu na základě vybraného případu."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -7017,6 +7101,10 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
+"\n"
+"Tento modul přidává požadovaný základní kód pro plně integrovaný zákaznický portál. Obsahuje základní třídu řadiče a základní šablony. Obchodní doplňky přidají své konkrétní šablony a řadiče k rozšíření zákaznického portálu.\n"
+"\n"
+"Tento modul obsahuje většinu kódu pocházejícího z odoo v10 website_portal. Účelem tohoto modulu je umožnit zobrazení zákaznického portálu bez závislosti na možnostech úprav a přizpůsobení webu."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -7194,6 +7282,21 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul umožňuje tisknout vaše platby na předtištěný šekový papír. Můžete nakonfigurovat výstup (rozložení, informace o stubech atd.) V nastavení společnosti a spravovat číslování šeků (pokud používáte předtištěné šeky bez čísel) v nastavení deníku.\n"
+"\n"
+"Podporované formáty\n"
+"-----------------\n"
+"Tento modul podporuje tři nejběžnější formáty šeků a bude fungovat po vybalení z krabice s propojenými šeky z checkdepot.net.\n"
+"\n"
+"Zobrazit všechny kontroly na: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
+"\n"
+"Můžete si vybrat mezi:\n"
+"\n"
+"- Šeky nahoře: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
+"- Šeky uprostřed: Peachtree standard (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
+"- Šeky dole: Standard ADP (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -7682,6 +7785,8 @@ msgid ""
 "It installs sale capabilities, front-end flow, eCommerce, questions and\n"
 "automatic lead generation, full Online support, ...\n"
 msgstr ""
+"\n"
+"Tento modul otestuje toky hlavních událostí Odoo, frontend i backend. Nainstaluje prodejní funkce, front-end tok, eCommerce, dotazy a automatické generování potenciálních zákazníků, plná podpora online, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
@@ -8113,6 +8218,10 @@ msgid ""
 "Other SIPS providers may be compatible, though this is\n"
 "not guaranteed."
 msgstr ""
+"\n"
+"Worldline SIPS Payment Acquirer pro online platby\n"
+"\n"
+"Implementuje rozhraní Worldline SIPS API pro nabyvatele plateb. Ostatní poskytovatelé SIPS mohou být kompatibilní, i když to není zaručeno."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
@@ -8828,6 +8937,9 @@ msgid ""
 "                            The key cannot be retrieved later and provides <b>full access</b>\n"
 "                            to your user account, it is very important to store it securely."
 msgstr ""
+"<strong>Důležité:</strong> Klíč nelze později načíst a poskytuje <b>plný "
+"přístup</b> k vašemu uživatelskému účtu, je velmi důležité jej bezpečně "
+"uložit."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -15222,6 +15334,7 @@ msgstr ""
 msgid ""
 "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
 msgstr ""
+"Pole '%(field)s' nalezené v uzlu 'groupby' v modelu %(model)s neexistuje"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -19923,6 +20036,11 @@ msgid ""
 "                            the uninstallation procedure on a duplicate database to guarantee that\n"
 "                            it works and then doing it on your production database."
 msgstr ""
+"Odinstalace modulu není vždy konzistentní a může někdy vést k problémům, "
+"může dojít ke smazání některých dat, může být databáze ponechána v "
+"nestabilním stavu, může dojít k selhání serveru atd. I když je to vzácné, "
+"doporučujeme postup odinstalování otestovat na duplikátu databáze, aby bylo "
+"zajištěno, že funguje, a poté to provedete ve své produkční databázi."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__module_ids
@@ -26583,6 +26701,12 @@ msgid "The internal user in charge of this contact."
 msgstr "Interní uživatel odpovědný za tento kontakt."
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "Seznam modelů, které rozšiřují aktuální model."
@@ -27085,6 +27209,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Tento modul obsahuje testy týkající se pošty. Ty jsou přítomny v samostatném"
+" modulu, protože obsahuje modely používané pouze k provádění testů nezávisle"
+" na funkčních aspektech jiných modelů."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_enterprise
@@ -27103,6 +27230,9 @@ msgid ""
 "are present in a separate module to use specific test models defined in\n"
 "test_mail. "
 msgstr ""
+"Tento modul obsahuje testy týkající se hromadné pošty. Ty jsou přítomny v "
+"samostatném modulu pro použití konkrétních testovacích modelů definovaných v"
+" test_mail."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_grid
@@ -27128,6 +27258,10 @@ msgid ""
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
+"Tento modul obsahuje testy týkající se různých funkcí pošty a dílčích modulů"
+" souvisejících s poštou. Tyto testy jsou přítomny v samostatném modulu, "
+"protože obsahuje modely používané pouze k provádění testů nezávisle na "
+"funkčních aspektech skutečných aplikací."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_web_cohort
@@ -27136,6 +27270,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Tento modul obsahuje testy související s webovou kohortou. Ty jsou přítomny "
+"v samostatném modulu, protože obsahuje modely používané pouze k provádění "
+"testů nezávisle na funkčních aspektech jiných modelů."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website
@@ -27997,7 +28134,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Unknown field \"%(model)s.%(field)s\" in %(attribute)s%(value)r"
-msgstr ""
+msgstr "Neznámé pole \"%(model)s.%(field)s\" v %(attribute)s%(value)r"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -29273,6 +29410,7 @@ msgstr "Nemůžete mít dva uživatele se stejným přihlašováním!"
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
+"Klíče API nemůžete odebrat, pokud nejsou vaše nebo nejste uživatel systému"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
