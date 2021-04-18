@@ -717,11 +717,12 @@ class Meeting(models.Model):
         events = super().create(other_vals)
 
         for vals in recurring_vals:
-
-            recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
             vals['follow_recurrence'] = True
-            event = super().create(vals)
-            events |= event
+        recurring_events = super().create(recurring_vals)
+        events += recurring_events
+
+        for event, vals in zip(recurring_events, recurring_vals):
+            recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
             if vals.get('recurrency'):
                 detached_events = event._apply_recurrence_values(recurrence_values)
                 detached_events.active = False

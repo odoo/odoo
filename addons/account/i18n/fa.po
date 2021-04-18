@@ -10699,9 +10699,21 @@ msgid ""
 msgstr "«نوع سیستمی» "
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_bank_statement__country_code model:ir.model.fields,help:account.field_account_bank_statement_line__country_code model:ir.model.fields,help:account.field_account_journal__country_code
-#: model:ir.model.fields,help:account.field_account_move__country_code model:ir.model.fields,help:account.field_account_payment__country_code model:ir.model.fields,help:account.field_account_payment_register__country_code
-#: model:ir.model.fields,help:account.field_account_tax__country_code model:ir.model.fields,help:account.field_res_company__country_code model:ir.model.fields,help:account.field_res_config_settings__country_code
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement__country_code
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
+#: model:ir.model.fields,help:account.field_account_journal__country_code
+#: model:ir.model.fields,help:account.field_account_move__country_code
+#: model:ir.model.fields,help:account.field_account_payment__country_code
+#: model:ir.model.fields,help:account.field_account_payment_register__country_code
+#: model:ir.model.fields,help:account.field_account_tax__country_code
+#: model:ir.model.fields,help:account.field_res_company__country_code
+#: model:ir.model.fields,help:account.field_res_config_settings__country_code
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
@@ -10739,8 +10751,17 @@ msgstr "حساب %s (%s) منسوخ شده‌است."
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
-"The account is already in use in a 'sale' or 'purchase' journal. This means"
-" that the account's type couldn't be 'receivable' or 'payable'."
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"The account is already in use in a 'sale' or 'purchase' journal. This means "
+"that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
 "این حساب هم اکنون مورد استفاده در یک تفکیک سند 'فروش' یا 'خرید' است. این یعنی"
 " نوع حساب نمی‌تواند 'دریافتنی' یا 'پرداختنی' باشد."
@@ -13111,6 +13132,12 @@ msgid ""
 " journal."
 msgstr ""
 "در تفکیک سند مربوط به صندوق وجه، باید حساب انتقالات داخلی را مشخص کنید."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

@@ -21,6 +21,7 @@ const GoogleCalendarModel = CalendarModel.include({
     init: function () {
         this._super.apply(this, arguments);
         this.google_is_sync = true;
+        this.google_pending_sync = false;
     },
 
     /**
@@ -39,6 +40,11 @@ const GoogleCalendarModel = CalendarModel.include({
      */
     async _loadCalendar() {
         const _super = this._super.bind(this);
+        // When the calendar synchronization takes some time, prevents retriggering the sync while navigating the calendar.
+        if (this.google_pending_sync) {
+            return _super(...arguments);
+        }
+
         try {
             await Promise.race([
                 new Promise(resolve => setTimeout(resolve, 1000)),
@@ -49,6 +55,7 @@ const GoogleCalendarModel = CalendarModel.include({
                 error.event.preventDefault();
             }
             console.error("Could not synchronize Google events now.", error);
+            this.google_pending_sync = false;
         }
         return _super(...arguments);
     },
@@ -56,6 +63,7 @@ const GoogleCalendarModel = CalendarModel.include({
     _syncGoogleCalendar(shadow = false) {
         var self = this;
         var context = this.getSession().user_context;
+        this.google_pending_sync = true;
         return this._rpc({
             route: '/google_calendar/sync_data',
             params: {
@@ -69,6 +77,7 @@ const GoogleCalendarModel = CalendarModel.include({
             } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
                 self.google_is_sync = true;
             }
+            self.google_pending_sync = false;
             return result
         });
     },
