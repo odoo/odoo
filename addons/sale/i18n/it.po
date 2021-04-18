@@ -1478,7 +1478,7 @@ msgstr "Chi sta seguendo (partner)"
 #. module: sale
 #: sql_constraint:sale.order.line:0
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "Valori vietati nella riga dell'ordine di vendita"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2722,7 +2722,7 @@ msgstr "Attributo prodotto"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "Valore cliente attributo prodotto"
+msgstr "Valore predefinito attributo prodotto"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template_attribute_value
@@ -3037,7 +3037,7 @@ msgstr "Avvisi ordine di vendita"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Procedura di attivazione sistema di pagamento vendita"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_product_configurator
@@ -3052,7 +3052,7 @@ msgstr "Avvisi vendita"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Metodo di pagamento selezionato nella configurazione di vendita"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__sale_order_line_id
@@ -3514,12 +3514,12 @@ msgstr "Fase"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
 msgid "State of the onboarding confirmation order step"
-msgstr ""
+msgstr "Stato della fase di configurazione conferma ordine"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_sample_quotation_state
 msgid "State of the onboarding sample quotation step"
-msgstr ""
+msgstr "Stato della fase di configurazione preventivo campione"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
@@ -3707,6 +3707,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Quando la transazione è confermata dal sistema di pagamento, la fattura viene generata in modo automatico e resa disponibile nel portale clienti.\n"
+"Viene segnata come pagata e il pagamento inserito nel registro indicato nella configurazione del sistema di pagamento.\n"
+"Questa modalità è consigliata se la fattura finale viene emessa all'ordine e non dopo la consegna."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3935,7 +3938,7 @@ msgstr "Quantità da fatturare"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "Da incrementare"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3944,9 +3947,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"Per inviare gli inviti in modo B2B, aprire un contatto o selezionarne più di"
-" uno nella vista elenco e cliccare sull'opzione \"Gestione degli accessi al "
-"portale\" nel menu a tendina *Azione*"
+"Per spedire gli inviti in modalità B2B, aprire un contatto o selezionarne "
+"alcuni nella vista elenco, quindi fare clic sull'opzione \"Gestione accessi "
+"al portale\" nel menù a tendina *Azione*."
 
 #. module: sale
 #: selection:sale.order,activity_state:0
@@ -4112,6 +4115,8 @@ msgid ""
 "Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a"
 " href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 msgstr ""
+"Incremento vendite da <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> "
+"per il cliente <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
