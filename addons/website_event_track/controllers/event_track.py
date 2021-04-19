@@ -27,7 +27,7 @@ class EventTrackController(http.Controller):
         search_domain_base = [
             ('event_id', '=', event.id),
         ]
-        if not request.env.user.has_group('event.group_event_user'):
+        if not request.env.user.has_group('event.group_event_registration_desk'):
             search_domain_base = expression.AND([
                 search_domain_base,
                 ['|', ('is_published', '=', True), ('is_accepted', '=', True)]

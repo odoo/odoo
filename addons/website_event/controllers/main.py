@@ -277,7 +277,7 @@ class WebsiteEventController(http.Controller):
                 continue
             ticket_order[int(registration_items[1])] = int(value)
 
-        ticket_dict = dict((ticket.id, ticket) for ticket in request.env['event.event.ticket'].search([
+        ticket_dict = dict((ticket.id, ticket) for ticket in request.env['event.event.ticket'].sudo().search([
             ('id', 'in', [tid for tid in ticket_order.keys() if tid]),
             ('event_id', '=', event.id)
         ]))

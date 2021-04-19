@@ -17,7 +17,9 @@ _logger = logging.getLogger(__name__)
 class WebsiteEventMeetController(EventCommunityController):
 
     def _get_event_rooms_base_domain(self, event):
-        search_domain_base = [('event_id', '=', event.id), ('is_published', '=', True)]
+        search_domain_base = [('event_id', '=', event.id)]
+        if not request.env.user.has_group('event.group_event_registration_desk'):
+            search_domain_base = expression.AND([search_domain_base, [('is_published', '=', True)]])
         return search_domain_base
 
     def _sort_event_rooms(self, room):
@@ -51,7 +53,7 @@ class WebsiteEventMeetController(EventCommunityController):
         meeting_rooms = request.env['event.meeting.room'].sudo().search(search_domain)
         meeting_rooms = meeting_rooms.sorted(self._sort_event_rooms, reverse=True)
 
-        is_event_user = request.env.user.has_group("event.group_event_user")
+        is_event_user = request.env.user.has_group("event.group_event_registration_desk")
         if not is_event_user:
             meeting_rooms = meeting_rooms.filtered(lambda m: not m.room_is_full)
 
@@ -155,5 +157,5 @@ class WebsiteEventMeetController(EventCommunityController):
             'meeting_rooms_other': meeting_rooms_other,
             # options
             'option_widescreen': True,
-            'is_event_user': request.env.user.has_group('event.group_event_manager'),
+            'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
         }
