@@ -4,6 +4,7 @@
 ##############################################################################
 from odoo import fields, models, _, api
 from odoo.exceptions import UserError, ValidationError
+from itertools import zip_longest
 import logging
 # import odoo.addons.decimal_precision as dp
 _logger = logging.getLogger(__name__)
@@ -85,7 +86,15 @@ class AccountPayment(models.Model):
     #                     rec.check_ids.mapped('amount_company_currency'))
 
     def action_post(self):
-        """ this method is called when posting an account_move of a payment or the payment directly.
+        """ this method is called when posting an account_move of a payment or the payment directly and do two things:
+        1. Do check operations (handed, delivered, etc)
+        2. Split liquidity lines so that statements reconciliation and accounting analysis is suitable for checks management.
+        When spliting the lines we also:
+        a) modify name to be more representative
+        b) add date_maturity from the check
+
+        This split is done for now on this easy way but could be doable directly on draft states by modifying the way
+        the lines are synchronized between move and payment.
         """
         res = super(AccountPayment, self).action_post()
         for rec in self.filtered('check_ids'):
@@ -100,8 +109,86 @@ class AccountPayment(models.Model):
             #         'Para mandar a proceso de firma debe definir número '
             #         'de cheque en cada línea de pago.\n'
             #         '* ID del pago: %s') % rec.id)
-            self.do_checks_operations()
+            operation = rec.do_checks_operations()
+            liquidity_lines, counterpart_lines, writeoff_lines = rec._seek_for_lines()
+            rec._split_aml_line_per_check(liquidity_lines, operation)
+
         return res
+
+    def _split_aml_line_per_check(self, liquidity_lines, operation):
+        """ Take an account move, find the move lines related to check and
+        split them one per each check related to the payment
+        """
+        checks = self.check_ids
+
+        liquidity_lines = liquidity_lines.with_context(check_move_validity=False)
+        liquidity_line = liquidity_lines[0]
+        amount_field = 'credit' if liquidity_line['credit'] else 'debit'
+        new_name = _('Deposit check %s') if liquidity_line['credit'] else liquidity_line['name'] + _(' check %s')
+
+        # if the move line has currency then we are delivering checks on a different currency than company one
+        currency = liquidity_line['currency_id']
+        currency_sign = amount_field == 'debit' and 1.0 or -1.0
+
+        # with current implementation, liquidity_lines should only have only one line. This is because we're deleting
+        # all other lines when reseting too draft because of the design of _synchronize_to_moves
+        for check, liquidity_line in zip_longest(checks, liquidity_lines):
+            new_name % check.name
+            # payment_display_name['%s-%s' % (self.payment_type, self.partner_type)]
+            # document, amount, currency, date, partner
+            document_name = _('Check %s %s') % (check.name, operation)
+            check_vals = {
+                'name': liquidity_lines._get_default_line_name(
+                    document_name, check.amount, self.currency_id, self.date, partner=self.partner_id),
+                amount_field: check.amount_company_currency,
+                'date_maturity': check.payment_date,
+                'amount_currency': currency and currency_sign * check.amount,
+            }
+            if check and liquidity_line:
+                liquidity_line.write(check_vals)
+            elif check:
+                check_vals = liquidity_lines[0].copy(default=check_vals)
+            else:
+                liquidity_line.unlink()
+        return True
+
+    # def _split_aml_line_per_check(self, lines_vals):
+    #     """ Take an account mvoe, find the move lines related to check and
+    #     split them one per earch check related to the payment
+    #     """
+    #     checks = self.check_ids
+
+    #     liquidity_line = lines_vals[0]
+    #     amount_field = 'credit' if liquidity_line['credit'] else 'debit'
+    #     # new_name = _('Deposit check %s') if liquidity_line['credit'] else liquidity_line['name'] + _(' check %s')
+
+    #     # if the move line has currency then we are delivering checks on a
+    #     # different currency than company one
+    #     currency = liquidity_line['currency_id']
+    #     currency_sign = amount_field == 'debit' and 1.0 or -1.0
+    #     liquidity_line.update({
+    #         # 'name': new_name % checks[0].name,
+    #         amount_field: checks[0].amount_company_currency,
+    #         'date_maturity': checks[0].payment_date,
+    #         'amount_currency': currency and currency_sign * checks[0].amount,
+    #     })
+    #     checks -= checks[0]
+    #     for check in checks:
+    #         check_vals = liquidity_line.copy()
+    #         check_vals.update({
+    #             # 'name': new_name % check.name,
+    #             amount_field: check.amount_company_currency,
+    #             'date_maturity': check.payment_date,
+    #             'amount_currency': currency and currency_sign * check.amount,
+    #         })
+    #         lines_vals += [check_vals]
+    #     return True
+
+    # def _prepare_move_line_default_vals(self, write_off_line_vals=None):
+    #     res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
+    #     if self.check_type:
+    #         self._split_aml_line_per_check(res)
+    #     return res
 
     def do_checks_operations(self, cancel=False):
         """
@@ -119,6 +206,7 @@ class AccountPayment(models.Model):
                 return None
             _logger.info('Receive Check')
             self.check_ids._add_operation('holding', self, self.partner_id, date=self.date)
+            return _('received')
         elif self.payment_method_code == 'delivered_third_check' and self.is_internal_transfer:
             # deposit third check or move third checks to other thir checks journal
             # if destination journal is a third checks journal we are moving between third checks journals
@@ -137,6 +225,7 @@ class AccountPayment(models.Model):
                 self.check_ids._add_operation('transfered', self, False, date=self.date)
                 self.check_ids._add_operation('holding', self.paired_internal_transfer_payment_id, False, date=self.date)
                 self.check_ids.write({'journal_id': self.destination_journal_id.id})
+                return _('transfered')
             else:
                 # sell check
                 if cancel:
@@ -146,6 +235,7 @@ class AccountPayment(models.Model):
 
                 _logger.info('Sell/Deposit Check')
                 self.check_ids._add_operation('selled' if self.destination_journal_id.type == 'cash' else 'deposited', self, self.partner_id, date=self.date)
+                return _('selled') if self.destination_journal_id.type == 'cash' else _('deposited')
         elif self.payment_method_code == 'delivered_third_check':
             # deliver check
             if cancel:
@@ -154,6 +244,7 @@ class AccountPayment(models.Model):
                 return None
             _logger.info('Deliver Check')
             self.check_ids._add_operation('delivered', self, self.partner_id, date=self.date)
+            return _('delivered')
         # ISSUE CHECKS OPERATIONS
         elif self.payment_method_code == 'issue_check' and not self.is_internal_transfer and self.payment_type == 'outbound':
             # issue checks
@@ -163,6 +254,7 @@ class AccountPayment(models.Model):
                 return None
             _logger.info('Issue Check')
             self.check_ids._add_operation('handed', self, self.partner_id, date=self.date)
+            return _('issued')
         elif self.payment_method_code == 'issue_check' and self.is_internal_transfer and self.destination_journal_id.type == 'cash':
             # Take money from the bank with an own check
             if cancel:
@@ -171,6 +263,7 @@ class AccountPayment(models.Model):
                 return None
             _logger.info('Withdraw Check')
             self.check_ids._add_operation('withdrawed', self, self.partner_id, date=self.date)
+            return _('withdrawed')
         elif self.check_ids:
             raise UserError(_(
                 'This operatios is not implemented for checks:\n'
@@ -180,7 +273,6 @@ class AccountPayment(models.Model):
                     self.payment_type,
                     self.payment_method_code,
                     self.destination_journal_id.type)))
-        return True
 
     # def _prepare_payment_moves(self):
     #     vals = super(AccountPayment, self)._prepare_payment_moves()
@@ -264,41 +356,3 @@ class AccountPayment(models.Model):
     #                 ' cheques sin número.'))
     #     else:
     #         return self.do_print_checks()
-
-    def _split_aml_line_per_check(self, lines_vals):
-        """ Take an account mvoe, find the move lines related to check and
-        split them one per earch check related to the payment
-        """
-        checks = self.check_ids
-
-        liquidity_line = lines_vals[0]
-        amount_field = 'credit' if liquidity_line['credit'] else 'debit'
-        # new_name = _('Deposit check %s') if liquidity_line['credit'] else liquidity_line['name'] + _(' check %s')
-
-        # if the move line has currency then we are delivering checks on a
-        # different currency than company one
-        currency = liquidity_line['currency_id']
-        currency_sign = amount_field == 'debit' and 1.0 or -1.0
-        liquidity_line.update({
-            # 'name': new_name % checks[0].name,
-            amount_field: checks[0].amount_company_currency,
-            'date_maturity': checks[0].payment_date,
-            'amount_currency': currency and currency_sign * checks[0].amount,
-        })
-        checks -= checks[0]
-        for check in checks:
-            check_vals = liquidity_line.copy()
-            check_vals.update({
-                # 'name': new_name % check.name,
-                amount_field: check.amount_company_currency,
-                'date_maturity': check.payment_date,
-                'amount_currency': currency and currency_sign * check.amount,
-            })
-            lines_vals += [check_vals]
-        return True
-
-    def _prepare_move_line_default_vals(self, write_off_line_vals=None):
-        res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
-        if self.check_type:
-            self._split_aml_line_per_check(res)
-        return res
