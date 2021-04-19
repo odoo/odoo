@@ -56,7 +56,7 @@ class StockMove(models.Model):
     product_uom_qty = fields.Float(
         'Demand',
         digits='Product Unit of Measure',
-        default=0.0, required=True, states={'done': [('readonly', True)]},
+        default=1.0, required=True, states={'done': [('readonly', True)]},
         help="This is the quantity of products from an inventory "
              "point of view. For moves in the state 'done', this is the "
              "quantity of products that were actually moved. For other "
