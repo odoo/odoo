@@ -246,7 +246,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
 
-            ('include', 'web.website_legacy'),
+            ('include', 'web.frontend_legacy'),
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
@@ -444,7 +444,7 @@ This module provides the core of the Odoo Web Client.
         ],
 
         # Used during the transition of the web architecture
-        'web.website_legacy': [
+        'web.frontend_legacy': [
             # Old rainbow man kept for website compatibility
             'web/static/src/legacy/frontend/rainbowman/*.js',
             'web/static/src/legacy/frontend/rainbowman/*.scss',
@@ -545,12 +545,27 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/services/**/*.js',
             'web/static/tests/utils/**/*.js',
             'web/static/tests/webclient/**/*.js',
+
+            ('include', 'web.frontend_legacy_tests'),
         ],
         'web.qunit_mobile_suite_tests': [
             'web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js',
             # 'web/static/tests/legacy/fields/basic_fields_mobile_tests.js',
             # 'web/static/tests/legacy/fields/relational_fields_mobile_tests.js',
             # 'web/static/tests/legacy/components/dropdown_menu_mobile_tests.js',
+        ],
+
+        # Used during the transition of the web architecture
+        'web.frontend_legacy_tests': [
+            # These 2 lines below are taken from web.assets_frontend
+            # They're required for the web.frontend_legacy to work properly
+            # It is expected to add other lines coming from the web.assets_frontend 
+            # if we need to add more and more legacy stuff that would require other scss or js. 
+            ('include', 'web._assets_helpers'),
+            'web/static/lib/bootstrap/scss/_variables.scss',
+
+            ('include', 'web.frontend_legacy'),
+            'web/static/src/legacy/frontend/*/tests/*.js',
         ],
     },
     'bootstrap': True,  # load translations for login screen
