@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <form>
                 <field name="check_type" invisible="1"/>
+                <field name="available_check_ids" invisible="1"/>
             </form>
             <xpath expr="//div[@name='amount_div']//field[@name='amount']" position="attributes">
                 <attribute name="attrs">{'readonly': [('check_type', '!=', False)]}</attribute>
@@ -16,10 +17,11 @@
             <field name="destination_journal_id" position="after">
                 <field
                     name="delivery_check_ids"
-                    attrs="{'invisible': [('payment_method_code', '!=', 'delivered_third_check')]}"
+                    attrs="{'invisible': [('payment_method_code', 'not in', ['delivered_third_check', 'returned_check'])]}"
                     options="{'no_create': True}"
-                    domain="[('journal_id', '=', journal_id), ('state', '=', 'holding'), ('type', '=', 'third_check')]"
+                    domain="[('id', 'in', available_check_ids)]"
                 >
+                    <!-- domain="[('journal_id', '=', journal_id), ('state', '=', 'holding'), ('type', '=', 'third_check')]" -->
                     <tree >
                     <!-- <tree edit="false"> -->
                         <field name="name"/>

@@ -2,7 +2,7 @@
 # For copyright and license notices, see __manifest__.py file in module root
 # directory
 ##############################################################################
-from odoo import models, fields
+from odoo import models, fields, _
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -52,18 +52,17 @@ class AccountChartTemplate(models.Model):
         res = super(AccountChartTemplate, self)._create_bank_journals(company, acc_template_ref)
 
         # creamos diario para cheques de terceros
-        received_third_check = self.env.ref(
-            'account_check.account_payment_method_received_third_check')
-        delivered_third_check = self.env.ref(
-            'account_check.account_payment_method_delivered_third_check')
         self.env['account.journal'].create({
-            'name': 'Cheques de Terceros',
+            'name': _('Third Checks'),
             'type': 'cash',
             'company_id': company.id,
             'inbound_payment_method_ids': [
-                (4, received_third_check.id, None)],
+                (4, self.env.ref('account_check.account_payment_method_received_third_check').id, None),
+                (4, self.env.ref('account_check.account_payment_method_returned_check').id, None),
+            ],
             'outbound_payment_method_ids': [
-                (4, delivered_third_check.id, None)],
+                (4, self.env.ref('account_check.account_payment_method_delivered_third_check').id, None),
+            ],
         })
 
         self.env['account.journal'].with_context(force_company_id=company.id)._enable_issue_check_on_bank_journals()
