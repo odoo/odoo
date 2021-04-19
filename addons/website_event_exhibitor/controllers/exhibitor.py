@@ -19,7 +19,7 @@ class ExhibitorController(WebsiteEventController):
             ('event_id', '=', event.id),
             ('exhibitor_type', 'in', ['exhibitor', 'online']),
         ]
-        if not request.env.user.has_group('event.group_event_user'):
+        if not request.env.user.has_group('event.group_event_registration_desk'):
             search_domain_base = expression.AND([search_domain_base, [('is_published', '=', True)]])
         return search_domain_base
 
@@ -104,7 +104,7 @@ class ExhibitorController(WebsiteEventController):
             'sponsor_countries': sponsor_countries,
             # environment
             'hostname': request.httprequest.host.split(':')[0],
-            'is_event_user': request.env.user.has_group('event.group_event_user'),
+            'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
         }
 
     # ------------------------------------------------------------
@@ -161,7 +161,7 @@ class ExhibitorController(WebsiteEventController):
             'option_can_edit': request.env.user.has_group('event.group_event_user'),
             # environment
             'hostname': request.httprequest.host.split(':')[0],
-            'is_event_user': request.env.user.has_group('event.group_event_user'),
+            'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
         }
 
     # ------------------------------------------------------------
