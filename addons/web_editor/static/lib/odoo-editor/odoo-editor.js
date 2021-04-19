@@ -4311,7 +4311,11 @@ var exportVariable = (function (exports) {
         _onPaste(ev) {
             ev.preventDefault();
             const pastedText = (ev.originalEvent || ev).clipboardData.getData('text/plain');
+<<<<<<< HEAD
             this._insertText(pastedText);
+=======
+            insertText(this.document.defaultView.getSelection(), pastedText);
+>>>>>>> 023be20d6c1... temp
             this.historyStep();
         }
 
@@ -4344,7 +4348,11 @@ var exportVariable = (function (exports) {
                         const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
                         setCursor(range.startContainer, range.startOffset);
                     }
+<<<<<<< HEAD
                     editorCommands.insertHTML(this, pastedText.replace(/\n+/g, '<br/>'));
+=======
+                    insertText(this.document.defaultView.getSelection(), pastedText);
+>>>>>>> 023be20d6c1... temp
                 });
             }
             this.historyStep();
