@@ -46,7 +46,7 @@ class WebsiteSaleDelivery(WebsiteSale):
             tax_ids = carrier.product_id.taxes_id.filtered(lambda t: t.company_id == order.company_id)
             if tax_ids:
                 fpos = order.fiscal_position_id
-                tax_ids = fpos.map_tax(tax_ids, carrier.product_id, order.partner_shipping_id)
+                tax_ids = fpos.map_tax(tax_ids)
                 taxes = tax_ids.compute_all(
                     rate['price'],
                     currency=order.currency_id,

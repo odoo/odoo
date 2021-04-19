@@ -158,7 +158,7 @@ class AccountMoveLine(models.Model):
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
         fpos = order.fiscal_position_id or order.fiscal_position_id.get_fiscal_position(order.partner_id.id)
-        taxes = fpos.map_tax(self.product_id.taxes_id, self.product_id, order.partner_id)
+        taxes = fpos.map_tax(self.product_id.taxes_id)
 
         return {
             'order_id': order.id,
