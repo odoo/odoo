@@ -1105,7 +1105,7 @@ class Website(models.Model):
             for key, val in list(arguments.items()):
                 if isinstance(val, models.BaseModel):
                     if val.env.context.get('lang') != lang.code:
-                        arguments[key] = val.with_context(lang=lang.url_code)
+                        arguments[key] = val.with_context(lang=lang.code)
             path = router.build(request.endpoint, arguments)
         else:
             # The build method returns a quoted URL so convert in this case for consistency.
