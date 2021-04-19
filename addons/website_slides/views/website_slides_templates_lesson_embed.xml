@@ -76,7 +76,7 @@
                                     </t>
                                 </div>
                             </div>
-                            <t t-if="slide.slide_type in ('presentation', 'document')">
+                            <t t-if="slide.slide_type == 'document'">
                                 <div id="PDFViewerLoader" class="oe_slides_loader mt-3 mx-2 w-100">
                                     <div class="toast show mx-auto">
                                         <div class="toast-header">
@@ -94,7 +94,7 @@
                             </t>
                         </div>
                         <!-- Fixed bottom navbar -->
-                        <div id="PDFViewerNav" class="pt-2 pb-2 bg-light text-white" role="navigation" t-if="slide.slide_type in ('presentation', 'document')">
+                        <div id="PDFViewerNav" class="pt-2 pb-2 bg-light text-white" role="navigation" t-if="slide.slide_type == 'document'">
                             <div class="container-fluid oe_slides_panel_footer">
                                 <div class="row align-items-center">
                                     <div class="col-3 d-flex align-items-center">

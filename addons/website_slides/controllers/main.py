@@ -1049,22 +1049,67 @@ class WebsiteSlides(WebsiteProfile):
     # --------------------------------------------------
 
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
-    def prepare_preview(self, **data):
-        Slide = request.env['slide.slide']
-        unused, document_id = Slide._find_document_data_from_url(data['url'])
-        preview = {}
-        if not document_id:
-            preview['error'] = _('Please enter valid youtube or google doc url')
-            return preview
-        existing_slide = Slide.search([('channel_id', '=', int(data['channel_id'])), ('document_id', '=', document_id)], limit=1)
-        if existing_slide:
-            preview['error'] = _('This video already exists in this channel on the following slide: %s', existing_slide.name)
-            return preview
-        values = Slide._parse_document_url(data['url'], only_preview_fields=True)
-        if values.get('error'):
-            preview['error'] = values['error']
-            return preview
-        return values
+    def prepare_preview(self, slide_type, **data):
+        """ Will attempt to fetch external metadata for this slide from the correct
+        source (YouTube, Google Drive, ...).
+
+        To take advantage of the slide business method, we create a temporary slide record before
+        fetching the metadata and then unlink it before returning the result.
+        This allows a lot of code simplification and should not affect the database in any way. """
+
+        if not data.get('url'):
+            return {}
+
+        # do not fetch metadata directly upon slide creation as we want to manually call the method
+        Slide = request.env['slide.slide'].with_context(website_slides_fetch_metadata=False)
+
+        if slide_type == 'video':
+            identical_video = request.env['slide.slide']
+            existing_videos = Slide.search([
+                ('channel_id', '=', int(data['channel_id'])),
+                ('slide_type', '=', 'video')
+            ])
+
+            slide = Slide.create({
+                'name': 'dummy',
+                'channel_id': int(data['channel_id']),
+                'slide_type': 'video',
+                'video_url': data['url']
+            })
+
+            if not slide.video_source_type:
+                slide.unlink()
+                return {'error': _('Please enter valid YouTube or Google Drive URL')}
+
+            if slide.video_source_type == 'youtube':
+                identical_video = existing_videos.filtered(
+                    lambda existing_video: slide.video_youtube_id == existing_video.video_youtube_id)
+            elif slide.video_source_type == 'google_drive':
+                identical_video = existing_videos.filtered(
+                    lambda existing_video: slide.video_google_drive_id == existing_video.video_google_drive_id)
+            if identical_video:
+                identical_video_name = identical_video[0].name
+                slide.unlink()
+                return {'error': _('This video already exists in this channel on the following slide: %s', identical_video_name)}
+        elif slide_type == 'document' or slide_type == 'infographic':
+            slide = Slide.create({
+                'name': 'dummy',
+                'channel_id': int(data['channel_id']),
+                'slide_type': slide_type,
+                'source_type': 'external',
+                'document_url': data['url']
+            })
+
+            if not slide.document_google_drive_id:
+                slide.unlink()
+                return {'error': _('Please enter valid Google Drive URL')}
+
+        slide_values = slide._fetch_external_metadata(fetch_image=False)
+        slide.unlink()
+        if slide_values.get('error'):
+            return {'error': slide_values['error']}
+
+        return slide_values
 
     @http.route(['/slides/add_slide'], type='json', auth='user', methods=['POST'], website=True)
     def create_slide(self, *args, **post):
@@ -1134,8 +1179,9 @@ class WebsiteSlides(WebsiteProfile):
         }
 
     def _get_valid_slide_post_values(self):
-        return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
-                'mime_type', 'datas', 'description', 'image_1920', 'is_published']
+        return ['name', 'document_url', 'video_url', 'tag_ids', 'slide_type', 'channel_id',
+                'is_preview', 'datas', 'image_data', 'description', 'image_1920', 'is_published',
+                'source_type']
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):

@@ -93,11 +93,12 @@
                     t-att-data-can-access="can_access"
                     t-att-data-name="slide.name"
                     t-att-data-type="slide.slide_type"
+                    t-att-data-video-source-type="slide.video_source_type"
                     t-att-data-slug="slug(slide)"
                     t-att-data-has-question="1 if slide.question_ids else 0"
                     t-att-data-is-quiz="0"
                     t-att-data-completed="1 if slide_completed else 0"
-                    t-att-data-embed-code="slide.embed_code if slide.slide_type in ['video', 'document', 'presentation', 'infographic'] else False"
+                    t-att-data-embed-code="slide.embed_code if slide.slide_type in ['video', 'document', 'infographic'] else False"
                     t-att-data-is-member="is_member"
                     t-att-data-session-answers="session_answers">
                     <span class="ml-3">
@@ -143,6 +144,7 @@
                             <li class="o_wslides_fs_sidebar_list_item pl-0 mb-1" t-if="slide.question_ids and not slide.slide_type == 'quiz'"
                                 t-att-data-id="slide.id"
                                 t-att-data-can-access="can_access"
+                                t-att-data-video-source-type="slide.video_source_type"
                                 t-att-data-name="slide.name"
                                 t-att-data-type="slide.slide_type"
                                 t-att-data-slug="slug(slide)"

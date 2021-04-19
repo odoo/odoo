@@ -50,8 +50,8 @@ tour.register('slides_tour', {
     content: _t("Your first section is created, now it's time to add lessons to your course. Click on <b>Add Content</b> to upload a document, create a web page or link a video."),
     position: 'bottom',
 }, {
-    trigger: 'a[data-slide-type="presentation"]',
-    content: _t("First, let's add a <b>Presentation</b>. It can be a .pdf or an image."),
+    trigger: 'a[data-slide-type="document"]',
+    content: _t("First, let's add a <b>Document</b>. It has to be a .pdf file."),
     position: 'bottom',
 }, {
     trigger: 'input#upload',

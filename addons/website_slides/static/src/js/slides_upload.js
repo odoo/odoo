@@ -15,7 +15,9 @@ var SlideUploadDialog = Dialog.extend({
         'click .o_wslides_js_upload_install_button': '_onClickInstallModule',
         'click .o_wslides_select_type': '_onClickSlideTypeIcon',
         'change input#upload': '_onChangeSlideUpload',
-        'change input#url': '_onChangeSlideUrl',
+        'change input#video_url': '_onChangeVideoUrl',
+        'change input#document_url': '_onChangeDocumentUrl',
+        'change input[name="source_type"]': '_onChangeSourceType',
     }),
 
     /**
@@ -27,7 +29,7 @@ var SlideUploadDialog = Dialog.extend({
      */
     init: function (parent, options) {
         options = _.defaults(options || {}, {
-            title: _t("Upload a document"),
+            title: _t("Upload new content"),
             size: 'medium',
         });
         this._super(parent, options);
@@ -102,11 +104,12 @@ var SlideUploadDialog = Dialog.extend({
             });
         }));
     },
-    _fetchUrlPreview: function (url) {
+    _fetchUrlPreview: function (url, slideType) {
         return this._rpc({
             route: '/slides/prepare_preview/',
             params: {
                 'url': url,
+                'slide_type': slideType,
                 'channel_id': this.channelID
             },
         });
@@ -129,45 +132,46 @@ var SlideUploadDialog = Dialog.extend({
      * @private
      */
     _formValidateGetValues: function (forcePublished) {
-        var canvas = this.$('#data_canvas')[0];
+        var slideType = 'document';
+        // default slide_type (for webpage for instance)
+        if (_.contains(this.slide_type_data), this.get('state')) {
+            slideType = this.get('state');
+        }
+
+        var sourceType = 'local_file';
+        if (slideType === 'video') {
+            sourceType = 'external';  // force external for videos
+        } else {
+            sourceType = this.$('input[name="source_type"]:checked').data('value');
+        }
         var values = _.extend({
             'channel_id': this.channelID,
             'name': this._formGetFieldValue('name'),
-            'url': this._formGetFieldValue('url'),
+            'slide_type': slideType,
+            'source_type': sourceType,
+            'document_url': this._formGetFieldValue('document_url'),
+            'video_url': this._formGetFieldValue('video_url'),
             'description': this._formGetFieldValue('description'),
             'duration': this._formGetFieldValue('duration'),
             'is_published': forcePublished,
         }, this._getSelect2DropdownValues()); // add tags and category
 
-        // default slide_type (for webpage for instance)
-        if (_.contains(this.slide_type_data), this.get('state')) {
-            values['slide_type'] = this.get('state');
-        }
-
+        var canvas = this.$('#data_canvas')[0];
         if (this.file.type === 'application/pdf') {
             _.extend(values, {
                 'image_1920': canvas.toDataURL().split(',')[1],
-                'slide_type': canvas.height > canvas.width ? 'document' : 'presentation',
-                'mime_type': this.file.type,
+                'slide_type': 'document',
                 'datas': this.file.data
             });
         } else if (values['slide_type'] === 'webpage') {
             _.extend(values, {
-                'mime_type': 'text/html',
                 'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
             });
         } else if (/^image\/.*/.test(this.file.type)) {
-            if (values['slide_type'] === 'presentation') {
-                _.extend(values, {
-                    'slide_type': 'infographic',
-                    'mime_type': this.file.type === 'image/svg+xml' ? 'image/png' : this.file.type,
-                    'datas': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data
-                });
-            } else {
-                _.extend(values, {
-                    'image_1920': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data,
-                });
-            }
+            _.extend(values, {
+                'slide_type': 'infographic',
+                'image_data': this.file.type === 'image/svg+xml' ? this._svgToPng() : this.file.data
+            });
         }
         return values;
     },
@@ -329,10 +333,15 @@ var SlideUploadDialog = Dialog.extend({
      */
     _setup: function () {
         this.slide_type_data = {
-            presentation: {
+            document: {
                 icon: 'fa-file-pdf-o',
-                label: _t('Presentation'),
-                template: 'website.slide.upload.modal.presentation',
+                label: _t('Document'),
+                template: 'website.slide.upload.modal.document',
+            },
+            infographic: {
+                icon: 'fa-file-image-o',
+                label: _t('Infographic'),
+                template: 'website.slide.upload.modal.infographic',
             },
             webpage: {
                 icon: 'fa-file-text',
@@ -380,6 +389,68 @@ var SlideUploadDialog = Dialog.extend({
         canvas.getContext('2d').drawImage(img, 0, 0);
         return canvas.toDataURL('image/png').split(',')[1];
     },
+
+    /**
+     * When the URL changes for slides of types infographic, document and video, we attempt to fetch
+     * some metadata on YouTube / Google Drive (such as a name, a title, a duration, ...).
+     *
+     * @param {string} url
+     * @param {string} slideType
+     */
+    _updateSlideMetadata: function (url, slideType) {
+        var self = this;
+        this._alertRemove();
+        this.isValidUrl = false;
+        this.set('can_submit_form', false);
+        this._setModalLoading(true);
+        this._fetchUrlPreview(url, slideType).then(function (data) {
+            self.set('can_submit_form', true);
+            if (data.error) {
+                self._alertDisplay(data.error);
+                self._hidePreviewColumn();
+            } else {
+                if (data.name) {
+                    self._formSetFieldValue('name', data.name);
+                }
+                if (data.description) {
+                    self._formSetFieldValue('description', data.description);
+                }
+                if (data.completion_time) {
+                    // hours to minutes conversion
+                    self._formSetFieldValue('duration', Math.round(data.completion_time * 60));
+                }
+                if (data.image_url) {
+                    self.$('#slide-image').attr('src', data.image_url);
+                }
+
+                if (!data.name && !data.description && !data.image_url) {
+                    self._hidePreviewColumn();
+                } else {
+                    self.isValidUrl = true;
+                    self._showPreviewColumn();
+                }
+            }
+
+            self._setModalLoading(false);
+        });
+    },
+
+    /**
+     * Typically used when loading slide metadata.
+     * Since the request result will change form values, it's better to wait for the return of the
+     * request to avoid having the user type text that will be overridden (such as the slide name
+     * for example).
+     *
+     * @param {boolean} loading true to mask the modal with a loading screen, false to remove it
+     */
+    _setModalLoading: function (loading) {
+        if (loading) {
+            this.$el.closest('.modal-content').append(QWeb.render('website.slide.upload.modal.loading'));
+        } else {
+            this.$el.closest('.modal-content').find('.o_wslides_slide_upload_loading').remove();
+        }
+    },
+
     //--------------------------------------------------------------------------
     // Handler
     //--------------------------------------------------------------------------
@@ -406,7 +477,7 @@ var SlideUploadDialog = Dialog.extend({
         if (currentType === '_import') {
             this.set_title(_t("New Certification"));
         } else {
-            this.set_title(_t("Upload a document"));
+            this.set_title(_t("Upload new content"));
         }
     },
     _onChangeCanSubmitForm: function (ev) {
@@ -414,6 +485,28 @@ var SlideUploadDialog = Dialog.extend({
             this.$('.o_w_slide_upload').button('reset');
         } else {
             this.$('.o_w_slide_upload').button('loading');
+        }
+    },
+    /**
+     * When the user selects 'local_file' or 'external' as source type, we display the 'upload'
+     * field or the 'document_url' field respectively.
+     * We also toggle the 'required' attribute the same way.
+     *
+     * @param {Event} ev the onchange event
+     */
+    _onChangeSourceType: function (ev) {
+        if (this.$('#source_type_local_file').is(':checked')) {
+            this.$('.o_wslides_js_slide_upload_local_file').removeClass('d-none');
+            this.$('.o_wslides_js_slide_upload_external').addClass('d-none');
+
+            this.$('#upload').attr('required', 'required');
+            this.$('#document_url').removeAttr('required');
+        } else if (this.$('#source_type_external').is(':checked')) {
+            this.$('.o_wslides_js_slide_upload_external').removeClass('d-none');
+            this.$('.o_wslides_js_slide_upload_local_file').addClass('d-none');
+
+            this.$('#document_url').attr('required', 'required');
+            this.$('#upload').removeAttr('required');
         }
     },
     _onChangeSlideUpload: function (ev) {
@@ -521,31 +614,15 @@ var SlideUploadDialog = Dialog.extend({
             }
         }
     },
-    _onChangeSlideUrl: function (ev) {
-        var self = this;
-        var url = $(ev.target).val();
-        this._alertRemove();
-        this.isValidUrl = false;
-        this.set('can_submit_form', false);
-        this._fetchUrlPreview(url).then(function (data) {
-            self.set('can_submit_form', true);
-            if (data.error) {
-                self._alertDisplay(data.error);
-            } else {
-                if (data.completion_time) {
-                    // hours to minutes conversion
-                    self._formSetFieldValue('duration', Math.round(data.completion_time * 60));
-                }
-                self.$('#slide-image').attr('src', data.url_src);
-                self._formSetFieldValue('name', data.title);
-                self._formSetFieldValue('description', data.description);
-
-                self.isValidUrl = true;
-                self._showPreviewColumn();
-            }
-        });
+    _onChangeDocumentUrl: function (ev) {
+        this._updateSlideMetadata($(ev.target).val(), 'document');
     },
-
+    _onChangeInfographicUrl: function (ev) {
+        this._updateSlideMetadata($(ev.target).val(), 'infographic');
+    },
+    _onChangeVideoUrl: function (ev) {
+        this._updateSlideMetadata($(ev.target).val(), 'video');
+    },
     _onClickInstallModule: function (ev) {
         var $btn = $(ev.currentTarget);
         var moduleId = $btn.data('moduleId');

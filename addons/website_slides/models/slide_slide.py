@@ -4,21 +4,21 @@
 import base64
 import datetime
 import io
+import logging
 import re
 import requests
 import PyPDF2
-import json
 
 from dateutil.relativedelta import relativedelta
-from PIL import Image
 from werkzeug import urls
 
 from odoo import api, fields, models, _
-from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import Warning, UserError, AccessError
+from odoo.addons.http_routing.models.ir_http import slug, url_for
+from odoo.exceptions import RedirectWarning, UserError, AccessError
 from odoo.http import request
-from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.tools import sql
+
+_logger = logging.getLogger(__name__)
 
 
 class SlidePartnerRelation(models.Model):
@@ -127,6 +127,9 @@ class Slide(models.Model):
     }
     _order = 'sequence asc, is_category asc, id asc'
 
+    YOUTUBE_VIDEO_ID_REGEX = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*'
+    GOOGLE_DRIVE_DOCUMENT_ID_REGEX = r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)'
+
     # description
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True, tracking=100)
@@ -160,21 +163,45 @@ class Slide(models.Model):
     slide_type = fields.Selection([
         ('infographic', 'Infographic'),
         ('webpage', 'Web Page'),
-        ('presentation', 'Presentation'),
         ('document', 'Document'),
         ('video', 'Video'),
         ('quiz', "Quiz")],
         string='Type', required=True,
-        default='document',
-        help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
+        default='document')
+    source_type = fields.Selection([
+        ('local_file', 'Local File'),
+        ('external', 'External (Google Drive)')],
+        default='local_file', required=True)
     datas = fields.Binary('Content', attachment=True)
-    url = fields.Char('Document URL', help="Youtube or Google Document URL")
-    document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     link_ids = fields.One2many('slide.slide.link', 'slide_id', string="External URL for this slide")
     slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
     slide_resource_downloadable = fields.Boolean('Allow Download', default=True, help="Allow the user to download the content of the slide.")
-    mime_type = fields.Char('Mime-type')
     html_content = fields.Html("HTML Content", help="Custom HTML content for slides of type 'Web Page'.", translate=True, sanitize_form=False)
+    # content - images
+    image_data = fields.Binary('Image Content', related='datas', readonly=False,
+        help="Used to filter file input to images only")
+    # content - documents
+    document_type = fields.Selection([
+        ('pdf', 'PDF'),
+        ('sheet', 'Sheet (Excel, Google Sheet, ...)'),
+        ('doc', 'Document (Word, Google Doc, ...)'),
+        ('slides', 'Slides (PowerPoint, Google Slides, ...)'),
+        ('image', 'Image'),
+        ('video', 'Video')],
+        string="Document Type",
+        help="Subtype of slides of type document, mostly used for external content and determined based on the mime_type.")
+    document_url = fields.Char('Document URL', help="URL of the document (we currently only support Google Drive as source)")
+    document_google_drive_id = fields.Char('Document Google Drive ID', compute='_compute_google_drive_id')
+    document_data_pdf = fields.Binary('PDF Content', related='datas', readonly=False,
+        help="Used to filter file input to PDF only")
+    # content - videos
+    video_url = fields.Char('Video URL', help="URL of the video (we support YouTube and Google Drive as sources)")
+    video_source_type = fields.Selection([
+        ('youtube', 'YouTube'),
+        ('google_drive', 'Google Drive')],
+        string='Video Source', compute="_compute_video_source_type")
+    video_youtube_id = fields.Char('Video YouTube ID', compute='_compute_video_youtube_id')
+    video_google_drive_id = fields.Char('Video Google Drive ID', compute='_compute_google_drive_id')
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date', readonly=True, tracking=1)
@@ -193,7 +220,6 @@ class Slide(models.Model):
     channel_type = fields.Selection(related="channel_id.channel_type", string="Channel type")
     channel_allow_comment = fields.Boolean(related="channel_id.allow_comment", string="Allows comment")
     # Statistics in case the slide is a category
-    nbr_presentation = fields.Integer("Number of Presentations", compute='_compute_slides_statistics', store=True)
     nbr_document = fields.Integer("Number of Documents", compute='_compute_slides_statistics', store=True)
     nbr_video = fields.Integer("Number of Videos", compute='_compute_slides_statistics', store=True)
     nbr_infographic = fields.Integer("Number of Infographics", compute='_compute_slides_statistics', store=True)
@@ -202,7 +228,7 @@ class Slide(models.Model):
     total_slides = fields.Integer(compute='_compute_slides_statistics', store=True)
 
     _sql_constraints = [
-        ('exclusion_html_content_and_url', "CHECK(html_content IS NULL OR url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
+        ('exclusion_html_content_and_document_url', "CHECK(html_content IS NULL OR document_url IS NULL)", "A slide is either filled with a document url or HTML content. Not both.")
     ]
 
     @api.depends('date_published', 'is_published')
@@ -332,56 +358,106 @@ class Slide(models.Model):
                 self.env['slide.slide.partner']
             )
 
-    @api.depends('document_id', 'slide_type', 'mime_type')
+    @api.depends('slide_type', 'document_google_drive_id', 'video_source_type', 'video_youtube_id', 'video_google_drive_id')
     def _compute_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if base_url[-1] == '/':
             base_url = base_url[:-1]
-        for record in self:
-            if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
-                slide_url = base_url + url_for('/slides/embed/%s?page=1' % record.id)
-                record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
-            elif record.slide_type == 'video' and record.document_id:
-                if not record.mime_type:
-                    # embed youtube video
-                    query = urls.url_parse(record.url).query
-                    query = query + '&theme=light' if query else 'theme=light'
-                    record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
+
+        for slide in self:
+            embed_code = False
+            if slide.slide_type == 'video':
+                if slide.video_source_type == 'youtube':
+                    query_params = urls.url_parse(slide.video_url).query
+                    query_params = query_params + '&theme=light' if query_params else 'theme=light'
+                    embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (slide.video_youtube_id, query_params)
+                elif slide.video_source_type == 'google_drive':
+                    embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (slide.video_google_drive_id)
+            elif slide.slide_type in ['infographic', 'document'] and slide.source_type == 'external' and slide.document_google_drive_id:
+                embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (slide.document_google_drive_id)
+            elif slide.slide_type == 'document' and slide.source_type == 'local_file':
+                slide_url = base_url + url_for('/slides/embed/%s?page=1' % slide.id)
+                embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
+
+            slide.embed_code = embed_code
+
+    @api.depends('video_url')
+    def _compute_video_source_type(self):
+        for slide in self:
+            video_source_type = False
+            youtube_match = re.match(self.YOUTUBE_VIDEO_ID_REGEX, slide.video_url) if slide.video_url else False
+            if youtube_match:
+                if youtube_match and len(youtube_match.groups()) == 2 and len(youtube_match.group(2)) == 11:
+                    video_source_type = 'youtube'
+            if slide.video_url and not video_source_type and re.match(self.GOOGLE_DRIVE_DOCUMENT_ID_REGEX, slide.video_url):
+                video_source_type = 'google_drive'
+
+            slide.video_source_type = video_source_type
+
+    @api.depends('video_url', 'video_source_type')
+    def _compute_video_youtube_id(self):
+        for slide in self:
+            if slide.video_url and slide.video_source_type == 'youtube':
+                match = re.match(self.YOUTUBE_VIDEO_ID_REGEX, slide.video_url)
+                if match and len(match.groups()) == 2 and len(match.group(2)) == 11:
+                    slide.video_youtube_id = match.group(2)
                 else:
-                    # embed google doc video
-                    record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
+                    slide.video_youtube_id = False
             else:
-                record.embed_code = False
+                slide.video_youtube_id = False
 
-    @api.onchange('url')
+    @api.depends('slide_type', 'document_url', 'video_url', 'video_source_type')
+    def _compute_google_drive_id(self):
+        """ Extracts the Google Drive ID from either the video_url or the document_url based on
+        the slide type.
+        The method is the same so we compute both fields in a single method. """
+
+        for slide in self:
+            google_drive_url = False
+            if slide.slide_type == 'video' and slide.video_url and slide.video_source_type == 'google_drive':
+                google_drive_url = slide.video_url
+            elif slide.slide_type in ['document', 'infographic'] and slide.document_url:
+                google_drive_url = slide.document_url
+
+            google_drive_id = False
+            if google_drive_url:
+                match = re.match(self.GOOGLE_DRIVE_DOCUMENT_ID_REGEX, google_drive_url)
+                if match and len(match.groups()) == 2:
+                    google_drive_id = match.group(2)
+
+            if google_drive_id and slide.slide_type == 'video':
+                slide.document_google_drive_id = False
+                slide.video_google_drive_id = google_drive_id
+            elif google_drive_id and slide.slide_type in ['document', 'infographic']:
+                slide.document_google_drive_id = google_drive_id
+                slide.video_google_drive_id = False
+            else:
+                slide.document_google_drive_id = False
+                slide.video_google_drive_id = False
+
+    @api.onchange('document_url', 'video_url')
     def _on_change_url(self):
-        self.ensure_one()
-        if self.url:
-            res = self._parse_document_url(self.url)
-            if res.get('error'):
-                raise Warning(res.get('error'))
-            values = res['values']
-            if not values.get('document_id'):
-                raise Warning(_('Please enter valid Youtube or Google Doc URL'))
-            for key, value in values.items():
-                self[key] = value
+        """ Keeping a 'onchange' because we want this behavior for the frontend.
+        Changing the document / video external URL will populate some metadata on the form view.
+        The slide metadata are also fetched in create / write overrides to ensure consistency. """
 
-    @api.onchange('datas')
-    def _on_change_datas(self):
-        """ For PDFs, we assume that it takes 5 minutes to read a page.
-            If the selected file is not a PDF, it is an image (You can
-            only upload PDF or Image file) then the slide_type is changed
-            into infographic and the uploaded dataS is transfered to the
-            image field. (It avoids the infinite loading in PDF viewer)"""
-        if self.datas:
-            data = base64.b64decode(self.datas)
-            if data.startswith(b'%PDF-'):
-                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False)
-                self.completion_time = (5 * len(pdf.pages)) / 60
-            else:
-                self.slide_type = 'infographic'
-                self.image_1920 = self.datas
-                self.datas = None
+        self.ensure_one()
+        if self.document_url or self.video_url:
+            slide_metadata = self._fetch_external_metadata()
+            if slide_metadata:
+                self.update(slide_metadata)
+
+    @api.onchange('document_data_pdf')
+    def _on_change_document_data_pdf(self):
+        if self.slide_type == 'document' and self.source_type == 'local_file' and self.document_data_pdf:
+            completion_time = self._get_completion_time_pdf(base64.b64decode(self.document_data_pdf))
+            if completion_time:
+                self.completion_time = completion_time
+
+    @api.onchange('image_data')
+    def _on_change_image_data(self):
+        if self.slide_type == 'infographic' and self.source_type == 'local_file' and self.image_data:
+            self.image_1920 = self.image_data
 
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
@@ -421,8 +497,8 @@ class Slide(models.Model):
             # 'website_published' is handled by mixin
             values['date_published'] = False
 
-        if values.get('slide_type') == 'infographic' and not values.get('image_1920'):
-            values['image_1920'] = values['datas']
+        if values.get('slide_type') == 'infographic' and not values.get('image_1920') and values.get('image_data'):
+            values['image_1920'] = values['image_data']
         if values.get('is_category'):
             values['is_preview'] = True
             values['is_published'] = True
@@ -434,6 +510,16 @@ class Slide(models.Model):
                 values.setdefault(key, value)
 
         slide = super(Slide, self).create(values)
+
+        # avoid fetching external metadata when installing the module (i.e. for demo data)
+        # we also support a context key if you don't want to fetch the metadata when creating a slide
+        if (values.get('document_url') or values.get('video_url')) \
+           and not self.env.context.get('install_mode', False) \
+           and self.env.context.get('website_slides_fetch_metadata', True):
+            slide_metadata = slide._fetch_external_metadata()
+            if slide_metadata:
+                # only update keys that are not set in the incoming values
+                slide.update({key: value for key, value in slide_metadata.items() if key not in values})
 
         if slide.is_published and not slide.is_category:
             slide._post_publication()
@@ -452,6 +538,16 @@ class Slide(models.Model):
         if values.get('is_published'):
             self.date_published = datetime.datetime.now()
             self._post_publication()
+
+        # avoid fetching external metadata when installing the module (i.e. for demo data)
+        # we also support a context key if you don't want to fetch the metadata when modifying a slide
+        if (values.get('document_url') or values.get('video_url')) \
+           and not self.env.context.get('install_mode', False) \
+           and self.env.context.get('website_slides_fetch_metadata', True):
+            slide_metadata = self._fetch_external_metadata()
+            if slide_metadata:
+                # only update keys that are not set in the incoming values
+                self.update({key: value for key, value in slide_metadata.items() if key not in values})
 
         if 'is_published' in values or 'active' in values:
             # if the slide is published/unpublished, recompute the completion for the partners
@@ -722,164 +818,224 @@ class Slide(models.Model):
     # Parsing methods
     # --------------------------------------------------
 
-    @api.model
-    def _fetch_data(self, base_url, params, content_type=False):
-        result = {'values': dict()}
-        try:
-            response = requests.get(base_url, timeout=3, params=params)
-            response.raise_for_status()
-            if content_type == 'json':
-                result['values'] = response.json()
-            elif content_type in ('image', 'pdf'):
-                result['values'] = base64.b64encode(response.content)
-            else:
-                result['values'] = response.content
-        except requests.exceptions.HTTPError as e:
-            result['error'] = e.response.content
-        except requests.exceptions.ConnectionError as e:
-            result['error'] = str(e)
-        return result
+    def _fetch_external_metadata(self, fetch_image=True):
+        self.ensure_one()
 
-    def _find_document_data_from_url(self, url):
-        url_obj = urls.url_parse(url)
-        if url_obj.ascii_host == 'youtu.be':
-            return ('youtube', url_obj.path[1:] if url_obj.path else False)
-        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com', 'www.youtube-nocookie.com'):
-            v_query_value = url_obj.decode_query().get('v')
-            if v_query_value:
-                return ('youtube', v_query_value)
-            split_path = url_obj.path.split('/')
-            if len(split_path) >= 3 and split_path[1] in ('v', 'embed'):
-                return ('youtube', split_path[2])
+        slide_metadata = {}
+        if self.slide_type == 'video' and self.video_source_type == 'youtube':
+            slide_metadata = self._fetch_youtube_metadata(fetch_image)
+        elif self.slide_type == 'video' and self.video_source_type == 'google_drive':
+            slide_metadata = self._fetch_google_drive_metadata(fetch_image)
+        elif self.slide_type in ['document', 'infographic'] and self.source_type == 'external':
+            # external documents & google drive videos share the same method currently
+            slide_metadata = self._fetch_google_drive_metadata(fetch_image)
 
-        expr = re.compile(r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)')
-        arg = expr.match(url)
-        document_id = arg and arg.group(2) or False
-        if document_id:
-            return ('google', document_id)
+        return slide_metadata
 
-        return (None, False)
+    def _fetch_youtube_metadata(self, fetch_image=True, raise_if_error=False):
+        """ Fetches video metadata from the YouTube API.
 
-    def _parse_document_url(self, url, only_preview_fields=False):
-        document_source, document_id = self._find_document_data_from_url(url)
-        if document_source and hasattr(self, '_parse_%s_document' % document_source):
-            return getattr(self, '_parse_%s_document' % document_source)(document_id, only_preview_fields)
-        return {'error': _('Unknown document')}
+        Returns a dict containing video metadata with the following keys (matching slide.slide fields):
+        - 'name' matching the video title
+        - 'description' matching the video description
+        - 'image_1920' binary data of the video thumbnail
+          OR 'image_url' containing an external link to the thumbnail when 'fetch_image' param is False
+        - 'completion_time' matching the video duration
+          The received duration is under a special format (e.g: PT1M21S15, meaning 1h 21m 15s).
 
-    def _parse_youtube_document(self, document_id, only_preview_fields):
-        """ If we receive a duration (YT video), we use it to determine the slide duration.
-        The received duration is under a special format (e.g: PT1M21S15, meaning 1h 21m 15s). """
+        :param fetch_image: if False, will return 'image_url' instead of binary data
+          Typically used when displaying a slide preview to the end user.
+        :param raise_if_error: is True, will raise a UserError in case metadata cannot be retrieved """
 
+        self.ensure_one()
         key = self.env['website'].get_current_website().website_slide_google_app_key
-        fetch_res = self._fetch_data('https://www.googleapis.com/youtube/v3/videos', {'id': document_id, 'key': key, 'part': 'snippet,contentDetails', 'fields': 'items(id,snippet,contentDetails)'}, 'json')
-        if fetch_res.get('error'):
-            return {'error': self._extract_google_error_message(fetch_res.get('error'))}
+        error_message = False
+        try:
+            response = requests.get(
+                'https://www.googleapis.com/youtube/v3/videos',
+                timeout=3,
+                params={
+                    'id': self.video_youtube_id,
+                    'key': key,
+                    'part': 'snippet,contentDetails',
+                    'fields': 'items(id,snippet,contentDetails)'
+                }
+            )
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            error_message = e.response.content
+        except requests.exceptions.ConnectionError as e:
+            error_message = str(e)
 
-        values = {'slide_type': 'video', 'document_id': document_id}
-        items = fetch_res['values'].get('items')
-        if not items:
-            return {'error': _('Please enter valid Youtube or Google Doc URL')}
-        youtube_values = items[0]
+        if not error_message:
+            response = response.json()
+            if response.get('error'):
+                error_message = response.get('error', {}).get('errors', [{}])[0].get('reason')
 
+            if not response.get('items'):
+                error_message = _('Please enter a valid YouTube video URL')
+
+        if error_message:
+            if raise_if_error:
+                raise UserError(_('Could not fetch YouTube metadata: %s', error_message))
+            else:
+                _logger.warning('Could not fetch YouTube metadata: %s', error_message)
+                return {}
+
+        slide_metadata = {}
+        youtube_values = response.get('items')[0]
         youtube_duration = youtube_values.get('contentDetails', {}).get('duration')
         if youtube_duration:
             parsed_duration = re.search(r'^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$', youtube_duration)
-            values['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
+            slide_metadata['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
                                         (int(parsed_duration.group(2) or 0) / 60) + \
                                         (int(parsed_duration.group(3) or 0) / 3600)
 
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']
-            if only_preview_fields:
-                values.update({
-                    'url_src': snippet['thumbnails']['high']['url'],
-                    'title': snippet['title'],
-                    'description': snippet['description']
-                })
-
-                return values
-
-            values.update({
+            slide_metadata.update({
                 'name': snippet['title'],
-                'image_1920': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
                 'description': snippet['description'],
-                'mime_type': False,
             })
-        return {'values': values}
 
-    def _extract_google_error_message(self, error):
-        """
-        See here for Google error format
-        https://developers.google.com/drive/api/v3/handle-errors
-        """
-        try:
-            error = json.loads(error)
-            error = (error.get('error', {}).get('errors', []) or [{}])[0].get('reason')
-        except json.decoder.JSONDecodeError:
-            error = str(error)
+            thumbnail_url = snippet['thumbnails']['high']['url']
+            if fetch_image:
+                slide_metadata['image_1920'] = base64.b64encode(
+                    requests.get(thumbnail_url, timeout=3).content
+                )
+            else:
+                slide_metadata['image_url'] = thumbnail_url
 
-        if error == 'keyInvalid':
-            return _('Your Google API key is invalid, please update it in your settings.\nSettings > Website > Features > API Key')
+        return slide_metadata
 
-        return _('Could not fetch data from url. Document or access right not available:\n%s', error)
+    def _fetch_google_drive_metadata(self, fetch_image, raise_if_error=False):
+        """ Fetches document / video metadata from the Google Drive API.
 
-    @api.model
-    def _parse_google_document(self, document_id, only_preview_fields):
-        def get_slide_type(vals):
-            # TDE FIXME: WTF ??
-            slide_type = 'presentation'
-            if vals.get('image_1920'):
-                image = Image.open(io.BytesIO(base64.b64decode(vals['image_1920'])))
-                width, height = image.size
-                if height > width:
-                    return 'document'
-            return slide_type
+        Returns a dict containing metadata with the following keys (matching slide.slide fields):
+        - 'name' matching the external file title
+        - 'image_1920' binary data of the file thumbnail
+          OR 'image_url' containing an external link to the thumbnail when 'fetch_image' param is False
+        - 'completion_time' which is computed for 2 types of files:
+          - pdf files where we download the content and then use slide.slide#_get_completion_time_pdf()
+          - videos where we use the 'videoMediaMetadata' to extract the 'durationMillis'
 
-        # Google drive doesn't use a simple API key to access the data, but requires an access
-        # token. However, this token is generated in module google_drive, which is not in the
-        # dependencies of website_slides. We still keep the 'key' parameter just in case, but that
-        # is probably useless.
+        :param fetch_image: if False, will return 'image_url' instead of binary data
+          Typically used when displaying a slide preview to the end user.
+        :param raise_if_error: is True, will raise a UserError in case metadata cannot be retrieved """
+
         params = {}
         params['projection'] = 'BASIC'
         if 'google.drive.config' in self.env:
-            access_token = self.env['google.drive.config'].get_access_token()
+            access_token = False
+            try:
+                access_token = self.env['google.drive.config'].get_access_token()
+            except RedirectWarning as e:
+                pass  # ignore and use the 'key' fallback
+            except UserError as e:
+                pass  # ignore and use the 'key' fallback
+
             if access_token:
                 params['access_token'] = access_token
+
         if not params.get('access_token'):
             params['key'] = self.env['website'].get_current_website().website_slide_google_app_key
 
-        fetch_res = self._fetch_data('https://www.googleapis.com/drive/v2/files/%s' % document_id, params, "json")
-        if fetch_res.get('error'):
-            return {'error': self._extract_google_error_message(fetch_res.get('error'))}
+        google_drive_id = self.document_google_drive_id or self.video_google_drive_id
+        error_message = False
+        try:
+            response = requests.get(
+                'https://www.googleapis.com/drive/v2/files/%s' % google_drive_id,
+                timeout=3,
+                params=params
+            )
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            error_message = e.response.content
+        except requests.exceptions.ConnectionError as e:
+            error_message = str(e)
 
-        google_values = fetch_res['values']
-        if only_preview_fields:
-            return {
-                'url_src': google_values['thumbnailLink'],
-                'title': google_values['title'],
-            }
+        if not error_message:
+            response = response.json()
+            if response.get('error'):
+                error_message = response.get('error', {}).get('errors', [{}])[0].get('reason')
 
-        values = {
-            'name': google_values['title'],
-            'image_1920': self._fetch_data(google_values['thumbnailLink'].replace('=s220', ''), {}, 'image')['values'],
-            'mime_type': google_values['mimeType'],
-            'document_id': document_id,
+        if error_message:
+            if raise_if_error:
+                raise UserError(_('Could not fetch Google Drive metadata: %s', error_message))
+            else:
+                _logger.warning('Could not fetch Google Drive metadata: %s', error_message)
+                return {}
+
+        google_drive_values = response
+        slide_metadata = {
+            'name': google_drive_values.get('title')
         }
-        if google_values['mimeType'].startswith('video/'):
-            values['slide_type'] = 'video'
-        elif google_values['mimeType'].startswith('image/'):
-            values['datas'] = values['image_1920']
-            values['slide_type'] = 'infographic'
-        elif google_values['mimeType'].startswith('application/vnd.google-apps'):
-            values['slide_type'] = get_slide_type(values)
-            if 'exportLinks' in google_values:
-                values['datas'] = self._fetch_data(google_values['exportLinks']['application/pdf'], params, 'pdf')['values']
-        elif google_values['mimeType'] == 'application/pdf':
-            # TODO: Google Drive PDF document doesn't provide plain text transcript
-            values['datas'] = self._fetch_data(google_values['webContentLink'], {}, 'pdf')['values']
-            values['slide_type'] = get_slide_type(values)
 
-        return {'values': values}
+        if google_drive_values.get('thumbnailLink'):
+            # small trick, we remove '=s220' to get a higher definition
+            thumbnail_url = google_drive_values['thumbnailLink'].replace('=s220', '')
+            if fetch_image:
+                slide_metadata['image_1920'] = base64.b64encode(
+                    requests.get(thumbnail_url, timeout=3).content
+                )
+            else:
+                slide_metadata['image_url'] = thumbnail_url
+
+        if self.slide_type == 'document':
+            sheet_mimetypes = [
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.oasis.opendocument.spreadsheet',
+                'application/vnd.google-apps.spreadsheet'
+            ]
+
+            doc_mimetypes = [
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.oasis.opendocument.text',
+                'application/vnd.google-apps.document'
+            ]
+
+            slides_mimetypes = [
+                'application/vnd.ms-powerpoint',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'application/vnd.oasis.opendocument.presentation',
+                'application/vnd.google-apps.presentation'
+            ]
+
+            mime_type = google_drive_values.get('mimeType')
+            if mime_type == 'application/pdf':
+                slide_metadata['document_type'] = 'pdf'
+                if google_drive_values.get('downloadUrl'):
+                    # attempt to download PDF content to extract a completion_time based on the number of pages
+                    try:
+                        pdf_response = requests.get(google_drive_values.get('downloadUrl'), timeout=5)
+                        completion_time = self._get_completion_time_pdf(pdf_response.content)
+                        if completion_time:
+                            slide_metadata['completion_time'] = completion_time
+                    except Exception:
+                        pass  # fail silently as this is nice to have
+            elif mime_type in sheet_mimetypes:
+                slide_metadata['document_type'] = 'sheet'
+            elif mime_type in doc_mimetypes:
+                slide_metadata['document_type'] = 'doc'
+            elif mime_type in slides_mimetypes:
+                slide_metadata['document_type'] = 'slides'
+            elif mime_type and mime_type.startswith('image/'):
+                # image and videos should be input using another "slide_type" but let's be nice and
+                # assign them a matching document_type
+                slide_metadata['document_type'] = 'image'
+            elif mime_type and mime_type.startswith('video/'):
+                slide_metadata['document_type'] = 'video'
+
+        elif self.slide_type == 'video':
+            completion_time = float(
+                google_drive_values.get('videoMediaMetadata', {}).get('durationMillis', 0)
+                ) / (60 * 60 * 1000)  # millis to hours conversion
+            if completion_time:
+                slide_metadata['completion_time'] = completion_time
+
+        return slide_metadata
 
     def _default_website_meta(self):
         res = super(Slide, self)._default_website_meta()
@@ -895,3 +1051,15 @@ class Slide(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('website_slides.website_slides_menu_root').id
+
+    @api.model
+    def _get_completion_time_pdf(self, data):
+        """ For PDFs, we assume that it takes 5 minutes to read a page. """
+        if data.startswith(b'%PDF-'):
+            try:
+                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False)
+                return (5 * len(pdf.pages)) / 60
+            except Exception:
+                pass  # as this is a nice to have, fail silently
+
+        return False
