@@ -11118,8 +11118,33 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('Quick Edition: do not bounce edit button when click on field or label', async function (assert) {
-        assert.expect(2);
+    QUnit.test('Quick Edition: do not bounce edit button when click on label', async function (assert) {
+        assert.expect(1);
+
+        const MULTI_CLICK_TIME = 50;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                    </group>
+                </form>`,
+            formMultiClickTime: MULTI_CLICK_TIME,
+            res_id: 1,
+        });
+
+        await testUtils.dom.click(form.$('.o_form_label'));
+        assert.containsNone(form, 'button.o_catch_attention:visible');
+
+        form.destroy();
+    });
+
+    QUnit.test('Quick Edition: do not bounce edit button when click on field char', async function (assert) {
+        assert.expect(1);
 
         const MULTI_CLICK_TIME = 50;
 
@@ -11139,13 +11164,31 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(form.$('.o_field_widget'));
         assert.containsNone(form, 'button.o_catch_attention:visible');
-        await concurrency.delay(MULTI_CLICK_TIME);
 
-        await testUtils.form.clickDiscard(form);
+        form.destroy();
+    });
 
-        await testUtils.dom.click(form.$('.o_form_label'));
+    QUnit.test('Quick Edition: do not bounce edit button when click on field boolean', async function (assert) {
+        assert.expect(1);
+
+        const MULTI_CLICK_TIME = 50;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="bar"/>
+                    </group>
+                </form>`,
+            formMultiClickTime: MULTI_CLICK_TIME,
+            res_id: 1,
+        });
+
+        await testUtils.dom.click(form.$('.o_field_widget'));
         assert.containsNone(form, 'button.o_catch_attention:visible');
-        await concurrency.delay(MULTI_CLICK_TIME);
 
         form.destroy();
     });
