@@ -782,7 +782,7 @@ class AccountPayment(models.Model):
             line_vals_list = pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
 
             line_ids_commands = [
-                (1, liquidity_lines.id, line_vals_list[0]),
+                (1, liquidity_lines[0].id, line_vals_list[0]),
                 (1, counterpart_lines.id, line_vals_list[1]),
             ]
 
