@@ -21,7 +21,6 @@ const LinkTools = Link.extend({
      * @override
      */
     init: function (parent, options, editable, data, $button, link) {
-        options.wysiwyg.odooEditor.automaticStepSkipStack();
         link = link || this.getOrCreateLink(editable);
         this._super(parent, options, editable, data, $button, link);
     },
@@ -29,21 +28,24 @@ const LinkTools = Link.extend({
      * @override
      */
     start: function () {
+        this.options.wysiwyg.odooEditor.observerUnactive();
         this.$link.addClass('oe_edited_link');
         this.$button.addClass('active');
         return this._super(...arguments);
     },
     destroy: function () {
-        this.options.wysiwyg.odooEditor.automaticStepSkipStack();
         $('.oe_edited_link').removeClass('oe_edited_link');
         const $contents = this.$link.contents();
         if (!this.$link.attr('href') && !this.colorCombinationClass) {
             $contents.unwrap();
         }
         this.$button.removeClass('active');
+        this.options.wysiwyg.odooEditor.observerActive();
+        this.applyLinkToDom(this._getData());
         const start = $contents[0] || this.$link[0];
         const end = $contents[$contents.length - 1] || this.$link[0];
         setCursor(start, 0, end, nodeSize(end));
+        this.options.wysiwyg.odooEditor.historyStep();
         this._super(...arguments);
     },
 
@@ -54,19 +56,13 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    _adaptPreview: function (createStep = true) {
+    _adaptPreview: function () {
         var data = this._getData();
         if (data === null) {
             return;
         }
-        const $links = $('.oe_edited_link');
-        $links.removeClass('oe_edited_link');
+        data.classes += ' oe_edited_link';
         this.applyLinkToDom(data);
-        if (createStep) {
-            this.options.wysiwyg.odooEditor.historyStep();
-        }
-        this.options.wysiwyg.odooEditor.automaticStepSkipStack();
-        $links.addClass('oe_edited_link');
     },
     /**
      * @override
