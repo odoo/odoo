@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment_acquirer_nelo" model="payment.acquirer">
+        <field name="name">Nelo</field>
+        <field name="image_128" type="base64" file="payment_nelo/static/src/img/nelo_icon.png"/>
+        <field name="provider">nelo</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="view_template_id" ref="nelo_form"/>
+    </record>
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_acquirer_view_form_inherit_payment_nelo" model="ir.ui.view">
+        <field name="name">payment.acquirer.view.form.inherit.payment.nelo</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', 'nelo')]}">
+                    <field name="nelo_payment_method" widget="radio"/>
+                    <field name="nelo_seller_email" attrs="{'invisible': [('nelo_payment_method', '=', 'standard_checkout')], 'required': [('provider', '=', 'nelo'), ('nelo_payment_method', '=', 'express_checkout')]}"/>
+                    <field name="nelo_merchant_partner_id" password="True"/>
+                    <field name="nelo_md5_signature_key" password="True"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
