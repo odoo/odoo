@@ -40,7 +40,10 @@ class AccountJournal(models.Model):
                 bank_journal._create_checkbook()
             bank_journal.write({
                 'outbound_payment_method_ids': [(4, self.env.ref('account_check.account_payment_method_issue_check').id, None)],
-                'inbound_payment_method_ids': [(4, self.env.ref('account_check.account_payment_method_returned_check').id, None)],
+                'inbound_payment_method_ids': [
+                    (4, self.env.ref('account_check.account_payment_method_returned_check').id, None),
+                    # if we dont send default payment method is not computed and not added to journal
+                    (4, self._default_inbound_payment_methods().id, None)],
             })
 
 ###############

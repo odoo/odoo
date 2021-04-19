@@ -54,13 +54,13 @@ class AccountCheckOperation(models.Model):
     notes = fields.Text(
     )
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_manual(self):
         for rec in self:
             if rec.origin:
                 raise ValidationError(_(
                     'You can not delete a check operation that has an origin.'
                     '\nYou can delete the origin reference and unlink after.'))
-        return super(AccountCheckOperation, self).unlink()
 
     @api.depends('origin')
     def _compute_origin_name(self):

@@ -150,6 +150,7 @@ class AccountPayment(models.Model):
                 check_vals = liquidity_lines[0].copy(default=check_vals)
             else:
                 liquidity_line.unlink()
+        self.move_id._check_balanced()
         return True
 
     # def _split_aml_line_per_check(self, lines_vals):
@@ -269,10 +270,10 @@ class AccountPayment(models.Model):
                 'This operatios is not implemented for checks:\n'
                 '* Payment type: %s\n'
                 '* Payment method: %s\n'
-                '* Destination journal: %s\n' % (
+                '* Destination journal: %s\n') % (
                     self.payment_type,
                     self.payment_method_code,
-                    self.destination_journal_id.type)))
+                    self.destination_journal_id.type))
 
     # def _prepare_payment_moves(self):
     #     vals = super(AccountPayment, self)._prepare_payment_moves()
