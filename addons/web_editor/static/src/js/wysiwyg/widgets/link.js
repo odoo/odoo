@@ -119,8 +119,8 @@ const Link = Widget.extend({
             this._setSelectOption($option, active);
         }
         if (this.data.url) {
-            var match = /mailto:(.+)/.exec(this.data.url);
-            this.$('input[name="url"]').val(match ? match[1] : this.data.url);
+            var match = /mailto:(.+)|tel:\/\/(.+)/.exec(this.data.url);
+            this.$('input[name="url"]').val(match ? match[1] || match[2] : this.data.url);
             this._onURLInput();
         }
 
@@ -232,10 +232,14 @@ const Link = Widget.extend({
      * @private
      */
     _correctLink: function (url) {
+        url = url.replace(/\s/g, '');
         if (url.indexOf('mailto:') === 0 || url.indexOf('tel:') === 0) {
+            // more universal
             url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
         } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
             url = 'mailto:' + url;
+        } else if (/^[^a-zA-Z]*[0-9]+[^a-z]*$/.test(url)) {
+            url = 'tel://' + url.replace(/[\/\-.]/g, '');
         } else if (url.indexOf('://') === -1 && url[0] !== '/'
                     && url[0] !== '#' && url.slice(0, 2) !== '${') {
             url = 'http://' + url;

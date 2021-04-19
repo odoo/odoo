@@ -3058,11 +3058,11 @@ var SnippetsMenu = Widget.extend({
     _checkEditorToolbarVisibility: function (e) {
         const $toolbarContainer = this.$('#o_we_editor_toolbar_container');
         const docSelection = document.getSelection();
-        const $currentSelectionTarget = docSelection && docSelection.rangeCount > 0 ? $(docSelection.getRangeAt(0).commonAncestorContainer) : $();
-        // Do not  toggle visibility if the target is inside the toolbar ( eg. during link edition).
-        if ($currentSelectionTarget.parents('#toolbar').length ||
-            (e && $(e.target).parents('#toolbar').length)
-        ) {
+        const currentSelectionTarget = docSelection && docSelection.rangeCount > 0 && docSelection.getRangeAt(0).commonAncestorContainer;
+        const isClickOnDialog = e && e.target.closest('.o_technical_modal, .o_existing_attachment_cell');
+        const isClickOnToolbar = currentSelectionTarget instanceof Element && currentSelectionTarget.closest('#toolbar') || e && e.target.closest('#toolbar');
+        // Do not toggle visibility if the target is inside the toolbar or if dialog is open( eg. during link edition).
+        if (isClickOnDialog || isClickOnToolbar) {
             return;
         }
 

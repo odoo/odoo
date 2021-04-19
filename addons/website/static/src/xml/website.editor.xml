@@ -28,6 +28,40 @@
                     '<span class="highlighted-text">#</span>' to link to an anchor.
                 </small>
             </div>
+            <we-row>
+                <we-title>⌙ Media</we-title>
+                <we-button class="o_we_bg_success o_we_link_upload_file" title="Upload file">Upload a file</we-button>
+                <div class="flex-grow-1" t-attf-style="{{widget.isFileUploaded() ? '' : 'display:none;'}}">
+                    <span class="pr-1 text-truncate o_we_file_name" t-att-title="widget.fileName"><t t-esc="widget.fileName"/></span>
+                    <we-button class="o_we_bg_success o_we_link_replace_file ml-auto" style="min-width:29.62px;" title="Replace file">
+                        <i class="fa fa-fw fa-refresh"></i>
+                    </we-button>
+                    <we-button class="o_we_bg_danger o_we_link_remove_file" style="min-width:29.62px;" title="Remove file">
+                        <i class="fa fa-fw fa-trash"></i>
+                    </we-button>
+                </div>
+            </we-row>
+            <we-row class="o_we_link_action_change">
+                <we-select class="o_we_user_value_widget">
+                    <we-title>⌙ Action</we-title>
+                    <div>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle"
+                                data-toggle="dropdown" title="" tabindex="0"
+                                data-original-title="Link Action" aria-expanded="false">
+                                <we-toggler>
+                                    <t t-esc="widget.isDownloadEnable() ? 'Download' : 'Open in a new tab'"/>
+                                </we-toggler>
+                            </button>
+                            <we-selection-items name="link_action" class="dropdown-menu">
+                                <we-button t-attf-class="dropdown-item {{widget.isDownloadEnable() ? '' : 'active'}}" data-value="">Open in a new tab</we-button>
+                                <we-button t-attf-class="dropdown-item  {{widget.isDownloadEnable() ? 'active' : ''}}" data-value="download">Download</we-button>
+                            </we-selection-items>
+                            <span class="o_we_dropdown_caret"></span>
+                        </div>
+                    </div>
+                </we-select>
+            </we-row>
             <we-row class="o_link_dialog_page_anchor d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
                 <we-select class="o_we_user_value_widget">
                     <we-title>⌙ Page Anchor</we-title>

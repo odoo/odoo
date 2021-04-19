@@ -554,9 +554,10 @@ const Wysiwyg = Widget.extend({
                 const $btn = this.toolbar.$el.find('#create-link');
                 this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, {}, $btn, options.link || this.lastMediaClicked);
                 const _onMousedown = ev => {
-                    if (!ev.target.closest('.oe-toolbar') && !ev.target.closest('.ui-autocomplete')) {
+                    if (!ev.target.closest('.oe-toolbar') && !ev.target.closest('.ui-autocomplete')
+                        && !ev.target.closest('.o_technical_modal')) {
                         // Destroy the link tools on click anywhere outside the
-                        // toolbar.
+                        // toolbar (except on dialog).
                         this.linkTools && this.linkTools.destroy();
                         this.linkTools = undefined;
                         this.odooEditor.document.removeEventListener('mousedown', _onMousedown, true);
@@ -955,6 +956,11 @@ const Wysiwyg = Widget.extend({
         const $target = e ? editorWindow.$(e.target) : editorWindow.$();
         // Restore paragraph dropdown button's default ID.
         this.toolbar.$el.find('#mediaParagraphDropdownButton').attr('id', 'paragraphDropdownButton');
+        // Remove the link tools.
+        if (this.linkTools) {
+            this.linkTools.destroy();
+            this.linkTools = undefined;
+        }
         // Hide the create-link button if the selection spans several blocks.
         const selection = this.odooEditor.document.getSelection();
         const range = selection.rangeCount && selection.getRangeAt(0);
