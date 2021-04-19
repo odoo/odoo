@@ -1053,22 +1053,64 @@ class WebsiteSlides(WebsiteProfile):
     # --------------------------------------------------
 
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
-    def prepare_preview(self, **data):
+    def prepare_preview(self, channel_id, slide_category, url=None):
+        """ Will attempt to fetch external metadata for this slide from the correct
+        source (YouTube, Google Drive, ...).
+
+        To take advantage of the slide business method, we create a temporary slide record before
+        fetching the metadata.
+        This allows a lot of code simplification, since we use "new", it will not created anything
+        in database. """
+
+        if not url:
+            return {}
+
         Slide = request.env['slide.slide']
-        unused, document_id = Slide._find_document_data_from_url(data['url'])
-        preview = {}
-        if not document_id:
-            preview['error'] = _('Please enter valid youtube or google doc url')
-            return preview
-        existing_slide = Slide.search([('channel_id', '=', int(data['channel_id'])), ('document_id', '=', document_id)], limit=1)
-        if existing_slide:
-            preview['error'] = _('This video already exists in this channel on the following slide: %s', existing_slide.name)
-            return preview
-        values = Slide._parse_document_url(data['url'], only_preview_fields=True)
-        if values.get('error'):
-            preview['error'] = values['error']
-            return preview
-        return values
+
+        if slide_category == 'video':
+            identical_video = request.env['slide.slide']
+            existing_videos = Slide.search([
+                ('channel_id', '=', int(channel_id)),
+                ('slide_category', '=', 'video')
+            ])
+
+            slide = Slide.new({
+                'channel_id': int(channel_id),
+                'name': 'memory_record_for_computed_fields',
+                'slide_category': 'video',
+                'url': url
+            })
+
+            if not slide.video_source_type:
+                slide.unlink()
+                return {'error': _('Please enter valid YouTube or Google Drive Link')}
+
+            if slide.video_source_type == 'youtube':
+                identical_video = existing_videos.filtered(
+                    lambda existing_video: slide.youtube_id == existing_video.youtube_id)
+            elif slide.video_source_type == 'google_drive':
+                identical_video = existing_videos.filtered(
+                    lambda existing_video: slide.google_drive_id == existing_video.google_drive_id)
+            if identical_video:
+                identical_video_name = identical_video[0].name
+                return {'error': _('This video already exists in this channel on the following content: %s', identical_video_name)}
+        elif slide_category in ['document', 'infographic']:
+            slide = Slide.new({
+                'channel_id': int(channel_id),
+                'name': 'memory_record_for_computed_fields',
+                'slide_category': slide_category,
+                'source_type': 'external',
+                'url': url
+            })
+
+            if not slide.google_drive_id:
+                return {'error': _('Please enter valid Google Drive Link')}
+
+        slide_values, error = slide._fetch_external_metadata(image_url_only=True)
+        if error:
+            return {'error': error}
+
+        return slide_values
 
     @http.route(['/slides/add_slide'], type='json', auth='user', methods=['POST'], website=True)
     def create_slide(self, *args, **post):
@@ -1138,8 +1180,8 @@ class WebsiteSlides(WebsiteProfile):
         }
 
     def _get_valid_slide_post_values(self):
-        return ['name', 'url', 'tag_ids', 'slide_category', 'channel_id', 'is_preview',
-                'mime_type', 'binary_content', 'description', 'image_1920', 'is_published']
+        return ['name', 'url', 'video_url', 'document_google_url', 'image_google_url', 'tag_ids', 'slide_category', 'channel_id',
+            'is_preview', 'binary_content', 'description', 'image_1920', 'is_published', 'source_type']
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):

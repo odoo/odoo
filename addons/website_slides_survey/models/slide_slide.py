@@ -33,6 +33,9 @@ class Slide(models.Model):
     slide_category = fields.Selection(selection_add=[
         ('certification', 'Certification')
     ], ondelete={'certification': 'set default'})
+    slide_type = fields.Selection(selection_add=[
+        ('certification', 'Certification')
+    ], ondelete={'certification': 'set null'})
     survey_id = fields.Many2one('survey.survey', 'Certification')
     nbr_certification = fields.Integer("Number of Certifications", compute='_compute_slides_statistics', store=True)
 
@@ -45,6 +48,13 @@ class Slide(models.Model):
     def _on_change_survey_id(self):
         if self.survey_id:
             self.slide_category = 'certification'
+
+    @api.depends('slide_category', 'source_type')
+    def _compute_slide_type(self):
+        super(Slide, self)._compute_slide_type()
+        for slide in self:
+            if slide.slide_category == 'certification':
+                slide.slide_type = 'certification'
 
     @api.model
     def create(self, values):
