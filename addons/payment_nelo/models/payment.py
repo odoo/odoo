@@ -142,39 +142,7 @@ class PaymentAcquirer(models.Model):
         data_string += self.nelo_md5_signature_key
         return md5(data_string.encode('utf-8')).hexdigest()
 
-    def _get_nelo_tx_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-
-        nelo_tx_values = ({
-            '_input_charset': 'utf-8',
-            'notify_url': urls.url_join(base_url, NeloController._confirm_url),
-            'out_trade_no': values.get('reference'),
-            'partner': self.nelo_merchant_partner_id,
-            'return_url': urls.url_join(base_url, NeloController._confirm_url),
-            'subject': values.get('reference'),
-            'total_fee': values.get('amount') + values.get('fees'),
-        })
-        if self.nelo_payment_method == 'standard_checkout':
-            nelo_tx_values.update({
-                'service': 'create_forex_trade',
-                'product_code': 'NEW_OVERSEAS_SELLER',
-                'currency': values.get('currency').name,
-            })
-        else:
-            nelo_tx_values.update({
-                'service': 'create_direct_pay_by_user',
-                'payment_type': 1,
-                'seller_email': self.nelo_seller_email,
-            })
-        sign = self._build_sign(nelo_tx_values)
-        nelo_tx_values.update({
-            'sign_type': 'MD5',
-            'sign': sign,
-        })
-        return nelo_tx_values
-
     def nelo_form_generate_values(self, values):
-        values.update(self._get_nelo_tx_values(values))
         self._set_redirect_url(values)
         return values
 
