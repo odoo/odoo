@@ -23,6 +23,7 @@ const getInSelection = OdooEditorLib.getInSelection;
 const isBlock = OdooEditorLib.isBlock;
 const rgbToHex = OdooEditorLib.rgbToHex;
 const preserveCursor = OdooEditorLib.preserveCursor;
+const closestElement = OdooEditorLib.closestElement;
 
 var id = 0;
 const faZoomClassRegex = RegExp('fa-[0-9]x');
@@ -69,7 +70,9 @@ const Wysiwyg = Widget.extend({
 
         this.toolbar = new Toolbar(this, this.options.toolbarTemplate);
         await this.toolbar.appendTo(document.createElement('void'));
+        const commands = this._getCommands();
         this.odooEditor = new OdooEditor(this.$editable[0], {
+            _t: _t,
             toolbar: this.toolbar.$el[0],
             document: this.options.document,
             autohideToolbar: !!this.options.autohideToolbar,
@@ -77,6 +80,8 @@ const Wysiwyg = Widget.extend({
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             getContentEditableAreas: this.options.getContentEditableAreas,
             getContextFromParentRect: options.getContextFromParentRect,
+            noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
+            commands: commands,
         });
 
         this._observeOdooFieldChanges();
@@ -126,7 +131,10 @@ const Wysiwyg = Widget.extend({
             this.$editable.on('dblclick', 'a', function () {
                 if (!this.getAttribute('data-oe-model') && self.toolbar.$el.is(':visible')) {
                     self.showTooltip = false;
-                    self.toggleLinkTools(true, this);
+                    self.toggleLinkTools({
+                        forceOpen: true,
+                        link: this,
+                    });
                 }
             });
         }
@@ -168,6 +176,9 @@ const Wysiwyg = Widget.extend({
      * @override
      */
     destroy: function () {
+        if (this.odooEditor) {
+            this.odooEditor.destroy();
+        }
         this.$editable && this.$editable.off('blur', this._onBlur);
         document.removeEventListener('mousedown', this._onDocumentMousedown, true);
         const $body = $(document.body);
@@ -399,6 +410,9 @@ const Wysiwyg = Widget.extend({
     redo: function () {
         this.odooEditor.historyRedo();
     },
+    focus() {
+        this.odooEditor.resetCursorOnLastHistoryCursor();
+    },
     /**
      * Focus inside the editor.
      *
@@ -534,17 +548,18 @@ const Wysiwyg = Widget.extend({
      * Toggle the Link tools/dialog to edit links. If a snippet menu is present,
      * use the link tools, otherwise use the dialog.
      *
-     * @param {boolean} [forceOpen] default: false
-     * @param {Node} [link] The link to edit if it is known.
+     * @param {boolean} [options.forceOpen] default: false
+     * @param {boolean} [options.forceDialog] force to open the dialog
+     * @param {boolean} [options.link] The anchor element to edit if it is known.
      */
-    toggleLinkTools(forceOpen = false, link) {
-        if (this.snippetsMenu) {
+    toggleLinkTools(options = {}) {
+        if (this.snippetsMenu && !options.forceDialog) {
             if (this.linkTools) {
                 this.linkTools.destroy();
             }
-            if (forceOpen || !this.linkTools) {
+            if (options.forceOpen || !this.linkTools) {
                 const $btn = this.toolbar.$el.find('#create-link');
-                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, {}, $btn, link);
+                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, {}, $btn, options.link);
                 const _onMousedown = ev => {
                     if (!ev.target.closest('.oe-toolbar')) {
                         // Destroy the link tools on click anywhere outside the
@@ -563,7 +578,7 @@ const Wysiwyg = Widget.extend({
             const linkDialog = new weWidgets.LinkDialog(this, {
                 forceNewWindow: this.options.linkForceNewWindow,
                 wysiwyg: this,
-            }, this.$editable[0], {}, undefined, link);
+            }, this.$editable[0], {}, undefined, options.link);
             linkDialog.open();
             linkDialog.on('save', this, data => {
                 const linkWidget = linkDialog.linkWidget;
@@ -572,6 +587,9 @@ const Wysiwyg = Widget.extend({
                     linkWidget.$link = $(linkWidget.getOrCreateLink(this.$editable[0]));
                 }
                 linkWidget.applyLinkToDom(data);
+
+                getDeepRange(this.odooEditor.editable, {range: data.range, select: true});
+                this.odooEditor.historyStep();
                 // At this point, the dialog is still open and prevents the
                 // focus in the editable, even though that is where the
                 // selection is. This waits so the dialog is destroyed when we
@@ -1116,7 +1134,136 @@ const Wysiwyg = Widget.extend({
         }
     },
     _cleanForSave: function () {
+        this.odooEditor.clean();
         this.$editable.find('.oe_edited_link').removeClass('oe_edited_link');
+    },
+    _getCommands: function () {
+        const commands = [
+            {
+                groupName: 'Basic blocks',
+                title: 'Link',
+                description: 'Add a link.',
+                fontawesome: 'fa-link',
+                callback: () => {
+                    this.toggleLinkTools({forceDialog: true});
+                },
+            },
+            {
+                groupName: 'Basic blocks',
+                title: 'Button',
+                description: 'Add a button.',
+                fontawesome: 'fa-link',
+                callback: () => {
+                    this.toggleLinkTools({forceDialog: true});
+                },
+            },
+            {
+                groupName: 'Basic blocks',
+                title: 'Image',
+                description: 'Add an image.',
+                fontawesome: 'fa-file-image-o',
+                callback: () => {
+                    this.openMediaDialog();
+                },
+            },
+        ];
+        if (this.options.snippets) {
+            commands.push(...this._getSnippetsCommands());
+        }
+        return commands;
+    },
+
+    _getSnippetsCommands: function () {
+        const snippetCommandCallback = (selector) => {
+            const $separatorBody = $(selector);
+            const $clonedBody = $separatorBody.clone();
+            const range = getDeepRange(this.odooEditor.editable);
+            const block = closestElement(range.endContainer, 'p, div, ol, ul, cl, h1, h2, h3, h4, h5, h6');
+            block && block.after($clonedBody[0]);
+        };
+        return [
+            {
+                groupName: 'Website',
+                title: 'Alert',
+                description: 'Complete this description.',
+                fontawesome: 'fa-info',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Rating',
+                description: 'Complete this description.',
+                fontawesome: 'fa-star-half-o',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_rating"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Card',
+                description: 'Complete this description.',
+                fontawesome: 'fa-sticky-note',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_card"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Share',
+                description: 'Complete this description.',
+                fontawesome: 'fa-share-square-o',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_share"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Text Highlight',
+                description: 'Complete this description.',
+                fontawesome: 'fa-sticky-note',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_text_highlight"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Chart',
+                description: 'Complete this description.',
+                fontawesome: 'fa-bar-chart',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_chart"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Progress Bar',
+                description: 'Complete this description.',
+                fontawesome: 'fa-spinner',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_progress_bar"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Badge',
+                description: 'Complete this description.',
+                fontawesome: 'fa-tags',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_badge"]');
+                },
+            },
+            {
+                groupName: 'Website',
+                title: 'Blockquote',
+                description: 'Complete this description.',
+                fontawesome: 'fa-quote-left',
+                callback: () => {
+                    snippetCommandCallback('.oe_snippet_body[data-snippet="s_blockquote"]');
+                },
+            },
+        ]
     },
 
     /**
