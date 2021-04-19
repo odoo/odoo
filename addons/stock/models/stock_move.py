@@ -850,6 +850,7 @@ class StockMove(models.Model):
             moves_to_unlink._clean_merged()
             moves_to_unlink._action_cancel()
             moves_to_unlink.sudo().unlink()
+
         return (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
 
     def _get_relevant_state_among_moves(self):
@@ -1031,6 +1032,11 @@ class StockMove(models.Model):
                         'origin': False,
                     })
             else:
+                # Don't create picking for negative moves since they will be
+                # reverse and assign to another picking
+                moves = moves.filtered(lambda m: m.product_uom_qty >= 0)
+                if not moves:
+                    continue
                 new_picking = True
                 picking = Picking.create(moves._get_new_picking_values())
 
@@ -1181,6 +1187,18 @@ class StockMove(models.Model):
         moves = self
         if merge:
             moves = self._merge_moves(merge_into=merge_into)
+
+        # Transform remaining move in return in case of negative initial demand
+        neg_r_moves = moves.filtered(lambda move: float_compare(
+            move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) < 0)
+        for move in neg_r_moves:
+            move.location_id, move.location_dest_id = move.location_dest_id, move.location_id
+            move.product_uom_qty *= -1
+            if move.picking_type_id.return_picking_type_id:
+                move.picking_type_id = move.picking_type_id.return_picking_type_id
+        # detach their picking as we inverted the location and potentially picking type
+        neg_r_moves.picking_id = False
+        neg_r_moves._assign_picking()
 
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation + those expected to be auto-assigned
         moves.filtered(lambda move: not move.picking_id.immediate_transfer
