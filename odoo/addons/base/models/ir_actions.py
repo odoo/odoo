@@ -543,13 +543,6 @@ class IrActionsServer(models.Model):
         :param action: the current server action
         :type action: browse record
         :returns: dict -- evaluation context given to (safe_)safe_eval """
-        def log(message, level="info"):
-            with self.pool.cursor() as cr:
-                cr.execute("""
-                    INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
-                    VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
-
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model_name = action.model_id.sudo().model
         model = self.env[model_name]
@@ -572,7 +565,7 @@ class IrActionsServer(models.Model):
             'record': record,
             'records': records,
             # helpers
-            'log': log,
+            'log': self.env['ir.logging']._get_action_logger(__name__, action),
         })
         return eval_context
 

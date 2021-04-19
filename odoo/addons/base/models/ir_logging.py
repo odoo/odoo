@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
+from functools import partial
 
 
 class IrLogging(models.Model):
@@ -41,3 +42,15 @@ class IrLogging(models.Model):
             # the relevant trigger instead acquires SHARE ROW EXCLUSIVE, which
             # still conflicts with the ROW EXCLUSIVE needed for an insert
             self._cr.execute("ALTER TABLE ir_logging DROP CONSTRAINT ir_logging_write_uid_fkey")
+
+    def _get_logger(self, name, type):
+        def log(message, path, line, func, level="info"):
+            with self.pool.cursor() as cr:
+                cr.execute("""
+                    INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
+                    VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (self.env.uid, type, self._cr.dbname, name, level, message, path, line, func))
+        return log
+
+    def _get_action_logger(self, name, action):
+        return partial(self._get_logger(name, 'server'), path="action", line=action.id, func=action.name)
