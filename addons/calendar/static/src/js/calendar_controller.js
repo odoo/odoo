@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/** @odoo-module alias=calendar.CalendarController **/
 
     import Controller from 'web.CalendarController';
     import Dialog from 'web.Dialog';

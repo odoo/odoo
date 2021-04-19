@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/** @odoo-module alias=calendar.CalendarModel **/
 
     import Model from 'web.CalendarModel';
 
