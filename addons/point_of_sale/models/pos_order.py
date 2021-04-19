@@ -379,6 +379,17 @@ class PosOrder(models.Model):
         }
         return vals
 
+    def _create_invoice(self, move_vals):
+        self.ensure_one()
+        new_move = self.env['account.move'].sudo()\
+                        .with_context(default_type=move_vals['type'], force_company=self.company_id.id)\
+                        .create(move_vals)
+        message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (self.id, self.name)
+        new_move.message_post(body=message)
+
+        return new_move
+
+
     def action_pos_order_invoice(self):
         moves = self.env['account.move']
 
@@ -392,11 +403,8 @@ class PosOrder(models.Model):
                 raise UserError(_('Please provide a partner for the sale.'))
 
             move_vals = order._prepare_invoice_vals()
-            new_move = moves.sudo()\
-                            .with_context(default_type=move_vals['type'], force_company=order.company_id.id)\
-                            .create(move_vals)
-            message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-            new_move.message_post(body=message)
+            new_move = order._create_invoice(move_vals)
+
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_context(force_company=order.company_id.id).post()
             moves += new_move
