@@ -25,3 +25,13 @@ class MailMessage(models.Model):
             ('message_id', '!=', False)
         ])
         return [('id', 'in', ratings.mapped('message_id').ids)]
+    
+    def message_format(self):
+        message_values = super().message_format()
+        for vals in message_values:
+            message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
+            rating = self.env['rating.rating'].search([('res_id', 'in', [vals['res_id']])], order='create_date DESC')
+            vals.update({
+                'rating_val': rating.rating or None
+            })
+        return message_values
