@@ -36,8 +36,13 @@ class WebsiteForm(http.Controller):
             raise BadRequest('Session expired (invalid CSRF token)')
 
         try:
-            if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
-                return self._handle_website_form(model_name, **kwargs)
+            # The except clause below should not let what has been done inside
+            # here be committed. It should not either roll back everything in
+            # this controller method. Instead, we use a savepoint to roll back
+            # what has been done inside the try clause.
+            with request.env.cr.savepoint():
+                if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
+                    return self._handle_website_form(model_name, **kwargs)
             error = _("Suspicious activity detected by Google reCaptcha.")
         except (ValidationError, UserError) as e:
             error = e.args[0]
