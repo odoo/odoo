@@ -34,7 +34,7 @@ class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                     'name': 'Gardening: The Know-How',
                     'sequence': 1,
                     'binary_content': pdf_content,
-                    'slide_category': 'presentation',
+                    'slide_category': 'document',
                     'is_published': True,
                     'is_preview': True,
                 }), (0, 0, {

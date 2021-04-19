@@ -110,11 +110,12 @@
                     t-att-data-can-access="can_access"
                     t-att-data-name="slide.name"
                     t-att-data-category="slide.slide_category"
+                    t-att-data-video-source-type="slide.video_source_type"
                     t-att-data-slug="slug(slide)"
                     t-att-data-has-question="1 if slide.question_ids else 0"
                     t-att-data-is-quiz="0"
                     t-att-data-completed="1 if slide_completed else 0"
-                    t-att-data-embed-code="slide.embed_code if slide.slide_category in ['video', 'document', 'presentation', 'infographic'] else False"
+                    t-att-data-embed-code="slide.embed_code if slide.slide_category in ['video', 'document', 'infographic'] else False"
                     t-att-data-is-member="is_member"
                     t-att-data-session-answers="session_answers">
                     <span class="ml-3">
@@ -124,6 +125,7 @@
                     <div class="ml-2">
                         <a t-if="can_access" class="d-block pt-1" href="#">
                             <div class="d-flex ">
+                                <t t-set="icon_class" t-value="'mr-2'"/>
                                 <t t-call="website_slides.slide_icon"/>
                                 <div class="o_wslides_fs_slide_name" t-esc="slide.name"/>
                             </div>
@@ -162,6 +164,7 @@
                             <li class="o_wslides_fs_sidebar_list_item pl-0 mb-1" t-if="slide.question_ids and not slide.slide_category == 'quiz'"
                                 t-att-data-id="slide.id"
                                 t-att-data-can-access="can_access"
+                                t-att-data-video-source-type="slide.video_source_type"
                                 t-att-data-name="slide.name"
                                 t-att-data-category="slide.slide_category"
                                 t-att-data-slug="slug(slide)"

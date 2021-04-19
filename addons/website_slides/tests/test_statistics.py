@@ -42,7 +42,6 @@ class TestChannelStatistics(common.SlidesCase):
         # slide category computation
         self.assertEqual(channel_publisher.total_slides, len(channel_publisher.slide_content_ids))
         self.assertEqual(channel_publisher.nbr_infographic, len(channel_publisher.slide_content_ids.filtered(lambda s: s.slide_category == 'infographic')))
-        self.assertEqual(channel_publisher.nbr_presentation, len(channel_publisher.slide_content_ids.filtered(lambda s: s.slide_category == 'presentation')))
         self.assertEqual(channel_publisher.nbr_document, len(channel_publisher.slide_content_ids.filtered(lambda s: s.slide_category == 'document')))
         self.assertEqual(channel_publisher.nbr_video, len(channel_publisher.slide_content_ids.filtered(lambda s: s.slide_category == 'video')))
         # slide statistics computation
@@ -158,9 +157,6 @@ class TestSlideStatistics(common.SlidesCase):
     @users('user_officer')
     def test_slide_statistics_categories(self):
         category = self.category.with_user(self.env.user)
-        self.assertEqual(
-            category.nbr_presentation,
-            len(category.channel_id.slide_ids.filtered(lambda s: s.category_id == category and s.slide_category == 'presentation')))
         self.assertEqual(
             category.nbr_document,
             len(category.channel_id.slide_ids.filtered(lambda s: s.category_id == category and s.slide_category == 'document')))

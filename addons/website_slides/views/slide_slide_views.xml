@@ -117,13 +117,32 @@
                                         <field name="active" invisible="1"/>
                                         <field name="channel_id"/>
                                         <field name="slide_category" string="Content Type"/>
-                                        <field name="url" attrs="{
-                                            'required': [('slide_category', 'in', ('video'))],
-                                            'invisible': [('slide_category', 'not in', ('video'))]}" />
-                                        <field name="document_id" invisible="1"/>
-                                        <field name="mime_type" force_save="1" readonly="1" groups="base.group_no_one"/>
-                                        <field name="binary_content" string="Attachment"
-                                            attrs="{'invisible': [('slide_category', 'not in', ('document', 'presentation'))]}"/>
+                                        <field name="slide_type" invisible="1"/>
+                                        <field name="source_type" widget="radio" attrs="{
+                                            'invisible': [('slide_category', 'not in', ['infographic', 'document'])]}" />
+                                        <field name="video_url" attrs="{
+                                            'required': [('slide_category', '=', 'video')],
+                                            'invisible': [('slide_category', '!=', 'video')],
+                                            'readonly': [('slide_category', '!=', 'video')]}"
+                                            widget="url"/>
+                                        <field name="document_google_url" attrs="{
+                                            'invisible': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'document')],
+                                            'readonly': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'document')]}"
+                                            placeholder='e.g "https://drive.google.com/file/..."'
+                                            widget="url"/>
+                                        <field name="image_google_url" attrs="{
+                                            'invisible': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'infographic')],
+                                            'readonly': ['|', ('source_type', '!=', 'external'), ('slide_category', '!=', 'infographic')]}"
+                                            placeholder='e.g "https://drive.google.com/file/..."'
+                                            widget="url"/>
+                                        <field name="document_binary_content" string="" options="{'accepted_file_extensions': '.pdf'}"
+                                            attrs="{
+                                                'invisible': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'document')],
+                                                'readonly': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'document')]}"/>
+                                        <field name="image_binary_content" string="" options="{'accepted_file_extensions': 'image/*'}"
+                                            attrs="{
+                                                'invisible': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'infographic')],
+                                                'readonly': ['|', ('source_type', '=', 'external'), ('slide_category', '!=', 'infographic')]}"/>
                                     </group>
                                     <group name="related_details">
                                         <field name="user_id" string="Responsible" widget="many2one_avatar"/>
@@ -133,7 +152,7 @@
                                             <span> hours</span>
                                         </div>
                                         <field name="is_preview"/>
-                                        <field name="slide_resource_downloadable" attrs="{'invisible': [('slide_category', 'not in', ['presentation', 'document'])]}"/>
+                                        <field name="slide_resource_downloadable" attrs="{'invisible': ['|', ('slide_category', '!=', 'document'), ('source_type', '!=', 'local_file')]}"/>
                                         <field name="date_published" string="Published Date" attrs="{'invisible': [('date_published', '=', False)]}" groups="base.group_no_one"/>
                                     </group>
                                 </group>
