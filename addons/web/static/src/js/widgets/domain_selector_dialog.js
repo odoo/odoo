@@ -26,7 +26,11 @@ return Dialog.extend({
         } else {
             buttons = [
                 {text: _t("Save"), classes: "btn-primary", close: true, click: function () {
-                    this.trigger_up("domain_selected", {domain: this.domainSelector.getDomain()});
+                    let domain = this.domainSelector.getDomain();
+                    if (this.domainSelector.invalidDomain) {
+                        domain = domain.length ? domain : this.domainSelector.domain;
+                    }
+                    this.trigger_up("domain_selected", {domain: domain});
                 }},
                 {text: _t("Discard"), close: true},
             ];

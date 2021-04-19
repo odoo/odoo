@@ -201,7 +201,7 @@ QUnit.module('DomainSelector', {
     });
 
     QUnit.test("editing a domain with `parent` key", async function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         var $target = $("#qunit-fixture");
 
@@ -213,8 +213,35 @@ QUnit.module('DomainSelector', {
         await testUtils.mock.addMockEnvironment(domainSelector, {data: this.data});
         await domainSelector.appendTo($target);
 
-        assert.strictEqual(domainSelector.$el.text(), "This domain is not supported.",
+        assert.strictEqual(domainSelector.$el.find('> span').text(),
+            "This domain is not supported by the domain selector. Please use the code editor instead.",
             "an error message should be displayed because of the `parent` key");
+        assert.containsOnce(domainSelector.$el, '.o_domain_debug_container', 'should be displayed a code editor');
+        assert.strictEqual(domainSelector.$('.o_domain_debug_input').val(), "[['name','=',parent.foo]]",
+            "the domain input should contain the unsupported domain");
+
+        domainSelector.destroy();
+    });
+
+    QUnit.test("editing a domain with `parent` key(invalid domain) in non debug mode", async function (assert) {
+        assert.expect(3);
+
+        var $target = $("#qunit-fixture");
+
+        // Create the domain selector and its mock environment
+        var domainSelector = new DomainSelector(null, "product", "[['name','=',parent.foo]]", {
+            readonly: false,
+        });
+        testUtils.mock.addMockEnvironment(domainSelector, { data: this.data });
+        await domainSelector.appendTo($target);
+
+        assert.strictEqual(domainSelector.$el.find('> span').text(),
+            "This domain is not supported by the domain selector. Please use the code editor instead.",
+            "an error message should be displayed because of the `parent` key");
+        assert.containsOnce(domainSelector.$el, '.o_domain_debug_container',
+            'should be displayed a code editor if invalid domain');
+        assert.strictEqual(domainSelector.$('.o_domain_debug_input').val(), "[['name','=',parent.foo]]",
+            "the domain input should contain the unsupported domain");
 
         domainSelector.destroy();
     });

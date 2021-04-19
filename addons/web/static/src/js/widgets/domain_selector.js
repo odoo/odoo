@@ -77,6 +77,7 @@ var DomainNode = Widget.extend({
             debugMode: false,
         }, options || {});
 
+        this.domain = domain;
         this.readonly = this.options.readonly;
         this.debug = this.options.debugMode;
     },
@@ -472,8 +473,12 @@ var DomainSelector = DomainTree.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             if (self.invalidDomain) {
-                var msg = _t("This domain is not supported.");
-                self.$el.html(msg);
+                const span = document.createElement('span');
+                span.textContent = _t("This domain is not supported by the domain selector. Please use the code editor instead.");
+                self.el.insertBefore(span, self.el.querySelector('.o_domain_debug_container'));
+                if (self.el.querySelector('.o_domain_debug_input')) {
+                    self.el.querySelector('.o_domain_debug_input').value = self.domain;
+                }
             }
         });
     },

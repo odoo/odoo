@@ -1062,23 +1062,25 @@
     </strong>
 </t>
 <div aria-atomic="true" t-name="DomainSelector" t-attf-class="o_domain_node o_domain_tree o_domain_selector #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
-    <t t-if="widget.children.length === 0">
-        <span>Match <strong>all records</strong></span>
-        <button t-if="!widget.readonly" class="btn btn-sm btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
-    </t>
-    <t t-else="">
-        <div class="o_domain_tree_header">
-            <t t-if="widget.children.length === 1">Match records with the following rule:</t>
-            <t t-else="">
-                <span>Match records with</span>
-                <t t-call="DomainTree.OperatorSelector"/>
-                <span>of the following rules:</span>
-            </t>
-        </div>
+    <t t-if="!widget.invalidDomain">
+        <t t-if="widget.children.length === 0">
+            <span>Match <strong>all records</strong></span>
+            <button t-if="!widget.readonly" class="btn btn-sm btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
+        </t>
+        <t t-else="">
+            <div class="o_domain_tree_header">
+                <t t-if="widget.children.length === 1">Match records with the following rule:</t>
+                <t t-else="">
+                    <span>Match records with</span>
+                    <t t-call="DomainTree.OperatorSelector"/>
+                    <span>of the following rules:</span>
+                </t>
+            </div>
 
-        <div class="o_domain_node_children_container"/>
+            <div class="o_domain_node_children_container"/>
+        </t>
     </t>
-    <label t-if="widget.debug &amp;&amp; !widget.readonly" class="o_domain_debug_container">
+    <label t-if="(widget.debug || widget.invalidDomain) &amp;&amp; !widget.readonly" class="o_domain_debug_container">
         <span class="small"># Code editor</span>
         <input type="text" class="o_domain_debug_input"/>
     </label>

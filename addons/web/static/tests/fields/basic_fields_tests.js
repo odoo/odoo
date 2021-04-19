@@ -7103,7 +7103,8 @@ QUnit.module('basic_fields', {
             },
         });
 
-        assert.strictEqual(form.$('.o_read_mode').text(), "This domain is not supported.",
+        assert.strictEqual(form.$('.o_read_mode span').text(),
+            "This domain is not supported by the domain selector. Please use the code editor instead.",
             "The widget should not crash the view, but gracefully admit its failure.");
         form.destroy();
     });
