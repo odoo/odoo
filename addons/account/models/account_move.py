@@ -3307,7 +3307,7 @@ class AccountMoveLine(models.Model):
 
         # Apply fiscal position.
         if product_taxes and fiscal_position:
-            product_taxes_after_fp = fiscal_position.map_tax(product_taxes, partner=self.partner_id)
+            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
 
             if set(product_taxes.ids) != set(product_taxes_after_fp.ids):
                 flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
@@ -3409,9 +3409,7 @@ class AccountMoveLine(models.Model):
         # 100 as balance but set 120 as price_unit.
         if self.tax_ids and self.move_id.fiscal_position_id and self.move_id.fiscal_position_id.tax_ids:
             price_subtotal = self._get_price_total_and_subtotal()['price_subtotal']
-            self.tax_ids = self.move_id.fiscal_position_id.map_tax(
-                self.tax_ids._origin,
-                partner=self.move_id.partner_id)
+            self.tax_ids = self.move_id.fiscal_position_id.map_tax(self.tax_ids._origin)
             accounting_vals = self._get_fields_onchange_subtotal(
                 price_subtotal=price_subtotal,
                 currency=self.move_id.company_currency_id)
@@ -3645,7 +3643,7 @@ class AccountMoveLine(models.Model):
             line.account_id = line._get_computed_account()
             taxes = line._get_computed_taxes()
             if taxes and line.move_id.fiscal_position_id:
-                taxes = line.move_id.fiscal_position_id.map_tax(taxes, partner=line.partner_id)
+                taxes = line.move_id.fiscal_position_id.map_tax(taxes)
             line.tax_ids = taxes
             line.product_uom_id = line._get_computed_uom()
             line.price_unit = line._get_computed_price_unit()
@@ -3655,7 +3653,7 @@ class AccountMoveLine(models.Model):
         ''' Recompute the 'price_unit' depending of the unit of measure. '''
         taxes = self._get_computed_taxes()
         if taxes and self.move_id.fiscal_position_id:
-            taxes = self.move_id.fiscal_position_id.map_tax(taxes, partner=self.partner_id)
+            taxes = self.move_id.fiscal_position_id.map_tax(taxes)
         self.tax_ids = taxes
         self.price_unit = self._get_computed_price_unit()
 
@@ -3669,7 +3667,7 @@ class AccountMoveLine(models.Model):
                 taxes = line._get_computed_taxes()
 
                 if taxes and line.move_id.fiscal_position_id:
-                    taxes = line.move_id.fiscal_position_id.map_tax(taxes, partner=line.partner_id)
+                    taxes = line.move_id.fiscal_position_id.map_tax(taxes)
 
                 line.tax_ids = taxes
 
