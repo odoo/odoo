@@ -176,6 +176,8 @@ class MassMailing(models.Model):
             self[key] = False
         if not self.ids:
             return
+        # ensure traces are sent to db
+        self.flush()
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,
@@ -200,7 +202,7 @@ class MassMailing(models.Model):
                 m.id
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
-            total = row['expected'] = (row['expected'] - row['ignored']) or 1
+            total = (row['expected'] - row['ignored']) or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total

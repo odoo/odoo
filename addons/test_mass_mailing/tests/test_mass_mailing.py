@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
+from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
+@tagged('mass_mailing')
 class TestMassMailing(TestMassMailCommon):
 
     @classmethod
@@ -14,9 +16,57 @@ class TestMassMailing(TestMassMailCommon):
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_gateway_update(self):
+        mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
+        recipients = self._create_mailing_test_records(model='mailing.test.optout', count=5)
+        self.assertEqual(len(recipients), 5)
+
+        mailing.write({
+            'mailing_model_id': self.env['ir.model']._get('mailing.test.optout'),
+            'mailing_domain': [('id', 'in', recipients.ids)]
+        })
+        mailing.action_put_in_queue()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            mailing._process_mass_mailing_queue()
+
+        self.assertMailTraces(
+            [{'email': record.email_normalized}
+             for record in recipients],
+            mailing, recipients,
+            mail_links_info=[[
+                ('url0', 'https://www.odoo.tz/my/%s' % record.name, True, {}),
+                ('url1', 'https://www.odoo.be', True, {}),
+                ('url2', 'https://www.odoo.com', True, {}),
+                ('url3', 'https://www.odoo.eu', True, {}),
+                ('url4', 'https://www.example.com/foo/bar?baz=qux', True, {'baz': 'qux'}),
+                ('url5', '%s/event/dummy-event-0' % mailing.get_base_url(), True, {}),
+                # view is not shortened and parsed at sending
+                ('url6', '%s/view' % mailing.get_base_url(), False, {}),
+                ('url7', 'mailto:test@odoo.com', False, {}),
+                # unsubscribe is not shortened and parsed at sending
+                ('url8', '%s/unsubscribe_from_list' % mailing.get_base_url(), False, {}),
+            ] for record in recipients],
+            check_mail=True
+        )
+        self.assertMailingStatistics(mailing, expected=5, delivered=5, sent=5)
+
+        # simulate a click
+        self.gateway_mail_click(mailing, recipients[0], 'https://www.odoo.be')
+        mailing.invalidate_cache()
+        self.assertMailingStatistics(mailing, expected=5, delivered=5, sent=5, opened=1, clicked=1)
+
+        # simulate a bounce
+        self.assertEqual(recipients[1].message_bounce, 0)
+        self.gateway_mail_bounce(mailing, recipients[1])
+        mailing.invalidate_cache()
+        self.assertMailingStatistics(mailing, expected=5, delivered=4, sent=5, opened=1, clicked=1, bounced=1)
+        self.assertEqual(recipients[1].message_bounce, 1)
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_w_blacklist(self):
-        mailing = self.mailing_bl.with_user(self.env.user)
-        recipients = self._create_test_blacklist_records(count=5)
+        mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
+        recipients = self._create_mailing_test_records(count=5)
 
         # blacklist records 3 and 4
         self.env['mail.blacklist'].create({'email': recipients[3].email_normalized})
@@ -40,8 +90,8 @@ class TestMassMailing(TestMassMailCommon):
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_w_opt_out(self):
-        mailing = self.mailing_bl.with_user(self.env.user)
-        recipients = self._create_test_blacklist_records(model='mailing.test.optout', count=5)
+        mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
+        recipients = self._create_mailing_test_records(model='mailing.test.optout', count=5)
 
         # optout records 0 and 1
         (recipients[0] | recipients[1]).write({'opt_out': True})
@@ -114,13 +164,13 @@ class TestMassMailing(TestMassMailCommon):
             mailing._process_mass_mailing_queue()
 
         self.assertMailTraces(
-            [{'email': 'test@test.example.com', 'state': 'ignored'},
-             {'email': 'test@test.example.com', 'state': 'sent'},
+            [{'email': 'test@test.example.com', 'state': 'sent'},
+             {'email': 'test@test.example.com', 'state': 'ignored'},
              {'email': 'test3@test.example.com'},
              {'email': 'test4@test.example.com'},
              {'email': 'test5@test.example.com', 'state': 'ignored'}],
             mailing,
-            mailing_contact_1 | mailing_contact_2 | mailing_contact_3 | mailing_contact_4 | mailing_contact_5,
+            mailing_contact_1 + mailing_contact_2 + mailing_contact_3 + mailing_contact_4 + mailing_contact_5,
             check_mail=True
         )
         self.assertEqual(mailing.ignored, 2)
