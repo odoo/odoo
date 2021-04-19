@@ -38,11 +38,6 @@ class PaymentAcquirer(models.Model):
         help="The MD5 private key is the 32-byte string which is composed of English letters and numbers.")
     nelo_seller_email = fields.Char(string='Nelo Seller Email', groups='base.group_user')
 
-    def _get_feature_support(self):
-        res = super(PaymentAcquirer, self)._get_feature_support()
-        res['fees'].append('nelo')
-        return res
-
     @api.model
     def _get_nelo_urls(self, environment):
         if environment == 'prod':
@@ -110,27 +105,6 @@ class PaymentAcquirer(models.Model):
         jsonResp = response.json()
         _logger.info('Response\n %s \n', pprint.pformat(jsonResp))  # debug
         self._nelo_redirect_url = jsonResp['redirectUrl']
-
-    def nelo_compute_fees(self, amount, currency_id, country_id):
-        """ Compute nelo fees.
-
-            :param float amount: the amount to pay
-            :param integer country_id: an ID of a res.country, or None. This is
-                                       the customer's country, to be compared to
-                                       the acquirer company country.
-            :return float fees: computed fees
-        """
-        fees = 0.0
-        if self.fees_active:
-            country = self.env['res.country'].browse(country_id)
-            if country and self.company_id.sudo().country_id.id == country.id:
-                percentage = self.fees_dom_var
-                fixed = self.fees_dom_fixed
-            else:
-                percentage = self.fees_int_var
-                fixed = self.fees_int_fixed
-            fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
-        return fees
 
     def _build_sign(self, val):
         # Rearrange parameters in the data set alphabetically
