@@ -685,12 +685,12 @@ class AccountPayment(models.Model):
                 all_lines = move.line_ids
                 liquidity_lines, counterpart_lines, writeoff_lines = pay._seek_for_lines()
 
-                if len(liquidity_lines) != 1:
-                    raise UserError(_(
-                        "Journal Entry %s is not valid. In order to proceed, the journal items must "
-                        "include one and only one outstanding payments/receipts account.",
-                        move.display_name,
-                    ))
+                # if len(liquidity_lines) != 1:
+                #     raise UserError(_(
+                #         "Journal Entry %s is not valid. In order to proceed, the journal items must "
+                #         "include one and only one outstanding payments/receipts account.",
+                #         move.display_name,
+                #     ))
 
                 if len(counterpart_lines) != 1:
                     raise UserError(_(
@@ -726,19 +726,19 @@ class AccountPayment(models.Model):
                 else:
                     partner_type = 'supplier'
 
-                liquidity_amount = liquidity_lines.amount_currency
+                liquidity_amount = sum(liquidity_lines.mapped('amount_currency'))
 
                 move_vals_to_write.update({
-                    'currency_id': liquidity_lines.currency_id.id,
-                    'partner_id': liquidity_lines.partner_id.id,
+                    'currency_id': liquidity_lines[0].currency_id.id,
+                    'partner_id': liquidity_lines[0].partner_id.id,
                 })
                 payment_vals_to_write.update({
                     'amount': abs(liquidity_amount),
                     'payment_type': 'inbound' if liquidity_amount > 0.0 else 'outbound',
                     'partner_type': partner_type,
-                    'currency_id': liquidity_lines.currency_id.id,
+                    'currency_id': liquidity_lines[0].currency_id.id,
                     'destination_account_id': counterpart_lines.account_id.id,
-                    'partner_id': liquidity_lines.partner_id.id,
+                    'partner_id': liquidity_lines[0].partner_id.id,
                 })
 
             move.write(move._cleanup_write_orm_values(move, move_vals_to_write))

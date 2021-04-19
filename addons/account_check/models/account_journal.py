@@ -23,14 +23,13 @@ class AccountJournal(models.Model):
     def _create_checkbook(self):
         """ Create a checkbook for the journal """
         for rec in self:
-            checkbook = rec.checkbook_ids.create({'journal_id': rec.id, 'state': 'active'})
+            rec.checkbook_ids.create({'journal_id': rec.id, 'state': 'active'})
 
     @api.model
     def _enable_issue_check_on_bank_journals(self):
         """ Enables issue checks payment method
             Called upon module installation via data file.
         """
-        issue_checks = self.env.ref('account_check.account_payment_method_issue_check')
         domain = [('type', '=', 'bank')]
         force_company_id = self._context.get('force_company_id')
         if force_company_id:
@@ -40,7 +39,8 @@ class AccountJournal(models.Model):
             if not bank_journal.checkbook_ids:
                 bank_journal._create_checkbook()
             bank_journal.write({
-                'outbound_payment_method_ids': [(4, issue_checks.id, None)],
+                'outbound_payment_method_ids': [(4, self.env.ref('account_check.account_payment_method_issue_check').id, None)],
+                'inbound_payment_method_ids': [(4, self.env.ref('account_check.account_payment_method_returned_check').id, None)],
             })
 
 ###############

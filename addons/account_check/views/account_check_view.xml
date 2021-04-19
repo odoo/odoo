@@ -49,13 +49,8 @@
                             <field name="journal_id"/>
                             <field name="checkbook_id" attrs="{'invisible':[('type','!=','issue_check')], 'required':[('type','=','issue_check')]}" domain="[('journal_id', '=', journal_id)]"/>
                             <field name="bank_id" attrs="{'invisible': [('type', '!=', 'third_check')]}"/>
-                            <!-- <field name="number"/> -->
-                            <label for="amount"/>
-                            <div name="amount_div" class="o_row">
-                                <field name="amount"/>
-                                <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
-                            </div>
-                            <field name="amount_company_currency"/>
+                            <field name="amount"/>
+                            <field name="amount_company_currency" groups="base.group_multi_currency"/>
                         </group>
                         <group>
                             <field name="state"/>

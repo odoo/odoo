@@ -163,6 +163,7 @@ class AccountCheck(models.Model):
             # else:
             #     rec.name = False
 
+    # TODO convert to new computed fields store=True, readonly=False
     @api.onchange('owner_vat')
     def onchange_owner_vat(self):
         """
@@ -188,6 +189,7 @@ class AccountCheck(models.Model):
             self.checkbook_id = self.env['account.checkbook'].search(
                 [('state', '=', 'active'), ('journal_id', '=', self.journal_id.id)], limit=1)
 
+    # TODO convert to new computed fields store=True, readonly=False
     @api.onchange('checkbook_id')
     def onchange_checkbook(self):
         if self.checkbook_id and not self.checkbook_id.numerate_on_printing:
