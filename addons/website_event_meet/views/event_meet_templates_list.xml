@@ -123,6 +123,9 @@
             <div class="d-flex flex-column">
                 <div class="d-flex flex-row justify-content-between">
                     <h4 class="text-break mw-75 text-uppercase" t-esc="meeting_room.name"/>
+                    <div t-if="not meeting_room.is_published">
+                        <span class="badge badge-danger">Unpublished</span>
+                    </div>
                     <div t-if="is_event_user" class="w-25">
                         <div class="dropdown float-right dropleft">
                             <button class="btn py-0" data-toggle="dropdown"><h3 class="m-0">&#8942;</h3></button>
