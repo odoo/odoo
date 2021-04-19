@@ -136,8 +136,8 @@ class AccountCheckbook(models.Model):
                 name += _(' up to %s') % rec.range_to
             rec.name = name
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_manual(self):
         if self.mapped('issue_check_ids'):
             raise ValidationError(
                 _('You can drop a checkbook if it has been used on checks!'))
-        return super(AccountCheckbook, self).unlink()
