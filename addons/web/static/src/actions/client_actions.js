@@ -9,7 +9,6 @@ export const displayNotificationAction = (env, action) => {
   const params = action.params || {};
   const options = {
     className: params.className || "",
-    icon: params.icon || "",
     sticky: params.sticky || false,
     title: params.title ? escape(params.title) : "",
     type: params.type || "info",
