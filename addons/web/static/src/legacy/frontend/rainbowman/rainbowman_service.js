@@ -1,8 +1,12 @@
 /** @odoo-module **/
-const RainbowMan = require("web.RainbowMan");
-const core = require("web.core");
+import RainbowMan from "web.RainbowMan";
+import { bus } from "web.core";
 
-core.bus.on("show-effect", this, (payload) => {
+/**
+ * This is used when an effect is demanded but the webclient
+ * isn't a parent of the current context. Like in the tour manager in website. 
+ */
+bus.on("show-effect", this, (payload) => {
   new RainbowMan({ message: payload.message, fadeout: payload.fadeout }).appendTo(
     document.getElementsByTagName("body")[0]
   );
