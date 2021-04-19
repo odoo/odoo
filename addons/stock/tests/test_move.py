@@ -4413,7 +4413,7 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
         })
         self.assertEqual(move1.state, 'draft')
-        self.assertEqual(move1.product_uom_qty, 0)
+        self.assertEqual(move1.product_uom_qty, 1)
         move1.product_uom_qty = 100
         move1.product_id = self.product_serial
         move1._onchange_product_id()

@@ -115,14 +115,8 @@ tour.register('purchase_tour' , {
     position: "bottom",
     run: 'click',
 }, {
-    trigger: ".ui-sortable-handle",
+    trigger: ".o_field_widget [name=price_unit]",
     extra_trigger: ".o_purchase_order",
-    content: _t("Click here to edit or move the quotation line."),
-    position: "bottom",
-    run: 'click',
-}, {
-    trigger: ".o_form_editable input[name='price_unit']",
-    extra_trigger: ".o_form_editable input[name='price_unit']",
     content: _t("Once you get the price from the vendor, you can complete the purchase order with the right price."),
     position: "right",
     run: 'text 200.00'
