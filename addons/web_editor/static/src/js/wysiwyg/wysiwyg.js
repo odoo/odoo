@@ -860,13 +860,21 @@ const Wysiwyg = Widget.extend({
         if (e && e.key === 'a' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             const selection = this.odooEditor.document.getSelection();
-            const deepestParent =
+            const containerSelector = '#wrap>*, [contenteditable], .oe_structure>*';
+            let $deepestParent =
                 selection ?
-                    $(selection.anchorNode).parentsUntil('#wrap>*, [contenteditable], .oe_structure>*').last() :
-                    [];
-            if(deepestParent.length) {
+                    $(selection.anchorNode).parentsUntil(containerSelector).last() :
+                    $();
+
+            if ($deepestParent.is('html')) {
+                // In case we didn't find a suitable container
+                // we need to restrict the selection inside to the editable area.
+                $deepestParent = this.$editable.find(containerSelector);
+            }
+
+            if ($deepestParent.length) {
                 const range = document.createRange();
-                range.selectNodeContents(deepestParent.parent()[0]);
+                range.selectNodeContents($deepestParent.parent()[0]);
                 selection.removeAllRanges();
                 selection.addRange(range);
             }
