@@ -181,11 +181,14 @@ export class LongpollingCommunication {
                 throw Error('_performRpcLongpollingPoll: missing response');
             }
             if (!response.ok) {
-                throw Error(response);
+                throw response;
+                // TODO throw response in appropriate error
+                // throw Error(`${response.url} ${response.status} ${response.statusText}`);
             }
             const data = await response.json();
             if (data.error) {
-                throw Error(data.error);
+                // TODO appropriate error
+                throw data.error;
             }
             return data.result;
         } catch (error) {
