@@ -127,7 +127,7 @@ const Link = Widget.extend({
         }
 
         this._updateOptionsUI();
-        this._adaptPreview(false);
+        this._adaptPreview();
 
         this.$('input:visible:first').focus();
 
@@ -213,7 +213,7 @@ const Link = Widget.extend({
      * @abstract
      * @private
      */
-    _adaptPreview: function (createStep = true) {},
+    _adaptPreview: function () {},
     /**
      * @private
      */
@@ -318,7 +318,7 @@ const Link = Widget.extend({
         return {
             content: content,
             url: this._correctLink(url),
-            classes: classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, '').replace(/oe_edited_link/, ''),
+            classes: classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, ''),
             oldAttributes: this.data.oldAttributes,
             isNewWindow: isNewWindow,
             doStripDomain: doStripDomain,
