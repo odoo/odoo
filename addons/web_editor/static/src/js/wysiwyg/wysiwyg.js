@@ -571,6 +571,11 @@ const Wysiwyg = Widget.extend({
                     linkWidget.$link = $(linkWidget.getOrCreateLink(this.$editable[0]));
                 }
                 linkWidget.applyLinkToDom(data);
+                // At this point, the dialog is still open and prevents the
+                // focus in the editable, even though that is where the
+                // selection is. This waits so the dialog is destroyed when we
+                // set the focus.
+                setTimeout(() => this.odooEditor.editable.focus(), 0);
             });
         }
     },
