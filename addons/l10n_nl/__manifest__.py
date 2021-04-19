@@ -28,6 +28,7 @@
         'data/account_fiscal_position_account_template.xml',
         'data/account_chart_template_data.xml',
         'data/menuitem.xml',
+        'views/res_partner_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
