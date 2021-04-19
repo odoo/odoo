@@ -954,10 +954,10 @@ const Wysiwyg = Widget.extend({
                 });
             }
             // Toggle the 'active' class on the active image tool buttons.
-            for (const button of $('#image-shape div, #fa-spin')) {
+            for (const button of this.toolbar.$el.find('#image-shape div, #fa-spin')) {
                 button.classList.toggle('active', $(e.target).hasClass(button.id));
             }
-            for (const button of $('#image-width div')) {
+            for (const button of this.toolbar.$el.find('#image-width div')) {
                 button.classList.toggle('active', e.target.style.width === button.id);
             }
             this._updateMediaJustifyButton();
