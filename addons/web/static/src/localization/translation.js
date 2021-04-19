@@ -9,7 +9,7 @@ export const translatedTerms = {};
  * translations are loaded, as class attributes or at the top-level of
  * an Odoo Web module
  *
- * @returns {string}
+ * @returns {{toString: () => string}}
  */
 export function _lt(str) {
   return { toString: () => translatedTerms[str] || str };
