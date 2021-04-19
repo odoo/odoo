@@ -70,9 +70,7 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         if (modules) {
             paramsGet.modules = modules.join(',');
         }
-        if (lang) {
-            paramsGet.lang = lang;
-        }
+        paramsGet.lang = lang || null;
         return $.get(url, paramsGet).then(function (trans) {
             self.set_bundle(trans);
         });
