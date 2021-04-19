@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/** @odoo-module alias=calendar.CalendarView **/
 
 import CalendarController from '@calendar/js/calendar_controller';
 import CalendarModel from '@calendar/js/calendar_model';

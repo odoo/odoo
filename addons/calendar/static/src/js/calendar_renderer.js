@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/** @odoo-module alias=calendar.CalendarRenderer **/
 
 import CalendarRenderer from 'web.CalendarRenderer';
 import CalendarPopover from 'web.CalendarPopover';
