@@ -1119,7 +1119,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                                             !!JSON.parse(arch.attrs.delete) :
                                             true;
             this.editable = arch.attrs.editable;
-            this._canQuickEdit = arch.tag === 'tree';
+            this._canQuickEdit = true;
         } else {
             this._canQuickEdit = false;
         }
@@ -1323,6 +1323,9 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
             if (extraInfo.subFieldName) {
                 parts.push(`[name="${extraInfo.subFieldName}"]`);
             }
+            if (extraInfo.kanbanRecord) {
+                parts.push(`.o_kanban_record[data-db_id="${extraInfo.kanbanRecord}"]`);
+            }
     
             if (parts.length) {
                 const el = this.el.querySelector(parts.join(' '));
@@ -1365,15 +1368,25 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      * @returns {Object}
      */
     _getQuickEditExtraInfo: function (ev) {
-        const row = ev.target.closest('.o_data_row');
-        const field = ev.target.closest('.o_data_row .o_field_widget') ||
-            ev.target.closest('.o_field_cell');
+        if (this.view.arch.tag === 'tree') {
+            const row = ev.target.closest('.o_data_row');
+            const field = ev.target.closest('.o_data_row .o_field_widget') ||
+                ev.target.closest('.o_field_cell');
 
-        return {
-            type: 'edit',
-            row: row && row.dataset.id,
-            subFieldName: row && field && field.getAttribute('name'),
-        };
+            return {
+                type: 'edit',
+                row: row && row.dataset.id,
+                subFieldName: row && field && field.getAttribute('name'),
+            };
+        }
+        if (this.view.arch.tag === 'kanban') {
+            const kanbanRecord = ev.target.closest('.o_kanban_record');
+            const record = $(kanbanRecord).data("record");
+            return {
+                type: 'edit',
+                kanbanRecord: record && record.db_id,
+            };
+        }
     },
     /**
      * Computes the default renderer to use depending on the view type.
@@ -1473,6 +1486,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 editable: false,
                 deletable: false,
                 read_only_mode: this.isReadonly,
+                no_open: (this.isReadonly && !this.hasReadonlyModifier) && this._canQuickEdit,
             };
             _.extend(rendererParams, {
                 record_options: record_options,
