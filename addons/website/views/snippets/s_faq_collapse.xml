@@ -36,6 +36,25 @@
     </section>
 </template>
 
+<template id="s_faq_collapse_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_faq_collapse">
+            <we-select string="Card Style">
+                <we-button title="Default" data-select-class="">Default</we-button>
+                <we-button title="Light" data-select-class="s_faq_collapse_light">Light</we-button>
+                <we-button title="Boxed" data-select-class="s_faq_collapse_boxed">Boxed</we-button>
+                <we-button title="Big" data-select-class="s_faq_collapse_big">Big</we-button>
+            </we-select>
+            <we-button-group string="Collapse Icon" data-apply-to=".card-header">
+                <we-button title="Left" data-select-class=""
+                    data-img="/website/static/src/img/snippets_options/pos_left.svg"/>
+                <we-button title="Right" data-select-class="s_faq_collapse_right_icon"
+                    data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
+            </we-button-group>
+        </div>
+    </xpath>
+</template>
+
 <record id="website.s_faq_collapse_000_scss" model="ir.asset">
     <field name="name">Faq collapse 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
