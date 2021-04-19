@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
 <odoo>
+
+    <!-- Este arquivo foi removido do __manifest__.py
+    porque as regras abaixo impediam o uso da model de
+    notes (trocar usuario da nota, criar notas e atribui-las a outros usuarios)
+    conforme a necessidade do cliente -->
+
     <record id="note_note_rule_global" model="ir.rule">
         <field name="name">Only followers can access a sticky notes</field>
         <field name="model_id" ref="model_note_note"/>

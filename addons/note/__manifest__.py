@@ -13,7 +13,7 @@
         'mail',
     ],
     'data': [
-        'security/note_security.xml',
+        # 'security/note_security.xml',
         'security/ir.model.access.csv',
         'data/mail_activity_data.xml',
         'data/note_data.xml',
