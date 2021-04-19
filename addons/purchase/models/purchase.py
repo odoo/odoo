@@ -940,7 +940,7 @@ class PurchaseOrderLine(models.Model):
             fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_id.partner_id.id)
             # filter taxes by company
             taxes = line.product_id.supplier_taxes_id.filtered(lambda r: r.company_id == line.env.company)
-            line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id)
+            line.taxes_id = fpos.map_tax(taxes)
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
     def _compute_qty_invoiced(self):
@@ -1287,7 +1287,7 @@ class PurchaseOrderLine(models.Model):
 
         taxes = product_id.supplier_taxes_id
         fpos = po.fiscal_position_id
-        taxes_id = fpos.map_tax(taxes, product_id, seller.name)
+        taxes_id = fpos.map_tax(taxes)
         if taxes_id:
             taxes_id = taxes_id.filtered(lambda x: x.company_id.id == company_id.id)
 
