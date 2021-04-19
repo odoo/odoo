@@ -512,14 +512,22 @@
                     slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + $.param(params) : "";
                 } else if (slideData.category === 'infographic') {
                     slideData.embedUrl = _.str.sprintf('/web/image/slide.slide/%s/image_1024', slideData.id);
-                } else if (_.contains(['document', 'presentation'], slideData.category)) {
+                } else if (slideData.category === 'document') {
                     slideData.embedUrl = $(slideData.embedCode).attr('src');
                 }
                 // fill empty property to allow searching on it with _.filter(list, matcher)
                 slideData.isQuiz = !!slideData.isQuiz;
                 slideData.hasQuestion = !!slideData.hasQuestion;
                 // technical settings for the Fullscreen to work
-                slideData._autoSetDone = _.contains(['infographic', 'presentation', 'document', 'webpage'], slideData.category) && !slideData.hasQuestion;
+                var autoSetDone = false;
+                if (!slideData.hasQuestion) {
+                    if (_.contains(['infographic', 'document', 'webpage'], slideData.category)) {
+                        autoSetDone = true;  // images, documents (local + external) and web pages are marked as completed when opened
+                    } else if (slideData.category === 'video' && slideData.videoSourceType === 'google_drive') {
+                        autoSetDone = true;  // google drive videos do not benefit from the YouTube integration and are marked as completed when opened
+                    }
+                }
+                slideData._autoSetDone = autoSetDone;
             });
             return slidesDataList;
         },
@@ -563,7 +571,7 @@
             }
 
             // render slide content
-            if (_.contains(['document', 'presentation', 'infographic'], slide.category)) {
+            if (_.contains(['document', 'infographic'], slide.category)) {
                 $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
             } else if (slide.category === 'video') {
                 this.videoPlayer = new VideoPlayer(this, slide);
@@ -627,7 +635,7 @@
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
-                    if (['document', 'presentation'].includes(slide.category)) {
+                    if (slide.category === 'document') {
                         // only set the slide as completed after iFrame is loaded to avoid concurrent execution with 'embedUrl' controller
                         self.el.querySelector('iframe.o_wslides_iframe_viewer').addEventListener('load', () => self._setCompleted(slide.id));
                     } else {

@@ -144,17 +144,15 @@
                 <t t-set="can_access" t-value="aside_slide.is_preview or is_member or slide.channel_id.can_publish"/>
                 <li class="p-0 pb-1">
                     <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
-                        t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-top px-2 pt-1 text-decoration-none %s%s' % (('bg-100 py-1 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')">
-                        <div t-if="is_member" >
-                            <i t-att-id="'o_wslides_lesson_aside_slide_check_%s' % (aside_slide.id)"
-                                t-att-class="'mr-1 fa fa-fw %s' % ('text-success fa-check-circle' if channel_progress[aside_slide.id].get('completed') else 'text-600 fa-circle')">
-                            </i>
-                        </div>
-                        <div class="o_wslides_lesson_link_name">
-                            <t t-call="website_slides.slide_icon">
-                                <t t-set="slide" t-value="aside_slide"/>
-                            </t>
-                            <span t-esc="aside_slide.name" class="mr-2"/>
+                        t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-center px-2 py-1 text-decoration-none %s%s' % (('bg-100 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')">
+                        <i t-if="is_member" t-att-id="'o_wslides_lesson_aside_slide_check_%s' % (aside_slide.id)"
+                            t-att-class="'mr-2 fa text-left %s' % ('text-success fa-check-circle' if channel_progress[aside_slide.id].get('completed') else 'text-600 fa-circle')">
+                        </i>
+                        <t t-call="website_slides.slide_icon">
+                            <t t-set="slide" t-value="aside_slide"/>
+                        </t>
+                        <div class="o_wslides_lesson_link_name text-truncate" t-att-title="aside_slide.name">
+                            <span t-esc="aside_slide.name" class="mr-2 text-truncate"/>
                         </div>
                         <div class="ml-auto" t-if="aside_slide.question_ids">
                             <span t-att-class="'badge badge-pill %s' % ('badge-success' if channel_progress[aside_slide.id].get('completed') else 'badge-light text-600')">
@@ -231,7 +229,7 @@
                     t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
                     <i class="fa fa-chevron-left mr-2"></i> <span class="d-none d-sm-inline-block">Prev</span>
                 </a>
-                <t t-set="allow_done_btn" t-value="slide.slide_category in ['infographic', 'presentation', 'document', 'webpage', 'video'] and not slide.question_ids and not channel_progress[slide.id].get('completed') and slide.channel_id.is_member"/>
+                <t t-set="allow_done_btn" t-value="slide.slide_category in ['infographic', 'document', 'webpage', 'video'] and not slide.question_ids and not channel_progress[slide.id].get('completed') and slide.channel_id.is_member"/>
                 <a t-att-class="'btn btn-primary border text-white %s' % ('disabled' if not allow_done_btn else '')"
                     role="button" t-att-aria-disabled="'true' if not allow_done_btn else None"
                     t-att-href="'/slides/slide/%s/set_completed?%s' % (slide.id, 'next_slide_id=%s' % (next_slide.id) if next_slide else '') if allow_done_btn else '#'">
@@ -257,10 +255,10 @@
     <div class="o_wslides_lesson_content_type">
         <img t-if="slide.slide_category == 'infographic'"
             t-att-src="website.image_url(slide, 'image_1024')" class="img-fluid" style="width:100%" t-att-alt="slide.name"/>
-        <div t-if="slide.slide_category in ('presentation', 'document')" class="embed-responsive embed-responsive-4by3 embed-responsive-item mb8" style="height: 600px;">
+        <div t-if="slide.slide_category == 'document'" class="embed-responsive embed-responsive-4by3 embed-responsive-item mb8" style="height: 600px;">
             <t t-out="slide.embed_code"/>
         </div>
-        <div t-if="slide.slide_category == 'video' and slide.document_id" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
+        <div t-if="slide.slide_category == 'video'" class="embed-responsive embed-responsive-16by9 embed-responsive-item mb8">
             <t t-out="slide.embed_code"/>
         </div>
         <div t-if="slide.slide_category == 'webpage'" class="bg-white p-3">
@@ -557,7 +555,7 @@
                 <t t-esc="slide.embed_code_external"/>
             </textarea>
         </div>
-        <div t-if="slide.slide_category in ('presentation', 'document') and not embed_hide_starting_page" class="form-group d-flex">
+        <div t-if="slide.slide_category == 'document' and not embed_hide_starting_page" class="form-group d-flex">
             <div class="form-text p-0 col-xs-5 col-sm-5 col-md-5 col-lg-5">Select page to start with</div>
             <div class="input-group col-xs-3 col-sm-2 col-md-2 col-lg-3">
                 <input type="number" value="1" class="form-control"/>

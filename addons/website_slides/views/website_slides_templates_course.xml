@@ -367,7 +367,7 @@
                             <a  t-if="channel.can_upload"
                                 class="o_text_link o_wslides_js_slide_upload px-3 py-2"
                                 role="button"
-                                aria-label="Upload Presentation"
+                                aria-label="Upload Document"
                                 href="#"
                                 t-att-data-modules-to-install="modules_to_install"
                                 t-att-data-channel-id="channel.id"
@@ -393,7 +393,7 @@
         <div t-if="channel.can_upload" class="o_wslides_content_actions btn-group">
             <a  class="o_wslides_js_slide_upload mr-1 border btn btn-primary"
                 role="button"
-                aria-label="Upload Presentation"
+                aria-label="Upload Document"
                 href="#"
                 t-att-data-open-modal="enable_slide_upload"
                 t-att-data-modules-to-install="modules_to_install"
@@ -680,8 +680,8 @@
 
             <div t-if="channel.can_upload" class="text-right pb-2 col-auto">
                 <a class="btn btn-primary py-1 o_wslides_js_slide_upload"
-                    title="Upload Presentation" role="button"
-                    aria-label="Upload Presentation" href="#"
+                    title="Upload Document" role="button"
+                    aria-label="Upload Document" href="#"
                     t-att-data-channel-id="channel.id"
                     t-att-data-can-upload="channel.can_upload"
                     t-att-data-can-publish="channel.can_publish">
@@ -796,7 +796,7 @@
                     </span>
                 </div>
                 <t t-if="channel.is_member and channel_progress[slide.id].get('completed')">
-                    <span class="badge badge-pill badge-success"><i class="fa fa-check"/> Completed</span>
+                    <span class="badge badge-pill badge-success"><i class="fa fa-check"/> Done</span>
                 </t>
             </div>
         </div>
@@ -805,13 +805,16 @@
 
 <template id="slide_icon">
     <t t-set="icon_class" t-value="icon_class if icon_class else 'mr-2 text-muted'"/>
-    <i t-if="slide.slide_category == 'document'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
-    <i t-if="slide.slide_category == 'presentation'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
-    <i t-if="slide.slide_category == 'infographic'" t-att-class="'fa fa-file-picture-o %s' % icon_class"></i>
-    <i t-if="slide.slide_category == 'video'" t-att-class="'fa fa-play-circle %s' % icon_class"></i>
-    <i t-if="slide.slide_category == 'link'" t-att-class="'fa fa-file-code-o %s' % icon_class"></i>
-    <i t-if="slide.slide_category == 'webpage'" t-att-class="'fa fa-file-text %s' % icon_class"></i>
-    <i t-if="slide.slide_category == 'quiz'" t-att-class="'fa fa-question-circle %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'pdf'" t-att-class="'fa fa-file-pdf-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'sheet'" t-att-class="'fa fa-file-excel-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'doc'" t-att-class="'fa fa-file-word-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'slides'" t-att-class="'fa fa-file-powerpoint-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'image'" t-att-class="'fa fa-file-picture-o %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'youtube_video'" t-att-class="'fa fa-youtube-play %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'google_drive_video'" t-att-class="'fa fa-play-circle %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'webpage'" t-att-class="'fa fa-file-text %s' % icon_class"></i>
+    <i t-if="slide.slide_type == 'quiz'" t-att-class="'fa fa-question-circle %s' % icon_class"></i>
+    <i t-if="not slide.slide_type" t-att-class="'fa fa-file-o %s' % icon_class"></i>
 </template>
 
 </data></odoo>

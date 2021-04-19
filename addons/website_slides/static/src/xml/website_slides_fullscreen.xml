@@ -1,7 +1,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="website.slides.fullscreen.content">
-        <t t-if="_.contains(['document', 'presentation'], widget.get('slide').category)">
+        <t t-if="widget.get('slide').category === 'document'">
             <div class="embed-responsive h-100">
                 <iframe t-att-src="widget.get('slide').embedUrl" class="o_wslides_iframe_viewer" allowFullScreen="true" frameborder="0"/>
             </div>

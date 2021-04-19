@@ -168,8 +168,8 @@ class TestSequencing(slides_common.SlidesCase):
 
 
 class TestFromURL(slides_common.SlidesCase):
-    def test_youtube_urls(self):
-        urls = {
+    def test_video_urls(self):
+        youtube_urls = {
             'W0JQcpGLSFw': [
                 'https://youtu.be/W0JQcpGLSFw',
                 'https://www.youtube.com/watch?v=W0JQcpGLSFw',
@@ -188,9 +188,27 @@ class TestFromURL(slides_common.SlidesCase):
             ],
         }
 
-        for id, urls in urls.items():
+        Slide = self.env['slide.slide'].with_context(website_slides_skip_fetch_metadata=True)
+
+        # test various YouTube URL formats
+        for youtube_id, urls in youtube_urls.items():
             for url in urls:
-                with self.subTest(url=url, id=id):
-                    document = self.env['slide.slide']._find_document_data_from_url(url)
-                    self.assertEqual(document[0], 'youtube')
-                    self.assertEqual(document[1], id)
+                with self.subTest(url=url, id=youtube_id):
+                    slide = Slide.create({
+                        'name': 'dummy',
+                        'channel_id': self.channel.id,
+                        'url': url,
+                        'slide_category': 'video'
+                    })
+                    self.assertEqual('youtube', slide.video_source_type)
+                    self.assertEqual(youtube_id, slide.youtube_id)
+
+        # test URL from Google Drive when user hits the "share" button (main use case)
+        slide = Slide.create({
+            'name': 'dummy',
+            'channel_id': self.channel.id,
+            'url': 'https://drive.google.com/file/d/1qU5nHVNbz_r84P_IS5kDzoCuC1h5ZAZR/view?usp=sharing',
+            'slide_category': 'video'
+        })
+        self.assertEqual('google_drive', slide.video_source_type)
+        self.assertEqual('1qU5nHVNbz_r84P_IS5kDzoCuC1h5ZAZR', slide.google_drive_id)

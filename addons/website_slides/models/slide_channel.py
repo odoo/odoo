@@ -183,7 +183,6 @@ class Channel(models.Model):
     )
     promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
-    nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
     nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
     nbr_video = fields.Integer('Videos', compute='_compute_slides_statistics', store=True)
     nbr_infographic = fields.Integer('Infographics', compute='_compute_slides_statistics', store=True)
