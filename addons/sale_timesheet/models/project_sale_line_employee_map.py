@@ -20,7 +20,7 @@ class ProjectProductEmployeeMap(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='project_id.company_id')
     partner_id = fields.Many2one(related='project_id.partner_id')
     price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=True)
-    currency_id = fields.Many2one('res.currency', string="Currency", compute='_compute_price_unit', store=True, readonly=False)
+    currency_id = fields.Many2one('res.currency', string="Currency", compute='_compute_currency_id', store=True, readonly=False)
 
     _sql_constraints = [
         ('uniqueness_employee', 'UNIQUE(project_id,employee_id)', 'An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again.'),
@@ -35,15 +35,18 @@ class ProjectProductEmployeeMap(models.Model):
                 and map_entry.sale_line_id.order_partner_id.commercial_partner_id != map_entry.partner_id.commercial_partner_id
         ).update({'sale_line_id': False})
 
-    @api.depends('sale_line_id', 'sale_line_id.price_unit')
+    @api.depends('sale_line_id.price_unit')
     def _compute_price_unit(self):
         for line in self:
             if line.sale_line_id:
                 line.price_unit = line.sale_line_id.price_unit
-                line.currency_id = line.sale_line_id.currency_id
             else:
                 line.price_unit = 0
-                line.currency_id = False
+
+    @api.depends('sale_line_id.price_unit')
+    def _compute_currency_id(self):
+        for line in self:
+            line.currency_id = line.sale_line_id.currency_id if line.sale_line_id else False
 
     @api.model
     def create(self, values):
