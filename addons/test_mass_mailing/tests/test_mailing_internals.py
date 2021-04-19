@@ -45,7 +45,7 @@ class TestMailingInternals(TestMassMailCommon):
         # Test if bad jinja in the subject raises an error
         mailing.write({'subject': 'Subject ${object.name_id.id}'})
         with self.mock_mail_gateway(), self.assertRaises(Exception):
-                mailing_test.send_mail_test()
+            mailing_test.send_mail_test()
 
         # Test if bad jinja in the body raises an error
         mailing.write({
@@ -53,15 +53,15 @@ class TestMailingInternals(TestMassMailCommon):
             'body_html': '<p>Hello ${object.name_id.id}</p>',
         })
         with self.mock_mail_gateway(), self.assertRaises(Exception):
-                mailing_test.send_mail_test()
-        
+            mailing_test.send_mail_test()
+
         # Test if bad jinja in the preview raises an error
         mailing.write({
             'body_html': '<p>Hello ${object.name}</p>',
             'preview': 'Preview ${object.name_id.id}',
         })
         with self.mock_mail_gateway(), self.assertRaises(Exception):
-                mailing_test.send_mail_test()
+            mailing_test.send_mail_test()
 
     def test_mailing_trace_update(self):
         customers = self.env['res.partner']
@@ -85,8 +85,8 @@ class TestMailingInternals(TestMassMailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             mailing.action_send_mail()
 
-        self.gateway_reply_wrecord(MAIL_TEMPLATE, customers[0], use_in_reply_to=True)
-        self.gateway_reply_wrecord(MAIL_TEMPLATE, customers[1], use_in_reply_to=False)
+        self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, customers[0], use_in_reply_to=True)
+        self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, customers[1], use_in_reply_to=False)
 
         # customer2 looses headers
         mail_mail = self._find_mail_mail_wrecord(customers[2])
@@ -152,8 +152,8 @@ class TestMailingInternals(TestMassMailCommon):
         self.assertEqual(len(traces), 3)
 
         # simulate response to mailing
-        self.gateway_reply_wrecord(MAIL_TEMPLATE, self.mailing_list_1.contact_ids[0], use_in_reply_to=True)
-        self.gateway_reply_wrecord(MAIL_TEMPLATE, self.mailing_list_1.contact_ids[1], use_in_reply_to=False)
+        self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, self.mailing_list_1.contact_ids[0], use_in_reply_to=True)
+        self.gateway_mail_reply_wrecord(MAIL_TEMPLATE, self.mailing_list_1.contact_ids[1], use_in_reply_to=False)
 
         mailing_test_utms = self.env['mailing.test.utm'].search([('name', '=', 'Re: %s' % subject)])
         self.assertEqual(len(mailing_test_utms), 2)
