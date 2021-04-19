@@ -25,18 +25,9 @@ class PaymentAcquirer(models.Model):
     ], ondelete={'nelo': 'set default'})
     _nelo_redirect_url = fields.Char('', invisible = True)
 
-    nelo_payment_method = fields.Selection([
-        ('express_checkout', 'Express Checkout (only for Chinese Merchant)'),
-        ('standard_checkout', 'Cross-border'),
-    ], string='Account', default='express_checkout',
-        help="  * Cross-border: For the Overseas seller \n  * Express Checkout: For the Chinese Seller")
-    nelo_merchant_partner_id = fields.Char(
-        string='Merchant Partner ID', required_if_provider='nelo', groups='base.group_user',
-        help='The Merchant Partner ID is used to ensure communications coming from Nelo are valid and secured.')
-    nelo_md5_signature_key = fields.Char(
-        string='MD5 Signature Key', required_if_provider='nelo', groups='base.group_user',
-        help="The MD5 private key is the 32-byte string which is composed of English letters and numbers.")
-    nelo_seller_email = fields.Char(string='Nelo Seller Email', groups='base.group_user')
+    nelo_merchant_secret = fields.Char(
+        string='Merchant Secret', required_if_provider='nelo', groups='base.group_user',
+        help='The Merchant Secret is used to ensure communications with Nelo.')
 
     @api.model
     def _get_nelo_urls(self, environment):
@@ -93,7 +84,7 @@ class PaymentAcquirer(models.Model):
         
 
         headers = {
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkYmZjMzgxYy1jZjNiLTQ0NGUtYTRlNS03YTI0NGM5YjgzNjMiLCJpc3MiOiJuZWxvLmNvIiwiYWN0aW9uIjoiTUVSQ0hBTlRfQVBJIiwiaWF0IjoxNjE3ODU2NjExfQ.YKsV3CUuReU3gXq6UCbUcu5hLG7iyT1TvakNp7kWk-Nibwz835-Suuv3xTtqsAZ0ML8vjUjfHz_DKqfaD4S2HQ',
+            'Authorization': 'Bearer %s' % (self.nelo_merchant_secret),
             'Content-Type': 'application/json'
         }
         _logger.info('Headers\n %s', pprint.pformat(headers))  # debug
@@ -105,16 +96,6 @@ class PaymentAcquirer(models.Model):
         jsonResp = response.json()
         _logger.info('Response\n %s \n', pprint.pformat(jsonResp))  # debug
         self._nelo_redirect_url = jsonResp['redirectUrl']
-
-    def _build_sign(self, val):
-        # Rearrange parameters in the data set alphabetically
-        data_to_sign = sorted(val.items())
-        # Exclude parameters that should not be signed
-        data_to_sign = ["{}={}".format(k, v) for k, v in data_to_sign if k not in ['sign', 'sign_type', 'reference']]
-        # And connect rearranged parameters with &
-        data_string = '&'.join(data_to_sign)
-        data_string += self.nelo_md5_signature_key
-        return md5(data_string.encode('utf-8')).hexdigest()
 
     def nelo_form_generate_values(self, values):
         self._set_redirect_url(values)
@@ -129,44 +110,9 @@ class PaymentAcquirer(models.Model):
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    def _check_nelo_configuration(self, vals):
-        acquirer_id = int(vals.get('acquirer_id'))
-        acquirer = self.env['payment.acquirer'].sudo().browse(acquirer_id)
-        if acquirer and acquirer.provider == 'nelo' and acquirer.nelo_payment_method == 'express_checkout':
-            currency_id = int(vals.get('currency_id'))
-            if currency_id:
-                currency = self.env['res.currency'].sudo().browse(currency_id)
-                if currency and currency.name != 'CNY':
-                    _logger.info("Only CNY currency is allowed for Nelo Express Checkout")
-                    raise ValidationError(_("""
-                        Only transactions in Chinese Yuan (CNY) are allowed for Nelo Express Checkout.\n
-                        If you wish to use another currency than CNY for your transactions, switch your
-                        configuration to a Cross-border account on the Nelo payment acquirer in Odoo.
-                    """))
-        return True
-
-    def write(self, vals):
-        if vals.get('currency_id') or vals.get('acquirer_id'):
-            for payment in self:
-                check_vals = {
-                    'acquirer_id': vals.get('acquirer_id', payment.acquirer_id.id),
-                    'currency_id': vals.get('currency_id', payment.currency_id.id)
-                }
-                payment._check_nelo_configuration(check_vals)
-        return super(PaymentTransaction, self).write(vals)
-
-    @api.model
-    def create(self, vals):
-        self._check_nelo_configuration(vals)
-        return super(PaymentTransaction, self).create(vals)
-
-    # --------------------------------------------------
-    # FORM RELATED METHODS
-    # --------------------------------------------------
-
     @api.model
     def _nelo_form_get_tx_from_data(self, data):
-        reference, txn_id, sign = data.get('reference'), data.get('trade_no'), data.get('sign')
+        reference, txn_id = data.get('reference'), data.get('trade_no')
         if not reference or not txn_id:
             _logger.info('Nelo: received data with missing reference (%s) or txn_id (%s)' % (reference, txn_id))
             raise ValidationError(_('Nelo: received data with missing reference (%s) or txn_id (%s)') % (reference, txn_id))
@@ -183,12 +129,6 @@ class PaymentTransaction(models.Model):
                 logger_msg += '; multiple order found'
             _logger.info(logger_msg)
             raise ValidationError(error_msg)
-
-        # verify sign
-        sign_check = txs.acquirer_id._build_sign(data)
-        if sign != sign_check:
-            _logger.info('Nelo: invalid sign, received %s, computed %s, for data %s' % (sign, sign_check, data))
-            raise ValidationError(_('Nelo: invalid sign, received %s, computed %s, for data %s') % (sign, sign_check, data))
 
         return txs
 

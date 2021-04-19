@@ -7,10 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr='//group[@name="acquirer"]' position='inside'>
                 <group attrs="{'invisible': [('provider', '!=', 'nelo')]}">
-                    <field name="nelo_payment_method" widget="radio"/>
-                    <field name="nelo_seller_email" attrs="{'invisible': [('nelo_payment_method', '=', 'standard_checkout')], 'required': [('provider', '=', 'nelo'), ('nelo_payment_method', '=', 'express_checkout')]}"/>
-                    <field name="nelo_merchant_partner_id" password="True"/>
-                    <field name="nelo_md5_signature_key" password="True"/>
+                    <field name="nelo_merchant_secret" password="True"/>
                 </group>
             </xpath>
         </field>
