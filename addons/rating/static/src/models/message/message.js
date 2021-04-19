@@ -4,7 +4,7 @@ import { registerFieldPatchModel, registerClassPatchModel } from 'mail/static/sr
 const { attr } = require('mail/static/src/model/model_field.js');
 
 registerFieldPatchModel('mail.message', 'project/static/src/models/message.message.js', {
-    isRating: attr(),
+    ratingVal: attr(),
 });
     
 registerClassPatchModel('mail.message', 'project/static/src/models/message.message.js', {
@@ -13,8 +13,8 @@ registerClassPatchModel('mail.message', 'project/static/src/models/message.messa
      */
     convertData(data) {
         const data2 = this._super(data);
-        if ('is_rating' in data) {
-            data2.isRating = data.is_rating;
+        if ('rating_val' in data) {
+            data2.ratingVal = data.rating_val;
         }
         return data2;
     },

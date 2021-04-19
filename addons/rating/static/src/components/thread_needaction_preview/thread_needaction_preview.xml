@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ThreadNeedactionPreview" t-inherit-mode="extension">
         <xpath expr="//*[hasclass('o_ThreadNeedactionPreview_messageBody')]" position="replace">
-            <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.isRating">
-                rating
+            <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.ratingVal">
+                Rating: <t t-esc="thread.lastNeedactionMessageAsOriginThread.ratingVal"/>.
             </t>
             <t t-else="">$0</t>
         </xpath>
