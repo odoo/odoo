@@ -41,7 +41,7 @@ class Note(models.Model):
         return self.env['note.stage'].search([('user_id', '=', self.env.uid)], limit=1)
 
     name = fields.Text(compute='_compute_name', string='Note Summary', store=True)
-    user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
+    user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid, track_visibility='always')
     memo = fields.Html('Note Content')
     sequence = fields.Integer('Sequence')
     stage_id = fields.Many2one('note.stage', compute='_compute_stage_id',
