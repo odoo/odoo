@@ -480,8 +480,7 @@ var FormController = BasicController.extend({
     _shouldBounceOnClick(element) {
         return this.mode === 'readonly' &&
             !!element.closest('.oe_title, .o_inner_group') &&
-            !element.classList.contains("o_form_label") &&
-            !element.classList.contains("o_quick_editable");
+            this.quickEditTimeout === undefined;
     },
 
     //--------------------------------------------------------------------------
@@ -708,6 +707,7 @@ var FormController = BasicController.extend({
                     await this._setEditMode();
                     this.renderer.quickEdit(ev.data);
                 }
+                this.quickEditTimeout = undefined;
             };
             if (this.multiClickTime > 0) {
                 this.quickEditTimeout = setTimeout(quickEdit, this.multiClickTime);
