@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
 from random import randint, sample
 from werkzeug.exceptions import NotFound, Forbidden
 
@@ -33,49 +32,21 @@ class ExhibitorController(WebsiteEventController):
         # TDE BACKWARD: matches event/event-1/exhibitor/exhib-1 sub domain
         '/event/<model("event.event"):event>/exhibitor'
     ], type='http', auth="public", website=True, sitemap=False)
-    def event_exhibitors(self, event, **searches):
+    def event_exhibitors(self, event):
         return request.render(
             "website_event_exhibitor.event_exhibitors",
-            self._event_exhibitors_get_values(event, **searches)
+            self._event_exhibitors_get_values(event)
         )
 
-    def _event_exhibitors_get_values(self, event, **searches):
+    def _event_exhibitors_get_values(self, event):
         # init and process search terms
-        searches.setdefault('search', '')
-        searches.setdefault('countries', '')
-        searches.setdefault('sponsorships', '')
-        search_domain_base = self._get_event_sponsors_base_domain(event)
-        search_domain = search_domain_base
-
-        # search on content
-        if searches.get('search'):
-            search_domain = expression.AND([
-                search_domain,
-                ['|', ('name', 'ilike', searches['search']), ('website_description', 'ilike', searches['search'])]
-            ])
-
-        # search on countries
-        search_countries = self._get_search_countries(searches['countries'])
-        if search_countries:
-            search_domain = expression.AND([
-                search_domain,
-                [('partner_id.country_id', 'in', search_countries.ids)]
-            ])
-
-        # search on sponsor types
-        search_sponsorships = self._get_search_sponsorships(searches['sponsorships'])
-        if search_sponsorships:
-            search_domain = expression.AND([
-                search_domain,
-                [('sponsor_type_id', 'in', search_sponsorships.ids)]
-            ])
+        search_domain = self._get_event_sponsors_base_domain(event)
 
         # fetch data to display; use sudo to allow reading partner info, be sure domain is correct
         event = event.with_context(tz=event.date_tz or 'UTC')
         sponsors = request.env['event.sponsor'].sudo().search(search_domain)
-        sponsors_all = request.env['event.sponsor'].sudo().search(search_domain_base)
-        sponsor_types = sponsors_all.mapped('sponsor_type_id')
-        sponsor_countries = sponsors_all.mapped('partner_id.country_id').sorted('name')
+        sponsor_types = sponsors.mapped('sponsor_type_id')
+        sponsor_countries = sponsors.mapped('partner_id.country_id').sorted('name')
         # organize sponsors into categories to help display
         sponsor_categories = dict()
         for sponsor in sponsors:
@@ -95,11 +66,6 @@ class ExhibitorController(WebsiteEventController):
             'main_object': event,
             'sponsor_categories': sponsor_categories,
             'hide_sponsors': True,
-            # search information
-            'searches': searches,
-            'search_key': searches['search'],
-            'search_countries': search_countries,
-            'search_sponsorships': search_sponsorships,
             'sponsor_types': sponsor_types,
             'sponsor_countries': sponsor_countries,
             # environment
@@ -203,28 +169,3 @@ class ExhibitorController(WebsiteEventController):
 
         return sponsor_data
 
-    # ------------------------------------------------------------
-    # TOOLS
-    # ------------------------------------------------------------
-
-    def _get_search_countries(self, country_search):
-        # TDE FIXME: make me generic (slides, event, ...)
-        try:
-            country_ids = literal_eval(country_search)
-        except Exception:
-            countries = request.env['res.country'].sudo()
-        else:
-            # perform a search to filter on existing / valid tags implicitly
-            countries = request.env['res.country'].sudo().search([('id', 'in', country_ids)])
-        return countries
-
-    def _get_search_sponsorships(self, sponsorship_search):
-        # TDE FIXME: make me generic (slides, event, ...)
-        try:
-            sponsorship_ids = literal_eval(sponsorship_search)
-        except Exception:
-            sponsorships = request.env['event.sponsor.type'].sudo()
-        else:
-            # perform a search to filter on existing / valid tags implicitly
-            sponsorships = request.env['event.sponsor.type'].sudo().search([('id', 'in', sponsorship_ids)])
-        return sponsorships
