@@ -1022,6 +1022,11 @@ class AccountTaxTemplate(models.Model):
 
                     if self.chart_template_id.country_id:
                         vals['country_id'] = self.chart_template_id.country_id.id
+                    elif company.account_fiscal_country_id:
+                        vals['country_id'] = company.account_fiscal_country_id.id
+                    else:
+                        # Will happen for generic CoAs such as syscohada (they are available for multiple countries, and don't have any country_id)
+                        raise UserError(_("Please first define a fiscal country for company %s.", company.name))
 
                     tax_template_vals.append((template, vals))
                 else:
