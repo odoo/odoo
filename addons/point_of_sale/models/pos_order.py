@@ -370,6 +370,70 @@ class PosOrder(models.Model):
         currency = self.currency_id
         return currency.round(amount) if currency else amount
 
+    def _create_invoice(self, move_vals):
+        self.ensure_one()
+        new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type']).create(move_vals)
+        message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (self.id, self.name)
+        new_move.message_post(body=message)
+        if self.config_id.cash_rounding:
+            rounding_applied = float_round(self.amount_paid - self.amount_total,
+                                           precision_rounding=new_move.currency_id.rounding)
+            rounding_line = new_move.line_ids.filtered(lambda line: line.is_rounding_line)
+            if rounding_applied:
+                if rounding_applied > 0.0:
+                    account_id = new_move.invoice_cash_rounding_id.loss_account_id.id
+                else:
+                    account_id = new_move.invoice_cash_rounding_id.profit_account_id.id
+                if rounding_line:
+                    if rounding_line.debit > 0:
+                        rounding_line_difference = rounding_line.debit + rounding_applied
+                    else:
+                        rounding_line_difference = -rounding_line.credit + rounding_applied
+                    if rounding_line_difference:
+                        rounding_line.with_context(check_move_validity=False).write({
+                            'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
+                            'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
+                            'account_id': account_id,
+                            'price_unit': rounding_applied,
+                        })
+                        existing_terms_line = new_move.line_ids.filtered(
+                            lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
+                        if existing_terms_line.debit > 0:
+                            existing_terms_line_new_val = float_round(
+                                existing_terms_line.debit + rounding_line_difference,
+                                precision_rounding=new_move.currency_id.rounding)
+                        else:
+                            existing_terms_line_new_val = float_round(
+                                -existing_terms_line.credit + rounding_line_difference,
+                                precision_rounding=new_move.currency_id.rounding)
+                        existing_terms_line.write({
+                            'debit': existing_terms_line_new_val > 0.0 and existing_terms_line_new_val or 0.0,
+                            'credit': existing_terms_line_new_val < 0.0 and -existing_terms_line_new_val or 0.0,
+                        })
+
+                        new_move._recompute_payment_terms_lines()
+
+                else:
+                    self.env['account.move.line'].create({
+                        'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
+                        'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
+                        'quantity': 1.0,
+                        'amount_currency': rounding_applied,
+                        'partner_id': new_move.partner_id.id,
+                        'move_id': new_move.id,
+                        'currency_id': new_move.currency_id if new_move.currency_id != new_move.company_id.currency_id else False,
+                        'company_id': new_move.company_id.id,
+                        'company_currency_id': new_move.company_id.currency_id.id,
+                        'is_rounding_line': True,
+                        'sequence': 9999,
+                        'name': new_move.invoice_cash_rounding_id.name,
+                        'account_id': account_id,
+                    })
+            else:
+                if rounding_line:
+                    rounding_line.unlink()
+        return new_move
+
     def action_pos_order_paid(self):
         self.ensure_one()
 
@@ -381,8 +445,20 @@ class PosOrder(models.Model):
         else:
             total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
 
-        if not float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding):
+        isPaid = float_is_zero(total - self.amount_paid, precision_rounding=self.currency_id.rounding)
+
+        if not isPaid and not self.config_id.cash_rounding:
             raise UserError(_("Order %s is not fully paid.", self.name))
+        elif not isPaid and self.config_id.cash_rounding:
+            currency = self.currency_id
+            if self.config_id.rounding_method.rounding_method == "HALF-UP":
+                maxDiff = currency.round(self.config_id.rounding_method.rounding / 2)
+            else:
+                maxDiff = currency.round(self.config_id.rounding_method.rounding)
+
+            diff = currency.round(self.amount_total - self.amount_paid)
+            if not abs(diff) < maxDiff:
+                raise UserError(_("Order %s is not fully paid.", self.name))
 
         self.write({'state': 'paid'})
 
@@ -424,12 +500,8 @@ class PosOrder(models.Model):
                 raise UserError(_('Please provide a partner for the sale.'))
 
             move_vals = order._prepare_invoice_vals()
-            new_move = moves.sudo()\
-                            .with_company(order.company_id)\
-                            .with_context(default_move_type=move_vals['move_type'])\
-                            .create(move_vals)
-            message = _("This invoice has been created from the POS Order: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
-            new_move.message_post(body=message)
+            new_move = order._create_invoice(move_vals)
+
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id)._post()
             moves += new_move
