@@ -22,6 +22,9 @@ async function handleRequestLongpollingPoll(request) {
         console.log('executing /longpolling/poll');
         requestInProgress = self.fetch('/longpolling/poll', {
             body: JSON.stringify({
+                id: Math.floor(Math.random() * 1000 * 1000 * 1000),
+                jsonrpc: '2.0',
+                method: 'call',
                 params: {
                     // TODO SEB handle new channels (only for livechat?)
                     channels: [],

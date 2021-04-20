@@ -165,6 +165,9 @@ export class LongpollingCommunication {
         try {
             const response = await this.env.browser.fetch('/longpolling/poll', {
                 body: JSON.stringify({
+                    id: Math.floor(Math.random() * 1000 * 1000 * 1000),
+                    jsonrpc: '2.0',
+                    method: 'call',
                     params: {
                         // TODO SEB handle new channels (only for livechat?)
                         channels: [],
