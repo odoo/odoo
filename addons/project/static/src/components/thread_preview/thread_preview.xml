@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ThreadPreview" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_ThreadPreview_messageBody')]" position="replace">
+            <t t-if="thread.lastMessage and thread.lastMessage.tracking_value_ids.length > 0">
+                <t t-esc="thread.lastMessage.tracking_value_ids[0].changed_field"/>
+                 changed: 
+                <t t-esc="thread.lastMessage.tracking_value_ids[0].old_value"/>
+                 to 
+                <t t-esc="thread.lastMessage.tracking_value_ids[0].new_value"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

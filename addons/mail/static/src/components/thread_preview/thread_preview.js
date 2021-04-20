@@ -31,8 +31,6 @@ class ThreadPreview extends Component {
             if (lastMessage) {
                 lastMessageAuthor = lastMessage.author;
             }
-            console.log(lastMessageAuthor)
-            console.log(lastMessage)
             return {
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 lastMessage: lastMessage ? lastMessage.__state : undefined,
