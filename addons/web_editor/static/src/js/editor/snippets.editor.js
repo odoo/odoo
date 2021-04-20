@@ -157,7 +157,7 @@ var SnippetEditor = Widget.extend({
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
-        this.displayHandles = false;
+        this.displayOverlayOptions = false;
 
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
@@ -504,9 +504,8 @@ var SnippetEditor = Widget.extend({
             // sticky class is added/removed when toggling/untoggling
             this.$el.removeClass('o_we_overlay_preview');
             this.$el.toggleClass('o_we_overlay_sticky', show);
-            if (!this.displayHandles) {
-                this.$el.find('.o_handle').addClass('d-none');
-                this.$el.find('.o_overlay_options_wrap').addClass('o_inside_parent');
+            if (!this.displayOverlayOptions) {
+                this.$el.find('.o_overlay_options_wrap').addClass('o_we_hidden_overlay_options');
             }
         }
 
@@ -686,8 +685,8 @@ var SnippetEditor = Widget.extend({
                 this.$el.add($optionsSection).find('.oe_snippet_remove').addClass('d-none');
             }
 
-            if (option.displayHandles) {
-                this.displayHandles = true;
+            if (option.displayOverlayOptions) {
+                this.displayOverlayOptions = true;
             }
 
             return option.appendTo(document.createDocumentFragment());
@@ -1732,8 +1731,8 @@ var SnippetsMenu = Widget.extend({
                 // enabled previously by a click
                 if (editorToEnable) {
                     editorToEnable.toggleOverlay(true, previewMode);
-                    if (!previewMode && !editorToEnable.displayHandles) {
-                        const parentEditor = editorToEnableHierarchy.find(ed => ed.displayHandles);
+                    if (!previewMode && !editorToEnable.displayOverlayOptions) {
+                        const parentEditor = editorToEnableHierarchy.find(ed => ed.displayOverlayOptions);
                         if (parentEditor) {
                             parentEditor.toggleOverlay(true, previewMode);
                         }
@@ -2075,7 +2074,9 @@ var SnippetsMenu = Widget.extend({
             let editableArea = self.getEditableArea();
             snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea), self.options);
             self.snippetEditors.push(snippetEditor);
-            return snippetEditor.appendTo(self.$snippetEditorArea);
+            // Keep parent below its child inside the DOM as its `o_handle`
+            // needs to be (visually) on top of the child ones.
+            return snippetEditor.prependTo(self.$snippetEditorArea);
         }).then(function () {
             return snippetEditor;
         });
