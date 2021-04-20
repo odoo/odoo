@@ -99,6 +99,10 @@ class ResUsers(models.Model):
             # Workaround: facebook does not send 'user_id' in Open Graph Api
             if validation.get('id'):
                 validation['user_id'] = validation['id']
+                
+            # Workaround: OIDC conformant providers like Auht0 do not send 'user_id'
+            elif  validation.get('sub'):
+                validation['user_id'] = validation['sub']
             else:
                 raise AccessDenied()
 
