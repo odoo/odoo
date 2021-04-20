@@ -830,7 +830,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1730.0,
         })
 
-    def test_out_invoice_line_onchange_rounding_price_subtotal(self):
+    def test_out_invoice_line_onchange_rounding_price_subtotal_1(self):
         ''' Seek for rounding issue on the price_subtotal when dealing with a price_unit having more digits than the
         foreign currency one.
         '''
@@ -903,6 +903,108 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
 
         check_invoice_values(invoice_2)
+
+    def test_out_invoice_line_onchange_rounding_price_subtotal_2(self):
+        """ Ensure the cyclic computations implemented using onchanges are not leading to rounding issues when using
+        price-included taxes.
+        For example:
+        100 / 1.21 ~= 82.64 but 82.64 * 1.21 ~= 99.99 != 100.0.
+        """
+
+        def check_invoice_values(invoice):
+            self.assertInvoiceValues(invoice, [
+                {
+                    'price_unit': 100.0,
+                    'price_subtotal': 82.64,
+                    'debit': 0.0,
+                    'credit': 82.64,
+                },
+                {
+                    'price_unit': 17.36,
+                    'price_subtotal': 17.36,
+                    'debit': 0.0,
+                    'credit': 17.36,
+                },
+                {
+                    'price_unit': -100.0,
+                    'price_subtotal': -100.0,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                },
+            ], {
+                'amount_untaxed': 82.64,
+                'amount_tax': 17.36,
+                'amount_total': 100.0,
+            })
+
+        tax = self.env['account.tax'].create({
+            'name': '21%',
+            'amount': 21.0,
+            'price_include': True,
+            'include_base_amount': True,
+        })
+
+        # == Test assigning tax directly ==
+
+        invoice_create = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2017-01-01',
+            'date': '2017-01-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'test line',
+                'price_unit': 100.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+                'tax_ids': [(6, 0, tax.ids)],
+            })],
+        })
+
+        check_invoice_values(invoice_create)
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        move_form.partner_id = self.partner_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.name = 'test line'
+            line_form.price_unit = 100.0
+            line_form.account_id = self.company_data['default_account_revenue']
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(tax)
+        invoice_onchange = move_form.save()
+
+        check_invoice_values(invoice_onchange)
+
+        # == Test when the tax is set on a product ==
+
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'lst_price': 100.0,
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+            'taxes_id': [(6, 0, tax.ids)],
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        move_form.partner_id = self.partner_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product
+        invoice_onchange = move_form.save()
+
+        check_invoice_values(invoice_onchange)
+
+        # == Test with a fiscal position ==
+
+        fiscal_position = self.env['account.fiscal.position'].create({'name': 'fiscal_position'})
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.invoice_date = fields.Date.from_string('2017-01-01')
+        move_form.partner_id = self.partner_a
+        move_form.fiscal_position_id = fiscal_position
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product
+        invoice_onchange = move_form.save()
+
+        check_invoice_values(invoice_onchange)
 
     def test_out_invoice_line_onchange_taxes_2_price_unit_tax_included(self):
         ''' Seek for rounding issue in the price unit. Suppose a price_unit of 2300 with a 5.5% price-included tax
