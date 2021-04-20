@@ -23,7 +23,7 @@ class ProjectTaskType(models.Model):
         return [default_project_id] if default_project_id else None
 
     active = fields.Boolean('Active', default=True)
-    name = fields.Char(string='Stage Name', required=True, translate=True)
+    name = fields.Char(string='Name', required=True, translate=True)
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
