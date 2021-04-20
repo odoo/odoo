@@ -94,10 +94,6 @@ This module provides the core of the Odoo Web Client.
 
             'base/static/src/css/modules.css',
 
-            'web/static/src/legacy/scss/webclient_extra.scss',
-            'web/static/src/legacy/scss/webclient_layout.scss',
-
-            'web/static/src/legacy/scss/webclient.scss',
             'web/static/src/legacy/scss/domain_selector.scss',
             'web/static/src/legacy/scss/model_field_selector.scss',
             'web/static/src/legacy/scss/progress_bar.scss',
