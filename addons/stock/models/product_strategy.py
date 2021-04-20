@@ -27,6 +27,10 @@ class StockPutawayRule(models.Model):
     def _default_location_id(self):
         if self.env.context.get('active_model') == 'stock.location':
             return self.env.context.get('active_id')
+        if not self.env.user.has_group('stock.group_stock_multi_warehouses'):
+            wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+            input_loc, _ = wh._get_input_output_locations(wh.reception_steps, wh.delivery_steps)
+            return input_loc
 
     def _default_product_id(self):
         if self.env.context.get('active_model') == 'product.template' and self.env.context.get('active_id'):
@@ -62,7 +66,7 @@ class StockPutawayRule(models.Model):
         domain="[('child_ids', '!=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         default=_default_location_id, required=True, ondelete='cascade', index=True)
     location_out_id = fields.Many2one(
-        'stock.location', 'Store to', check_company=True,
+        'stock.location', 'Store to sublocation', check_company=True,
         domain="[('id', 'child_of', location_in_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         required=True, ondelete='cascade')
     sequence = fields.Integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list.")
@@ -75,14 +79,15 @@ class StockPutawayRule(models.Model):
 
     @api.onchange('location_in_id')
     def _onchange_location_in(self):
+        child_location_count = 0
         if self.location_out_id:
             child_location_count = self.env['stock.location'].search_count([
                 ('id', '=', self.location_out_id.id),
                 ('id', 'child_of', self.location_in_id.id),
                 ('id', '!=', self.location_in_id.id),
             ])
-            if not child_location_count:
-                self.location_out_id = None
+        if not child_location_count or not self.location_out_id:
+            self.location_out_id = self.location_in_id
 
     def write(self, vals):
         if 'company_id' in vals:
