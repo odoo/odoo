@@ -850,6 +850,7 @@ td {
 /*  ********* The right pane contains the screens and headers ********* */
 
 .pos .rightpane {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -875,7 +876,8 @@ td {
     background: #d3d3d3;
     text-align: center;
     display: flex;
-    flex-flow: row wrap;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .pos .green-border-bottom {
@@ -889,11 +891,17 @@ td {
 /*  ********* The product list  ********* */
 
 .pos .product-list {
-    padding: 10px;
-    text-align: left;
-    -webkit-transform: translate3d(0,0,0);
+    padding: 10px 5px;
     display: flex;
     flex-wrap: wrap;
+    gap: 2px;
+}
+@media screen and (max-width: 768px) {
+    .pos .product-list {
+        padding: 0px;
+        gap: 0px;
+        justify-content: space-between;
+    }
 }
 
 .pos .product-list-scroller{
@@ -948,7 +956,6 @@ td {
 @media screen and (max-width: 768px) {
     .pos .breadcrumb-button.breadcrumb-home {
         width: auto;
-        font-size: 13px;
         margin-left: 3px;
     }
 }
@@ -1050,7 +1057,6 @@ td {
     padding: 0px;
     background: #cecece;
     display: flex;
-    flex-flow: row wrap;
     flex: 1;
 }
 
@@ -1132,11 +1138,7 @@ td {
 
 .pos .product {
     position:relative;
-    vertical-align: top;
-    display: inline-block;
     line-height: 100px;
-    font-size: 11px;
-    margin: 8px !important;
     width: 122px;
     height:115px;
     background:#fff;
@@ -1162,9 +1164,6 @@ td {
 }
 
 @media screen and (max-width: 768px) {
-    .pos .product-list {
-        padding: 0px;
-    }
     .pos .product {
         width: 32%;
         height: auto;

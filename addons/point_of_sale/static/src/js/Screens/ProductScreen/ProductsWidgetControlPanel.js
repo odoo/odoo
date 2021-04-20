@@ -26,6 +26,9 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
             this.searchWordInput.el.value = '';
             this.trigger('clear-search');
         }
+        get displayCategImages() {
+            return this.env.pos.config.iface_display_categ_images && !this.env.isMobile;
+        }
         updateSearch(event) {
             this.trigger('update-search', event.target.value);
             if (event.key === 'Enter') {
