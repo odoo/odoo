@@ -287,4 +287,5 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend({
         $target.find('.fa-chevron-circle-down, .fa-chevron-circle-right').toggleClass('fa-chevron-circle-down fa-chevron-circle-right');
     },
 });
+return ProductComparison;
 });
