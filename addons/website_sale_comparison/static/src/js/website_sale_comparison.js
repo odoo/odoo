@@ -308,4 +308,5 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
         }
     },
 });
+return ProductComparison;
 });
