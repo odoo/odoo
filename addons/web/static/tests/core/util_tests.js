@@ -231,7 +231,7 @@ QUnit.module('core', {}, function () {
         );
         assert.throws(
             () => sortBy([Symbol('b'), Symbol('a')]),
-            new TypeError(`Cannot convert a Symbol value to a number`)
+            TypeError
         );
         assert.throws(
             () => sortBy(ints, true),
