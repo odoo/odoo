@@ -2769,7 +2769,7 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @type {boolean}
      */
-    displayHandles: false,
+    displayOverlayOptions: false,
 
     /**
      * The option `$el` is supposed to be the associated DOM UI element.
@@ -3846,7 +3846,7 @@ const registry = {};
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 registry.sizing = SnippetOptionWidget.extend({
-    displayHandles: true,
+    displayOverlayOptions: true,
 
     /**
      * @override
@@ -4105,28 +4105,6 @@ registry['sizing_y'] = registry.sizing.extend({
  * Allows for media to be replaced.
  */
 registry.ReplaceMedia = SnippetOptionWidget.extend({
-    /**
-     * @override
-     */
-    start() {
-        const $button = this.$el.find('we-button.fa');
-        this.$overlayRemove = this.$overlay.find('.oe_snippet_remove');
-        $button.insertBefore(this.$overlayRemove);
-
-        return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUIVisibility() {
-        this.$overlayRemove.toggleClass('d-none', this.$target.is('.fa'));
-        return this._super(...arguments);
-    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -4142,20 +4120,6 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         // to be refactored when the new editor is merged
         this.$target.dblclick();
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'replace_media_overlay_opt') {
-            return !this.$target.is('.fa');
-        }
-        return this._super(...arguments);
-    }
 });
 
 /**
