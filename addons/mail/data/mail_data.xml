@@ -73,7 +73,7 @@
     <td colspan="2" style="text-align:center;">
         <hr width="100%"
             style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0 12px 0;"/>
-        <p t-if="subtype.internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
+        <p t-if="subtype.internal and message.reply_to != message.email_from" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
             <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
         </p>
     </td>
