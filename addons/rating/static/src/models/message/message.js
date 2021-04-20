@@ -3,11 +3,11 @@ import { registerFieldPatchModel, registerClassPatchModel } from 'mail/static/sr
 
 const { attr } = require('mail/static/src/model/model_field.js');
 
-registerFieldPatchModel('mail.message', 'project/static/src/models/message.message.js', {
+registerFieldPatchModel('mail.message', 'rating/static/src/models/message.message.js', {
     ratingVal: attr(),
 });
     
-registerClassPatchModel('mail.message', 'project/static/src/models/message.message.js', {
+registerClassPatchModel('mail.message', 'rating/static/src/models/message.message.js', {
     /**
      * @override
      */
