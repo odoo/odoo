@@ -599,6 +599,19 @@ class StockMove(models.Model):
         self._generate_serial_numbers()
         return self.action_show_details()
 
+    def action_clear_lines_show_details(self):
+        """ Unlink `self.move_line_ids` before returning `self.action_show_details`.
+        Useful for if a user creates too many SNs by accident via action_assign_serial_show_details
+        since there's no way to undo the action.
+        """
+        self.ensure_one()
+        if self.picking_type_id.show_reserved:
+            move_lines = self.move_line_ids
+        else:
+            move_lines = self.move_line_nosuggest_ids
+        move_lines.unlink()
+        return self.action_show_details()
+
     def action_assign_serial(self):
         """ Opens a wizard to assign SN's name on each move lines.
         """
