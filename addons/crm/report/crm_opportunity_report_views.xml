@@ -138,7 +138,9 @@
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),
-                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')})]"/>
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('crm_lead_view_form')})]"/>
             <field name="help">This report analyses the source of your leads.</field>
         </record>
 
