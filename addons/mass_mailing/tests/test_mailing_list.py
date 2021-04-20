@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.tests.common import users
+from odoo.tests.common import Form, users
 
 
 class TestMailingListMerge(MassMailCommon):
@@ -72,13 +72,12 @@ class TestMailingListMerge(MassMailCommon):
         # This test ensure that the mailing lists are correctly merged and no
         # duplicates are appearing in C
 
-        result_list = self.env['mailing.list.merge'].create({
-            'src_list_ids': [(4, list_id) for list_id in [self.mailing_list_1.id, self.mailing_list_2.id]],
-            'dest_list_id': self.mailing_list_3.id,
-            'merge_options': 'existing',
-            'new_list_name': False,
-            'archive_src_lists': False,
-        }).action_mailing_lists_merge()
+        merge_form = Form(self.env['mailing.list.merge'].with_context(active_ids=[self.mailing_list_1.id, self.mailing_list_2.id]))
+        merge_form.new_list_name = False
+        merge_form.dest_list_id = self.mailing_list_3
+        merge_form.merge_options = 'existing'
+        merge_form.archive_src_lists = False
+        result_list = merge_form.save().action_mailing_lists_merge()
 
         # Assert the number of contacts is correct
         self.assertEqual(
