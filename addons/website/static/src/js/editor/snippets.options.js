@@ -2670,7 +2670,7 @@ options.registry.ContainerWidth = options.Class.extend({
  * Allows snippets to be moved before the preceding element or after the following.
  */
 options.registry.SnippetMove = options.Class.extend({
-    displayHandles: true,
+    displayOverlayOptions: true,
 
     /**
      * @override
