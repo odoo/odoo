@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_ca_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@class='row'][last()]" position="after">
+            <div>PST: <span t-field="o.company_id.l10n_ca_pst"/></div>
+        </xpath>
+    </template>
+
+    <template id="l10n_ca_external_layout_clean" inherit_id="web.external_layout_clean">
+        <xpath expr="//div[@class='row']" position="after">
+            <div>PST: <span t-field="o.company_id.l10n_ca_pst"/></div>
+
+        </xpath>
+    </template>
+
+    <template id="l10n_ca_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[@class='row mb8']" position="after">
+            <div>PST: <span t-field="o.company_id.l10n_ca_pst"/></div>
+        </xpath>
+    </template>
+
+    <template id="l10n_ca_external_layout_background" inherit_id="web.external_layout_background">
+        <xpath expr="//div[@class='float-left company_address']" position="after">
+            <div>PST: <span t-field="o.company_id.l10n_ca_pst"/></div>
+        </xpath>
+    </template>
+</odoo>
