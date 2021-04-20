@@ -79,6 +79,8 @@ export class LongpollingCommunication {
         }
         this._isActive = true;
         this._lastBusMessageId = lastBusMessageId;
+        // ensure session is correctly bound before making the request (to avoid "session expired")
+        await this.env.session.is_bound;
         while (this._isActive) {
             try {
                 const busMessages = await this._performRpcLongpollingPoll();
