@@ -98,6 +98,7 @@ function registerView(name, LegacyView) {
   Controller.components = { ViewAdapter };
   Controller.display_name = LegacyView.prototype.display_name;
   Controller.icon = LegacyView.prototype.icon;
+  Controller.isMobileFriendly = LegacyView.prototype.mobile_friendly;
   Controller.multiRecord = LegacyView.prototype.multi_record;
   Controller.type = LegacyView.prototype.viewType;
   Controller.isLegacy = true;

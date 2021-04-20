@@ -456,23 +456,23 @@ function makeActionManager(env) {
     }
 
     let view = options.viewType && views.find((v) => v.type === options.viewType);
-    let lazyController;
+    let lazyView;
 
     if (view && !view.multiRecord) {
-      const lazyView = views[0].multiRecord ? views[0] : undefined;
-      if (lazyView) {
-        lazyController = {
-          jsId: `controller_${++id}`,
-          Component: lazyView,
-          action,
-          view: lazyView,
-          views,
-          props: _getViewProps(lazyView, action, views),
-        };
-      }
+      lazyView = views[0].multiRecord ? views[0] : undefined;
     } else if (!view) {
       view = views[0];
     }
+
+    if (env.isSmall) {
+      if (!view.isMobileFriendly) {
+        view = _findMobileView(views, view.multiRecord) || view;
+      }
+      if (lazyView && !lazyView.isMobileFriendly) {
+        lazyView = _findMobileView(views, lazyView.multiRecord) || lazyView;
+      }
+    }
+
     const viewOptions = {};
     if (options.resId) {
       viewOptions.recordId = options.resId;
@@ -487,12 +487,36 @@ function makeActionManager(env) {
     };
     action.controllers[view.type] = controller;
 
-    return _updateUI(controller, {
+    const updateUIOptions = {
       clearBreadcrumbs: options.clearBreadcrumbs,
-      lazyController,
       onClose: options.onClose,
       stackPosition: options.stackPosition,
-    });
+    };
+
+    if (lazyView) {
+      updateUIOptions.lazyController = {
+        jsId: `controller_${++id}`,
+        Component: lazyView,
+        action,
+        view: lazyView,
+        views,
+        props: _getViewProps(lazyView, action, views),
+      };
+    }
+
+    return _updateUI(controller, updateUIOptions);
+  }
+
+  /**
+   * Helper function to find the first mobile-friendly view, if any.
+   *
+   * @private
+   * @param {Array} views an array of views
+   * @param {boolean} multiRecord true if we search for a multiRecord view
+   * @returns {Object|undefined} first mobile-friendly view found
+   */
+  function _findMobileView(views, multiRecord) {
+    return views.find((view) => view.isMobileFriendly && view.multiRecord === multiRecord);
   }
 
   // ---------------------------------------------------------------------------

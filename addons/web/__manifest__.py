@@ -546,6 +546,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.qunit_mobile_suite_tests': [
             'web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js',
+            'web/static/tests/actions/helpers.js',
             # 'web/static/tests/legacy/fields/basic_fields_mobile_tests.js',
             # 'web/static/tests/legacy/fields/relational_fields_mobile_tests.js',
             # 'web/static/tests/legacy/components/dropdown_menu_mobile_tests.js',
