@@ -507,6 +507,7 @@ class Partner(models.Model):
 
     def write(self, vals):
         if vals.get('active') is False:
+<<<<<<< HEAD
             # DLE: It should not be necessary to modify this to make work the ORM. The problem was just the recompute
             # of partner.user_ids when you create a new user for this partner, see test test_70_archive_internal_partners
             # You modified it in a previous commit, see original commit of this:
@@ -528,6 +529,11 @@ class Partner(models.Model):
                     raise ValidationError(_('You cannot archive contacts linked to an active user.\n'
                                             'Ask an administrator to archive their associated user first.\n\n'
                                             'Linked active users :\n%(names)s', names=", ".join([u.display_name for u in users])))
+=======
+            for partner in self:
+                if partner.active and partner.user_ids:
+                    raise ValidationError(_('You cannot archive a contact linked to a portal or internal user.'))
+>>>>>>> 71f566afd11... temp
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
         # (this is to allow the code from res_users to write to the partner!) or
