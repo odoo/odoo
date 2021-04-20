@@ -122,7 +122,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                     }
                     let quantity = line.product_uom_qty;
                     if (line.product_uom_qty > 0) {
-                        quantity = line.product_uom_qty - line.qty_invoiced;
+                        quantity = line.product_uom_qty - Math.max(line.qty_invoiced, line.qty_delivered);
                     }
 
                     let new_line = new models.Orderline({}, {
