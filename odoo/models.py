@@ -1677,6 +1677,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
+            'name': self.env['ir.model']._get(self._name).name,
             'view_type': 'form',
             'view_mode': 'form',
             'views': [(view_id, 'form')],
