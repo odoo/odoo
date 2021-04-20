@@ -169,6 +169,9 @@ odoo.define('web.test_utils_dom', function (require) {
         if (validMatches.length === 0 && matches.length > 0) {
             throw new Error(`Element to click on is not visible ${selectorMsg}`);
         }
+        if (target.disabled) {
+            return;
+        }
 
         return triggerEvent(target, 'click');
     }
