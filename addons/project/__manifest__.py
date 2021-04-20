@@ -66,6 +66,8 @@
             'project/static/src/js/portal_rating.js',
         ],
         'web.assets_qweb': [
+            'project/static/src/components/thread_needaction_preview/thread_needaction_preview.xml',
+            'project/static/src/components/thread_preview/thread_preview.xml',
             'project/static/src/xml/**/*',
         ],
         'web.qunit_suite_tests': [
