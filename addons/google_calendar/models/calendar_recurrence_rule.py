@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 
@@ -137,8 +138,8 @@ class RecurrenceRule(models.Model):
             vals['calendar_event_ids'] = [(4, base_event.id)]
             # event_tz is written on event in Google but on recurrence in Odoo
             vals['event_tz'] = gevent.start.get('timeZone')
-        recurrence = super()._create_from_google(gevents, vals_list)
-        recurrence._apply_recurrence()
+        recurrence = super(RecurrenceRule, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
+        recurrence.with_context(dont_notify=True)._apply_recurrence()
         return recurrence
 
     def _get_sync_domain(self):
