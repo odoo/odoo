@@ -38,7 +38,7 @@ class AccountInvoiceSend(models.TransientModel):
     def snailmail_print_action(self):
         self.ensure_one()
         letters = self.env['snailmail.letter']
-        for invoice in self.invoice_ids:
+        for invoice in self.invoice_ids.filtered(lambda i: i.partner_id):
             letter = self.env['snailmail.letter'].create({
                 'partner_id': invoice.partner_id.id,
                 'model': 'account.move',
@@ -49,7 +49,7 @@ class AccountInvoiceSend(models.TransientModel):
             })
             letters |= letter
 
-        self.invoice_ids.filtered(lambda inv: not inv.invoice_sent).write({'invoice_sent': True})
+        self.invoice_ids.filtered(lambda inv: inv.partner_id and not inv.invoice_sent).write({'invoice_sent': True})
         if len(self.invoice_ids) == 1:
             letters._snailmail_print()
         else:
