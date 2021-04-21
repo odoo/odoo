@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { deployServices } from "./webclient/setup";
+import { startServices } from "./webclient/setup";
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
@@ -37,6 +37,6 @@ export async function makeEnv(debug) {
     },
   };
 
-  await deployServices(env);
+  await startServices(env);
   return env;
 }

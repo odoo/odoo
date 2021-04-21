@@ -206,7 +206,7 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
   Parent.template = tags.xml`<RedirectWarningDialog data="data" t-on-dialog-closed="onDialogClosed"/>`;
   const faceActionService = {
     name: "action",
-    deploy() {
+    start() {
       return {
         doAction(actionId) {
           assert.step(actionId);

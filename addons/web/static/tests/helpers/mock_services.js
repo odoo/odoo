@@ -32,7 +32,7 @@ export function makeFakeLocalizationService(config) {
 
   return {
     name: "localization",
-    deploy: async (env) => {
+    start: async (env) => {
       const _t = (str) => translatedTerms[str] || str;
       env._t = _t;
       env.qweb.translateFn = _t;
@@ -49,7 +49,7 @@ export function makeFakeUserService(values) {
   const { uid, name, username, is_admin, user_companies, partner_id, user_context } = sessionInfo;
   return {
     name: "user",
-    deploy(env) {
+    start(env) {
       let allowedCompanies = computeAllowedCompanyIds();
       const setCompanies = makeSetCompanies(() => allowedCompanies);
       const context = {
@@ -98,7 +98,7 @@ export function makeFakeUserService(values) {
   };
   return {
     name: "menus",
-    deploy() {
+    start() {
       const menusService = {
         getMenu(menuId: keyof MenuData) {
           return _menuData![menuId];
@@ -136,7 +136,7 @@ function buildMockRPC(mockRPC) {
 export function makeFakeRPCService(mockRPC) {
   return {
     name: "rpc",
-    deploy() {
+    start() {
       return buildMockRPC(mockRPC);
     },
     specializeForComponent: rpcService.specializeForComponent,
@@ -228,7 +228,7 @@ export function makeFakeRouterService(params) {
   }
   let current = getRoute(_current);
   return {
-    deploy(env) {
+    start(env) {
       function loadState(hash) {
         current.hash = hash;
         env.bus.trigger("ROUTE_CHANGE");
@@ -271,7 +271,7 @@ export function makeFakeUIService(values) {
     SIZES,
   };
   return {
-    deploy(env) {
+    start(env) {
       const res = Object.assign(defaults, values);
       Object.defineProperty(env, "isSmall", {
         get() {
@@ -284,7 +284,7 @@ export function makeFakeUIService(values) {
 }
 
 export const fakeCookieService = {
-  deploy() {
+  start() {
     const cookie = {};
     return {
       get current() {
@@ -303,7 +303,7 @@ export const fakeCookieService = {
 };
 
 export const fakeTitleService = {
-  deploy() {
+  start() {
     let current = {};
     return {
       get current() {
@@ -321,7 +321,7 @@ export const fakeTitleService = {
 
 export function makeFakeDownloadService(callback) {
   return {
-    deploy() {
+    start() {
       return async function (options) {
         if (callback) {
           return await callback(options);
@@ -333,7 +333,7 @@ export function makeFakeDownloadService(callback) {
 
 export function makeFakeNotificationService(createMock, closeMock) {
   return {
-    deploy() {
+    start() {
       function create() {
         if (createMock) {
           return createMock(...arguments);

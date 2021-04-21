@@ -4,7 +4,7 @@ import { serviceRegistry } from "@web/webclient/service_registry";
 import tourManager from "web_tour.tour";
 
 export const tourService = {
-  deploy() {
+  start() {
     /**
      * @private
      * @returns {Object} All the tours as a map

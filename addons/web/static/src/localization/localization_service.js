@@ -66,7 +66,7 @@ export function strftimeToLuxonFormat(value) {
 
 export const localizationService = {
   dependencies: ["user"],
-  deploy: async (env) => {
+  start: async (env) => {
     const cacheHashes = odoo.session_info.cache_hashes;
     const translationsHash = cacheHashes.translations || new Date().getTime().toString();
     const lang = env.services.user.lang || null;

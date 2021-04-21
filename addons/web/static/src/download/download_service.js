@@ -7,7 +7,7 @@ import { download } from "./download";
 import { serviceRegistry } from "../webclient/service_registry";
 
 export const downloadService = {
-  deploy() {
+  start() {
     return async function (options) {
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();

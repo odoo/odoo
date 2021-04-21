@@ -85,7 +85,7 @@ function jsonrpc(env, rpcId, url, params, settings = {}) {
 // RPC service
 // -----------------------------------------------------------------------------
 export const rpcService = {
-  deploy(env) {
+  start(env) {
     let rpcId = 0;
     return (route, params = {}, settings) => {
       return jsonrpc(env, rpcId++, route, params, settings);

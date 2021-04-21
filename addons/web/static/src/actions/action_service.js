@@ -1021,7 +1021,7 @@ export const actionService = {
     "ui",
     "user",
   ],
-  deploy(env) {
+  start(env) {
     return makeActionManager(env);
   },
 };

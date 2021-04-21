@@ -15,7 +15,7 @@ const { mount } = owl;
 async function createFileInput(config) {
   const serviceRegistry = new Registry();
   const fakeHTTPService = {
-    deploy() {
+    start() {
       return {
         post: config.mockPost || (() => {}),
       };

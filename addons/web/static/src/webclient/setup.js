@@ -9,7 +9,7 @@ export const SPECIAL_METHOD = Symbol("special_method");
  * @param {OdooEnv} env
  * @returns {Promise<void>}
  */
-export async function deployServices(env) {
+export async function startServices(env) {
   const toDeploy = new Set();
   let timeoutId;
   odoo.serviceRegistry.on("UPDATE", null, async (payload) => {
@@ -24,13 +24,13 @@ export async function deployServices(env) {
       const namedService = Object.assign(Object.create(service), { name });
       toDeploy.add(namedService);
     } else {
-      timeoutId = await _deployServices(env, toDeploy, timeoutId);
+      timeoutId = await _startServices(env, toDeploy, timeoutId);
     }
   });
-  timeoutId = await _deployServices(env, toDeploy, timeoutId);
+  timeoutId = await _startServices(env, toDeploy, timeoutId);
 }
 
-async function _deployServices(env, toDeploy, timeoutId) {
+async function _startServices(env, toDeploy, timeoutId) {
   const services = env.services;
   for (const [name, service] of odoo.serviceRegistry.getEntries()) {
     if (!(name in services)) {
@@ -46,7 +46,7 @@ async function _deployServices(env, toDeploy, timeoutId) {
     while ((service = findNext())) {
       let name = service.name;
       toDeploy.delete(service);
-      const value = service.deploy(env);
+      const value = service.start(env);
       if (value && "specializeForComponent" in service) {
         value[SPECIAL_METHOD] = service.specializeForComponent;
       }

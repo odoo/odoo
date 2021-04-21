@@ -143,7 +143,7 @@ QUnit.module("Calendar Notification", (hooks) => {
 
       const fakeActionService = {
         name: "action",
-        deploy() {
+        start() {
           return {
             doAction(actionId) {
               assert.step(actionId);

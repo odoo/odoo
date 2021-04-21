@@ -32,7 +32,7 @@ export function useActiveElement(refName = null) {
 }
 
 export const uiService = {
-  deploy(env) {
+  start(env) {
     let ui = {};
 
     // block/unblock code

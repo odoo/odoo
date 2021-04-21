@@ -152,7 +152,7 @@ export function makePushState(getCurrent, doPush, preProcessQuery) {
 }
 
 export const routerService = {
-  deploy(env) {
+  start(env) {
     return makeRouter(env);
   },
 };

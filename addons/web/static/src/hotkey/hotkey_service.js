@@ -32,7 +32,7 @@ const AUTHORIZED_KEYS = new Set([...ALPHANUM_KEYS, ...NAV_KEYS]);
 
 export const hotkeyService = {
   dependencies: ["ui"],
-  deploy(env) {
+  start(env) {
     const { ui } = env.services;
     const registrations = new Map();
     let nextToken = 0;

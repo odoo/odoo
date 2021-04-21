@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser";
 import { ConnectionLostError } from "@web/services/rpc_service";
 
 export const calendarNotificationService = {
-  async deploy(env) {
+  async start(env) {
     let calendarNotifTimeouts = {};
     let nextCalendarNotifTimeout = null;
     const calendarNotif = {};

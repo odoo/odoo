@@ -26,7 +26,7 @@ export function makeLegacyActionManagerService(legacyEnv) {
   return {
     name: "legacy_action_manager",
     dependencies: ["action"],
-    deploy(env) {
+    start(env) {
       legacyEnv.bus.on("do-action", null, (payload) => {
         const legacyOptions = mapDoActionOptionAPI(payload.options);
         env.services.action.doAction(payload.action, legacyOptions);
@@ -38,7 +38,7 @@ export function makeLegacyActionManagerService(legacyEnv) {
 export function makeLegacyRpcService(legacyEnv) {
   return {
     name: "legacy_rpc",
-    deploy(env) {
+    start(env) {
       legacyEnv.bus.on("rpc_request", null, (rpcId) => {
         env.bus.trigger("RPC:REQUEST", rpcId);
       });
@@ -62,7 +62,7 @@ export function makeLegacyRpcService(legacyEnv) {
 export function makeLegacyDialogMappingService(legacyEnv) {
   return {
     dependencies: ["ui", "hotkey"],
-    deploy(env) {
+    start(env) {
       const { ui, hotkey } = env.services;
 
       function getModalEl(dialog) {
@@ -113,7 +113,7 @@ export function makeLegacySessionService(legacyEnv, session) {
   return {
     name: "legacy_session",
     dependencies: ["user"],
-    deploy(env) {
+    start(env) {
       // userContext, Object.create is incompatible with legacy new Context
       function mapContext() {
         return Object.assign({}, env.services.user.context);

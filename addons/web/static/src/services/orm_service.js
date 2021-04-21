@@ -104,7 +104,7 @@ class ORM {
  */
 export const ormService = {
   dependencies: ["rpc", "user"],
-  deploy(env) {
+  start(env) {
     const { rpc, user } = env.services;
     return new ORM(rpc, user);
   },

@@ -24,7 +24,7 @@ function makeFakeRPC() {
   const query = { route: null, params: null };
   const rpc = {
     name: "rpc",
-    deploy() {
+    start() {
       return async (route, params) => {
         query.route = route;
         query.params = params;

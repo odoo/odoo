@@ -48,7 +48,7 @@ import { serviceRegistry } from "../webclient/service_registry";
 export const viewService = {
   name: "view",
   dependencies: ["orm"],
-  deploy(env) {
+  start(env) {
     const { orm } = env.services;
     let cache = {};
 

@@ -3,7 +3,7 @@
 import { serviceRegistry } from "../webclient/service_registry";
 
 export const titleService = {
-  deploy() {
+  start() {
     const titleParts = {};
 
     function getParts() {

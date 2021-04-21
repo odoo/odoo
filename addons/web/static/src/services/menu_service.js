@@ -78,7 +78,7 @@ function makeMenus(env, menusData, fetchLoadMenus) {
 
 export const menuService = {
   dependencies: ["action", "router"],
-  async deploy(env) {
+  async start(env) {
     const fetchLoadMenus = makeFetchLoadMenus();
     const menusData = await fetchLoadMenus();
     return makeMenus(env, menusData, fetchLoadMenus);

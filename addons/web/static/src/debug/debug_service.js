@@ -17,7 +17,7 @@ export function editModelDebug(env, title, model, id) {
 
 export const debugService = {
   dependencies: ["orm"],
-  async deploy(env) {
+  async start(env) {
     let accessRightsProm;
     if (env.debug !== "") {
       odoo.systrayRegistry.add("web.debug_mode_menu", DebugManager, { sequence: 100 });

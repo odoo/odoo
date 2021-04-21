@@ -51,7 +51,7 @@ function makeCookieService() {
 }
 
 export const cookieService = {
-  deploy() {
+  start() {
     return makeCookieService();
   },
 };

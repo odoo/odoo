@@ -61,7 +61,7 @@ QUnit.test("useService: service that returns null", async function (assert) {
   const serviceRegistry = new Registry();
   serviceRegistry.add("toy_service", {
     name: "toy_service",
-    deploy: () => {
+    start: () => {
       return null;
     },
   });

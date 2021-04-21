@@ -62,7 +62,7 @@ DialogContainer.template = tags.xml`
 mainComponentRegistry.add("DialogContainer", DialogContainer);
 
 export const dialogService = {
-  deploy(env) {
+  start(env) {
     const bus = new EventBus();
     function open(dialogClass, props, options) {
       bus.trigger("UPDATE", dialogClass, props, options);

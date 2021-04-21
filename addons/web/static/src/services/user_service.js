@@ -47,7 +47,7 @@ export function makeSetCompanies(getAllowedCompanyIds) {
 
 export const userService = {
   dependencies: ["router", "cookie"],
-  deploy(env) {
+  start(env) {
     const { router, cookie } = env.services;
     const info = odoo.session_info;
     const {

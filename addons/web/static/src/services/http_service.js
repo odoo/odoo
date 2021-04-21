@@ -3,7 +3,7 @@
 import { serviceRegistry } from "../webclient/service_registry";
 
 export const httpService = {
-  deploy() {
+  start() {
     return {
       async get(route, readMethod = "json") {
         const response = await fetch(route, { method: "GET" });

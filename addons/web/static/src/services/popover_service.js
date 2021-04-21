@@ -100,7 +100,7 @@ PopoverManager.template = xml`
 mainComponentRegistry.add("PopoverManager", PopoverManager);
 
 export const popoverService = {
-  deploy(env) {
+  start(env) {
     return {
       /**
        * Signals the manager to add a popover.

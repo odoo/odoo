@@ -4,7 +4,7 @@ import { serviceRegistry } from "@web/webclient/service_registry";
 import { browser } from "@web/core/browser";
 
 export const assetsWatchdogService = {
-  async deploy(env) {
+  async start(env) {
     const assets = {};
     let assetsChangedNotificationId = null;
     let bundleNotifTimerID = null;

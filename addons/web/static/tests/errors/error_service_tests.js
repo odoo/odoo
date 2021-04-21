@@ -19,7 +19,7 @@ const { Component, tags } = owl;
 function makeFakeDialogService(open) {
   return {
     name: "dialog",
-    deploy() {
+    start() {
       return { open };
     },
   };
