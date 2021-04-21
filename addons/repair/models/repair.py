@@ -329,7 +329,6 @@ class Repair(models.Model):
                     'narration': narration,
                     'invoice_origin': repair.name,
                     'repair_ids': [(4, repair.id)],
-                    'invoice_line_ids': [],
                     'fiscal_position_id': fp_id
                 }
                 if partner_invoice.property_payment_term_id:
