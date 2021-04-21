@@ -998,3 +998,87 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(order.amount_total, 1486.80, "Discount improperly applied")
         self.assertEqual(len(order.order_line.ids), 2, "No discount applied while it should")
+
+    def test_program_free_prods_with_min_qty_and_reward_qty_and_rule(self):
+        order = self.empty_order
+        coupon_program = self.env['sale.coupon.program'].create({
+            'name': '2 free conference chair if at least 1 large cabinet',
+            'promo_code_usage': 'code_needed',
+            'program_type': 'promotion_program',
+            'reward_type': 'product',
+            'reward_product_quantity': 2,
+            'reward_product_id': self.conferenceChair.id,
+            'rule_min_quantity': 1,
+            'rule_products_domain': '["&", ["sale_ok","=",True], ["name","ilike","large cabinet"]]',
+        })
+        # set large cabinet and conference chair prices
+        self.largeCabinet.write({'list_price': 500, 'sale_ok': True,})
+        self.conferenceChair.write({'list_price': 100, 'sale_ok': True})
+
+        # create SOL
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.largeCabinet.id,
+            'name': 'Large Cabinet',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        sol2 = self.env['sale.order.line'].create({
+            'product_id': self.conferenceChair.id,
+            'name': 'Conference chair',
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+
+        self.assertEqual(len(order.order_line), 2, 'The order must contain 2 order lines since the coupon is not yet applied')
+        self.assertEqual(order.amount_total, 700.0, 'The price must be 500.0 since the coupon is not yet applied')
+
+        # generate and apply coupon
+        self.env['sale.coupon.generate'].with_context(active_id=coupon_program.id).create({
+            'generation_type': 'nbr_coupon',
+            'nbr_coupons': 1,
+        }).generate_coupon()
+        coupon = coupon_program.coupon_ids
+        self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
+            'coupon_code': coupon.code
+        }).process_coupon()
+
+        # Name                  | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
+        # --------------------------------------------------------------------------------
+        # Conference Chair      |  2  |    100.00  | /        |  200.00 |  200.00 |       /
+        # Large Cabinet         |  1  |    500.00  | /        |  500.00 |  500.00 |       /
+        #
+        # Free Conference Chair |  2  |   -100.00  | /        | -200.00 | -200.00 |       /
+        # --------------------------------------------------------------------------------
+        # TOTAL                                               |  500.00 |  500.00 |       /
+
+        self.assertEqual(len(order.order_line), 3, 'The order must contain 3 order lines including one for free conference chair')
+        self.assertEqual(order.amount_total, 500.0, 'The price must be 500.0 since two conference chairs are free')
+        self.assertEqual(order.order_line[2].price_total, -200.0, 'The last order line should apply a reduction of 200.0 since there are two conference chairs that cost 100.0 each')
+
+        # prevent user to get illicite discount by decreasing the to 1 the reward product qty after applying the coupon
+        sol2.product_uom_qty = 1.0
+        order.recompute_coupon_lines()
+
+        # in this case user should not have -200.0
+        # Name                  | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
+        # --------------------------------------------------------------------------------
+        # Conference Chair      |  1  |    100.00  | /        |  100.00 |  100.00 |       /
+        # Large Cabine          |  1  |    500.00  | /        |  500.00 |  500.00 |       /
+        #
+        # Free Conference Chair |  2  |   -100.00  | /        | -200.00 | -200.00 |       /
+        # --------------------------------------------------------------------------------
+        # TOTAL                                               |  400.00 |  400.00 |       /
+
+
+        # he should rather have this one
+        # Name                  | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
+        # --------------------------------------------------------------------------------
+        # Conference Chair      |  1  |    100.00  | /        |  100.00 |  100.00 |       /
+        # Large Cabinet         |  1  |    500.00  | /        |  500.00 |  500.00 |       /
+        #
+        # Free Conference Chair |  1  |   -100.00  | /        | -100.00 | -100.00 |       /
+        # --------------------------------------------------------------------------------
+        # TOTAL                                               |  500.00 |  500.00 |       /
+
+        self.assertEqual(order.amount_total, 500.0, 'The price must be 500.0 since two conference chairs are free and the user only bought one')
+        self.assertEqual(order.order_line[2].price_total, -100.0, 'The last order line should apply a reduction of 100.0 since there is one conference chair that cost 100.0')
