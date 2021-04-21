@@ -119,7 +119,7 @@
                                 <div class="row">
                                     <div class="col flex-grow-0 pr-2">
                                         <img t-if="invoice.invoice_user_id.image_1024" class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(invoice.invoice_user_id.image_1024)" alt="Contact"/>
-                                        <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/src/img/user_menu_avatar.png" alt="Contact"/>
+                                        <img t-else="" class="rounded-circle mt-1 o_portal_contact_img" src="/web/static/img/user_menu_avatar.png" alt="Contact"/>
                                     </div>
                                     <div class="col pl-0">
                                         <span t-field="invoice.invoice_user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>

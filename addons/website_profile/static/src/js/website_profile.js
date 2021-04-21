@@ -107,7 +107,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
      */
     _onProfilePicClearClick: function (ev) {
         var $form = $(ev.currentTarget).closest('form');
-        $form.find('.o_forum_avatar_img').attr('src', '/web/static/src/img/placeholder.png');
+        $form.find('.o_forum_avatar_img').attr('src', '/web/static/img/placeholder.png');
         $form.append($('<input/>', {
             name: 'clear_image',
             id: 'forum_clear_image',

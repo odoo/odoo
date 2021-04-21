@@ -53,7 +53,7 @@
             'point_of_sale/static/tests/tours/**/*',
         ],
         'point_of_sale.assets': [
-            'web/static/src/scss/fonts.scss',
+            'web/static/fonts/fonts.scss',
             'web/static/lib/fontawesome/css/font-awesome.css',
             'point_of_sale/static/src/css/pos.css',
             'point_of_sale/static/src/css/keyboard.css',
