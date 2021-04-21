@@ -807,7 +807,7 @@ class Task(models.Model):
         access button to portal users and portal customers. If they are notified
         they should probably have access to the document. """
         groups = super(Task, self)._notify_get_groups(msg_vals=msg_vals)
-        msg_vals = msg_vals or {}
+        local_msg_vals = dict(msg_vals or {})
         self.ensure_one()
 
         project_user_group_id = self.env.ref('project.group_project_user').id
@@ -818,7 +818,7 @@ class Task(models.Model):
         )
 
         if not self.user_id and not self.stage_id.fold:
-            take_action = self._notify_get_action_link('assign', **msg_vals)
+            take_action = self._notify_get_action_link('assign', **local_msg_vals)
             project_actions = [{'url': take_action, 'title': _('I take it')}]
             new_group[2]['actions'] = project_actions
 
