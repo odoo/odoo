@@ -30,6 +30,7 @@ Print product labels with barcode.
         'data/product_data.xml',
         'security/product_security.xml',
         'security/ir.model.access.csv',
+        'wizard/product_label_layout_views.xml',
         'views/res_config_settings_views.xml',
         'views/product_attribute_views.xml',
         'views/product_views.xml',
@@ -40,7 +41,7 @@ Print product labels with barcode.
         'report/product_product_templates.xml',
         'report/product_template_templates.xml',
         'report/product_packaging.xml',
-        'report/product_pricelist_report_templates.xml'
+        'report/product_pricelist_report_templates.xml',
     ],
     'demo': [
         'data/product_demo.xml',
@@ -50,6 +51,9 @@ Print product labels with barcode.
     'assets': {
         'web.assets_backend': [
             'product/static/src/js/**/*',
+        ],
+        'web.report_assets_common': [
+            'product/static/src/scss/report_label_sheet.scss',
         ],
         'web.qunit_suite_tests': [
             'product/static/tests/**/*',
