@@ -2610,6 +2610,8 @@ class MailThread(models.AbstractModel):
 
         # fill group_data with default_values if they are not complete
         for group_name, group_func, group_data in groups:
+            group_data.setdefault('notification_group_name', group_name)
+            group_data.setdefault('notification_is_customer', False)
             group_data.setdefault('has_button_access', True)
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
