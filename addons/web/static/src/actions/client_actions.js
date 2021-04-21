@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { sprintf } from "../utils/strings";
+import { actionRegistry } from "./action_registry";
 
 const { utils } = owl;
 const { escape } = utils;
@@ -20,3 +21,5 @@ export const displayNotificationAction = (env, action) => {
   env.services.notification.create(message, options);
   return params.next;
 };
+
+actionRegistry.add("display_notification", displayNotificationAction);

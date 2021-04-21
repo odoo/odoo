@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { displayNotificationAction } from "./client_actions";
 import { Registry } from "../core/registry";
 
 // This registry contains client actions. A client action can be either a
@@ -9,4 +8,3 @@ import { Registry } from "../core/registry";
 // executed
 export const actionRegistry = (odoo.actionRegistry = new Registry());
 
-actionRegistry.add("display_notification", displayNotificationAction);
