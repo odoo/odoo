@@ -123,7 +123,7 @@ class Website(models.Model):
     robots_txt = fields.Html('Robots.txt', translate=False, groups='website.group_website_designer', sanitize=False)
 
     def _default_favicon(self):
-        img_path = get_resource_path('web', 'static/src/img/favicon.ico')
+        img_path = get_resource_path('web', 'static/img/favicon.ico')
         with tools.file_open(img_path, 'rb') as f:
             return base64.b64encode(f.read())
 

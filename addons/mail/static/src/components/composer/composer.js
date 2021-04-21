@@ -135,7 +135,7 @@ class Composer extends Component {
                     id: this.env.messaging.currentUser.id,
                     model: 'res.users',
                 })
-            : '/web/static/src/img/user_menu_avatar.png';
+            : '/web/static/img/user_menu_avatar.png';
         return avatar;
     }
 
