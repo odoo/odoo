@@ -30,8 +30,8 @@ class PaymentAcquirer(models.Model):
         help='The Merchant Secret is used to ensure communications with Nelo.')
 
     @api.model
-    def _get_nelo_urls(self, environment):
-        if environment == 'prod':
+    def _get_nelo_urls(self):
+        if self.state == 'enabled': #prod
             return {
                 'web_url': self._nelo_redirect_url,
                 'rest_url': 'https://api-v2-dev.nelo.co/v1'
@@ -43,13 +43,11 @@ class PaymentAcquirer(models.Model):
             }
 
     def _set_redirect_url(self, values):
-        base_url = self.get_base_url()
-
         payload = json.dumps({
         "order": {
             "id": values['reference'],
             "totalAmount": {
-                "amount": values['amount'],
+                "amount": values['amount']*100.0, # in cents
                 "currencyCode": 'MXN'
             }
         },
@@ -76,26 +74,19 @@ class PaymentAcquirer(models.Model):
                 "countryIso2": "MX"
             }
         },
-        "redirectConfirmUrl": urls.url_join(base_url, NeloController._confirm_url),
-        "redirectCancelUrl": urls.url_join(base_url, NeloController._cancel_url)
+        "redirectConfirmUrl": urls.url_join(self.get_base_url(), NeloController._confirm_url),
+        "redirectCancelUrl": urls.url_join(self.get_base_url(), NeloController._cancel_url)
         })
-
-        _logger.info('Payload\n %s', pprint.pformat(payload))  # debug
-        
-
         headers = {
             'Authorization': 'Bearer %s' % (self.nelo_merchant_secret),
             'Content-Type': 'application/json'
         }
-        _logger.info('Headers\n %s', pprint.pformat(headers))  # debug
+        _logger.info('Payload\n %s', pprint.pformat(payload))  # debug
 
-        environment = 'prod' if self.state == 'enabled' else 'test'
-        url = '%s/checkout' % (self._get_nelo_urls(environment)['rest_url'])
+        url = '%s/checkout' % (self._get_nelo_urls()['rest_url'])
         response = requests.request("POST", url, headers=headers, data=payload)
         response.raise_for_status()
-        jsonResp = response.json()
-        _logger.info('Response\n %s \n', pprint.pformat(jsonResp))  # debug
-        self._nelo_redirect_url = jsonResp['redirectUrl']
+        self._nelo_redirect_url = response.json()['redirectUrl']
 
     def nelo_form_generate_values(self, values):
         self._set_redirect_url(values)
@@ -103,8 +94,7 @@ class PaymentAcquirer(models.Model):
 
     def nelo_get_form_action_url(self):
         self.ensure_one()
-        environment = 'prod' if self.state == 'enabled' else 'test'
-        return self._get_nelo_urls(environment)['web_url']
+        return self._get_nelo_urls()['web_url']
 
 
 class PaymentTransaction(models.Model):
@@ -112,10 +102,11 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def _nelo_form_get_tx_from_data(self, data):
-        reference, txn_id = data.get('reference'), data.get('trade_no')
-        if not reference or not txn_id:
-            _logger.info('Nelo: received data with missing reference (%s) or txn_id (%s)' % (reference, txn_id))
-            raise ValidationError(_('Nelo: received data with missing reference (%s) or txn_id (%s)') % (reference, txn_id))
+        reference = data.get('reference')
+
+        if not reference:
+            _logger.info('Nelo: received data with missing reference/order_id (%s)' % (reference))
+            raise ValidationError(_('Nelo: received data with missing reference (%s)') % (reference))
 
         txs = self.env['payment.transaction'].search([('reference', '=', reference)])
         if not txs or len(txs) > 1:
@@ -132,44 +123,18 @@ class PaymentTransaction(models.Model):
 
         return txs
 
-    def _nelo_form_get_invalid_parameters(self, data):
-        invalid_parameters = []
-
-        if float_compare(float(data.get('total_fee', '0.0')), (self.amount + self.fees), 2) != 0:
-            invalid_parameters.append(('total_fee', data.get('total_fee'), '%.2f' % (self.amount + self.fees)))  # mc_gross is amount + fees
-        if self.acquirer_id.nelo_payment_method == 'standard_checkout':
-            if data.get('currency') != self.currency_id.name:
-                invalid_parameters.append(('currency', data.get('currency'), self.currency_id.name))
-        else:
-            if data.get('seller_email') != self.acquirer_id.nelo_seller_email:
-                invalid_parameters.append(('seller_email', data.get('seller_email'), self.acquirer_id.nelo_seller_email))
-        return invalid_parameters
-
     def _nelo_form_validate(self, data):
         if self.state in ['done']:
             _logger.info('Nelo: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
-        status = data.get('trade_status')
-        res = {
-            'acquirer_reference': data.get('trade_no'),
+        payload = {
+            'acquirer_reference': data.get('reference'),
+            'date': fields.Datetime.now()
         }
-        if status in ['TRADE_FINISHED', 'TRADE_SUCCESS']:
-            _logger.info('Validated Nelo payment for tx %s: set as done' % (self.reference))
-            date_validate = fields.Datetime.now()
-            res.update(date=date_validate)
-            self._set_transaction_done()
-            self.write(res)
-            self.execute_callback()
-            return True
-        elif status == 'TRADE_CLOSED':
-            _logger.info('Received notification for Nelo payment %s: set as Canceled' % (self.reference))
-            res.update(state_message=data.get('close_reason', ''))
-            self._set_transaction_cancel()
-            return self.write(res)
-        else:
-            error = 'Received unrecognized status for Nelo payment %s: %s, set as error' % (self.reference, status)
-            _logger.info(error)
-            res.update(state_message=error)
-            self._set_transaction_error()
-            return self.write(res)
+        _logger.info('Validated Nelo payment for tx %s: set as done' % (self.reference))
+        self._set_transaction_done()
+        self.write(payload)
+        self.execute_callback()
+        return True
+       
