@@ -10,6 +10,7 @@
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',
+        'views/payment_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
     'application': True,
@@ -17,7 +18,6 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'https://js.stripe.com/v3/',
             'payment_stripe/static/src/js/payment_form.js',
         ],
     }
