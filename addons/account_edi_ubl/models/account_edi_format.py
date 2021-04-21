@@ -96,29 +96,6 @@ class AccountEdiFormat(models.Model):
                 vat=_find_value('//cac:AccountingSupplierParty/cac:Party//cbc:CompanyID'),
             )
 
-            # Regenerate PDF
-            attachments = self.env['ir.attachment']
-            elements = tree.xpath('//cac:AdditionalDocumentReference', namespaces=namespaces)
-            for element in elements:
-                attachment_name = element.xpath('cbc:ID', namespaces=namespaces)
-                attachment_data = element.xpath('cac:Attachment//cbc:EmbeddedDocumentBinaryObject', namespaces=namespaces)
-                if attachment_name and attachment_data:
-                    text = attachment_data[0].text
-                    # Normalize the name of the file : some e-fff emitters put the full path of the file
-                    # (Windows or Linux style) and/or the name of the xml instead of the pdf.
-                    # Get only the filename with a pdf extension.
-                    name = PureWindowsPath(attachment_name[0].text).stem + '.pdf'
-                    attachments |= self.env['ir.attachment'].create({
-                        'name': name,
-                        'res_id': invoice.id,
-                        'res_model': 'account.move',
-                        'datas': text + '=' * (len(text) % 3),  # Fix incorrect padding
-                        'type': 'binary',
-                        'mimetype': 'application/pdf',
-                    })
-            if attachments:
-                invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
-
             # Lines
             lines_elements = tree.xpath('//cac:InvoiceLine', namespaces=namespaces)
             for eline in lines_elements:
@@ -163,4 +140,29 @@ class AccountEdiFormat(models.Model):
                         if tax:
                             invoice_line_form.tax_ids.add(tax)
 
-        return invoice_form.save()
+        invoice = invoice_form.save()
+
+        # Regenerate PDF
+        attachments = self.env['ir.attachment']
+        elements = tree.xpath('//cac:AdditionalDocumentReference', namespaces=namespaces)
+        for element in elements:
+            attachment_name = element.xpath('cbc:ID', namespaces=namespaces)
+            attachment_data = element.xpath('cac:Attachment//cbc:EmbeddedDocumentBinaryObject', namespaces=namespaces)
+            if attachment_name and attachment_data:
+                text = attachment_data[0].text
+                # Normalize the name of the file : some e-fff emitters put the full path of the file
+                # (Windows or Linux style) and/or the name of the xml instead of the pdf.
+                # Get only the filename with a pdf extension.
+                name = PureWindowsPath(attachment_name[0].text).stem + '.pdf'
+                attachments |= self.env['ir.attachment'].create({
+                    'name': name,
+                    'res_id': invoice.id,
+                    'res_model': 'account.move',
+                    'datas': text + '=' * (len(text) % 3),  # Fix incorrect padding
+                    'type': 'binary',
+                    'mimetype': 'application/pdf',
+                })
+        if attachments:
+            invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachments.ids)
+
+        return invoice
