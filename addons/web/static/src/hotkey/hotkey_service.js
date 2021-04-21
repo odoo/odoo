@@ -53,6 +53,13 @@ export const hotkeyService = {
      * @param {KeyboardEvent} event
      */
     function onKeydown(event) {
+      if (!event.key) {
+        // Chrome may trigger incomplete keydown events under certain circumstances.
+        // E.g. when using browser built-in autocomplete on an input.
+        // See https://stackoverflow.com/questions/59534586/google-chrome-fires-keydown-event-when-form-autocomplete
+        return;
+      }
+
       const hotkey = getActiveHotkey(event);
 
       // Do not dispatch if UI is blocked
