@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "../core/browser";
+import AbstractStorageService from "web.AbstractStorageService";
 
 export function mapDoActionOptionAPI(legacyOptions) {
   legacyOptions = Object.assign(legacyOptions || {});
@@ -142,15 +143,8 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
   };
   // Storages
   function mapStorage(storage) {
-    return Object.assign(Object.create(storage), {
-      getItem(key, defaultValue) {
-        const val = storage.getItem(key);
-        return val ? JSON.parse(val) : defaultValue;
-      },
-      setItem(key, value) {
-        storage.setItem(key, JSON.stringify(value));
-      },
-    });
+    const StorageService = AbstractStorageService.extend({ storage });
+    return new StorageService();
   }
 
   legacyEnv.services.local_storage = mapStorage(browser.localStorage);
