@@ -10,7 +10,7 @@ class ReportStockQuantity(models.Model):
     _description = 'Stock Quantity Report'
 
     date = fields.Date(string='Date', readonly=True)
-    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
+    product_tmpl_id = fields.Many2one('product.template', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     state = fields.Selection([
         ('forecast', 'Forecasted Stock'),
@@ -26,10 +26,19 @@ class ReportStockQuantity(models.Model):
         tools.drop_view_if_exists(self._cr, 'report_stock_quantity')
         query = """
 CREATE or REPLACE VIEW report_stock_quantity AS (
-WITH forecast_qty AS (
-    SELECT
+SELECT
+    MIN(id) as id,
+    product_id,
+    product_tmpl_id,
+    state,
+    date,
+    sum(product_qty) as product_qty,
+    company_id,
+    warehouse_id
+FROM (SELECT
         m.id,
         m.product_id,
+        pt.id as product_tmpl_id,
         CASE
             WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN 'out'
             WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN 'in'
@@ -62,6 +71,7 @@ WITH forecast_qty AS (
     SELECT
         -q.id as id,
         q.product_id,
+        pp.product_tmpl_id,
         'forecast' as state,
         date.*::date,
         q.quantity as product_qty,
@@ -73,6 +83,7 @@ WITH forecast_qty AS (
         stock_quant q
     LEFT JOIN stock_location l on (l.id=q.location_id)
     LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%/', wh.view_location_id, '/%')
+    LEFT JOIN product_product pp on pp.id=q.product_id
     WHERE
         (l.usage = 'internal' AND wh.id IS NOT NULL) OR
         l.usage = 'transit'
@@ -80,6 +91,7 @@ WITH forecast_qty AS (
     SELECT
         m.id,
         m.product_id,
+        pt.id as product_tmpl_id,
         'forecast' as state,
         GENERATE_SERIES(
         CASE
@@ -114,18 +126,8 @@ WITH forecast_qty AS (
         product_qty != 0 AND
         (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
         (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
-        m.state NOT IN ('cancel', 'draft')
-) -- /forecast_qty
-SELECT
-    MIN(id) as id,
-    product_id,
-    state,
-    date,
-    sum(product_qty) as product_qty,
-    company_id,
-    warehouse_id
-FROM forecast_qty
-GROUP BY product_id, state, date, company_id, warehouse_id
+        m.state NOT IN ('cancel', 'draft')) as forecast_qty
+GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
 );
 """
         self.env.cr.execute(query)
