@@ -7,4 +7,3 @@ import { Registry } from "../core/registry";
 // instantiated and mounted in the DOM. In the latter, the function will be
 // executed
 export const actionRegistry = (odoo.actionRegistry = new Registry());
-

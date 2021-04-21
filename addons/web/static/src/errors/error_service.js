@@ -68,14 +68,9 @@ export const errorService = {
       else if (handledError && handledError.message) {
         const error = new OdooError("UNCAUGHT_OBJECT_REJECTION_ERROR");
         error.message = handledError.message;
-        error.traceback = JSON.stringify(
-          handledError,
-          Object.getOwnPropertyNames(handledError),
-          4
-        );
+        error.traceback = JSON.stringify(handledError, Object.getOwnPropertyNames(handledError), 4);
         handleError(error, env);
-      }
-      else {
+      } else {
         // @legacy
         // In the future, we probably don't want to use Promises as async if/else structures
         // rather, we should always consider a rejected Promise as an error

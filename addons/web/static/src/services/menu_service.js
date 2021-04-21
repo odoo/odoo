@@ -12,7 +12,7 @@ function makeFetchLoadMenus() {
     if (reload) {
       loadMenusHash = new Date().getTime().toString();
     } else if (odoo.loadMenusPromise) {
-        return odoo.loadMenusPromise;
+      return odoo.loadMenusPromise;
     }
     const res = await browser.fetch(`${loadMenusUrl}/${loadMenusHash}`);
     if (!res.ok) {

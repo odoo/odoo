@@ -37,7 +37,7 @@ export function runClickTestItem(env) {
     type: "item",
     description: env._t("Run Click Everywhere Test"),
     callback: () => {
-      startClickEverywhere()
+      startClickEverywhere();
     },
     sequence: 30,
   };
