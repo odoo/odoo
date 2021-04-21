@@ -30,8 +30,10 @@ const MrpDocumentsControllerMixin = Object.assign({}, fileUploadMixin, {
      * @param {jQueryElement} $node
      */
     renderButtons($node) {
-        this.$buttons = $(qweb.render('MrpDocumentsKanbanView.buttons'));
-        this.$buttons.appendTo($node);
+        if (this.is_action_enabled('edit')) {
+            this.$buttons = $(qweb.render('MrpDocumentsKanbanView.buttons'));
+            this.$buttons.appendTo($node);
+        }
     },
 
     //--------------------------------------------------------------------------
