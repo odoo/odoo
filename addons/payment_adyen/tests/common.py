@@ -21,6 +21,8 @@ class AdyenCommon(PaymentCommon):
         # Override default values
         cls.acquirer = cls.adyen
 
+        cls.psp_reference = '0123456789ABCDEF'
+        cls.original_reference = 'FEDCBA9876543210'
         cls.webhook_notification_payload = {
             'additionalData': {
                 'hmacSignature': 'kK6vSQvfWP3AtT2TTK1ePj9e7XPb7bF5jHC7jDWyU5c='
@@ -32,8 +34,8 @@ class AdyenCommon(PaymentCommon):
             'eventCode': 'AUTHORISATION',
             'merchantAccountCode': 'DuckSACom123',
             'merchantReference': cls.reference,
-            'originalReference': 'FEDCBA9876543210',
-            'pspReference': '0123456789ABCDEF',
+            'originalReference': cls.original_reference,
+            'pspReference': cls.psp_reference,
             'success': 'true',
         }  # Include all keys used in the computation of the signature to the payload
         cls.webhook_notification_batch_data = {
@@ -43,3 +45,8 @@ class AdyenCommon(PaymentCommon):
                 }
             ]
         }
+
+    def create_transaction(self, *args, acquirer_reference=None, **kwargs):
+        if not acquirer_reference:
+            acquirer_reference = self.psp_reference
+        return super().create_transaction(*args, acquirer_reference=acquirer_reference, **kwargs)
