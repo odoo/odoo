@@ -39,6 +39,7 @@
     <t t-set-slot="menu">
       <MenuItem
         t-foreach="apps" t-as="app" t-key="app.id"
+        class="o_app"
         t-att-class="{ o_dropdown_active: menuService.getCurrentApp() === app }"
         payload="app"
         t-esc="app.name" />

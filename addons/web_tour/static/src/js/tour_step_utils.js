@@ -29,7 +29,7 @@ return core.Class.extend({
     showAppsMenuItem() {
         return {
             edition: 'community',
-            trigger: '.o_menu_apps a',
+            trigger: '.o_navbar_apps_menu button',
             auto: true,
             position: 'bottom',
         };
