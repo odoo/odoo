@@ -1668,12 +1668,29 @@ class APIKeys(models.Model):
             index varchar({index_size}) not null CHECK (char_length(index) = {index_size}),
             key varchar not null,
             create_date timestamp without time zone DEFAULT (now() at time zone 'utc')
-        );
-        CREATE INDEX IF NOT EXISTS res_users_apikeys_user_id_index_idx ON {table} (user_id, index);
+        )
         """.format(table=self._table, index_size=INDEX_SIZE))
+
+        index_name = self._table + "_user_id_index_idx"
+        if len(index_name) > 63:
+            # unique determinist index name
+            index_name = self._table[:50] + "_idx_" + sha256(self._table.encode()).hexdigest()[:8]
+        self.env.cr.execute("""
+        CREATE INDEX IF NOT EXISTS {index_name} ON {table} (user_id, index);
+        """.format(
+            table=self._table,
+            index_name=index_name
+        ))
 
     @check_identity
     def remove(self):
+        return self._remove()
+
+    def _remove(self):
+        """Use the remove() method to remove an API Key. This method implement logic,
+        but won't check the identity (mainly used to remove trusted devices)"""
+        if not self:
+            return {'type': 'ir.actions.act_window_close'}
         if self.env.is_system() or self.mapped('user_id') == self.env.user:
             ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
             _logger.info("API key(s) removed: scope: <%s> for '%s' (#%s) from %s",
@@ -1687,9 +1704,10 @@ class APIKeys(models.Model):
         index = key[:INDEX_SIZE]
         self.env.cr.execute('''
             SELECT user_id, key
-            FROM res_users_apikeys INNER JOIN res_users u ON (u.id = user_id)
+            FROM {} INNER JOIN res_users u ON (u.id = user_id)
             WHERE u.active and index = %s AND (scope IS NULL OR scope = %s)
-        ''', [index, scope])
+        '''.format(self._table),
+        [index, scope])
         for user_id, current_key in self.env.cr.fetchall():
             if KEY_CRYPT_CONTEXT.verify(key, current_key):
                 return user_id
@@ -1704,15 +1722,15 @@ class APIKeys(models.Model):
         # no need to clear the LRU when *adding* a key, only when removing
         k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
         self.env.cr.execute("""
-        INSERT INTO res_users_apikeys (name, user_id, scope, key, index)
+        INSERT INTO {table} (name, user_id, scope, key, index)
         VALUES (%s, %s, %s, %s, %s)
         RETURNING id
-        """,
+        """.format(table=self._table),
         [name, self.env.user.id, scope, hash_api_key(k), k[:INDEX_SIZE]])
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
-        _logger.info("API key generated: scope: <%s> for '%s' (#%s) from %s",
-            scope, self.env.user.login, self.env.uid, ip)
+        _logger.info("%s generated: scope: <%s> for '%s' (#%s) from %s",
+            self._description, scope, self.env.user.login, self.env.uid, ip)
 
         return k
 

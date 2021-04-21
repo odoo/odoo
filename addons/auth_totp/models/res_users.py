@@ -22,10 +22,12 @@ class Users(models.Model):
 
     totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS)
     totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled')
+    totp_trusted_device_ids = fields.One2many('auth_totp.device', 'user_id', string="Trusted Devices")
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['totp_enabled']
+        return super().SELF_READABLE_FIELDS + ['totp_enabled', 'totp_trusted_device_ids']
+
 
     def _mfa_url(self):
         r = super()._mfa_url()
@@ -120,7 +122,9 @@ class Users(models.Model):
             _logger.info("2FA disable: REJECT for %s (%s) by uid #%s", self, logins, self.env.user.id)
             return False
 
+        self.revoke_all_devices()
         self.sudo().write({'totp_secret': False})
+
         if request and self == self.env.user:
             self.flush()
             # update session token so the user does not get logged out (cache cleared by change)
@@ -163,3 +167,14 @@ class Users(models.Model):
             'views': [(False, 'form')],
             'context': self.env.context,
         }
+
+    @check_identity
+    def revoke_all_devices(self):
+        self._revoke_all_devices()
+
+    def _revoke_all_devices(self):
+        self.totp_trusted_device_ids._remove()
+
+    def change_password(self, old_passwd, new_passwd):
+        self.env.user._revoke_all_devices()
+        return super().change_password(old_passwd, new_passwd)
