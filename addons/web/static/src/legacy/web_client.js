@@ -9,7 +9,7 @@ odoo.define("web.pseudo_web_client", function (require) {
     const legacyPseudoWebClient = {
       name: "legacy_web_client",
       dependencies: ["title", "router"],
-      deploy(env) {
+      start(env) {
         function setTitlePart(part, title = null) {
           env.services.title.setParts({ [part]: title });
         }

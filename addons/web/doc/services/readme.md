@@ -70,7 +70,7 @@ It could be defined like this:
 
 ```js
 const counterService = {
-  deploy(env) {
+  start(env) {
     let value = 0;
     return {
       getValue() {
