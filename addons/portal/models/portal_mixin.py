@@ -63,13 +63,13 @@ class PortalMixin(models.AbstractModel):
     def _notify_get_groups(self, msg_vals=None):
         access_token = self._portal_ensure_token()
         groups = super(PortalMixin, self)._notify_get_groups(msg_vals=msg_vals)
-        msg_vals = msg_vals or {}
+        local_msg_vals = dict(msg_vals or {})
 
         if access_token and 'partner_id' in self._fields and self['partner_id']:
             customer = self['partner_id']
-            msg_vals['access_token'] = self.access_token
-            msg_vals.update(customer.signup_get_auth_param()[customer.id])
-            access_link = self._notify_get_action_link('view', **msg_vals)
+            local_msg_vals['access_token'] = self.access_token
+            local_msg_vals.update(customer.signup_get_auth_param()[customer.id])
+            access_link = self._notify_get_action_link('view', **local_msg_vals)
 
             new_group = [
                 ('portal_customer', lambda pdata: pdata['id'] == customer.id, {
