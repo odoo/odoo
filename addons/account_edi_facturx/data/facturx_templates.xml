@@ -112,7 +112,7 @@
 
                 <!-- Document Headers. -->
                 <rsm:ExchangedDocument>
-                    <ram:ID t-esc="record.ref"/>
+                    <ram:ID t-esc="record.name"/>
                     <ram:TypeCode t-esc="'381' if 'refund' in record.move_type else '380'"/>
                     <ram:IssueDateTime>
                         <udt:DateTimeString format="102" t-esc="format_date(record.invoice_date)"/>
