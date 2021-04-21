@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { getHotkeyToPress } from "../hotkey/hotkey_service";
+import { getHotkeyToPress } from "../hotkeys/hotkey_service";
 import { serviceRegistry } from "../webclient/service_registry";
 import { CommandPaletteDialog } from "./command_palette_dialog";
 

@@ -1,7 +1,8 @@
 /** @odoo-module **/
 import { useAutofocus } from "../utils/hooks";
-import { useHotkey } from "../hotkey/hotkey_hook";
+import { useHotkey } from "../hotkeys/hotkey_hook";
 import { scrollTo } from "../utils/scrolling";
+
 const { Component, hooks } = owl;
 const { onPatched, useState } = hooks;
 

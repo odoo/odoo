@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Registry } from "../../src/core/registry";
-import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { hotkeyService } from "../../src/hotkeys/hotkey_service";
 import { SwitchCompanyMenu } from "../../src/webclient/switch_company_menu/switch_company_menu";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";

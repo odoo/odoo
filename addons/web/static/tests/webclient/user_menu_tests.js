@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "../../src/core/browser";
-import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { hotkeyService } from "../../src/hotkeys/hotkey_service";
 import { uiService } from "../../src/services/ui_service";
 import { patch, unpatch } from "../../src/utils/patch";
 import { UserMenu } from "../../src/webclient/user_menu/user_menu";

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 import { browser } from "../../src/core/browser";
 import { Registry } from "../../src/core/registry";
-import { useHotkey } from "../../src/hotkey/hotkey_hook";
-import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { useHotkey } from "../../src/hotkeys/hotkey_hook";
+import { hotkeyService } from "../../src/hotkeys/hotkey_service";
 import { uiService, useActiveElement } from "../../src/services/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../helpers/utils";

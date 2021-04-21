@@ -2,7 +2,7 @@
 
 import { useService } from "../../src/utils/hooks";
 import { Registry } from "../../src/core/registry";
-import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { hotkeyService } from "../../src/hotkeys/hotkey_service";
 import { uiService } from "../../src/services/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, nextTick } from "../helpers/utils";

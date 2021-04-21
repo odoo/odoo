@@ -2,7 +2,7 @@
 
 import { click, getFixture, nextTick, makeDeferred, triggerHotkey } from "../helpers/utils";
 import { Registry } from "./../../src/core/registry";
-import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { hotkeyService } from "../../src/hotkeys/hotkey_service";
 import { uiService } from "../../src/services/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 

@@ -3,7 +3,7 @@
 import makeTestEnvironment from "web.test_env";
 import core from "web.core";
 import { Registry } from "@web/core/registry";
-import { hotkeyService } from "@web/hotkey/hotkey_service";
+import { hotkeyService } from "@web/hotkeys/hotkey_service";
 import { uiService } from "@web/services/ui_service";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeLegacyDialogMappingService } from "@web/legacy/utils";

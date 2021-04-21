@@ -14,7 +14,7 @@ import OdooError from "../../src/errors/odoo_error";
 import { uiService } from "../../src/services/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, nextTick, patchWithCleanup } from "../helpers/utils";
-import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { hotkeyService } from "../../src/hotkeys/hotkey_service";
 
 const { Component, mount, tags } = owl;
 let target;

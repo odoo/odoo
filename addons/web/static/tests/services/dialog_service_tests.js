@@ -11,7 +11,7 @@ import { makeFakeRPCService } from "../helpers/mock_services";
 import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
 import { registerCleanup } from "../helpers/cleanup";
 import { ErrorDialog } from "@web/errors/error_dialogs";
-import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { hotkeyService } from "../../src/hotkeys/hotkey_service";
 
 const { Component, mount, tags } = owl;
 

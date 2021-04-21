@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { useActiveElement } from "../../services/ui_service";
-import { useHotkey } from "../../hotkey/hotkey_hook";
+import { useHotkey } from "../../hotkeys/hotkey_hook";
 
 const { Component, hooks, misc, QWeb } = owl;
 const { useRef, useSubEnv } = hooks;

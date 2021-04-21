@@ -2,7 +2,7 @@
 import { useCommand } from "../../src/commands/command_hook";
 import { commandService } from "../../src/commands/command_service";
 import { Registry } from "../../src/core/registry";
-import { hotkeyService } from "../../src/hotkey/hotkey_service";
+import { hotkeyService } from "../../src/hotkeys/hotkey_service";
 import { dialogService } from "../../src/services/dialog_service";
 import { uiService } from "../../src/services/ui_service";
 import { mainComponentRegistry } from "../../src/webclient/main_component_registry";
