@@ -1431,6 +1431,20 @@ class Picking(models.Model):
     def action_view_reception_report(self):
         return self.env["ir.actions.actions"]._for_xml_id("stock.stock_reception_action")
 
+    def action_open_label_layout(self):
+        view = self.env.ref('stock.product_label_layout_form_picking')
+        return {
+            'name': _('Choose Labels Layout'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.label.layout',
+            'views': [(view.id, 'form')],
+            'target': 'new',
+            'context': {
+                'default_product_ids': self.move_lines.product_id.ids,
+                'default_move_line_ids': self.move_line_ids.ids,
+                'default_picking_quantity': 'picking'},
+        }
+
     def _attach_sign(self):
         """ Render the delivery report in pdf and attach it to the picking in `self`. """
         self.ensure_one()

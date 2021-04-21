@@ -13,6 +13,7 @@
                         name="%(product_attribute_value_action)d"
                         attrs="{'invisible': ['|', ('attribute_line_ids', '&lt;=', 0), ('is_product_variant', '=', True)]}"
                         groups="product.group_product_variant"/>
+                    <button string="Print Labels" type="object" name="action_open_label_layout"/>
                 </header>
                 <sheet>
                     <field name='product_variant_count' invisible='1'/>
@@ -221,6 +222,9 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <form string="Variant Information" duplicate="false">
+                    <header>
+                        <button string="Print Labels" type="object" name="action_open_label_layout"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -305,6 +309,9 @@
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Product Variants" multi_edit="1" duplicate="false" sample="1">
+                <header>
+                    <button string="Print Labels" type="object" name="action_open_label_layout"/>
+                </header>
                     <field name="priority" widget="priority" nolabel="1" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
@@ -726,5 +733,13 @@ action = {
         </field>
     </record>
 
+    <record id="action_open_label_layout" model="ir.actions.act_window">
+        <field name="name">Choose Labels Layout</field>
+        <field name="res_model">product.label.layout</field>
+        <field name="view_ids"
+                eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('product_label_layout_form')})]" />
+        <field name="target">new</field>
+    </record>
     </data>
 </odoo>
