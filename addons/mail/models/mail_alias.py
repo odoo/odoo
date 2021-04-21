@@ -161,6 +161,7 @@ class Alias(models.Model):
             """ Cleans and sanitizes the alias name """
             sanitized_name = remove_accents(name).lower().split('@')[0]
             sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
+            sanitized_name = re.sub(r'^\.+|\.+$|\.+(?=\.)', '', sanitized_name)
             sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
             return sanitized_name
 
