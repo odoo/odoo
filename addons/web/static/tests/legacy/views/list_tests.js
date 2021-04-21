@@ -11102,6 +11102,45 @@ QUnit.module('Views', {
         delete fieldRegistry.map.asyncwidget;
     });
 
+    QUnit.test('open list optional fields dropdown position to right place', async function (assert) {
+        assert.expect(1);
+
+        this.data.bar.fields.name = { string: "Name", type: "char", sortable: true };
+        this.data.bar.fields.foo = { string: "Foo", type: "char", sortable: true };
+        this.data.foo.records[0].o2m = [1, 2];
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="Page 1">
+                                <field name="o2m">
+                                    <tree editable="bottom">
+                                        <field name="display_name"/>
+                                        <field name="foo"/>
+                                        <field name="name" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+        });
+
+        const listWidth = form.el.querySelector('.o_list_view').offsetWidth;
+
+        await testUtils.dom.click(form.el.querySelector('.o_optional_columns_dropdown_toggle'));
+        assert.strictEqual(form.el.querySelector('.o_optional_columns').offsetLeft, listWidth,
+            "optional fields dropdown should opened at right place");
+
+        form.destroy();
+    });
+
     QUnit.test('change the viewType of the current action', async function (assert) {
         assert.expect(25);
 
