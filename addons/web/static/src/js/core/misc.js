@@ -173,7 +173,6 @@ core.action_registry.add("login", login);
 
 function logout() {
     redirect('/web/session/logout');
-    return new Promise();
 }
 core.action_registry.add("logout", logout);
 
