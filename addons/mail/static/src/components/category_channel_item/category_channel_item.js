@@ -1,15 +1,14 @@
-odoo.define('mail/static/src/components/category_channel_item/category_channel_item.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    CategoryItem: require('mail/static/src/components/category_item/category_item.js'),
-    ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
-};
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useStore from '@mail/component_hooks/use_store/use_store';
+import CategoryItem from '@mail/components/category_item/category_item';
+import ThreadIcon from '@mail/components/thread_icon/thread_icon';
 
-const Dialog = require('web.Dialog');
+import Dialog from 'web.Dialog';
 
 const { Component } = owl;
+
+const components = { CategoryItem, ThreadIcon };
 
 class CategoryChannelItem extends Component {
 
@@ -116,6 +115,4 @@ Object.assign(CategoryChannelItem, {
     template: 'mail.CategoryChannelItem',
 });
 
-return CategoryChannelItem;
-
-});
+export default CategoryChannelItem;

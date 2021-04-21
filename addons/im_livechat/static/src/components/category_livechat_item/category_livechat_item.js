@@ -1,13 +1,12 @@
-odoo.define('im_livechat/static/src/components/category_livechat_item/category_livechat_item.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    CategoryItem: require('mail/static/src/components/category_item/category_item.js'),
-    PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
-};
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useStore from '@mail/component_hooks/use_store/use_store';
+import CategoryItem from '@mail/components/category_item/category_item';
+import PartnerImStatusIcon from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 
 const { Component } = owl;
+
+const components = { CategoryItem, PartnerImStatusIcon };
 
 class CategoryLivechatItem extends Component {
 
@@ -66,6 +65,4 @@ Object.assign(CategoryLivechatItem, {
     template: 'im_livechat.CategoryLivechatItem',
 });
 
-return CategoryLivechatItem;
-
-});
+export default CategoryLivechatItem;

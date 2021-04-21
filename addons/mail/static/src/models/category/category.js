@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/models/category/category.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr } = require('mail/static/src/model/model_field.js');
-const { clear } = require('mail/static/src/model/model_field_command.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
     class Category extends dependencies['mail.model'] {
@@ -11,7 +10,7 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
-        
+
         async toggleIsOpen() {
             if(this.isOpen) {
                 await this.close();
@@ -51,7 +50,7 @@ function factory(dependencies) {
         //--------------------------------------------------------------------------
         // Private
         //--------------------------------------------------------------------------
-        
+
         _computeIsOpen() {
             return this.isPendingOpen !== undefined ? this.isPendingOpen : this.isServerOpen;
         }
@@ -88,5 +87,3 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.category', factory);
-
-});

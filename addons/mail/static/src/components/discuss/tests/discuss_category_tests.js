@@ -1,12 +1,11 @@
-odoo.define('mail/static/src/components/discuss/tests/discuss_category_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from 'mail/static/src/utils/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -30,8 +29,8 @@ QUnit.module('discuss_category_tests.js', {
         this.data['res.partner'].records.push({ id: 17, name: "Demo", im_status: 'offline' });
         this.data['mail.channel'].records.push({
             channel_type: 'chat',
-            id: 10, 
-            members: [this.data.currentPartnerId, 17], 
+            id: 10,
+            members: [this.data.currentPartnerId, 17],
             public: 'private',
         });
     },
@@ -44,7 +43,7 @@ QUnit.test('category: open and close manually', async function (assert) {
     assert.expect(6);
 
     await this.start();
-    // category channel 
+    // category channel
     assert.containsOnce(
         document.body,
         `.o_Category[data-category-local-id="${ this.env.messaging.discuss.categoryChannel.localId }"]`,
@@ -60,7 +59,7 @@ QUnit.test('category: open and close manually', async function (assert) {
         }"]`,
         "Category channel should be open and the content should be visible"
     );
-    await afterNextRender(() => 
+    await afterNextRender(() =>
         document.querySelector(`.o_Category[data-category-local-id="${
             this.env.messaging.discuss.categoryChannel.localId }"]
             .o_CategoryTitle_header
@@ -92,7 +91,7 @@ QUnit.test('category: open and close manually', async function (assert) {
         }"]`,
         "Category chat should be open and the content should be visible"
     );
-    await afterNextRender(() => 
+    await afterNextRender(() =>
         document.querySelector(`.o_Category[data-category-local-id="${
             this.env.messaging.discuss.categoryChat.localId }"]
             .o_CategoryTitle_header
@@ -202,6 +201,4 @@ QUnit.test('category: open and close from bus', async function (assert) {
 });
 });
 });
-});
-
 });

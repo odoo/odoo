@@ -1,12 +1,11 @@
-odoo.define('im_livechat/static/src/components/discuss/discuss_category_test.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
-} = require('mail/static/src/utils/test_utils.js');
+} from 'mail/static/src/utils/test_utils.js';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {
@@ -41,7 +40,7 @@ QUnit.module('discuss_category_test.js', {
 
 QUnit.test('category: open and close manually', async function (assert) {
     assert.expect(3);
-    
+
     await this.start();
     assert.containsOnce(
         document.body,
@@ -58,7 +57,7 @@ QUnit.test('category: open and close manually', async function (assert) {
         }"]`,
         "Category livechat should be open and the content should be visible"
     );
-    await afterNextRender(() => 
+    await afterNextRender(() =>
         document.querySelector(`.o_Category[data-category-local-id="${
             this.env.messaging.discuss.categoryLivechat.localId }"]
             .o_CategoryTitle_header
@@ -135,6 +134,4 @@ QUnit.test('category: open and close from bus', async function (assert) {
 });
 });
 });
-});
-
 });

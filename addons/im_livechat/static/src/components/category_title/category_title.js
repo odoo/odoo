@@ -1,18 +1,17 @@
-odoo.define('im_livechat/static/src/components/category_title/category_title.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    CategoryTitle: require('mail/static/src/components/category_title/category_title.js'),
-}
+import CategoryTitle from '@mail/components/category_title/category_title';
 
-const { patch } = require('web.utils');
+import { patch } from 'web.utils';
+
+const components = { CategoryTitle };
 
 patch(components.CategoryTitle.prototype, 'im_livechat/static/src/components/category_title/category_title.js', {
-    
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-    
+
     /**
      * @override
      * @returns {Integer}
@@ -32,6 +31,4 @@ patch(components.CategoryTitle.prototype, 'im_livechat/static/src/components/cat
             categoryLivechatUnreadCounter: this.env.messaging.discuss && this.env.messaging.discuss.categoryLivechatUnreadCounter,
         });
     }
-});
-
 });

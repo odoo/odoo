@@ -1,13 +1,12 @@
-odoo.define('mail/static/src/components/category_item/category_item.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
-};
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const { isEventHandled } = require('mail/static/src/utils/utils.js');
+import useStore from '@mail/component_hooks/use_store/use_store';
+import ThreadIcon from '@mail/components/thread_icon/thread_icon';
+import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
+
+const components = { ThreadIcon };
 
 class CategoryItem extends Component {
 
@@ -84,6 +83,4 @@ Object.assign(CategoryItem, {
     template: 'mail.CategoryItem',
 });
 
-return CategoryItem;
-
-});
+export default CategoryItem;

@@ -1,11 +1,10 @@
-odoo.define('im_livechat/static/src/models/discuss/discuss.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     registerFieldPatchModel,
     registerInstancePatchModel
-} = require('mail/static/src/model/model_core.js');
-const { attr, one2one, one2many } = require('mail/static/src/model/model_field.js');
+} from '@mail/model/model_core';
+import { attr, one2one, one2many } from '@mail/model/model_field';
 
 registerInstancePatchModel('mail.discuss', 'im_livechat/static/src/models/discuss/discuss.js', {
 
@@ -71,6 +70,4 @@ registerFieldPatchModel('mail.discuss', 'im_livechat/static/src/models/discuss/d
         compute: '_computeQuickSearchPinnedAndSortedLivechatTypeThreads',
         dependencies: ['allPinnedAndSortedLivechatTypeThreads', 'sidebarQuickSearchValue'],
     })
-});
-
 });

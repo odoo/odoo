@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { datetime_to_str } = require('web.time');
+import { datetime_to_str } from 'web.time';
 
 /**
  * Allows to generate mocked models that will be used by the mocked server.

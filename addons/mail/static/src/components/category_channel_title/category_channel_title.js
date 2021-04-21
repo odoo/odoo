@@ -1,13 +1,12 @@
-odoo.define('mail/static/src/components/category_channel_title/category_channel_title.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    AutocompleteInput: require('mail/static/src/components/autocomplete_input/autocomplete_input.js'),
-    CategoryTitle: require('mail/static/src/components/category_title/category_title.js'),
-};
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useStore from '@mail/component_hooks/use_store/use_store';
+import AutocompleteInput from '@mail/components/autocomplete_input/autocomplete_input';
+import CategoryTitle from '@mail/components/category_title/category_title';
 
 const { Component } = owl;
+
+const components = { AutocompleteInput, CategoryTitle };
 
 class CategoryChannelTitle extends Component {
 
@@ -113,6 +112,4 @@ Object.assign(CategoryChannelTitle, {
     template: 'mail.CategoryChannelTitle',
 });
 
-return CategoryChannelTitle;
-
-});
+export default CategoryChannelTitle;

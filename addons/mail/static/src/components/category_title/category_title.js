@@ -1,7 +1,6 @@
-odoo.define('mail/static/src/components/category_title/category_title.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useStore from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 
@@ -18,7 +17,7 @@ class CategoryTite extends Component {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-    
+
     /**
      * @returns {mail.category}
      */
@@ -50,7 +49,7 @@ class CategoryTite extends Component {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-    
+
     /**
      * @private
      */
@@ -70,7 +69,7 @@ class CategoryTite extends Component {
             categoryChatUnreadCounter: discuss && discuss.categoryChatUnreadCounter,
         };
     }
-    
+
 }
 
 Object.assign(CategoryTite, {
@@ -80,6 +79,4 @@ Object.assign(CategoryTite, {
     template: 'mail.CategoryTitle',
 });
 
-return CategoryTite;
-
-});
+export default CategoryTite;

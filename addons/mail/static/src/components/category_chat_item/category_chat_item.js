@@ -1,14 +1,13 @@
-odoo.define('mail/static/src/components/category_chat_item/category_chat_item.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const components = {
-    CategoryItem: require('mail/static/src/components/category_item/category_item.js'),
-    PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
-    EditableText: require('mail/static/src/components/editable_text/editable_text.js'),
-};
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useStore from '@mail/component_hooks/use_store/use_store';
+import CategoryItem from '@mail/components/category_item/category_item';
+import EditableText from '@mail/components/editable_text/editable_text';
+import PartnerImStatusIcon from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 
 const { Component } = owl;
+
+const components = { CategoryItem, PartnerImStatusIcon, EditableText };
 
 class CategoryChatItem extends Component {
     /**
@@ -110,6 +109,4 @@ Object.assign(CategoryChatItem, {
     template: 'mail.CategoryChatItem',
 });
 
-return CategoryChatItem;
-
-});
+export default CategoryChatItem;

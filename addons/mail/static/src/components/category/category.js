@@ -1,7 +1,6 @@
-odoo.define('mail/static/src/components/category/category.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+import useStore from '@mail/component_hooks/use_store/use_store';
 
 const { Component } = owl;
 
@@ -36,6 +35,4 @@ Object.assign(Category, {
     template: 'mail.Category',
 });
 
-return Category;
-
-});
+export default Category;

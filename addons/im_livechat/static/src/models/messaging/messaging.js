@@ -1,11 +1,10 @@
-odoo.define('im_livechat/static/src/models/messaging/messaging.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
+import {
     registerFieldPatchModel,
     registerInstancePatchModel,
-} = require('mail/static/src/model/model_core.js');
-const { one2many } = require('mail/static/src/model/model_field.js');
+} from '@mail/model/model_core';
+import { one2many } from '@mail/model/model_field';
 
 registerInstancePatchModel('mail.messaging', 'im_livechat/static/src/models/messaging/messaging.js', {
     //----------------------------------------------------------------------
@@ -42,6 +41,4 @@ registerFieldPatchModel('mail.messaging', 'im_livechat/static/src/models/messagi
         compute: '_computeAllPinnedAndSortedLivechatTypeThreads',
         dependencies: ['allPinnedChannelModelThreads', 'allPinnedChannelModelThreadsChannelType', 'allPinnedChannelModelThreadsLastActivityTime'],
     }),
-});
-
 });
