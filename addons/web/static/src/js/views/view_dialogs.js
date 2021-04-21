@@ -221,6 +221,7 @@ var FormViewDialog = ViewDialog.extend({
                             in_DOM: true,
                         });
                         self.form_view.updateButtons();
+                        self.trigger_up('dialog_form_loaded');
                     });
                     return _super();
                 });
