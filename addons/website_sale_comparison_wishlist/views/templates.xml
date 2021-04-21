@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_wishlist" inherit_id="website_sale_wishlist.product_wishlist">
+        <xpath expr="//button[hasclass('o_wish_rm')]" position="after">
+            <button type="button" class="btn btn-link o_add_to_compare no-decoration" t-att-data-product-id='wish.product_id.id'>
+                <small><i t-attf-class="fa fa-exchange"></i> Add to compare</small>
+            </button>
+        </xpath>
+    </template>
+</odoo>
