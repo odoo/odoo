@@ -41,7 +41,8 @@ class Meeting(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        return super().create([
+        notify_context = self.env.context.get('dont_notify', False)
+        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
@@ -50,7 +51,8 @@ class Meeting(models.Model):
         recurrence_update_setting = values.get('recurrence_update')
         if recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1:
             values = dict(values, need_sync=False)
-        res = super().write(values)
+        notify_context = self.env.context.get('dont_notify', False)
+        res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
         if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_google_synced_fields():
             self.recurrence_id.need_sync = True
         return res

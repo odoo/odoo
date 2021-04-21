@@ -674,8 +674,8 @@ class Meeting(models.Model):
 
         (detached_events & self).active = False
         (detached_events - self).with_context(archive_on_error=True).unlink()
-
-        self._setup_alarms()
+        if not self.env.context.get('dont_notify'):
+            self._setup_alarms()
 
         current_attendees = self.filtered('active').attendee_ids
         if 'partner_ids' in values:
@@ -704,7 +704,9 @@ class Meeting(models.Model):
                     # Don't trigger for past alarms, they would be skipped by design
                     cron._trigger(at=at)
             if any(alarm.alarm_type == 'notification' for alarm in event.alarm_ids):
-                alarm_manager._notify_next_alarm(event.partner_ids.ids)
+                # filter events before notifying attendees through calendar_alarm_manager
+                need_notifs = event.filtered(lambda ev: ev.alarm_ids and ev.stop >= fields.Datetime.now())
+                alarm_manager._notify_next_alarm(need_notifs.partner_ids.ids)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -755,9 +757,8 @@ class Meeting(models.Model):
 
         events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys() })
-
-        events._setup_alarms()
-
+        if not self.env.context.get('dont_notify'):
+            events._setup_alarms()
         return events
 
     def read(self, fields=None, load='_classic_read'):
