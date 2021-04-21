@@ -19,6 +19,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
     custom_events: _.extend({}, FieldHtml.prototype.custom_events, {
         snippets_loaded: '_onSnippetsLoaded',
     }),
+    _wysiwygSnippetsActive: true,
 
     /**
      * @override
@@ -137,6 +138,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
      */
     _renderEdit: function () {
         this._isFromInline = !!this.value;
+        this._wysiwygSnippetsActive = !(this._isFromInline && $(this.value).is('.o_layout.o_basic_theme'));
         if (!this.value) {
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }
@@ -291,7 +293,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
                     return this.nodeType === 3 && this.textContent.match(/\S/);
                 }).parent().addClass('o_default_snippet_text');
 
-            if (themeParams.name == 'basic') {
+            if (themeParams.name === 'basic') {
                 this.$content[0].focus();
             }
         }
@@ -322,6 +324,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
     _getWysiwygOptions: function () {
         const options = this._super.apply(this, arguments);
         options.resizable = false;
+        if (!this._wysiwygSnippetsActive) {
+            delete options.snippets;
+        }
         return options;
     },
 
@@ -342,6 +347,16 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this._super();
         this.wysiwyg.odooEditor.observerFlush();
         this.wysiwyg.odooEditor.resetHistory();
+    },
+    /**
+     * @private
+     * @param {boolean} activateSnippets
+     */
+    _restartWysiwygIntance: async function (activateSnippets = true) {
+        this.wysiwyg.destroy();
+        this.$el.empty();
+        this._wysiwygSnippetsActive = activateSnippets;
+        await this._createWysiwygIntance();
     },
     /**
      * @private
@@ -479,13 +494,16 @@ var MassMailingFieldHtml = FieldHtml.extend({
         };
 
         $themeSelector.on("click", ".dropdown-item", selectTheme);
-        $themeSelectorNew.on("click", ".dropdown-item", (e) => {
+        $themeSelectorNew.on("click", ".dropdown-item", async (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
             const themeParams = themesParams[$(e.currentTarget).index()];
 
-            self._switchThemes(true, themeParams);
-            self.$content.closest('body').removeClass("o_force_mail_theme_choice");
+            if (themeParams.name === "basic") {
+                await this._restartWysiwygIntance(false);
+            }
+            this._switchThemes(true, themeParams);
+            this.$content.closest('body').removeClass("o_force_mail_theme_choice");
 
             $themeSelectorNew.remove();
 
