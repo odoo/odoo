@@ -36,7 +36,7 @@ class WebsiteProfile(http.Controller):
         return False
 
     def _get_default_avatar(self):
-        img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
+        img_path = modules.get_module_resource('web', 'static/img', 'placeholder.png')
         with open(img_path, 'rb') as f:
             return base64.b64encode(f.read())
 

@@ -58,7 +58,7 @@
             <div class="d-inline-block position-relative">
                 <img class="rounded-circle img-fluid"
                     style="width: 128px; height: 128px; object-fit: cover;"
-                    t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/src/img/user_placeholder.jpg'"/>
+                    t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/img/user_placeholder.jpg'"/>
                 <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{visitor['position']}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
             </div>
             <h3 t-if="visitor['visitor'] == current_visitor and not visitor['visitor'].name" class="mt-2 mb-0">You</h3>
@@ -78,7 +78,7 @@
         <img class="o_object_fit_cover rounded-circle o_wprofile_img_small"
         width="30"
         height="30"
-        t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/src/img/user_placeholder.jpg'"/>
+        t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/img/user_placeholder.jpg'"/>
     </td>
     <td class="align-middle w-md-75">
         <span t-if="visitor['visitor'] == current_visitor and not visitor['visitor'].name" class="font-weight-bold">You</span>

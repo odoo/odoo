@@ -2917,7 +2917,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
             async mockRPC(route, args) {
                 const _super = this._super;
-                if (route === '/web/static/src/img/placeholder.png') {
+                if (route === '/web/static/img/placeholder.png') {
                     assert.step('call placeholder route');
                 }
                 return _super.apply(this, arguments);

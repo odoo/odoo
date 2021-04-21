@@ -33,7 +33,7 @@ var RainbowMan = Widget.extend({
         var rainbowDelay = {very_slow:8500, slow: 4500, medium: 3500, fast: 2000, no: false};
         this.options = _.defaults(options || {}, {
             fadeout: 'medium',
-            img_url: '/web/static/src/img/smile.svg',
+            img_url: '/web/static/img/smile.svg',
             message: _t('Well Done!'),
         });
         this.delay = rainbowDelay[this.options.fadeout];

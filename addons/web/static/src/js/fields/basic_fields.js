@@ -1953,7 +1953,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     }),
 
     template: 'FieldBinaryImage',
-    placeholder: "/web/static/src/img/placeholder.png",
+    placeholder: "/web/static/img/placeholder.png",
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
         'click img': function () {
             if (this.mode === "readonly") {
@@ -2096,7 +2096,7 @@ var CharImageUrl = AbstractField.extend({
     className: 'o_field_image',
     description: _lt("Image"),
     supportedFieldTypes: ['char'],
-    placeholder: "/web/static/src/img/placeholder.png",
+    placeholder: "/web/static/img/placeholder.png",
 
     _renderReadonly: function () {
         var self = this;

@@ -31,7 +31,7 @@ class Company(models.Model):
         return self.env.user.company_id.currency_id
 
     def _get_default_favicon(self, original=False):
-        img_path = get_resource_path('web', 'static/src/img/favicon.ico')
+        img_path = get_resource_path('web', 'static/img/favicon.ico')
         with tools.file_open(img_path, 'rb') as f:
             if original:
                 return base64.b64encode(f.read())

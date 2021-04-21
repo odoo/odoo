@@ -295,7 +295,7 @@ Example::
 
     @font-face {
         font-family: 'MonixBold';
-        src: local('MonixBold'), local('MonixBold'), url(/your_module/static/src/fonts/MonixBold-Regular.otf) format('opentype');
+        src: local('MonixBold'), local('MonixBold'), url(/your_module/static/fonts/MonixBold-Regular.otf) format('opentype');
     }
 
     .h1-title-big {

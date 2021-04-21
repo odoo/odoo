@@ -1374,7 +1374,7 @@ class Binary(http.Controller):
 
     @staticmethod
     def placeholder(image='placeholder.png'):
-        image_path = image.lstrip('/').split('/') if '/' in image else ['web', 'static', 'src', 'img', image]
+        image_path = image.lstrip('/').split('/') if '/' in image else ['web', 'static', 'img', image]
         with tools.file_open(get_resource_path(*image_path), 'rb') as fd:
             return fd.read()
 
@@ -1578,7 +1578,7 @@ class Binary(http.Controller):
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo'
         imgext = '.png'
-        placeholder = functools.partial(get_resource_path, 'web', 'static', 'src', 'img')
+        placeholder = functools.partial(get_resource_path, 'web', 'static', 'img')
         uid = None
         if request.session.db:
             dbname = request.session.db
@@ -1640,8 +1640,8 @@ class Binary(http.Controller):
         fonts = []
         if fontname:
             module_path = get_module_path('web')
-            fonts_folder_path = os.path.join(module_path, 'static/src/fonts/sign/')
-            module_resource_path = get_resource_path('web', 'static/src/fonts/sign/' + fontname)
+            fonts_folder_path = os.path.join(module_path, 'static/fonts/sign/')
+            module_resource_path = get_resource_path('web', 'static/fonts/sign/' + fontname)
             if fonts_folder_path and module_resource_path:
                 fonts_folder_path = os.path.join(os.path.normpath(fonts_folder_path), '')
                 module_resource_path = os.path.normpath(module_resource_path)
@@ -1651,7 +1651,7 @@ class Binary(http.Controller):
                         fonts.append(font)
         else:
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')
+            fonts_directory = os.path.join(current_dir, '..', 'static', 'fonts', 'sign')
             font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(('.ttf', '.otf', '.woff', '.woff2'))])
 
             for filename in font_filenames:

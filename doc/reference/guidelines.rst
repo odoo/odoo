@@ -976,8 +976,8 @@ The convention is to organize the code according to the following structure:
   - *static/src*: the generic static source code folder
 
     - *static/src/css*: all css files
-    - *static/src/fonts*
-    - *static/src/img*
+    - *static/fonts*
+    - *static/img*
     - *static/src/js*
 
       - *static/src/js/tours*: end user tour files (tutorials, not tests)
