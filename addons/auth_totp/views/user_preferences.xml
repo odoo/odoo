@@ -135,6 +135,31 @@
                             <button name="totp_disable" type="object" string="(Disable two-factor authentication)"
                                     class="btn btn-link text-muted"/>
                         </div>
+                        <div colspan="2" attrs="{'invisible': [('totp_trusted_device_ids', '=', [])]}">
+                            <field name="totp_trusted_device_ids" nolabel="1" colspan="4" readonly="1">
+
+                                <tree create="false" delete="false">
+                                    <field name="name" string="Trusted Devices"/>
+                                    <field name="create_date" string="Added On"/>
+                                    <button type="object" name="remove" icon="fa-trash"/>
+                                </tree>
+                                <form string="Trusted Device">
+                                    <group>
+                                        <group>
+                                            <field name="name" string="Device Name"/>
+                                            <field name="create_date" string="Added On"/>
+                                        </group>
+                                    </group>
+                                    <footer>
+                                        <button name="remove" string="Revoke" type="object" icon="fa-trash"/>
+                                        <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
+                                    </footer>
+                                </form>
+
+                            </field>
+                            <button name="revoke_all_devices" string="Revoke All" type="object" class="btn btn-secondary"
+                                    confirm="Are you sure? Two-factor authentication will be required again on all your devices"/>
+                        </div>
                     </group>
             </button>
         </field>
