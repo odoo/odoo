@@ -2,6 +2,7 @@
 
 import { browser } from "../core/browser";
 import AbstractStorageService from "web.AbstractStorageService";
+import { RPCError } from "../services/rpc_service";
 
 export function mapDoActionOptionAPI(legacyOptions) {
   legacyOptions = Object.assign(legacyOptions || {});
@@ -133,12 +134,30 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
   // rpc
   legacyEnv.session.rpc = (...args) => {
     let rejection;
+    let error;
+    let event;
     const prom = new Promise((resolve, reject) => {
       rejection = () => reject();
       const [route, params, settings] = args;
-      wowlEnv.services.rpc(route, params, settings).then(resolve).catch(reject);
+      wowlEnv.services.rpc(route, params, settings).then(resolve).catch((reason) => {
+        error = reason;
+        if (isPrototypeOf.call(RPCError.prototype, reason)) {
+          event = $.Event();
+          reject({ message: reason, event });
+        }
+        reject(reason);
+      });
     });
     prom.abort = rejection;
+    prom.catch(() => {
+      setTimeout(function () {
+        // we want to execute this handler after all others (hence
+        // setTimeout) to let the other handlers prevent the event
+        if (!event || !event.isDefaultPrevented()) {
+          throw error;
+        }
+      }, 0);
+    });
     return prom;
   };
   // Storages
