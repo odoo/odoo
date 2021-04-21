@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
 import { browser } from "../../core/browser";
+import { userMenuRegistry } from "../user_menu_registry";
 
 const { Component } = owl;
 
-export function documentationItem(env) {
+function documentationItem(env) {
   const documentationURL = "https://www.odoo.com/documentation/user";
   return {
     type: "item",
@@ -17,7 +18,7 @@ export function documentationItem(env) {
   };
 }
 
-export function supportItem(env) {
+function supportItem(env) {
   const buyEnterpriseURL = "https://www.odoo.com/buy";
   return {
     type: "item",
@@ -33,7 +34,7 @@ export function supportItem(env) {
 class ShortCutsDialog extends Component {}
 ShortCutsDialog.template = "web.UserMenu.ShortCutsDialog";
 
-export function shortCutsItem(env) {
+function shortCutsItem(env) {
   return {
     type: "item",
     description: env._t("Shortcuts"),
@@ -45,14 +46,14 @@ export function shortCutsItem(env) {
   };
 }
 
-export function separator(env) {
+function separator(env) {
   return {
     type: "separator",
     sequence: 40,
   };
 }
 
-export function preferencesItem(env) {
+function preferencesItem(env) {
   return {
     type: "item",
     description: env._t("Preferences"),
@@ -65,7 +66,7 @@ export function preferencesItem(env) {
   };
 }
 
-export function odooAccountItem(env) {
+function odooAccountItem(env) {
   return {
     type: "item",
     description: env._t("My Odoo.com.account"),
@@ -83,7 +84,7 @@ export function odooAccountItem(env) {
   };
 }
 
-export function logOutItem(env) {
+function logOutItem(env) {
   const route = "/web/session/logout";
   return {
     type: "item",
@@ -95,3 +96,12 @@ export function logOutItem(env) {
     sequence: 70,
   };
 }
+
+userMenuRegistry
+  .add("documentation", documentationItem)
+  .add("support", supportItem)
+  .add("shortcuts", shortCutsItem)
+  .add("separator", separator)
+  .add("profile", preferencesItem)
+  .add("odoo_account", odooAccountItem)
+  .add("log_out", logOutItem);
