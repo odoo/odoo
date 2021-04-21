@@ -51,6 +51,6 @@ class TestProcurementException(common.TransactionCase):
 
         # I check a purchase quotation was created.
         purchase = self.env['purchase.order.line'].search([
-            ('sale_line_id', '=', sale_order_route_dropship01.order_line.ids[0])]).order_id
+            ('sale_line_ids', 'in', sale_order_route_dropship01.order_line.ids[0])]).order_id
 
         self.assertTrue(purchase, 'No Purchase Quotation is created')

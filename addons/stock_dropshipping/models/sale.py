@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import fields, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
+
+    purchase_line_ids = fields.Many2many(
+        'purchase.order.line', 'purchase_sale_line_rel', 'sale_line_id', 'purchase_line_id')
 
     def _compute_is_mto(self):
         super(SaleOrderLine, self)._compute_is_mto()
@@ -29,3 +32,9 @@ class SaleOrderLine(models.Model):
             return qty
         else:
             return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
+
+    def _prepare_procurement_values(self, group_id=False):
+        # Only used by dropshipping
+        values = super()._prepare_procurement_values(group_id)
+        values['sale_line_ids'] = self.ids
+        return values

@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
-        # if this is defined, this is a dropshipping line, so no
-        # this is to correctly map delivered quantities to the so lines
-        lines = self.filtered(lambda po_line: po_line.sale_line_id.id == values['sale_line_id']) if values.get('sale_line_id') else self
-        return super(PurchaseOrderLine, lines)._find_candidate(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
+    sale_line_ids = fields.Many2many(
+        'sale.order.line', 'purchase_sale_line_rel', 'purchase_line_id', 'sale_line_id')
+
+    def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
+        res = super()._update_purchase_order_line(product_id, product_qty, product_uom, company_id, values, line)
+        res['sale_line_ids'] = line.sale_line_ids.ids + values.get('sale_line_ids', [])
+        return res
 
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, company_id, values, po):
         res = super()._prepare_purchase_order_line_from_procurement(product_id, product_qty, product_uom, company_id, values, po)
-        res['sale_line_id'] = values.get('sale_line_id', False)
+        res['sale_line_ids'] = values.get('sale_line_ids', False)
         return res

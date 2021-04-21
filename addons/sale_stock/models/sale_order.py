@@ -401,7 +401,7 @@ class SaleOrderLine(models.Model):
         def group_func(line):
             return (line.order_id.id, line.product_id.id)
 
-        for dummy, lines in groupby(sorted(self, key=group_func), key=group_func):
+        for dummy, lines in groupby(sorted(self.filtered(lambda l: l.qty_delivered_method == 'stock_move'), key=group_func), key=group_func):
             lines = self.env['sale.order.line'].concat(*lines)
             lines.qty_delivered = 0
             quantity_to_distribute = lines._get_moves_quantity()
