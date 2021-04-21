@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
+    'auto_install': True,
     'name': 'Automated Action Rules',
     'version': '1.0',
     'category': 'Sales/Sales',

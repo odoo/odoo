@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
+    'auto_install': True,
     'name': 'City Addresses',
     'summary': 'Add a many2one field city on addresses',
     'sequence': '19',
