@@ -122,6 +122,13 @@ class TestMailAlias(TestMailCommon):
         with self.assertRaises(exceptions.ValidationError):
             record.write({'alias_defaults': "{'custom_field': brokendict"})
 
+    def test_alias_sanitize(self):
+        alias = self.env['mail.alias'].create({
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
+            'alias_name': 'bidule...inc.',
+        })
+        self.assertEqual(alias.alias_name, 'bidule.inc', 'Emails cannot start or end with a dot, there cannot be a sequence of dots.')
+
     def test_alias_setup(self):
         alias = self.env['mail.alias'].create({
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
