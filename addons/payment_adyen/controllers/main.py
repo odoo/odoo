@@ -124,7 +124,7 @@ class AdyenController(http.Controller):
         ):
             raise ValidationError("Adyen: " + _("Received tampered payment request data."))
 
-        # Make the payment request to Adyen
+        # Prepare the payment request to Adyen
         acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id).exists()
         tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
         data = {
@@ -154,6 +154,12 @@ class AdyenController(http.Controller):
                 f'/payment/adyen/return?merchantReference={reference}'
             ),
         }
+
+        # Avoid authorisation without capture for users who have Adyen settings set as "manual"
+        if not acquirer_sudo.capture_manually:
+            data.update({"captureDelayHours": 0,})
+
+        # Make the payment request to Adyen
         response_content = acquirer_sudo._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/payments',

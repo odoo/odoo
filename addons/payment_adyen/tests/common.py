@@ -13,6 +13,7 @@ class AdyenCommon(PaymentCommon):
             'adyen_api_key': 'dummy',
             'adyen_hmac_key': 'dummy',
             'adyen_checkout_api_url': 'https://this.is.an.url',
+            'adyen_payment_api_url': 'https://this.is.an.url',
             'adyen_recurring_api_url': 'https://this.is.an.url',
         })
 

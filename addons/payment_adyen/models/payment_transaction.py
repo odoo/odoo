@@ -19,6 +19,14 @@ class PaymentTransaction(models.Model):
         string="Saved Payment Data",
         help="Data that must be passed back to Adyen when returning from redirect", readonly=True,
         groups='base.group_system')
+    adyen_capture_reference = fields.Char(
+        string="Saved Capture Reference",
+        help="If later on a notification came about the capture, this is the reference that'll \
+        be used, and not the original pspreference.")
+    adyen_cancel_reference = fields.Char(
+        string="Saved Cancel Reference",
+        help="If later on a notification came about the cancel, this is the reference that'll \
+        be used, and not the original pspreference.")
 
     #=== BUSINESS METHODS ===#
 
@@ -59,7 +67,7 @@ class PaymentTransaction(models.Model):
         if self.provider != 'adyen':
             return
 
-        # Make the payment request to Adyen
+        # Prepare the payment request to Adyen
         if not self.token_id:
             raise UserError("Adyen: " + _("The transaction is not linked to a token."))
 
@@ -82,6 +90,12 @@ class PaymentTransaction(models.Model):
             'shopperIP': payment_utils.get_customer_ip_address(),
             'shopperInteraction': 'ContAuth',
         }
+
+        # Avoid authorisation without capture for users who have Adyen settings set as "manual"
+        if not self.acquirer_id.capture_manually:
+            data.update({"captureDelayHours": 0,})
+
+        # Make the payment request to Adyen
         response_content = self.acquirer_id._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/payments',
@@ -147,7 +161,10 @@ class PaymentTransaction(models.Model):
             has_token_data = 'recurring.recurringDetailReference' in data.get('additionalData', {})
             if self.tokenize and has_token_data:
                 self._adyen_tokenize_from_feedback_data(data)
-            self._set_done()
+            if self.acquirer_id.capture_manually and self.state != 'authorized':
+                self._set_authorized()
+            else:
+                self._set_done()
         elif payment_state in RESULT_CODES_MAPPING['cancel']:
             self._set_canceled()
         else:  # Classify unsupported payment state as `error` tx state
@@ -181,3 +198,98 @@ class PaymentTransaction(models.Model):
         _logger.info(
             "created token with id %s for partner with id %s", token.id, self.partner_id.id
         )
+
+    def _send_capture_request(self):
+        """ Override of payment to send a capture request to Adyen.
+        Note: self.ensure_one()
+        :return: None
+        """
+        super()._send_capture_request()
+        if self.provider != 'adyen':
+            return
+
+        converted_amount = payment_utils.to_minor_currency_units(
+            self.amount, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
+        )
+        data = {
+            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'modificationAmount': {
+                'value': converted_amount,
+                'currency': self.currency_id.name,
+            },
+            'originalReference': self.acquirer_reference,
+            'reference': self.reference,
+        }
+        response_content = self.acquirer_id._adyen_make_request(
+            url_field_name='adyen_payment_api_url',
+            endpoint='/capture',
+            payload=data,
+            method='POST'
+        )
+
+        # Handle the payment request response
+        _logger.info("capture request response:\n%s", pprint.pformat(response_content))
+        # the PSP reference associated with this /capture request is different from the
+        # psp reference associated with the original payment request
+        if response_content['pspReference']:
+            self.adyen_capture_reference = response_content['pspReference']
+        else:
+            self._set_error(
+                "Adyen: " + _("Received data with invalid capture reference")
+            )
+        if response_content['response']:
+            if response_content['response'] == '[capture-received]':
+                self._set_done()
+            else:
+                self._set_error(
+                    "Adyen: " + _("Received data with invalid capture response: %s", response_content["response"])
+                )
+        else:
+            self._set_error(
+                    "Adyen: " + _("Received data without capture response")
+                )
+
+    def _send_void_request(self):
+        """ Override of payment to send a void request to Adyen.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        super()._send_void_request()
+        if self.provider != 'adyen':
+            return
+
+        data = {
+            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'originalReference': self.acquirer_reference,
+            'reference': self.reference,
+        }
+        response_content = self.acquirer_id._adyen_make_request(
+            url_field_name='adyen_payment_api_url',
+            endpoint='/cancel',
+            payload=data,
+            method='POST'
+        )
+
+        # Handle the payment request response
+        _logger.info("cancel request response:\n%s", pprint.pformat(response_content))
+        # the PSP reference associated with this /cancel request is different from the
+        # psp reference associated with the original payment request
+        if response_content['pspReference']:
+            self.adyen_cancel_reference = response_content['pspReference']
+        else:
+            self._set_error(
+                "Adyen: " + _("Received data with invalid cancel reference")
+            )
+        if response_content['response']:
+            if response_content['response'] == '[cancel-received]':
+                self._set_canceled()
+            else:
+                self._set_error(
+                    "Adyen: " + _("Received data with invalid cancel response: %s", response_content["response"])
+                )
+        else:
+            self._set_error(
+                    "Adyen: " + _("Received data without cancel response")
+                )
