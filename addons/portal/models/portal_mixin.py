@@ -32,7 +32,7 @@ class PortalMixin(models.AbstractModel):
             self.sudo().write({'access_token': str(uuid.uuid4())})
         return self.access_token
 
-    def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
+    def _get_share_url(self, redirect=False, signup_partner=False, pid=None, share_token=True):
         """
         Build the url of the record  that will be sent by mail and adds additional parameters such as
         access_token to bypass the recipient's rights,
@@ -50,7 +50,7 @@ class PortalMixin(models.AbstractModel):
             'model': self._name,
             'res_id': self.id,
         }
-        if hasattr(self, 'access_token'):
+        if share_token and hasattr(self, 'access_token'):
             params['access_token'] = self._portal_ensure_token()
         if pid:
             params['pid'] = pid
@@ -77,6 +77,7 @@ class PortalMixin(models.AbstractModel):
                     'button_access': {
                         'url': access_link,
                     },
+                    'notification_is_customer': True,
                 })
             ]
         else:
