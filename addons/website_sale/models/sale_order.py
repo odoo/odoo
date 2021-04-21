@@ -292,13 +292,13 @@ class SaleOrder(models.Model):
                     'pricelist': order.pricelist_id.id,
                     'force_company': order.company_id.id,
                 })
-                product = self.env['product.product'].with_context(product_context).browse(product_id)
-                values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
-                    order_line._get_display_price(product),
-                    order_line.product_id.taxes_id,
-                    order_line.tax_id,
-                    self.company_id
-                )
+            product = self.env['product.product'].with_context(product_context).browse(product_id)
+            values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
+                order_line._get_display_price(product),
+                order_line.product_id.taxes_id,
+                order_line.tax_id,
+                self.company_id
+            )
 
             order_line.write(values)
 
