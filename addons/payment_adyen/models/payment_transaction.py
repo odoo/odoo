@@ -54,7 +54,7 @@ class PaymentTransaction(models.Model):
         if self.provider != 'adyen':
             return
 
-        # Make the payment request to Adyen
+        # Prepare the payment request to Adyen
         if not self.token_id:
             raise UserError("Adyen: " + _("The transaction is not linked to a token."))
 
@@ -76,11 +76,23 @@ class PaymentTransaction(models.Model):
             'shopperIP': payment_utils.get_customer_ip_address(),
             'shopperInteraction': 'ContAuth',
         }
+
+        # Force the capture delay on Adyen side if the acquirer is not configured for capturing
+        # payments manually. This is necessary because it's not possible to distinguish
+        # 'AUTHORISATION' events sent by Adyen with the merchant account's capture delay set to
+        # 'manual' from events with the capture delay set to 'immediate' or a number of hours. If
+        # the merchant account is configured to capture payments with a delay but the acquirer is
+        # not, we force the immediate capture to avoid considering authorized transactions as
+        # captured on Odoo.
+        if not self.acquirer_id.capture_manually:
+            data.update(captureDelayHours=0)
+
+        # Make the payment request to Adyen
         response_content = self.acquirer_id._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/payments',
             payload=data,
-            method='POST'
+            method='POST',
         )
 
         # Handle the payment request response
@@ -145,6 +157,77 @@ class PaymentTransaction(models.Model):
 
         return refund_tx
 
+    def _send_capture_request(self):
+        """ Override of payment to send a capture request to Adyen.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        super()._send_capture_request()
+        if self.provider != 'adyen':
+            return
+
+        converted_amount = payment_utils.to_minor_currency_units(
+            self.amount, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
+        )
+        data = {
+            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'amount': {
+                'value': converted_amount,
+                'currency': self.currency_id.name,
+            },
+            'reference': self.reference,
+        }
+        response_content = self.acquirer_id._adyen_make_request(
+            url_field_name='adyen_checkout_api_url',
+            endpoint='/payments/{}/captures',
+            endpoint_param=self.acquirer_reference,
+            payload=data,
+            method='POST',
+        )
+        _logger.info("capture request response:\n%s", pprint.pformat(response_content))
+
+        # Handle the capture request response
+        status = response_content.get('status')
+        if status == 'received':
+            self._log_message_on_linked_documents(_(
+                "The capture of the transaction with reference %s has been requested (%s).",
+                self.reference, self.acquirer_id.name
+            ))
+
+    def _send_void_request(self):
+        """ Override of payment to send a void request to Adyen.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        super()._send_void_request()
+        if self.provider != 'adyen':
+            return
+
+        data = {
+            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'reference': self.reference,
+        }
+        response_content = self.acquirer_id._adyen_make_request(
+            url_field_name='adyen_checkout_api_url',
+            endpoint='/payments/{}/cancels',
+            endpoint_param=self.acquirer_reference,
+            payload=data,
+            method='POST',
+        )
+        _logger.info("void request response:\n%s", pprint.pformat(response_content))
+
+        # Handle the void request response
+        status = response_content.get('status')
+        if status == 'received':
+            self._log_message_on_linked_documents(_(
+                "A request was sent to void the transaction with reference %s (%s).",
+                self.reference, self.acquirer_id.name
+            ))
+
     def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on Adyen data.
 
@@ -162,25 +245,40 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('merchantReference')
         if not reference:
             raise ValidationError("Adyen: " + _("Received data with missing merchant reference"))
-        event_code = notification_data.get('eventCode')
 
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'adyen')])
-        if event_code == 'REFUND' and (not tx or tx.operation != 'refund'):
-            # If a refund is initiated from Adyen, the merchant reference can be personalized. We
-            # need to get the source transaction and manually create the refund transaction.
-            source_acquirer_reference = notification_data.get('originalReference')
-            source_tx = self.search(
-                [('acquirer_reference', '=', source_acquirer_reference), ('provider', '=', 'adyen')]
+        event_code = notification_data.get('eventCode', 'AUTHORISATION')  # Fallback on auth if S2S.
+        acquirer_reference = notification_data.get('pspReference')
+        source_reference = notification_data.get('originalReference')
+        if event_code == 'AUTHORISATION':
+            tx = self.search([('reference', '=', reference), ('provider', '=', 'adyen')])
+        elif event_code in ['CAPTURE', 'CANCELLATION']:
+            # The capture/void may be initiated from Adyen, so we can't trust the reference.
+            # We find the transaction based on the original acquirer reference since Adyen will have
+            # two different references: one for the original transaction and one for the capture.
+            tx = self.search(
+                [('acquirer_reference', '=', source_reference), ('provider', '=', 'adyen')]
             )
-            if source_tx:
-                # Manually create a refund transaction with a new reference. The reference of
-                # the refund transaction was personalized from Adyen and could be identical to
-                # that of an existing transaction.
-                tx = self._adyen_create_refund_tx_from_notification_data(
-                    source_tx, notification_data
+        else:  # 'REFUND'
+            # The refund may be initiated from Adyen, so we can't trust the reference, which could
+            # be identical to another existing transaction. We find the transaction based on the
+            # acquirer reference.
+            tx = self.search(
+                [('acquirer_reference', '=', acquirer_reference), ('provider', '=', 'adyen')]
+            )
+            if not tx:  # The refund was initiated from Adyen
+                # Find the source transaction based on the original reference
+                source_tx = self.search(
+                    [('acquirer_reference', '=', source_reference), ('provider', '=', 'adyen')]
                 )
-            else:  # The refund was initiated for an unknown source transaction
-                pass  # Don't do anything with the refund notification
+                if source_tx:
+                    # Manually create a refund transaction with a new reference. The reference of
+                    # the refund transaction was personalized from Adyen and could be identical to
+                    # that of an existing transaction.
+                    tx = self._adyen_create_refund_tx_from_notification_data(
+                        source_tx, notification_data
+                    )
+                else:  # The refund was initiated for an unknown source transaction
+                    pass  # Don't do anything with the refund notification
 
         if not tx:
             raise ValidationError(
@@ -194,7 +292,7 @@ class PaymentTransaction(models.Model):
         :param recordset source_tx: The source transaction for which a refund is initiated, as a
                                     `payment.transaction` recordset
         :param dict notification_data: The notification data sent by the provider
-        :return: The created refund transaction
+        :return: The newly created refund transaction
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         """
@@ -225,8 +323,14 @@ class PaymentTransaction(models.Model):
         if self.provider != 'adyen':
             return
 
-        # Handle the acquirer reference
-        if 'pspReference' in notification_data:
+        # Extract or assume the event code. If none is provided, the feedback data originate from a
+        # direct payment request whose feedback data share the same payload as an 'AUTHORISATION'
+        # webhook notification.
+        event_code = notification_data.get('eventCode', 'AUTHORISATION')
+
+        # Handle the acquirer reference. If the event code is 'CAPTURE' or 'CANCELLATION', we
+        # discard the pspReference as it is different from the original pspReference of the tx.
+        if 'pspReference' in notification_data and event_code in ['AUTHORISATION', 'REFUND']:
             self.acquirer_reference = notification_data.get('pspReference')
 
         # Handle the payment state
@@ -242,23 +346,47 @@ class PaymentTransaction(models.Model):
             has_token_data = 'recurring.recurringDetailReference' in additional_data
             if self.tokenize and has_token_data:
                 self._adyen_tokenize_from_notification_data(notification_data)
-            self._set_done()
+
+            if not self.acquirer_id.capture_manually:
+                self._set_done()
+            else:  # The payment was configured for manual capture.
+                # Differentiate the state based on the event code.
+                if event_code == 'AUTHORISATION':
+                    self._set_authorized()
+                else:  # 'CAPTURE'
+                    self._set_done()
+
+            # Immediately post-process the transaction if it is a refund, as the post-processing
+            # will not be triggered by a customer browsing the transaction from the portal.
             if self.operation == 'refund':
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif payment_state in RESULT_CODES_MAPPING['cancel']:
-            _logger.warning(
-                "the transaction with reference %s was cancelled. reason: %s",
-                self.reference, refusal_reason
-            )
             self._set_canceled()
         elif payment_state in RESULT_CODES_MAPPING['error']:
-            _logger.warning(
-                "the transaction with reference %s underwent an error. reason: %s",
-                self.reference, refusal_reason
-            )
-            self._set_error(
-                _("An error occurred during the processing of your payment. Please try again.")
-            )
+            if event_code in ['AUTHORISATION', 'REFUND']:
+                _logger.warning(
+                    "the transaction with reference %s underwent an error. reason: %s",
+                    self.reference, refusal_reason
+                )
+                self._set_error(
+                    _("An error occurred during the processing of your payment. Please try again.")
+                )
+            elif event_code == 'CANCELLATION':
+                _logger.warning(
+                    "the void of the transaction with reference %s failed. reason: %s",
+                    self.reference, refusal_reason
+                )
+                self._log_message_on_linked_documents(
+                    _("The void of the transaction with reference %s failed.", self.reference)
+                )
+            else:  # 'CAPTURE'
+                _logger.warning(
+                    "the capture of the transaction with reference %s failed. reason: %s",
+                    self.reference, refusal_reason
+                )
+                self._log_message_on_linked_documents(
+                    _("The capture of the transaction with reference %s failed.", self.reference)
+                )
         elif payment_state in RESULT_CODES_MAPPING['refused']:
             _logger.warning(
                 "the transaction with reference %s was refused. reason: %s",

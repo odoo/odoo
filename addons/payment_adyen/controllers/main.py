@@ -105,7 +105,7 @@ class AdyenController(http.Controller):
         ):
             raise ValidationError("Adyen: " + _("Received tampered payment request data."))
 
-        # Make the payment request to Adyen
+        # Prepare the payment request to Adyen
         acquirer_sudo = request.env['payment.acquirer'].sudo().browse(acquirer_id).exists()
         tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
         data = {
@@ -135,6 +135,18 @@ class AdyenController(http.Controller):
                 f'/payment/adyen/return?merchantReference={reference}'
             ),
         }
+
+        # Force the capture delay on Adyen side if the acquirer is not configured for capturing
+        # payments manually. This is necessary because it's not possible to distinguish
+        # 'AUTHORISATION' events sent by Adyen with the merchant account's capture delay set to
+        # 'manual' from events with the capture delay set to 'immediate' or a number of hours. If
+        # the merchant account is configured to capture payments with a delay but the acquirer is
+        # not, we force the immediate capture to avoid considering authorized transactions as
+        # captured on Odoo.
+        if not acquirer_sudo.capture_manually:
+            data.update(captureDelayHours=0)
+
+        # Make the payment request to Adyen
         response_content = acquirer_sudo._adyen_make_request(
             url_field_name='adyen_checkout_api_url',
             endpoint='/payments',
@@ -230,7 +242,7 @@ class AdyenController(http.Controller):
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='json', auth='public')
-    def adyen_notification(self):
+    def adyen_webhook(self):
         """ Process the data sent by Adyen to the webhook based on the event code.
 
         See https://docs.adyen.com/development-resources/webhooks/understand-notifications for the
@@ -259,9 +271,9 @@ class AdyenController(http.Controller):
                 event_code = notification_data['eventCode']
                 if event_code == 'AUTHORISATION' and success:
                     notification_data['resultCode'] = 'Authorised'
-                elif event_code == 'CANCELLATION' and success:
-                    notification_data['resultCode'] = 'Cancelled'
-                elif event_code == 'REFUND':
+                elif event_code == 'CANCELLATION':
+                    notification_data['resultCode'] = 'Cancelled' if success else 'Error'
+                elif event_code in ['REFUND', 'CAPTURE']:
                     notification_data['resultCode'] = 'Authorised' if success else 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
