@@ -6,6 +6,13 @@ from odoo import api, models
 class MailTemplate(models.Model):
     _inherit = "mail.template"
 
+    def _get_edi_attachments(self, attachment_id, record_data):
+        if not attachment_id:
+            return record_data
+        record_data.setdefault('attachments', [])
+        record_data['attachments'].append((attachment_id.name, attachment_id.datas))
+        return record_data
+
     def generate_email(self, res_ids, fields):
         res = super().generate_email(res_ids, fields)
 
@@ -26,10 +33,6 @@ class MailTemplate(models.Model):
                 # wizard.
                 if doc.edi_format_id._is_embedding_to_invoice_pdf_needed():
                     continue
-
-                attachment = doc.attachment_id
-                if attachment:
-                    record_data.setdefault('attachments', [])
-                    record_data['attachments'].append((attachment.name, attachment.datas))
+                record_data = self._get_edi_attachments(doc, record_data)
 
         return res
