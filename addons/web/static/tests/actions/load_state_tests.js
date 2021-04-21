@@ -257,7 +257,7 @@ QUnit.module("ActionManager", (hooks) => {
         "Second record",
         "breadcrumbs should contain the display_name of the opened record"
       );
-      // go back to Lst
+      // go back to List
       await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a"));
       await legacyExtraNextTick();
       assert.containsOnce(webClient, ".o_list_view");
