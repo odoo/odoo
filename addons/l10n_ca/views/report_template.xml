@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_ca_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@class='row'][last()]" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div>PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_ca_external_layout_clean" inherit_id="web.external_layout_clean">
+        <xpath expr="//div[@class='row']" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div>PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_ca_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//div[@class='row mb8']" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div>PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="l10n_ca_external_layout_background" inherit_id="web.external_layout_background">
+        <xpath expr="//div[@class='float-left company_address']" position="after">
+            <t t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst" class="mt16">
+                <div>PST: <span t-field="company.l10n_ca_pst"/></div>
+            </t>
+        </xpath>
+    </template>
+</odoo>
