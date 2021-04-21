@@ -528,6 +528,11 @@ class ProductTemplate(models.Model):
             '', args=[('id', 'in', list(searched_ids))],
             operator='ilike', limit=limit, name_get_uid=name_get_uid)
 
+    def action_open_label_layout(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
+        action['context'] = {'default_product_tmpl_ids': self.ids}
+        return action
+
     def open_pricelist_rules(self):
         self.ensure_one()
         domain = ['|',
