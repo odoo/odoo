@@ -18,7 +18,10 @@
         'data/website_form_data.xml',
     ],
     'installable': True,
-    'auto_install': True,
+    'auto_install': [
+        'website',
+        'mail',
+    ],
     'assets': {
         'website.assets_editor': [
             'website_form/static/src/snippets/s_website_form/options.js',
