@@ -12,6 +12,7 @@
                     <field name="adyen_api_key" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
                     <field name="adyen_hmac_key" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
                     <field name="adyen_checkout_api_url" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+                    <field name="adyen_payment_api_url" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
                     <field name="adyen_recurring_api_url" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
                 </group>
             </xpath>
