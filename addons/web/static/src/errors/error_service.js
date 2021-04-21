@@ -53,32 +53,38 @@ export const errorService = {
     window.addEventListener("unhandledrejection", (ev) => {
       const handledError = ev.reason;
       const isPrototypeOf = Object.prototype.isPrototypeOf;
-      // The thrown error was originally an instance of "OdooError" or subtype.
       if (isPrototypeOf.call(OdooError.prototype, handledError)) {
+        // the thrown error was originally an instance of "OdooError" or subtype.
         handleError(handledError, env);
-      }
-      // The thrown error was originally an instance of "Error"
-      else if (isPrototypeOf.call(Error.prototype, handledError)) {
+      } else if (isPrototypeOf.call(Error.prototype, handledError)) {
+        // the thrown error was originally an instance of "Error"
         const error = new OdooError("DEFAULT_ERROR");
         error.message = ev.reason.message;
         error.traceback = ev.reason.stack;
-        handleError(error, env);
-      }
-      // The thrown value was originally a non-Error instance or a raw js object
-      else if (handledError && handledError.message) {
-        const error = new OdooError("UNCAUGHT_OBJECT_REJECTION_ERROR");
-        error.message = handledError.message;
-        error.traceback = JSON.stringify(handledError, Object.getOwnPropertyNames(handledError), 4);
         handleError(error, env);
       } else {
         // @legacy
         // In the future, we probably don't want to use Promises as async if/else structures
         // rather, we should always consider a rejected Promise as an error
         // For the time being, this is not possible, as Odoo code intensively relies on guardedCatch
+        // } else if (handledError && handledError.message) {
+        //   // the thrown value was originally a non-Error instance or a raw js object
+        //   const error = new OdooError("UNCAUGHT_OBJECT_REJECTION_ERROR");
+        //   error.message = handledError.message;
+        //   error.traceback = JSON.stringify(
+        //     handledError,
+        //     Object.getOwnPropertyNames(handledError),
+        //     4
+        //   );
+        //   handleError(error, env);
+        // } else {
         // const error = new OdooError("UNCAUGHT_EMPTY_REJECTION_ERROR");
         // error.message = env._t("A Promise reject call with no argument is not getting caught.");
         // handleError(error, env);
-        return;
+        // }
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+        ev.preventDefault();
       }
     });
   },
