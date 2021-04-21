@@ -65,24 +65,242 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             refund_tx,
             msg="Refunding an Adyen transaction should always create a refund transaction."
         )
+        self.assertTrue(
+            refund_tx.state == 'draft',
+            msg="A refund request as been made, but the state of the refund tx stays as 'draft' "
+                "until a success notification is sent"
+        )
         self.assertNotEqual(
             refund_tx.acquirer_reference,
             tx.acquirer_reference,
-            msg="The acquirer reference of the refund transaction should different from that of "
+            msg="The acquirer reference of the refund transaction should be different from that of "
                 "the source transaction."
         )
 
-    @mute_logger('odoo.addons.payment_adyen.controllers.main')
+    def test_get_tx_from_notification_data_returns_refund_tx(self):
+        source_tx = self.create_transaction(
+            'direct', state='done', acquirer_reference=self.original_reference
+        )
+        refund_tx = self.create_transaction(
+            'direct',
+            reference='RefundTx',
+            acquirer_reference=self.psp_reference,
+            amount=-source_tx.amount,
+            operation='refund',
+            source_transaction_id=source_tx.id
+        )
+        data = dict(
+            self.webhook_notification_payload,
+            amount={
+                'currency': 'USD',
+                'value': payment_utils.to_minor_currency_units(
+                    -source_tx.amount, refund_tx.currency_id
+                )
+            },
+            eventCode='REFUND',
+        )
+        returned_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        self.assertEqual(returned_tx, refund_tx, msg="The existing refund tx is the one returned")
+
+    def test_get_tx_from_notification_data_creates_refund_tx_when_missing(self):
+        source_tx = self.create_transaction(
+            'direct', state='done', acquirer_reference=self.original_reference
+        )
+        data = dict(
+            self.webhook_notification_payload,
+            amount={'currency': 'USD', 'value': payment_utils.to_minor_currency_units(
+                -self.amount, source_tx.currency_id
+            )},
+            eventCode='REFUND',
+        )
+        refund_tx = self.env['payment.transaction']._get_tx_from_notification_data('adyen', data)
+        self.assertTrue(
+            refund_tx,
+            msg="If no refund tx is found with received refund data, a refund tx should be created"
+        )
+        self.assertNotEqual(refund_tx, source_tx)
+        self.assertEqual(refund_tx.source_transaction_id, source_tx)
+
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
+    def test_tx_state_after_send_capture_request(self):
+        self.acquirer.capture_manually = True
+        tx = self.create_transaction('direct', state='authorized')
+
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
+            return_value={'status': 'received'},
+        ):
+            tx._send_capture_request()
+        self.assertEqual(
+            tx.state,
+            'authorized',
+            msg="A capture request as been made, but the state of the transaction stays as "
+                "'authorized' until a success notification is sent",
+        )
+
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
+    def test_tx_state_after_send_void_request(self):
+        self.acquirer.capture_manually = True
+        tx = self.create_transaction('direct', state='authorized')
+
+        with patch(
+            'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
+            return_value={'status': 'received'},
+        ):
+            tx._send_void_request()
+        self.assertEqual(
+            tx.state,
+            'authorized',
+            msg="A void request as been made, but the state of the transaction stays as "
+                "'authorized' until a success notification is sent",
+        )
+
     def test_webhook_notification_confirms_transaction(self):
-        """ Test the processing of a webhook notification. """
         tx = self.create_transaction('direct')
+        self._webhook_notification_flow(self.webhook_notification_batch_data)
+        self.assertEqual(tx.state, 'done')
+
+    def test_webhook_notification_authorizes_transaction(self):
+        self.acquirer.capture_manually = True
+        tx = self.create_transaction('direct')
+        self._webhook_notification_flow(self.webhook_notification_batch_data)
+        self.assertEqual(
+            tx.state,
+            'authorized',
+            msg="The authorization succeeded, the manual capture is enabled, the tx state should be"
+                " 'authorized'.",
+        )
+
+    def test_webhook_notification_captures_transaction(self):
+        self.acquirer.capture_manually = True
+        tx = self.create_transaction(
+            'direct', state='authorized', acquirer_reference=self.original_reference
+        )
+        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
+            'NotificationRequestItem': dict(self.webhook_notification_payload, eventCode='CAPTURE')
+        }])
+        self._webhook_notification_flow(payload)
+        self.assertEqual(
+            tx.state, 'done',
+            msg="The capture succeeded, the tx state should be 'done'.",
+        )
+
+    def test_webhook_notification_cancels_transaction(self):
+        tx = self.create_transaction(
+            'direct', state='pending', acquirer_reference=self.original_reference
+        )
+        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
+            'NotificationRequestItem': dict(
+                self.webhook_notification_payload, eventCode='CANCELLATION'
+            )
+        }])
+        self._webhook_notification_flow(payload)
+        self.assertEqual(
+            tx.state,
+            'cancel',
+            msg="The cancellation succeeded, the tx state should be 'cancel'.",
+        )
+
+    def test_webhook_notification_refunds_transaction(self):
+        source_tx = self.create_transaction(
+            'direct', state='done', acquirer_reference=self.original_reference
+        )
+        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
+            'NotificationRequestItem': dict(
+                self.webhook_notification_payload,
+                amount={'currency': 'USD', 'value': payment_utils.to_minor_currency_units(
+                    -self.amount, source_tx.currency_id
+                )},
+                eventCode='REFUND',
+            )
+        }])
+        self._webhook_notification_flow(payload)
+        refund_tx = self.env['payment.transaction'].search(
+            [('source_transaction_id', '=', source_tx.id)]
+        )
+        self.assertEqual(
+            refund_tx.state,
+            'done',
+            msg="After a successful refund notification, the refund state should be in 'done'.",
+        )
+
+    def test_failed_webhook_authorization_notification_leaves_transaction_in_draft(self):
+        tx = self.create_transaction('direct')
+        payload = dict(self.webhook_notification_batch_data, notificationItems=[
+            {'NotificationRequestItem': dict(self.webhook_notification_payload, success='false')}
+        ])
+        self._webhook_notification_flow(payload)
+        self.assertEqual(
+            tx.state, 'draft',
+            msg="The authorization failed, as we don't support failed authorization, the tx state "
+                "should still be 'draft'.",
+        )
+
+    def test_failed_webhook_capture_notification_leaves_transaction_authorized(self):
+        tx = self.create_transaction(
+            'direct', state='authorized', acquirer_reference=self.original_reference
+        )
+        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
+            'NotificationRequestItem': dict(
+                self.webhook_notification_payload, eventCode='CAPTURE', success='false'
+            )
+        }])
+        self._webhook_notification_flow(payload)
+        self.assertEqual(
+            tx.state, 'authorized',
+            msg="The capture failed, the tx state should still be 'authorized'.",
+        )
+
+    def test_failed_webhook_cancellation_notification_leaves_transaction_authorized(self):
+        tx = self.create_transaction('direct', state='authorized')
+        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
+            'NotificationRequestItem': dict(
+                self.webhook_notification_payload, eventCode='CANCELLATION', success='false'
+            )
+        }])
+        self._webhook_notification_flow(payload)
+        self.assertEqual(
+            tx.state, 'authorized',
+            msg="The cancellation failed, the tx state should still be 'authorized'.",
+        )
+
+    def test_failed_webhook_refund_notification_sets_refund_transaction_in_error(self):
+        source_tx = self.create_transaction(
+            'direct', state='done', acquirer_reference=self.original_reference
+        )
+        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
+            'NotificationRequestItem': dict(
+                self.webhook_notification_payload,
+                amount={'currency': 'USD', 'value': payment_utils.to_minor_currency_units(
+                    -self.amount, source_tx.currency_id
+                )},
+                eventCode='REFUND',
+                success='false',
+            )
+        }])
+        self._webhook_notification_flow(payload)
+        refund_tx = self.env['payment.transaction'].search([
+            ('source_transaction_id', '=', source_tx.id)]
+        )
+        self.assertEqual(
+            refund_tx.state,
+            'error',
+            msg="After a failed refund notification, the refund state should be in 'error'.",
+        )
+
+    @mute_logger('odoo.addons.payment_adyen.controllers.main')
+    @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
+    def _webhook_notification_flow(self, payload):
+        """ Send a notification to the webhook, ignore the signature, and check the response. """
         url = self._build_url(AdyenController._webhook_url)
         with patch(
             'odoo.addons.payment_adyen.controllers.main.AdyenController'
             '._verify_notification_signature'
         ):
-            self._make_json_request(url, data=self.webhook_notification_batch_data)
-        self.assertEqual(tx.state, 'done')
+            response = self._make_json_request(url, data=payload).json()
+        self.assertEqual(
+            response['result'], '[accepted]', msg="The webhook should always respond '[accepted]'",
+        )
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')
     def test_webhook_notification_triggers_signature_check(self):
