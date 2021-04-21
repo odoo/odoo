@@ -47,6 +47,44 @@
     </div>
 </template>
 
+<template id="snippet_options_image_selection_widgets">
+    <we-row string="Image" class="o_we_sublevel_1">
+        <we-imagepicker title="Edit image"
+                        data-background=""
+                        data-name="bg_image_opt"
+                        data-dependencies="bg_image_opt"/>
+    </we-row>
+    <we-row string="Main Color" class="o_we_sublevel_2" title="Main Color" data-name="main_color_opt">
+        <we-colorpicker data-dynamic-color="true" data-color-name="c1"/>
+        <we-colorpicker data-dynamic-color="true" data-color-name="c2"/>
+        <we-colorpicker data-dynamic-color="true" data-color-name="c3"/>
+        <we-colorpicker data-dynamic-color="true" data-color-name="c4"/>
+        <we-colorpicker data-dynamic-color="true" data-color-name="c5"/>
+    </we-row>
+</template>
+
+<template id="snippet_options_image_position_widgets">
+    <t t-set="bg_image_dependencies" t-value="bg_image_dependencies or None"/>
+    <t t-set="type_method" t-value="type_method or 'data-background-type'"/>
+    <t t-set="type_method_value_quote" t-value="type_method_value_quote or ''"/>
+    <t t-set="type_param" t-value="type_param"/>
+    <t t-set="type_param_value" t-value="type_param_value"/>
+    <t t-set="size_method" t-value="size_method or 'data-select-style'"/>
+    <t t-set="size_param" t-value="size_param or 'data-css-property'"/>
+    <t t-set="size_param_value" t-value="size_param_value or 'background-size'"/>
+    <we-row string="Position" class="o_we_sublevel_2">
+        <we-select data-no-preview="true" t-att-data-dependencies="bg_image_dependencies" t-att="type_param and {type_param: type_param_value}">
+            <we-button t-att="{type_method: type_method_value_quote + 'image' + type_method_value_quote}">Cover</we-button>
+            <we-button t-att="{type_method: type_method_value_quote + 'pattern' + type_method_value_quote}" data-name="background_repeat_opt">Repeat pattern</we-button>
+        </we-select>
+        <we-button class="fa fa-fw fa-crosshairs" title="Background Position" data-background-position-overlay="true" t-att-data-dependencies="bg_image_dependencies" data-no-preview="true"/>
+    </we-row>
+    <we-multi data-dependencies="background_repeat_opt" t-att="{size_param: size_param_value}">
+        <we-input string="Width" class="o_we_sublevel_3" placeholder="auto" data-unit="px" t-att="{size_method: 'auto'}"/>
+        <we-input string="Height" class="o_we_sublevel_3" placeholder="auto" data-unit="px" t-att="{size_method: 'auto'}"/>
+    </we-multi>
+</template>
+
 <template id="snippet_options_image_optimization_widgets">
     <t t-set="filter_label">Filter</t>
     <we-select t-att-string="filter_label" t-att-class="indent and 'o_we_sublevel_2'">
@@ -170,36 +208,16 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row string="Image" class="o_we_sublevel_1">
-                <we-imagepicker title="Edit image"
-                                data-background=""
-                                data-name="bg_image_opt"
-                                data-dependencies="bg_image_opt"/>
-            </we-row>
-            <we-row string="Main Color" class="o_we_sublevel_2" title="Main Color" data-name="main_color_opt">
-                <we-colorpicker data-dynamic-color="true" data-color-name="c1"/>
-                <we-colorpicker data-dynamic-color="true" data-color-name="c2"/>
-                <we-colorpicker data-dynamic-color="true" data-color-name="c3"/>
-                <we-colorpicker data-dynamic-color="true" data-color-name="c4"/>
-                <we-colorpicker data-dynamic-color="true" data-color-name="c5"/>
-            </we-row>
+            <t t-call="web_editor.snippet_options_image_selection_widgets"/>
         </div>
 
         <div data-js="BackgroundPosition"
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row string="Position" class="o_we_sublevel_2">
-                <we-select data-no-preview="true">
-                    <we-button data-background-type="cover">Cover</we-button>
-                    <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
-                </we-select>
-                <we-button class="fa fa-fw fa-crosshairs" title="Background Position" data-background-position-overlay="true" data-no-preview="true"/>
-            </we-row>
-            <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
-                <we-input string="Width" class="o_we_sublevel_3" data-select-style="auto" placeholder="auto" data-unit="px"/>
-                <we-input string="Height" class="o_we_sublevel_3" data-select-style="auto" placeholder="auto" data-unit="px"/>
-            </we-multi>
+            <t t-call="web_editor.snippet_options_image_position_widgets">
+                <t t-set="bg_image_dependencies" t-valuef="bg_image_toggle_opt"/>
+            </t>
         </div>
 
         <div data-js="BackgroundOptimize"

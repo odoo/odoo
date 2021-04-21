@@ -658,7 +658,12 @@ options.Class.include({
     custom_events: Object.assign({}, options.Class.prototype.custom_events || {}, {
         'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
     }),
-    specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
+    specialCheckAndReloadMethodsNames: [
+        "customizeWebsiteViews",
+        "customizeWebsiteVariable",
+        "customizeWebsiteColor",
+        "customizeWebsiteColorOrGradient",
+    ],
 
     /**
      * @override
@@ -711,6 +716,12 @@ options.Class.include({
      */
     async customizeWebsiteAssets(previewMode, widgetValue, params) {
         await this._customizeWebsite(previewMode, widgetValue, params, 'assets');
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async customizeWebsiteColorOrGradient(previewMode, widgetValue, params) {
+        await this._customizeWebsite(previewMode, widgetValue, params, "colorOrGradient");
     },
 
     //--------------------------------------------------------------------------
@@ -784,6 +795,16 @@ options.Class.include({
             case 'customizeWebsiteAssets': {
                 return this._getEnabledCustomizeValues(params.possibleValues, false);
             }
+            case "customizeWebsiteColorOrGradient": {
+                let gradientValue = weUtils.getCSSVariableValue(params.colorGradient);
+                if (gradientValue) {
+                    if (gradientValue.startsWith("'") && gradientValue.endsWith("'")) {
+                        gradientValue = gradientValue.substring(1, gradientValue.length - 1);
+                    }
+                    return gradientValue;
+                }
+                return weUtils.getCSSVariableValue(params.color);
+            }
         }
         return this._super(...arguments);
     },
@@ -818,6 +839,11 @@ options.Class.include({
                 break;
             case 'assets':
                 await this._customizeWebsiteData(widgetValue, params, false);
+                break;
+            case "colorOrGradient":
+                await this._customizeWebsiteColorOrGradient(widgetValue, params);
+                break;
+            case "reloadOnly":
                 break;
             default:
                 if (params.customCustomization) {
@@ -857,6 +883,18 @@ options.Class.include({
     /**
      * @private
      */
+    async _customizeWebsiteColorOrGradient(color, params) {
+        if (weUtils.isColorGradient(color)) {
+            await this._customizeWebsiteVariable(color, {variable: params.colorGradient});
+            await this._customizeWebsiteColors({[params.color]: ""}, params);
+        } else {
+            await this._customizeWebsiteColors({[params.color]: color}, params);
+            await this._customizeWebsiteVariable(null, {variable: params.colorGradient});
+        }
+    },
+    /**
+     * @private
+     */
      async _customizeWebsiteColors(colors, params) {
         colors = colors || {};
 
@@ -890,9 +928,9 @@ options.Class.include({
      *
      * @private
      * @param {Object} values: value per key variable
-     * @param {string} nullValue: string that represent null
+     * @param {string} nullValue: string that represents null
      */
-    _customizeWebsiteVariables: async function (values, nullValue) {
+    async _customizeWebsiteVariables(values, nullValue) {
         await this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values, nullValue);
         await this._refreshBundles();
     },
@@ -1266,7 +1304,13 @@ options.registry.BackgroundVideo = options.Class.extend({
     },
 });
 
-options.registry.OptionsTab = options.Class.extend({
+options.registry.OptionsTab = options.Class.extend(options.BackgroundPositionMixin, {
+    specialCheckAndReloadMethodsNames: options.Class.prototype.specialCheckAndReloadMethodsNames
+        .concat([
+            "customizeBodyBg",
+            "toggleBodyBgImage",
+        ]),
+
     GRAY_PARAMS: {EXTRA_SATURATION: "gray-extra-saturation", HUE: "gray-hue"},
 
     /**
@@ -1277,6 +1321,7 @@ options.registry.OptionsTab = options.Class.extend({
         this.grayParams = {};
         this.grays = {};
         this.orm = this.bindService("orm");
+        this.$target = $(this.ownerDocument.body).find("#wrapwrap");
     },
 
     //--------------------------------------------------------------------------
@@ -1399,26 +1444,32 @@ options.registry.OptionsTab = options.Class.extend({
         });
     },
     /**
-     * @see this.selectClass for parameters
-     */
-    async customizeBodyBgType(previewMode, widgetValue, params) {
-        if (widgetValue === 'NONE') {
-            this.bodyImageType = 'image';
-            return this.customizeBodyBg(previewMode, '', params);
-        }
-        // TODO improve: hack to click on external image picker
-        this.bodyImageType = widgetValue;
-        const widget = this._requestUserValueWidgets(params.imagepicker)[0];
-        widget.enable();
-    },
-    /**
      * @override
      */
     async customizeBodyBg(previewMode, widgetValue, params) {
+        if (previewMode) {
+            return;
+        }
+        // Customize several variables at the same time.
         await this._customizeWebsiteVariables({
-            'body-image-type': this.bodyImageType,
+            "body-image-type": "image",
+            "body-image-repeat-size": null,
+            "body-image-position": null,
             'body-image': widgetValue ? `'${widgetValue}'` : '',
         }, params.nullValue);
+        await this._customizeWebsite(previewMode, widgetValue, params, "reloadOnly");
+    },
+    /**
+     * Toggles background image on or off.
+     *
+     * @see this.selectClass for parameters
+     */
+    async toggleBodyBgImage(previewMode, widgetValue, params) {
+        if (widgetValue) {
+            this._requestUserValueWidgets("body_bg_image_opt")[0].enable();
+        } else {
+            await this.customizeBodyBg(previewMode, "", {});
+        }
     },
     async openCustomCodeDialog(previewMode, widgetValue, params) {
         return new Promise(resolve => {
@@ -1552,12 +1603,9 @@ options.registry.OptionsTab = options.Class.extend({
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'customizeBodyBgType') {
-            const bgImage = getComputedStyle(this.ownerDocument.querySelector('#wrapwrap'))['background-image'];
-            if (bgImage === 'none') {
-                return "NONE";
-            }
-            return weUtils.getCSSVariableValue('body-image-type');
+        if (methodName === "toggleBodyBgImage") {
+            const bgImageParts = weUtils.backgroundImageCssToParts(getComputedStyle(this.$target[0])["background-image"]);
+            return !!bgImageParts.url;
         }
         if (methodName === 'customizeGray') {
             // See updateUI override
@@ -1574,9 +1622,6 @@ options.registry.OptionsTab = options.Class.extend({
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'body_bg_image_opt') {
-            return false;
-        }
         if (params.param === this.GRAY_PARAMS.HUE) {
             return this.grayHueIsDefined;
         }
@@ -1587,6 +1632,32 @@ options.registry.OptionsTab = options.Class.extend({
             return !!font;
         }
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _applyPosition(position) {
+        await options.BackgroundPositionMixin._applyPosition.apply(this, arguments);
+        await this.customizeWebsiteVariable(false, position, {variable: "body-image-position"});
+    },
+    /**
+     * @override
+     */
+    _getOverlaySize() {
+        const style = getComputedStyle(this.$target[0]);
+        return {
+            width: parseInt(style.width) + parseInt(style.paddingLeft) + parseInt(style.paddingRight),
+            height: parseInt(style.height) + parseInt(style.paddingTop) + parseInt(style.paddingBottom),
+        };
+    },
+    /**
+     * @override
+     */
+    _toggleBgOverlay(activate) {
+        options.BackgroundPositionMixin._toggleBgOverlay.apply(this, arguments);
+        if (activate) {
+            this.$bgDragger[0].style.backgroundAttachment = "scroll";
+        }
     },
 });
 
