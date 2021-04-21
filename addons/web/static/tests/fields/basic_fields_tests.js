@@ -4314,7 +4314,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('field date should select its content onclick when there is one', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
         var done = assert.async();
 
         var form = await createView({
@@ -4332,7 +4332,10 @@ QUnit.module('basic_fields', {
             'show.datetimepicker': function () {
                 assert.ok($('.bootstrap-datetimepicker-widget').is(':visible'),
                     'bootstrap-datetimepicker is visible');
-                assert.strictEqual(window.getSelection().toString(), "02/03/2017",
+                const active = document.activeElement;
+                assert.equal(active.tagName, 'INPUT', "The datepicker input should be focused");
+                const sel = active.value.slice(active.selectionStart, active.selectionEnd);
+                assert.strictEqual(sel, "02/03/2017",
                     'The whole input of the date field should have been selected');
                 done();
             }
