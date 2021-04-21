@@ -120,11 +120,11 @@ class AccountTaxReportLine(models.Model):
     # The selection should be filled in localizations using the system
     carry_over_condition_method = fields.Selection(
         selection=[('no_negative_amount_carry_over_condition', 'No negative amount')],
-        string="Carry over method",
+        string="Carryover method",
         help="The method used to determine if this line should be carried over."
     )
     carry_over_destination_line_id = fields.Many2one(
-        string="Carry over to",
+        string="Carryover to",
         comodel_name="account.tax.report.line",
         domain=[('tag_name', '!=', False)],
         help="The line to which the value of this line will be carried over to if needed."
@@ -286,6 +286,23 @@ class AccountTaxReportLine(models.Model):
 
             if neg_tags.name != '-'+record.tag_name or pos_tags.name != '+'+record.tag_name:
                 raise ValidationError(_("The tags linked to a tax report line should always match its tag name."))
+
+    def action_view_carryover_lines(self):
+        ''' Action when clicking on the "View carryover lines" in the carryover info popup.
+
+        :return:    An action showing the account.tax.carryover.lines for the current tax report line.
+        '''
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Carryover Lines For %s', self.name),
+            'res_model': 'account.tax.carryover.line',
+            'view_type': 'list',
+            'view_mode': 'list',
+            'views': [[self.env.ref('account.account_tax_carryover_line_tree').id, 'list'],
+                      [False, 'form']],
+            'domain': [('id', 'in', self.carryover_line_ids.ids)],
+        }
 
     def _get_carryover_bounds(self, options, line_amount, carried_over_amount):
         """
