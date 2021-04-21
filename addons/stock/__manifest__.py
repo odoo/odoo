@@ -59,6 +59,7 @@
         'wizard/stock_rules_report_views.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
         'wizard/product_replenish_views.xml',
+        'wizard/product_label_layout_views.xml',
         'wizard/stock_track_confirmation_views.xml',
         'wizard/stock_orderpoint_snooze_views.xml',
         'wizard/stock_package_destination_views.xml',

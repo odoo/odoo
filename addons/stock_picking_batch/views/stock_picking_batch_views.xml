@@ -102,6 +102,7 @@
                                 ('state', '!=', 'draft'),
                                 ('show_check_availability', '=', False)]}"/>
                     <button name="action_print" states="in_progress,done" string="Print" type="object"/>
+                    <button string="Print Labels" type="object" name="action_open_label_layout"/>
                     <button name="action_cancel" string="Cancel" type="object" states="in_progress"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
                 </header>

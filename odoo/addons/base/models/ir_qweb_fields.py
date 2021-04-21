@@ -451,6 +451,12 @@ class MonetaryConverter(models.AbstractModel):
         else:
             post = '\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol or '')
 
+        if options.get('label_price'):
+            sep = lang.decimal_point
+            integer_part, decimal_part = formatted_amount.split(sep)
+            integer_part += sep
+            return M('{pre}<span class="oe_currency_value">{0}</span><span class="oe_currency_value" style="font-size:0.5em">{1}</span>{post}').format(integer_part, decimal_part, pre=pre, post=post)
+
         return M('{pre}<span class="oe_currency_value">{0}</span>{post}').format(formatted_amount, pre=pre, post=post)
 
     @api.model

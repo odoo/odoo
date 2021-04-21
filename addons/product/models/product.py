@@ -596,6 +596,11 @@ class ProductProduct(models.Model):
             )
         return super().view_header_get(view_id, view_type)
 
+    def action_open_label_layout(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
+        action['context'] = {'default_product_ids': self.ids}
+        return action
+
     def open_pricelist_rules(self):
         self.ensure_one()
         domain = ['|',
