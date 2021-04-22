@@ -4,7 +4,7 @@
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from zeep import Client
-import requests
+import http.client
 import json
 
 
@@ -57,17 +57,17 @@ class ResPartner(models.Model):
         return False
 
     @api.model
-    @tools.ormcache('eori')
+    #@tools.ormcache('eori')
     def _validate_eori_gb(self, eori):
         # GB Validation
-        url = 'https://api.service.hmrc.gov.uk/customs/eori/lookup/check-multiple-eori'
+        connection = http.client.HTTPSConnection('test-api.service.hmrc.gov.uk')
+        connection.request('POST', '/customs/eori/lookup/check-multiple-eori', json.dumps({'eoris': [eori]}), {'Content-type': 'application/json'})
+        response = connection.getresponse()
 
-        task = json.dumps({'eoris': [eori]})
-        resp = requests.post(url, data=task)
-        if resp.status_code != 200: 
-            raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(resp.status_code))
+        if response.status != 200: 
+            raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(response.status_code))
 
-        answer = json.loads(resp.text)
+        answer = json.loads(response.read().decode())
         if answer[0]['valid'] == True:
             return True
 

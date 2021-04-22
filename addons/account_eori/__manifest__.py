@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Base EORI Number',
+    'name': 'Account EORI Number',
     'version': '1.0',
     'category': 'Accounting/Accounting',
     'description': """
 EORI validation for Partner's EORI numbers.
-===========================================
+==========================================
 Adds validation for both EU and GB EORI Numbers.
     """,
     'author': 'XCLUDE AB',
