@@ -1019,9 +1019,9 @@ class MailThread(models.AbstractModel):
 
         _generic_bounce_body_html = """<div>
 <p>Hello,</p>
-<p>The following email sent to %s cannot be accepted because this is a private email address.
+<p>The following email sent to {to} cannot be accepted because this is a private email address.
    Only allowed people can contact us at this address.</p>
-</div><blockquote>%s</blockquote>""" % (message.get('to'), message_dict.get('body'))
+</div><blockquote>{body}</blockquote>"""
 
         # Wrong model
         if model and model not in self.env:
@@ -1086,7 +1086,14 @@ class MailThread(models.AbstractModel):
                 check_result = self.env['mail.alias.mixin']._alias_check_contact_on_record(obj, message, message_dict, alias)
             if check_result is not True:
                 self._routing_warn(_('alias %s: %s') % (alias.alias_name, check_result.get('error_message', _('unknown error'))), _('skipping'), message_id, route, False)
-                self._routing_create_bounce_email(email_from, check_result.get('error_template', _generic_bounce_body_html), message)
+                self._routing_create_bounce_email(
+                    email_from,
+                    check_result.get('error_template', _generic_bounce_body_html.format(
+                        to=alias.display_name.lower(),
+                        body=message_dict.get('body')
+                    )),
+                    message
+                )
                 return False
 
         if not model and not thread_id and not alias and not allow_private:
