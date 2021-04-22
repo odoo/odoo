@@ -51,7 +51,9 @@ export class ActionContainer extends Component {
 }
 ActionContainer.components = { ActionDialog };
 ActionContainer.template = tags.xml`
-    <div t-name="web.ActionContainer" class="o_action_manager">
-      <t t-if="main.Component" t-component="main.Component" t-props="main.componentProps" t-key="main.id"/>
-      <ActionDialog t-if="dialog.id" t-props="dialog.props" t-key="dialog.id" t-on-dialog-closed="onDialogClosed"/>
-    </div>`;
+    <t t-name="web.ActionContainer">
+      <div class="o_action_manager">
+        <t t-if="main.Component" t-component="main.Component" t-props="main.componentProps" t-key="main.id"/>
+        <ActionDialog t-if="dialog.id" t-props="dialog.props" t-key="dialog.id" t-on-dialog-closed="onDialogClosed"/>
+      </div>
+    </t>`;

@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <div t-name="web.NotificationWowl" t-attf-class="o_notification {{className}}"
-         role="alert" aria-live="assertive" aria-atomic="true" owl="1">
-        <div class="o_notification_body">
-            <button type="button" class="close o_notification_close"
+    <t t-name="web.NotificationWowl" owl="1">
+        <div t-attf-class="o_notification {{className}}"
+        role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="o_notification_body">
+                <button type="button" class="close o_notification_close"
                 aria-label="Close"
-                t-on-click="notificationService.close(props.id)">
-                <span class="d-inline" aria-hidden="true">×</span>
-            </button>
-            <div t-if="props.title" class="font-weight-bold o_notification_title mb-1" t-raw="props.title"/>
-            <div t-if="props.message" t-raw="props.message" class="mr-auto o_notification_content"/>
-            <div t-if="props.buttons.length" class="mt-2 o_notification_buttons">
-                <button t-foreach="props.buttons" t-as="button" type="button"
-                        t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-link'}}" t-on-click="button.onClick()">
+                    t-on-click="notificationService.close(props.id)">
+                    <span class="d-inline" aria-hidden="true">×</span>
+                </button>
+                <div t-if="props.title" class="font-weight-bold o_notification_title mb-1" t-raw="props.title"/>
+                <div t-if="props.message" t-raw="props.message" class="mr-auto o_notification_content"/>
+                <div t-if="props.buttons.length" class="mt-2 o_notification_buttons">
+                    <button t-foreach="props.buttons" t-as="button" type="button"
+                    t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-link'}}" t-on-click="button.onClick()">
                     <t t-if="button.icon">
                         <i t-if="button.icon.indexOf('fa-') === 0" role="img"
-                            t-att-aria-label="button.name" t-att-title="button.name"
-                            t-attf-class="fa fa-fw o_button_icon {{button.icon}}"/>
+                        t-att-aria-label="button.name" t-att-title="button.name"
+                        t-attf-class="fa fa-fw o_button_icon {{button.icon}}"/>
                         <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
                     </t>
                     <span t-esc="button.name"/>
                 </button>
+                </div>
             </div>
         </div>
-    </div>
+    </t>
 
 </templates>
