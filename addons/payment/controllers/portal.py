@@ -386,7 +386,14 @@ class PaymentPortal(portal.CustomerPortal):
         if tx_sudo.operation == 'validation':  # Don't allow to refund non-validation transactions
             tx_sudo._send_refund_request()
 
+<<<<<<< HEAD
         PaymentPostProcessing.remove_transactions(tx_sudo)
+=======
+        render_values = {
+            'partner_id': partner_id,
+            'type': tx.type,
+        }
+>>>>>>> f05238dcb17... temp
 
         return tx_sudo
 
