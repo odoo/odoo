@@ -235,6 +235,16 @@ class IrActionsActWindow(models.Model):
     filter = fields.Boolean()
     search_view = fields.Text(compute='_compute_search_view')
 
+    context_json = fields.JSON(compute='_compute_context_json', store=True)
+
+    @api.depends('context')
+    def _compute_context_json(self):
+        for record in self:
+            # Probably not the best example because of the locals_dict but it helps testing quickly ¯\_(ツ)_/¯
+            # Also this doesn't allow the at runtime evaluation with builtins like datetime
+            # Could add a customized encoder/decoder to make it work though
+            record.context_json = safe_eval(record.context, locals_dict={x: x for x in ('active_id', 'active_ids')})
+
     def read(self, fields=None, load='_classic_read'):
         """ call the method get_empty_list_help of the model and set the window action help message
         """

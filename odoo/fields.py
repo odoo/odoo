@@ -1207,6 +1207,13 @@ class Field(MetaField('DummyField', (object,), {})):
     # Notification when fields are modified
     #
 
+class JSON(Field):
+    type = 'json'
+    column_type = ('json', 'json')
+
+    def convert_to_column(self, value, record, values=None, validate=True):
+        from psycopg2.extras import Json
+        return Json(value)
 
 class Boolean(Field):
     """ Encapsulates a :class:`bool`. """
