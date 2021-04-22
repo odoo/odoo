@@ -36,6 +36,8 @@ class ContractHistory(models.Model):
     resource_calendar_id = fields.Many2one('resource.calendar', readonly=True)
     wage = fields.Monetary('Wage', help="Employee's monthly gross wage.", readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
+    country_code = fields.Char(related='company_country_id.code', readonly=True)
     currency_id = fields.Many2one(string='Currency', related='company_id.currency_id', readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', 'Contract Type', readonly=True)
     contract_ids = fields.One2many('hr.contract', string='Contracts', compute='_compute_contract_ids', readonly=True)

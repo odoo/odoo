@@ -152,6 +152,7 @@
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                                 <field name="company_country_id" invisible="1"/>
+                                <field name="country_code" invisible="1"/>
                                 <field name="structure_type_id" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                                 <field name="calendar_mismatch" invisible="1"/>
                                 <label for="resource_calendar_id"/>
