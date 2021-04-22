@@ -1574,7 +1574,7 @@ Possible children elements of the list view are:
 
     <groupby name="partner_id">
       <field name="name"/> <!-- name of partner_id -->
-        <button type="edit" name"edit" string="Edit/>
+        <button type="edit" name="edit" string="Edit"/>
         <button type="object" name="my_method" string="Button1"
           attrs="{'invisible': [('name', '=', 'Georges')]}"/>
     </groupby>
