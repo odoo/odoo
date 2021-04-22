@@ -121,7 +121,8 @@ class Track(models.Model):
     def create(self, vals):
         track = super(Track, self).create(vals)
 
-        track.event_id.message_post_with_view(
+        user = self.env.user if self.env.user.email else self.env.ref('base.user_root')
+        track.event_id.with_user(user).message_post_with_view(
             'website_event_track.event_track_template_new',
             values={'track': track},
             subject=track.name,
