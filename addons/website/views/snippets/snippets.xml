@@ -1738,10 +1738,14 @@
             <we-button data-add-language="" data-no-preview="true" class="o_we_bg_brand_primary">Add a Language</we-button>
         </we-row>
         <we-select string="Page Layout" data-variable="layout">
-            <we-button data-customize-website-variable="'full'" data-name="layout_full_opt">Full</we-button>
-            <we-button data-customize-website-variable="'boxed'">Boxed</we-button>
-            <we-button data-customize-website-variable="'framed'">Framed</we-button>
-            <we-button data-customize-website-variable="'postcard'">Postcard</we-button>
+            <t t-set="page_layout_full_label">Full</t>
+            <t t-set="page_layout_boxed_label">Boxed</t>
+            <t t-set="page_layout_framed_label">Framed</t>
+            <t t-set="page_layout_postcard_label">Postcard</t>
+            <we-button t-att-data-select-label="page_layout_full_label" data-customize-website-variable="'full'" data-name="layout_full_opt" data-img="/website/static/src/img/snippets_options/page_layout_full.svg">Full</we-button>
+            <we-button t-att-data-select-label="page_layout_boxed_label" data-customize-website-variable="'boxed'" data-img="/website/static/src/img/snippets_options/page_layout_boxed.svg">Boxed</we-button>
+            <we-button t-att-data-select-label="page_layout_framed_label" data-customize-website-variable="'framed'" data-img="/website/static/src/img/snippets_options/page_layout_framed.svg">Framed</we-button>
+            <we-button t-att-data-select-label="page_layout_postcard_label" data-customize-website-variable="'postcard'" data-img="/website/static/src/img/snippets_options/page_layout_postcard.svg">Postcard</we-button>
         </we-select>
         <we-row string="Background" class="o_we_sublevel_1" data-no-preview="true">
             <we-colorpicker data-dependencies="!layout_full_opt"
