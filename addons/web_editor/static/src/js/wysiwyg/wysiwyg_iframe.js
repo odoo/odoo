@@ -76,6 +76,16 @@ Wysiwyg.include({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     **/
+    _editorOptions: function () {
+        let options = this._super.apply(this, arguments);
+        options.getContextFromParentRect = () => {
+            return this.$iframe && this.$iframe.length ? this.$iframe[0].getBoundingClientRect() : { top: 0, left: 0 };
+        };
+        return options;
+    },
+    /**
      * Create iframe, inject css and create a link with the content,
      * then inject the target inside.
      *

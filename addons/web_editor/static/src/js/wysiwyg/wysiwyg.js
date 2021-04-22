@@ -76,6 +76,7 @@ const Wysiwyg = Widget.extend({
             isRootEditable: this.options.isRootEditable,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             getContentEditableAreas: this.options.getContentEditableAreas,
+            getContextFromParentRect: options.getContextFromParentRect,
         });
 
         this._observeOdooFieldChanges();
