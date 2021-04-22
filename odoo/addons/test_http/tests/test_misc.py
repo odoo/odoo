@@ -42,8 +42,15 @@ class TestHttpMisc(TestHttpBase):
             self.assertEqual(res.json()['REMOTE_ADDR'], reverseproxy_ip)
             self.assertEqual(res.json()['HTTP_HOST'], '')
 
-        # Trust proxy-sent forwarded headers
+        # Don't trust proxy-sent forwarded host by default
         with patch.object(config, 'options', {**config.options, 'proxy_mode': True}):
+            res = self.nodb_url_open('/test_http/wsgi_environ', headers=headers)
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.json()['REMOTE_ADDR'], client_ip)
+            self.assertEqual(res.json()['HTTP_HOST'], '')
+
+        # Trust proxy-sent forwarded host
+        with patch.object(config, 'options', {**config.options, 'proxy_mode': True, 'proxy_x_host': 1}):
             res = self.nodb_url_open('/test_http/wsgi_environ', headers=headers)
             self.assertEqual(res.status_code, 200)
             self.assertEqual(res.json()['REMOTE_ADDR'], client_ip)

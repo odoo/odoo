@@ -142,13 +142,28 @@ class configmanager(object):
                          help="Listen port for the gevent worker", type="int", metavar="PORT")
         group.add_option("--no-http", dest="http_enable", action="store_false", my_default=True,
                          help="Disable the HTTP and Longpolling services entirely")
+
+        # HTTP: configure werkzeug proxy mode
+        # https://werkzeug.palletsprojects.com/en/0.16.x/middleware/proxy_fix/
         group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
                          help="Activate reverse proxy WSGI wrappers (headers rewriting) "
                               "Only enable this when running behind a trusted web proxy!")
+        group.add_option("--proxy-x-for", dest="proxy_x_for", type="int", my_default=1,
+                         help="Number of values to trust for X-Forwarded-For.")
+        group.add_option("--proxy-x-proto", dest="proxy_x_proto", type="int", my_default=1,
+                         help="Number of values to trust for X-Forwarded-Proto.")
+        group.add_option("--proxy-x-host", dest="proxy_x_host", type="int", my_default=0,
+                         help="Number of values to trust for X-Forwarded-Host.")
+        group.add_option("--proxy-x-port", dest="proxy_x_port", type="int", my_default=0,
+                         help="Number of values to trust for X-Forwarded-Port.")
+        group.add_option("--proxy-x-prefix", dest="proxy_x_prefix", type="int", my_default=0,
+                         help="Number of values to trust for X-Forwarded-Prefix.")
+
         group.add_option("--x-sendfile", dest="x_sendfile", action="store_true", my_default=False,
                          help="Activate X-Sendfile (apache) and X-Accel-Redirect (nginx) "
                               "HTTP response header to delegate the delivery of large "
                               "files (assets/attachments) to the web server.")
+
         # HTTP: hidden backwards-compatibility for "*xmlrpc*" options
         hidden = optparse.SUPPRESS_HELP
         group.add_option("--xmlrpc-interface", dest="http_interface", help=hidden)

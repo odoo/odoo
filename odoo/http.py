@@ -148,11 +148,7 @@ import werkzeug.wsgi
 from werkzeug.urls import URL, url_parse, url_encode, url_quote
 from werkzeug.exceptions import (HTTPException, BadRequest, Forbidden,
                                  NotFound, InternalServerError)
-try:
-    from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
-    ProxyFix = functools.partial(ProxyFix_, x_for=1, x_proto=1, x_host=1)
-except ImportError:
-    from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 try:
     from werkzeug.utils import send_file as _send_file
@@ -1918,14 +1914,14 @@ class Application:
         current_thread.query_time = 0
         current_thread.perf_t0 = time.time()
 
-        if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
+        if odoo.tools.config['proxy_mode']:
             # The ProxyFix middleware has a side effect of updating the
             # environ, see https://github.com/pallets/werkzeug/pull/2184
             def fake_app(environ, start_response):
                 return []
             def fake_start_response(status, headers):
                 return
-            ProxyFix(fake_app)(environ, fake_start_response)
+            ProxyFix(fake_app, x_for=config['proxy_x_for'], x_proto=config['proxy_x_proto'], x_host=config['proxy_x_host'], x_port=config['proxy_x_port'], x_prefix=config['proxy_x_prefix'])(environ, fake_start_response)
 
         # Some URLs in website are concatenated, first url ends with /,
         # second url starts with /, resulting url contains two following
