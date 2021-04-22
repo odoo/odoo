@@ -2040,6 +2040,7 @@ var SnippetsMenu = Widget.extend({
 
         this.$el.addClass('o_loaded');
         this.trigger_up('snippets_loaded', self.$el);
+        $(this.el.ownerDocument.body).addClass('editor_has_snippets');
     },
     /**
      * Creates a snippet editor to associated to the given snippet. If the given

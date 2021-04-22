@@ -31,7 +31,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         request_save: '_onSnippetRequestSave',
         request_cancel: '_onSnippetRequestCancel',
         get_clean_html: '_onGetCleanHTML',
-        snippets_loaded: '_onSnippetLoaded',
     }),
 
     /**
@@ -522,15 +521,6 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     _onSnippetRequestCancel: function (ev) {
         ev.stopPropagation();
         this.cancel();
-    },
-    /**
-     * Add class that inform the SnippetMenu biend loaded.
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onSnippetLoaded: function (ev) {
-        $('body.editor_enable').addClass('editor_has_snippets');
     },
 });
 
