@@ -335,6 +335,9 @@ class Website(models.Model):
                 try:
                     response = requests.get(image['url'], timeout=3)
                     response.raise_for_status()
+                except Exception as e:
+                    logger.warning("Failed to download image: %s. %s" % (image['url'], e))
+                else:
                     self.env['ir.attachment'].create({
                         'name': image['name'],
                         'website_id': website.id,
@@ -342,8 +345,6 @@ class Website(models.Model):
                         'type': 'binary',
                         'raw': response.content,
                     })
-                except requests.HTTPError:
-                    logger.warning("Failed to download image '%s'", image['url'])
 
         website = self.get_current_website()
 
