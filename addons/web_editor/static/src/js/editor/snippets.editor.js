@@ -3001,7 +3001,7 @@ var SnippetsMenu = Widget.extend({
      * Update editor UI visibility based on the current range.
      */
     _checkEditorToolbarVisibility: function (e) {
-        const $toolbarContainer = $('#o_we_editor_toolbar_container');
+        const $toolbarContainer = this.$('#o_we_editor_toolbar_container');
         const docSelection = document.getSelection();
         const $currentSelectionTarget = docSelection && docSelection.rangeCount > 0 ? $(docSelection.getRangeAt(0).commonAncestorContainer) : $();
         // Do not  toggle visibility if the target is inside the toolbar ( eg. during link edition).
@@ -3014,7 +3014,7 @@ var SnippetsMenu = Widget.extend({
         const selection = this.options.wysiwyg.odooEditor.document.getSelection();
         const range = selection && selection.rangeCount && selection.getRangeAt(0);
         if (!range ||
-            !$(range.commonAncestorContainer).parents('#wrapwrap').length ||
+            !$(range.commonAncestorContainer).parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
             $(range.commonAncestorContainer).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"])').length
         ) {
             $toolbarContainer.hide();
