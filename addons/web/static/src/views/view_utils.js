@@ -1,13 +1,6 @@
 /** @odoo-module **/
 
 /**
- * This file contains various utility functions that do not have a well defined
- * category.
- */
-
-// -----------------------------------------------------------------------------
-
-/**
  * For debugging purpose, this function will convert a json node back to xml
  *
  * @param {Object} node

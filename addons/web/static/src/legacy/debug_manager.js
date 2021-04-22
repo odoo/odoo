@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { editModelDebug } from "../debug/debug_service";
-import { json_node_to_xml } from "../utils/misc";
+import { json_node_to_xml } from "../views/view_utils";
 import { formatMany2one } from "../utils/fields";
 import { parseDateTime, formatDateTime } from "../utils/dates";
 
