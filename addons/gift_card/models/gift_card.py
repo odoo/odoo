@@ -38,10 +38,9 @@ class GiftCard(models.Model):
         ('check_amount', 'CHECK(initial_amount >= 0)', 'The initial amount must be positive.')
     ]
 
-    @api.depends("balance")
     def _compute_name(self):
         for record in self:
-            record.name = _("Gift #%s", self.id)
+            record.name = _("Gift #%s", record.id)
 
     @api.depends("initial_amount", "redeem_line_ids")
     def _compute_balance(self):
