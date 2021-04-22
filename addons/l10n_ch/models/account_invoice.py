@@ -233,19 +233,21 @@ class AccountMove(models.Model):
     @api.depends(
         'type', 'name', 'currency_id.name',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_eur',
-        'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
+        'invoice_partner_bank_id.l10n_ch_isr_subscription_chf',
+        'company_id.country_id.code')
     def _compute_l10n_ch_isr_valid(self):
         """Returns True if all the data required to generate the ISR are present"""
         for record in self:
             record.l10n_ch_isr_valid = record.type == 'out_invoice' and\
                 record.name and \
                 record.l10n_ch_isr_subscription and \
-                record.l10n_ch_currency_name in ['EUR', 'CHF']
+                record.l10n_ch_currency_name in ['EUR', 'CHF'] and \
+                record.company_id.country_id.code in ["CH", "LI"]
 
     @api.depends('type', 'invoice_partner_bank_id', 'invoice_payment_ref')
     def _compute_l10n_ch_isr_needs_fixing(self):
         for inv in self:
-            if inv.type == 'in_invoice' and inv.company_id.country_id.code == "CH":
+            if inv.type == 'in_invoice' and inv.company_id.country_id.code in ["CH", "LI"]:
                 partner_bank = inv.invoice_partner_bank_id
                 if partner_bank:
                     needs_isr_ref = partner_bank._is_qr_iban() or partner_bank._is_isr_issuer()
@@ -318,7 +320,8 @@ class AccountMove(models.Model):
         # as the QR report data haven't been loaded.
         # TODO: remove this in master
         return not self.env.ref('l10n_ch.l10n_ch_swissqr_template').inherit_id \
-               and self.invoice_partner_bank_id.validate_swiss_code_arguments(self.invoice_partner_bank_id.currency_id, self.partner_id, self.invoice_payment_ref)
+               and self.invoice_partner_bank_id.validate_swiss_code_arguments(self.invoice_partner_bank_id.currency_id, self.partner_id, self.invoice_payment_ref) \
+               and self.company_id.country_id.code in ["CH", "LI"]
 
     def print_ch_qr_bill(self):
         """ Triggered by the 'Print QR-bill' button.
