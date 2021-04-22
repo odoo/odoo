@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import startClickEverywhere from "@web/tools/test_menus_loader";
+import startClickEverywhere from "@web/webclient/clickbot/clickbot_loader";
 import { browser } from "../core/browser";
 import { routeToUrl } from "../services/router_service";
 import { debugRegistry } from "./debug_registry";
