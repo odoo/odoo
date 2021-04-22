@@ -6,7 +6,7 @@
     'category': 'Accounting/Accounting',
     'description': """
 EORI validation for Partner's EORI numbers.
-==========================================
+===========================================
 Adds validation for both EU and GB EORI Numbers.
     """,
     'author': 'XCLUDE AB',
