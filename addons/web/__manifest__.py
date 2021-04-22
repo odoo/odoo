@@ -166,6 +166,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/utils/**/*',
             'web/static/src/views/**/*',
             'web/static/src/webclient/**/*',
+            ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
             'web/static/src/env.js',
 
             'web/static/src/legacy/action_adapters.js',
