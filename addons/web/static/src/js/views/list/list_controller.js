@@ -423,6 +423,12 @@ var ListController = BasicController.extend({
      * @private
      */
     _getActionMenuItems: function (state) {
+        let isM2MGrouped = false;
+        if (state.groupedBy.length) {
+            isM2MGrouped = state.groupedBy.some((group) => {
+                return state.fields[group].type === "many2many";
+            });
+        }
         if (!this.hasActionMenus || !this.selectedRecords.length) {
             return null;
         }
@@ -434,7 +440,7 @@ var ListController = BasicController.extend({
                 callback: () => this._onExportData()
             });
         }
-        if (this.archiveEnabled) {
+        if (this.archiveEnabled && !isM2MGrouped) {
             otherActionItems.push({
                 description: _t("Archive"),
                 callback: () => {
@@ -450,7 +456,7 @@ var ListController = BasicController.extend({
                 callback: () => this._toggleArchiveState(false)
             });
         }
-        if (this.activeActions.delete) {
+        if (this.activeActions.delete && !isM2MGrouped) {
             otherActionItems.push({
                 description: _t("Delete"),
                 callback: () => this._onDeleteSelectedRecords()

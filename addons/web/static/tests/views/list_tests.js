@@ -1291,6 +1291,29 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.only('basic grouped list rendering with groupby m2m field', async function (assert) {
+        assert.expect(4);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                `<tree>
+                    <field name="foo"/>
+                    <field name="m2m"/>
+                </tree>`,
+            groupBy: ['m2m'],
+            debug: true,
+        });
+
+        await testUtils.nextTick();
+        debugger;
+        await testUtils.dom.click(list.$('th.o_group_name').first());
+        // TODO: MSH: Add support of m2m domain in search_read like [('tag_ids', '=', '1')]
+        list.destroy();
+    });
+
     QUnit.test('ordered list, sort attribute in context', async function (assert) {
         assert.expect(1);
         // Equivalent to saving a custom filter
