@@ -142,6 +142,7 @@ class MailController(http.Controller):
                 'id': follower.id,
                 'partner_id': follower.partner_id.id,
                 'name': follower.name,
+                'display_name': follower.display_name,
                 'email': follower.email,
                 'is_active': follower.is_active,
                 # When editing the followers, the "pencil" icon that leads to the edition of subtypes
