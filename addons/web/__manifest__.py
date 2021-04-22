@@ -562,7 +562,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web.frontend_legacy'),
-            'web/static/src/legacy/frontend/*/tests/*.js',
+            'web/static/tests/legacy/frontend/*.js',
         ],
     },
     'bootstrap': True,  # load translations for login screen
