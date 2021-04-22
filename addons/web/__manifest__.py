@@ -93,6 +93,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_bootstrap'),
 
             'base/static/src/css/modules.css',
+            'web/static/src/webclient/**/*.scss',
 
             'web/static/src/legacy/scss/domain_selector.scss',
             'web/static/src/legacy/scss/model_field_selector.scss',
@@ -139,7 +140,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/commands/**/*.scss',
             'web/static/src/notifications/**/*.scss',
             'web/static/src/effects/**/*.scss',
-            'web/static/src/webclient/**/*.scss',
 
             'base/static/src/js/res_config_settings.js',
             'web/static/lib/jquery.scrollTo/jquery.scrollTo.js',
