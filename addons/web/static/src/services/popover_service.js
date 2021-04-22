@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useBus } from "../core/hooks";
+import { useBus } from "../utils/hooks";
 import { mainComponentRegistry } from "../webclient/main_component_registry";
 import { serviceRegistry } from "../webclient/service_registry";
 import { Popover } from "../components/popover/popover";

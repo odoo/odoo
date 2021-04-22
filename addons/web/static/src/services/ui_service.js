@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { useService } from "../core/hooks";
+import { useService } from "../utils/hooks";
 import { debounce } from "../utils/timing";
 import { serviceRegistry } from "../webclient/service_registry";
 

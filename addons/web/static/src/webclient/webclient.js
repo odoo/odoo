@@ -2,7 +2,7 @@
 
 import { ActionContainer } from "../actions/action_container";
 import { NavBar } from "./navbar/navbar";
-import { useService } from "../core/hooks";
+import { useService } from "../utils/hooks";
 
 const { Component, hooks } = owl;
 

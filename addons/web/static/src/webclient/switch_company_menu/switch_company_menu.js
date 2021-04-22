@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "../../core/hooks";
+import { useService } from "../../utils/hooks";
 
 export class SwitchCompanyMenu extends owl.Component {
   static isDisplayed(env) {

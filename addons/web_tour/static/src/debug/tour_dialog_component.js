@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/hooks";
+import { useService } from "@web/utils/hooks";
 
 export default class ToursDialog extends owl.Component {
   setup() {

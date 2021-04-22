@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useBus } from "../core/hooks";
+import { useBus } from "../utils/hooks";
 import { getScrollPosition, setScrollPosition } from "../utils/scrolling";
 
 const { useComponent, onMounted, onWillUnmount } = owl.hooks;

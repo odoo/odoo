@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "../core/hooks";
+import { useService } from "../utils/hooks";
 
 const { Component, hooks } = owl;
 

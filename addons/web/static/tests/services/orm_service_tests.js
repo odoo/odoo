@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "../../src/core/hooks";
+import { useService } from "../../src/utils/hooks";
 import { Registry } from "../../src/core/registry";
 import { ormService } from "../../src/services/orm_service";
 import { getFixture } from "../helpers/utils";
