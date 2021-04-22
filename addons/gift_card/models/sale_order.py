@@ -22,8 +22,8 @@ class SaleOrder(models.Model):
 
         # create and send gift card when order become confirmed
         for record in self.filtered(lambda so: so.state == 'sale'):
-            for gift_card_oder_line in record.order_line.filtered(lambda ol: ol.product_id.is_gift_card):
-                gift_card_oder_line._create_gift_cards()
+            for gift_card_order_line in record.order_line.filtered(lambda ol: ol.product_id.is_gift_card):
+                gift_card_order_line._create_gift_cards()
             record.sudo()._send_gift_card_mail()
 
     def _pay_with_gift_card(self, gift_card):
@@ -83,7 +83,7 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     generated_gift_card_ids = fields.One2many('gift.card', "buy_line_id", string="Bought Gift Card")
-    gift_card_id = fields.Many2one('gift.card', help="Deduced from this Gift Card", copy=False)
+    gift_card_id = fields.Many2one('gift.card', help="Deducted from this Gift Card", copy=False)
 
     def _is_not_sellable_line(self):
         return self.gift_card_id or super()._is_not_sellable_line()
