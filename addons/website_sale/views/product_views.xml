@@ -46,11 +46,26 @@
             <xpath expr="/tree" position="attributes">
               <attribute name="default_order">website_sequence</attribute>
             </xpath>
-            <field name="sequence" position="replace">
+            <field name="priority" position="before">
                 <field name="website_sequence" widget="handle"/>
             </field>
             <field name="website_id" position="after">
                 <field name="is_published" string="Is Published" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_view_kanban_website_sale">
+        <field name="name">product.template.view.kanban.website_sale</field>
+        <field name="mode">primary</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="/kanban" position="attributes">
+              <attribute name="default_order">website_sequence</attribute>
+            </xpath>
+            <field name="id" position="after">
+                <field name="website_sequence"/>
             </field>
         </field>
     </record>
@@ -61,7 +76,7 @@
         <field name="view_mode">tree,kanban,form,activity</field>
         <field name="view_id"/>
         <field name="search_view_id" ref="product_template_search_view_website"/>
-        <field name="context">{'search_default_published': 1, 'tree_view_ref':'website_sale.product_template_view_tree_website_sale'}</field>
+        <field name="context">{'search_default_published': 1, 'tree_view_ref':'website_sale.product_template_view_tree_website_sale', 'kanban_view_ref':'website_sale.product_template_view_kanban_website_sale'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new product

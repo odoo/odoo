@@ -143,7 +143,7 @@ class ProductTemplate(models.Model):
     priority = fields.Selection([
         ('0', 'Normal'),
         ('1', 'Favorite'),
-    ], default='0', string="Priority")
+    ], default='0', string="Favorite")
 
     def _compute_item_count(self):
         for template in self:
