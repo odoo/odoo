@@ -245,19 +245,14 @@ class Challenge(models.Model):
         # exclude goals for users that did not connect since the last update
         yesterday = fields.Date.to_string(date.today() - timedelta(days=1))
         self.env.cr.execute("""SELECT gg.id
-                        FROM gamification_goal as gg,
-                             gamification_challenge as gc,
-                             res_users as ru,
-                             res_users_log as log
-                       WHERE gg.challenge_id = gc.id
-                         AND gg.user_id = ru.id
-                         AND ru.id = log.create_uid
-                         AND gg.write_date < log.create_date
+                        FROM gamification_goal as gg
+                        JOIN gamification_challenge as gc ON gg.challenge_id = gc.id
+                        JOIN res_users_log as log ON gg.user_id = log.create_uid
+                       WHERE gg.write_date < log.create_date
                          AND gg.closed IS NOT TRUE
                          AND gc.id IN %s
                          AND (gg.state = 'inprogress'
-                              OR (gg.state = 'reached'
-                                  AND (gg.end_date >= %s OR gg.end_date IS NULL)))
+                              OR (gg.state = 'reached' AND gg.end_date >= %s))
                       GROUP BY gg.id
         """, [tuple(self.ids), yesterday])
 
