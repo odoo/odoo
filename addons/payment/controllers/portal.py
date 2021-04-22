@@ -226,6 +226,7 @@ class WebsitePayment(http.Controller):
 
         render_values = {
             'partner_id': partner_id,
+            'type': tx.type,
         }
 
         return acquirer.sudo().render(tx.reference, float(amount), int(currency_id), values=render_values)
