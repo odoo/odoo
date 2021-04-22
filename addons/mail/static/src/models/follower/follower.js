@@ -34,6 +34,7 @@ function factory(dependencies) {
                     data2.partner = unlinkAll();
                 } else {
                     const partnerData = {
+                        display_name: data.display_name,
                         email: data.email,
                         id: data.partner_id,
                         name: data.name,
@@ -159,6 +160,9 @@ function factory(dependencies) {
     }
 
     Follower.fields = {
+        displayName: attr({
+            related: 'partner.display_name'
+        }),
         followedThread: many2one('mail.thread', {
             inverse: 'followers',
         }),
