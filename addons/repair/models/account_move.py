@@ -9,7 +9,9 @@ class AccountMove(models.Model):
     repair_ids = fields.One2many('repair.order', 'invoice_id', readonly=True, copy=False)
 
     def unlink(self):
-        self.repair_ids.filtered(lambda repair: repair.state != 'cancel').state = '2binvoiced'
+        repairs = self.sudo().repair_ids.filtered(lambda repair: repair.state != 'cancel')
+        if repairs:
+            repairs.sudo(False).state = '2binvoiced'
         return super().unlink()
 
 
