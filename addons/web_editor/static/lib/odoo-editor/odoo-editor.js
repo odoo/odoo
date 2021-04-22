@@ -485,7 +485,10 @@ var exportVariable = (function (exports) {
             : getNormalizedCursorPosition(focusNode, focusOffset, normalize);
 
         const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
-        const sel = document.defaultView.getSelection();
+        const sel = document.getSelection();
+        if (!sel) {
+            return null;
+        }
         const range = new Range();
         if (direction === DIRECTIONS.RIGHT) {
             range.setStart(anchorNode, anchorOffset);
@@ -567,7 +570,7 @@ var exportVariable = (function (exports) {
      */
     function getSelectedNodes(editable) {
         const document = editable.ownerDocument;
-        const sel = document.defaultView.getSelection();
+        const sel = document.getSelection();
         if (!sel.rangeCount) {
             return [];
         }
@@ -591,7 +594,7 @@ var exportVariable = (function (exports) {
      * @returns {Range}
      */
     function getDeepRange(editable, { range, sel, splitText, select, correctTripleClick } = {}) {
-        sel = sel || editable.ownerDocument.defaultView.getSelection();
+        sel = sel || editable.ownerDocument.getSelection();
         range = range ? range.cloneRange() : sel.rangeCount && sel.getRangeAt(0).cloneRange();
         if (!range) return;
         let start = range.startContainer;
@@ -710,7 +713,7 @@ var exportVariable = (function (exports) {
     }
 
     function getCursors(document) {
-        const sel = document.defaultView.getSelection();
+        const sel = document.getSelection();
         if (
             getCursorDirection(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset) ===
             DIRECTIONS.LEFT
@@ -726,7 +729,7 @@ var exportVariable = (function (exports) {
     }
 
     function preserveCursor(document) {
-        const sel = document.defaultView.getSelection();
+        const sel = document.getSelection();
         const cursorPos = [sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset];
         return replace => {
             replace = replace || new Map();
@@ -885,7 +888,7 @@ var exportVariable = (function (exports) {
     }
 
     function getInSelection(document, selector) {
-        const selection = document.defaultView.getSelection();
+        const selection = document.getSelection();
         const range = !!selection.rangeCount && selection.getRangeAt(0);
         return (
             range &&
@@ -2443,7 +2446,7 @@ var exportVariable = (function (exports) {
     const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/g;
 
     function insert(editor, data, isText = true) {
-        const selection = editor.document.defaultView.getSelection();
+        const selection = editor.document.getSelection();
         const range = selection.getRangeAt(0);
         let startNode;
         let insertBefore = false;
@@ -2456,7 +2459,7 @@ var exportVariable = (function (exports) {
         } else {
             editor.deleteRange(selection);
         }
-        startNode = startNode || editor.document.defaultView.getSelection().anchorNode;
+        startNode = startNode || editor.document.getSelection().anchorNode;
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {
                 startNode.prepend(editor.document.createTextNode(''));
@@ -2493,7 +2496,7 @@ var exportVariable = (function (exports) {
         return insertedNodes;
     }
     function align(editor, mode) {
-        const sel = editor.document.defaultView.getSelection();
+        const sel = editor.document.getSelection();
         const visitedBlocks = new Set();
         const traversedNode = getTraversedNodes(editor.editable);
         for (const node of traversedNode) {
@@ -2558,7 +2561,7 @@ var exportVariable = (function (exports) {
      * which the wanted style should be applied
      */
     function applyInlineStyle(editor, applyStyle) {
-        const sel = editor.document.defaultView.getSelection();
+        const sel = editor.document.getSelection();
         const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
         const { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
         const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
@@ -2722,7 +2725,7 @@ var exportVariable = (function (exports) {
 
         // Link
         createLink: (editor, link, content) => {
-            const sel = editor.document.defaultView.getSelection();
+            const sel = editor.document.getSelection();
             if (content && !sel.isCollapsed) {
                 editor.deleteRange(sel);
             }
@@ -2740,7 +2743,7 @@ var exportVariable = (function (exports) {
             }
         },
         unlink: editor => {
-            const sel = editor.document.defaultView.getSelection();
+            const sel = editor.document.getSelection();
             // we need to remove the contentEditable isolation of links
             // before we apply the unlink, otherwise the command is not performed
             // because the content editable root is the link
@@ -2880,7 +2883,7 @@ var exportVariable = (function (exports) {
             const tdsHtml = new Array(colCount).fill('<td><br></td>').join('');
             const trsHtml = new Array(rowCount).fill(`<tr>${tdsHtml}</tr>`).join('');
             const tableHtml = `<table class="table table-bordered"><tbody>${trsHtml}</tbody></table>`;
-            const sel = editor.document.defaultView.getSelection();
+            const sel = editor.document.getSelection();
             if (!sel.isCollapsed) {
                 editor.deleteRange(sel);
             }
@@ -2963,6 +2966,9 @@ var exportVariable = (function (exports) {
             this.options = defaultOptions(
                 {
                     controlHistoryFromDocument: false,
+                    getContextFromParentRect: () => {
+                        return { top: 0, left: 0 };
+                    },
                     toSanitize: true,
                     isRootEditable: true,
                     getContentEditableAreas: () => [],
@@ -2992,6 +2998,9 @@ var exportVariable = (function (exports) {
             // Set of labels that which prevent the automatic step mechanism if
             // it contains at least one element.
             this._observerTimeoutUnactive = new Set();
+            // Set of labels that which prevent the observer to be active if
+            // it contains at least one element.
+            this._observerUnactiveLabels = new Set();
 
             // The state of the dom.
             this._currentMouseState = 'mouseup';
@@ -3163,7 +3172,8 @@ var exportVariable = (function (exports) {
             this.automaticStepUnactive('skipStack');
             setTimeout(() => this.automaticStepActive('skipStack'));
         }
-        observerUnactive() {
+        observerUnactive(label) {
+            this._observerUnactiveLabels.add(label);
             clearTimeout(this.observerTimeout);
             this.observer.disconnect();
             this.observerFlush();
@@ -3171,7 +3181,10 @@ var exportVariable = (function (exports) {
         observerFlush() {
             this.observerApply(this.observer.takeRecords());
         }
-        observerActive() {
+        observerActive(label) {
+            this._observerUnactiveLabels.delete(label);
+            if (this._observerUnactiveLabels.size !== 0) return;
+
             if (!this.observer) {
                 this.observer = new MutationObserver(records => {
                     records = this.filterMutationRecords(records);
@@ -3775,7 +3788,7 @@ var exportVariable = (function (exports) {
 
             let hiliteColor = params.hiliteColor;
             if (!hiliteColor) {
-                const sel = this.document.defaultView.getSelection();
+                const sel = this.document.getSelection();
                 if (sel.rangeCount) {
                     const endContainer = closestElement(sel.getRangeAt(0).endContainer);
                     const hiliteColorRgb = getComputedStyle(endContainer).backgroundColor;
@@ -3806,7 +3819,7 @@ var exportVariable = (function (exports) {
          * @returns {?}
          */
         _applyRawCommand(method, ...args) {
-            const sel = this.document.defaultView.getSelection();
+            const sel = this.document.getSelection();
             if (!sel.isCollapsed && BACKSPACE_FIRST_COMMANDS.includes(method)) {
                 this.deleteRange(sel);
                 if (BACKSPACE_ONLY_COMMANDS.includes(method)) {
@@ -3893,7 +3906,7 @@ var exportVariable = (function (exports) {
          * @returns {Object}
          */
         _computeHistoryCursor() {
-            const sel = this.document.defaultView.getSelection();
+            const sel = this.document.getSelection();
             if (!sel.anchorNode) {
                 return this._latestComputedCursor;
             }
@@ -3957,7 +3970,7 @@ var exportVariable = (function (exports) {
                 this.toolbar.style.visibility = 'visible';
             }
 
-            const sel = this.document.defaultView.getSelection();
+            const sel = this.document.getSelection();
             if (!sel.anchorNode) {
                 show = false;
             }
@@ -4053,7 +4066,7 @@ var exportVariable = (function (exports) {
             let isBottom = false;
             this.toolbar.classList.toggle('toolbar-bottom', false);
             this.toolbar.style.maxWidth = this.editable.offsetWidth - OFFSET * 2 + 'px';
-            const sel = this.document.defaultView.getSelection();
+            const sel = this.document.getSelection();
             const range = sel.getRangeAt(0);
             const isSelForward =
                 sel.anchorNode === range.startContainer && sel.anchorOffset === range.startOffset;
@@ -4061,10 +4074,11 @@ var exportVariable = (function (exports) {
             const toolbarWidth = this.toolbar.offsetWidth;
             const toolbarHeight = this.toolbar.offsetHeight;
             const editorRect = this.editable.getBoundingClientRect();
+            const parentContextRect = this.options.getContextFromParentRect();
             const editorLeftPos = Math.max(0, editorRect.left);
             const editorTopPos = Math.max(0, editorRect.top);
-            const scrollX = this.document.defaultView.window.scrollX;
-            const scrollY = this.document.defaultView.window.scrollY;
+            const scrollX = this.document.defaultView.scrollX;
+            const scrollY = this.document.defaultView.scrollY;
 
             // Get left position.
             let left = selRect.left + OFFSET;
@@ -4072,6 +4086,8 @@ var exportVariable = (function (exports) {
             left = Math.max(editorLeftPos + OFFSET, left);
             // Ensure the toolbar doesn't overflow the editor on the right.
             left = Math.min(editorLeftPos + this.editable.offsetWidth - OFFSET - toolbarWidth, left);
+            // Offset left to compensate for parent context position (eg. Iframe).
+            left += parentContextRect.left;
             this.toolbar.style.left = scrollX + left + 'px';
 
             // Get top position.
@@ -4084,6 +4100,8 @@ var exportVariable = (function (exports) {
             }
             // Ensure the toolbar doesn't overflow the editor on the bottom.
             top = Math.min(editorTopPos + this.editable.offsetHeight - OFFSET - toolbarHeight, top);
+            // Offset top to compensate for parent context position (eg. Iframe).
+            top += parentContextRect.top;
             this.toolbar.style.top = scrollY + top + 'px';
 
             // Position the arrow.
@@ -4127,7 +4145,10 @@ var exportVariable = (function (exports) {
                     this.historyRollback();
                     ev.preventDefault();
                     this._applyCommand('oDeleteForward');
-                } else if (ev.inputType === 'insertParagraph' || (ev.inputType === 'insertText' && ev.data === null)) {
+                } else if (
+                    ev.inputType === 'insertParagraph' ||
+                    (ev.inputType === 'insertText' && ev.data === null)
+                ) {
                     // Sometimes the browser wrongly triggers an insertText
                     // input event with null data on enter.
                     this.historyRollback();
@@ -4137,7 +4158,7 @@ var exportVariable = (function (exports) {
                     }
                 } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
                     // insertCompositionText, courtesy of Samsung keyboard.
-                    const selection = this.document.defaultView.getSelection();
+                    const selection = this.document.getSelection();
                     // Detect that text was selected and change behavior only if it is the case,
                     // since it is the only text insertion case that may cause problems.
                     if (anchorNode !== focusNode || anchorOffset !== focusOffset) {
@@ -4171,7 +4192,7 @@ var exportVariable = (function (exports) {
             // representation of the key. In this case, call `deleteRange` before
             // inserting the printed representation of the character.
             if (/^.$/u.test(ev.key) && !ev.ctrlKey && !ev.metaKey) {
-                const selection = this.document.defaultView.getSelection();
+                const selection = this.document.getSelection();
                 if (selection && !selection.isCollapsed) {
                     this.deleteRange(selection);
                 }
@@ -4218,8 +4239,9 @@ var exportVariable = (function (exports) {
             // that to the command execution or the 'input' event handler.
             this._computeHistoryCursor();
 
-            const selection = this.document.defaultView.getSelection();
-            const isSelectionInEditable = !selection.isCollapsed &&
+            const selection = this.document.getSelection();
+            const isSelectionInEditable =
+                !selection.isCollapsed &&
                 this.editable.contains(selection.anchorNode) &&
                 this.editable.contains(selection.focusNode);
             this._updateToolbar(isSelectionInEditable);
@@ -4337,8 +4359,7 @@ var exportVariable = (function (exports) {
         _onPaste(ev) {
             ev.preventDefault();
             const pastedText = (ev.originalEvent || ev).clipboardData.getData('text/plain');
-            insertText(this.document.defaultView.getSelection(), pastedText);
-            this.historyStep();
+            this.execCommand('insertText', pastedText);
         }
 
         /**
@@ -4346,7 +4367,7 @@ var exportVariable = (function (exports) {
          */
         _onDrop(ev) {
             ev.preventDefault();
-            const sel = this.document.defaultView.getSelection();
+            const sel = this.document.getSelection();
             let isInEditor = false;
             let ancestor = sel.anchorNode;
             while (ancestor && !isInEditor) {
@@ -4370,7 +4391,7 @@ var exportVariable = (function (exports) {
                         const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
                         setCursor(range.startContainer, range.startOffset);
                     }
-                    insertText(this.document.defaultView.getSelection(), pastedText);
+                    insertText(this.document.getSelection(), pastedText);
                 });
             }
             this.historyStep();
@@ -4488,7 +4509,7 @@ var exportVariable = (function (exports) {
          * Fix the current selection range in case the range start or end inside a fontAwesome node
          */
         _fixFontAwesomeSelection() {
-            const selection = this.document.defaultView.getSelection();
+            const selection = this.document.getSelection();
             if (
                 selection.isCollapsed ||
                 (selection.anchorNode &&
