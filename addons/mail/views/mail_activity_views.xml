@@ -129,9 +129,9 @@
                     <field name="note" placeholder="Log a note..."/>
                     <footer>
                         <field name="id" invisible="1"/>
-                        <button string="Schedule" name="action_close_dialog" type="object" class="btn-primary"
+                        <button id="mail_activity_schedule" string="Schedule" name="action_close_dialog" type="object" class="btn-primary"
                             attrs="{'invisible': [('id', '!=', False)]}" data-hotkey="q"/>
-                        <button string="Save" name="action_close_dialog" type="object" class="btn-primary"
+                        <button id="mail_activity_save" string="Save" name="action_close_dialog" type="object" class="btn-primary"
                             attrs="{'invisible': [('id', '=', False)]}" data-hotkey="q"/>
                         <button attrs="{'invisible': [('chaining_type', '=', 'trigger')]}" string="Mark as Done" name="action_done"
                             type="object" class="btn-secondary" data-hotkey="w"
