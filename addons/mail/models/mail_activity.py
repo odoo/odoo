@@ -78,7 +78,9 @@ class MailActivityType(models.Model):
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
         string='Preceding Activities')
     category = fields.Selection([
-        ('default', 'None'), ('upload_file', 'Upload Document')
+        ('default', 'None'),
+        ('upload_file', 'Upload Document'),
+        ('phonecall', 'Phonecall')
     ], default='default', string='Action',
         help='Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded')
     mail_template_ids = fields.Many2many('mail.template', string='Email templates')

@@ -39,13 +39,14 @@ If you need to manage your meetings, you should install the CRM module.
     'auto_install': False,
     'assets': {
         'web.assets_backend': [
+            'calendar/static/src/models/activity/activity.js',
+            'calendar/static/src/components/activity/activity.js',
             'calendar/static/src/scss/calendar.scss',
             'calendar/static/src/js/base_calendar.js',
             'calendar/static/src/js/calendar_renderer.js',
             'calendar/static/src/js/calendar_controller.js',
             'calendar/static/src/js/calendar_model.js',
             'calendar/static/src/js/calendar_view.js',
-            'calendar/static/src/js/mail_activity.js',
             'calendar/static/src/js/systray_activity_menu.js',
             'calendar/static/src/js/services/calendar_notification_service.js',
         ],
@@ -54,6 +55,7 @@ If you need to manage your meetings, you should install the CRM module.
         ],
         'web.assets_qweb': [
             'calendar/static/src/xml/base_calendar.xml',
+            'calendar/static/src/components/activity/activity.xml',
         ],
     }
 }

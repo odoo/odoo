@@ -15,6 +15,19 @@ class MailActivity(models.Model):
 
     calendar_event_id = fields.Many2one('calendar.event', string="Calendar Meeting", ondelete='cascade')
 
+    def action_reschedule_meeting(self):
+        """ Open meeting's calendar view to reschedule the meeting linked ."""
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
+        partner_id = self.env.user.partner_id.id
+        action['context'] = {
+            'default_partner_id': partner_id,
+            'default_partner_ids': [partner_id],
+            'default_name': self.summary or self.res_name,
+            'initial_date': self.calendar_event_id.start
+        }
+        return action
+
     def action_create_calendar_event(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
