@@ -25,7 +25,8 @@ const timeFormat = strftimeToLuxonFormat(formats.time);
 
 function runTestSet(assert, testSet, options) {
   for (const [input, expected] of testSet.entries()) {
-    let res1, res2;
+    let res1;
+    let res2;
     try {
       res1 = options.newFn(input);
     } catch (e) {}
@@ -45,7 +46,6 @@ function runTestSet(assert, testSet, options) {
             legacy: expected[1],
           };
 
-    const success = res1 === expect.new && res2 === expect.legacy;
     assert.deepEqual(res1, expect.new, `"${input}" is parsed as expected. [new]`);
     assert.deepEqual(res2, expect.legacy, `"${input}" is parsed as expected. [legacy]`);
   }
@@ -304,9 +304,9 @@ QUnit.module("utils", () => {
       Object.assign(legacy.session, sessionPatch);
       registerCleanup(() => {
         for (let key in sessionPatch) {
-          delete session[key];
+          delete legacy.session[key];
         }
-        Object.assign(session, initialSession);
+        Object.assign(legacy.session, initialSession);
       });
 
       // Patch legacy date (will also work for new dates utils): 15th July 2020 12h30
