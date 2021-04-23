@@ -493,7 +493,8 @@ class Lead(models.Model):
         # searching on +32485112233 should also finds 00485112233 (00 / + prefix are both valid)
         # we therefore remove it from input value and search for both of them in db
         if value.startswith('+') or value.startswith('00'):
-            value = value.replace('+', '').replace('00', '', 1)
+            if value.startswith('00'):
+                value = value[2:]
             starts_with = '00|\+'
         else:
             starts_with = '%'
