@@ -24,6 +24,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         this.options = _.extend(this.$el.data(), this.options);
         this.updateNewPaymentDisplayStatus();
         $('[data-toggle="tooltip"]').tooltip();
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
         return this._super.apply(this, arguments);
     },
 
