@@ -1328,12 +1328,21 @@
                 <t t-set="with_color_combinations" t-value="True"/>
                 <t t-set="with_gradients" t-value="True"/>
             </t>
-            <we-button-group class="ms-auto">
-                <we-imagepicker title="Image" data-background="" data-button-style="true"/>
-                <we-button class="fa fa-fw fa-ban" title="None" data-background="">
-                </we-button>
-            </we-button-group>
+            <we-button title="Image" class="ms-auto fa fa-fw fa-camera" data-name="bg_image_toggle_opt"
+                    data-toggle-bg-image="true" data-no-preview="true"/>
         </we-row>
+    </div>
+    <div data-js="BackgroundImage" data-selector=".o_record_cover_container"
+            data-target=".o_record_cover_image" data-no-check="true">
+        <t t-call="web_editor.snippet_options_image_selection_widgets"/>
+    </div>
+    <div data-js="BackgroundPosition" data-selector=".o_record_cover_container"
+            data-target=".o_record_cover_image" data-no-check="true">
+        <t t-call="web_editor.snippet_options_image_position_widgets">
+            <t t-set="bg_image_dependencies" t-valuef="bg_image_toggle_opt"/>
+        </t>
+    </div>
+    <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
         <we-select string="Size" data-name="size_opt" data-cover-opt-name="size">
             <we-button data-select-class="o_full_screen_height">Full Screen</we-button>
             <we-button class="o_record_cover_opt_size_default" data-select-class="o_half_screen_height">Half Screen</we-button>
