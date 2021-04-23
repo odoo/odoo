@@ -3,7 +3,6 @@
  * view. On each view, click on each filter.
  */
 
-// TODO: ensure this file is lazy loaded (after the assets revamp)
 (function (exports) {
   "use strict";
 
