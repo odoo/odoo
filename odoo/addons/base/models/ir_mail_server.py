@@ -7,11 +7,14 @@ from email.header import Header
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.quoprimime import NL, _QUOPRI_BODY_ENCODE_MAP, CRLF, quote
 from email.utils import COMMASPACE, formataddr, formatdate, getaddresses, make_msgid
+import email.quoprimime
 import logging
 import re
 import smtplib
 import threading
+import sys
 
 import html2text
 
@@ -34,6 +37,59 @@ class MailDeliveryException(except_orm):
 def _print_debug(self, *args):
     _logger.debug(' '.join(str(a) for a in args))
 smtplib.SMTP._print_debug = _print_debug
+
+# Python 3: patch qp body encoder
+if sys.version_info < (3, 11):
+    def body_encode(body, maxlinelen=76, eol=NL):
+        if maxlinelen < 4:
+            raise ValueError("maxlinelen must be at least 4")
+        if not body:
+            return body
+        body = body.translate(_QUOPRI_BODY_ENCODE_MAP)
+        soft_break = '=' + eol
+        maxlinelen1 = maxlinelen - 1
+        encoded_body = []
+        append = encoded_body.append
+        for line in body.splitlines():
+            # <patch>
+            if line.startswith('.'):
+                line = quote('.') + line[1:]
+            # </patch>
+            start = 0
+            laststart = len(line) - 1 - maxlinelen
+            while start <= laststart:
+                stop = start + maxlinelen1
+                if line[stop - 2] == '=':
+                    append(line[start:stop - 1])
+                    start = stop - 2
+                elif line[stop - 1] == '=':
+                    append(line[start:stop])
+                    start = stop - 1
+                # <patch>
+                elif line[stop] == '.':
+                    append(line[start:stop] + '=')
+                    line = line[:stop] + quote('.') + line[stop+1:]
+                    laststart += 2
+                    start = stop
+                # </patch>
+                else:
+                    append(line[start:stop] + '=')
+                    start = stop
+            if line and line[-1] in ' \t':
+                room = start - laststart
+                if room >= 3:
+                    q = quote(line[-1])
+                elif room == 2:
+                    q = line[-1] + soft_break
+                else:
+                    q = soft_break + quote(line[-1])
+                append(line[start:-1] + q)
+            else:
+                append(line[start:])
+        if body[-1] in CRLF:
+            append('')
+        return eol.join(encoded_body)
+    email.quoprimime.body_encode = body_encode
 
 # Python 2: replace smtplib's stderr
 class WriteToLogger(object):

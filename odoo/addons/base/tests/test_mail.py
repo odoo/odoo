@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
+from email.message import EmailMessage
+from email.policy import SMTPUTF8
 from unittest.mock import patch
 
 from odoo.tests.common import BaseCase
@@ -280,6 +282,22 @@ class TestSanitizer(BaseCase):
         img_tag = '<img src="@">'
         sanitized = html_sanitize(img_tag, sanitize_tags=False, strip_classes=True)
         self.assertEqual(img_tag, sanitized, "img with can have cid containing @ and shouldn't be escaped")
+
+    def test_no_line_start_with_dot(self):
+        body_input = """\
+This should force quoted-printable tranport: é
+We just need some random text to reach that seventy-eighth character, example.com"""
+
+        body_expect = """\
+This should force quoted-printable tranport: =C3=A9\r
+We just need some random text to reach that seventy-eighth character, example=\r
+=2Ecom\r
+"""
+
+        msg = EmailMessage(policy=SMTPUTF8)
+        msg.set_content(body_input)
+        body_output = msg.as_string().partition("\r\n\r\n")[2]
+        self.assertEqual(body_output.encode(), body_expect.encode())
 
     # ms office is currently not supported, have to find a way to support it
     # def test_30_email_msoffice(self):
