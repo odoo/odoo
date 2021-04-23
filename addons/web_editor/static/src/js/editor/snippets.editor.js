@@ -1168,7 +1168,7 @@ var SnippetsMenu = Widget.extend({
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
         this._addToolbar();
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this)
-        $(document.body).on('click', this._checkEditorToolbarVisibilityCallback);
+        $(this.options.wysiwyg.odooEditor.document.body).on('click', this._checkEditorToolbarVisibilityCallback);
 
         if (this.options.enableTranslation) {
             // Load the sidebar with the style tab only.
