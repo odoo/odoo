@@ -207,8 +207,9 @@ class PaymentTransactionStripe(models.Model):
         return res
 
     def form_feedback(self, data, acquirer_name):
-        if data.get('reference') and acquirer_name == 'stripe':
-            transaction = self.env['payment.transaction'].search([('reference', '=', data['reference'])])
+        reference = data.get('metadata', {}).get("reference") or data.get("reference")
+        if reference and acquirer_name == 'stripe':
+            transaction = self.env['payment.transaction'].search([('reference', '=', reference)])
 
             url = 'payment_intents/%s' % transaction.stripe_payment_intent
             resp = transaction.acquirer_id._stripe_request(url)
@@ -216,6 +217,8 @@ class PaymentTransactionStripe(models.Model):
                 resp = resp.get('charges').get('data')[0]
 
             data.update(resp)
+            if 'metadata' in data and not data.get('metadata').get('reference'):
+                data['metadata']['reference'] = reference
             _logger.info('Stripe: entering form_feedback with post data %s' % pprint.pformat(data))
         return super(PaymentTransactionStripe, self).form_feedback(data, acquirer_name)
 
@@ -272,7 +275,7 @@ class PaymentTransactionStripe(models.Model):
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data.get('reference')
+        reference = data.get('metadata', {}).get("reference") or data.get("reference")
         if not reference:
             stripe_error = data.get('error', {}).get('message', '')
             _logger.error('Stripe: invalid reply received from stripe API, looks like '
