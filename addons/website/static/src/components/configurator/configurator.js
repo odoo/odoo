@@ -128,22 +128,24 @@ class DescriptionScreen extends Component {
     }
 
     selectIndustry(_, ui) {
+        this.industrySelection.el.parentNode.dataset.value = ui.item.label;
         this.dispatch('selectIndustry', this.labelToId[ui.item.label]);
         this.checkDescriptionCompletion();
     }
 
     blurIndustrySelection(ev) {
-        const id = this.labelToId[ev.target.outerText];
+        const id = this.labelToId[ev.target.value];
         this.dispatch('selectIndustry', id);
         if (id === undefined) {
-            this.industrySelection.el.textContent = '';
+            this.industrySelection.el.value = '';
+            this.industrySelection.el.parentNode.dataset.value = '';
         } else {
             this.checkDescriptionCompletion();
         }
     }
 
     inputIndustrySelection(ev) {
-        this.dispatch('selectIndustry', this.labelToId[ev.target.outerText]);
+        this.industrySelection.el.parentNode.dataset.value = ev.target.value;
     }
 
     selectWebsiteType(ev) {

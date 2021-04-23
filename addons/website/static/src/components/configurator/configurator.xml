@@ -44,7 +44,7 @@
                                 <i class="fa fa-angle-down text-black-50 ml-auto pl-2" title="dropdown_angle_down" role="img"/>
                             </a>
                         </div>
-                        <div t-attf-class="dropdown-menu w-100 border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
+                        <div t-attf-class="dropdown-menu border-0 shadow-lg {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}" role="menu">
                             <t t-foreach="getters.getWebsiteTypes()" t-as="type" t-key="type.name">
                                 <a t-att-title="type.name" t-att-data-id="type.id" t-on-click="selectWebsiteType" class="dropdown-item o_change_website_type">
                                     <t t-esc="type.label"/>
@@ -52,12 +52,12 @@
                             </t>
                         </div>
                     </div>
-                    <span t-att-class="!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'"> for my</span>
+                    <span t-attf-class="mr-2 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}"> for my</span>
                 </div>
-                <div t-attf-class="o_configurator_typing_text d-inline d-md-block o_configurator_industry mb-md-2 mb-lg-4 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}">
-                    <div class="o_configurator_industry_wrapper position-relative d-inline">
-                        <i t-attf-class="industry_selection d-inline d-md-inline-block rounded bg-100 px-2 px-md-3 mx-2 mx-md-0 {{state.selectedIndustry ? 'o_step_completed' : 'o_step_todo show'}}" contenteditable="True" t-on-blur="blurIndustrySelection" t-on-input="inputIndustrySelection" t-ref="industrySelection"/>
-                    </div>
+                <div t-attf-class="o_configurator_typing_text d-inline d-md-flex align-items-center o_configurator_industry mb-md-2 mb-lg-4 {{!state.selectedType ? 'o_configurator_hide' : 'o_configurator_show'}}">
+                    <label class="o_configurator_industry_wrapper mr-2">
+                        <input t-on-blur="blurIndustrySelection" t-on-input="inputIndustrySelection" t-ref="industrySelection"/>
+                    </label>
                     <span> business</span>
                     <span t-att-class="!state.selectedIndustry ? 'o_configurator_hide' : 'o_configurator_show'">,</span>
                 </div>
@@ -72,7 +72,7 @@
                                 <i class="fa fa-angle-down text-black-50 ml-auto pl-2" title="dropdown_angle_down" role="img"/>
                             </a>
                         </div>
-                        <div class="dropdown-menu w-100 border-0 shadow-lg" role="menu">
+                        <div class="dropdown-menu border-0 shadow-lg" role="menu">
                             <t t-foreach="getters.getWebsitePurpose()" t-as="type" t-key="type.name">
                                 <a t-att-title="type.name" t-att-data-id="type.id" t-on-click="selectWebsitePurpose" class="dropdown-item o_change_website_purpose">
                                     <t t-esc="type.label"/>
