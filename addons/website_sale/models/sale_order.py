@@ -245,21 +245,21 @@ class SaleOrder(models.Model):
             # update line
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
             values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity)
+            order = self.sudo().browse(self.id)
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
-                order = self.sudo().browse(self.id)
                 product_context.update({
                     'partner': order.partner_id,
                     'quantity': quantity,
                     'date': order.date_order,
                     'pricelist': order.pricelist_id.id,
                 })
-                product_with_context = self.env['product.product'].with_context(product_context).with_company(order.company_id.id)
-                product = product_with_context.browse(product_id)
-                values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
-                    order_line._get_display_price(product),
-                    order_line.product_id.taxes_id,
-                    order_line.tax_id,
-                    self.company_id
+            product_with_context = self.env['product.product'].with_context(product_context).with_company(order.company_id.id)
+            product = product_with_context.browse(product_id)
+            values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
+                order_line._get_display_price(product),
+                order_line.product_id.taxes_id,
+                order_line.tax_id,
+                self.company_id
                 )
 
             order_line.write(values)
