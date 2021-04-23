@@ -577,7 +577,8 @@ class PosOrder(models.Model):
                             if stock_production_lot.product_id.tracking == 'lot':
                                 qty = abs(pos_pack_lot.pos_order_line_id.qty)
                             qty_done += qty
-                            pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
+                            quant = stock_production_lot.quant_ids.filtered(lambda q: q.quantity > 0.0 or q.location_id.parent_path.startswith(move.location_id.parent_path))[-1:]
+                            pack_lots.append({'lot_id': stock_production_lot.id, 'quant_location_id': quant.location_id.id, 'qty': qty})
                         else:
                             has_wrong_lots = True
                 elif move.product_id.tracking == 'none' or not lots_necessary:
@@ -585,14 +586,14 @@ class PosOrder(models.Model):
                 else:
                     has_wrong_lots = True
                 for pack_lot in pack_lots:
-                    lot_id, qty = pack_lot['lot_id'], pack_lot['qty']
+                    lot_id, quant_location_id, qty = pack_lot['lot_id'], pack_lot['quant_location_id'], pack_lot['qty']
                     self.env['stock.move.line'].create({
                         'picking_id': move.picking_id.id,
                         'move_id': move.id,
                         'product_id': move.product_id.id,
                         'product_uom_id': move.product_uom.id,
                         'qty_done': qty,
-                        'location_id': move.location_id.id,
+                        'location_id': quant_location_id or move.location_id.id,
                         'location_dest_id': move.location_dest_id.id,
                         'lot_id': lot_id,
                     })
