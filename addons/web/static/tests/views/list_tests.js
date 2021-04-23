@@ -1299,17 +1299,18 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch:
-                `<tree>
+                `<tree expand="1">
                     <field name="foo"/>
-                    <field name="m2m"/>
+                    <field name="m2o"/>
+                    <field name="m2m" widget="many2many_tags"/>
                 </tree>`,
             groupBy: ['m2m'],
             debug: true,
         });
 
         await testUtils.nextTick();
-        debugger;
         await testUtils.dom.click(list.$('th.o_group_name').first());
+        debugger;
         // TODO: MSH: Add support of m2m domain in search_read like [('tag_ids', '=', '1')]
         list.destroy();
     });

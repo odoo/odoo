@@ -481,6 +481,12 @@ var MockServer = Class.extend({
                     }
                     criterion = [criterion[0], 'in', childIDs];
                 }
+                // TODO: only many2many based condition is not enough, we may have many2many field in normal
+                // search_read domain, we should check criterion[1] is "=" and criterion[2] is integer
+                // in that case we should change criterion following way
+                if (self.data[model].fields[criterion[0]].type === "many2many") {
+                    criterion = [criterion[0], 'in', [criterion[2]]];
+                }
                 return criterion;
             });
             records = _.filter(records, function (record) {
@@ -1407,6 +1413,7 @@ var MockServer = Class.extend({
         if (!('lazy' in kwargs)) {
             kwargs.lazy = true;
         }
+        // kwargs.lazy = false; // TODO: To remove
         var self = this;
         var fields = this.data[model].fields;
         var aggregatedFields = [];
@@ -1480,6 +1487,81 @@ var MockServer = Class.extend({
                 return val instanceof Array ? val[0] : (val || false);
             }
         }
+        // TODO: MSH: Maybe develop custom groupby method instead of using _groupBy and pass groupByFunction
+        // if many2many field type comes then add 1 group for each m2m record like if groupby is ["m2o", "m2m"]
+        // then it should generate like "m2o#1,m2m#1" "m2o#1,m2m#2", "m2o#2,m2m#1", "m2o#2,m2m#2" and so on...
+        function generateGroups(records) {
+            const groups = {};
+            const createGroup = function (record) {
+                //generate keys for groups
+                var groupByKeys = {};
+                _.each(groupBy, function (groupByField) {
+                    var fieldName = groupByField.split(':')[0];
+                    if (fields[fieldName].type === 'date') {
+                        groupByKeys[groupByField] = formatValue(groupByField, record[fieldName]);
+                    } else if (fields[fieldName].type === 'many2many') {
+                        _.each(self.data[fields[fieldName].relation].records, function (rec) {
+                            if (record[fieldName] && record[fieldName].includes(rec.id)) {
+                                if (groupByKeys[groupByField]) {
+                                    groupByKeys[groupByField].push(rec.id);
+                                } else {
+                                    groupByKeys[groupByField] = [rec.id];
+                                }
+                            }
+                        });
+                    } else {
+                        groupByKeys[groupByField] = JSON.stringify(record[groupByField]);
+                    }
+                });
+
+                // prepare keys from groupByKeys
+                const keys = [];
+                _.each(groupByKeys, function (val, groupByField) {
+                    if (_.isArray(val)) {
+                        if (!keys.length) {
+                            _.each(val, (v) => {
+                                keys.push(groupByField + "#" + v);
+                            });
+                        } else {
+                            _.each(keys, (k, i) => {
+                                _.each(val, (v) => {
+                                    keys.push(k + "," + groupByField + "#" + v);
+                                    const index = keys.indexOf(k);
+                                    if (index !== -1) {
+                                        keys.splice(index, 1);
+                                    }
+                                });
+                            });
+                        }
+                    } else {
+                        if (!keys.length) {
+                            keys.push(groupByField + "#" + val);
+                        } else {
+                            _.each(keys, (k, i) => {
+                                keys.push(k + "," + groupByField + "#" + val);
+                                const index = keys.indexOf(k);
+                                if (index !== -1) {
+                                    keys.splice(index, 1);
+                                }
+                            });
+                        }
+                    }
+                });
+                _.each(keys, (key) => {
+                    if (groups[key]) {
+                        groups[key].push(record);
+                    } else {
+                        groups[key] = [record];
+                    }
+                });
+            };
+            _.each(records, createGroup);
+            return groups;
+        }
+        const grps = generateGroups(records);
+        debugger;
+
+
         function groupByFunction(record) {
             var value = '';
             _.each(groupBy, function (groupByField) {
@@ -1487,6 +1569,11 @@ var MockServer = Class.extend({
                 var fieldName = groupByField.split(':')[0];
                 if (fields[fieldName].type === 'date') {
                     value += formatValue(groupByField, record[fieldName]);
+                // } else if (fields[fieldName].type === 'many2many') {
+                //     // return _.each(self.data[fields[fieldName].relation].records, function (rec) {
+                //     //     return groupByFunction(rec);
+                //     // });
+                //     // value += JSON.stringify(record[groupByField]);
                 } else {
                     value += JSON.stringify(record[groupByField]);
                 }
@@ -1501,6 +1588,9 @@ var MockServer = Class.extend({
         }
 
         var groups = _.groupBy(records, groupByFunction);
+        debugger;
+        // TODO: MSH: Maybe need to create a function for following logic, split following logic in functions
+        // such a way that we can handle m2m field grouping
         var result = _.map(groups, function (group) {
             var res = {
                 __domain: kwargs.domain || [],
@@ -1518,6 +1608,10 @@ var MockServer = Class.extend({
                     } else {
                         res[groupByField] = false;
                     }
+                // } else if (field.type === 'many2many') {
+                //     _.each(self.data[fields[fieldName].relation].records, function (rec) {
+                //         if ()
+                //     });
                 } else {
                     res[groupByField] = val;
                 }
@@ -1558,6 +1652,7 @@ var MockServer = Class.extend({
             return res;
         });
 
+        debugger;
         if (kwargs.orderby) {
             // only consider first sorting level
             kwargs.orderby = kwargs.orderby.split(',')[0];
