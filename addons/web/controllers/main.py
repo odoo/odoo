@@ -37,7 +37,7 @@ from odoo.modules import get_module_path, get_resource_path, module
 from odoo.tools import image_process, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlsxwriter, file_open
+from odoo.tools.misc import str2bool, xlsxwriter, file_open, file_path
 from odoo.tools.safe_eval import safe_eval, time
 from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception
@@ -1636,27 +1636,18 @@ class Binary(http.Controller):
         :return: base64 encoded fonts
         :rtype: list
         """
-
-
+        supported_exts = ('.ttf', '.otf', '.woff', '.woff2')
         fonts = []
+        fonts_directory = file_path(os.path.join('web', 'static', 'fonts', 'sign'))
         if fontname:
-            module_path = get_module_path('web')
-            fonts_folder_path = os.path.join(module_path, 'static/fonts/sign/')
-            module_resource_path = get_resource_path('web', 'static/fonts/sign/' + fontname)
-            if fonts_folder_path and module_resource_path:
-                fonts_folder_path = os.path.join(os.path.normpath(fonts_folder_path), '')
-                module_resource_path = os.path.normpath(module_resource_path)
-                if module_resource_path.startswith(fonts_folder_path):
-                    with file_open(module_resource_path, 'rb') as font_file:
-                        font = base64.b64encode(font_file.read())
-                        fonts.append(font)
+            font_path = os.path.join(fonts_directory, fontname)
+            with file_open(font_path, 'rb', filter_ext=supported_exts) as font_file:
+                font = base64.b64encode(font_file.read())
+                fonts.append(font)
         else:
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            fonts_directory = os.path.join(current_dir, '..', 'static', 'fonts', 'sign')
-            font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(('.ttf', '.otf', '.woff', '.woff2'))])
-
+            font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(supported_exts)])
             for filename in font_filenames:
-                font_file = open(os.path.join(fonts_directory, filename), 'rb')
+                font_file = file_open(os.path.join(fonts_directory, filename), 'rb', filter_ext=supported_exts)
                 font = base64.b64encode(font_file.read())
                 fonts.append(font)
         return fonts
