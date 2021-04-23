@@ -4,7 +4,9 @@
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
+from odoo.exceptions import UserError
 from odoo.tests.common import Form, users
+
 
 class TestCRMLead(TestCrmCommon):
 
@@ -417,3 +419,100 @@ class TestCRMLead(TestCrmCommon):
         new_lead._handle_partner_assignment(create_missing=True)
         self.assertEqual(new_lead.partner_id.email, 'unknown.sender@test.example.com')
         self.assertEqual(new_lead.partner_id.team_id, self.sales_team_1)
+
+    @users('user_sales_manager')
+    def test_phone_mobile_search(self):
+        lead_1 = self.env['crm.lead'].create({
+            'name': 'Lead 1',
+            'country_id': self.env.ref('base.be').id,
+            'phone': '+32499332211',
+        })
+        lead_2 = self.env['crm.lead'].create({
+            'name': 'Lead 2',
+            'country_id': self.env.ref('base.be').id,
+            'phone': '0032499332211',
+        })
+        lead_3 = self.env['crm.lead'].create({
+            'name': 'Lead 3',
+            'country_id': self.env.ref('base.be').id,
+            'phone': 'hello',
+        })
+
+        # search term containing less than 3 characters should throw an error (some currently not working)
+        with self.assertRaises(UserError):
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', '')])
+        # with self.assertRaises(UserError):
+        #     self.env['crm.lead'].search([('phone_mobile_search', 'like', '7   ')])
+        with self.assertRaises(UserError):
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', 'c')])
+        with self.assertRaises(UserError):
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', '+')])
+        with self.assertRaises(UserError):
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', '5')])
+        with self.assertRaises(UserError):
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', '42')])
+
+        # + / 00 prefixes do not block search -> currently not working
+        # self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
+        #     ('phone_mobile_search', 'like', '+32499332211')
+        # ]))
+        # self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
+        #     ('phone_mobile_search', 'like', '0032499332211')
+        # ]))
+        self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '499332211')
+        ]))
+        self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '3322')
+        ]))
+
+        # textual input still possible -> currently not working
+        # self.assertEqual(
+        #     self.env['crm.lead'].search([('phone_mobile_search', 'like', 'hello')]),
+        #     lead_3,
+        #     'Should behave like a text field'
+        # )
+        # self.assertEqual(
+        #     self.env['crm.lead'].search([('phone_mobile_search', 'like', 'Hello')]),
+        #     lead_3,
+        #     'Should behave like a text field'
+        # )
+        # self.assertEqual(
+        #     self.env['crm.lead'].search([('phone_mobile_search', 'like', 'hello123')]),
+        #     self.env['crm.lead'],
+        #     'Should behave like a text field'
+        # )
+
+    @users('user_sales_manager')
+    def test_phone_mobile_search_format(self):
+        numbers = [
+            # standard
+            '0499223311',
+            # separators
+            '0499/223311', '0499/22.33.11', '0499/22 33 11', '0499/223 311',
+            # international format
+            # '+32499223311', '0032499223311',
+        ]
+        leads = self.env['crm.lead'].create([
+            {'name': 'Lead %s' % index,
+             'country_id': self.env.ref('base.be').id,
+             'phone': number,
+            }
+            for index, number in enumerate(numbers)
+        ])
+
+        self.assertEqual(leads, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '0499223311')
+        ]))
+        self.assertEqual(leads, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '0499/223311')
+        ]))
+        self.assertEqual(leads, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '0499/22.33.11')
+        ]))
+        self.assertEqual(leads, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '0499/22 33 11')
+        ]))
+        self.assertEqual(leads, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '0499/223 311')
+        ]))
