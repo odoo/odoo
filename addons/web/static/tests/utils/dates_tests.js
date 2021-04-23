@@ -10,11 +10,16 @@ import { registerCleanup } from "../helpers/cleanup";
 
 const { DateTime, Settings } = luxon;
 
+import core from "web.core";
+import field_utils from "web.field_utils";
+import session from "web.session";
+import test_utils from "web.test_utils";
+
 const legacy = {
-  core: require("web.core"),
-  field_utils: require("web.field_utils"),
-  session: require("web.session"),
-  test_utils: require("web.test_utils"),
+  core,
+  field_utils,
+  session,
+  test_utils,
 };
 const formats = {
   date: "%d.%m/%Y",
