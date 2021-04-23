@@ -23,38 +23,32 @@ Allow website visitors to chat with the collaborators. This module also brings a
     'assets': {
         'web.assets_frontend': [
             'mail/static/src/js/utils.js',
-            'website_livechat/static/src/bugfix/public_bugfix.js',
             'im_livechat/static/src/legacy/public_livechat.js',
             'website_livechat/static/src/legacy/public_livechat.js',
             'im_livechat/static/src/legacy/public_livechat.scss',
-            'website_livechat/static/src/bugfix/public_bugfix.scss',
+            'website_livechat/static/src/legacy/public_livechat.scss',
         ],
         'website.assets_editor': [
             'website_livechat/static/src/js/**/*',
         ],
         'web.assets_backend': [
-            'website_livechat/static/src/bugfix/bugfix.js',
             'website_livechat/static/src/components/discuss/discuss.js',
             'website_livechat/static/src/components/visitor_banner/visitor_banner.js',
             'website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js',
             'website_livechat/static/src/models/thread/thread.js',
             'website_livechat/static/src/models/visitor/visitor.js',
-            'website_livechat/static/src/bugfix/bugfix.scss',
             'website_livechat/static/src/components/visitor_banner/visitor_banner.scss',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
-            'website_livechat/static/src/bugfix/bugfix_tests.js',
             'website_livechat/static/src/components/discuss/discuss_tests.js',
             'website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler_tests.js',
             'website_livechat/static/tests/helpers/mock_models.js',
             'website_livechat/static/tests/helpers/mock_server.js',
         ],
         'web.assets_qweb': [
-            'website_livechat/static/src/bugfix/bugfix.xml',
-            'website_livechat/static/src/bugfix/public_bugfix.xml',
             'website_livechat/static/src/components/discuss/discuss.xml',
             'website_livechat/static/src/components/visitor_banner/visitor_banner.xml',
         ],
