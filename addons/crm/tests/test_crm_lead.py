@@ -451,17 +451,22 @@ class TestCRMLead(TestCrmCommon):
         lead_1 = self.env['crm.lead'].create({
             'name': 'Lead 1',
             'country_id': self.env.ref('base.be').id,
-            'phone': '+32499332211',
+            'phone': '+32485001122',
         })
         lead_2 = self.env['crm.lead'].create({
             'name': 'Lead 2',
             'country_id': self.env.ref('base.be').id,
-            'phone': '0032499332211',
+            'phone': '0032485001122',
         })
         lead_3 = self.env['crm.lead'].create({
             'name': 'Lead 3',
             'country_id': self.env.ref('base.be').id,
             'phone': 'hello',
+        })
+        lead_4 = self.env['crm.lead'].create({
+            'name': 'Lead 3',
+            'country_id': self.env.ref('base.be').id,
+            'phone': '+32485112233',
         })
 
         # search term containing less than 3 characters should throw an error (some currently not working)
@@ -480,16 +485,16 @@ class TestCRMLead(TestCrmCommon):
 
         # + / 00 prefixes do not block search
         self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
-            ('phone_mobile_search', 'like', '+32499332211')
+            ('phone_mobile_search', 'like', '+32485001122')
         ]))
         self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
-            ('phone_mobile_search', 'like', '0032499332211')
+            ('phone_mobile_search', 'like', '0032485001122')
         ]))
         self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
-            ('phone_mobile_search', 'like', '499332211')
+            ('phone_mobile_search', 'like', '485001122')
         ]))
-        self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
-            ('phone_mobile_search', 'like', '3322')
+        self.assertEqual(lead_1 + lead_2 + lead_4, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '1122')
         ]))
 
         # textual input still possible

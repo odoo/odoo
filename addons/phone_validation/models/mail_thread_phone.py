@@ -54,6 +54,7 @@ class PhoneMixin(models.AbstractModel):
         pattern = r'[\s\\./\(\)\-]'
         if value.startswith('+') or value.startswith('00'):
             # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+            # we therefore remove it from input value and search for both of them in db
             query = f"""
                 SELECT model.id
                 FROM {self._table} model
