@@ -262,5 +262,7 @@ field_registry
     .add('mrp_time_counter', TimeCounter)
     .add('embed_viewer', FieldEmbedURLViewer);
 
+fieldUtils.format.mrp_time_counter = fieldUtils.format.float_time;
+
 return FieldEmbedURLViewer;
 });
