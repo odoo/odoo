@@ -143,7 +143,11 @@ class RecurrenceRule(models.Model):
         return recurrence
 
     def _get_sync_domain(self):
-        return [('calendar_event_ids.user_id', '=', self.env.user.id)]
+        # Empty rrule may exists in historical data. It is not a desired behavior but it could have been created with
+        # older versions of the module. When synced, these recurrency may come back from Google after database cleaning
+        # and trigger errors as the records are not properly populated.
+        # We also prevent sync of other user recurrent events.
+        return [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
 
     @api.model
     def _odoo_values(self, google_recurrence, default_reminders=()):
