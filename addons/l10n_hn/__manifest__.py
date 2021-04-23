@@ -27,5 +27,6 @@ and the Lempira currency.""",
         'data/l10n_hn_chart_post_data.xml',
         'data/account_data.xml',
         'data/account_chart_template_data.xml',
+        'data/res_country_state_data.xml',
     ],
 }
