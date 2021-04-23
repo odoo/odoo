@@ -452,13 +452,13 @@ class TestCRMLead(TestCrmCommon):
         with self.assertRaises(UserError):
             self.env['crm.lead'].search([('phone_mobile_search', 'like', '42')])
 
-        # + / 00 prefixes do not block search -> currently not working
-        # self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
-        #     ('phone_mobile_search', 'like', '+32499332211')
-        # ]))
-        # self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
-        #     ('phone_mobile_search', 'like', '0032499332211')
-        # ]))
+        # + / 00 prefixes do not block search
+        self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '+32499332211')
+        ]))
+        self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '0032499332211')
+        ]))
         self.assertEqual(lead_1 + lead_2, self.env['crm.lead'].search([
             ('phone_mobile_search', 'like', '499332211')
         ]))
@@ -466,22 +466,22 @@ class TestCRMLead(TestCrmCommon):
             ('phone_mobile_search', 'like', '3322')
         ]))
 
-        # textual input still possible -> currently not working
-        # self.assertEqual(
-        #     self.env['crm.lead'].search([('phone_mobile_search', 'like', 'hello')]),
-        #     lead_3,
-        #     'Should behave like a text field'
-        # )
-        # self.assertEqual(
-        #     self.env['crm.lead'].search([('phone_mobile_search', 'like', 'Hello')]),
-        #     lead_3,
-        #     'Should behave like a text field'
-        # )
-        # self.assertEqual(
-        #     self.env['crm.lead'].search([('phone_mobile_search', 'like', 'hello123')]),
-        #     self.env['crm.lead'],
-        #     'Should behave like a text field'
-        # )
+        # textual input still possible
+        self.assertEqual(
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', 'hello')]),
+            lead_3,
+            'Should behave like a text field'
+        )
+        self.assertEqual(
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', 'Hello')]),
+            lead_3,
+            'Should behave like a text field'
+        )
+        self.assertEqual(
+            self.env['crm.lead'].search([('phone_mobile_search', 'like', 'hello123')]),
+            self.env['crm.lead'],
+            'Should behave like a text field'
+        )
 
     @users('user_sales_manager')
     def test_phone_mobile_search_format(self):
@@ -490,7 +490,7 @@ class TestCRMLead(TestCrmCommon):
             '0499223311',
             # separators
             '0499/223311', '0499/22.33.11', '0499/22 33 11', '0499/223 311',
-            # international format
+            # international format -> currently not working
             # '+32499223311', '0032499223311',
         ]
         leads = self.env['crm.lead'].create([
