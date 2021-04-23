@@ -23,6 +23,7 @@ PAYMENT_METHOD_TYPES = [
 INTENT_STATUS_MAPPING = {
     'draft': ('requires_payment_method', 'requires_confirmation', 'requires_action'),
     'pending': ('processing',),
+    'authorized': ('requires_capture',),
     'done': ('succeeded',),
     'cancel': ('canceled',),
 }

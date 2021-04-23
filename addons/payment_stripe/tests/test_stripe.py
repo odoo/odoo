@@ -30,6 +30,36 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         self.assertEqual(processing_values['publishable_key'], self.stripe.stripe_publishable_key)
         self.assertEqual(processing_values['session_id'], dummy_session_id)
 
+    @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
+    def test_tx_state_after_send_capture_request(self):
+        self.acquirer.capture_manually = True
+        tx = self.create_transaction('redirect', state='authorized')
+
+        with patch(
+            'odoo.addons.payment_stripe.models.payment_acquirer.PaymentAcquirer'
+            '._stripe_make_request',
+            return_value={'status': 'succeeded'},
+        ):
+            tx._send_capture_request()
+        self.assertEqual(
+            tx.state, 'done', msg="The state should be 'done' after a successful capture."
+        )
+
+    @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
+    def test_tx_state_after_send_void_request(self):
+        self.acquirer.capture_manually = True
+        tx = self.create_transaction('redirect', state='authorized')
+
+        with patch(
+            'odoo.addons.payment_stripe.models.payment_acquirer.PaymentAcquirer'
+            '._stripe_make_request',
+            return_value={'status': 'canceled'},
+        ):
+            tx._send_void_request()
+        self.assertEqual(
+            tx.state, 'cancel', msg="The state should be 'cancel' after voiding the transaction."
+        )
+
     @mute_logger('odoo.addons.payment_stripe.controllers.main')
     def test_webhook_notification_confirms_transaction(self):
         """ Test the processing of a webhook notification. """
