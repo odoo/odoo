@@ -11,7 +11,7 @@ const fieldRegistry = require('web.field_registry');
 require('web._field_registry');
 
 const session = require('web.session');
-const AbstractWebClient = require('web.AbstractWebClient');
+// const AbstractWebClient = require('web.AbstractWebClient');
 
 const TimesheetUOMMultiCompanyMixin = {
     init: function(parent, name, record, options) {
@@ -90,79 +90,79 @@ const FieldTimesheetTime = basicFields.FieldFloatTime.extend(TimesheetUOMMultiCo
     }
 });
 
-AbstractWebClient.include({
-    init: function () {
-        this._super(...arguments);
-        /**
-         * Binding depending on Company Preference
-         *
-         * determine wich widget will be the timesheet one.
-         * Simply match the 'timesheet_uom' widget key with the correct
-         * implementation (float_time, float_toggle, ...). The default
-         * value will be 'float_factor'.
-        **/
-        const widgetName = this.currentCompanyTimesheetUOM &&
-                           this.currentCompanyTimesheetUOM.timesheet_widget ||
-                           'float_factor';
+// AbstractWebClient.include({
+//     init: function () {
+//         this._super(...arguments);
+//         /**
+//          * Binding depending on Company Preference
+//          *
+//          * determine wich widget will be the timesheet one.
+//          * Simply match the 'timesheet_uom' widget key with the correct
+//          * implementation (float_time, float_toggle, ...). The default
+//          * value will be 'float_factor'.
+//         **/
+//         const widgetName = this.currentCompanyTimesheetUOM &&
+//                            this.currentCompanyTimesheetUOM.timesheet_widget ||
+//                            'float_factor';
 
-        let FieldTimesheetUom = null;
+//         let FieldTimesheetUom = null;
 
-        if (widgetName === 'float_toggle') {
-            FieldTimesheetUom = FieldTimesheetToggle;
-        } else if (widgetName === 'float_time') {
-            FieldTimesheetUom = FieldTimesheetTime;
-        } else {
-            FieldTimesheetUom = (
-                    fieldRegistry.get(widgetName) &&
-                    fieldRegistry.get(widgetName).extend({ })
-                ) || FieldTimesheetFactor;
-        }
-        fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
+//         if (widgetName === 'float_toggle') {
+//             FieldTimesheetUom = FieldTimesheetToggle;
+//         } else if (widgetName === 'float_time') {
+//             FieldTimesheetUom = FieldTimesheetTime;
+//         } else {
+//             FieldTimesheetUom = (
+//                     fieldRegistry.get(widgetName) &&
+//                     fieldRegistry.get(widgetName).extend({ })
+//                 ) || FieldTimesheetFactor;
+//         }
+//         fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
 
-        // widget timesheet_uom_no_toggle is the same as timesheet_uom but without toggle.
-        // We can modify easly huge amount of days.
-        let FieldTimesheetUomWithoutToggle = null;
-        if (widgetName === 'float_toggle') {
-            FieldTimesheetUomWithoutToggle = FieldTimesheetFactor;
-        } else {
-            FieldTimesheetUomWithoutToggle = FieldTimesheetTime;
-        }
-        fieldRegistry.add('timesheet_uom_no_toggle', FieldTimesheetUomWithoutToggle);
+//         // widget timesheet_uom_no_toggle is the same as timesheet_uom but without toggle.
+//         // We can modify easly huge amount of days.
+//         let FieldTimesheetUomWithoutToggle = null;
+//         if (widgetName === 'float_toggle') {
+//             FieldTimesheetUomWithoutToggle = FieldTimesheetFactor;
+//         } else {
+//             FieldTimesheetUomWithoutToggle = FieldTimesheetTime;
+//         }
+//         fieldRegistry.add('timesheet_uom_no_toggle', FieldTimesheetUomWithoutToggle);
 
 
-        // bind the formatter and parser method, and tweak the options
-        const _tweak_options = (options) => {
-            if (!_.contains(options, 'factor')) {
-                options.factor = this.currentCompanyTimesheetUOMFactor;
-            }
-            return options;
-        };
+//         // bind the formatter and parser method, and tweak the options
+//         const _tweak_options = (options) => {
+//             if (!_.contains(options, 'factor')) {
+//                 options.factor = this.currentCompanyTimesheetUOMFactor;
+//             }
+//             return options;
+//         };
 
-        fieldUtils.format.timesheet_uom = function(value, field, options) {
-            options = _tweak_options(options || { });
-            const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
-            return formatter(value, field, options);
-        };
+//         fieldUtils.format.timesheet_uom = function(value, field, options) {
+//             options = _tweak_options(options || { });
+//             const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
+//             return formatter(value, field, options);
+//         };
 
-        fieldUtils.parse.timesheet_uom = function(value, field, options) {
-            options = _tweak_options(options || { });
-            const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
-            return parser(value, field, options);
-        };
+//         fieldUtils.parse.timesheet_uom = function(value, field, options) {
+//             options = _tweak_options(options || { });
+//             const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
+//             return parser(value, field, options);
+//         };
 
-        fieldUtils.format.timesheet_uom_no_toggle = function(value, field, options) {
-            options = _tweak_options(options || { });
-            const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
-            return formatter(value, field, options);
-        };
+//         fieldUtils.format.timesheet_uom_no_toggle = function(value, field, options) {
+//             options = _tweak_options(options || { });
+//             const formatter = fieldUtils.format[FieldTimesheetUom.prototype.formatType];
+//             return formatter(value, field, options);
+//         };
 
-        fieldUtils.parse.timesheet_uom_no_toggle = function(value, field, options) {
-            options = _tweak_options(options || { });
-            const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
-            return parser(value, field, options);
-        };
-    },
-});
+//         fieldUtils.parse.timesheet_uom_no_toggle = function(value, field, options) {
+//             options = _tweak_options(options || { });
+//             const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
+//             return parser(value, field, options);
+//         };
+//     },
+// });
 
 return {
     FieldTimesheetFactor,

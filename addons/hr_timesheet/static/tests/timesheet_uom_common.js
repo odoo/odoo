@@ -2,7 +2,7 @@ odoo.define("hr_timesheet.timesheet_uom_tests_env", function (require) {
 "use strict";
 
 const session = require('web.session');
-const AbstractWebClient = require('web.AbstractWebClient');
+// const AbstractWebClient = require('web.AbstractWebClient');
 const { createView } = require("web.test_utils");
 const ListView = require('web.ListView');
 
@@ -162,15 +162,15 @@ const SetupTimesheetUOMWidgetsTestEnvironment = function () {
         if (sessionToApply && 'uid' in sessionToApply) {
             session.uid = sessionToApply.uid;
         }
-        if (!this.abstractWebClient) {
-            this.abstractWebClient = new AbstractWebClient();
-        } else {
-            this.abstractWebClient.init();
-        }
+        // if (!this.abstractWebClient) {
+        //     this.abstractWebClient = new AbstractWebClient();
+        // } else {
+        //     this.abstractWebClient.init();
+        // }
     };
     this.createView = async function(options) {
         const sessionToApply = options && options.session || { };
-        this.triggerAbstractWebClientInit(sessionToApply);
+        // this.triggerAbstractWebClientInit(sessionToApply);
         return await createView(Object.assign(
             {
                 View: ListView,

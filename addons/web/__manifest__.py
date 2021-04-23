@@ -458,6 +458,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/helpers/**/*',
+            'web/static/tests/legacy/legacy_setup.js',
 
             'web/static/lib/fullcalendar/core/main.css',
             'web/static/lib/fullcalendar/daygrid/main.css',
