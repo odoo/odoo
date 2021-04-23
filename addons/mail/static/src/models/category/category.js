@@ -21,7 +21,7 @@ function factory(dependencies) {
 
         async open() {
             this.update({ isPendingOpen: true });
-            await this.env.models['mail.category'].performRpcSetCategoryOpenStates({
+            await this.env.models['mail.category'].performRpcSetCategoryStates({
                 categoryId: this.id,
                 isOpen: true,
             });
@@ -29,22 +29,24 @@ function factory(dependencies) {
 
         async close() {
             this.update({ isPendingOpen: false });
-            await this.env.models['mail.category'].performRpcSetCategoryOpenStates({
+            await this.env.models['mail.category'].performRpcSetCategoryStates({
                 categoryId: this.id,
                 isOpen: false,
             });
         }
 
-        static async performRpcSetCategoryOpenStates({ categoryId, isOpen }) {
-            return this.env.services.rpc({
-                model: 'res.users',
-                method: 'set_category_open_states',
-                args: [[this.env.session.uid]],
-                kwargs: {
-                    'category_id': categoryId,
-                    'is_open': isOpen,
-                }
-            });
+        static async performRpcSetCategoryStates({ categoryId, isOpen }) {
+            return this.env.services.rpc(
+                {
+                    model: 'mail.category.states',
+                    method: 'set_category_states',
+                    kwargs: {
+                        'category': categoryId,
+                        'is_open': isOpen,
+                    },
+                },
+                { shadow: true },
+            );
         }
 
         //--------------------------------------------------------------------------

@@ -5,7 +5,7 @@ import {
     afterNextRender,
     beforeEach,
     start,
-} from 'mail/static/src/utils/test_utils.js';
+} from '@mail/utils/test_utils';
 
 QUnit.module('im_livechat', {}, function () {
 QUnit.module('components', {}, function () {

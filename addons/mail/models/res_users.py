@@ -31,9 +31,6 @@ class Users(models.Model):
     moderation_channel_ids = fields.Many2many(
         'mail.channel', 'mail_channel_moderator_rel',
         string='Moderated channels')
-    # Discuss category open states
-    is_category_channel_open = fields.Boolean(string='Is category channel open', default=True)
-    is_category_chat_open = fields.Boolean(string='Is category chat open', default=True)
 
     @api.depends('moderation_channel_ids.moderation', 'moderation_channel_ids.moderator_ids')
     def _compute_is_moderator(self):
@@ -162,23 +159,6 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
                 'name': 'Summary',
             }]
         return list(user_activities.values())
-
-    def get_category_open_states(self):
-        self.ensure_one()
-        return {
-            "is_category_channel_open": self.is_category_channel_open,
-            "is_category_chat_open": self.is_category_chat_open
-        }
-
-    def set_category_open_states(self, category_id, is_open):
-        self.ensure_one()
-        if category_id == 'chat':
-            self.sudo().write({'is_category_chat_open': is_open})
-        elif category_id == 'channel':
-            self.sudo().write({'is_category_channel_open': is_open})
-        data = self.get_category_open_states()
-        data['type'] = 'category_states'
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.partner_id.id), data)
 
 
 class res_groups_mail_channel(models.Model):

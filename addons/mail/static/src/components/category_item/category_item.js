@@ -55,7 +55,6 @@ class CategoryItem extends Component {
             return this.thread.localMessageUnreadCounter;
         }
         return 0;
-
     }
 
     //--------------------------------------------------------------------------

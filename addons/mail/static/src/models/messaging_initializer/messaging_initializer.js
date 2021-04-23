@@ -185,9 +185,9 @@ function factory(dependencies) {
          */
         _initCategories(data) {
             const discuss = this.messaging.discuss;
-            const { 
-                is_category_channel_open = true, 
-                is_category_chat_open = true, 
+            const {
+                is_category_channel_open = true,
+                is_category_chat_open = true,
             } = data;
             discuss.update({
                 categoryChannel: [['create', {

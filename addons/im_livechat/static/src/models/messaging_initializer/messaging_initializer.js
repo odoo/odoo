@@ -34,8 +34,8 @@ registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src
      * @param {Boolean} data.is_category_livechat_open
      */
     async _initCategories(data) {
-        const { 
-            is_category_livechat_open=true 
+        const {
+            is_category_livechat_open=true
         } = data;
         this.messaging.discuss.update({
             'categoryLivechat': [['create', {
