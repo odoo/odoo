@@ -13,6 +13,11 @@ odoo.define('payment.payment_form_mixin', require => {
          */
         start: async function () {
             await this._super(...arguments);
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted) {
+                    window.location.reload();
+                }
+            });
             this.$('[data-toggle="tooltip"]').tooltip();
             this.txContext = {};
             Object.assign(this.txContext, this.$el.data());
