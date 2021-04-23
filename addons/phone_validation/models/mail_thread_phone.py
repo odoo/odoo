@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import api, fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import AccessError, UserError
@@ -45,26 +47,46 @@ class PhoneMixin(models.AbstractModel):
     phone_mobile_search = fields.Char("Phone/Mobile", store=False, search='_search_phone_mobile_search')
 
     def _search_phone_mobile_search(self, operator, value):
+        value = value.strip()
+        if len(value) < 3:
+            raise UserError(_('Please enter at least 3 characters when searching a Phone/Mobile number.'))
 
-        if len(value) <= 2:
-            raise UserError(_('Please enter at least 3 digits when searching on phone / mobile.'))
-
-        query = f"""
+        pattern = r'[\s\\./\(\)\-]'
+        if value.startswith('+') or value.startswith('00'):
+            # searching on +32485112233 should also finds 0032485112233 (and vice versa)
+            query = f"""
                 SELECT model.id
                 FROM {self._table} model
-                WHERE REGEXP_REPLACE(model.phone, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
-                  OR REGEXP_REPLACE(model.mobile, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
+                WHERE
+                    model.phone IS NOT NULL AND (
+                        REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s OR
+                        REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s
+                    ) OR
+                    model.mobile IS NOT NULL AND (
+                        REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s OR
+                        REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s
+                    );
             """
-
-    # searching on +32485112233 should also finds 00485112233 (00 / + prefix are both valid)
-    # we therefore remove it from input value and search for both of them in db
-        if value.startswith('+') or value.startswith('00'):
-            value = value.replace('+', '').replace('00', '', 1)
-            starts_with = '00|\+'
+            term = re.sub(pattern, '', value[1 if value.startswith('+') else 2:]) + '%'
+            self._cr.execute(query, (
+                pattern, '00' + term,
+                pattern, '+' + term,
+                pattern, '00' + term,
+                pattern, '+' + term
+            ))
         else:
-            starts_with = '%'
-
-        self._cr.execute(query, (starts_with, value, starts_with, value))
+            query = f"""
+                SELECT model.id
+                FROM {self._table} model
+                WHERE
+                    REGEXP_REPLACE(model.phone, %s, '', 'g') ILIKE %s OR
+                    REGEXP_REPLACE(model.mobile, %s, '', 'g') ILIKE %s;
+            """
+            term = '%' + re.sub(pattern, '', value) + '%'
+            self._cr.execute(query, (
+                pattern, term,
+                pattern, term
+            ))
         res = self._cr.fetchall()
         if not res:
             return [(0, '=', 1)]
