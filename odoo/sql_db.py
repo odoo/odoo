@@ -64,13 +64,18 @@ def flush_env(cr, *, clear=True):
     """ Retrieve and flush an environment corresponding to the given cursor.
         Also clear the environment if ``clear`` is true.
     """
-    env_to_flush = None
+    env_to_flush_candidates = [None, None, None]
     for env in list(Environment.envs):
         # don't flush() on another cursor or with a RequestUID
         if env.cr is cr and (isinstance(env.uid, int) or env.uid is None):
-            env_to_flush = env
+            env_to_flush_candidates[2] = env
             if env.uid is not None:
-                break               # prefer an environment with a real uid
+                env_to_flush_candidates[1] = env               # prefer an environment with a real uid
+                if env.su:
+                    env_to_flush_candidates[0] = env           # prefer an environment with a real uid and sudo
+                    break
+
+    env_to_flush = env_to_flush_candidates[0] or env_to_flush_candidates[1] or env_to_flush_candidates[2] or None
 
     if env_to_flush is not None:
         env_to_flush['base'].flush()
