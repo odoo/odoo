@@ -146,12 +146,6 @@ QUnit.test("dialog component crashes", async (assert) => {
   QUnit.onUnhandledRejection = () => {
     assert.step("error");
   };
-  window.onunhandledrejection = (ev) => {
-    // prevent the error from making the test suite fail when executed from python
-    ev.preventDefault();
-    ev.stopPropagation();
-    ev.stopImmediatePropagation();
-  };
   registerCleanup(() => {
     QUnit.onUnhandledRejection = qunitUnhandledReject;
     window.onunhandledrejection = windowUnhandledReject;
@@ -161,9 +155,6 @@ QUnit.test("dialog component crashes", async (assert) => {
   serviceRegistry.add("rpc", rpc);
   serviceRegistry.add("notification", notificationService);
   serviceRegistry.add("error", errorService);
-  const componentRegistry = new Registry();
-  componentRegistry.add("DialogContainer", DialogContainer);
-  env = await makeTestEnv({ serviceRegistry, mainComponentRegistry: componentRegistry });
 
   pseudoWebClient = await mount(PseudoWebClient, { env, target });
 

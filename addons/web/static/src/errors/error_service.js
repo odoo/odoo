@@ -82,10 +82,10 @@ export const errorService = {
         // error.message = env._t("A Promise reject call with no argument is not getting caught.");
         // handleError(error, env);
         // }
-        ev.stopPropagation();
-        ev.stopImmediatePropagation();
-        ev.preventDefault();
       }
+      ev.stopPropagation();
+      ev.stopImmediatePropagation();
+      ev.preventDefault();
     });
   },
 };
