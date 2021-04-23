@@ -181,6 +181,9 @@ class Base(models.AbstractModel):
             if type(group_by_value) == tuple:
                 group_by_value = group_by_value[1] # FIXME should use technical value (0)
 
+            if field_type == 'many2many' and isinstance(group_by_value, list):
+                group_by_value = str(tuple(group_by_value)) or False
+
             if group_by_value not in data:
                 data[group_by_value] = {}
                 for key in progress_bar['colors']:

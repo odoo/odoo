@@ -19,18 +19,22 @@ class TestM2MGrouping(common.TransactionCase):
             {   # both users
                 'name': "Super Mario Bros.",
                 'user_ids': [Command.set(cls.users.ids)],
+                'state': 'done',
             },
             {   # mario only
                 'name': "Paper Mario",
                 'user_ids': [Command.set(cls.users[0].ids)],
+                'state': 'done',
             },
             {   # luigi only
                 'name': "Luigi's Mansion",
                 'user_ids': [Command.set(cls.users[1].ids)],
+                'state': 'in_progress',
             },
             {   # no user
                 'name': 'Donkey Kong',
                 'user_ids': [Command.set([])],
+                'state': 'new',
             },
         ])
 
