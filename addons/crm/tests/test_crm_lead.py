@@ -445,6 +445,22 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(new_lead.partner_id.team_id, self.sales_team_1)
 
     @users('user_sales_manager')
+    def test_phone_mobile_search(self):
+        lead_1 = self.env['crm.lead'].create({
+            'name': 'Lead 1',
+            'country_id': self.env.ref('base.be').id,
+            'phone': '+32485001122',
+        })
+        lead_2 = self.env['crm.lead'].create({
+            'name': 'Lead 2',
+            'country_id': self.env.ref('base.be').id,
+            'phone': '+32485112233',
+        })
+        self.assertEqual(lead_1, self.env['crm.lead'].search([
+            ('phone_mobile_search', 'like', '+32485001122')
+        ]))
+
+    @users('user_sales_manager')
     def test_phone_mobile_update(self):
         lead = self.env['crm.lead'].create({
             'name': 'Lead 1',

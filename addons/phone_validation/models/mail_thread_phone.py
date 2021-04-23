@@ -45,7 +45,6 @@ class PhoneMixin(models.AbstractModel):
     phone_mobile_search = fields.Char("Phone/Mobile", store=False, search='_search_phone_mobile_search')
 
     def _search_phone_mobile_search(self, operator, value):
-
         if len(value) <= 2:
             raise UserError(_('Please enter at least 3 digits when searching on phone / mobile.'))
 
@@ -59,7 +58,8 @@ class PhoneMixin(models.AbstractModel):
     # searching on +32485112233 should also finds 00485112233 (00 / + prefix are both valid)
     # we therefore remove it from input value and search for both of them in db
         if value.startswith('+') or value.startswith('00'):
-            value = value.replace('+', '').replace('00', '', 1)
+            if value.startswith('00'):
+                value = value[2:]
             starts_with = '00|\+'
         else:
             starts_with = '%'
