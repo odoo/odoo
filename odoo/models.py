@@ -4333,7 +4333,11 @@ Fields:
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
-        dest_alias = query.left_join(alias, order_field, dest_model._table, 'id', order_field)
+        # When field is not required
+        if field.required:
+            dest_alias = query.join(alias, order_field, dest_model._table, 'id', order_field)
+        else:
+            dest_alias = query.left_join(alias, order_field, dest_model._table, 'id', order_field)
         return dest_model._generate_order_by_inner(dest_alias, m2o_order, query,
                                                    reverse_direction, seen)
 

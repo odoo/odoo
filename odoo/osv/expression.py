@@ -671,9 +671,14 @@ class expression(object):
 
             elif len(path) > 1 and field.store and field.type == 'many2one' and field.auto_join:
                 # res_partner.state_id = res_partner__state_id.id
-                coalias = self.query.left_join(
-                    alias, path[0], comodel._table, 'id', path[0],
-                )
+                if field.required:
+                    coalias = self.query.join(
+                        alias, path[0], comodel._table, 'id', path[0],
+                    )
+                else:
+                    coalias = self.query.left_join(
+                        alias, path[0], comodel._table, 'id', path[0],
+                    )
                 push((path[1], operator, right), comodel, coalias)
 
             elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
