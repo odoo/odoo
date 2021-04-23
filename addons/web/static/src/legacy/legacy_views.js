@@ -1,7 +1,7 @@
 /** @odoo-module **/
 const { Component, hooks, tags } = owl;
 
-import { useService } from "../utils/hooks";
+import { useService } from "../services/service_hook";
 import { useSetupAction } from "../actions/action_hook";
 import { viewRegistry } from "../views/view_registry";
 import legacyViewRegistry from "web.view_registry";

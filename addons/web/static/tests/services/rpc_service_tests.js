@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "../../src/core/browser";
-import { useService } from "../../src/utils/hooks";
+import { useService } from "../../src/services/service_hook";
 import { Registry } from "../../src/core/registry";
 import { notificationService } from "../../src/notifications/notification_service";
 import { rpcService } from "../../src/services/rpc_service";

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "../../utils/hooks";
+import { useService } from "../../services/service_hook";
 import { DropdownItem } from "../../components/dropdown/dropdown_item";
 import { debounce } from "../../utils/timing";
 

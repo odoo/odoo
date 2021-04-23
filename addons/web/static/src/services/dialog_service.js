@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "../utils/hooks";
+import { useService } from "../services/service_hook";
 import { mainComponentRegistry } from "../webclient/main_component_registry";
 import { serviceRegistry } from "../webclient/service_registry";
 

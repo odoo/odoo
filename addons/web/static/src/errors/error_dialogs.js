@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "../utils/hooks";
+import { useService } from "../services/service_hook";
 import { capitalize } from "../utils/strings";
 import { _lt } from "../localization/translation";
 import { browser } from "../core/browser";

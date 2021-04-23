@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "../../utils/hooks";
+import { useService } from "../../services/service_hook";
 import { systrayRegistry } from "../systray_registry";
 import { browser } from "../../core/browser";
 

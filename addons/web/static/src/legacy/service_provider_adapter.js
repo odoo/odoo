@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "@web/utils/hooks";
+import { useService } from "@web/services/service_hook";
 import { patch } from "@web/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
 import { useListener } from "web.custom_hooks";

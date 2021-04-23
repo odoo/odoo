@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "../../src/utils/hooks";
+import { useService } from "../../src/services/service_hook";
 import { Registry } from "../../src/core/registry";
 import { hotkeyService } from "../../src/hotkeys/hotkey_service";
 import { uiService } from "../../src/services/ui_service";

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "../../core/browser";
-import { useService } from "../../utils/hooks";
+import { useService } from "../../services/service_hook";
 import { mainComponentRegistry } from "../main_component_registry";
 
 const { Component, useState } = owl;

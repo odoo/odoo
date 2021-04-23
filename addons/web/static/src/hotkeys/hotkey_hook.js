@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { useService } from "../utils/hooks";
+import { useService } from "../services/service_hook";
 const { hooks } = owl;
 const { onMounted, onWillUnmount } = hooks;
 
