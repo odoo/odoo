@@ -9704,7 +9704,7 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: `<form>
-                      <widget name="pie_chart" title="qux by product" attrs="{'measure\': 'qux', 'groupby': 'product_id'}"/>
+                      <widget name="pie_chart" title="qux by product" attrs="{'measure': 'qux', 'groupby': 'product_id'}"/>
                   </form>`,
         });
 
