@@ -21,20 +21,14 @@
     ],
     'assets': {
         'web.assets_backend': [
-            'mail_bot/static/src/bugfix/bugfix.js',
             'mail_bot/static/src/models/messaging_initializer/messaging_initializer.js',
             'mail_bot/static/src/scss/odoobot_style.scss',
-            'mail_bot/static/src/bugfix/bugfix.scss',
         ],
         'web.tests_assets': [
             'mail_bot/static/tests/**/*',
         ],
         'web.qunit_suite_tests': [
-            'mail_bot/static/src/bugfix/bugfix_tests.js',
             'mail_bot/static/src/models/messaging_initializer/messaging_initializer_tests.js',
-        ],
-        'web.assets_qweb': [
-            'mail_bot/static/src/bugfix/bugfix.xml',
         ],
     }
 }
