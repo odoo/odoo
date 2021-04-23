@@ -154,7 +154,7 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
         // we want to execute this handler after all others (hence
         // setTimeout) to let the other handlers prevent the event
         if (!event || !event.isDefaultPrevented()) {
-          throw error;
+          return Promise.reject(error);
         }
       }, 0);
     });
