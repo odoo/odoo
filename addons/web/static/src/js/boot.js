@@ -38,10 +38,10 @@
     var commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg;
     var cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
 
-    if (!window.odoo) {
-        window.odoo = {};
+    if (!self.odoo) {
+        self.odoo = {};
     }
-    var odoo = window.odoo;
+    var odoo = self.odoo;
 
     var didLogInfoResolve;
     var didLogInfoPromise = new Promise(function (resolve) {
@@ -212,7 +212,7 @@
                 });
 
             if (odoo.debug || failed.length || unloaded.length) {
-                var log = window.console[!failed.length || !unloaded.length ? 'info' : 'error'].bind(window.console);
+                var log = console[!failed.length || !unloaded.length ? 'info' : 'error'].bind(console);
                 log((failed.length ? 'error' : (unloaded.length ? 'warning' : 'info')) + ': Some modules could not be started');
                 if (missing.length) {
                     log('Missing dependencies:    ', missing);
@@ -319,7 +319,7 @@
     };
 
     // Automatically log errors detected when loading modules
-    window.addEventListener('load', function logWhenLoaded() {
+    function logWhenLoaded() {
         setTimeout(function () {
             var len = jobPromises.length;
             Promise.all(jobPromises).then(function () {
@@ -330,5 +330,14 @@
                 }
             });
         }, 9999);
-    });
+    }
+
+    if (typeof window === "object") {
+        // in a regular browser window
+        window.addEventListener('load', logWhenLoaded);
+    } else {
+        // probably in a service worker
+        logWhenLoaded();
+    }
+    
 })();
