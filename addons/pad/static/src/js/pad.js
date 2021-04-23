@@ -129,7 +129,8 @@ var FieldPad = AbstractField.extend({
                 context: {
                     model: this.model,
                     field_name: this.name,
-                    object_id: this.res_id
+                    object_id: this.res_id,
+                    record: this.recordData,
                 },
             }, {
                 shadow: true
