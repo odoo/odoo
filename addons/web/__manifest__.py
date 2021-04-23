@@ -234,7 +234,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/public/public_env.js',
             'web/static/src/legacy/js/public/public_crash_manager.js',
-            'web/static/src/legacy/js/public/public_notification.js',
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',

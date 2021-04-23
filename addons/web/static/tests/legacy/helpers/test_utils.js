@@ -127,6 +127,7 @@ odoo.define('web.test_utils', async function (require) {
         ajax.loadXML('/web/static/src/legacy/xml/debug.xml', core.qweb),
         ajax.loadXML('/web/static/src/legacy/xml/dialog.xml', core.qweb),
         ajax.loadXML('/web/static/src/legacy/xml/translation_dialog.xml', core.qweb),
+        ajax.loadXML('/web/static/src/legacy/frontend/notification/notification.xml', core.qweb),
     ]);
     setTimeout(function () {
         // jquery autocomplete refines the search in a setTimeout() parameterized
