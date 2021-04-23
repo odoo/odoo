@@ -692,7 +692,7 @@ class expression(object):
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
             elif len(path) > 1 and field.store and field.type == 'many2one':
-                right_ids = comodel.with_context(active_test=False)._search([(path[1], operator, right)], order='id')
+                right_ids = comodel.with_context(active_test=False)._search([(path[1], operator, right)], order=False)
                 push((path[0], 'in', right_ids), model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many

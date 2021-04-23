@@ -4481,6 +4481,7 @@ Fields:
         by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
         This is ok at the security level because this method is private and not callable through XML-RPC.
 
+        :param order: optional specific ordering. None means default (=model._order). False means not ordering
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
         :return: a list of record ids or an integer (if count is True)
@@ -4506,7 +4507,10 @@ Fields:
             res = self._cr.fetchone()
             return res[0]
 
-        query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
+        if order == False:
+            query.order = ''
+        else:
+            query.order = self._generate_order_by(order, query).replace('ORDER BY ', '')
         query.limit = limit
         query.offset = offset
 
