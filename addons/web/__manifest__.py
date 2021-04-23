@@ -248,6 +248,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.assets_backend_prod_only': [
             'web/static/src/main.js',
+            'web/static/src/setup.js',
             'web/static/src/legacy/legacy_setup.js',
         ],
         # Optional Bundle for PDFJS lib
