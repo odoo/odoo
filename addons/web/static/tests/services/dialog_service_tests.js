@@ -9,6 +9,7 @@ import { mainComponentRegistry } from "../../src/webclient/main_component_regist
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeRPCService } from "../helpers/mock_services";
 import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
+import { registerCleanup } from "../helpers/cleanup";
 import { ErrorDialog } from "@web/errors/error_dialogs";
 import { hotkeyService } from "../../src/hotkey/hotkey_service";
 
@@ -47,7 +48,7 @@ QUnit.module("DialogManager", {
     env = await makeTestEnv({ serviceRegistry, mainComponentRegistry: componentRegistry });
   },
   afterEach() {
-    pseudoWebClient.unmount();
+    pseudoWebClient.destroy();
   },
 });
 QUnit.test("Simple rendering with a single dialog", async (assert) => {
@@ -141,9 +142,20 @@ QUnit.test("dialog component crashes", async (assert) => {
   });
 
   const qunitUnhandledReject = QUnit.onUnhandledRejection;
+  const windowUnhandledReject = window.onunhandledrejection;
   QUnit.onUnhandledRejection = () => {
     assert.step("error");
   };
+  window.onunhandledrejection = (ev) => {
+    // prevent the error from making the test suite fail when executed from python
+    ev.preventDefault();
+    ev.stopPropagation();
+    ev.stopImmediatePropagation();
+  };
+  registerCleanup(() => {
+    QUnit.onUnhandledRejection = qunitUnhandledReject;
+    window.onunhandledrejection = windowUnhandledReject;
+  });
 
   const rpc = makeFakeRPCService();
   serviceRegistry.add("rpc", rpc);
@@ -160,7 +172,4 @@ QUnit.test("dialog component crashes", async (assert) => {
   assert.verifySteps(["error"]);
   assert.containsOnce(pseudoWebClient, ".modal");
   assert.containsOnce(pseudoWebClient, ".modal .o_dialog_error");
-
-  pseudoWebClient.destroy();
-  QUnit.onUnhandledRejection = qunitUnhandledReject;
 });
