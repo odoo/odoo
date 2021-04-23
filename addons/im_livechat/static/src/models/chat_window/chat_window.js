@@ -1,12 +1,5 @@
 /** @odoo-module **/
 
-/**
- * This file allows introducing new JS modules without contaminating other files.
- * This is useful when bug fixing requires adding such JS modules in stable
- * versions of Odoo. Any module that is defined in this file should be isolated
- * in its own file in master.
- */
-
 import { registerInstancePatchModel } from '@mail/model/model_core';
 
 registerInstancePatchModel('mail.chat_window', 'im_livechat/static/src/models/chat_window/chat_window.js', {
