@@ -5,7 +5,7 @@ import pprint
 
 from werkzeug import urls
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -88,6 +88,7 @@ class PaymentTransaction(models.Model):
             # 1. attach the payment method to the created customer
             # 2. trigger a 3DS check if one if required, while the customer is still present
             future_usage = 'off_session' if self.tokenize else None
+            capture_method = 'manual' if self.acquirer_id.capture_manually else 'automatic'
             checkout_session = self.acquirer_id._stripe_make_request(
                 'checkout/sessions', payload={
                     **common_session_values,
@@ -102,6 +103,7 @@ class PaymentTransaction(models.Model):
                     'line_items[0][quantity]': 1,
                     'payment_intent_data[description]': self.reference,
                     'payment_intent_data[setup_future_usage]': future_usage,
+                    'payment_intent_data[capture_method]': capture_method,
                 }
             )
             self.stripe_payment_intent = checkout_session['payment_intent']
@@ -173,18 +175,77 @@ class PaymentTransaction(models.Model):
         if self.provider != 'stripe':
             return
 
-        # Make the payment request to Stripe
         if not self.token_id:
             raise UserError("Stripe: " + _("The transaction is not linked to a token."))
 
+        # Make the payment request to Stripe
         payment_intent = self._stripe_create_payment_intent()
-        feedback_data = {'reference': self.reference}
-        StripeController._include_payment_intent_in_notification_data(payment_intent, feedback_data)
         _logger.info(
             "payment request response for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(feedback_data)
+            self.reference, pprint.pformat(payment_intent)
         )
-        self._handle_notification_data('stripe', feedback_data)
+        self.stripe_payment_intent = payment_intent['id']
+
+        # Handle the payment request response
+        notification_data = {'reference': self.reference}
+        StripeController._include_payment_intent_in_notification_data(
+            payment_intent, notification_data
+        )
+        self._handle_notification_data('stripe', notification_data)
+
+    def _send_capture_request(self):
+        """ Override of payment to send a capture request to Stripe.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        super()._send_capture_request()
+        if self.provider != 'stripe':
+            return
+
+        # Make the capture request to Stripe
+        payment_intent = self.acquirer_id._stripe_make_request(
+            f'payment_intents/{self.stripe_payment_intent}/capture'
+        )
+        _logger.info(
+            "capture request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(payment_intent)
+        )
+
+        # Handle the capture request response
+        notification_data = {'reference': self.reference}
+        StripeController._include_payment_intent_in_notification_data(
+            payment_intent, notification_data
+        )
+        self._handle_notification_data('stripe', notification_data)
+
+    def _send_void_request(self):
+        """ Override of payment to send a void request to Stripe.
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        super()._send_void_request()
+        if self.provider != 'stripe':
+            return
+
+        # Make the void request to Stripe
+        payment_intent = self.acquirer_id._stripe_make_request(
+            f'payment_intents/{self.stripe_payment_intent}/cancel'
+        )
+        _logger.info(
+            "void request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(payment_intent)
+        )
+
+        # Handle the void request response
+        notification_data = {'reference': self.reference}
+        StripeController._include_payment_intent_in_notification_data(
+            payment_intent, notification_data
+        )
+        self._handle_notification_data('stripe', notification_data)
 
     def _stripe_create_payment_intent(self):
         """ Create and return a PaymentIntent.
@@ -231,6 +292,7 @@ class PaymentTransaction(models.Model):
             'off_session': True,
             'payment_method': self.token_id.stripe_payment_method,
             'description': self.reference,
+            'capture_method': 'manual' if self.acquirer_id.capture_manually else 'automatic',
         }
 
     def _get_tx_from_notification_data(self, provider, notification_data):
@@ -292,6 +354,10 @@ class PaymentTransaction(models.Model):
             pass
         elif intent_status in INTENT_STATUS_MAPPING['pending']:
             self._set_pending()
+        elif intent_status in INTENT_STATUS_MAPPING['authorized']:
+            if self.tokenize:
+                self._stripe_tokenize_from_notification_data(notification_data)
+            self._set_authorized()
         elif intent_status in INTENT_STATUS_MAPPING['done']:
             if self.tokenize:
                 self._stripe_tokenize_from_notification_data(notification_data)
