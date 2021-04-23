@@ -899,6 +899,7 @@
                                         <field name="date" invisible="1"/>
                                         <field name="date_maturity" invisible="1"/>
 
+                                        <field name="group_tax_id" invisible="1"/>
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1"/>
                                         <field name="tax_tag_ids" invisible="1"/>
@@ -975,6 +976,7 @@
                                         <field name="date" invisible="1"/>
                                         <field name="date_maturity" invisible="1"/>
 
+                                        <field name="group_tax_id" invisible="1"/>
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1"/>
                                         <field name="tax_tag_ids" invisible="1"/>
@@ -1126,6 +1128,7 @@
                                         <field name="sequence" invisible="1"/>
                                         <field name="move_name" invisible="1"/>
                                         <field name="date" invisible="1"/>
+                                        <field name="group_tax_id" invisible="1"/>
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_group_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1" force_save="1"/>
@@ -1143,6 +1146,7 @@
                                     <!-- Form view to cover mobile use -->
                                     <form>
                                       <group>
+                                        <field name="group_tax_id" invisible="1"/>
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                                         <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
