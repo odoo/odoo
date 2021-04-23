@@ -42,7 +42,7 @@ actions(Check in/Check out) performed by them.
             'hr_attendance/static/src/scss/hr_attendance.scss',
         ],
         'web.qunit_suite_tests': [
-            ('after', 'web/static/tests/views/kanban_tests.js', 'hr_attendance/static/tests/hr_attendance_tests.js'),
+            ('after', 'web/static/tests/legacy/views/kanban_tests.js', 'hr_attendance/static/tests/hr_attendance_tests.js'),
         ],
         'web.assets_qweb': [
             'hr_attendance/static/src/xml/**/*',
