@@ -766,6 +766,33 @@ parser to transform native modules. There are, therefore, a number of limitation
       import X ...
     */
 
+- when you ``export`` an object, it can't contain a comment
+
+.. code-block:: javascript
+
+    // supported
+    export {
+      a as b,
+      c,
+      d,
+    }
+
+    export {
+      a
+    } from "./file_a"
+
+
+    // not supported
+    export {
+      a as b, // this is a comment
+      c,
+      d,
+    }
+
+    export {
+      a /* this is a comment */
+    } from "./file_a"
+
 - Odoo needs a way to determine if a module is described by a path (like ``./views/form_view``) or a name (like
   ``web.FormView``). It has to use a heuristic to do just that: if there is a ``/`` in the name, it is considered
   a path.  This means that Odoo does not really support anymore module names with a ``/``.
