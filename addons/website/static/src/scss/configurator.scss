@@ -84,12 +84,43 @@
                 min-width: 13ch;
             }
 
-            .industry_selection.o_step_todo {
-                min-width: 17ch;
-            }
-
             .o_configurator_purpose_dd.o_step_todo {
                 min-width: 12ch;
+            }
+
+            .o_configurator_industry_wrapper {
+                position: relative;
+                display: inline-block;
+                height: $line-height-base * 1em;
+                min-width: 17ch;
+                cursor: pointer;
+
+                input, &::after {
+                    height: $line-height-base * 1em;
+                    font-weight: 500;
+                    font-style: italic;
+                    text-indent: 5px;
+                    padding: 0;
+                }
+
+                input {
+                    position: absolute;
+                    width: 100%;
+                    border: none;
+                    border-bottom: 3px solid theme-color(primary);
+                    color: theme-color(primary);
+
+                    &:focus {
+                        color: inherit;
+                        outline: none;
+                    }
+                }
+
+                &::after {
+                    content: attr(data-value) '|';
+                    display: inline-block;
+                    overflow: hidden;
+                }
             }
 
             .dropdown {
@@ -121,22 +152,12 @@
             .dropdown-menu, .custom-ui-autocomplete {
                 @include border-bottom-radius($border-radius);
                 font-size: inherit;
+                min-width: 100%;
             }
 
             .dropdown-item, .fa-angle-down, .ui-menu-item a, .ui-menu-item a.ui-state-active {
                 font-size: .65em;
                 font-weight: inherit;
-            }
-
-            .industry_selection {
-                border: 1px solid $border-color;
-                color: theme-color(primary);
-
-                &:focus {
-                    border-color: theme-color(primary);
-                    color: inherit;
-                    outline: none;
-                }
             }
 
             .custom-ui-autocomplete {
