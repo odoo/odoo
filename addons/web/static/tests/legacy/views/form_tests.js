@@ -9650,17 +9650,17 @@ QUnit.module('Views', {
 
         const $productLabel = form.$('.o_form_label:eq(1)');
         $productLabel.tooltip('show', false);
-        $productLabel.trigger($.Event('mouseenter'));
+        await testUtils.dom.triggerMouseEvent($productLabel, 'mouseenter');
         assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(),
             "this is a tooltip\n\nValues set here are company-specific.");
-        $productLabel.trigger($.Event('mouseleave'));
+        await testUtils.dom.triggerMouseEvent($productLabel, 'mouseleave');
 
         const $fooLabel = form.$('.o_form_label:first');
         $fooLabel.tooltip('show', false);
-        $fooLabel.trigger($.Event('mouseenter'));
+        await testUtils.dom.triggerMouseEvent($fooLabel, 'mouseenter');
         assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(),
             "Values set here are company-specific.");
-        $fooLabel.trigger($.Event('mouseleave'));
+        await testUtils.dom.triggerMouseEvent($fooLabel, 'mouseleave');
 
         form.destroy();
     });
@@ -9689,9 +9689,9 @@ QUnit.module('Views', {
         const $productLabel = form.$('.o_form_label');
 
         $productLabel.tooltip('show', false);
-        $productLabel.trigger($.Event('mouseenter'));
+        await testUtils.dom.triggerMouseEvent($productLabel, 'mouseenter');
         assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(), "this is a tooltip");
-        $productLabel.trigger($.Event('mouseleave'));
+        await testUtils.dom.triggerMouseEvent($productLabel, 'mouseleave');
 
         form.destroy();
     });
