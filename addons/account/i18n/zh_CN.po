@@ -42,6 +42,7 @@
 # Titan Li <lghbeta@gmail.com>, 2021
 # keecome <7017511@qq.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
+# JZH-Odoo <jzh@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -49,7 +50,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
+"Last-Translator: JZH-Odoo <jzh@odoo.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2192,7 +2193,7 @@ msgstr "核算分配"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_analytic_lines_tree
 msgid "Analytic Items"
-msgstr "核算项目"
+msgstr "分析项目"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
@@ -2250,12 +2251,12 @@ msgstr "适用范围"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__tax_adjustments_wizard__adjustment_type__credit
 msgid "Applied on credit journal item"
-msgstr "应用在贷方会计分录"
+msgstr "应用在贷方日记账项目"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__tax_adjustments_wizard__adjustment_type__debit
 msgid "Applied on debit journal item"
-msgstr "应用在借方会计分录"
+msgstr "应用在借方日记账项目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
@@ -6806,7 +6807,7 @@ msgstr "日记账组"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Journal Item"
-msgstr "会计分录"
+msgstr "日记账项目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
@@ -6833,7 +6834,7 @@ msgstr "会计分录标签"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Journal Items"
-msgstr "会计分录"
+msgstr "日记账项目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -7556,7 +7557,7 @@ msgstr "匹配的借项"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__reconciled_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr "匹配的会计分录"
+msgstr "匹配的日记账项目"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -9134,7 +9135,7 @@ msgstr "过账的会计凭证"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "已过账的会计分录"
+msgstr "已过账的日记账项目"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10159,7 +10160,7 @@ msgstr "搜索结算单"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "搜索会计分录"
+msgstr "搜索日记账项目"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -11777,6 +11778,8 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
+"该科目已在 %(journal_names)s 日记账 (ids %(journal_ids)s) 中被设置为借方付款科目或贷方付款科目。 "
+"既该科目的科目类型应为\"可对账\"。"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0

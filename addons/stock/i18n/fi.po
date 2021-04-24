@@ -100,7 +100,7 @@ msgstr ""
 #: code:addons/stock/models/stock_production_lot.py:0
 #, python-format
 msgid " - Product: %s, Serial Number: %s"
-msgstr ""
+msgstr " - Tuote: %s, Sarjanumero: %s"
 
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
@@ -314,8 +314,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
 "title=\"Unfold\"/>"
 msgstr ""
-"<i class = \"fa fa-fw fa-caret-right\" rooli = \"img\" aria-label = "
-"\"Unfold\" title = \"Unfold\" />"
+"<i class=\"fa fa-fw fa-caret-right\" role=\"img\" aria-label=\"Unfold\" "
+"title=\"Unfold\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -407,7 +407,7 @@ msgstr "<span>Määritä sarjanumeroita</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "<span>LN/SN:</span>"
-msgstr ""
+msgstr "<span>EN/SN:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -417,7 +417,7 @@ msgstr "<span>Uusi</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "<span>Package Type: </span>"
-msgstr "<span> Pakkaus tyyppi: </span>"
+msgstr "<span> Pakkaustyyppi: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
@@ -485,7 +485,7 @@ msgstr "<strong>Tilaus:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Package Type:</strong>"
-msgstr "<strong>Pakkauksen tyyppi:</strong>"
+msgstr "<strong>Pakkaustyyppi:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -2645,7 +2645,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__hide_picking_type
 msgid "Hide Picking Type"
-msgstr "Piilota keräily tyyppi"
+msgstr "Piilota keräilytyyppi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__id
@@ -2909,7 +2909,7 @@ msgstr "Käynnissä"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
-msgstr "Tyyppi"
+msgstr "Saapuvien tyyppi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__exhausted
@@ -2960,12 +2960,12 @@ msgstr "Alkuperäinen tarve"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Input"
-msgstr "syöte"
+msgstr "Vastaanotto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_input_stock_loc_id
 msgid "Input Location"
-msgstr "syötteen sijainti"
+msgstr "Vastaanottopaikka"
 
 #. module: stock
 #: code:addons/stock/models/res_company.py:0
@@ -3015,7 +3015,7 @@ msgstr "Sisäinen siirtymäpaikka"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__int_type_id
 msgid "Internal Type"
-msgstr "Sisäinen tyyppi"
+msgstr "Sisäisten siirtojen tyyppi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__ref
@@ -3670,7 +3670,7 @@ msgstr "Hallitse pakkauksia"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr "Hallitse Push and Pull -varastovirtoja"
+msgstr "Hallitse Push ja Pull -varastovirtoja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4117,7 +4117,7 @@ msgstr "Toiminnon tyyppi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr "Palautustyyppi"
+msgstr "Palautusten tyyppi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking_type_label
@@ -4268,7 +4268,7 @@ msgstr "Lisätiedot"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
 msgid "Out Type"
-msgstr "Out-tyyppi"
+msgstr "Lähtevien tyyppi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
@@ -4516,7 +4516,7 @@ msgstr "Keräily"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
 msgid "Pick Type"
-msgstr "Keräilytyyppi"
+msgstr "Keräilyn tyyppi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__picking_id
@@ -4814,7 +4814,7 @@ msgstr "Tuotteen täydennystilaus"
 #: model:ir.actions.report,name:stock.action_report_stock_rule
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Product Routes Report"
-msgstr "Product Routes -raportti"
+msgstr "Tuotereititysten raportti"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -4943,27 +4943,27 @@ msgstr "Hankintaryhmän leviäminen"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__action__pull_push
 msgid "Pull & Push"
-msgstr "Vedä Työnnä"
+msgstr "Push ja Pull"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__action__pull
 msgid "Pull From"
-msgstr "Vedä"
+msgstr "Ota paikasta"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Pull Rule"
-msgstr "Vedä sääntö"
+msgstr "Pull-sääntö"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Push Rule"
-msgstr "Paina sääntö"
+msgstr "Push-sääntö"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__action__push
 msgid "Push To"
-msgstr "Paina"
+msgstr "Push-kohde"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5241,8 +5241,8 @@ msgstr "Vastaanota tavaroita tuloina ja varastoi (2 vaihetta)"
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive goods in input, then quality and then stock (3 steps)"
 msgstr ""
-"Vastaanota tavaroita syötteessä, sitten laatu ja sitten varastossa (3 "
-"vaihetta)"
+"Vastaanota tuotteet vastaanottoon, sitten laaduntarkistukseen, sitten "
+"varastoon  (3 vaihetta)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -5254,13 +5254,14 @@ msgstr "Vastaanota 1 vaiheessa (varastossa)"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 2 steps (input + stock)"
-msgstr "Vastaanota kahdessa vaiheessa (syöttö + varasto)"
+msgstr "Vastaanota kahdessa vaiheessa (vastaanotto + varasto)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Receive in 3 steps (input + quality + stock)"
-msgstr "Vastaanota kolmessa vaiheessa (syöttö + laatu + varastossa)"
+msgstr ""
+"Vastaanota kolmessa vaiheessa (vastaanotto + laaduntarkistus + varastossa)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -5565,7 +5566,7 @@ msgstr "Reitin yritys"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
 msgid "Route Sequence"
-msgstr "Reitin järjestys"
+msgstr "Reititysjärjestys"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_routes_form
@@ -5830,31 +5831,31 @@ msgstr "Järjestys"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence in"
-msgstr "Järjestys"
+msgstr "Sisääntulevien sarja"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence internal"
-msgstr "Sisäinen järjestys"
+msgstr "Sisäisten sarja"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence out"
-msgstr "Sekvenssi ulos"
+msgstr "Lähtevien sarja"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence packing"
-msgstr "Sekvenssipakkaus"
+msgstr "Pakkausten sarja"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking"
-msgstr "Sekvenssikeräys"
+msgstr "Keräilyjen sarja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
