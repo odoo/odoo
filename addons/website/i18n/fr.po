@@ -57,7 +57,6 @@
 # William Olhasque <william.olhasque@scopea.fr>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
-# Martin Trigaux, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Nathan Noël <nathan070@me.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
@@ -72,6 +71,8 @@
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2021
 # Nathan Grognet <ngr@odoo.com>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
+# Clément Watthez <cwa@odoo.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
@@ -79,7 +80,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-04 15:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -460,7 +461,7 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click</b> on this option to change the %s of the block."
-msgstr ""
+msgstr "<b>Cliquez</b> sur cette option pour changer le %s du bloc."
 
 #. module: website
 #. openerp-web
@@ -470,6 +471,8 @@ msgid ""
 "<b>Customize</b> any block through this menu. Try to change the background "
 "color of this block."
 msgstr ""
+"<b>Personnalisez</b>n'importe quel bloc à travers ce menu. Essayez de "
+"changer la couleur de fond de ce bloc."
 
 #. module: website
 #. openerp-web
@@ -479,16 +482,18 @@ msgid ""
 "<b>Customize</b> any block through this menu. Try to change the background "
 "image of this block."
 msgstr ""
+"<b>Personnalisez </b> n'importe quel bloc à travers ce menu. Essayez de "
+"changer la couleur de fond de ce bloc."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 msgid "<b>Designed</b> <br/>for Companies"
-msgstr ""
+msgstr "<b>Conçu</b><br/>pour les entreprises"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 msgid "<b>Designed</b> for companies"
-msgstr ""
+msgstr "<b>Conçu</b> pour les entreprises"
 
 #. module: website
 #. openerp-web
@@ -6560,6 +6565,11 @@ msgstr ""
 "d'obtenir l'image parfaite, en quelques clics."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_search_box
+msgid "Search..."
+msgstr "Recherche…"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid "Second Feature"
 msgstr "Seconde fonctionnalité "
@@ -6634,7 +6644,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Select and delete blocks to remove features."
-msgstr ""
+msgstr "Sélectionnez et supprimez des blocs pour enlever des fonctionnalités."
 
 #. module: website
 #. openerp-web
@@ -6657,7 +6667,7 @@ msgstr "Envoyer un email"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 msgid "Send us a message"
-msgstr ""
+msgstr "Envoyez-nous un message"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -6756,7 +6766,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show Sign In"
-msgstr ""
+msgstr "Afficher le bouton \"Se connecter\""
 
 #. module: website
 #. openerp-web
@@ -6773,12 +6783,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Shown On Mobile"
-msgstr ""
+msgstr "Affiché sur version mobile"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sidebar"
-msgstr ""
+msgstr "Barre latérale"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -6855,7 +6865,7 @@ msgstr "Diaporama"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Slogan"
-msgstr ""
+msgstr "Slogan"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -7341,14 +7351,14 @@ msgstr "Thème pièce-jointe"
 #: model_terms:website.page,arch_db:website.color_combinations_debug_page
 #, python-format
 msgid "Theme Colors"
-msgstr ""
+msgstr "Couleurs de Thème"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Theme Options"
-msgstr ""
+msgstr "Options de Thème"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
@@ -7382,7 +7392,7 @@ msgstr "Il n'existe actuellement aucune page pour votre site Web."
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "There are no contact and/or no email linked to this visitor."
-msgstr ""
+msgstr "Il n'y a pas de contact et/ou d'email associé à ce visiteur."
 
 #. module: website
 #. openerp-web
@@ -7417,7 +7427,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Thick"
-msgstr ""
+msgstr "Épais"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -7489,7 +7499,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "This page"
-msgstr ""
+msgstr "Cette page"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
@@ -7509,7 +7519,7 @@ msgstr "Cette page est dans le menu <b>%s</b>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "This page will be published on {{ date_formatted }}"
-msgstr ""
+msgstr "Cette page sera publiée le {{ date_formatted }}"
 
 #. module: website
 #. openerp-web
@@ -7572,7 +7582,7 @@ msgstr ""
 #: model:digest.tip,name:website.digest_tip_website_1
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_1
 msgid "Tip: Use royalty-free photos"
-msgstr ""
+msgstr "Astuce :  Utilisez des images libres de droit"
 
 #. module: website
 #. openerp-web
@@ -7687,7 +7697,7 @@ msgstr "Surveiller"
 #: code:addons/website/static/src/xml/track_page.xml:0
 #, python-format
 msgid "Track Visitor"
-msgstr ""
+msgstr "Suivre le visiteur"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -8774,7 +8784,7 @@ msgstr ""
 #: code:addons/website/models/res_config_settings.py:0
 #, python-format
 msgid "You haven't defined your domain"
-msgstr ""
+msgstr "Vous n'avez pas défini votre domaine"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -8875,7 +8885,7 @@ msgstr "Votre recherche «"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "Your title"
-msgstr ""
+msgstr "Votre titre"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_youtube
@@ -8976,7 +8986,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "content"
-msgstr ""
+msgstr "contenu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
