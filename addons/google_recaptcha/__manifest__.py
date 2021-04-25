@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
+    'auto_install': True,
     'name': 'Google reCAPTCHA integration',
     'category': 'Hidden',
     'version': '1.0',
@@ -13,5 +14,4 @@
         'views/assets.xml',
         'views/res_config_settings_view.xml',
     ],
-    'auto_install': False,
 }
