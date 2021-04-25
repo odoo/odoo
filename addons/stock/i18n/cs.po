@@ -164,6 +164,8 @@ msgid ""
 "<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
 "it."
 msgstr ""
+"<br>Je vytvořena potřeba v <b>%s</b> a bude spuštěno pravidlo k jejímu "
+"splnění."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_view_kanban
@@ -243,7 +245,7 @@ msgstr "<span class=\"o_stat_text\">Po ruce</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Provoz</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -703,7 +705,7 @@ msgstr "Automatický přesun"
 #. module: stock
 #: selection:stock.rule,auto:0
 msgid "Automatic No Step Added"
-msgstr ""
+msgstr "Automaticky nebyl přidán žádný krok"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__string_availability_info
@@ -874,7 +876,7 @@ msgstr "Nelze nalézt umístění zákazníka či dodavatele."
 #: code:addons/stock/models/stock_warehouse.py:256
 #, python-format
 msgid "Can't find any generic route %s."
-msgstr ""
+msgstr "Nelze najít žádnou obecnou trasu %s."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
@@ -1471,7 +1473,7 @@ msgstr "Očekávaný datum"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
 msgid "Date at which the replenishment should take place."
-msgstr ""
+msgstr "Datum, kdy by mělo dojít k doplnění."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -1687,6 +1689,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Dodací lhůta, ve dnech. Je to počet dní, které byly zákazníkovi slíbeny, "
+"mezi potvrzením prodejní objednávky a dodávkou."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -3742,7 +3746,7 @@ msgstr "Volitelné: další pohyb zásob, když jsou zřetězeny"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_orig_ids
 msgid "Optional: previous stock move when chaining them"
-msgstr ""
+msgstr "Volitelné: předchozí pohyb zásob při jejich řetězení"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -5722,6 +5726,8 @@ msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
 msgstr ""
+"Technické pole zobrazující sklad, který je třeba vzít v úvahu při výběru "
+"trasy při příštím nákupu (pokud existuje)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__internal_transit_location_id
@@ -5729,6 +5735,8 @@ msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
 msgstr ""
+"Technické pole používané pro zásobovací trasy mezi sklady, které patří této "
+"společnosti"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_check_availability
@@ -5977,6 +5985,9 @@ msgid ""
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
 msgstr ""
+"Sklad, který se má zřídit na vytvořeném přesunu / veřejné zakázce, který se "
+"může lišit od skladu, pro který je toto pravidlo určeno (např. pro pravidla "
+"doplňování z jiného skladu)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__theoretical_qty
