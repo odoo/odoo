@@ -57,7 +57,7 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Tax payer type and vat number are mandatory for this type of '
                                         'document. Please set the current tax payer type of this customer'))
             if rec.journal_id.type == 'sale' and rec.journal_id.l10n_latam_use_documents:
-                if country_id.code != "CL":
+                if country_id.code != "CL" and rec.move_type in rec.get_invoice_types():
                     if not ((tax_payer_type == '4' and latam_document_type_code in ['110', '111', '112']) or (
                             tax_payer_type == '3' and latam_document_type_code in ['39', '41', '61', '56'])):
                         raise ValidationError(_(
