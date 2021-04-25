@@ -35,7 +35,6 @@
 # Nancy Bolognesi <nb@microcom.ca>, 2018
 # Micky Jault <micky037@hotmail.fr>, 2018
 # Nathan Noël <nathan070@me.com>, 2018
-# Saad Thaifa <saad.thaifa@gmail.com>, 2018
 # 6534c450c77b2549e41c52e2051f5839, 2018
 # 31c77b784710e4a287a92d851a40e039, 2018
 # Benoît Fontaine <benoitfontaine.ba@gmail.com>, 2018
@@ -107,6 +106,7 @@
 # Benjamin Stienon <tsb@odoo.com>, 2021
 # Didier LUBERRIAGA <didier.luberriaga@gmail.com>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
+# Saad Thaifa <saad.thaifa@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -114,7 +114,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Alexandra Jubert <aju@odoo.com>, 2021\n"
+"Last-Translator: Saad Thaifa <saad.thaifa@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4565,7 +4565,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
 msgid "Date Mode"
-msgstr ""
+msgstr "Mode de date"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
@@ -8048,7 +8048,7 @@ msgstr "Opérations diverses"
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "Missing 'active_model' in context."
-msgstr ""
+msgstr "'active_model' manquant sur le contexte."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -8809,7 +8809,7 @@ msgstr "Factures originales"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Original Currency"
-msgstr ""
+msgstr "Devise d'origine"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -9065,7 +9065,7 @@ msgstr "Livre des tiers"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr ""
+msgstr "Association du partenaire"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
@@ -10926,7 +10926,7 @@ msgstr "Services"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Set a price"
-msgstr ""
+msgstr "Renseigner un prix"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -11027,7 +11027,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
 msgid "Show Decimal Separator"
-msgstr ""
+msgstr "Afficher le séparateur des décimales"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
@@ -11403,7 +11403,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__suitable_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__suitable_journal_ids
 msgid "Suitable Journal"
-msgstr ""
+msgstr "Journal convenable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
@@ -12220,7 +12220,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr ""
+msgstr "C'est la date de l'écriture d'ouverture."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -12254,6 +12254,12 @@ msgstr ""
 "différents types de comptes : le type liquidité est pour l'argent cash ou "
 "les comptes banquaires, payabls/recevables par les comptes des "
 "vendeurs/clients"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code

@@ -1678,7 +1678,7 @@ msgstr "Systém stavebních bloků"
 #: code:addons/website/static/src/js/menu/new_content.js:0
 #, python-format
 msgid "Building your %s"
-msgstr ""
+msgstr "Budování vašeho %s"
 
 #. module: website
 #. openerp-web
@@ -1934,6 +1934,8 @@ msgid ""
 "Click and change content directly from the front-end: no complex back\n"
 "                            end to deal with."
 msgstr ""
+"Klikněte a změňte obsah přímo z front-endu: není potřeba řešit žádný "
+"komplexní backend."
 
 #. module: website
 #. openerp-web
@@ -2020,6 +2022,10 @@ msgid ""
 "resize and duplicate the blocks to create your own layout. Add images or "
 "icons to customize the blocks."
 msgstr ""
+"Barevné bloky představují jednoduchý a efektivní způsob <b>prezentace a "
+"zvýraznění vašeho obsahu</b>. Vyberte obrázek nebo barvu pozadí. Můžete "
+"dokonce změnit velikost a duplikovat bloky a vytvořit si vlastní rozvržení. "
+"Přidáním obrázků nebo ikon můžete bloky přizpůsobit."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -2888,6 +2894,7 @@ msgstr "Kobliha"
 msgid ""
 "Drag the <b>%s</b> building block and drop it at the bottom of your page."
 msgstr ""
+"Přetáhněte stavební blok <b>%s</b> a umístěte jej do dolní části stránky."
 
 #. module: website
 #. openerp-web
@@ -3664,6 +3671,11 @@ msgid ""
 "small quirks like word choices or phrases. Write from your point of view, "
 "not from someone else's experience."
 msgstr ""
+"Velké příběhy mají <b>osobnost</b>. Zvažte vyprávění skvělého příběhu, který"
+" poskytuje osobnost. Psaní příběhu s osobností pro potenciální klienty "
+"pomůže při navazování vztahů. To se zobrazuje v malých vtípcích, jako jsou "
+"volby slov nebo fráze. Pište ze svého úhlu pohledu, ne ze zkušeností někoho "
+"jiného."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -5282,6 +5294,10 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Platí pouze v případě, že se tento pohled dědí z jiného (inherit_id není False / Null).\n"
+"\n"
+"* pokud rozšiřuje (výchozí), pokud je toto zobrazení požadováno, vyhledá se nejbližší primární pohled (prostřednictvím inherit_id), pak se použijí všechny pohledy, které z něj dědí s modelem tohoto pohledu\n"
+"* pokud je primární, nejbližší primární pohled je plně vyřešen (i když používá jiný model než tento), pak se použijí specifikace dědičnosti tohoto pohledu (<xpath/>) a výsledek se použije, jako by to byl skutečný oblouk tohoto pohledu.\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -6101,6 +6117,11 @@ msgstr ""
 "vašeho webu. Integrace Odoo s Unsplash, která nabízí miliony bezplatných a "
 "vysoce kvalitních fotografií, vám umožní získat dokonalý obraz pouhými "
 "několika kliknutími."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_search_box
+msgid "Search..."
+msgstr "Hledat..."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -7323,6 +7344,12 @@ msgid ""
 "        308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)\n"
 "    "
 msgstr ""
+"Typ přesměrování / přepsání:\n"
+"\n"
+"301 Přesunuto trvale: Prohlížeč uloží novou adresu URL do mezipaměti.\n"
+"302 Dočasně přesunuto: Prohlížeč neudrží v mezipaměti novou adresu URL a při příští nové adrese URL se znovu zeptá.\n"
+"404 Nenalezeno: Pokud chcete odebrat konkrétní stránku / řadič (např. Je nainstalován elektronický obchod, ale nechcete / nakupovat na konkrétním webu)\n"
+"308 Přesměrování / Přepsání Pokud chcete přejmenovat řadič pomocí nové adresy URL. (Např.:  /shop -> /garden - Obě adresy URL budou přístupné, ale /shop bude automaticky přesměrován na /garden)"
 
 #. module: website
 #. openerp-web
@@ -7831,6 +7858,8 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's "
 "life.<br/>Our services are designed for small to medium size companies."
 msgstr ""
+"Jsme tým motivovaných lidí, jehož cílem je zlepšit život každého člověka. "
+"<br/>Naše služby jsou určeny pro malé a střední společnosti."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar
@@ -8217,12 +8246,15 @@ msgid ""
 "feature.<br/> To be successful your content needs to be useful to your "
 "readers."
 msgstr ""
+"Napište jeden nebo dva odstavce popisující váš produkt, služby nebo "
+"konkrétní funkci. <br/>Aby byl váš obsah úspěšný, musí být užitečný pro vaše"
+" čtenáře."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid ""
 "Write what the customer would like to know, <br/>not what you want to show."
-msgstr ""
+msgstr "Napište, co by zákazník rád věděl, <br/> ne to, co chcete ukázat."
 
 #. module: website
 #. openerp-web
@@ -8653,6 +8685,8 @@ msgid ""
 "            verified with a legal advisor that you absolutely need cookie\n"
 "            consent in your country."
 msgstr ""
+"vašich návštěvníků. Doporučujeme se jim vyhnout, pokud si u právního poradce"
+" neověříte, že ve vaší zemi nezbytně potřebujete souhlas se soubory cookie."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar

@@ -3,36 +3,37 @@
 # 	* website_sale_wishlist
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2019
-# 384b9483dceff15cca881ce1cccf70f5, 2019
+# José Vicente <txusev@gmail.com>, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
+# Eric Antones <eantones@users.noreply.github.com>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Carles Antoli <carlesantoli@hotmail.com>, 2017
+# Alejandro Santana <alejandrosantana@anubia.es>, 2017
+# Antonio Trueba, 2017
+# e2f <projects@e2f.com>, 2018
+# 966ff43e6966712895a590e7320ca288, 2018
 # Martin Trigaux, 2019
-# Eric Antones <eantones@users.noreply.github.com>, 2019
-# 966ff43e6966712895a590e7320ca288, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
 # Jesse Garza <jga@odoo.com>, 2019
+# José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2017-07-17 09:13+0000\n"
+"Last-Translator: José Cabrera Lozano <jose.cabrera@edukative.es>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
-msgid ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wishlist"
-msgstr ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Lista de deseos"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -74,11 +75,6 @@ msgid "Add to Wishlist"
 msgstr "Añadir a lista de deseos"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Vaciado automático"
-
-#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
@@ -99,7 +95,11 @@ msgid "Currency"
 msgstr "Moneda"
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
 
@@ -109,12 +109,20 @@ msgid "Duplicated wishlisted product for this partner."
 msgstr "Producto duplicado en la lista de este socio."
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product____last_update
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template____last_update
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist____last_update
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner____last_update
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
@@ -156,7 +164,7 @@ msgstr "Tarifa"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
-msgstr "Lista de precios cuando se añadió"
+msgstr "Lista de precios al añadirlo"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_product
@@ -185,6 +193,11 @@ msgid "Shop Wishlist"
 msgstr "Lista de deseos de la tienda"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+msgid "Show Empty Wishlist"
+msgstr "Mostrar lista de deseos vacía"
+
+#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
 msgid "Users"
 msgstr "Usuarios"
@@ -197,5 +210,6 @@ msgstr "Sitio web"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
 msgid "Wishlist"
 msgstr "Lista de deseos"

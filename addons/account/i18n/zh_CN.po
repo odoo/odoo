@@ -32,7 +32,6 @@
 # John Lin <linyinhuan@139.com>, 2018
 # xiaobin wu <bd5dml@gmail.com>, 2018
 # zhiguo liu <if@openbpm.cn>, 2018
-# JZH-Odoo <jzh@odoo.com>, 2018
 # Henry Zhou <zhouhenry@live.com>, 2018
 # e2f <projects@e2f.com>, 2019
 # Siyuan Gu <siyuancn@hotmail.com>, 2019
@@ -82,6 +81,7 @@
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # Titan Li <lghbeta@gmail.com>, 2021
 # keecome <7017511@qq.com>, 2021
+# JZH-Odoo <jzh@odoo.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
@@ -11825,6 +11825,12 @@ msgid ""
 msgstr " ‘内部类型'用于不同类型科目的功能: 流动性用于现金或银行科目, 应付/应收用于供应商/客户科目."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr "需要帐单/退款日期才能验证此文档。"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
 #: model:ir.model.fields,help:account.field_account_journal__country_code
@@ -11863,6 +11869,8 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
+"该科目已在 %(journal_names)s 日记账 (ids %(journal_ids)s) 中被设置为借方付款科目或贷方付款科目。 "
+"既该科目的科目类型应为\"可核销\"。"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
