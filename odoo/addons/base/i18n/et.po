@@ -17,8 +17,9 @@
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Andre Roomet <andreroomet@gmail.com>, 2021
 # Eneli Õigus <enelioigus@gmail.com>, 2021
-# Triine Aavik <triine@avalah.ee>, 2021
 # Piia Paurson <piia@avalah.ee>, 2021
+# Martin Talts <martin.t@avalah.ee>, 2021
+# Triine Aavik <triine@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2021\n"
+"Last-Translator: Triine Aavik <triine@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,6 +102,17 @@ msgid ""
 " - Hungarian Bank information\n"
 " "
 msgstr ""
+"\n"
+"\n"
+"Baasmoodul  Ungari lokaliseerimiseks\n"
+"==========================================\n"
+"\n"
+"See moodul koosneb :\n"
+"\n"
+" - Üldisest Ungari kontoplaanist\n"
+" - Ungari maksudest\n"
+" - Ungari pangaandmetest\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk
@@ -348,6 +360,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Ülevaade (Jaapani lokalisatsioon):\n"
+"---------\n"
+"\n"
+"* Chart of Accounts and Taxes template for companies in Japan.\n"
+"* This probably does not cover all the necessary accounts for a company. You are expected to add/delete/modify accounts based on this template.\n"
+"\n"
+"Note:\n"
+"-----\n"
+"\n"
+"* Fiscal positions '内税' and '外税' have been added to handle special requirements which might arise from POS implementation. [1]  Under normal circumstances, you might not need to use those at all.\n"
+"\n"
+"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+"\n"
+"    "
 
 #. module: base
 #: code:addons/base/models/res_config.py:0
@@ -368,6 +396,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"See moodul lisab kassasüsteemile müügimeeskonnad, et oleks lihtsamini võimalik vaadata ja hallata kassa müüke.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -380,6 +411,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"See moodul lisab mitmeid restorani funktsioone kassasüsteemi:\n"
+"- Arve prinimine: Võimaldab printida arve enne tellimuse tasumist\n"
+"- Arve jagamine: Võimaldab arvet jagada mitmeks tellimuseks\n"
+"- Köögi tellimuste printimine: lubab printida tellimuste uuendusi köögi- või baariprinteritel\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -645,6 +683,9 @@ msgid ""
 "        Bridge module between purchase and intrastat.\n"
 "    "
 msgstr ""
+"\n"
+"        Sild Ostu ja Intrastati vahel.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_intrastat
@@ -653,6 +694,9 @@ msgid ""
 "        Bridge module between sale and intrastat.\n"
 "    "
 msgstr ""
+"\n"
+"        Sild Müügi ja Intrastati vahel.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_sale_intrastat
@@ -661,6 +705,9 @@ msgid ""
 "        Bridge module between sale_intrastat and l10n_be_intrastat.\n"
 "    "
 msgstr ""
+"\n"
+"        Sild sale_intrastat and l10n_be_intrastat vahel.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_product_configurator
@@ -668,6 +715,8 @@ msgid ""
 "\n"
 "        Bridge module for website_sale / sale_product_configurator"
 msgstr ""
+"\n"
+"        Sild website_sale / sale_product_configurator jaoks."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock_product_configurator
@@ -675,6 +724,8 @@ msgid ""
 "\n"
 "        Bridge module for website_sale_stock / sale_product_configurator"
 msgstr ""
+"\n"
+"       Sild website_sale_stock / sale_product_configurator jaoks."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_product_configurator
@@ -683,6 +734,9 @@ msgid ""
 "        Bridge module to make the website e-commerce compatible with the product configurator\n"
 "    "
 msgstr ""
+"\n"
+"        Ühendusmoodul, et muuta veebsaidi e-kaubandus ühilduvaks toote konfiguraatoriga\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_stock_product_configurator
@@ -691,6 +745,9 @@ msgid ""
 "        Bridge module to make the website e-commerce stock management compatible with the product configurator\n"
 "    "
 msgstr ""
+"\n"
+"        Ühendusmoodul, et muuta veebsaidi e-kaubanduse varude haldamine ühilduvaks toote konfiguraatoriga\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -707,6 +764,17 @@ msgid ""
 "        * Account Tags.\n"
 "    "
 msgstr ""
+"\n"
+"        Leedu kontoplaani (COA) mall.\n"
+"\n"
+"        This module also includes:\n"
+"\n"
+"        * List of available banks in Lithuania.\n"
+"        * Tax groups.\n"
+"        * Most common Lithuanian Taxes.\n"
+"        * Fiscal positions.\n"
+"        * Account Tags.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -727,6 +795,10 @@ msgid ""
 "        UNSPSC code for their products and uoms.  \n"
 "    "
 msgstr ""
+"\n"
+"        Countries like Colombia, Peru and Mexico need to be able to use the \n"
+"        UNSPSC code for their products and uoms.  \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -736,6 +808,10 @@ msgid ""
 "        This module adds a new building block in the website builder in order to build new forms from scratch in any website page.\n"
 "    "
 msgstr ""
+"\n"
+"        Kohandage ja looge oma veebivorme.\n"
+"        See moodul lisab veebisaidi koostajale uue koosteüksuse, et luua uusi vorme nullist mis tahes veebisaidi lehel..\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_purchase_stock
@@ -743,6 +819,8 @@ msgid ""
 "\n"
 "        Define default purchase journal on the warehouse"
 msgstr ""
+"\n"
+"        Määra lao vaikimisi ostuandmik."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_purchase_stock
@@ -754,6 +832,11 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"Määra lao vaikimisi ostuandmik,\n"
+"aitab teil valida ostutellimusel õige ostuandmiku kui \n"
+"muudate ladu.\n"
+"kasulik mitme GSTIN-ühiku seadistamisel.."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_sale_stock
@@ -761,6 +844,8 @@ msgid ""
 "\n"
 "        Define default sales journal on the warehouse"
 msgstr ""
+"\n"
+"        Määra lao vaikimisi müügiandmik."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_sale_stock
@@ -772,6 +857,12 @@ msgid ""
 "        useful when you setup the multiple GSTIN units.\n"
 "    "
 msgstr ""
+"\n"
+"        Määra lao vaikimisi müügiandmik,\n"
+"     aitab teil valida müügitellimusel õige müügiandmiku kui \n"
+"        muudate ladu.\n"
+"        kasulik mitme GSTIN-ühiku seadistamisel..\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_disallowed_expenses
@@ -780,6 +871,9 @@ msgid ""
 "        Disallowed Expenses Data for Belgium\n"
 "    "
 msgstr ""
+"\n"
+"      Belgia keelatud kulude andmed\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id_efaktur
@@ -808,6 +902,29 @@ msgid ""
 "        you have not already sent to the government to reuse its number.\n"
 "    "
 msgstr ""
+"\n"
+"        E-Faktuur menüü (Indonesia)\n"
+"        Format : 010.000-16.00000001\n"
+"        * 2 (dua) digit pertama adalah Kode Transaksi\n"
+"        * 1 (satu) digit berikutnya adalah Kode Status\n"
+"        * 3 (tiga) digit berikutnya adalah Kode Cabang\n"
+"        * 2 (dua) digit pertama adalah Tahun Penerbitan\n"
+"        * 8 (delapan) digit berikutnya adalah Nomor Urut\n"
+"\n"
+"        To be able to export customer invoices as e-Faktur,\n"
+"        you need to put the ranges of numbers you were assigned\n"
+"        by the government in Accounting > Customers > e-Faktur\n"
+"\n"
+"        When you validate an invoice, where the partner has the ID PKP\n"
+"        field checked, a tax number will be assigned to that invoice.\n"
+"        Afterwards, you can filter the invoices still to export in the\n"
+"        invoices list and click on Action > Download e-Faktur to download\n"
+"        the csv and upload it to the site of the government.\n"
+"\n"
+"        You can replace an already sent invoice by another by indicating\n"
+"        the replaced invoice and the new one and you can reset an invoice\n"
+"        you have not already sent to the government to reuse its number.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -847,6 +964,12 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Genereerige maksekorraldused vastavalt SEPA normile, tänu valu.001 sõnumitele. Supported pain version (countries) are pain.001.001.03 (generic), pain.001.001.03.ch.02 (Switzerland) and pain.001.003.03 (Germany). The generated XML file can then be uploaded to your bank.\n"
+"\n"
+"        This module follow the implementation guidelines issued by the European Payment Council.\n"
+"        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -877,6 +1000,10 @@ msgid ""
 "        Manage user and manager notifications\n"
 "    "
 msgstr ""
+"\n"
+"Määrake toodete laenutus (tooted, pakkumised, arved ...)\n"
+"Toodete seisundi, laenutuste, viivituste haldamine. \n"
+"Kasutajate ja haldurite teatiste haldamine"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_sparse_field
@@ -900,6 +1027,9 @@ msgid ""
 "        This bridge module allows to manage subcontracting with the dropshipping module.\n"
 "    "
 msgstr ""
+"\n"
+"See moodul võimaldab hallata allhankeid koos dropshippinguga.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account
@@ -916,6 +1046,9 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and mrp_subcontracting are installed.\n"
 "    "
 msgstr ""
+"\n"
+"        See moodul on automaatselt installeeritud kui stock_barcode and mrp_subcontracting moodulid on installeeritud.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_quality_control
@@ -924,6 +1057,9 @@ msgid ""
 "        This bridge module is auto-installed when the modules stock_barcode and quality_control are installed.\n"
 "    "
 msgstr ""
+"\n"
+"        See moodul on automaatselt installeeritud kui modules stock_barcode and quality_control moodulid on installeeritud.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_qr_code_sepa
@@ -932,6 +1068,9 @@ msgid ""
 "        This module adds support for SEPA Credit Transfer QR-code generation.\n"
 "    "
 msgstr ""
+"\n"
+"        See moodul toetab SEPA Credit Transfer QR-koodi loomist.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase
@@ -950,6 +1089,10 @@ msgid ""
 "        by choosing product variants quantity through a Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"        See moodul võimaldab ostutellimusi kiiresti täita\n"
+"        valides ruudustikkande kaudu tootevariantide kogused.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_product_matrix
@@ -959,6 +1102,9 @@ msgid ""
 "        by choosing product variants quantity through a Grid Entry.\n"
 "    "
 msgstr ""
+"\n"
+"See moodul võimaldab müügitellimusi kiiresti täita\n"
+"valides ruudustikkande kaudu tootevariantide kogused."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_ponto
@@ -971,6 +1117,13 @@ msgid ""
 "        but aims to connect with all European banks later on\n"
 "    "
 msgstr ""
+"\n"
+"       Ainult Belgia pankadele! This module connects to my myponto.com to retrieve bank statements.\n"
+"\n"
+"        Currently, that service allows to connect to belgian banks only\n"
+"        (BNP Paribas Fortis, KBC, CBC, KBC Brussels, Fintro, Hello Bank, ING Belgium, AXA Belgium)\n"
+"        but aims to connect with all European banks later on\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -1014,6 +1167,9 @@ msgid ""
 "        This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.\n"
 "    "
 msgstr ""
+"\n"
+"       See moodul rakendab reCaptchaV3, et saaksite oma avalikes moodulites robotirämpsposti ära hoida. \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_online_sync
@@ -1140,6 +1296,9 @@ msgid ""
 "       Technical module: Matrix Implementation\n"
 "    "
 msgstr ""
+"\n"
+"        Tehniline moodul: Maatriksi rakendamine \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -1191,6 +1350,9 @@ msgid ""
 "    Configure IoT devices to be used in certain \n"
 "    steps for taking measures, taking pictures, ...\n"
 msgstr ""
+"\n"
+"    Konfigureerige IoT-seadmed \n"
+"    mõõtude võtmise, pildistamise jaoks ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -1286,6 +1448,11 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"    Norra SAF-T is standard file format for exporting various types of accounting transactional data using the XML format.\n"
+"    The first version of the SAF-T Financial is limited to the general ledger level including customer and supplier transactions.\n"
+"    Necessary master data is also included.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payumoney
@@ -1333,6 +1500,12 @@ msgid ""
 "    - a Chart of Accounts customised to Ireland\n"
 "    - VAT Rates and Structure"
 msgstr ""
+"\n"
+"    See moodul on mõeldud kõigile Iiri VKEdele, kes soovivad oma raamatupidamist kiiresti seadistada. \n"
+"The module provides: -\n"
+"\n"
+"    - a Chart of Accounts customised to Ireland\n"
+"    - VAT Rates and Structure"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_saft
@@ -1341,6 +1514,9 @@ msgid ""
 "    Under Construction\n"
 "    "
 msgstr ""
+"\n"
+"    Loomisel\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -1372,6 +1548,24 @@ msgid ""
 "* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"Argentiina VAT book\n"
+"* Add VAT Book report which is a legal requirement in Argentina and that holds the VAT detail info of sales or purchases made in a period of time.\n"
+"* Add a VAT summary report that is used to analyze invoicing\n"
+"* Add Digital VAT Book functionality that let us generate TXT files to import in AFIP. The ones we implement are:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Official Documentation AFIP\n"
+"\n"
+"* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - record design (same as the Digital VAT Book): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -1396,6 +1590,11 @@ msgid ""
 "This module gives the details of the goods traded between the countries of\n"
 "European Union."
 msgstr ""
+"\n"
+"Moodul, mis lisab intrastati aruannetesse varude haldamise.\n"
+"============================================================\n"
+"\n"
+"See moodul sisaldab üksikasju kaupade kohta millega kaubeldakse Euroopa Liidu riikide vahel. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -1408,6 +1607,13 @@ msgid ""
 "\"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
+"\n"
+"        Maks, defineeritud kui pythoni kood, koosneb kahest pythoni koodi lõigust, mis viiakse läbi kohalikus keskkonnas, mis sisaldab selliseid andmeid nagu ühikhind, toode või partner. \n"
+"\n"
+"        \"Kohaldatav kood\" kirjeldab, kas lisatakse maks.\n"
+"\n"
+"        \"Pythoni kood\" kirjeldab maksu summat.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -1509,6 +1715,102 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
+"\n"
+"Austraalia Credit Transfer\n"
+"===================\n"
+"\n"
+"This module allows the generation of payment batches as ABA (Australian\n"
+"Bankers Association) text files.  The generated 'aba' file can be uploaded\n"
+"to many Australian banks.\n"
+"\n"
+"Setup\n"
+"-----\n"
+"\n"
+"- *Account > Configuration > invoicing > Journals*\n"
+"\n"
+"    If needed, create new journal or choose an existing journal with **Type**\n"
+"    set to *“Bank”*.\n"
+"\n"
+"    On **Advanced Settings**, ensure ABA Credit Transfer is ticked.\n"
+"\n"
+"    On the **Bank Account** tab, enter the **Account Number**.\n"
+"\n"
+"    On the same tab, ensure the ABA transfer information is set up.\n"
+"\n"
+"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
+"\n"
+"    **Financial Institution Code** - Required (provided by bank or can be found\n"
+"    on Google).  It is three uppercase 3 characters.\n"
+"\n"
+"    **Supplying User Name** - Some banks allow this to be freeform, some banks\n"
+"    may reject the ABA file if the Supplying User Name is not as expected.  It\n"
+"    cannot be longer than 26 characters.\n"
+"\n"
+"    **APCA Identification Number** - User Identification number is bank\n"
+"    allocated.  It is 6 digits.\n"
+"\n"
+"    **Include Self Balancing Transaction** - Some institutions require that the\n"
+"    last be a self balancing transaction which is used as a verification.\n"
+"\n"
+"- *Accounting > Configuration > Payments > Bank Accounts*\n"
+"\n"
+"    Account will show up in list as the journal name.\n"
+"\n"
+"    Editing will show the **Account Number**.  This is important as it is used by\n"
+"    the ABA process.\n"
+"\n"
+"    **Bank** is optional.\n"
+"\n"
+"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
+"\n"
+"    Paying account will show up in list as the account number.\n"
+"\n"
+"    **Account Holder Name** - Can be entered here, if Required.  Generally not\n"
+"    validated by the banks on ABA file transfers, but may show up on the payee\n"
+"    bank statement against the payment.\n"
+"\n"
+"- Vendor bank accounts can be set up in the same place, however, it is\n"
+"  generally easier to set them up from the partner from for the Vendor.\n"
+"\n"
+"- *Accounting > Vendors > Vendors*\n"
+"\n"
+"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
+"    vendor bank account can be created or edited.\n"
+"\n"
+"    **Account Number** - Required, must be less than 9 digits.\n"
+"\n"
+"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
+"\n"
+"    **Account Holder Name** - Optional.\n"
+"\n"
+"Use\n"
+"---\n"
+"\n"
+"- Create a vendor payment in the normal way.\n"
+"\n"
+"    Ensure the **Vendor** is one with a valid ABA payment account.\n"
+"\n"
+"    Choose the correct **Payment Journal** which is set for ABA payments.\n"
+"\n"
+"    Select **ABA Credit Transfer** radio button.\n"
+"\n"
+"    If the vendor has multiple bank account, you may need to select the\n"
+"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
+"    need the correct bank account associated with it.\n"
+"\n"
+"    Enter payment amount, etc.\n"
+"\n"
+"- *Vendors > Payments*\n"
+"\n"
+"    After payment(s) are confirmed, they will show up in the payments list.\n"
+"\n"
+"    Using filters, or sorting, select the payments to be included.  Under\n"
+"    *Actions* choose *Create batch payment*.\n"
+"\n"
+"- *Vendors > Batch Payments*\n"
+"\n"
+"    When validating a batch payment, the ABA file will be generated.  It can\n"
+"    be regenerated.  This file can then be uploaded to the bank.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -1519,6 +1821,11 @@ msgid ""
 "Manage automatic transfers between your accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Konto automaatsed ülekanded\n"
+"===========================\n"
+"Halda oma kontode vahelisi automaatseid ülekandeid..\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_auto_transfer_demo
@@ -1677,6 +1984,13 @@ msgid ""
 " - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
 "    "
 msgstr ""
+"\n"
+"Singapuri raamatupidamise aruanded\n"
+"================================\n"
+"This module allow to generate the GST Return (F5) and the IRAS Audit File.\n"
+" - To generate the GST Return, go to Accounting -> Reporting -> GST Return\n"
+" - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_ocr
@@ -1701,6 +2015,9 @@ msgid ""
 "Add a dynamic report about contracts and employees.\n"
 "    "
 msgstr ""
+"\n"
+"Lisage dünaamiline aruanne lepingute ja töötajate kohta.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_reports
@@ -1709,6 +2026,8 @@ msgid ""
 "Add a dynamic report about recruitment.\n"
 "    "
 msgstr ""
+"\n"
+"Lisage dünaamiline aruanne värbamise kohta    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_base
@@ -15036,7 +15355,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__image_128
 #: model:ir.model.fields,field_description:base.field_res_users__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Pilt 128"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_image_mixin__image_256
@@ -17477,6 +17796,74 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
+"Minimaalsed kontod, et alustada kasutamist Peruu lokalisatsiooniga.\n"
+"=================================================\n"
+"\n"
+"The usage of this CoA must refer to the official documentation on MEF.\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"All the legal references can be found here.\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Considerations.\n"
+"===============\n"
+"\n"
+"Chart of account:\n"
+"-----------------\n"
+"\n"
+"The tree of the CoA is done using account groups, all the accounts with move\n"
+"are available as groups but only the more common ones are available as actual\n"
+"accounts, if you want to create a new one use the group of accounts as\n"
+"reference.\n"
+"\n"
+"# TODO: Image showing what I am talking about.\n"
+"\n"
+"Taxes:\n"
+"------\n"
+"\n"
+"'IGV': {'name': 'VAT', 'code': 'S'},\n"
+"'IVAP': {'name': 'VAT', 'code': ''},\n"
+"'ISC': {'name': 'EXC', 'code': 'S'},\n"
+"'ICBPER': {'name': 'OTH', 'code': ''},\n"
+"'EXP': {'name': 'FRE', 'code': 'G'},\n"
+"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
+"'EXO': {'name': 'VAT', 'code': 'E'},\n"
+"'INA': {'name': 'FRE', 'code': 'O'},\n"
+"'OTROS': {'name': 'OTH', 'code': 'S'},\n"
+"\n"
+"We added on this module the 3 concepts in taxes (necessary for the EDI\n"
+"signature)\n"
+"\n"
+"# TODO: Describe new fields.\n"
+"\n"
+"Products:\n"
+"---------\n"
+"\n"
+"Code for products to be used in the EDI are availables here, in order to decide\n"
+"which tax use due to which code following this reference and python code:\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Nota:**\n"
+"---------\n"
+"\n"
+"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
+"\n"
+"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
+"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
+"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
+"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
+"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
+"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
+"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
+"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
+"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
+"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
+"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
+"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -17580,13 +17967,13 @@ msgstr "Mudel"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Model %s does not exist"
-msgstr ""
+msgstr "Mudelit %s pole olemas."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Model %s does not exist!"
-msgstr ""
+msgstr "Mudelit %s pole olemas!"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -18184,7 +18571,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "No module found!"
-msgstr ""
+msgstr "Moodulit ei leitud!"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_ids
@@ -18203,7 +18590,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "No spaces allowed in view_mode: %r"
-msgstr ""
+msgstr "Tühikud ei ole lubatud view_mode: %r"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -19681,7 +20068,7 @@ msgstr "Ainult ettevõttesisesed kasutajad saavad luua API võtmeid"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
 msgid "Only one currency rate per day allowed!"
-msgstr ""
+msgstr "Ainult üks valuutakurss päevas on lubatud!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_decimal_precision_name_uniq
@@ -19703,7 +20090,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Oops, no!"
-msgstr ""
+msgstr "Oops, no!"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -19788,7 +20175,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Optional timezone name"
-msgstr ""
+msgstr "Valikuline ajatsooni nimi"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_user
@@ -19971,12 +20358,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_project
 msgid "Organize and plan your projects"
-msgstr ""
+msgstr "Organiseeri ja planeeri oma projekt."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note
 msgid "Organize your work with memos"
-msgstr ""
+msgstr "Organiseeri oma töö memodega"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
@@ -20013,7 +20400,7 @@ msgstr "Muu aadress"
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
 msgid "Other Extra Rights"
-msgstr ""
+msgstr "Teised eriõigused"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__other_osi_approved_licence
@@ -20023,7 +20410,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__other_proprietary
 msgid "Other Proprietary"
-msgstr ""
+msgstr "Muu varaline"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_S
@@ -20987,7 +21374,7 @@ msgstr "Projekt, ülesanded, konto"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale
 msgid "Project, Tasks, After Sales"
-msgstr ""
+msgstr "Projekt, Ülesanded, After Sales"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_repair
@@ -21002,7 +21389,7 @@ msgstr "Projekt, ülesanded, müügikupong"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_stock
 msgid "Project, Tasks, Stock"
-msgstr ""
+msgstr "Projekt, Ülessanded, Ladu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_timesheet
@@ -21027,7 +21414,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "Prospects"
-msgstr ""
+msgstr "Väljavaated"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
@@ -21215,12 +21602,12 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_quality_mrp
 #: model:ir.module.module,summary:base.module_quality_mrp_workorder
 msgid "Quality Management with MRP"
-msgstr ""
+msgstr "Kvaliteedijuhtimine koos MRP-ga"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp_workorder_iot
 msgid "Quality Management with MRP and IoT"
-msgstr ""
+msgstr "Kvaliteedijuhtimine koos MRP ja Iot-ga"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_iot
@@ -21282,37 +21669,39 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field
 msgid "Qweb Field"
 msgstr ""
+"2689\n"
+"Qweb Väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_barcode
 msgid "Qweb Field Barcode"
-msgstr ""
+msgstr "Qweb Triipkoodi Väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Qweb Kontakti väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_date
 msgid "Qweb Field Date"
-msgstr ""
+msgstr "Qweb Kuupäeva Väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_datetime
 msgid "Qweb Field Datetime"
-msgstr ""
+msgstr "Qweb Kuupäev/kellaaaeg väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_duration
 msgid "Qweb Field Duration"
-msgstr ""
+msgstr "Gweb kestvus Väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float
@@ -21327,13 +21716,13 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
 msgid "Qweb Field HTML"
-msgstr ""
+msgstr "Qweb HTML Väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_image
 #: model:ir.model,name:base.model_ir_qweb_field_image_url
 msgid "Qweb Field Image"
-msgstr ""
+msgstr "Qweb Pildi Väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_integer
@@ -21344,11 +21733,13 @@ msgstr ""
 #: model:ir.model,name:base.model_ir_qweb_field_many2one
 msgid "Qweb Field Many to One"
 msgstr ""
+"2700\n"
+"Qweb Many to One väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_monetary
 msgid "Qweb Field Monetary"
-msgstr ""
+msgstr "Qweb Raha Väli"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
@@ -21378,17 +21769,17 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
 msgid "R ARTS, ENTERTAINMENT AND RECREATION"
-msgstr ""
+msgstr "R KUNST, MEELELAHUTUS JA VABA AEG"
 
 #. module: base
 #: model:res.country,vat_label:base.mx
 msgid "RFC"
-msgstr ""
+msgstr "RFC"
 
 #. module: base
 #: model:res.country,vat_label:base.do
 msgid "RNC"
-msgstr ""
+msgstr "RNC"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__raleway
@@ -21586,7 +21977,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
 msgid "Related field"
-msgstr ""
+msgstr "Seotud väli"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -21907,13 +22298,13 @@ msgstr "Ümardamise faktor"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Rounding precision"
-msgstr ""
+msgstr "Ümardamise täpsus"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Rounding unit"
-msgstr ""
+msgstr "Ümmardatud ühik"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule
@@ -21954,7 +22345,7 @@ msgstr "Käivita käsitsi"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Run this action manually."
-msgstr ""
+msgstr "Käivita see toiming käsitsi."
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -21969,7 +22360,7 @@ msgstr "Ruanda"
 #. module: base
 #: model:res.country,name:base.re
 msgid "Réunion"
-msgstr ""
+msgstr "Réunion"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_S
@@ -21999,7 +22390,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sms
 msgid "SMS Marketing"
-msgstr ""
+msgstr "SMS Turundus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
@@ -22061,17 +22452,17 @@ msgstr "SSL/TLS"
 #. module: base
 #: model:res.country,name:base.bl
 msgid "Saint Barthélémy"
-msgstr ""
+msgstr "Saint Barthélémy"
 
 #. module: base
 #: model:res.country,name:base.sh
 msgid "Saint Helena, Ascension and Tristan da Cunha"
-msgstr ""
+msgstr "Saint Helena, Ascension and Tristan da Cunha"
 
 #. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts and Nevis"
-msgstr ""
+msgstr "Saint Kitts and Nevis"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -22081,7 +22472,7 @@ msgstr "Saint Lucia"
 #. module: base
 #: model:res.country,name:base.mf
 msgid "Saint Martin (French part)"
-msgstr ""
+msgstr "Saint Martin (French part)"
 
 #. module: base
 #: model:res.country,name:base.pm
@@ -22091,22 +22482,22 @@ msgstr "Saint-Pierre ja Miquelon"
 #. module: base
 #: model:res.country,name:base.vc
 msgid "Saint Vincent and the Grenadines"
-msgstr ""
+msgstr "Saint Vincent and the Grenadines"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary
 msgid "Salary Configurator"
-msgstr ""
+msgstr "Palga konfiguraator"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary
 msgid "Salary Configurator (Belgium)"
-msgstr ""
+msgstr "Palga konfiguraator (Belgia)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_payroll
 msgid "Salary Configurator - Payroll"
-msgstr ""
+msgstr "Palga konfiguraator - Palgaleht"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
@@ -22121,7 +22512,7 @@ msgstr "Müük"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_accountant
 msgid "Sale Accounting"
-msgstr ""
+msgstr "Müügiarvestus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_sale_intrastat
@@ -22136,7 +22527,7 @@ msgstr "Müügikupong"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_delivery
 msgid "Sale Coupon Delivery"
-msgstr ""
+msgstr "Kohaletoimetamise kupong"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
@@ -22146,7 +22537,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_product_matrix
 msgid "Sale Matrix"
-msgstr ""
+msgstr "Müügimaatriks"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_product_configurator
@@ -22166,17 +22557,17 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
 msgid "Sale Subscription Dashboard"
-msgstr ""
+msgstr "Müügi kordustellimuste töölaud"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase
 msgid "Sale based on service outsourcing."
-msgstr ""
+msgstr "Teenuse sisseostmisel põhinev müük."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_enterprise
 msgid "Sale enterprise"
-msgstr ""
+msgstr "Müügiettevõte"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_sale
@@ -22201,12 +22592,12 @@ msgstr "Müük & ost"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project
 msgid "Sales - Project"
-msgstr ""
+msgstr "Müük - Projekt"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
 msgid "Sales Expense"
-msgstr ""
+msgstr "Müügi Kulud"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sales_team
@@ -22217,7 +22608,7 @@ msgstr "Müügimeeskonnad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr ""
+msgstr "Müügi ajaarvestus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_purchase
@@ -22366,7 +22757,7 @@ msgstr "Teaduslik"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__scope
 msgid "Scope"
-msgstr ""
+msgstr "Maht"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -23100,7 +23491,7 @@ msgstr "Lõuna Aafrika"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_za
 msgid "South Africa - Accounting"
-msgstr ""
+msgstr "South Africa - Accounting"
 
 #. module: base
 #: model:res.country.group,name:base.south_america
@@ -23110,7 +23501,7 @@ msgstr "Lõuna-Ameerika"
 #. module: base
 #: model:res.country,name:base.gs
 msgid "South Georgia and the South Sandwich Islands"
-msgstr ""
+msgstr "South Georgia and the South Sandwich Islands"
 
 #. module: base
 #: model:res.country,name:base.kr
@@ -23136,12 +23527,12 @@ msgstr "Hispaania"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spain - Accounting (PGCE 2008)"
-msgstr ""
+msgstr "Spain - Accounting (PGCE 2008)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports
 msgid "Spain - Accounting (PGCE 2008) Reports"
-msgstr ""
+msgstr "Spain - Accounting (PGCE 2008) Reports"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_sparse_field
@@ -23241,7 +23632,7 @@ msgstr "Maakonna nimi"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_required
 msgid "State Required"
-msgstr ""
+msgstr "Riik nõutud"
 
 #. module: base
 #: model:res.country,name:base.ps
@@ -23996,17 +24387,17 @@ msgstr "Valitud ettevõte ei ole sellele kasutajale lubatud ettevõtete all"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "Riigi kood peab olema unikaalne!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_code_uniq
 msgid "The code of the language must be unique !"
-msgstr ""
+msgstr "Keele kood peab olema unikaalne!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_state_name_code_uniq
 msgid "The code of the state must be unique by country !"
-msgstr ""
+msgstr "Osariigi kood peab olema unikaalne!"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_company_name_uniq
@@ -24111,7 +24502,7 @@ msgstr "Järgnevad dokumendid kustutakse jäädavalt"
 #: code:addons/base/wizard/base_module_upgrade.py:0
 #, python-format
 msgid "The following modules are not installed or unknown: %s"
-msgstr ""
+msgstr "Need moodulid on istalleerimata või tundmatud: %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__name
@@ -24326,7 +24717,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_state__code
 msgid "The state code."
-msgstr ""
+msgstr "Osariigi kood."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -24397,7 +24788,7 @@ msgstr "Teema"
 #: model:ir.ui.menu,name:base.menu_theme_store
 #: model:ir.ui.menu,name:base.theme_store
 msgid "Theme Store"
-msgstr ""
+msgstr "Teemade Pood"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form

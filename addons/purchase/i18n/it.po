@@ -104,6 +104,26 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Spett.le ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        siamo a ricordarLe che la consegna dell'ordine di acquisto <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            <strong>(${object.partner_ref})</strong>\n"
+"        % endif \n"
+"        è attesa per il \n"
+"        % if object.date_planned:\n"
+"            <strong>${format_date(object.date_planned)}</strong>.\n"
+"        % else:\n"
+"            <strong>non definito</strong>.\n"
+"        % endif\n"
+"        Le chiediamo di confermare l'avvenuta consegna nei tempi previsti.\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -137,7 +157,7 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Siamo ad inviarLe l'ordine di acquisto <strong>${object.name}</strong>\n"
+"        siamo ad inviarLe l'ordine di acquisto <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            con riferimento: ${object.partner_ref}\n"
 "        % endif\n"
@@ -145,7 +165,7 @@ msgstr ""
 "        da parte di ${object.company_id.name}. \n"
 "        <br/><br/>\n"
 "        % if object.date_planned:\n"
-"            La ricezione è prevista per il <strong>${format_date(object.date_planned)}</strong>.\n"
+"            La ricezione è attesa per il <strong>${format_date(object.date_planned)}</strong>.\n"
 "            <br/><br/>\n"
 "            Le chiediamo di comunicarci gentilmente l'avvenuto ricevimento dell'ordine.\n"
 "        % endif\n"
@@ -181,7 +201,7 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Siamo ad inviarLe la richiesta di preventivo <strong>${object.name}</strong>\n"
+"        siamo ad inviarLe la richiesta di preventivo <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            con riferimento: ${object.partner_ref}\n"
 "        % endif\n"
@@ -221,7 +241,7 @@ msgstr "<i class=\"fa fa-print\"/> Stampa"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "<p> %s modified receipt dates for the following products:</p>"
-msgstr ""
+msgstr "<p> %s - Date di ricezione modificate per i seguenti prodotti:</p>"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -344,7 +364,7 @@ msgstr "<strong>Descrizione</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
-msgstr "<strong>Data prevista</strong>"
+msgstr "<strong>Data attesa</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1024,6 +1044,9 @@ msgid ""
 "Delivery date expected from vendor. This date respectively defaults to "
 "vendor pricelist lead time then today's date."
 msgstr ""
+"Data di consegna attesa dal fornitore. Il valore predefinito è "
+"rispettivamente il tempo di risposta listino prezzi fornitore e poi la data "
+"odierna."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
@@ -1032,7 +1055,7 @@ msgid ""
 "arrival of products."
 msgstr ""
 "Data di consegna promessa dal fornitore. È utilizzata per determinare "
-"l'arrivo previsto dei prodotti."
+"l'arrivo atteso dei prodotti."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__date_order
@@ -1471,7 +1494,7 @@ msgid ""
 msgstr ""
 "Margine di errore per i tempi di risposta del fornitore. Gli ordini di "
 "acquisto, generati dal sistema per ottenere prodotti, vengono programmati in"
-" anticipo di alcuni giorni per superare ritardi imprevisti del fornitore."
+" anticipo di alcuni giorni per superare ritardi non attesi del fornitore."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1905,7 +1928,7 @@ msgstr "Prodotti"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation
 msgid "Provide a double validation mechanism for purchases"
-msgstr "Fornire un meccanismo di doppia validazione per gli acquisti"
+msgstr "Fornisce un meccanismo a doppia validazione per gli acquisti"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
@@ -1931,10 +1954,10 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
-"L'analisi degli acquisti ti permette di controllare e analizzare facilmente "
-"la storia di acuisti e le prestazioni della tua azienda. Da questo menù , "
-"puoi registrare le prestazioni nelle negoziazioni, nelle consegne dei "
-"fornitori, etc."
+"L'analisi degli acquisti consente di controllare e analizzare facilmente la "
+"cronologia e il rendimento degli acquisti aziendali. Da questo menù è "
+"possibile monitorare il rendimento della trattativa, della consegna dei "
+"fornitori ecc..."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2031,8 +2054,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
-"L'opzione di modifica di ordine di acquisto viene utilizzata quando si "
-"desidera che gli ordini di acquisto siano modificabili dopo la conferma."
+"Cambiamento sull'ordine di acquisto utilizzato per permetterne la modifica "
+"dopo la conferma"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -2621,10 +2644,9 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
-"Questo conto viene utilizzato nella valutazione automatica dell'inventario "
-"per registrare la differenza di prezzo tra un ordine di acquisto e la "
-"relativa fattura fornitore al momento della convalida della fattura "
-"fornitore."
+"Conto utilizzato, nella valutazione automatica del magazzino, per registrare"
+" la differenza di prezzo tra un ordine di acquisto e la relativa fattura "
+"fornitore quando viene confermata la fattura."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -2681,13 +2703,13 @@ msgstr "Il fornitore non ha ordini di acquisto. Crea una nuova RdP"
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
 msgid "Tip: How to keep late receipts under control?"
-msgstr ""
+msgstr "Consiglio: come tenere sotto controllo le ricezioni in ritardo"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_1
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
 msgid "Tip: Never miss a purchase order"
-msgstr ""
+msgstr "Consiglio: non perdere mai un ordine di acquisto"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__to_approve
@@ -2850,7 +2872,7 @@ msgstr "Utente"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__company_currency_id
 msgid "Utility field to express amount currency"
-msgstr "Campo di utilità per esprimere la valuta importo"
+msgstr "Campo utilità per esprimere la valuta dell'importo"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase

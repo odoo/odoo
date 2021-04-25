@@ -582,6 +582,7 @@
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="price_subtotal"/>
+                                    <field name="price_total"/>
                                     <field name="price_tax" invisible="1"/>
                                     <field name="price_total" invisible="1"/>
                                     <field name="price_unit"/>
@@ -603,7 +604,9 @@
                                                         <div class="col-4">
                                                             <strong>
                                                                 <span class="float-right text-right">
-                                                                    <t t-esc="record.price_subtotal.value"/>
+                                                                    <t t-set="line_price" t-value="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                                                    <t t-set="line_price" t-value="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
+                                                                    <t t-esc="line_price"/>
                                                                 </span>
                                                             </strong>
                                                         </div>

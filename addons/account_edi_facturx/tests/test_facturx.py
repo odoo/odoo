@@ -66,6 +66,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                     </GuidelineSpecifiedDocumentContextParameter>
                 </ExchangedDocumentContext>
                 <ExchangedDocument>
+                    <ID>INV/2017/01/0001</ID>
                     <TypeCode>380</TypeCode>
                     <IssueDateTime>
                         <DateTimeString format="102">20170101</DateTimeString>

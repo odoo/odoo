@@ -38,7 +38,7 @@ tour.register("sale_tour", {
     trigger: "button[name='document_layout_save']",
     extra_trigger: ".o_sale_order",
     content: _t("Good job, let's continue."),
-    position: "bottom",
+    position: "top", // dot NOT move to bottom, it would cause a resize flicker
 }, {
     trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_sale_onboarding_payment_acquirer]',
     extra_trigger: ".o_sale_order",

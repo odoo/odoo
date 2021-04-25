@@ -10,11 +10,11 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Helen Sulaoja <helen@avalah.ee>, 2020
-# Algo Kärp <algokarp@gmail.com>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
-# Piia Paurson <piia@avalah.ee>, 2020
 # Andre Roomet <andreroomet@gmail.com>, 2021
-# atriine <triine@avalah.ee>, 2021
+# Algo Kärp <algokarp@gmail.com>, 2021
+# Piia Paurson <piia@avalah.ee>, 2021
+# Triine Aavik <triine@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: atriine <triine@avalah.ee>, 2021\n"
+"Last-Translator: Triine Aavik <triine@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +111,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "<b>Predictive Lead Scoring</b>"
-msgstr "Müügivihje ennustav hindamine"
+msgstr "<b>Müügivihje ennustav hindamine</b>"
 
 #. module: crm
 #. openerp-web
@@ -669,7 +669,7 @@ msgstr "Seadistus"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Configure a custom domain"
-msgstr ""
+msgstr "Konfigureerige kohandatud domeen"
 
 #. module: crm
 #. openerp-web
@@ -1087,7 +1087,7 @@ msgstr "E-posti kvaliteet"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Koopia"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_type_demo_email_with_template
@@ -1106,17 +1106,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr ""
+msgstr "Täiendage kõiki müügivihjed automaatselt"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr ""
+msgstr "Täienda müügivihjet automaatselt"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
 msgid "Enrich leads on demand only"
-msgstr ""
+msgstr "Täiendage müügivihjeid ainult nõudmisel."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1163,7 +1163,7 @@ msgstr "Eeldatav tähtaeg"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected MRR"
-msgstr ""
+msgstr "Eeldatav igakuine tulu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
@@ -1389,6 +1389,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
+"Kui see on määratud, kasutatakse seda müügimeeskonda selle partneriga seotud"
+" müügi ja ülesannetele määramiseks."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_bounced_content
@@ -1396,6 +1398,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Kui määratud, saadetekse see sisu vaikimisi sisu asemel automaatselt "
+"lubamatutele kasutajale."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1753,7 +1757,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Saabuvate kirjade koopiate loend."
 
 #. module: crm
 #. openerp-web
@@ -1763,6 +1767,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip : Schedule activities to "
 "keep track of everything you have to do!</i>"
 msgstr ""
+"Tundub, et midagi pole plaanis. : ( <br><br></i>Nõuanne: planeerige "
+"tegevused, et jälgida kõike, mida peate tegema!</i>"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2081,7 +2087,7 @@ msgstr "Vigade arv"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
 msgid "Number of leads and opportunities assigned this last month."
-msgstr ""
+msgstr "Viimase kuu jooksul määratud müügvihjete ja -võimaluste arv."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -2388,7 +2394,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Please enter at least 3 digits when searching on phone / mobile."
-msgstr ""
+msgstr "Telefonis/mobiilis otsimisel sisestage vähemalt 3 numbrit."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2437,7 +2443,7 @@ msgstr "Ettepanek"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly_prorated
 msgid "Prorated MRR"
-msgstr ""
+msgstr "Prognoositav igakuine tulu."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
@@ -2599,6 +2605,8 @@ msgstr "Otsingu võimalused"
 msgid ""
 "See and manage users, companies, and leads from our mail client extensions."
 msgstr ""
+"Vaadake ja hallake kasutajaid, ettevõtteid ja müügivihjeid meie e-posti "
+"laiendustest."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -2651,7 +2659,7 @@ msgstr "Näita korduvate tulude menüüd"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
-"Näita kõiki võimalusi, mille jaoks järgmine tegevuskuupäev on enne tänast.\n"
+"Näita kõiki võimalusi, mille jaoks järgmine tegevuskuupäev on enne tänast."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -2912,6 +2920,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
+"See e-kiri on masspostituste jaoks musta nimekirja kantud. Klõpsake "
+"nimekirja tühistamiseks."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
@@ -2965,7 +2975,7 @@ msgstr ""
 #: model:digest.tip,name:crm.digest_tip_crm_0
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Tip: Convert incoming emails into opportunities"
-msgstr ""
+msgstr "Nõuanne. Teisendage saabuvad meilid võimalusteks"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_1
@@ -2977,13 +2987,13 @@ msgstr ""
 #: model:digest.tip,name:crm.digest_tip_crm_4
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
 msgid "Tip: Do not waste time recording customers' data"
-msgstr ""
+msgstr "Nõuanne: ärge raisake aega klientide andmete salvestamiseks"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
 msgid "Tip: Manage your pipeline"
-msgstr ""
+msgstr "Nõuanne: hallake oma müügitoru"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_2
@@ -3010,6 +3020,8 @@ msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of 5."
 msgstr ""
+"Andmekao vältimiseks saab müügivihjeid ja võimalusi liita ainult "
+"viieliikmeliikmelisteks rühmadeks."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3036,7 +3048,7 @@ msgstr ""
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try sending an email"
-msgstr ""
+msgstr "Proovige saata e-kiri."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3062,7 +3074,7 @@ msgstr "Tüüpi kasutatakse müügivhjete ja müügivõimaluste eraldamiseks."
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Kirjel oleva erandtegevuse tüüp."
 
 #. module: crm
 #: model:ir.model,name:crm.model_utm_campaign
@@ -3266,7 +3278,7 @@ msgstr "Iga-aastaselt"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "You don't have the access needed to run this cron."
-msgstr ""
+msgstr "Teil pole selle croni käitamiseks vajalikku juurdepääsu."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -3315,12 +3327,13 @@ msgstr "nt https://www.odoo.com"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
 msgid "team_count"
-msgstr ""
+msgstr "meeskonna_arv"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
 msgstr ""
+"oma CRM-ile. Seda e-posti aadressi saavad muuta müügimeeskonna liikmed."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
