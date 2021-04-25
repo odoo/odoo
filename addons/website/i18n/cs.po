@@ -3848,6 +3848,10 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Platí pouze v případě, že se tento pohled dědí z jiného (inherit_id není False / Null).\n"
+"\n"
+"* pokud rozšiřuje (výchozí), pokud je toto zobrazení požadováno, vyhledá se nejbližší primární pohled (prostřednictvím inherit_id), pak se použijí všechny pohledy, které z něj dědí s modelem tohoto pohledu\n"
+"* pokud je primární, nejbližší primární pohled je plně vyřešen (i když používá jiný model než tento), pak se použijí specifikace dědičnosti tohoto pohledu (<xpath/>) a výsledek se použije, jako by to byl skutečný oblouk tohoto pohledu.\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -5203,6 +5207,12 @@ msgid ""
 "        308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)\n"
 "    "
 msgstr ""
+"Typ přesměrování / přepsání:\n"
+"\n"
+"301 Přesunuto trvale: Prohlížeč uloží novou adresu URL do mezipaměti.\n"
+"302 Dočasně přesunuto: Prohlížeč neudrží v mezipaměti novou adresu URL a při příští nové adrese URL se znovu zeptá.\n"
+"404 Nenalezeno: Pokud chcete odebrat konkrétní stránku / řadič (např. Je nainstalován elektronický obchod, ale nechcete / nakupovat na konkrétním webu)\n"
+"308 Přesměrování / Přepsání Pokud chcete přejmenovat řadič pomocí nové adresy URL. (Např.:  /shop -> /garden - Obě adresy URL budou přístupné, ale /shop bude automaticky přesměrován na /garden)"
 
 #. module: website
 #. openerp-web
@@ -5838,12 +5848,15 @@ msgid ""
 "feature.<br/> To be successful your content needs to be useful to your "
 "readers."
 msgstr ""
+"Napište jeden nebo dva odstavce popisující váš produkt, služby nebo "
+"konkrétní funkci. <br/>Aby byl váš obsah úspěšný, musí být užitečný pro vaše"
+" čtenáře."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid ""
 "Write what the customer would like to know, <br/>not what you want to show."
-msgstr ""
+msgstr "Napište, co by zákazník rád věděl, <br/> ne to, co chcete ukázat."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
