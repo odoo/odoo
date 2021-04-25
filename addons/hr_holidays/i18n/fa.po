@@ -1865,7 +1865,7 @@ msgstr "نوع مرخصی"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
 msgid "Leave Validation"
-msgstr "تاییدیه مرخص"
+msgstr "تاییدیه مرخصی"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
@@ -2674,6 +2674,8 @@ msgid ""
 "The employee, department, company or employee category of this request is "
 "missing. Please make sure that your user login is linked to an employee."
 msgstr ""
+"گروه کارمند، دپارتمان ، شرکت یا کارمند این درخواست"
+"تایین نشده است. لطفا مطمئن شوید که ورود کاربر به یک کارمند لینک شده است."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2682,11 +2684,13 @@ msgid ""
 "The following employees are not supposed to work during that period:\n"
 " %s"
 msgstr ""
+"کارمندان زیر قرار نیست در این دوره کار کنند: \n"
+" %s"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_interval_number_check
 msgid "The interval number should be greater than 0"
-msgstr ""
+msgstr "مقدار بازه باید بیشتر از 0 باشد"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_duration_check
@@ -2700,16 +2704,18 @@ msgid ""
 "The number of remaining time off is not sufficient for this time off type.\n"
 "Please also check the time off waiting for validation."
 msgstr ""
+"مقدار مرخصی باقیمانده برای این نوع مرخصی مکفی نمی‌باشد. \n"
+"لطفا مرخصی‌های در انتظار تأیید را نیز بررسی کنید."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_number_per_interval_check
 msgid "The number per interval should be greater than 0"
-msgstr ""
+msgstr "تعداد در هر بازه باید بیشتر از 0 باشد"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
 msgid "The start date must be anterior to the end date."
-msgstr ""
+msgstr "تاریخ شروع باید قبل از تاریخ پایان باشد."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
@@ -2748,6 +2754,7 @@ msgstr " با مرخصی به طور خودکار موافقت شد"
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
 msgstr ""
+"نوع با کوچکترین توالی ، مقدار پیش فرض درخواست زمان خاموش است"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
