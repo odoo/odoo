@@ -316,7 +316,7 @@ class TestCalendar(TransactionCase):
         })
 
         start_recurring_dates = m.with_context({'tz': 'Europe/Brussels'})._get_recurrent_date_by_event()
-        self.assertEqual(len(start_recurring_dates), 4)
+        self.assertEqual(len(list(start_recurring_dates)), 4)
 
         for d in start_recurring_dates:
             self.assertEqual(d.tzinfo, pytz.UTC)

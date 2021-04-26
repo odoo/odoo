@@ -592,14 +592,14 @@ class Meeting(models.Model):
         return partners
 
     @api.multi
-    def _get_recurrent_dates_by_event(self):
+    def _get_recurrent_dates_by_event(self, start=None, stop=None):
         """ Get recurrent start and stop dates based on Rule string"""
-        start_dates = self._get_recurrent_date_by_event(date_field='start')
-        stop_dates = self._get_recurrent_date_by_event(date_field='stop')
-        return list(pycompat.izip(start_dates, stop_dates))
+        start_dates = self._get_recurrent_date_by_event(date_field='start', start=start, stop=stop)
+        stop_dates = self._get_recurrent_date_by_event(date_field='stop', start=start, stop=stop)
+        return pycompat.izip(start_dates, stop_dates)
 
     @api.multi
-    def _get_recurrent_date_by_event(self, date_field='start'):
+    def _get_recurrent_date_by_event(self, date_field='start', start=None, stop=None):
         """ Get recurrent dates based on Rule string and all event where recurrent_id is child
 
         date_field: the field containing the reference date information for recurrence computation
@@ -624,7 +624,8 @@ class Meeting(models.Model):
         # The start date is naive
         # the timezone will be applied, if necessary, at the very end of the process
         # to allow for DST timezone reevaluation
-        rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
+        event_start = event_date.replace(tzinfo=None)
+        rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_start, forceset=True, ignoretz=True)
 
         recurring_meetings_ids = self.env.context.get('recurrent_siblings_cache', {}).get(self.id)
         if recurring_meetings_ids is not None:
@@ -650,10 +651,10 @@ class Meeting(models.Model):
                     recurring_date += timedelta(hours=self.duration)
                 rset1.exdate(recurring_date)
             invalidate = True
-
-        def naive_tz_to_utc(d):
-            return timezone.localize(d).astimezone(pytz.UTC)
-        return [naive_tz_to_utc(d) if not use_naive_datetime else d for d in rset1 if d.year < MAXYEAR]
+        for dt in rset1.xafter(start or event_start, inc=True):
+            yield timezone.localize(dt).astimezone(pytz.UTC) if not use_naive_datetime else dt
+            if dt.year >= MAXYEAR or (stop and dt > stop):
+                break
 
     @api.multi
     def _get_recurrency_end_date(self):
@@ -1127,7 +1128,7 @@ class Meeting(models.Model):
         return sort_fields
 
     @api.multi
-    def get_recurrent_ids(self, domain, order=None):
+    def get_recurrent_ids(self, domain, order=None, start=None, stop=None):
         """ Gives virtual event ids for recurring events. This method gives ids of dates
             that comes between start date and end date of calendar views
             :param order:   The fields (comma separated, format "FIELD {DESC|ASC}") on which
@@ -1178,7 +1179,7 @@ class Meeting(models.Model):
                 result.append(meeting.id)
                 result_data.append(meeting.get_search_fields(order_fields))
                 continue
-            rdates = meeting.with_env(recurrent_env)._get_recurrent_dates_by_event()
+            rdates = meeting.with_env(recurrent_env)._get_recurrent_dates_by_event(start=start, stop=stop)
 
             for r_start_date, r_stop_date in rdates:
                 # fix domain evaluation
@@ -1769,12 +1770,23 @@ class Meeting(models.Model):
         if self._context.get('mymeetings'):
             args += [('partner_ids', 'in', self.env.user.partner_id.ids)]
 
+        filtering_start = filtering_stop = False
+        start = stop = None
         new_args = []
         for arg in args:
             new_arg = arg
-            if arg[0] in ('stop_date', 'stop_datetime', 'stop',) and arg[1] == ">=":
+            if arg[0] in {"stop", "final_date"}:
+                filtering_stop = True
+            if arg[0] in {'stop_date', 'stop_datetime', 'stop'} and arg[1] == ">=":
                 if self._context.get('virtual_id', True):
                     new_args += ['|', '&', ('recurrency', '=', 1), ('final_date', arg[1], arg[2])]
+                    _dt = fields.Datetime.to_datetime(arg[2])
+                    start = min(start, _dt) if start else _dt
+            elif arg[0] == "start":
+                filtering_start = True
+                if arg[1] == "<=":
+                    _dt = fields.Datetime.to_datetime(arg[2])
+                    stop = max(stop, _dt) if stop else _dt
             elif arg[0] == "id":
                 new_arg = (arg[0], arg[1], get_real_ids(arg[2]))
             new_args.append(new_arg)
@@ -1784,8 +1796,7 @@ class Meeting(models.Model):
         if not self._context.get('virtual_id', virtual_id_fallback):
             return super(Meeting, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
-        if any(arg[0] == 'start' for arg in args) and \
-           not any(arg[0] in ('stop', 'final_date') for arg in args):
+        if filtering_start and not filtering_stop:
             # domain with a start filter but with no stop clause should be extended
             # e.g. start=2017-01-01, count=5 => virtual occurences must be included in ('start', '>', '2017-01-02')
             start_args = new_args
@@ -1799,7 +1810,7 @@ class Meeting(models.Model):
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
         event_ids = super(Meeting, self)._search(new_args, offset=0, limit=0, order=None, count=False, access_rights_uid=access_rights_uid)
         events = self.browse(event_ids)
-        events = self.browse(events.get_recurrent_ids(args, order=order))
+        events = self.browse(events.get_recurrent_ids(args, order=order, start=start, stop=stop))
         if count:
             return len(events)
         elif limit:
