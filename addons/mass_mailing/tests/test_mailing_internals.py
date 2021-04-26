@@ -72,7 +72,7 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing.medium_id, self.env.ref('utm.utm_medium_email'))
         self.assertEqual(mailing.mailing_model_name, 'res.partner')
         self.assertEqual(mailing.mailing_model_real, 'res.partner')
-        self.assertEqual(mailing.reply_to_mode, 'email')
+        self.assertEqual(mailing.reply_to_mode, 'new')
         self.assertEqual(mailing.reply_to, self.user_marketing.email_formatted)
         # default for partner: remove blacklisted
         self.assertEqual(literal_eval(mailing.mailing_domain), [('is_blacklisted', '=', False)])
@@ -89,7 +89,7 @@ class TestMassMailValues(MassMailCommon):
         })
         self.assertEqual(mailing.mailing_model_name, 'mailing.list')
         self.assertEqual(mailing.mailing_model_real, 'mailing.contact')
-        self.assertEqual(mailing.reply_to_mode, 'email')
+        self.assertEqual(mailing.reply_to_mode, 'new')
         self.assertEqual(mailing.reply_to, self.email_reply_to)
         # default for mailing list: depends upon contact_list_ids
         self.assertEqual(literal_eval(mailing.mailing_domain), [])
@@ -104,7 +104,7 @@ class TestMassMailValues(MassMailCommon):
         })
         self.assertEqual(mailing.mailing_model_name, 'mail.channel')
         self.assertEqual(mailing.mailing_model_real, 'mail.channel')
-        self.assertEqual(mailing.reply_to_mode, 'thread')
+        self.assertEqual(mailing.reply_to_mode, 'update')
         self.assertFalse(mailing.reply_to)
 
     @users('user_marketing')
@@ -215,6 +215,79 @@ class TestMassMailFeatures(MassMailCommon, CronMixinCase):
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_deletion(self):
+        """ Test deletion in various use case, depending on reply-to """
+        # 1- Keep archives and reply-to set to 'answer = new thread'
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestSource',
+            'subject': 'TestDeletion',
+            'body_html': "<div>Hello {object.name}</div>",
+            'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
+            'contact_list_ids': [(6, 0, self.mailing_list_1.ids)],
+            'keep_archives': True,
+            'reply_to_mode': 'new',
+            'reply_to': self.email_reply_to,
+        })
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        self.assertEqual(len(self._mails), 3)
+        self.assertEqual(len(self._new_mails.exists()), 3)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+
+        # 2- Keep archives and reply-to set to 'answer = update thread'
+        self.mailing_list_1.contact_ids.message_ids.unlink()
+        mailing = mailing.copy()
+        mailing.write({
+            'reply_to_mode': 'update',
+        })
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        self.assertEqual(len(self._mails), 3)
+        self.assertEqual(len(self._new_mails.exists()), 3)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+
+        # 3- Remove archives and reply-to set to 'answer = new thread'
+        self.mailing_list_1.contact_ids.message_ids.unlink()
+        mailing = mailing.copy()
+        mailing.write({
+            'keep_archives': False,
+            'reply_to_mode': 'new',
+            'reply_to': self.email_reply_to,
+        })
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        self.assertEqual(len(self._mails), 3)
+        self.assertEqual(len(self._new_mails.exists()), 0)
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        # 4- Remove archives and reply-to set to 'answer = update thread'
+        # Imply keeping mail.message for gateway reply)
+        self.mailing_list_1.contact_ids.message_ids.unlink()
+        mailing = mailing.copy()
+        mailing.write({
+            'keep_archives': False,
+            'reply_to_mode': 'update',
+        })
+        self.assertEqual(self.mailing_list_1.contact_ids.message_ids, self.env['mail.message'])
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        self.assertEqual(len(self._mails), 3)
+        self.assertEqual(len(self._new_mails.exists()), 0)
+        self.assertEqual(len(self.mailing_list_1.contact_ids.message_ids), 3)
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mailing_on_res_partner(self):
         """ Test mailing on res.partner model: ensure default recipients are
         correctly computed """
@@ -262,7 +335,7 @@ Website3: <a id="url3" href="${httpurl}">${httpurl}</a>
 External1: <a id="url4" href="https://www.example.com/foo/bar?baz=qux">Youpie</a>
 Email: <a id="url5" href="mailto:test@odoo.com">test@odoo.com</a></div>""",
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
-            'reply_to_mode': 'email',
+            'reply_to_mode': 'new',
             'reply_to': self.email_reply_to,
             'contact_list_ids': [(6, 0, self.mailing_list_1.ids)],
             'keep_archives': True,

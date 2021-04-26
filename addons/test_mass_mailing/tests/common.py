@@ -11,6 +11,13 @@ class TestMassMailCommon(MassMailCommon, TestMailCommon):
     def setUpClass(cls):
         super(TestMassMailCommon, cls).setUpClass()
 
+        cls.test_alias = cls.env['mail.alias'].create({
+            'alias_name': 'test.alias',
+            'alias_user_id': False,
+            'alias_model_id': cls.env['ir.model']._get('mailing.test.simple').id,
+            'alias_contact': 'everyone'
+        })
+
         # enforce last update by user_marketing to match _process_mass_mailing_queue
         # taking last writer as user running a batch
         cls.mailing_bl = cls.env['mailing.mailing'].with_user(cls.user_marketing).create({
@@ -32,6 +39,7 @@ class TestMassMailCommon(MassMailCommon, TestMailCommon):
 </div>""",
             'mailing_type': 'mail',
             'mailing_model_id': cls.env['ir.model']._get('mailing.test.blacklist').id,
+            'reply_to_mode': 'update',
         })
 
     @classmethod

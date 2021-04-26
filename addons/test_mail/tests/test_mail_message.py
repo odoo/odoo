@@ -169,11 +169,11 @@ class TestMessageValues(TestMailCommon):
         self.assertEqual(msg.reply_to, formataddr((reply_to_name, reply_to_email)))
         self.assertEqual(msg.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
 
-    def test_mail_message_values_no_auto_thread(self):
+    def test_mail_message_values_reply_to_force_new(self):
         msg = self.Message.create({
             'model': 'mail.test.container',
             'res_id': self.alias_record.id,
-            'no_auto_thread': True,
+            'reply_to_force_new': True,
         })
         self.assertIn('reply_to', msg.message_id.split('@')[0])
         self.assertNotIn('mail.test.container', msg.message_id.split('@')[0])
