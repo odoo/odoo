@@ -2,8 +2,9 @@
 
 const { onMounted, onPatched, onWillUnmount, useComponent } = owl.hooks;
 
+// TODO: better global explanation #TODODESCR
 // -----------------------------------------------------------------------------
-// Hook function
+// Hook functions
 // -----------------------------------------------------------------------------
 
 /**

@@ -9,10 +9,7 @@ export const ParentClosingMode = {
 };
 
 export class DropdownItem extends Component {
-  /**
-   * Handlers
-   */
-  onClick(ev) {
+  onClick() {
     const payload = {
       payload: this.props.payload,
       dropdownClosingRequest: {

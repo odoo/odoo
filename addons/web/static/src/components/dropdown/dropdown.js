@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 import { useBus } from "../../utils/hooks";
 import { useService } from "../../services/service_hook";
 import { scrollTo } from "../../utils/scrolling";
@@ -49,9 +50,10 @@ export class Dropdown extends Component {
     });
   }
 
-  // --------------------------------------------------------------------------
-  // PRIVATE
-  // --------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Private
+  // ---------------------------------------------------------------------------
+
   async _changeStateAndNotify(stateSlice) {
     if ((stateSlice.open || stateSlice.groupIsOpen) && this.props.beforeOpen) {
       await this.props.beforeOpen();
@@ -96,11 +98,11 @@ export class Dropdown extends Component {
     }
 
     const subs = {
-      arrowup: () => this._setActiveItem("PREV"),
-      arrowdown: () => this._setActiveItem("NEXT"),
+      "arrowup": () => this._setActiveItem("PREV"),
+      "arrowdown": () => this._setActiveItem("NEXT"),
       "shift+arrowup": () => this._setActiveItem("FIRST"),
       "shift+arrowdown": () => this._setActiveItem("LAST"),
-      enter: () => {
+      "enter": () => {
         const activeItem = this.el.querySelector(
           ":scope > ul.o_dropdown_menu > .o_dropdown_item.o_dropdown_active"
         );
@@ -108,7 +110,7 @@ export class Dropdown extends Component {
           activeItem.click();
         }
       },
-      escape: this._close.bind(this),
+      "escape": this._close.bind(this),
     };
 
     this.hotkeyTokens = [];
@@ -143,9 +145,10 @@ export class Dropdown extends Component {
     });
   }
 
-  // --------------------------------------------------------------------------
-  // HANDLERS
-  // --------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
+  // Handlers
+  // ---------------------------------------------------------------------------
+
   onItemSelected(ev) {
     // Handle parent closing request
     const { dropdownClosingRequest } = ev.detail;
@@ -164,11 +167,15 @@ export class Dropdown extends Component {
    * Dropdowns react to each other state changes through this method.
    */
   onDropdownStateChanged(args) {
-    // Do not listen to my own events
-    if (args.emitter.el === this.el) return;
+    if (args.emitter.el === this.el) {
+      // Do not listen to my own events
+      return;
+    }
 
-    // Do not listen to events emitted by children
-    if (this.el.contains(args.emitter.el)) return;
+    if (this.el.contains(args.emitter.el)) {
+      // Do not listen to events emitted by children
+      return;
+    }
 
     // Emitted by direct siblings ?
     if (args.emitter.el.parentElement === this.el.parentElement) {

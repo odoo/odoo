@@ -4,6 +4,46 @@ import { escapeRegExp, intersperse, sprintf } from "./strings";
 import { localization } from "../localization/localization_settings";
 import { _lt } from "../localization/translation";
 
+// -----------------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------------
+
+/**
+ * Inserts "thousands" separators in the provided number.
+ *
+ * @param {number} [num] integer number
+ * @param {string} [thousandsSep=","] the separator to insert
+ * @param {number[]} [grouping=[3,0]]
+ *   array of relative offsets at which to insert `thousandsSep`.
+ *   See `strings.intersperse` method.
+ * @returns {string}
+ */
+function insertThousandsSep(num, thousandsSep = ",", grouping = [3, 0]) {
+  let numStr = `${num}`;
+  const negative = numStr[0] === "-";
+  numStr = negative ? numStr.slice(1) : numStr;
+  return (negative ? "-" : "") + intersperse(numStr, grouping, thousandsSep);
+}
+
+/**
+ * Parses a string into a number.
+ *
+ * @param {string} value
+ * @param {Object} options - additional options
+ * @param {string|RegExp} [options.thousandsSep] - the thousands separator used in the value
+ * @param {string|RegExp} [options.decimalPoint] - the decimal point used in the value
+ * @returns number
+ */
+function parseNumber(value, options = {}) {
+  value = value.replace(options.thousandsSep || ",", "");
+  value = value.replace(options.decimalPoint || ".", ".");
+  return Number(value);
+}
+
+// -----------------------------------------------------------------------------
+// Exports
+// -----------------------------------------------------------------------------
+
 /**
  * Formats a number into a string representing a float.
  *
@@ -29,38 +69,7 @@ export function formatFloat(value, options = {}) {
   return formatted.join(decimalPoint);
 }
 
-/**
- * Inserts "thousands" separators in the provided number.
- *
- * @param {number} [num] integer number
- * @param {string} [thousandsSep=","] the separator to insert
- * @param {number[]} [grouping=[3,0]]
- *   array of relative offsets at which to insert `thousandsSep`.
- *   See `strings.intersperse` method.
- * @returns {string}
- */
-export function insertThousandsSep(num, thousandsSep = ",", grouping = [3, 0]) {
-  let numStr = `${num}`;
-  const negative = numStr[0] === "-";
-  numStr = negative ? numStr.slice(1) : numStr;
-  return (negative ? "-" : "") + intersperse(numStr, grouping, thousandsSep);
-}
-
-/**
- * Parses a string into a number.
- *
- * @param {string} value
- * @param {Object} options - additional options
- * @param {string|RegExp} [options.thousandsSep] - the thousands separator used in the value
- * @param {string|RegExp} [options.decimalPoint] - the decimal point used in the value
- * @returns number
- */
-export function parseNumber(value, options = {}) {
-  value = value.replace(options.thousandsSep || ",", "");
-  value = value.replace(options.decimalPoint || ".", ".");
-  return Number(value);
-}
-
+// #TODODESCR
 export function parseFloat(value) {
   let thousandsSepRegex = new RegExp(escapeRegExp(localization.thousandsSep), "g");
   let decimalPointRegex = new RegExp(escapeRegExp(localization.decimalPoint), "g");
@@ -74,6 +83,7 @@ export function parseFloat(value) {
   return parsed;
 }
 
+// #TODODESCR
 export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
   number = Math.round(number);
   const decimals = options.decimals || 0;

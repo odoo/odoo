@@ -50,8 +50,8 @@ const _normalize_format_cache = {};
  */
 export function strftimeToLuxonFormat(value) {
   if (_normalize_format_cache[value] === undefined) {
-    const isletter = /[a-zA-Z]/,
-      output = [];
+    const isletter = /[a-zA-Z]/;
+    const output = [];
     let inToken = false;
     for (let index = 0; index < value.length; ++index) {
       let character = value[index];
@@ -244,6 +244,7 @@ export function parseDateTime(value, options = {}) {
 export function parseDate(value, options = {}) {
   return parseDateTime(value, { dateOnly: true, format: options.format });
 }
+
 // -----------------------------------------------------------------------------
 
 const dateUnits = {

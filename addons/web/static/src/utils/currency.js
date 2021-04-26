@@ -2,6 +2,7 @@
 
 import { formatFloat, humanNumber } from "./numbers";
 
+// #TODODESCR
 export function formatCurrency(value, cid, options = {}) {
   if (value === false) {
     return "";

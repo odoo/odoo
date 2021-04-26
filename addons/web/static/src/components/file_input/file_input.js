@@ -69,6 +69,7 @@ export class FileInput extends Component {
     this.fileInputRef.el.click();
   }
 }
+
 FileInput.defaultProps = {
   accepted_file_extensions: "*",
   action: "/web/binary/upload",

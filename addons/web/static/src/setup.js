@@ -8,7 +8,7 @@ import { loadTemplates } from "./webclient/setup";
 const { mount, utils } = owl;
 const { whenReady } = utils;
 
-export async function startWebClient (webclient) {
+export async function startWebClient(webclient) {
   // delete (odoo as any).session_info; // FIXME: some legacy code rely on this (e.g. ajax.js)
   const sessionInfo = odoo.session_info;
   odoo.info = {

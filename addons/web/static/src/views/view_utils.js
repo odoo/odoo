@@ -24,8 +24,8 @@ export function json_node_to_xml(node, humanReadable, indent) {
     );
   } else if (
     typeof node.tag !== "string" ||
-    !node.children instanceof Array ||
-    !node.attrs instanceof Object
+    !(node.children instanceof Array) ||
+    !(node.attrs instanceof Object)
   ) {
     throw new Error(`Node [${JSON.stringify(node)}] is not a JSONified XML node`);
   }

@@ -25,6 +25,10 @@ export const browser = Object.assign({}, owl.browser, {
   sessionStorage,
 });
 
+// -----------------------------------------------------------------------------
+// Feature detection
+// -----------------------------------------------------------------------------
+
 /**
  * true if the browser is based on Chromium (Google Chrome, Opera, Edge)
  *

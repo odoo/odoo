@@ -5,7 +5,7 @@ import { translatedTerms } from "../../src/localization/translation";
 import { makeTestEnv } from "../helpers/mock_env";
 import { getFixture, patchWithCleanup } from "../helpers/utils";
 
-const { mount, tags } = owl;
+const { Component, mount, tags } = owl;
 const { xml } = tags;
 
 let env;

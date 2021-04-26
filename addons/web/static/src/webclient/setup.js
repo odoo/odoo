@@ -1,5 +1,9 @@
 /** @odoo-module **/
 
+// -----------------------------------------------------------------------------
+// startServices
+// -----------------------------------------------------------------------------
+
 export const SPECIAL_METHOD = Symbol("special_method");
 
 /**
@@ -75,6 +79,7 @@ async function _startServices(env, toDeploy, timeoutId) {
     toDeploy.clear();
   }
   return timeoutId;
+
   function findNext() {
     for (let s of toDeploy) {
       if (s.dependencies) {
@@ -88,6 +93,11 @@ async function _startServices(env, toDeploy, timeoutId) {
     return null;
   }
 }
+
+
+// -----------------------------------------------------------------------------
+// loadTemplates
+// -----------------------------------------------------------------------------
 
 /**
  * Load all templates from the Odoo server and returns the string. This method

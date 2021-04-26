@@ -8,7 +8,6 @@ export class KeepLast {
   constructor() {
     this._id = 0;
   }
-
   /**
    * Register a new task
    *
