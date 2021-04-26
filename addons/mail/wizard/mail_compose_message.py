@@ -67,10 +67,10 @@ class MailComposer(models.TransientModel):
             result['model'] = self._context.get('active_model')
         if 'res_id' in fields and 'res_id' not in result:
             result['res_id'] = self._context.get('active_id')
-        if 'no_auto_thread' in fields and 'no_auto_thread' not in result and result.get('model'):
+        if 'reply_to_mode' in fields and 'reply_to_mode' not in result and result.get('model'):
             # doesn't support threading
             if result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post'):
-                result['no_auto_thread'] = True
+                result['reply_to_mode'] = 'new'
 
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
             result['active_domain'] = '%s' % self._context.get('active_domain')
@@ -123,10 +123,15 @@ class MailComposer(models.TransientModel):
         'mail.activity.type', 'Mail Activity Type',
         index=True, ondelete='set null')
     # destination
-    reply_to = fields.Char('Reply-To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
-    no_auto_thread = fields.Boolean(
-        'No threading for answers',
-        help='Answers do not go in the original document discussion thread. This has an impact on the generated message-id.')
+    reply_to = fields.Char('Reply To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
+    reply_to_force_new = fields.Boolean(
+        string='Considers answers as new thread',
+        help='Manage answers as new incoming emails instead of replies going to the same thread.')
+    reply_to_mode = fields.Selection([
+        ('update', 'Log in the original discussion thread'),
+        ('new', 'Redirect to another email address')],
+        string='Replies', compute='_compute_reply_to_mode', inverse='_inverse_reply_to_mode',
+        help="Original Discussion: Answers go in the original document discussion thread. \n Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n This has an impact on the generated message-id.")
     is_log = fields.Boolean('Log an Internal Note',
                             help='Whether the message is an internal note (comment mode only)')
     partner_ids = fields.Many2many(
@@ -139,6 +144,15 @@ class MailComposer(models.TransientModel):
         help='This option permanently removes any track of email after it\'s been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
+
+    @api.depends('reply_to_force_new')
+    def _compute_reply_to_mode(self):
+        for composer in self:
+            composer.reply_to_mode = 'new' if composer.reply_to_force_new else 'update'
+
+    def _inverse_reply_to_mode(self):
+        for composer in self:
+            composer.reply_to_force_new = composer.reply_to_mode == 'new'
 
     @api.model
     def get_record_data(self, values):
@@ -275,7 +289,7 @@ class MailComposer(models.TransientModel):
             rendered_values = self.render_message(res_ids)
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
-        if mass_mail_mode and not self.no_auto_thread:
+        if mass_mail_mode and not self.reply_to_force_new:
             records = self.env[self.model].browse(res_ids)
             reply_to_value = records._notify_get_reply_to(default=self.email_from)
 
@@ -301,7 +315,7 @@ class MailComposer(models.TransientModel):
                 'author_id': self.author_id.id,
                 'email_from': self.email_from,
                 'record_name': self.record_name,
-                'no_auto_thread': self.no_auto_thread,
+                'reply_to_force_new': self.reply_to_force_new,
                 'mail_server_id': self.mail_server_id.id,
                 'mail_activity_type_id': self.mail_activity_type_id.id,
             }
@@ -319,11 +333,11 @@ class MailComposer(models.TransientModel):
                 email_dict = rendered_values[res_id]
                 mail_values['partner_ids'] += email_dict.pop('partner_ids', [])
                 mail_values.update(email_dict)
-                if not self.no_auto_thread:
+                if not self.reply_to_force_new:
                     mail_values.pop('reply_to')
                     if reply_to_value.get(res_id):
                         mail_values['reply_to'] = reply_to_value[res_id]
-                if self.no_auto_thread and not mail_values.get('reply_to'):
+                if self.reply_to_force_new and not mail_values.get('reply_to'):
                     mail_values['reply_to'] = mail_values['email_from']
                 # mail_mail values: body -> body_html, partner_ids -> recipient_ids
                 mail_values['body_html'] = mail_values.get('body', '')

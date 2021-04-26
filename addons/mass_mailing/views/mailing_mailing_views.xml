@@ -241,14 +241,14 @@
                                             }"/>
                                             <field name="reply_to"
                                                 attrs="{
-                                                    'required': [('reply_to_mode', '=', 'email')],
-                                                    'invisible': [('reply_to_mode', '=', 'thread')],
+                                                    'required': [('reply_to_mode', '=', 'new')],
+                                                    'invisible': [('reply_to_mode', '=', 'update')],
                                                     'readonly': [('state', 'in', ('sending', 'done'))]
                                             }"/>
                                             <div style="margin-top:-5px">
                                                 <small class="oe_edit_only text-muted mb-2"
                                                     style="font-size:74%"
-                                                    attrs="{'invisible': ['|', ('reply_to_mode', '=', 'thread'), ('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],}">
+                                                    attrs="{'invisible': ['|', ('reply_to_mode', '=', 'update'), ('mailing_model_name', 'in', ['mailing.contact', 'res.partner', 'mailing.list'])],}">
                                                     To track replies, this address must belong to this database.
                                                 </small>
                                             </div>

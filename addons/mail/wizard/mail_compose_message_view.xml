@@ -62,10 +62,11 @@
                         <field name="notify"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_post')]}"/>
                         <!-- mass mailing -->
-                        <field name="no_auto_thread" attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
-                        <field name="reply_to" placeholder="Email address to redirect replies..."
-                            attrs="{'invisible':['|', ('no_auto_thread', '=', False), ('composition_mode', '!=', 'mass_mail')],
-                                    'required':[('no_auto_thread', '=', True), ('composition_mode', '=', 'mass_mail')]}"/>
+                        <field name="reply_to_force_new" invisible="1"/>
+                        <field name="reply_to_mode" attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}" widget="radio"/>
+                        <field name="reply_to" placeholder="Email address to which replies will be redirected"
+                            attrs="{'invisible':['|', ('reply_to_mode', '=', 'update'), ('composition_mode', '!=', 'mass_mail')],
+                                    'required':[('reply_to_mode', '!=', 'update'), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
                     <field name="body" options="{'style-inline': true}"/>
                     <group col="4">

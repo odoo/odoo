@@ -113,7 +113,7 @@ class MassMailing(models.Model):
     # mailing options
     mailing_type = fields.Selection([('mail', 'Email')], string="Mailing Type", default="mail", required=True)
     reply_to_mode = fields.Selection([
-        ('thread', 'Recipient Followers'), ('email', 'Specified Email Address')],
+        ('update', 'Recipient Followers'), ('new', 'Specified Email Address')],
         string='Reply-To Mode', compute='_compute_reply_to_mode',
         readonly=False, store=True,
         help='Thread: replies go to target document. Email: replies are routed to a given email.')
@@ -252,16 +252,16 @@ class MassMailing(models.Model):
     def _compute_reply_to_mode(self):
         for mailing in self:
             if mailing.mailing_model_real in ['res.partner', 'mailing.contact']:
-                mailing.reply_to_mode = 'email'
+                mailing.reply_to_mode = 'new'
             else:
-                mailing.reply_to_mode = 'thread'
+                mailing.reply_to_mode = 'update'
 
     @api.depends('reply_to_mode')
     def _compute_reply_to(self):
         for mailing in self:
-            if mailing.reply_to_mode == 'email' and not mailing.reply_to:
+            if mailing.reply_to_mode == 'new' and not mailing.reply_to:
                 mailing.reply_to = self.env.user.email_formatted
-            elif mailing.reply_to_mode == 'thread':
+            elif mailing.reply_to_mode == 'update':
                 mailing.reply_to = False
 
     @api.depends('mailing_model_name', 'contact_list_ids')
@@ -631,11 +631,11 @@ class MassMailing(models.Model):
                 'composition_mode': 'mass_mail',
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
-                'no_auto_thread': mailing.reply_to_mode != 'thread',
+                'reply_to_force_new': mailing.reply_to_mode == 'new',
                 'template_id': None,
                 'mail_server_id': mailing.mail_server_id.id,
             }
-            if mailing.reply_to_mode == 'email':
+            if mailing.reply_to_mode == 'new':
                 composer_values['reply_to'] = mailing.reply_to
 
             composer = self.env['mail.compose.message'].with_context(active_ids=res_ids).create(composer_values)

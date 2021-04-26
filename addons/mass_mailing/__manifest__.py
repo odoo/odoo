@@ -5,7 +5,7 @@
     'name': 'Email Marketing',
     'summary': 'Design, send and track emails',
     'description': "",
-    'version': '2.3',
+    'version': '2.4',
     'sequence': 60,
     'website': 'https://www.odoo.com/page/mailing',
     'category': 'Marketing/Email Marketing',
