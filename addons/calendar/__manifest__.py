@@ -32,6 +32,7 @@ If you need to manage your meetings, you should install the CRM module.
         'views/mail_activity_views.xml',
         'views/calendar_templates.xml',
         'views/calendar_views.xml',
+        'views/res_partner_views.xml',
     ],
     'installable': True,
     'application': True,
