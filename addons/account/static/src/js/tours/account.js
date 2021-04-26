@@ -2,6 +2,7 @@ odoo.define('account.tour', function(require) {
 "use strict";
 
 var core = require('web.core');
+const {Markup} = require('web.utils');
 var tour = require('web_tour.tour');
 
 var _t = core._t;
@@ -36,7 +37,7 @@ tour.register('account_tour', {
     }, {
         trigger: "div[name=partner_id] input",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
-        content: _t("Write a company name to <b>create one</b> or <b>see suggestions</b>."),
+        content: Markup(_t("Write a company name to <b>create one</b> or <b>see suggestions</b>.")),
         position: "bottom",
     }, {
         trigger: ".o_m2o_dropdown_option a:contains('Create')",
@@ -46,7 +47,7 @@ tour.register('account_tour', {
     }, {
         trigger: ".modal-content button.btn-primary",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
-        content: _t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu."),
+        content: Markup(_t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu.")),
         auto: true,
     }, {
         trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add a:not([data-context])",
@@ -74,7 +75,7 @@ tour.register('account_tour', {
     }, {
         trigger: "input[name=email]",
         extra_trigger: "[name=move_type][raw-value=out_invoice]",
-        content: _t("Write here <b>your own email address</b> to test the flow."),
+        content: Markup(_t("Write here <b>your own email address</b> to test the flow.")),
         run: 'text customer@example.com',
         auto: true,
     }, {
