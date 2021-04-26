@@ -437,11 +437,9 @@ This module provides the core of the Odoo Web Client.
         # Used during the transition of the web architecture
         'web.frontend_legacy': [
             # Old rainbow man kept for website compatibility
-            'web/static/src/legacy/frontend/rainbowman/*.js',
-            'web/static/src/legacy/frontend/rainbowman/*.scss',
+            'web/static/src/legacy/frontend/rainbowman/**/*',
             # Old notification kept for website compatiblity
-            'web/static/src/legacy/frontend/notification/*.js',
-            'web/static/src/legacy/frontend/notification/*.scss',
+            'web/static/src/legacy/frontend/notification/**/*',
         ],
 
         # ---------------------------------------------------------------------
@@ -486,6 +484,15 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/qunit.js',
             'web/static/tests/main.js',
             'web/static/tests/setup.js',
+
+            # These 2 lines below are taken from web.assets_frontend
+            # They're required for the web.frontend_legacy to work properly
+            # It is expected to add other lines coming from the web.assets_frontend
+            # if we need to add more and more legacy stuff that would require other scss or js.
+            ('include', 'web._assets_helpers'),
+            'web/static/lib/bootstrap/scss/_variables.scss',
+
+            ('include', 'web.frontend_legacy'),
         ],
         'web.qunit_suite_tests': [
             'base/static/tests/base_settings_tests.js',
@@ -548,21 +555,14 @@ This module provides the core of the Odoo Web Client.
         'web.qunit_mobile_suite_tests': [
             'web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js',
             'web/static/tests/actions/helpers.js',
-            # 'web/static/tests/legacy/fields/basic_fields_mobile_tests.js',
-            # 'web/static/tests/legacy/fields/relational_fields_mobile_tests.js',
-            # 'web/static/tests/legacy/components/dropdown_menu_mobile_tests.js',
+
+            'web/static/tests/legacy/fields/basic_fields_mobile_tests.js',
+            'web/static/tests/legacy/fields/relational_fields_mobile_tests.js',
+            'web/static/tests/legacy/components/dropdown_menu_mobile_tests.js',
         ],
 
         # Used during the transition of the web architecture
         'web.frontend_legacy_tests': [
-            # These 2 lines below are taken from web.assets_frontend
-            # They're required for the web.frontend_legacy to work properly
-            # It is expected to add other lines coming from the web.assets_frontend 
-            # if we need to add more and more legacy stuff that would require other scss or js. 
-            ('include', 'web._assets_helpers'),
-            'web/static/lib/bootstrap/scss/_variables.scss',
-
-            ('include', 'web.frontend_legacy'),
             'web/static/tests/legacy/frontend/*.js',
         ],
     },
