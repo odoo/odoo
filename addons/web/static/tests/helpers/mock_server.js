@@ -4,7 +4,7 @@ import * as utils from "../../src/utils/arrays";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { Registry } from "../../src/core/registry";
 import { evaluateExpr } from "../../src/py_js/py";
-import { combineDomains, Domain } from "../../src/core/domain";
+import { Domain } from "../../src/core/domain";
 import { browser } from "../../src/core/browser";
 import { patchWithCleanup } from "./utils";
 
@@ -736,7 +736,7 @@ class MockServer {
           // }
           // res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD')], [fieldName, '<', endDate.format('YYYY-MM-DD')]].concat(res.__domain);
         } else {
-          res.__domain = combineDomains([[[fieldName, "=", val]], res.__domain], "AND").toList();
+          res.__domain = Domain.combine([[[fieldName, "=", val]], res.__domain], "AND").toList();
         }
       });
       // compute count key to match dumb server logic...

@@ -39,6 +39,30 @@ export class Domain {
   }
 
   /**
+   * Combine various domains together with a given operator
+   * @param {DomainRepr[]} domains
+   * @param {"AND" | "OR"} operator
+   * @returns {Domain}
+   */
+  static combine(domains, operator) {
+    if (domains.length === 0) {
+      return new Domain([]);
+    }
+    const domain1 = domains[0] instanceof Domain ? domains[0] : new Domain(domains[0]);
+    if (domains.length === 1) {
+      return domain1;
+    }
+    const domain2 = Domain.combine(domains.slice(1), operator);
+    const result = new Domain([]);
+    const astValues1 = domain1.ast.value;
+    const astValues2 = domain2.ast.value;
+    const op = operator === "AND" ? "&" : "|";
+    const combinedAST = { type: 4 /* List */, value: astValues1.concat(astValues2) };
+    result.ast = normalizeDomainAST(combinedAST, op);
+    return result;
+  }
+
+  /**
    * @returns {string}
    */
   toString() {
@@ -53,31 +77,6 @@ export class Domain {
     return evaluate(this.ast, context);
   }
 }
-
-/**
- * Combine various domains together with a given operator
- * @param {DomainRepr[]} domains
- * @param {"AND" | "OR"} operator
- * @returns {Domain}
- */
-export function combineDomains(domains, operator) {
-  if (domains.length === 0) {
-    return new Domain([]);
-  }
-  const domain1 = domains[0] instanceof Domain ? domains[0] : new Domain(domains[0]);
-  if (domains.length === 1) {
-    return domain1;
-  }
-  const domain2 = combineDomains(domains.slice(1), operator);
-  const result = new Domain([]);
-  const astValues1 = domain1.ast.value;
-  const astValues2 = domain2.ast.value;
-  const op = operator === "AND" ? "&" : "|";
-  const combinedAST = { type: 4 /* List */, value: astValues1.concat(astValues2) };
-  result.ast = normalizeDomainAST(combinedAST, op);
-  return result;
-}
-
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------

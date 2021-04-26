@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { combineDomains, Domain } from "../../src/core/domain";
+import { Domain } from "../../src/core/domain";
 
 QUnit.module("domain", {}, () => {
   // ---------------------------------------------------------------------------
@@ -204,58 +204,58 @@ QUnit.module("domain", {}, () => {
   QUnit.module("Combining domains");
 
   QUnit.test("combining zero domain", function (assert) {
-    assert.strictEqual(combineDomains([], "AND").toString(), "[]");
-    assert.strictEqual(combineDomains([], "OR").toString(), "[]");
-    assert.ok(combineDomains([], "AND").contains({ a: 1, b: 2 }));
+    assert.strictEqual(Domain.combine([], "AND").toString(), "[]");
+    assert.strictEqual(Domain.combine([], "OR").toString(), "[]");
+    assert.ok(Domain.combine([], "AND").contains({ a: 1, b: 2 }));
   });
 
   QUnit.test("combining one domain", function (assert) {
-    assert.strictEqual(combineDomains([`[("a", "=", 1)]`], "AND").toString(), `[("a", "=", 1)]`);
+    assert.strictEqual(Domain.combine([`[("a", "=", 1)]`], "AND").toString(), `[("a", "=", 1)]`);
     assert.strictEqual(
-      combineDomains([`[("user_id", "=", uid)]`], "AND").toString(),
+      Domain.combine([`[("user_id", "=", uid)]`], "AND").toString(),
       `[("user_id", "=", uid)]`
     );
-    assert.strictEqual(combineDomains([[["a", "=", 1]]], "AND").toString(), `[("a", "=", 1)]`);
+    assert.strictEqual(Domain.combine([[["a", "=", 1]]], "AND").toString(), `[("a", "=", 1)]`);
     assert.strictEqual(
-      combineDomains(["[('a', '=', '1'), ('b', '!=', 2)]"], "AND").toString(),
+      Domain.combine(["[('a', '=', '1'), ('b', '!=', 2)]"], "AND").toString(),
       `["&", ("a", "=", "1"), ("b", "!=", 2)]`
     );
   });
 
   QUnit.test("combining two domains", function (assert) {
     assert.strictEqual(
-      combineDomains([`[("a", "=", 1)]`, "[]"], "AND").toString(),
+      Domain.combine([`[("a", "=", 1)]`, "[]"], "AND").toString(),
       `[("a", "=", 1)]`
     );
     assert.strictEqual(
-      combineDomains([`[("a", "=", 1)]`, []], "AND").toString(),
+      Domain.combine([`[("a", "=", 1)]`, []], "AND").toString(),
       `[("a", "=", 1)]`
     );
     assert.strictEqual(
-      combineDomains([new Domain(`[("a", "=", 1)]`), "[]"], "AND").toString(),
+      Domain.combine([new Domain(`[("a", "=", 1)]`), "[]"], "AND").toString(),
       `[("a", "=", 1)]`
     );
     assert.strictEqual(
-      combineDomains([new Domain(`[("a", "=", 1)]`), "[]"], "OR").toString(),
+      Domain.combine([new Domain(`[("a", "=", 1)]`), "[]"], "OR").toString(),
       `[("a", "=", 1)]`
     );
     assert.strictEqual(
-      combineDomains([[["a", "=", 1]], "[('uid', '<=', uid)]"], "AND").toString(),
+      Domain.combine([[["a", "=", 1]], "[('uid', '<=', uid)]"], "AND").toString(),
       `["&", ("a", "=", 1), ("uid", "<=", uid)]`
     );
     assert.strictEqual(
-      combineDomains([[["a", "=", 1]], "[('b', '<=', 3)]"], "OR").toString(),
+      Domain.combine([[["a", "=", 1]], "[('b', '<=', 3)]"], "OR").toString(),
       `["|", ("a", "=", 1), ("b", "<=", 3)]`
     );
     assert.strictEqual(
-      combineDomains(
+      Domain.combine(
         ["[('a', '=', '1'), ('c', 'in', [4, 5])]", "[('b', '<=', 3)]"],
         "OR"
       ).toString(),
       `["|", "&", ("a", "=", "1"), ("c", "in", [4, 5]), ("b", "<=", 3)]`
     );
     assert.strictEqual(
-      combineDomains(
+      Domain.combine(
         [new Domain("[('a', '=', '1'), ('c', 'in', [4, 5])]"), "[('b', '<=', 3)]"],
         "OR"
       ).toString(),
@@ -265,7 +265,7 @@ QUnit.module("domain", {}, () => {
 
   QUnit.test("combining three domains", function (assert) {
     assert.strictEqual(
-      combineDomains(
+      Domain.combine(
         [
           new Domain("[('a', '=', '1'), ('c', 'in', [4, 5])]"),
           [["b", "<=", 3]],
