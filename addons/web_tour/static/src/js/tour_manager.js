@@ -11,6 +11,7 @@ var RunningTourActionHelper = require('web_tour.RunningTourActionHelper');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
+const {Markup} = require('web.utils');
 
 var _t = core._t;
 
@@ -92,7 +93,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             wait_for: options.wait_for || Promise.resolve(),
         };
         if (options.skip_enabled) {
-            tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
+            tour.skip_link = Markup`<p><span class="o_skip_tour">${_t('Skip tour')}</span></p>`;
             tour.skip_handler = function (tip) {
                 this._deactivate_tip(tip);
                 this._consume_tour(name);
@@ -353,7 +354,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var tip_info = tip;
         if (tour.skip_link) {
             tip_info = _.extend(_.omit(tip_info, 'content'), {
-                content: tip.content + tour.skip_link,
+                content: Markup`${tip.content}${tour.skip_link}`,
                 event_handlers: [{
                     event: 'click',
                     selector: '.o_skip_tour',

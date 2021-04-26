@@ -1,10 +1,9 @@
 odoo.define("website_blog.tour", function (require) {
     "use strict";
 
-    var core = require("web.core");
+    const {_t} = require("web.core");
+    const {Markup} = require('web.utils');
     var tour = require("web_tour.tour");
-
-    var _t = core._t;
 
     tour.register("blog", {
         url: "/",
@@ -30,7 +29,7 @@ odoo.define("website_blog.tour", function (require) {
     }, {
         trigger: "we-button[data-background]:nth(1)",
         extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
-        content: _t("Set a blog post <b>cover</b>."),
+        content: Markup(_t("Set a blog post <b>cover</b>.")),
         position: "right",
     }, {
         trigger: ".o_select_media_dialog .o_we_search",
@@ -43,7 +42,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "top",
     }, {
         trigger: "#o_wblog_post_content",
-        content: _t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs."),
+        content: Markup(_t("<b>Write your story here.</b> Use the top toolbar to style your text: add an image or table, set bold or italic, etc. Drag and drop building blocks for more graphical blogs.")),
         position: "top",
         run: function (actions) {
             actions.auto();
@@ -52,12 +51,12 @@ odoo.define("website_blog.tour", function (require) {
     }, {
         trigger: "button[data-action=save]",
         extra_trigger: "#o_wblog_post_content .o_wblog_post_content_field p:first:not(:containsExact(" + _t("Start writing here...") + "))",
-        content: _t("<b>Click on Save</b> to record your changes."),
+        content: Markup(_t("<b>Click on Save</b> to record your changes.")),
         position: "bottom",
     }, {
         trigger: "a[data-action=show-mobile-preview]",
         extra_trigger: "body:not(.editor_enable)",
-        content: _t("Use this icon to preview your blog post on <b>mobile devices</b>."),
+        content: Markup(_t("Use this icon to preview your blog post on <b>mobile devices</b>.")),
         position: "bottom",
     }, {
         trigger: "button[data-dismiss=modal]",
@@ -68,11 +67,11 @@ odoo.define("website_blog.tour", function (require) {
         trigger: ".js_publish_management .js_publish_btn",
         extra_trigger: "body:not(.editor_enable)",
         position: "bottom",
-        content: _t("<b>Publish your blog post</b> to make it visible to your visitors."),
+        content: Markup(_t("<b>Publish your blog post</b> to make it visible to your visitors.")),
     }, {
         trigger: "#customize-menu > a",
         extra_trigger: ".js_publish_management .js_publish_btn .css_unpublish:visible",
-        content: _t("<b>That's it, your blog post is published!</b> Discover more features through the <i>Customize</i> menu."),
+        content: Markup(_t("<b>That's it, your blog post is published!</b> Discover more features through the <i>Customize</i> menu.")),
         position: "bottom",
         width: 500,
     }]);

@@ -1,10 +1,9 @@
 odoo.define('hr_expense.tour', function(require) {
 "use strict";
 
-var core = require('web.core');
+const {_t} = require('web.core');
+const {Markup} = require('web.utils');
 var tour = require('web_tour.tour');
-
-var _t = core._t;
 
 tour.register('hr_expense_tour' , {
     url: "/web"
@@ -20,7 +19,7 @@ tour.register('hr_expense_tour' , {
     edition: 'enterprise'
 }, {
     trigger: '.o_form_button_save',
-    content: _t("<p>Once your <b> Expense </b> is ready, you can save it.</p>"),
+    content: Markup(_t("<p>Once your <b> Expense </b> is ready, you can save it.</p>")),
     position: 'bottom',
 }, {
     trigger: '.o_attach_document',
@@ -29,28 +28,28 @@ tour.register('hr_expense_tour' , {
 }, {
     trigger: '.o_expense_submit',
     extra_triggger: ".o_expense_form",
-    content: _t('<p>Click on <b> Create Report </b> to create the report.</p>'),
+    content: Markup(_t('<p>Click on <b> Create Report </b> to create the report.</p>')),
     position: 'right',
 }, {
     trigger: '.o_expense_tree input[type=checkbox]',
-    content: _t('<p>Select expenses to submit them to your manager</p>'),
+    content: Markup(_t('<p>Select expenses to submit them to your manager</p>')),
     position: 'bottom'
 }, {
     trigger: '.o_dropdown_toggler',
     extra_trigger: ".o_expense_tree",
-    content: _t('<p>Click on <b> Action Create Report </b> to submit selected expenses to your manager</p>'),
+    content: Markup(_t('<p>Click on <b> Action Create Report </b> to submit selected expenses to your manager</p>')),
     position: 'right',
 },  {
     trigger: '.o_expense_sheet_submit',
-    content: _t('Once your <b>Expense report</b> is ready, you can submit it to your manager and wait for the approval from your manager.'),
+    content: Markup(_t('Once your <b>Expense report</b> is ready, you can submit it to your manager and wait for the approval from your manager.')),
     position: 'bottom',
 }, {
     trigger: '.o_expense_sheet_approve',
-    content: _t("<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give the reason thanks to the hereunder message tool</p>"),
+    content: Markup(_t("<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give the reason thanks to the hereunder message tool</p>")),
     position: 'bottom',
 }, {
     trigger: '.o_expense_sheet_post',
-    content: _t("<p>The accountant receive approved expense reports.</p><p>He can post journal entries in one click if taxes and accounts are right.</p>"),
+    content: Markup(_t("<p>The accountant receive approved expense reports.</p><p>He can post journal entries in one click if taxes and accounts are right.</p>")),
     position: 'bottom',
 }, {
     trigger: '.o_expense_sheet_pay',
