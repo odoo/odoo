@@ -260,7 +260,7 @@ class AccountMove(models.Model):
         # OVERRIDE
         posted = super()._post(soft=soft)
 
-        for move in posted.filtered(lambda m: m.l10n_it_send_state == 'to_send' and m.move_type == 'out_invoice'):
+        for move in posted.filtered(lambda m: m.l10n_it_send_state == 'to_send' and m.move_type == 'out_invoice' and m.company_id.country_id.code == 'IT'):
             move.send_pec_mail()
 
         return posted

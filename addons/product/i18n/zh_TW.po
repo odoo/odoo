@@ -6,15 +6,16 @@
 # Michael Yeung, 2020
 # Bill Hsu <hcm86@icloud.com>, 2020
 # sejun huang <sejun.huang@gmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Mandy Choy <mnc@odoo.com>, 2021
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -251,7 +252,7 @@ msgstr "活動狀態"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "活動類型圖標"
 
 #. module: product
 #. openerp-web
@@ -584,8 +585,8 @@ msgstr "包含數量"
 #. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
-msgid "Corner Desk Black"
-msgstr "角台黑色"
+msgid "Corner Desk Left Sit"
+msgstr ""
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -832,6 +833,7 @@ msgstr "折扣"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
 #: model:ir.model.fields,field_description:product.field_res_partner__display_name
+#: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -985,7 +987,7 @@ msgstr "一般資訊"
 #: model:ir.actions.server,name:product.action_product_price_list_report
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 msgid "Generate Pricelist"
-msgstr ""
+msgstr "產生價格表"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1053,6 +1055,7 @@ msgstr "小時"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
 #: model:ir.model.fields,field_description:product.field_res_partner__id
+#: model:ir.model.fields,field_description:product.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
 
@@ -1272,6 +1275,7 @@ msgstr "大型會議桌"
 #: model:ir.model.fields,field_description:product.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:product.field_res_country_group____last_update
 #: model:ir.model.fields,field_description:product.field_res_partner____last_update
+#: model:ir.model.fields,field_description:product.field_uom_uom____last_update
 msgid "Last Modified on"
 msgstr "最後修改於"
 
@@ -1894,6 +1898,11 @@ msgid "Product Type"
 msgstr "產品類型"
 
 #. module: product
+#: model:ir.model,name:product.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "產品測量單位"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
@@ -2386,6 +2395,15 @@ msgid ""
 msgstr "這價格表將會被使用,取代預設值,用之出售給目前夥伴."
 
 #. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
@@ -2707,6 +2725,13 @@ msgid "Volume unit of measure label"
 msgstr "體積度量單位備註"
 
 #. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "警告！"
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
 msgstr "警告"
@@ -2738,6 +2763,16 @@ msgstr "重量單位計量標籤"
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "白"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

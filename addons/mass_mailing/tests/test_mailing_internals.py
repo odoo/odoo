@@ -200,9 +200,9 @@ class TestMassMailFeatures(MassMailCommon):
             mailing._process_mass_mailing_queue()
 
         self.assertMailTraces(
-            [{'email': 'test1@example.com'},
-             {'email': 'test2@example.com', 'state': 'ignored'}],
-            mailing, partner_a | partner_b, check_mail=True
+            [{'partner': partner_a},
+             {'partner': partner_b, 'state': 'ignored'}],
+            mailing, partner_a + partner_b, check_mail=True
         )
 
     @users('user_marketing')

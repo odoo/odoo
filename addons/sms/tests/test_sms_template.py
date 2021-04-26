@@ -3,8 +3,9 @@
 
 from odoo.tests.common import SavepointCase, users
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.tests import tagged
 from odoo.exceptions import AccessError
+from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 
 @tagged('post_install')
@@ -26,7 +27,8 @@ class TestSmsTemplateAccessRights(SavepointCase):
         cls.sms_templates = cls.env['sms.template'].create(vals)
 
     @users('user_employee')
-    def test_access_rights_user_sms_template(self):
+    @mute_logger('odoo.models.unlink')
+    def test_access_rights_user(self):
         # Check if a member of group_user can only read on sms.template
         for sms_template in self.env['sms.template'].browse(self.sms_templates.ids):
             self.assertTrue(bool(sms_template.name))
@@ -42,7 +44,8 @@ class TestSmsTemplateAccessRights(SavepointCase):
                 sms_template.unlink()
 
     @users('user_system')
-    def test_access_rights_manager_sms_template(self):
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
+    def test_access_rights_system(self):
         admin = self.env.ref('base.user_admin')
         for sms_template in self.env['sms.template'].browse(self.sms_templates.ids):
             self.assertTrue(bool(sms_template.name))

@@ -146,7 +146,7 @@ class TestSMSPost(TestMailFullCommon, LinkTrackerMock):
             self.env['sms.sms'].with_user(self.user_employee).browse(self.sms_all.ids).send()
 
     def test_sms_send_delete_all(self):
-        with self.mockSMSGateway(sim_error='jsonrpc_exception'):
+        with self.mockSMSGateway(sms_allow_unlink=True, sim_error='jsonrpc_exception'):
             self.env['sms.sms'].browse(self.sms_all.ids).send(delete_all=True, raise_exception=False)
         self.assertFalse(len(self.sms_all.exists()))
 

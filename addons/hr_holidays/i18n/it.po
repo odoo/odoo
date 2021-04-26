@@ -929,8 +929,8 @@ msgstr ""
 msgid ""
 "Allocation request must be confirmed or validated in order to refuse it."
 msgstr ""
-"Per permetterne il rifiuto, la richiesta di assegnazione deve essere "
-"confermata o validata."
+"Per essere respinta, la richiesta di assegnazione deve essere confermata o "
+"convalidata."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -950,7 +950,7 @@ msgid ""
 "be reset to Draft."
 msgstr ""
 "Per essere reimpostata a bozza, la richiesta di assegnazione deve trovarsi "
-"nello stato \"Rifiutata\" o \"Da approvare\"."
+"nello stato \"Respinta\" o \"Da approvare\"."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -2291,13 +2291,13 @@ msgstr "In linea"
 #, python-format
 msgid "Only a Time Off Manager can approve/refuse its own requests."
 msgstr ""
-"Solo un supervisore ferie può approvare/rifiutare le proprie richieste."
+"Solo un supervisore ferie può approvare/respingere le proprie richieste."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset a refused leave."
-msgstr "Solo un supervisore ferie può reimpostare un permesso rifiutato."
+msgstr "Solo un supervisore ferie può reimpostare un permesso respinto."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -2342,7 +2342,7 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
-"Solo un responsabile ferie o un supervisore può approvare o rifiutare le "
+"Solo un responsabile ferie o un supervisore può approvare o respingere le "
 "richieste."
 
 #. module: hr_holidays
@@ -2431,7 +2431,7 @@ msgstr "Rosso"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 #, python-format
 msgid "Refuse"
-msgstr "Rifiuta"
+msgstr "Respingi"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__refuse
@@ -2442,7 +2442,7 @@ msgstr "Rifiuta"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__refuse
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__refuse
 msgid "Refused"
-msgstr "Rifiutata"
+msgstr "Respinta"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
@@ -2743,7 +2743,7 @@ msgid ""
 msgstr ""
 "Lo stato è impostato \"Da inviare\" quando viene creata una richiesta di ferie.\n"
 "Lo stato è \"Da approvare\" quando la richiesta viene confermata da un utente.\n"
-"Lo stato è \"Rifiutata\" quando la richiesta viene rifiutata dal supervisore.\n"
+"Lo stato è \"Respinta\" quando la richiesta viene respinta dal supervisore.\n"
 "Lo stato è \"Approvata\" quando la richiesta viene approvata dal supervisore."
 
 #. module: hr_holidays
@@ -2756,7 +2756,7 @@ msgid ""
 msgstr ""
 "Lo stato è impostato \"Da inviare\" quando viene creata una richiesta di assegnazione.\n"
 "Lo stato è \"Da approvare\" quando la richiesta viene confermata da un utente.\n"
-"Lo stato è \"Rifiutata\" quando la richiesta viene rifiutata dal supervisore.\n"
+"Lo stato è \"Respinta\" quando la richiesta viene respinta dal supervisore.\n"
 "Lo stato è \"Approvata\" quando la richiesta viene approvata dal supervisore."
 
 #. module: hr_holidays
@@ -2836,6 +2836,9 @@ msgid ""
 "only used when validation is 'By Time Off Officer' or 'By Employee's Manager"
 " and Time Off Officer'"
 msgstr ""
+"Utente responsabile dell'approvazione di questo tipo di ferie. Viene "
+"utilizzato solo se la convalida è \"Per responsabile ferie\" o \"Per "
+"supervisore dipendente e responsabile ferie\""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3048,8 +3051,8 @@ msgstr ""
 #, python-format
 msgid "Time off request must be confirmed or validated in order to refuse it."
 msgstr ""
-"Per permetterne il rifiuto, la richiesta di ferie deve essere confermata o "
-"validata."
+"Per essere respinta, la richiesta di ferie deve essere confermata o "
+"convalidata."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -3069,7 +3072,7 @@ msgid ""
 "reset to draft."
 msgstr ""
 "Per essere reimpostata a bozza, la richiesta di ferie deve trovarsi nello "
-"stato \"Rifiutata\" o \"Da approvare\"."
+"stato \"Respinta\" o \"Da approvare\"."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
@@ -3412,7 +3415,7 @@ msgstr "%(leave_type)s pianificato/a il %(date)s accettato/a"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Your %(leave_type)s planned on %(date)s has been refused"
-msgstr "%(leave_type)s pianificato/a il %(date)s rifiutato/a"
+msgstr "%(leave_type)s in programma il %(date)s respinte/i"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
@@ -3478,7 +3481,7 @@ msgstr "delle ferie di tipo"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "refused"
-msgstr ""
+msgstr "respinta"
 
 #. module: hr_holidays
 #. openerp-web
@@ -3496,7 +3499,7 @@ msgstr "al"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "validated"
-msgstr ""
+msgstr "convalidata"
 
 #. module: hr_holidays
 #. openerp-web

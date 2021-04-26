@@ -270,7 +270,28 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 'partner_ids': [(4, customer_id)],
             })
 
-        with self.assertQueryCount(__system__=29, emp=32):
+        with self.assertQueryCount(__system__=32, emp=39):
+            composer.send_mail()
+
+    @users('__system__', 'emp')
+    @warmup
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail')
+    def test_mail_composer_nodelete(self):
+        self._create_test_records()
+        test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
+        customer_id = self.customer.id
+        with self.assertQueryCount(__system__=2, emp=2):
+            composer = self.env['mail.compose.message'].with_context({
+                'default_composition_mode': 'comment',
+                'default_model': test_record._name,
+                'default_res_id': test_record.id,
+                'mail_auto_delete': False,
+            }).create({
+                'body': '<p>Test Body</p>',
+                'partner_ids': [(4, customer_id)],
+            })
+
+        with self.assertQueryCount(__system__=25, emp=32):
             composer.send_mail()
 
     @users('__system__', 'emp')
@@ -290,7 +311,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }).create({})
             composer.onchange_template_id_wrapper()
 
-        with self.assertQueryCount(__system__=37, emp=40):
+        with self.assertQueryCount(__system__=33, emp=40):
             composer.send_mail()
 
         # remove created partner to ensure tests are the same each run
@@ -331,7 +352,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_log_with_post(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=5, emp=6):
+        with self.assertQueryCount(__system__=3, emp=6):
             record.message_post(
                 body='<p>Test message_post as log</p>',
                 subtype_xmlid='mail.mt_note',
@@ -342,7 +363,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_no_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=5, emp=6):
+        with self.assertQueryCount(__system__=3, emp=6):
             record.message_post(
                 body='<p>Test Post Performances basic</p>',
                 partner_ids=[],
@@ -355,7 +376,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_one_email_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=30, emp=31):
+        with self.assertQueryCount(__system__=28, emp=31):
             record.message_post(
                 body='<p>Test Post Performances with an email ping</p>',
                 partner_ids=self.customer.ids,
@@ -367,7 +388,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=14, emp=17):
+        with self.assertQueryCount(__system__=12, emp=17):
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -847,14 +868,14 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'res_id': record.id
         } for record in records])
 
-        with self.assertQueryCount(emp=5):
+        with self.assertQueryCount(emp=4):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 
         messages.flush()
         messages.invalidate_cache()
 
-        with self.assertQueryCount(emp=15):
+        with self.assertQueryCount(emp=14):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 

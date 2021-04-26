@@ -712,6 +712,8 @@ class MrpProduction(models.Model):
     def _onchange_workorder_ids(self):
         if self.bom_id:
             self._create_workorder()
+        else:
+            self.workorder_ids = False
 
     def write(self, vals):
         if 'workorder_ids' in self:

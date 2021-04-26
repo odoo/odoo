@@ -20,7 +20,6 @@
 # bb76cd9ac0cb7e20167a14728edb858b, 2020
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
 # Daniel Deyris <daniel.deyris@phidias.fr>, 2020
-# Alexandra Jubert <aju@odoo.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Valaeys Stéphane <svalaeys@fiefmanage.ch>, 2020
 # Nathan Grognet <ngr@odoo.com>, 2020
@@ -31,7 +30,6 @@
 # Richard Mathot <rim@odoo.com>, 2020
 # Damien Bouvy <dbo@odoo.com>, 2020
 # Brice Reul <brice@bluerice.be>, 2020
-# Fabien Pinckaers <fp@openerp.com>, 2020
 # Florian Hatat, 2020
 # Nicolas JEUDY <njeudy@panda-chi.io>, 2020
 # Melanie Bernard <mbe@odoo.com>, 2020
@@ -79,6 +77,9 @@
 # Benjamin Stienon <tsb@odoo.com>, 2021
 # Didier LUBERRIAGA <didier.luberriaga@gmail.com>, 2021
 # Jonathan Castillo <jcs@odoo.com>, 2021
+# Fabien Pinckaers <fp@openerp.com>, 2021
+# Alexandra Jubert <aju@odoo.com>, 2021
+# Saad Thaifa <saad.thaifa@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -86,7 +87,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jonathan Castillo <jcs@odoo.com>, 2021\n"
+"Last-Translator: Saad Thaifa <saad.thaifa@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,7 +127,7 @@ msgstr "Nombre de factures rapprochées"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "Nombre de factures rapprochées "
+msgstr "# Factures rapprochées "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
@@ -4506,7 +4507,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
 msgid "Date Mode"
-msgstr ""
+msgstr "Mode de date"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
@@ -7982,7 +7983,7 @@ msgstr "Opérations diverses"
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "Missing 'active_model' in context."
-msgstr ""
+msgstr "'active_model' manquant sur le contexte."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -8733,6 +8734,12 @@ msgid "Original Bills"
 msgstr "Factures originales"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr "Devise d'origine"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Paiement effectué par"
@@ -8988,7 +8995,7 @@ msgstr "Livre des tiers"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr ""
+msgstr "Association du partenaire"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
@@ -10870,7 +10877,7 @@ msgstr "Services"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Set a price"
-msgstr ""
+msgstr "Renseigner un prix"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -10966,7 +10973,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
 msgid "Show Decimal Separator"
-msgstr ""
+msgstr "Afficher le séparateur des décimales"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
@@ -11312,7 +11319,7 @@ msgstr "Sous-titres"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report__root_line_ids
 msgid "Subset of line_ids, containing the lines at the root of the report."
-msgstr ""
+msgstr "Sous-ensemble de line_ids, contenant les lignes à la base du rapport"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__subtotal
@@ -11342,7 +11349,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__suitable_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__suitable_journal_ids
 msgid "Suitable Journal"
-msgstr ""
+msgstr "Journal convenable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
@@ -11929,6 +11936,8 @@ msgid ""
 "Technical field used to have a dynamic domain on journal / taxes in the form"
 " view."
 msgstr ""
+"Champ technique utilisé pour avoir un domaine dynamique sur le journal / les"
+" taxes dans la vue formulaire."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__hide_payment_method
@@ -12020,6 +12029,8 @@ msgid ""
 "Technical field used to restrict the domain of account tags for tax "
 "repartition lines created for this tax."
 msgstr ""
+"Champ technique utilisé pour resteindre le domaine des étiquettes de compte "
+"pour la répartition des lignes de taxe crées pour cette taxe."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__is_rounding_line
@@ -12067,7 +12078,7 @@ msgstr "Modèle"
 #. module: account
 #: model:ir.model,name:account.model_account_group_template
 msgid "Template for Account Groups"
-msgstr ""
+msgstr "Modèle pour les Groupes de Comptes"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -12112,7 +12123,7 @@ msgstr "Conditions générales"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
-msgstr ""
+msgstr "C'est la date de l'écriture d'ouverture."
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -12146,6 +12157,12 @@ msgstr ""
 "différents types de comptes : le type liquidité est pour l'argent cash ou "
 "les comptes banquaires, créanciers/débiteurs par les comptes des "
 "vendeurs/clients."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
@@ -12185,6 +12202,15 @@ msgstr ""
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "Le compte %s (%s) est déprécié."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -12341,6 +12367,8 @@ msgid ""
 "The combination of reference model and reference type on the journal is not "
 "implemented"
 msgstr ""
+"La combinaison du modèle de référence et du type de référence sur le journal"
+" n'est pas implémentée."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -14696,6 +14724,12 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
 msgstr "Vous devez ajouter une ligne avant de poster."
 
@@ -14869,7 +14903,7 @@ msgstr "du mois suivant"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "on"
-msgstr "le"
+msgstr "sur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

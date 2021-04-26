@@ -203,8 +203,8 @@ msgid ""
 "selected Sales Order Item on save. Discard to avoid the change."
 msgstr ""
 "Alle urenstaaturen die nog niet zijn gefactureerd, worden bij het opslaan "
-"toegewezen aan het geselecteerde verkooporder-item. Discard om verandering "
-"te voorkomen."
+"toegewezen aan het geselecteerde verkooporder-item. Kies negeren om de "
+"wijziging te voorkomen."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -214,7 +214,7 @@ msgid ""
 "Order on save. Discard to avoid the change."
 msgstr ""
 "Alle urenstaaturen die nog niet zijn gefactureerd, worden bij het opslaan "
-"uit de verkooporder verwijderd. Discard om verandering te voorkomen."
+"uit de verkooporder verwijderd. Kies negeren om de wijziging te voorkomen."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -224,8 +224,8 @@ msgid ""
 "selected Sales Order Item on save. Discard to avoid the change."
 msgstr ""
 "Alle urenstaaturen die nog niet zijn gefactureerd, worden bij het opslaan "
-"verwijderd uit het geselecteerde verkooporder-item. Discard om verandering "
-"te voorkomen."
+"verwijderd uit het geselecteerde verkooporder-item. Kies negeren om de "
+"wijziging te voorkomen."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -235,7 +235,7 @@ msgid ""
 "save. Discard to avoid the change."
 msgstr ""
 "Alle urenstaaturen worden bij het opslaan toegewezen aan het geselecteerde "
-"verkooporder-item. Discard om verandering te voorkomen."
+"verkooporder-item. Kies negeren om de wijziging te voorkomen."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -848,6 +848,7 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: sale_timesheet
+#. openerp-web
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Late"
@@ -1057,7 +1058,7 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks. The existing timesheet will be linked to this product."
 msgstr ""
-"Product van het verkooporder item. Moet een gefactureerde dienst zijn "
+"Product van het verkooporderregel. Moet een gefactureerde dienst zijn "
 "gebaseerd op urenstaten op taken. De bestaande urenstaat wordt gekoppeld aan"
 " dit product."
 
@@ -1245,7 +1246,7 @@ msgstr "Verkooporder bevestigingsdatum"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__sale_line_id
 msgid "Sales Order Item"
-msgstr "Verkooporder item"
+msgstr "Verkooporderregel"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
@@ -1441,7 +1442,7 @@ msgstr "Het project heeft al een verkooporder."
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project is already linked to a sales order item."
-msgstr "Het project is al gekoppeld aan een verkooporder item."
+msgstr "Het project is al gekoppeld aan een verkooporderregel."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -1470,7 +1471,7 @@ msgstr "De taak heeft al een verkooporder."
 #: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
 #, python-format
 msgid "The task is already linked to a sales order item."
-msgstr "De taak is al gekoppeld aan een verkooporder item."
+msgstr "De taak is al gekoppeld aan een verkooporderregel."
 
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_project_timesheet_product_required_if_billable_and_timesheets
@@ -1677,7 +1678,7 @@ msgstr "Prijs"
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__price_unit
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_create_sale_order__price_unit
 msgid "Unit price of the sales order item."
-msgstr "De prijs van het verkooporder item."
+msgstr "De prijs van het verkooporderregel."
 
 #. module: sale_timesheet
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual

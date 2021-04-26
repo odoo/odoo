@@ -2153,21 +2153,7 @@ exports.Orderline = Backbone.Model.extend({
 
         taxes = collect_taxes(taxes);
 
-        // 2) Avoid dealing with taxes mixing price_include=False && include_base_amount=True
-        // with price_include=True
-
-        var base_excluded_flag = false; // price_include=False && include_base_amount=True
-        var included_flag = false;      // price_include=True
-        _(taxes).each(function(tax){
-            if(tax.price_include)
-                included_flag = true;
-            else if(tax.include_base_amount)
-                base_excluded_flag = true;
-            if(base_excluded_flag && included_flag)
-                throw new Error('Unable to mix any taxes being price included with taxes affecting the base amount but not included in price.');
-        });
-
-        // 3) Deal with the rounding methods
+        // 2) Deal with the rounding methods
 
         var round_tax = this.pos.company.tax_calculation_rounding_method != 'round_globally';
 
@@ -2175,7 +2161,7 @@ exports.Orderline = Backbone.Model.extend({
         if(!round_tax)
             currency_rounding = currency_rounding * 0.00001;
 
-        // 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
+        // 3) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
         var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount){
              return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
         }
@@ -2230,15 +2216,17 @@ exports.Orderline = Backbone.Model.extend({
         var total_excluded = round_pr(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), initial_currency_rounding);
         var total_included = total_excluded;
 
-        // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
+        // 4) Iterate the taxes in the sequence order to fill missing base/amount values.
 
         base = total_excluded;
+
+        var skip_checkpoint = false;
 
         var taxes_vals = [];
         i = 0;
         var cumulated_tax_included_amount = 0;
         _(taxes.reverse()).each(function(tax){
-            if(tax.price_include && total_included_checkpoints[i] !== undefined){
+            if(!skip_checkpoint && tax.price_include && total_included_checkpoints[i] !== undefined){
                 var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
                 cumulated_tax_included_amount = 0;
             }else
@@ -2256,8 +2244,11 @@ exports.Orderline = Backbone.Model.extend({
                 'base': sign * round_pr(base, currency_rounding),
             });
 
-            if(tax.include_base_amount)
+            if(tax.include_base_amount){
                 base += tax_amount;
+                if(!tax.price_include)
+                    skip_checkpoint = true;
+            }
 
             total_included += tax_amount;
             i += 1;
@@ -3080,6 +3071,10 @@ exports.Order = Backbone.Model.extend({
         newPaymentline.set_amount(this.get_due());
         this.paymentlines.add(newPaymentline);
         this.select_paymentline(newPaymentline);
+        if(this.pos.config.cash_rounding){
+          this.selected_paymentline.set_amount(0);
+          this.selected_paymentline.set_amount(this.get_due());
+        }
         return newPaymentline;
     },
     get_paymentlines: function(){
@@ -3316,12 +3311,13 @@ exports.Order = Backbone.Model.extend({
     get_rounding_applied: function() {
         if(this.pos.config.cash_rounding) {
             const only_cash = this.pos.config.only_round_cash_method;
-            const has_cash = _.some(this.get_paymentlines(), function(pl) { return pl.payment_method.is_cash_count == true;});
+            const has_cash = this.selected_paymentline ? this.selected_paymentline.payment_method.is_cash_count == true: false;
             if (!only_cash || (only_cash && has_cash)) {
-                var total = round_pr(this.get_total_with_tax(), this.pos.cash_rounding[0].rounding);
+                var remaining = this.get_total_with_tax() - this.get_total_paid();
+                var total = round_pr(remaining, this.pos.cash_rounding[0].rounding);
                 var sign = total > 0 ? 1.0 : -1.0;
 
-                var rounding_applied = total - (this.pos.config['iface_tax_included'] === "total"? this.get_subtotal(): this.get_total_with_tax());
+                var rounding_applied = total - remaining;
                 rounding_applied *= sign;
                 // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
                 if (utils.float_is_zero(rounding_applied, this.pos.currency.decimals)){
@@ -3359,12 +3355,29 @@ exports.Order = Backbone.Model.extend({
         return false;
     },
     is_paid: function(){
-        return this.get_due() <= 0;
+        return this.get_due() <= 0 && this.check_paymentlines_rounding();
     },
     is_paid_with_cash: function(){
         return !!this.paymentlines.find( function(pl){
             return pl.payment_method.is_cash_count;
         });
+    },
+    check_paymentlines_rounding: function() {
+        if(this.pos.config.cash_rounding) {
+            var cash_rounding = this.pos.cash_rounding[0].rounding;
+            var default_rounding = this.pos.currency.rounding;
+            for(var id in this.get_paymentlines()) {
+                var line = this.get_paymentlines()[id];
+                var diff = round_pr(round_pr(line.amount, cash_rounding) - round_pr(line.amount, default_rounding), default_rounding);
+                if(diff && line.payment_method.is_cash_count) {
+                    return false;
+                } else if(!this.pos.config.only_round_cash_method && diff) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return true;
     },
     finalize: function(){
         this.destroy();

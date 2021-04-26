@@ -333,7 +333,7 @@ form: module.record_id""" % (xml_id,)
         name = rec.get('name')
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
-        warnings.warn("The <act_window> tag is deprecated, use a <record> for {xml_id!r}.", DeprecationWarning)
+        warnings.warn(f"The <act_window> tag is deprecated, use a <record> for {xml_id!r}.", DeprecationWarning)
         view_id = False
         if rec.get('view_id'):
             view_id = self.id_get(rec.get('view_id'))

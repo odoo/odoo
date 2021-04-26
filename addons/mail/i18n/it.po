@@ -1877,7 +1877,7 @@ msgstr "Discussioni"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_cancel
 msgid "Dismiss notification for resend by model"
-msgstr ""
+msgstr "Ignoramento notifiche per reinvio per modello"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_module_uninstall__display_name
@@ -2825,7 +2825,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID del record principale contenente l’alias (esempio: progetto che contiene "
+"ID del record primario contenente l’alias (esempio: progetto che contiene "
 "l’alias di creazione del lavoro)"
 
 #. module: mail
@@ -4610,8 +4610,8 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
-"Server opzionale preferito per l'invio di email. Se non valorizzato, verrà "
-"usato quello con priorità più alta."
+"Server facoltativo preferito per la posta in uscita. Se non impostato, viene"
+" usato quello con priorità più alta."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_template
@@ -4709,7 +4709,7 @@ msgstr "Messaggio principale"
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Modello principale"
+msgstr "Modello primario"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
@@ -4727,9 +4727,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modello principale contenente l'alias. Il modello che contiene il "
-"riferimento alias non è necessariamente quello fornito da alias_model_id "
-"(esempio: progetto (parent_model) e lavoro (model))"
+"Modello primario contenente l'alias. Il modello che contiene il riferimento "
+"alias non è necessariamente quello fornito da alias_model_id (esempio: "
+"progetto (parent_model) e lavoro (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -6124,7 +6124,7 @@ msgstr "Questa azione invia una e-mail."
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Questa e-mail è nella lista nera dell'invio massivo, fai clic per toglierla."
+"L'e-mail è nella lista nera dell'invio massivo, fai clic per toglierla."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
@@ -6378,14 +6378,14 @@ msgstr ""
 #: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
 msgid "Unblacklisting Reason: %s"
-msgstr ""
+msgstr "Motivo rimozione da lista nera: %s"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/follow_button/follow_button.xml:0
 #, python-format
 msgid "Unfollow"
-msgstr "Non seguire più"
+msgstr "Non seguire"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_alias_unique
@@ -7124,7 +7124,7 @@ msgstr "generale"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been created from:"
-msgstr ""
+msgstr "è stato creato da:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link

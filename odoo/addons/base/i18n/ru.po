@@ -20998,6 +20998,16 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr ""
@@ -24578,7 +24588,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_marketing_social_marketing
 #: model:ir.module.module,shortdesc:base.module_social
 msgid "Social Marketing"
-msgstr "Меркетинг соцсетей"
+msgstr "Меркетинг в соцсетях"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
@@ -25726,6 +25736,12 @@ msgstr "Полное наименование страны."
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
 msgstr "Внутренний пользователь, который отвечает за этот контакт."
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
@@ -27404,7 +27420,7 @@ msgstr "Записи в журнале пользователя"
 #. module: base
 #: model:ir.module.category,name:base.module_category_user_type
 msgid "User types"
-msgstr "типы пользователей"
+msgstr "Тип пользователя"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user

@@ -70,6 +70,11 @@ class MrpProduction(models.Model):
                 # able to produce orders
                 AccountAnalyticLine.create(vals)
 
+    def _get_backorder_mo_vals(self):
+        res = super()._get_backorder_mo_vals()
+        res['extra_cost'] = self.extra_cost
+        return res
+
     def button_mark_done(self):
         res = super(MrpProduction, self).button_mark_done()
         for order in self:

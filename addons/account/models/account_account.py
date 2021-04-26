@@ -188,6 +188,32 @@ class AccountAccount(models.Model):
         if self._cr.fetchone():
             raise ValidationError(_("The account is already in use in a 'sale' or 'purchase' journal. This means that the account's type couldn't be 'receivable' or 'payable'."))
 
+    @api.constrains('reconcile')
+    def _check_used_as_journal_default_debit_credit_account(self):
+        accounts = self.filtered(lambda a: not a.reconcile)
+        if not accounts:
+            return
+
+        self.flush(['reconcile'])
+        self._cr.execute('''
+            SELECT journal.id
+            FROM account_journal journal
+            WHERE journal.payment_credit_account_id in %(credit_account)s
+            OR journal.payment_debit_account_id in %(debit_account)s ;
+        ''', {
+            'credit_account': tuple(accounts.ids),
+            'debit_account': tuple(accounts.ids)
+        })
+
+        rows = self._cr.fetchall()
+        if rows:
+            journals = self.env['account.journal'].browse([r[0] for r in rows])
+            raise ValidationError(_(
+                "This account is configured in %(journal_names)s journal(s) (ids %(journal_ids)s) as payment debit or credit account. This means that this account's type should be reconcilable.",
+                journal_names=journals.mapped('display_name'),
+                journal_ids=journals.ids
+            ))
+
     @api.depends('code')
     def _compute_account_root(self):
         # this computes the first 2 digits of the account.
@@ -258,10 +284,12 @@ class AccountAccount(models.Model):
             account.is_off_balance = account.internal_group == "off_balance"
 
     def _set_opening_debit(self):
-        self._set_opening_debit_credit(self.opening_debit, 'debit')
+        for record in self:
+            record._set_opening_debit_credit(record.opening_debit, 'debit')
 
     def _set_opening_credit(self):
-        self._set_opening_debit_credit(self.opening_credit, 'credit')
+        for record in self:
+            record._set_opening_debit_credit(record.opening_credit, 'credit')
 
     def _set_opening_debit_credit(self, amount, field):
         """ Generic function called by both opening_debit and opening_credit's

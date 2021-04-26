@@ -118,7 +118,13 @@ class RecurrenceRule(models.Model):
     until = fields.Date('Repeat Until')
 
     _sql_constraints = [
-        ('month_day', "CHECK (rrule_type != 'monthly' OR month_by != 'day' OR day >= 1 AND day <= 31)", "The day must be between 1 and 31"),
+        ('month_day',
+         "CHECK (rrule_type != 'monthly' "
+                "OR month_by != 'day' "
+                "OR day >= 1 AND day <= 31 "
+                "OR weekday in %s AND byday in %s)"
+                % (tuple(wd[0] for wd in WEEKDAY_SELECTION), tuple(bd[0] for bd in BYDAY_SELECTION)),
+         "The day must be between 1 and 31"),
     ]
 
     @api.depends('rrule')

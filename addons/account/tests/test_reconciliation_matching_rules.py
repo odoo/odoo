@@ -477,6 +477,49 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
         self.assertEqual(self.invoice_line_1.amount_residual, 60.0, "The invoice should have been partially reconciled")
 
+    def test_auto_reconcile_with_duplicate_match(self):
+        """ If multiple bank statement lines match with the same invoice, ensure the
+         correct line is auto-validated and no crashing happens.
+        """
+
+        # Only the invoice defined in this test should have this partner
+        partner = self.env['res.partner'].create({'name': "The Only One"})
+        invoice_line = self._create_invoice_line(
+            2000, partner, 'out_invoice', ref="REF 7788")
+
+        # Enable auto-validation and don't restrict the partners that can be matched on
+        # so our newly created partner can be matched.
+        self.rule_1.write({
+            'auto_reconcile': True,
+            'match_partner_ids': [(5, 0, 0)],
+        })
+        self.rule_1.match_partner_ids = []
+
+        # This line has a matching payment reference and the exact amount of the
+        # invoice. As a result it should auto-validate.
+        self.bank_line_1.amount = 2000
+        self.bank_line_1.partner_id = partner
+        self.bank_line_1.payment_ref = "REF 7788"
+
+        # This line doesn't have a matching amount or reference, but it does have a
+        # matching partner.
+        self.bank_line_2.amount = 1800
+        self.bank_line_2.partner_id = partner
+        self.bank_line_2.payment_ref = "something"
+
+        # Verify the auto-validation happens with the first line, and no exceptions.
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {
+                'aml_ids': [invoice_line.id],
+                'model': self.rule_1,
+                'status': 'reconciled',
+                'partner': self.bank_line_1.partner_id
+            },
+            self.bank_line_2.id: {
+                'aml_ids': []
+            },
+        }, statements=self.bank_st)
+
     def test_auto_reconcile_with_tax(self):
         ''' Test auto reconciliation with a tax amount included in the bank statement line'''
         self.rule_1.write({

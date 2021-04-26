@@ -1343,12 +1343,12 @@ msgstr "Účet na prevod."
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
 msgid "Account tour upload bill"
-msgstr "Účet za nahrávanie prehliadky účtu"
+msgstr "Nahratie prijatej faktúry na zaúčtovanie"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
 msgid "Account tour upload bill email confirm"
-msgstr "E-mail s potvrdením nahrávania faktúry"
+msgstr "E-mail s potvrdením o nahratí prijatej faktúry na zaúčtovanie"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__revenue_accrual_account
@@ -8566,6 +8566,12 @@ msgid "Original Bills"
 msgstr "Originálny prijatých faktúr"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
 msgstr "Pôvodca platby"
@@ -12010,6 +12016,12 @@ msgstr ""
 "predajcov/zákazníkov."
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
 #: model:ir.model.fields,help:account.field_account_journal__country_code
@@ -12051,6 +12063,15 @@ msgstr ""
 #, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "Účet %s (%s) je zrušený."
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -13643,7 +13664,7 @@ msgstr "Nahrať"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Upload your own bill"
-msgstr ""
+msgstr "Nahratie vlastnej prijatej faktúry"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -14627,6 +14648,12 @@ msgid ""
 msgstr ""
 "V denníku svojej registračnej pokladnice musíte definovať „účet interného "
 "prevodu“."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

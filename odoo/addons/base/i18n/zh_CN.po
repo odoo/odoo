@@ -59,10 +59,10 @@
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
-# liAnGjiA <liangjia@qq.com>, 2021
 # Titan Li <lghbeta@gmail.com>, 2021
 # 卓忆科技 <zhanghao@jointd.com>, 2021
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -70,7 +70,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2021\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -882,7 +882,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"采购和内部统计之间的桥接模块。\n"
+"        采购和内部统计之间的桥接模块 l10n_be_intrastat.\n"
 "    "
 
 #. module: base
@@ -3985,6 +3985,47 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"欧盟迷你一站式店铺(MOSS) 提供电信,广播,电子服务VAT\n"
+"=============================================================================================\n"
+"\n"
+"截至2015年一月,电信，广播电子服务\n"
+"在欧洲的销售必须在客户所在的国家含税。\n"
+". 为了简化EU的流程,迷你一站式店铺 (MOSS) 注册方案\n"
+"允许交易有一个特别的税号。\n"
+"\n"
+"这个模块能帮助您创建所需的\n"
+"欧盟财政位置和税号来自动应用和记录所需的税。\n"
+"\n"
+"这个模块安装了一个向导来帮助设置财政位置\n"
+"及在欧盟内销售电子服务税。\n"
+"\n"
+"向导让您选择:\n"
+" - 销售电子服务所在的欧盟国家\n"
+" - 您国家的VAT服务税,对应到\n"
+"   目标国家的税\n"
+" - 选项: 一个财政位置模版， \n"
+"   用于复制账户映射. 也会作为您\n"
+"   现有的B2C Intra-EU财政位置. (默认\n"
+"   是无账户映射)\n"
+" - 选项: 用于收集税款的账户\n"
+"    (默认为您国家的VAT服务税的账户)\n"
+"\n"
+"这创建了对应的财务位置和税，\n"
+"自动用于客户所选国家的欧盟销售。\n"
+"向导可多次运行来增加更多的国家。\n"
+"\n"
+"向导为税创建了分割符来收集MOSS的VAT总额\n"
+"，所以提取MOSS数据会很容易。\n"
+"查找税中的 \"欧盟MOSS VAT 图\" \n"
+"在税报表菜单 (总账报表).\n"
+"\n"
+"参考\n"
+"++++++++++\n"
+"- Directive 2008/8/EC\n"
+"- Council Implementing Regulation (EU) No 1042/2013\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr
@@ -6794,6 +6835,14 @@ msgid ""
 "This should help for reconciliation on the bank statements where the old IBAN code is still used.\n"
 "    "
 msgstr ""
+"\n"
+"瑞士本地化\n"
+"==================\n"
+"在银行帐户上添加了 QR-IBAN 字段。\n"
+"如果此字段为空，但银行帐号本身是有效的 QR-IBAN 号码，则它仍然将一样用作 QR-IBAN。 \n"
+"但是，如果您填写新的 QR-IBAN 字段，该字段将用作 QR-IBAN。 这应该有助于和解\n"
+"在银行对帐单上，旧 IBAN 代码仍在使用。 \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -7447,6 +7496,15 @@ msgid ""
 " - Fiscal position for Palestina\n"
 " "
 msgstr ""
+"\n"
+"以色列最新的 Odoo 本地化模块:\n"
+"================================================================================\n"
+"\n"
+"本模块包括以下功能：\n"
+" - 以色列通用会计科目表。\n"
+" - 税务报告。\n"
+" - 巴勒斯坦的财务报告。\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -8005,6 +8063,24 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
+"\n"
+"此模块允许在预打印的支票纸上打印付款。\n"
+"您可以在公司设置中配置输出（布局、存根信息等），并管理\n"
+"在日志设置中检查编号（如果使用不带数字的预打印支票）。\n"
+"\n"
+"支持的格式\n"
+"-----------------\n"
+"此模块支持三种最常见的检查格式，并将使用来自checkdepot.net的链接支票开箱即用。\n"
+"\n"
+"查看所有检查：https://www.checkdepot.net/checks/laser/Odoo.htm\n"
+"\n"
+"您可以选择：\n"
+"\n"
+"- 检查顶部：加快/快速书籍标准（https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm）\n"
+"- 检查中间：桃树标准（https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm）\n"
+"- 检查底部：ADP标准（https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm）\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -10195,7 +10271,7 @@ msgstr "A0 5 841 x 1189 毫米"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a1
 msgid "A1  6   594 x 841 mm"
-msgstr "A1 6 594 x 841 毫米"
+msgstr "A1  6   594 x 841 毫米"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a2
@@ -11532,7 +11608,7 @@ msgstr "应用"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__modules
 msgid "Apps To Export"
-msgstr "要导出的应用"
+msgstr "要导出的模块"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade__module_info
@@ -12097,12 +12173,12 @@ msgstr "基础 语言 'en_US' 不能 删除。"
 #. module: base
 #: model:ir.module.module,summary:base.module_adyen_platforms
 msgid "Base Module for Adyen for Platforms"
-msgstr ""
+msgstr "基础版 Adyen 平台支付模块"
 
 #. module: base
 #: model:ir.module.module,description:base.module_adyen_platforms
 msgid "Base Module for Adyen for Platforms, used in eCommerce and PoS"
-msgstr ""
+msgstr "这是Adyen 平台的基础模块, 用于电子商务及POS零售点"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
@@ -12216,17 +12292,17 @@ msgstr "比利时国际联盟申报"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_proration
 msgid "Belgian Payroll - Advantage Proration"
-msgstr ""
+msgstr "比利时薪资 - Advantage Proration"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
 msgid "Belgian Payroll - Posted Employee"
-msgstr ""
+msgstr "比利时薪资 - Posted Employee"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_variable_revenue
 msgid "Belgian Payroll - Variable Revenue"
-msgstr ""
+msgstr "比利时薪资 - Variable Revenue"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -12559,7 +12635,7 @@ msgstr "由"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "By default the widget uses the field information"
-msgstr ""
+msgstr "默认情况下，小部件使用字段信息"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -12738,7 +12814,7 @@ msgstr "无法仅从名称中创建新的%s记录。请手动创建这些记录�
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
-msgstr ""
+msgstr "无法停用联系人当前使用的语言。"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -12975,7 +13051,7 @@ msgstr "智利 - 财务报告"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_edi
 msgid "Chile - E-invoicing"
-msgstr ""
+msgstr "智利-电子发票"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -16649,7 +16725,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_fix_register_token
 msgid "Fix register payment wizard with 'payment' module"
-msgstr ""
+msgstr "使用“付款”模块修复注册付款向导"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
@@ -21277,7 +21353,7 @@ msgstr "荷兰国际联盟申报"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_report_intrastat
 msgid "Netherlands Intrastat Declaration Reports"
-msgstr ""
+msgstr "荷兰内部统计申报报告"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -21638,7 +21714,7 @@ msgstr "当前用户的记录访问规则的数量"
 #. module: base
 #: model:res.country,vat_label:base.pf
 msgid "N° Tahiti"
-msgstr ""
+msgstr "N° 塔希提岛"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
@@ -22779,12 +22855,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_payment_odoo_by_adyen
 msgid "Odoo Payments by Adyen"
-msgstr ""
+msgstr "Odoo 的 Adyen支付模块"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_odoo_by_adyen
 msgid "Odoo Payments by Adyen Payment Acquirer"
-msgstr ""
+msgstr "Odoo 通过 Adyen 支付平台进行支付"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -22899,6 +22975,112 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
+"Odoo  POS \n"
+"-----------------------------\n"
+"\n"
+"Odoo 的<a href=\"https://www.odoo.com/page/point-of-sale\">POS</a>\n"
+"采用了非常整洁的界面，无需安装即可在现代硬件上\n"
+"在线和离线运行。\n"
+"\n"
+"它与公司库存和会计完全集成，为您提供所有商店的实\n"
+"时统计数据和整合，而无需\n"
+"集成多个应用程序。\n"
+"\n"
+"使用已有的硬件\n"
+"---------------------------------------\n"
+"\n"
+"### 在您的网络浏览器中，\n"
+"\n"
+"Odoo 的 POS 是一款可以在任何设备上运行的网络应用程序，它可以在几乎不需要任何设置的情况下显示\n"
+"网站。\n"
+"\n"
+"### 触摸屏或键盘？\n"
+"\n"
+"销售点可完美适用于任何类型的触控设备，无论\n"
+"是多点触控平板电脑（如 iPad）还是无键盘电阻式触摸屏\n"
+"终端。\n"
+"\n"
+"### 电子秤和打印机\n"
+"\n"
+"条形码扫描仪和打印机开箱即用，无需\n"
+"设置。电子秤、钱箱和其他外围设备可以与代理\n"
+"API 一起使用。\n"
+"\n"
+"在线和离线\n"
+"------------------\n"
+"\n"
+"### 即使没有网络连接，Odoo 的 POS 仍然可靠\n"
+"\n"
+"通过互联网连接部署新商店：**无需安装，无需\n"
+"特定硬件**。它适用于任何 **iPad、平板电脑、笔记本电脑** 或\n"
+"工业 POS 机。\n"
+"\n"
+"虽然需要互联网连接才能启动销售点，但即使在完全断开连接后，它\n"
+"仍会保持运行。\n"
+"\n"
+"\n"
+"非常整洁的用户界面\n"
+"----------------------------\n"
+"\n"
+"### 简单美观n\n"
+"告别不美观且过时的 POS 软件，享受为现代零售商\n"
+"设计的 Odoo 网络界面。\n"
+"\n"
+"### 为提高效率而设计\n"
+"\n"
+"无论用于餐厅还是商店，您可以同时处理多张订单，\n"
+"无需让您的客户等待。\n"
+"\n"
+"### 极其快速的搜索\n"
+"\n"
+"扫描产品，浏览层级类别，或通过快速筛选所有产品来快速获取有关产品的信息。\n"
+"\n"
+"集成库存管理\n"
+"-------------------------------\n"
+"\n"
+"实时整合所有销售渠道：商店、电子商务、销售\n"
+"团队。实时控制库存和准确的预测来管理\n"
+"采购。\n"
+"\n"
+"一套完整的仓库管理系统触手可及：获取有关\n"
+"产品可用性的信息，触发采购请求等。\n"
+"\n"
+"提供店内客户服务\n"
+"----------------------------------\n"
+"\n"
+"通过集成店内客户\n"
+"服务，提供强大的客户体验。处理承诺书，跟进被保证人，跟进客户索赔，计划\n"
+"交付订单等。\n"
+"\n"
+"开票和会计集成\n"
+"----------------------------------\n"
+"\n"
+"只需点击几下即可生成客户发票。实时\n"
+"控制销售额和现金，并使用 Odoo 强大的报告功能做出更明智的决策，以提高\n"
+"商店的效率。\n"
+"\n"
+"无需集成软件：在总账中自动对将您的所有销售额和\n"
+"库存操作过账。\n"
+"\n"
+"所有商店的统一数据\n"
+"------------------------------\n"
+"\n"
+"自动将新产品、定价策略和促销活动应用于\n"
+"选定的商店。服务于统一的客户群。无需使用复杂的界面便可在所有商店中全局运作。\n"
+"\n"
+"以 Odoo 作为后端，Odoo系统已被证明非常适合\n"
+"小型商店或大型跨国公司。\n"
+"\n"
+"了解您的客户 - 无论是在店内还是店外\n"
+"--------------------------------------\n"
+"\n"
+"成功的品牌将其所有\n"
+"渠道中的所有客户信息整合在一起，以建立准确的客户档案，并在\n"
+"顾客在店内或在线进行购物决策时与他们沟通。\n"
+"\n"
+"通过 Odoo，您可以获得全方位的客户视角，包括跨渠道销售、\n"
+"互动历史记录、个人资料等。\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__opl-1
@@ -23152,6 +23334,119 @@ msgid ""
 "\n"
 "Schedule, organize, promote or sell events online; conferences, trainings, webinars, etc.\n"
 msgstr ""
+"Odoo 网站生成器\n"
+"--------------------\n"
+"\n"
+"通过 Odoo <a href=\"https://www.odoo.com/page/website-builder\">网站生成器</a>创建极棒的<a href=\"https://www.odoo.com/page/website-builder\">免费网站</a>，\n"
+"并轻松进行定制。\n"
+"\n"
+"使用我们极其简单的生成器创建企业级的网站。使用精心\n"
+"设计的构件并编辑所有行内内容。\n"
+"\n"
+"从开箱即用的业务功能中收益； 电子商务、活动、博客、招聘\n"
+"启事、客户参考、号召性行动等。\n"
+"\n"
+"编辑所有行内内容\n"
+"--------------------\n"
+"\n"
+"创建美观的网站，无需任何技术知识。Odoo 独特的 *“行内\n"
+"编辑”*方法使网站创建变得非常简单。没有更复杂的\n"
+"后端； 只需点击任意位置即可更改任何内容。\n"
+"\n"
+"“想要更改产品模板的价格？或者用粗体表示？想要更改\n"
+"博客标题？”只需单击进行更改即可。眼见为实、信息实时。\n"
+"\n"
+"非常棒。非常美观。\n"
+"---------------------------------\n"
+"\n"
+"使用 Odoo 构建块您可以设计出传统的 WYSIWYG 页面编辑器无法实现的现代网站。\n"
+"\n"
+"无论是产品模板描述，博客还是静态页面，即使您不是专业设计人员也可以创建出清晰的内容。只需拖放和\n"
+"定制预定义的构建块。\n"
+"\n"
+"企业功能准备就绪，开箱即用\n"
+"--------------------------------\n"
+"\n"
+"只需点击一下即可启用即时可用的企业功能； 电子商务、号召性行动、招聘启事、活动、客户参考、博客等。\n"
+"\n"
+"传统电子商务和 CMS 的后端设计不佳，因为这不是他们的\n"
+"核心焦点。通过 Odoo 集成，您可以从最好的管理\n"
+"软件中受益，以跟踪您的订单、求职者、销售线索等。\n"
+"\n"
+"绝佳的移动设备体验\n"
+"-------------------------\n"
+"\n"
+"得益于基于\n"
+"已找到框架的响应式设计，您可建立一个适合移动设备的网站。所有页面都会自动适应屏幕大小。 （移动设备\n"
+"手机、平板电脑、台式电脑）您不必担心移动内容，它\n"
+"会默认运行。\n"
+"\n"
+"SEO 工具触手可得\n"
+"-----------------------------\n"
+"\n"
+"*推广*工具会根据 Google 中搜索最多的词汇推荐关键字。\n"
+"搜索引擎优化工具即时可用，无需\n"
+"配置\n"
+"\n"
+"默认情况下，Google Analytics 会跟踪您的购物车活动。自动为 Google 索引编制创建站点地图和\n"
+"结构化内容。\n"
+"\n"
+"多种语言变得简单\n"
+"-------------------------\n"
+"\n"
+"轻松将您的网站翻译成多种语言。Odoo 会在页面中自动提出\n"
+"和传送翻译，关注您在母版页上\n"
+"编辑的内容。\n"
+"\n"
+"在专业翻译人员的帮助下，您可以通过 [Gengo] (http://gengo.com) 集成\n"
+"自动翻译所有内容。更新网站的\n"
+"任何部分，并在几个\n"
+"小时内自动推送翻译版本。\n"
+"\n"
+"设计友好模板\n"
+"---------------------------\n"
+"\n"
+"模板非常棒，且易于设计。您不需要进一步开发以创建新的\n"
+"页面、主题或构件。我们使用简洁的 HTML 结构和\n"
+" [bootstrap] (http://getbootstrap.com/) CSS。\n"
+"\n"
+"使用集成模板编辑器即时定制每个页面。将您的工作地作为 Odoo 模块轻松分配。\n"
+"\n"
+"流体网格布局\n"
+"--------------------\n"
+"\n"
+"通过拖放构建块设计完美的页面。移动内容并进行缩放，\n"
+"以适应您想要的布局。\n"
+"\n"
+"构建块基于响应的、移动端友好的流体网格系统，\n"
+"当设备或视口的大小\n"
+"增加时，可以适当地扩展到 12 列。\n"
+"\n"
+"专业的主题\n"
+"-------------------\n"
+"\n"
+"设计定制的主题或者重用预定义的主题来定制\n"
+"网站的外观。\n"
+"\n"
+"测试新的色彩方案；只需\n"
+"点击一下，您就可以随时更改主题。\n"
+"\n"
+"与 Odoo 应用集成\n"
+"-------------------------\n"
+"\n"
+"### 电子商务\n"
+"\n"
+"推广产品模板、在线销售、优化访客的购物体验。\n"
+"\n"
+"\n"
+"### 博客\n"
+"\n"
+"撰写新闻、吸引新访客、建立客户忠诚度。\n"
+"\n"
+"\n"
+"### 在线活动\n"
+"\n"
+"在线安排、组织、推广或销售活动；会议、培训、在线研讨会等。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
@@ -23480,6 +23775,20 @@ msgstr ""
 "模块操作此时无法完成，请稍后再试或联系你的系统管理员。"
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+"Odoo无法合并附加到以下记录的PDF:\n"
+"%s\n"
+"\n"
+"请将其从选择中排除以继续。仍然可以通过单独选择每个受影响的记录来检索这些PDF，这将避免合并。"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Odoo引荐方案"
@@ -23551,7 +23860,7 @@ msgstr "一个你试图访问的文档已经被删除，请刷新后重试。"
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "One of the documents, you try to merge is encrypted"
-msgstr ""
+msgstr "您尝试合并的文档，其中一个文档是加密的"
 
 #. module: base
 #: code:addons/models.py:0
@@ -23585,7 +23894,7 @@ msgstr "在线预约"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_synchronization
 msgid "Online Bank Statement Synchronization"
-msgstr ""
+msgstr "网上银行对账单同步"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -24561,7 +24870,7 @@ msgstr "支付：Ingenico"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_odoo_by_adyen
 msgid "Payment Acquirer: Odoo Payments by Adyen"
-msgstr ""
+msgstr "支付机构: Odoo通过 Adyen平台支付"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
@@ -28340,6 +28649,12 @@ msgid "The internal user in charge of this contact."
 msgstr "负责此联系人的内部用户。"
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr "布局包含无效的格式键"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "扩展当前模型清单。"
@@ -30192,7 +30507,7 @@ msgstr "努瓦阿图"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
 msgid "Variable Revenue"
-msgstr ""
+msgstr "收益"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -30460,7 +30775,7 @@ msgstr "网页甘特"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_grid
 msgid "Web Grid Tests"
-msgstr "网站网格视图测试"
+msgstr "网格视图测试"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_grid
@@ -30517,7 +30832,7 @@ msgstr "网站企业版"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
 msgid "Website Event CRM Questions"
-msgstr ""
+msgstr "网站事件和CRM问题"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm

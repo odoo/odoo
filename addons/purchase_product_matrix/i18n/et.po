@@ -8,6 +8,7 @@
 # Martin Trigaux, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
 # Algo Kärp <algokarp@gmail.com>, 2020
+# Piia Paurson <piia@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2020\n"
+"Last-Translator: Piia Paurson <piia@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "Kuva nimi"
 #: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
 #, python-format
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Muuda seadistusi"
 
 #. module: purchase_product_matrix
 #. openerp-web
@@ -48,7 +49,7 @@ msgstr ""
 #: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
 #, python-format
 msgid "External Link"
-msgstr ""
+msgstr "Väline link"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid
@@ -58,12 +59,12 @@ msgstr "Võrgustik"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Toote võrgustiku mall"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Grid Update"
-msgstr ""
+msgstr "Võrgustiku uuendamine"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__id
@@ -77,11 +78,13 @@ msgid ""
 "If set, the matrix of configurable products will be shown on the report of "
 "this order."
 msgstr ""
+"Kui see on määratud, kuvatakse selle tellimuse aruandes konfigureeritavate "
+"toodete maatriks."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "Kas see toode on konfigureeritav?"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order____last_update
@@ -92,7 +95,7 @@ msgstr "Viimati muudetud (millal)"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Prindi variantide võrgustik"
 
 #. module: purchase_product_matrix
 #: model_terms:ir.ui.view,arch_db:purchase_product_matrix.purchase_order_form_matrix
@@ -122,7 +125,7 @@ msgstr "Ostutellimuse rida"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Product_matrix funktsionaalsuste tehniline väli."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid
@@ -131,11 +134,14 @@ msgid ""
 "If grid_update, will be loaded on the PO. \n"
 "If not, represents the matrix to open."
 msgstr ""
+"Võrgu tehniline ladustamine. \n"
+"Kui grid_update, laetakse ostutellimusele. \n"
+"Kui ei, tähistab maatriksit avamiseks."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
-msgstr ""
+msgstr "Kas võrgustiku väli sisaldab uut rakendatavat maatriksit või mitte."
 
 #. module: purchase_product_matrix
 #: code:addons/purchase_product_matrix/models/purchase.py:0
@@ -143,4 +149,4 @@ msgstr ""
 msgid ""
 "You cannot change the quantity of a product present in multiple purchase "
 "lines."
-msgstr ""
+msgstr "Mitmes ostureas oleva toote hulka ei saa muuta."

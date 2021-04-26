@@ -457,6 +457,8 @@ class MrpWorkorder(models.Model):
                     })
 
             for workorders in workorders_by_bom.values():
+                if not workorders:
+                    continue
                 if workorders[0].state == 'pending':
                     workorders[0].state = 'ready'
                 for workorder in workorders:

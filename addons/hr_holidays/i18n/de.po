@@ -18,6 +18,7 @@
 # Martin Trigaux, 2020
 # Bettina Pfeifer <betzilla@web.de>, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
+# Robert Förster <hello@suppliot.eu>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2020\n"
+"Last-Translator: Robert Förster <hello@suppliot.eu>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -564,12 +565,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Days Allocated</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Zugewiesene Tage zur Gruppe</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Time Off</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Gruppen-Abwesenheiten</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -864,7 +865,7 @@ msgstr "Genutzte Zuweisung Übersicht"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_validation_type
 msgid "Allocation Validation"
-msgstr ""
+msgstr "Abwesenheitsvalidierung"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -916,6 +917,8 @@ msgid ""
 "Allocation request state must be \"Refused\" or \"To Approve\" in order to "
 "be reset to Draft."
 msgstr ""
+"Zuweisungsanfrage muss im Status \"Abgelehnt\" oder \"Zur Einreichung\" "
+"sein, um zurück auf den Satus Entwurf zu gelangen."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -931,7 +934,7 @@ msgstr "Urlaubsansprüche"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed_allocation
 msgid "Allow Employees Requests"
-msgstr ""
+msgstr "Anfrage genehmigen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__holiday_type
@@ -1080,13 +1083,13 @@ msgstr "Nach Mitarbeiter-Tag"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__manager
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
 msgid "By Employee's Manager"
-msgstr ""
+msgstr "Durch Manager des Mitarbeiters"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Manager and Time Off Officer"
-msgstr ""
+msgstr "Durch Manager des Mitarbeiters und Abwesenheitsmanager"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1102,7 +1105,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr ""
+msgstr "Durch Abwesenheitsmanager"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1635,6 +1638,7 @@ msgstr "Stunde bis"
 
 #. module: hr_holidays
 #. openerp-web
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__unit_per_interval__hours
@@ -1825,7 +1829,7 @@ msgstr "Abwesenheitstyp"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
 msgid "Leave Validation"
-msgstr ""
+msgstr "Abwesenheitsgenehmigung"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
@@ -1998,7 +2002,7 @@ msgstr "Vormittag"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
 msgid "My Allocation Requests"
-msgstr ""
+msgstr "Meine Zuweisungsanfragen"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_my
@@ -2033,7 +2037,7 @@ msgstr "Meine Abwesenheit"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
 #: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_my
 msgid "My Time Off Requests"
-msgstr ""
+msgstr "Meine Abwesenheitsanträge"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__name
@@ -2065,7 +2069,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "New Allocation"
-msgstr ""
+msgstr "Neuer Abwesenheitsanspruch"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2080,7 +2084,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "New Time Off"
-msgstr ""
+msgstr "Neue Abwesenheit"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
@@ -2103,7 +2107,7 @@ msgstr "Nächster Aktivitätstyp"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__no
 msgid "No Limit"
-msgstr ""
+msgstr "Unbegrenzt"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__no_validation
@@ -2262,6 +2266,8 @@ msgid ""
 "Only a Time off Approver can apply the second approval on allocation "
 "requests."
 msgstr ""
+"Nur Abwesenheitsmanager können zweite Genehmigungen für Zuweisungen "
+"durchführen."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2545,7 +2551,7 @@ msgstr "Nummernfolge"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed
 msgid "Set by Time Off Officer"
-msgstr ""
+msgstr "Festgelegt durch Abwesenheitsmanager"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3262,7 +3268,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr ""
+msgstr "Sie können keine Anfrage im %s Status stornieren"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0

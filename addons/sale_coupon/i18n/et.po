@@ -6,10 +6,10 @@
 # Rivo Zängov <eraser@eraser.ee>, 2020
 # Martin Trigaux, 2020
 # Helen Sulaoja <helen@avalah.ee>, 2020
-# Algo Kärp <algokarp@gmail.com>, 2020
-# atriine <triine@avalah.ee>, 2021
+# Triine Aavik <triine@avalah.ee>, 2021
 # Eneli Õigus <enelioigus@gmail.com>, 2021
 # Piia Paurson <piia@avalah.ee>, 2021
+# Algo Kärp <algokarp@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2021\n"
+"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,13 +28,13 @@ msgstr ""
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_view_coupon_program_kanban
 msgid "<strong>Sales</strong>"
-msgstr ""
+msgstr "<strong>Müük</strong>"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "A Coupon is already applied for the same reward"
-msgstr ""
+msgstr "Selle soodustuse saamiseks on kupong juba rakendatud"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -43,6 +43,8 @@ msgstr ""
 msgid ""
 "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
 msgstr ""
+"Ost peab olema minimaalselt summas %(amount)s %(currency)s soodustuse "
+"saamiseks"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
@@ -100,7 +102,7 @@ msgstr "Sooduskupong"
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_coupon_program
 msgid "Coupon Program"
-msgstr ""
+msgstr "Sooduskupongid"
 
 #. module: sale_coupon
 #: model:ir.ui.menu,name:sale_coupon.menu_coupon_type_config
@@ -122,7 +124,7 @@ msgstr "Loodud"
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
-msgstr "Allahindlus: %(program)s - Järgmiste maksudega tootel: %(taxes)s"
+msgstr "Allahindlus: %(program)s - %(taxes)s maksuga toodetel"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
@@ -155,13 +157,13 @@ msgstr "Tasuta toode"
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "Global discounts are not cumulable."
-msgstr ""
+msgstr "Üldised allahindlused ei ole kumulatiivsed."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Global discounts are not cumulative."
-msgstr ""
+msgstr "Üldised allahindlused ei ole kumulatiivsed."
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__id
@@ -176,7 +178,7 @@ msgstr "ID"
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "Invalid partner."
-msgstr ""
+msgstr "Kehtetu partner."
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__is_reward_line
@@ -205,7 +207,7 @@ msgstr "Viimati uuendatud"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__generated_coupon_ids
 msgid "Offered Coupons"
-msgstr ""
+msgstr "Pakutavad kupongid"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__order_count
@@ -221,19 +223,19 @@ msgstr "Tellimuse viide"
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code %s has been expired."
-msgstr ""
+msgstr "Sooduskood %s on aegunud."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code is expired"
-msgstr ""
+msgstr "Sooduskood on aegunud"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code is invalid"
-msgstr ""
+msgstr "Sooduskood on vigane"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__promo_code
@@ -250,7 +252,7 @@ msgstr "Kampaaniaprogrammid"
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promotionals codes are not cumulative."
-msgstr ""
+msgstr "Kampaaniate koodid ei ole kumulatiivsed."
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
@@ -260,7 +262,7 @@ msgstr "Kampaaniate kontroll"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
 msgid "Reward Amount"
-msgstr ""
+msgstr "Preemia summa"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_coupon_program_form
@@ -271,7 +273,7 @@ msgstr "Müük"
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_coupon_apply_code
 msgid "Sales Coupon Apply Code"
-msgstr ""
+msgstr "Müügikupongi rakenduskood"
 
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_order_action
@@ -294,26 +296,26 @@ msgstr "Müügitellimused"
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "The coupon program for %s is in draft or closed state"
-msgstr ""
+msgstr "Soodusprogramm %s on mustand- või suletud staatuses."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The customer doesn't have access to this reward."
-msgstr ""
+msgstr "Kliendil puudub juurdepääs sellele preemiale."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The promo code is already applied on this order"
-msgstr ""
+msgstr "Sooduskood on sellele tellimusele juba rakendatud"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The promotional offer is already applied on this order"
-msgstr ""
+msgstr "Sooduspakkumine on sellele tellimusele juba rakendatud"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -323,16 +325,17 @@ msgid ""
 "The reward products should be in the sales order lines to apply the "
 "discount."
 msgstr ""
+"Soodustuse rakendamiseks peaksid preemiatooted olema müügitellimuse ridadel."
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
 msgid "The sales order from which coupon is generated"
-msgstr ""
+msgstr "Müügitellimus, millest kupong luuakse"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__sales_order_id
 msgid "The sales order on which the coupon is applied"
-msgstr ""
+msgstr "Müügitellimus, millele kupongi rakendatakse"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -367,7 +370,7 @@ msgstr ""
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__sales_order_id
 msgid "Used in"
-msgstr ""
+msgstr "Kasutatakse"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
@@ -375,6 +378,8 @@ msgid ""
 "When clicked, the content of the order will be checked to detect (and apply)"
 " possible promotion programs."
 msgstr ""
+"Klõpsamisel kontrollitakse tellimuse sisu võimalike reklaamiprogrammide "
+"tuvastamiseks (ja rakendamiseks)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -399,4 +404,4 @@ msgstr ""
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "limited to "
-msgstr ""
+msgstr "piiratud"

@@ -1000,6 +1000,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Objednávka se upselluje, pokud dodané množství přesahuje původně objednané "
+"množství a zásady fakturace vycházejí z objednaného množství."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -1051,6 +1053,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Například pokud prodáváte předplacené hodiny služeb, Odoo vám doporučuje "
+"prodat hodiny navíc, když jsou vyčerpány všechny objednané hodiny."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1520,7 +1524,7 @@ msgstr "Datum:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr ""
+msgstr "Odečíst zálohy"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1717,24 +1721,24 @@ msgstr "Částka zálohy"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "Částka zálohy (pevná)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr ""
+msgstr "Produkt zálohy"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment: %s"
-msgstr ""
+msgstr "Záloha: %s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Down Payments"
-msgstr ""
+msgstr "Zálohy"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -1774,7 +1778,7 @@ msgstr "Návrh nabídky"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Draft invoices for this order will be cancelled."
-msgstr ""
+msgstr "Koncept faktury pro tuto objednávku bude zrušen."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -1813,7 +1817,7 @@ msgstr "Průvodce sestavením e-mailu"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_template_id
 msgid "Email sent to the customer once the order is paid."
-msgstr ""
+msgstr "E-mail odeslaný zákazníkovi po zaplacení objednávky."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -1942,7 +1946,7 @@ msgstr "Budoucí činnosti"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Generovat odkaz na prodejní platbu"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
@@ -1992,7 +1996,7 @@ msgstr "Změnil se ceník"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr ""
+msgstr "Má zálohy"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2071,7 +2075,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
-msgstr ""
+msgstr "Pokud změníte ceník, budou ovlivněny pouze nově přidané řádky."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2132,7 +2136,7 @@ msgstr "Fakturační adresa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr ""
+msgstr "Upozornění na fakturu"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
@@ -2200,7 +2204,7 @@ msgstr "Fakturované množství"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "Fakturované množství: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2393,14 +2397,14 @@ msgstr "Nechte své zákazníky přihlásit se kvuli zobrazení svých dokument�
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Let's send the quote."
-msgstr ""
+msgstr "Pošleme nabídku."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Lets keep electronic signature for now."
-msgstr ""
+msgstr "Prozatím si ponecháme elektronický podpis."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2453,7 +2457,7 @@ msgstr "Ruční platba"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "Ručně nastavte množství na objednávku"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__service_type
@@ -2476,7 +2480,7 @@ msgstr "Marže"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "Označit nabídku jako odeslanou"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2530,7 +2534,7 @@ msgstr "Metoda aktualizace dodaného množství"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "Na řádku odpovědné prodejní objednávky chybí povinná pole."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2550,7 +2554,7 @@ msgstr "Mé položky zakázky"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signed_by
 msgid "Name of the person that signed the SO."
-msgstr ""
+msgstr "Jméno osoby, která podepsala prodejní objednávku"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0 code:addons/sale/models/sale.py:0
@@ -2593,7 +2597,7 @@ msgstr "Žádná zpráva"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr ""
+msgstr "Po potvrzení již objednávky neupravujte"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -2603,14 +2607,14 @@ msgstr "Nebyly nalezeny žádné objednávky na fakturu"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "Nebyly nalezeny žádné objednávky na další prodej."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/variant_mixin.js:0
 #, python-format
 msgid "Not available with %s"
-msgstr ""
+msgstr "Není k dispozici s %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_order_confirmation_state__not_done
@@ -2636,7 +2640,7 @@ msgstr "Nic k fakturaci"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "Nyní vytvoříme ukázkovou nabídku."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -2679,7 +2683,7 @@ msgstr "Počet nabídek na fakturu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr ""
+msgstr "Počet prodejů na fakturu"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread_counter
@@ -2701,6 +2705,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Jakmile zákazník nabídku potvrdí, stane se z ní prodejní objednávka. "
+"<br>Budete moci vytvořit fakturu a inkasovat platbu."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2708,6 +2714,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Jakmile je nabídka potvrzena, stane se prodejní objednávkou. <br>Budete moci"
+" vytvořit fakturu a inkasovat platbu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -2727,13 +2735,15 @@ msgstr "Online podpis"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
-msgstr ""
+msgstr "Přímo lze označit pouze koncept objednávky."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Na každou hodnotu atributu na řádek prodejní objednávky je povolena pouze "
+"jedna vlastní hodnota."
 
 #. module: sale
 #. openerp-web
@@ -2742,6 +2752,7 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
+"Otevřete aplikaci Prodej a odešlete svou první nabídku několika kliknutími."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2758,12 +2769,12 @@ msgstr "Číslo objednávky"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Order Confirmation"
-msgstr ""
+msgstr "Potvrzení objednávky"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr ""
+msgstr "Počet objednávek"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2802,7 +2813,7 @@ msgstr "Stav objednávky"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr ""
+msgstr "Objednávka k dalšímu prodeji"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2813,13 +2824,13 @@ msgstr "Objednávka podepsána od %s"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr ""
+msgstr "Objednávka k fakturaci"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "Objednané množství: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -2828,6 +2839,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Objednané množství: Fakturovaná množství objednaná zákazníkem.\n"
+"Dodané množství: Fakturovaná množství dodaná zákazníkovi."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -2851,7 +2864,7 @@ msgstr "Objednávky k fakturaci"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "Objednávky na další prodej"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2955,7 +2968,7 @@ msgstr "Platební transakce"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
-msgstr ""
+msgstr "Platební podmínky"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_user_type
@@ -2966,7 +2979,7 @@ msgstr "Typ uživatele Paypal"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Please define an accounting sales journal for the company %s (%s)."
-msgstr ""
+msgstr "Definujte účetní deník prodeje pro společnost %s (%s)."
 
 #. module: sale
 #. openerp-web
@@ -3100,7 +3113,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr ""
+msgstr "Produkt používaný pro zálohy"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3144,7 +3157,7 @@ msgstr "Množ. k fakturaci"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr ""
+msgstr "Množství k fakturaci z prodejních objednávek"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
@@ -3157,7 +3170,7 @@ msgstr "Množství"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_qty_configurator
 msgid "Quantity visible in configurator"
-msgstr ""
+msgstr "Množství viditelné v konfigurátoru"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3276,7 +3289,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "Přepočítejte všechny ceny na základě tohoto ceníku"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3318,7 +3331,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online payment to confirm orders"
-msgstr ""
+msgstr "Požádejte o online platbu za účelem potvrzení objednávky"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
@@ -3331,13 +3344,13 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr ""
+msgstr "Vyžádejte si online podpis k potvrzení objednávek"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "Požadované datum je příliš brzy."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
@@ -3349,6 +3362,7 @@ msgstr "Zodpovědný uživatel"
 msgid ""
 "Revenue target for the current month (untaxed total of confirmed invoices)."
 msgstr ""
+"Výnosový cíl pro aktuální měsíc (nezdanený součet potvrzených faktur)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -3380,12 +3394,12 @@ msgstr "Počet prodejních objednávek"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
-msgstr ""
+msgstr "Upozornění na prodejní objednávku"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_acquirer_onboarding_wizard
 msgid "Sale Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Průvodce připojením k nákupu plateb"
 
 #. module: sale
 #: model:utm.source,name:sale.utm_source_sale_order_0
@@ -3453,7 +3467,7 @@ msgstr "Prodejní objednávka"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr ""
+msgstr "Storno prodejní objednávky"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -3497,7 +3511,7 @@ msgstr "Položky zakázky související s mými zakázkami"
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "Prodejní objednávka(y)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -3550,7 +3564,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "Sales by Channel (All in One)"
-msgstr ""
+msgstr "Prodej podle kanálu (vše v jednom)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3623,6 +3637,7 @@ msgstr "Vyberte produkt nebo za chodu vytvořte nový."
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
 msgstr ""
+"V objednávce odběratele vyberte atributy produktu a volitelné produkty"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3757,7 +3772,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "Podepsat & amp; Platit"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
@@ -3784,7 +3799,7 @@ msgstr "Chybí podpis."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signature
 msgid "Signature received through the portal."
-msgstr ""
+msgstr "Podpis přijatý prostřednictvím portálu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
@@ -4033,7 +4048,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Objednávka není ve stavu vyžadujícím podpis zákazníka."
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
@@ -4250,6 +4265,8 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Abychom urychlili potvrzení objednávky, můžeme aktivovat elektronické "
+"podpisy nebo platby."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4518,6 +4535,8 @@ msgid ""
 "You can not remove an order line once the sales order is confirmed.\n"
 "You should rather set the quantity to 0."
 msgstr ""
+"Po potvrzení prodejní objednávky nelze řádek objednávky odebrat.\n"
+"Měli byste raději nastavit množství na 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4590,6 +4609,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Vaše nabídka obsahuje produkty od společnosti %(product_company)s, zatímco vaše nabídka patří společnosti %(quote_company)s.\n"
+"Změňte společnost své nabídky nebo odeberte produkty od jiných společností (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
@@ -4611,9 +4632,10 @@ msgstr "dnů"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "sale order"
-msgstr ""
+msgstr "prodejní objednávka"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_by_group
 msgid "type: [(name, amount, base, formated amount, formated base)]"
 msgstr ""
+"zadejte: [(název, částka, základ, formátovaná částka, formátovaný základ)]"

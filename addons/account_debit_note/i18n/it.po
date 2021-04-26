@@ -42,7 +42,7 @@ msgstr "Annulla"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
 msgid "Copy Lines"
-msgstr ""
+msgstr "Copia righe"
 
 #. module: account_debit_note
 #: model:ir.actions.act_window,name:account_debit_note.action_view_account_move_debit
@@ -92,6 +92,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
 msgstr ""
+"Se vuoto, viene usato il registro della registrazione contabile da "
+"addebitare."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -99,6 +101,9 @@ msgid ""
 "In case you need to do corrections for every line, it can be in handy to "
 "copy them.  We won't copy them for debit notes from credit notes. "
 msgstr ""
+"Nel caso sia necessario effettuare correzioni per tutte le righe, può essere"
+" utile copiarle. La copia non viene effettuata per note di debito da note di"
+" credito."
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -148,7 +153,7 @@ msgstr "Numero di note di debito"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_id
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_origin_id
 msgid "Original Invoice Debited"
-msgstr ""
+msgstr "Fattura originale addebitata"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
@@ -177,4 +182,4 @@ msgstr "Usa registro specifico"
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "You can only debit posted moves."
-msgstr ""
+msgstr "È possibile addebitare solo movimenti confermati."

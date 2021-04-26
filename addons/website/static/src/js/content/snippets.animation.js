@@ -124,10 +124,12 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         // Initialize the animation startEvents, startTarget, endEvents, endTarget and callbacks
         this._updateCallback = updateCallback;
         this.startEvents = startEvents || 'scroll';
-        this.$startTarget = $($startTarget ? $startTarget : this.startEvents === 'scroll' ? $().getScrollingElement()[0] : window);
+        const mainScrollingElement = $().getScrollingElement()[0];
+        const mainScrollingTarget = mainScrollingElement === document.documentElement ? window : mainScrollingElement;
+        this.$startTarget = $($startTarget ? $startTarget : this.startEvents === 'scroll' ? mainScrollingTarget : window);
         if (options.getStateCallback) {
             this._getStateCallback = options.getStateCallback;
-        } else if (this.startEvents === 'scroll' && this.$startTarget[0] === $().getScrollingElement()[0]) {
+        } else if (this.startEvents === 'scroll' && this.$startTarget[0] === mainScrollingTarget) {
             const $scrollable = this.$startTarget;
             this._getStateCallback = function () {
                 return $scrollable.scrollTop();

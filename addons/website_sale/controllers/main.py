@@ -491,6 +491,15 @@ class WebsiteSale(http.Controller):
     # Checkout
     # ------------------------------------------------------
 
+    def checkout_check_address(self, order):
+        billing_fields_required = self._get_mandatory_fields_billing(order.partner_id.country_id.id)
+        if not all(order.partner_id.read(billing_fields_required)[0].values()):
+            return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
+
+        shipping_fields_required = self._get_mandatory_fields_shipping(order.partner_shipping_id.country_id.id)
+        if not all(order.partner_shipping_id.read(shipping_fields_required)[0].values()):
+            return request.redirect('/shop/address?partner_id=%d' % order.partner_shipping_id.id)
+
     def checkout_redirection(self, order):
         # must have a draft sales order with lines at this point, otherwise reset
         if not order or order.state != 'draft':
@@ -782,13 +791,9 @@ class WebsiteSale(http.Controller):
         if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
             return request.redirect('/shop/address')
 
-        billing_fields_required = self._get_mandatory_fields_billing(order.partner_id.country_id.id)
-        if not all(order.partner_id.read(billing_fields_required)[0].values()):
-            return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
-
-        shipping_fields_required = self._get_mandatory_fields_shipping(order.partner_shipping_id.country_id.id)
-        if not all(order.partner_shipping_id.read(shipping_fields_required)[0].values()):
-            return request.redirect('/shop/address?partner_id=%d' % order.partner_shipping_id.id)
+        redirection = self.checkout_check_address(order)
+        if redirection:
+            return redirection
 
         values = self.checkout_values(**post)
 
@@ -806,7 +811,7 @@ class WebsiteSale(http.Controller):
     def confirm_order(self, **post):
         order = request.website.sale_get_order()
 
-        redirection = self.checkout_redirection(order)
+        redirection = self.checkout_redirection(order) or self.checkout_check_address(order)
         if redirection:
             return redirection
 
@@ -901,7 +906,7 @@ class WebsiteSale(http.Controller):
            paying / canceling
         """
         order = request.website.sale_get_order()
-        redirection = self.checkout_redirection(order)
+        redirection = self.checkout_redirection(order) or self.checkout_check_address(order)
         if redirection:
             return redirection
 

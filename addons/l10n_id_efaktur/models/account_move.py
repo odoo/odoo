@@ -45,7 +45,7 @@ class AccountMove(models.Model):
     @api.onchange('l10n_id_tax_number')
     def _onchange_l10n_id_tax_number(self):
         for record in self:
-            if record.l10n_id_tax_number and record.type not in self.get_purchase_types():
+            if record.l10n_id_tax_number and record.move_type not in self.get_purchase_types():
                 raise UserError(_("You can only change the number manually for a Vendor Bills and Credit Notes"))
 
     @api.depends('l10n_id_attachment_id')

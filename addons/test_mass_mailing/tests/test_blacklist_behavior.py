@@ -11,40 +11,29 @@ class TestAutoBlacklist(common.TestMassMailCommon):
 
     @users('user_marketing')
     def test_mailing_bounce_w_auto_bl(self):
-        mailing = self.mailing_bl.with_user(self.env.user)
-        base_parsed_values = {
-            'email_from': 'toto@yaourth.com', 'to': 'tata@yaourth.com', 'message_id': '<123.321@yaourth.com>',
-            'bounced_partner': self.env['res.partner'].sudo(), 'bounced_message': self.env['mail.message'].sudo()
-        }
+        mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
+        target = self._create_mailing_test_records()[0]
+        mailing.write({'mailing_domain': [('id', 'in', target.ids)]})
 
-        target = self._create_test_blacklist_records()[0]
         # create bounced history of 4 statistics
         for idx in range(4):
-            trace = self._create_bounce_trace(target, dt=datetime.datetime.now() - datetime.timedelta(weeks=idx+2))
-            base_parsed_values.update({
-                'bounced_email': target.email_normalized,
-                'bounced_msg_id': [trace.message_id],
-            })
-            self.env['mail.thread']._routing_handle_bounce(False, base_parsed_values)
+            new_mailing = mailing.copy()
+            self._create_bounce_trace(new_mailing, target, dt=datetime.datetime.now() - datetime.timedelta(weeks=idx+2))
+            self.gateway_mail_bounce(new_mailing, target)
 
         # mass mail record: ok, not blacklisted yet
-        mailing.write({'mailing_domain': [('id', 'in', target.ids)]})
         mailing.action_put_in_queue()
         with self.mock_mail_gateway(mail_unlink_sent=False):
             mailing._process_mass_mailing_queue()
 
         self.assertMailTraces(
             [{'email': 'test.record.00@test.example.com'}],
-            mailing, target, check_mail=True
+            mailing, target,
+            check_mail=True
         )
 
         # call bounced
-        trace = self._create_bounce_trace(target, dt=datetime.datetime.now())
-        base_parsed_values.update({
-            'bounced_email': target.email_normalized,
-            'bounced_msg_id': [trace.message_id],
-        })
-        self.env['mail.thread']._routing_handle_bounce(False, base_parsed_values)
+        self.gateway_mail_bounce(mailing, target)
 
         # check blacklist
         blacklist_record = self.env['mail.blacklist'].sudo().search([('email', '=', target.email_normalized)])

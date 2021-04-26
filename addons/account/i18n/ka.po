@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Giorgi Jvaridze <giorgi.jvaridze@gmail.com>, 2021
+# Davit Matchakhelidze <david.machakhelidze@gmail.com>, 2021
+# Mari Khomeriki <mari.khomeriki@maxinai.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Giorgi Jvaridze <giorgi.jvaridze@gmail.com>, 2021\n"
+"Last-Translator: Mari Khomeriki <mari.khomeriki@maxinai.com>, 2021\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3342,7 +3344,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "კონფიგურაციის პარამეტრები"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -4568,7 +4570,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__display_name
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "სახელი"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_qr_code
@@ -5668,7 +5670,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__id
 #: model:ir.model.fields,field_description:account.field_validate_account_move__id
 msgid "ID"
-msgstr ""
+msgstr "იდენტიფიკატორი/ID"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -6895,7 +6897,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard____last_update
 #: model:ir.model.fields,field_description:account.field_validate_account_move____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "ბოლოს განახლებულია"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__write_uid
@@ -8191,6 +8193,12 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
 msgid "Original Bills"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
 msgstr ""
 
 #. module: account
@@ -11473,6 +11481,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The Bill/Refund date is required to validate this document."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__country_code
 #: model:ir.model.fields,help:account.field_account_journal__country_code
@@ -11507,6 +11521,15 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The account %s (%s) is deprecated."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"This account is configured in %(journal_names)s journal(s) (ids "
+"%(journal_ids)s) as payment debit or credit account. This means that this "
+"account's type should be reconcilable."
 msgstr ""
 
 #. module: account
@@ -13039,7 +13062,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "მომხმარებლები"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__company_currency_id
@@ -13797,6 +13820,12 @@ msgstr ""
 msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
 msgstr ""
 
 #. module: account

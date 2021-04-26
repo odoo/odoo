@@ -106,7 +106,8 @@ class TestMailSchedule(TestEventCommon, MockEmail):
         self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
-            'outgoing', '',
+            'outgoing',
+            content=None,
             fields_values={'subject': 'Your registration at %s' % test_event.name,
                            'email_from': self.user_eventmanager.company_id.email_formatted,
                           })
@@ -140,7 +141,8 @@ class TestMailSchedule(TestEventCommon, MockEmail):
         self.assertEqual(len(self._new_mails), 2, 'event: should have 2 scheduled emails (1 / registration)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
-            'outgoing', '',
+            'outgoing',
+            content=None,
             fields_values={'subject': 'Your registration at %s' % test_event.name,
                            'email_from': self.user_eventmanager.company_id.email_formatted,
                           })
@@ -173,7 +175,8 @@ class TestMailSchedule(TestEventCommon, MockEmail):
         self.assertEqual(len(self._new_mails), 2, 'event: should have scheduled 2 mails (1 / registration)')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email))],
-            'outgoing', '',
+            'outgoing',
+            content=None,
             fields_values={'subject': '%s: tomorrow' % test_event.name,
                            'email_from': self.user_eventmanager.company_id.email_formatted,
                           })
@@ -248,7 +251,8 @@ class TestMailSchedule(TestEventCommon, MockEmail):
         self.assertEqual(len(self._new_mails), 3, 'event: should have scheduled 3 mails, one for each registration')
         self.assertMailMailWEmails(
             [formataddr((reg1.name, reg1.email)), formataddr((reg2.name, reg2.email)), formataddr((reg3.name, reg3.email))],
-            'outgoing', '',
+            'outgoing',
+            content=None,
             fields_values={'subject': '%s: today' % test_event.name,
                            'email_from': self.user_eventmanager.company_id.email_formatted,
                           })

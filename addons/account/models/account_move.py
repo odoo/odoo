@@ -104,8 +104,10 @@ class AccountMove(models.Model):
 
         return journal
 
+    # TODO remove in master
     @api.model
     def _get_default_invoice_date(self):
+        warnings.warn("Method '_get_default_invoice_date()' is deprecated and has been removed.", DeprecationWarning)
         return fields.Date.context_today(self) if self._context.get('default_move_type', 'entry') in self.get_purchase_types(include_receipts=True) else False
 
     @api.model
@@ -264,8 +266,7 @@ class AccountMove(models.Model):
         string='Salesperson',
         default=lambda self: self.env.user)
     invoice_date = fields.Date(string='Invoice/Bill Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)]},
-        default=_get_default_invoice_date)
+        states={'draft': [('readonly', False)]})
     invoice_date_due = fields.Date(string='Due Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)]})
     invoice_origin = fields.Char(string='Origin', readonly=True, tracking=True,
@@ -1652,7 +1653,11 @@ class AccountMove(models.Model):
         duplicated_moves = self.browse([r[0] for r in self._cr.fetchall()])
         if duplicated_moves:
             raise ValidationError(_('Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n%s') % "\n".join(
-                duplicated_moves.mapped(lambda m: "%(partner)s - %(ref)s - %(date)s" % {'ref': m.ref, 'partner': m.partner_id.display_name, 'date': format_date(self.env, m.date)})
+                duplicated_moves.mapped(lambda m: "%(partner)s - %(ref)s - %(date)s" % {
+                    'ref': m.ref,
+                    'partner': m.partner_id.display_name,
+                    'date': format_date(self.env, m.invoice_date),
+                })
             ))
 
     def _check_balanced(self):
@@ -2428,6 +2433,8 @@ class AccountMove(models.Model):
         if not self.env.su and not self.env.user.has_group('account.group_account_invoice'):
             raise AccessError(_("You don't have the access rights to post an invoice."))
         for move in to_post:
+            if move.state == 'posted':
+                raise UserError(_('The entry %s (id %s) is already posted.') % (move.name, move.id))
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
             if move.auto_post and move.date > fields.Date.context_today(self):
@@ -2447,9 +2454,12 @@ class AccountMove(models.Model):
             # lines are recomputed accordingly.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
-            if not move.invoice_date and move.is_invoice(include_receipts=True):
-                move.invoice_date = fields.Date.context_today(self)
-                move.with_context(check_move_validity=False)._onchange_invoice_date()
+            if not move.invoice_date:
+                if move.is_sale_document(include_receipts=True):
+                    move.invoice_date = fields.Date.context_today(self)
+                    move.with_context(check_move_validity=False)._onchange_invoice_date()
+                elif move.is_purchase_document(include_receipts=True):
+                    raise UserError(_("The Bill/Refund date is required to validate this document."))
 
             # When the accounting date is prior to the tax lock date, move it automatically to the next available date.
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
@@ -2817,7 +2827,8 @@ class AccountMove(models.Model):
         }
         for line in preview_vals['items_vals']:
             if 'partner_id' in line[2]:
-                line[2]['partner_id'] = self.env['res.partner'].browse(line[2]['partner_id']).display_name
+                # sudo is needed to compute display_name in a multi companies environment
+                line[2]['partner_id'] = self.env['res.partner'].browse(line[2]['partner_id']).sudo().display_name
             line[2]['account_id'] = self.env['account.account'].browse(line[2]['account_id']).display_name or _('Destination Account')
             line[2]['debit'] = currency_id and formatLang(self.env, line[2]['debit'], currency_obj=currency_id) or line[2]['debit']
             line[2]['credit'] = currency_id and formatLang(self.env, line[2]['credit'], currency_obj=currency_id) or line[2]['debit']
@@ -3605,7 +3616,7 @@ class AccountMoveLine(models.Model):
             )
             FROM %(from)s
             WHERE %(where)s
-        """ % {'from': from_clause, 'where': where_clause, 'order_by': order_string}
+        """ % {'from': from_clause, 'where': where_clause or 'TRUE', 'order_by': order_string}
         self.env.cr.execute(sql, where_clause_params)
         result = {r[0]: r[1] for r in self.env.cr.fetchall()}
         for record in self:
