@@ -51,6 +51,7 @@ export async function setupTests() {
   });
 
   const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}`;
+  // TODO replace by `processTemplates` when the legacy system is removed
   let templates = await loadFile(templatesUrl);
   // as we currently have two qweb engines (owl and legacy), owl templates are
   // flagged with attribute `owl="1"`. The following lines removes the 'owl'

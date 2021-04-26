@@ -7,14 +7,14 @@
 export const SPECIAL_METHOD = Symbol("special_method");
 
 /**
- * Deploy all services registered in the service registry, while making sure
+ * Start all services registered in the service registry, while making sure
  * each service dependencies are properly fulfilled.
  *
  * @param {OdooEnv} env
  * @returns {Promise<void>}
  */
 export async function startServices(env) {
-  const toDeploy = new Set();
+  const toStart = new Set();
   let timeoutId;
   odoo.serviceRegistry.on("UPDATE", null, async (payload) => {
     const { operation, key: name, value: service } = payload;
@@ -24,32 +24,32 @@ export async function startServices(env) {
       // Keep it simple!
       return;
     }
-    if (toDeploy.size) {
+    if (toStart.size) {
       const namedService = Object.assign(Object.create(service), { name });
-      toDeploy.add(namedService);
+      toStart.add(namedService);
     } else {
-      timeoutId = await _startServices(env, toDeploy, timeoutId);
+      timeoutId = await _startServices(env, toStart, timeoutId);
     }
   });
-  timeoutId = await _startServices(env, toDeploy, timeoutId);
+  timeoutId = await _startServices(env, toStart, timeoutId);
 }
 
-async function _startServices(env, toDeploy, timeoutId) {
+async function _startServices(env, toStart, timeoutId) {
   const services = env.services;
   for (const [name, service] of odoo.serviceRegistry.getEntries()) {
     if (!(name in services)) {
       const namedService = Object.assign(Object.create(service), { name });
-      toDeploy.add(namedService);
+      toStart.add(namedService);
     }
   }
 
-  // deploy as many services in parallel as possible
-  function deploy() {
+  // start as many services in parallel as possible
+  function start() {
     let service = null;
     const proms = [];
     while ((service = findNext())) {
       let name = service.name;
-      toDeploy.delete(service);
+      toStart.delete(service);
       const value = service.start(env);
       if (value && "specializeForComponent" in service) {
         value[SPECIAL_METHOD] = service.specializeForComponent;
@@ -58,7 +58,7 @@ async function _startServices(env, toDeploy, timeoutId) {
         proms.push(
           value.then((val) => {
             services[name] = val || null;
-            return deploy();
+            return start();
           })
         );
       } else {
@@ -67,21 +67,21 @@ async function _startServices(env, toDeploy, timeoutId) {
     }
     return Promise.all(proms);
   }
-  await deploy();
+  await start();
   clearTimeout(timeoutId);
   timeoutId = undefined;
-  if (toDeploy.size) {
-    const names = [...toDeploy].map((s) => s.name);
+  if (toStart.size) {
+    const names = [...toStart].map((s) => s.name);
     timeoutId = setTimeout(() => {
       timeoutId = undefined;
-      throw new Error(`Some services could not be deployed: ${names}`);
+      throw new Error(`Some services could not be started: ${names}`);
     }, 15000);
-    toDeploy.clear();
+    toStart.clear();
   }
   return timeoutId;
 
   function findNext() {
-    for (let s of toDeploy) {
+    for (let s of toStart) {
       if (s.dependencies) {
         if (s.dependencies.every((d) => d in services)) {
           return s;
@@ -92,32 +92,4 @@ async function _startServices(env, toDeploy, timeoutId) {
     }
     return null;
   }
-}
-
-
-// -----------------------------------------------------------------------------
-// loadTemplates
-// -----------------------------------------------------------------------------
-
-/**
- * Load all templates from the Odoo server and returns the string. This method
- * does NOT register the templates into Owl.
- *
- * @returns {Promise<string>}
- */
-export async function loadTemplates() {
-  const templates = await odoo.loadTemplatesPromise;
-  // as we currently have two qweb engines (owl and legacy), owl templates are
-  // flagged with attribute `owl="1"`. The following lines removes the 'owl'
-  // attribute from the templates, so that it doesn't appear in the DOM. For now,
-  // we make the assumption that 'templates' only contains owl templates. We
-  // might need at some point to handle the case where we have both owl and
-  // legacy templates. At the end, we'll get rid of all this.
-  const doc = new DOMParser().parseFromString(templates, "text/xml");
-  const owlTemplates = [];
-  for (let child of doc.querySelectorAll("templates > [owl]")) {
-    child.removeAttribute("owl");
-    owlTemplates.push(child.outerHTML);
-  }
-  return `<templates> ${owlTemplates.join("\n")} </templates>`;
 }

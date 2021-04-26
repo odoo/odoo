@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { SPECIAL_METHOD } from "../webclient/setup";
+import { SPECIAL_METHOD } from "./launcher";
 
 const { useComponent } = owl.hooks;
 

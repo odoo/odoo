@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { startServices } from "./webclient/setup";
+import { startServices } from "./services/launcher";
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
