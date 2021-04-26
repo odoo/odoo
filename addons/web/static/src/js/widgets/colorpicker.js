@@ -39,7 +39,7 @@ var ColorpickerWidget = Widget.extend({
         this.selectedHexValue = '';
 
         // Needs to be bound on document to work in all possible cases.
-        const $document = $(document);
+        const $document = $(parent.el && parent.el.ownerDocument || document);
         $document.on(`mousemove.${this.uniqueId}`, _.throttle((ev) => {
             this._onMouseMovePicker(ev);
             this._onMouseMoveSlider(ev);
