@@ -13,6 +13,7 @@ var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
 const widgetRegistryOwl = require('web.widgetRegistry');
+const {Markup} = require('web.utils');
 
 var makeTestPromise = testUtils.makeTestPromise;
 var nextTick = testUtils.nextTick;
@@ -3941,10 +3942,11 @@ QUnit.module('Views', {
             examples:[{
                 name: "A first example",
                 columns: ["Column 1", "Column 2", "Column 3"],
-                description: "Some description",
+                description: "A <b>weak</b> description.",
             }, {
                 name: "A second example",
                 columns: ["Col 1", "Col 2"],
+                description: Markup`A <b>fantastic</b> description.`
             }],
         });
 
@@ -3982,23 +3984,27 @@ QUnit.module('Views', {
         assert.strictEqual($('.modal .o_kanban_examples_dialog_content .tab-pane').length, 2,
             "should have two examples");
 
-        var $firstPane = $('.modal .o_kanban_examples_dialog_content .tab-pane:first');
+        const $panes = $('.modal .o_kanban_examples_dialog_content .tab-pane');
+        var $firstPane = $panes.eq(0);
         assert.strictEqual($firstPane.find('.o_kanban_examples_group').length, 3,
             "there should be 3 stages in the first example");
         assert.strictEqual($firstPane.find('h6').text(), 'Column 1Column 2Column 3',
             "column titles should be correct");
-        assert.strictEqual($firstPane.find('.o_kanban_examples_description').text().trim(),
-            "Some description", "the correct description should be displayed");
+        assert.strictEqual($firstPane.find('.o_kanban_examples_description').html().trim(),
+            "A &lt;b&gt;weak&lt;/b&gt; description.",
+            "An escaped description should be displayed");
 
-        var $secondPane = $('.modal .o_kanban_examples_dialog_content .tab-pane:nth(1)');
+        var $secondPane = $panes.eq(1);
         assert.strictEqual($secondPane.find('.o_kanban_examples_group').length, 2,
             "there should be 2 stages in the second example");
         assert.strictEqual($secondPane.find('h6').text(), 'Col 1Col 2',
             "column titles should be correct");
-        assert.strictEqual($secondPane.find('.o_kanban_examples_description').text().trim(),
-            "", "there should be no description for the second example");
+        assert.strictEqual($secondPane.find('.o_kanban_examples_description').html().trim(),
+            "A <b>fantastic</b> description.",
+            "A formatted description should be displayed.");
 
         kanban.destroy();
+        delete kanbanExamplesRegistry.map['test'];
     });
 
     QUnit.test("quick create column's apply button's display text", async function (assert) {
@@ -4010,7 +4016,6 @@ QUnit.module('Views', {
             examples:[{
                 name: "A first example",
                 columns: ["Column 1", "Column 2", "Column 3"],
-                description: "Some description",
             }, {
                 name: "A second example",
                 columns: ["Col 1", "Col 2"],
@@ -4052,7 +4057,6 @@ QUnit.module('Views', {
             examples:[{
                 name: "A first example",
                 columns: ["Column 1", "Column 2", "Column 3"],
-                description: "Some description",
             }, {
                 name: "A second example",
                 columns: ["Col 1", "Col 2"],
