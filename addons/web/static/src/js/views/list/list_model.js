@@ -1,6 +1,7 @@
 /** @odoo-module alias=web.ListModel **/
 
     import BasicModel from 'web.BasicModel';
+    import utils from 'web.utils';
 
     var ListModel = BasicModel.extend({
 
@@ -46,6 +47,7 @@
             var self = this;
             var referenceRecord = this.localData[referenceRecordId];
             var list = this.localData[listDatapointId];
+            const listState = this.get(listDatapointId);
             // generate all record values to ensure that we'll write something
             // (e.g. 2 records selected, edit a many2one in the first one, but
             // reset same value, we still want to save this value on the other
@@ -80,6 +82,32 @@
                     record._isDirty = false;
                     self._parseServerData(fieldNames, record, record.data);
                 });
+                // Note: if list is grouped by m2m field and user chages record then if same
+                // record is available in another group then update that record as well.
+                // TODO: MSH: We can move this whole logic above to avoid code duplication, may be create inner method to avoide code duplication
+                if (list.groupedBy.length) {
+                    const isM2MGrouped = list.groupedBy.some((group) => {
+                        return list.fields[group].type === "many2many";
+                    });
+                    if (isM2MGrouped) {
+                        const recordIds = _.pluck(records, 'id');
+                        results.forEach(function (data) {
+                            const sameResIdrecords = [];
+                            utils.traverse_records(listState, function (r) {
+                                if (r.res_id === data.id && !recordIds.includes(r.id)) {
+                                    sameResIdrecords.push(r);
+                                }
+                            });
+                            sameResIdrecords.forEach((rec) => {
+                                const record = self.localData[rec.id];
+                                record.data = _.extend({}, record.data, data);
+                                record._changes = {};
+                                record._isDirty = false;
+                                self._parseServerData(fieldNames, record, record.data);
+                            });
+                        });
+                    }
+                }
             }).then(function () {
                 if (!list.groupedBy.length) {
                     return Promise.all([

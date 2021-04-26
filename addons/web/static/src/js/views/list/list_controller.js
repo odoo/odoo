@@ -14,6 +14,7 @@ import Dialog from 'web.Dialog';
 import ListConfirmDialog from 'web.ListConfirmDialog';
 import session from 'web.session';
 import viewUtils from 'web.viewUtils';
+import utils from 'web.utils';
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -485,6 +486,37 @@ var ListController = BasicController.extend({
         var fieldName = Object.keys(changes)[0];
         var value = Object.values(changes)[0];
         var recordIds = _.union([recordId], this.selectedRecords);
+
+        // TODO: MSH: even after applying following logic other record in UI will not update
+        // we have update UI for other groups
+        // following is one way to achieve to update other records in other groups, alternative is
+        // to select same record Res ID if other groups has same record and uncheck it if user uncheck
+        // one of the record
+        // OR another alternative is to do changes in list_model.js to avoid confirmation dialog for
+        // "n" records changed while record is same in all groups, apply following logic in list_model.js
+        // const listState = this.model.get(this.handle);
+        // if (listState.groupedBy.length) {
+        //     const isM2MGrouped = listState.groupedBy.some((group) => {
+        //         return listState.fields[group].type === "many2many";
+        //     });
+        //     if (isM2MGrouped) {
+        //         let otherRecords = recordIds.map((nextRecordId) => {
+        //             const record = this.model.get(nextRecordId);
+        //             const resID = record.res_id;
+        //             const records = [];
+        //             utils.traverse_records(listState, function (r) {
+        //                 if (r.res_id === resID) {
+        //                     records.push(r);
+        //                 }
+        //             });
+        //             return records;
+        //         });
+        //         otherRecords = otherRecords.flat();
+        //         const otherRecordIds = otherRecords.map(record => record.id);
+        //         recordIds = [...new Set(recordIds.concat(otherRecordIds))];
+        //     }
+        // }
+
         var validRecordIds = recordIds.reduce((result, nextRecordId) => {
             var record = this.model.get(nextRecordId);
             var modifiers = this.renderer._registerModifiers(node, record);
@@ -495,9 +527,11 @@ var ListController = BasicController.extend({
         }, []);
         return new Promise((resolve, reject) => {
             const saveRecords = () => {
+                debugger;
                 this.model.saveRecords(this.handle, recordId, validRecordIds, fieldName)
                     .then(async () => {
                         this.updateButtons('readonly');
+                        debugger;
                         const state = this.model.get(this.handle);
                         // We need to check the current multi-editable state here
                         // in case the selection is changed. If there are changes
