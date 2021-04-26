@@ -28,25 +28,27 @@ class AccountPayment(models.Model):
     amount = fields.Monetary(compute='_compute_amount', readonly=False, store=True)
     available_check_ids = fields.Many2many('account.check', compute='_compute_available_checks')
 
-    @api.depends('payment_method_code', 'partner_id')
+    @api.depends('payment_method_code', 'partner_id', 'check_type', 'is_internal_transfer', 'journal_id')
     def _compute_available_checks(self):
         for rec in self:
             available_checks = rec.env['account.check']
-            if rec.payment_method_code == 'delivered_third_check':
-                available_checks = available_checks.search(
-                    [('journal_id', '=', rec.journal_id.id), ('state', '=', 'holding'), ('type', '=', 'third_check')])
-            elif rec.payment_method_code == 'returned_check':
-                available_checks = available_checks.search(
-                    [('journal_id', '=', rec.journal_id.id), ('state', '=', 'debited'), ('type', '=', 'issue_check'), ('partner_id', '=', rec.partner_id.id)])
+            operation, domain = rec._get_checks_operations()
+            print ('domain', domain)
+            print ('domain', domain)
+            if domain:
+                available_checks = available_checks.search(domain)
             rec.available_check_ids = available_checks
 
     @api.depends('payment_method_code')
     def _compute_check_type(self):
         for rec in self:
-            if rec.payment_method_code in ['issue_check', 'returned_check']:
-                rec.check_type = 'issue_check'
-            elif rec.payment_method_code in ['received_third_check', 'delivered_third_check']:
+            rec.check_type = 'third_check'
+            if rec.payment_method_code == 'new_in_checks':
                 rec.check_type = 'third_check'
+            elif rec.payment_method_code == 'new_out_checks':
+                rec.check_type = 'issue_check'
+            elif rec.check_ids:
+                rec.check_type = rec.check_ids[0].type
             else:
                 rec.check_type = False
 
@@ -85,6 +87,10 @@ class AccountPayment(models.Model):
     #                 rec.force_amount_company_currency = sum(
     #                     rec.check_ids.mapped('amount_company_currency'))
 
+    def _create_paired_internal_transfer_payment(self):
+        for rec in self:
+            super(AccountPayment, rec.with_context(default_check_ids=rec.check_ids))._create_paired_internal_transfer_payment()
+
     def action_post(self):
         """ this method is called when posting an account_move of a payment or the payment directly and do two things:
         1. Do check operations (handed, delivered, etc)
@@ -109,7 +115,7 @@ class AccountPayment(models.Model):
             #         'Para mandar a proceso de firma debe definir número '
             #         'de cheque en cada línea de pago.\n'
             #         '* ID del pago: %s') % rec.id)
-            operation = rec.do_checks_operations()
+            operation = rec._do_checks_operations()
             liquidity_lines, counterpart_lines, writeoff_lines = rec._seek_for_lines()
             rec._split_aml_line_per_check(liquidity_lines, operation)
 
@@ -191,81 +197,9 @@ class AccountPayment(models.Model):
     #         self._split_aml_line_per_check(res)
     #     return res
 
-    def do_checks_operations(self, cancel=False):
-        """
-        This method is called from:
-        * cancellation of payment to execute delete the right operation and unlink check if needed
-        * from post to add check operation and, if needded, change payment vals and/or create check and
-        """
-        self.ensure_one()
-        # THIRD CHECKS OPERATIONS
-        if self.payment_method_code == 'received_third_check' and self.payment_type == 'inbound':
-            # receive third check
-            if cancel:
-                _logger.info('Cancel Receive Check')
-                self.check_ids._del_operation(self)
-                return None
-            _logger.info('Receive Check')
-            self.check_ids._add_operation('holding', self, self.partner_id, date=self.date)
-            return _('received')
-        elif self.payment_method_code == 'delivered_third_check' and self.is_internal_transfer:
-            # deposit third check or move third checks to other thir checks journal
-            # if destination journal is a third checks journal we are moving between third checks journals
-            if any(x.code == 'received_third_check' for x in self.destination_journal_id.inbound_payment_method_ids):
-                if cancel:
-                    _logger.info('Cancel Transfer Check')
-                    # TODO implementar, ahora tenemos que ver como juega con el pago destino
-                    raise UserError('NOT IMPLEMENTED YET')
-                    # self.check_ids._del_operation(self)
-                    # self.check_ids._del_operation(self)
-                    # receive_op = check._get_operation('holding')
-                    # if receive_op.origin._name == 'account.payment':
-                    #     check.journal_id = receive_op.origin.journal_id.id
-                    # return None
-                _logger.info('Transfer Check')
-                self.check_ids._add_operation('transfered', self, False, date=self.date)
-                self.check_ids._add_operation('holding', self.paired_internal_transfer_payment_id, False, date=self.date)
-                self.check_ids.write({'journal_id': self.destination_journal_id.id})
-                return _('transfered')
-            else:
-                # sell check
-                if cancel:
-                    _logger.info('Cancel Sell/Deposit Check')
-                    self.check_ids._del_operation(self)
-                    return None
-
-                _logger.info('Sell/Deposit Check')
-                self.check_ids._add_operation('selled' if self.destination_journal_id.type == 'cash' else 'deposited', self, self.partner_id, date=self.date)
-                return _('selled') if self.destination_journal_id.type == 'cash' else _('deposited')
-        elif self.payment_method_code == 'delivered_third_check':
-            # deliver check
-            if cancel:
-                _logger.info('Cancel Deliver Check')
-                self.check_ids._del_operation(self)
-                return None
-            _logger.info('Deliver Check')
-            self.check_ids._add_operation('delivered', self, self.partner_id, date=self.date)
-            return _('delivered')
-        # ISSUE CHECKS OPERATIONS
-        elif self.payment_method_code == 'issue_check' and not self.is_internal_transfer and self.payment_type == 'outbound':
-            # issue checks
-            if cancel:
-                _logger.info('Cancel Issue Check')
-                self.check_ids._del_operation(self)
-                return None
-            _logger.info('Issue Check')
-            self.check_ids._add_operation('handed', self, self.partner_id, date=self.date)
-            return _('issued')
-        elif self.payment_method_code == 'issue_check' and self.is_internal_transfer and self.destination_journal_id.type == 'cash':
-            # Take money from the bank with an own check
-            if cancel:
-                _logger.info('Cancel Withdrawal Check')
-                self.check_ids._del_operation(self)
-                return None
-            _logger.info('Withdraw Check')
-            self.check_ids._add_operation('withdrawed', self, self.partner_id, date=self.date)
-            return _('withdrawed')
-        elif self.check_ids:
+    def _do_checks_operations(self, cancel=False):
+        operation, domain = self._get_checks_operations()
+        if not operation:
             raise UserError(_(
                 'This operatios is not implemented for checks:\n'
                 '* Payment type: %s\n'
@@ -274,6 +208,69 @@ class AccountPayment(models.Model):
                     self.payment_type,
                     self.payment_method_code,
                     self.destination_journal_id.type))
+        elif cancel:
+            self.check_ids._del_operation(self)
+        else:
+            self.check_ids._add_operation(operation, self, self.partner_id, date=self.date)
+            # TODO implementar cambio de journal? o lo hacemos related al último y listo?
+            # self.check_ids.write({'journal_id': self.destination_journal_id.id})
+
+    def _get_checks_operations(self):
+        """
+        This method is called from:
+        * cancellation of payment to execute delete the right operation and unlink check if needed
+        * from post to add check operation and, if needded, change payment vals and/or create check and
+        """
+        self.ensure_one()
+        if self.check_type == 'third_check':
+            domain = []
+            import pdb; pdb.set_trace()
+            if self.is_internal_transfer:
+                if self.payment_type == 'outbound':
+                    # on every outgoing transfer we use "transfered", the actual operation is the incoming one
+                    return 'transfered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
+                elif any(x.code == 'in_checks' for x in self.destination_journal_id.inbound_payment_method_ids):
+                    # a otro third checks
+                    # we don't implement domain for now, they are suposed to be created automatically from the oubound payment transfer
+                    # TODO rename holding for receiving? (lo mismo abajo)
+                    return 'holding', False
+                # TODO para estos dos falta definir ver si hay bypass de ir derecho a "credited"
+                elif self.journal_id.type == 'cash':
+                    # a caja
+                    # we don't implement domain for now, they are suposed to be created automatically from the oubound payment transfer
+                    return 'selled', False
+                elif self.journal_id.type == 'bank':
+                    # a banco
+                    return 'deposited', False
+                else:
+                    # TODO falta implementar de depositado/vendido a rechazado (depende si hacemos con otro diario o mismo diario)
+                    # elif self.journal_id.type == 'bank':
+                    # issue check
+                    # TODO implementar el criterio correcto
+                    raise UserError('Not implemented')
+                    # return 'handed'
+                    # withdrawed
+            elif self.payment_method_code == 'new_in_checks':
+                return 'holding', False
+            elif self.payment_method_code == 'out_checks':
+                # TODO falta implementar devolucion a cliente (si la hacemos)
+                return 'delivered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
+            elif self.payment_method_code == 'in_checks':
+                return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'delivered'), ('partner_id.commercial_partner_id', '=', rec.partner_id.commercial_partner_id)]
+        elif self.check_type == 'issue_check':
+            domain = []
+            if self.is_internal_transfer:
+                if self.payment_type == 'outbound':
+                    # on every outgoing transfer we use "transfered", the actual operation is the incoming one
+                    return 'transfered', False
+                else:
+                    return 'withdrawed', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
+            elif self.payment_method_code == 'new_out_checks':
+                return 'handed', False
+            elif self.payment_method_code == 'in_checks':
+                # TODO definir si usamos mismo nombre para rejected y devuelto
+                return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'handed'), ('partner_id.commercial_partner_id', '=', rec.partner_id.commercial_partner_id)]
+        return False, False
 
     # def _prepare_payment_moves(self):
     #     vals = super(AccountPayment, self)._prepare_payment_moves()

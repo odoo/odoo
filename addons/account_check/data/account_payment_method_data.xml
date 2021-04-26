@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="account_payment_method_received_third_check" model="account.payment.method">
-        <field name="name">Received Third Check</field>
-        <field name="code">received_third_check</field>
+    <!-- only used for third checks, may be rename it? -->
+    <record id="account_payment_method_new_in_checks" model="account.payment.method">
+        <field name="name">New Checks</field>
+        <field name="code">new_in_checks</field>
         <field name="payment_type">inbound</field>
     </record>
 
-    <record id="account_payment_method_returned_check" model="account.payment.method">
-        <field name="name">Returned Check</field>
-        <field name="code">returned_check</field>
+    <record id="account_payment_method_in_checks" model="account.payment.method">
+        <field name="name">Checks</field>
+        <field name="code">in_checks</field>
         <field name="payment_type">inbound</field>
     </record>
 
-    <record id="account_payment_method_delivered_third_check" model="account.payment.method">
-        <field name="name">Delivered Third Check</field>
-        <field name="code">delivered_third_check</field>
+    <!-- only used for issue checks, may be rename it? -->
+    <record id="account_payment_method_new_out_checks" model="account.payment.method">
+        <field name="name">New Checks</field>
+        <field name="code">new_out_checks</field>
         <field name="payment_type">outbound</field>
     </record>
 
-    <record id="account_payment_method_issue_check" model="account.payment.method">
-        <field name="name">Issue Check</field>
-        <field name="code">issue_check</field>
+    <record id="account_payment_method_out_checks" model="account.payment.method">
+        <field name="name">Checks</field>
+        <field name="code">out_checks</field>
         <field name="payment_type">outbound</field>
     </record>
-
-    <!-- <function model="account.journal" name="_enable_issue_check_on_bank_journals"/> -->
 
 </odoo>

@@ -17,7 +17,7 @@ class AccountMove(models.Model):
         """
         res = super().button_draft()
         if self.payment_id.check_ids and self.payment_id.state != 'cancel':
-            self.payment_id.do_checks_operations(cancel=True)
+            self.payment_id._do_checks_operations(cancel=True)
             liq_lines, counterpart_lines, writeoff_lines = self.payment_id._seek_for_lines()
             if len(liq_lines) > 1:
                 self.write({'line_ids': [

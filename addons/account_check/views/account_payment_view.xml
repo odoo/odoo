@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <form>
                 <field name="check_type" invisible="1"/>
-                <field name="available_check_ids" invisible="1"/>
+                <field name="available_check_ids" invisible="0"/>
             </form>
             <xpath expr="//div[@name='amount_div']//field[@name='amount']" position="attributes">
                 <attribute name="attrs">{'readonly': [('check_type', '!=', False)]}</attribute>
@@ -17,7 +17,7 @@
             <field name="destination_journal_id" position="after">
                 <field
                     name="delivery_check_ids"
-                    attrs="{'invisible': [('payment_method_code', 'not in', ['delivered_third_check', 'returned_check'])]}"
+                    attrs="{'invisible': [('payment_method_code', 'not in', ['in_checks', 'out_checks'])]}"
                     options="{'no_create': True}"
                     domain="[('id', 'in', available_check_ids)]"
                 >
@@ -42,8 +42,8 @@
                 </field>
             </field>
             <group>
-                <label for="check_ids" attrs="{'invisible': [('payment_method_code', 'not in', ['received_third_check', 'issue_check'])]}"/>
-                <field context="{'default_partner_id': partner_id, 'default_journal_id': journal_id, 'default_currency_id': currency_id, 'default_type': check_type}" name="check_ids" widget="one2many" attrs="{'invisible': [('payment_method_code', 'not in', ['received_third_check', 'issue_check'])]}">
+                <label for="check_ids" attrs="{'invisible': [('payment_method_code', 'not in', ['new_in_checks', 'new_out_checks'])]}"/>
+                <field context="{'default_partner_id': partner_id, 'default_journal_id': journal_id, 'default_currency_id': currency_id, 'default_type': check_type}" name="check_ids" widget="one2many" attrs="{'invisible': [('payment_method_code', 'not in', ['new_in_checks', 'new_out_checks'])]}">
                     <tree editable="bottom">
                         <field name="checkbook_id" attrs="{'required': [('parent.check_type', '=', 'issue_check')], 'column_invisible': [('parent.check_type', '!=', 'issue_check')]}" domain="[('journal_id', '=', journal_id), ('state', '=', 'active')]"/>
                         <field name="number"/>
