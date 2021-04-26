@@ -29,7 +29,7 @@ class TestMassMailing(TestMassMailCommon):
             'name': 'TestName',
             'subject': 'TestSubject',
             'body_html': 'Hello ${object.name}',
-            'reply_to_mode': 'email',
+            'reply_to_mode': 'new',
             'reply_to': '%s@%s' % (self.test_alias.alias_name, self.test_alias.alias_domain),
             'keep_archives': True,
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
@@ -129,7 +129,7 @@ class TestMassMailing(TestMassMailCommon):
         mailing.write({
             'mailing_domain': [('id', 'in', recipients.ids)],
             'keep_archives': False,
-            'reply_to_mode': 'email',
+            'reply_to_mode': 'new',
             'reply_to': self.test_alias.display_name,
         })
 
@@ -155,7 +155,7 @@ class TestMassMailing(TestMassMailCommon):
         mailing.write({
             'mailing_domain': [('id', 'in', recipients.ids)],
             'keep_archives': False,
-            'reply_to_mode': 'thread',
+            'reply_to_mode': 'update',
             'reply_to': self.test_alias.display_name,
         })
 
@@ -191,7 +191,7 @@ class TestMassMailing(TestMassMailCommon):
             'name': 'UTMTest',
             'subject': subject,
             'body_html': '<p>Hello ${object.name}</p>',
-            'reply_to_mode': 'email',
+            'reply_to_mode': 'new',
             'reply_to': '%s@%s' % (self.test_alias.alias_name, self.test_alias.alias_domain),
             'keep_archives': True,
             'mailing_model_id': self.env['ir.model']._get('mailing.list').id,

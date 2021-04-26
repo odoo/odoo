@@ -39,7 +39,7 @@ class TestMassMailCommon(MassMailCommon, TestMailCommon):
 </div>""",
             'mailing_type': 'mail',
             'mailing_model_id': cls.env['ir.model']._get('mailing.test.blacklist').id,
-            'reply_to_mode': 'thread',
+            'reply_to_mode': 'update',
         })
 
     @classmethod

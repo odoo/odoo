@@ -31,7 +31,7 @@ class MailComposeMessage(models.TransientModel):
                     'subject': self.subject,
                     'state': 'done',
                     'reply_to_mode': self.reply_to_mode,
-                    'reply_to': self.reply_to if self.reply_to_mode == 'email' else False,
+                    'reply_to': self.reply_to if self.reply_to_mode == 'new' else False,
                     'sent_date': fields.Datetime.now(),
                     'body_html': self.body,
                     'mailing_model_id': self.env['ir.model']._get(self.model).id,
@@ -85,7 +85,7 @@ class MailComposeMessage(models.TransientModel):
                     'mailing_id': mass_mailing.id,
                     'mailing_trace_ids': [(0, 0, trace_vals)],
                     # email-mode: keep original message for routing
-                    'notification': mass_mailing.reply_to_mode == 'thread',
+                    'notification': mass_mailing.reply_to_mode == 'update',
                     'auto_delete': not mass_mailing.keep_archives,
                 })
         return res
