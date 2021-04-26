@@ -270,6 +270,7 @@ class Users(models.Model):
             'signature', 'company_id', 'login', 'email', 'name', 'image_1920',
             'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
             'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id',
+            'avatar_1920', 'avatar_1024', 'avatar_512', 'avatar_256', 'avatar_128',
         ]
 
     @property
@@ -282,17 +283,6 @@ class Users(models.Model):
     def _default_groups(self):
         default_user_id = self.env['ir.model.data'].xmlid_to_res_id('base.default_user', raise_if_not_found=False)
         return self.env['res.users'].browse(default_user_id).sudo().groups_id if default_user_id else []
-
-    @api.model
-    def _get_default_image(self):
-        """ Get a default image when the user is created without image
-
-            Inspired to _get_default_image method in
-            https://github.com/odoo/odoo/blob/11.0/odoo/addons/base/res/res_partner.py
-        """
-        image_path = get_module_resource('base', 'static/img', 'avatar.png')
-        image = base64.b64encode(open(image_path, 'rb').read())
-        return image_process(image, colorize=True)
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
         string='Related Partner', help='Partner-related data of the user')
@@ -338,7 +328,6 @@ class Users(models.Model):
                                  compute='_compute_accesses_count', compute_sudo=True)
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
-    image_1920 = fields.Image(related='partner_id.image_1920', inherited=True, readonly=False, default=_get_default_image)
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
@@ -1036,11 +1025,6 @@ class Users(models.Model):
         if hasattr(self, 'check_credentials'):
             _logger.warning("The check_credentials method of res.users has been renamed _check_credentials. One of your installed modules defines one, but it will not be called anymore.")
 
-    def _get_placeholder_filename(self, field=None):
-        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
-        if field in image_fields and not self:
-            return 'base/static/img/user-slash.png'
-        return super()._get_placeholder_filename(field=field)
 
     def _mfa_url(self):
         """ If an MFA method is enabled, returns the URL for its second step. """

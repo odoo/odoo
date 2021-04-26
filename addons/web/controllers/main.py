@@ -1420,15 +1420,6 @@ class Binary(http.Controller):
         return self._get_content_common(xmlid=None, model='ir.attachment', id=id, field='datas', unique=unique, filename=filename,
             filename_field='name', download=None, mimetype=None, access_token=None, token=None)
 
-    @http.route(['/web/partner_image',
-        '/web/partner_image/<int:rec_id>',
-        '/web/partner_image/<int:rec_id>/<string:field>',
-        '/web/partner_image/<int:rec_id>/<string:field>/<string:model>/'], type='http', auth="public")
-    def content_image_partner(self, rec_id, field='image_128', model='res.partner', **kwargs):
-        # other kwargs are ignored on purpose
-        return self._content_image(id=rec_id, model='res.partner', field=field,
-            placeholder='user_placeholder.jpg')
-
     @http.route(['/web/image',
         '/web/image/<string:xmlid>',
         '/web/image/<string:xmlid>/<string:filename>',
@@ -1459,7 +1450,7 @@ class Binary(http.Controller):
     def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename_field='name', unique=None, filename=None, mimetype=None,
                        download=None, width=0, height=0, crop=False, quality=0, access_token=None,
-                       placeholder=None, **kwargs):
+                       **kwargs):
         status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
@@ -1467,25 +1458,17 @@ class Binary(http.Controller):
 
         return Binary._content_image_get_response(
             status, headers, image_base64, model=model, id=id, field=field, download=download,
-            width=width, height=height, crop=crop, quality=quality,
-            placeholder=placeholder)
+            width=width, height=height, crop=crop, quality=quality)
 
     @staticmethod
     def _content_image_get_response(
             status, headers, image_base64, model='ir.attachment', id=None,
             field='datas', download=None, width=0, height=0, crop=False,
-            quality=0, placeholder='placeholder.png'):
+            quality=0):
         if status in [301, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
-            if placeholder is None and model in request.env:
-                # Try to browse the record in case a specific placeholder
-                # is supposed to be used. (eg: Unassigned users on a task)
-                record = request.env[model].browse(int(id)) if id else request.env[model]
-                placeholder_filename = record._get_placeholder_filename(field=field)
-                placeholder_content = Binary.placeholder(image=placeholder_filename)
-            else:
-                placeholder_content = Binary.placeholder()
+            placeholder_content = Binary.placeholder()
             # Since we set a placeholder for any missing image, the status must be 200. In case one
             # wants to configure a specific 404 page (e.g. though nginx), a 404 status will cause
             # troubles.

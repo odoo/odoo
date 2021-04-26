@@ -434,8 +434,7 @@ class WebsiteSlides(WebsiteProfile):
     def _get_top3_users(self):
         return request.env['res.users'].sudo().search_read([
             ('karma', '>', 0),
-            ('website_published', '=', True),
-            ('image_1920', '!=', False)], ['id'], limit=3, order='karma desc')
+            ('website_published', '=', True)], ['id'], limit=3, order='karma desc')
 
     @http.route([
         '/slides/<model("slide.channel"):channel>',

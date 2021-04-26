@@ -101,7 +101,7 @@
                             <h3>The Team</h3>
                             <t t-foreach="team" t-as="user">
                                 <div class="media mt-3">
-                                    <img t-if="user.image_128" t-att-src="image_data_uri(user.image_128)" class="o_image_64_cover rounded o_livechat_operator_avatar" t-att-alt="user.livechat_username or user.name"/>
+                                    <img t-att-src="image_data_uri(user.avatar_128)" class="o_image_64_cover rounded o_livechat_operator_avatar" t-att-alt="user.livechat_username or user.name"/>
                                     <div class="media-body">
                                         <h5>
                                             <t t-if="user.livechat_username">

@@ -113,10 +113,10 @@ QUnit.module('mail', {}, function () {
 
         assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), '');
         assert.containsN(kanban, '.o_m2o_avatar', 4);
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0) > img').data('src'), '/web/image/res.users/11/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1) > img').data('src'), '/web/image/res.users/7/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2) > img').data('src'), '/web/image/res.users/11/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3) > img').data('src'), '/web/image/res.users/23/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0) > img').data('src'), '/web/image/res.users/11/avatar_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1) > img').data('src'), '/web/image/res.users/7/avatar_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2) > img').data('src'), '/web/image/res.users/11/avatar_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3) > img').data('src'), '/web/image/res.users/23/avatar_128');
 
         kanban.destroy();
     });
@@ -141,7 +141,7 @@ QUnit.module('mail', {}, function () {
 
         assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
             "should have 2 records");
-        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/image/res.users/11/image_128',
+        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/image/res.users/11/avatar_128',
             "should have correct avatar image");
 
         await dom.click(form.$('.o_field_many2manytags.avatar .badge:first .o_m2m_avatar'));

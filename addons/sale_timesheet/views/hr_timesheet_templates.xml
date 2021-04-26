@@ -297,7 +297,7 @@
                                                 <t t-set="employee" t-value="repartition_employee[employee_id]"/>
                                                 <tr name="row_time_by_people">
                                                     <td style="width: 3%; vertical-align: middle;">
-                                                        <img class="img rounded-circle mr-2 mb-2" t-attf-src="/web/image?model=hr.employee&amp;field=image_128&amp;id=#{employee['employee_id']}" t-att-title="employee['employee_name']" t-att-alt="employee['employee_name']" width="25" height="25"/>
+                                                        <img class="img rounded-circle mr-2 mb-2" t-attf-src="/web/image?model=hr.employee&amp;field=avatar_128&amp;id=#{employee['employee_id']}" t-att-title="employee['employee_name']" t-att-alt="employee['employee_name']" width="25" height="25"/>
                                                     </td>
                                                     <td style="width: 15%; vertical-align: middle;" >
                                                         <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain)" t-att-data-context="json.dumps({'search_default_employee_id': employee_id})" data-views="[[0, &quot;list&quot;]]" tabindex="-1">

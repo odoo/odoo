@@ -6354,13 +6354,6 @@ Fields:
 
         return result
 
-    def _get_placeholder_filename(self, field=None):
-        """ Returns the filename of the placeholder to use,
-            set on web/static/img by default, or the
-            complete path to access it (eg: module/path/to/image.png).
-        """
-        return 'placeholder.png'
-
     def _populate_factories(self):
         """ Generates a factory for the different fields of the model.
 
