@@ -61,7 +61,9 @@ class Forum(models.Model):
                                 </div>
                             </div>
                         </div>
-                    </section>""")
+                    </section>""",
+        sanitize_attributes=False,
+        sanitize_form=False)
     default_order = fields.Selection([
         ('create_date desc', 'Newest'),
         ('write_date desc', 'Last Updated'),
