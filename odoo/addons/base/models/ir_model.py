@@ -1573,7 +1573,7 @@ class IrModelConstraint(models.Model):
         constraint_module = {
             constraint[0]: cls._module
             for cls in reversed(type(model).mro())
-            if not getattr(cls, 'pool', None)
+            if models.is_definition_class(cls)
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }
 
