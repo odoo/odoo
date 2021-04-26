@@ -501,11 +501,18 @@ var KanbanRenderer = BasicRenderer.extend({
         // - is a date or datetime since we group by month or
         // - is readonly (on the field attrs or in the view)
         var draggable = true;
+        let recordDeletable = this.recordOptions.deletable;
         var grouped_by_date = false;
         if (groupByFieldAttrs) {
             if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
                 draggable = false;
                 grouped_by_date = true;
+            } else if (groupByFieldAttrs.type === "many2many") {
+                // TODO: MSH: should we allow resequencing of record, if yes then this fix is OK else we need to disable recordsDraggable to false
+                // do not allow dragging of record if grouped by many2many
+                draggable = false;
+                // do not allow to delete records if grouped by many2many
+                recordDeletable = false;
             } else if (groupByFieldAttrs.readonly !== undefined) {
                 draggable = !(groupByFieldAttrs.readonly);
             }
@@ -528,6 +535,9 @@ var KanbanRenderer = BasicRenderer.extend({
             quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(this.state),
         });
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
+        this.recordOptions = _.extend(this.recordOptions, {
+            deletable: recordDeletable,
+        });
     },
     /**
      * Remove date/datetime magic grouping info to get proper field attrs/info from state
