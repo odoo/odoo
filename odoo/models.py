@@ -251,6 +251,109 @@ VALID_AGGREGATE_FUNCTIONS = {
 }
 
 
+# THE DEFINITION AND REGISTRY CLASSES
+#
+# The framework deals with two kinds of classes for models: the "definition"
+# classes and the "registry" classes.
+#
+# The "definition" classes are the ones defined in modules source code: they
+# define models and extend them.  Those classes are essentially "static", for
+# whatever that means in Python.  The only exception is custom models: their
+# definition class is created dynamically.
+#
+# The "registry" classes are the ones you find in the registry.  They are the
+# actual classes of the recordsets of their model.  The "registry" class of a
+# model is created dynamically when the registry is built.  It inherits (in the
+# Python sense) from all the definition classes of the model, and possibly other
+# registry classes (when the model inherits from another model).  It also
+# carries model metadata inferred from its parent classes.
+#
+#
+# THE REGISTRY CLASS OF A MODEL
+#
+# In the simplest case, a model's registry class inherits from all the classes
+# that define the model in a flat hierarchy.  Consider the model definition
+# below.  The registry class of model 'a' inherits from the definition classes
+# A1, A2, A3, in reverse order, to match the expected overriding order.  The
+# registry class carries inferred metadata that is shared between all the
+# model's instances for a given registry.
+#
+#       class A1(Model):                      Model
+#           _name = 'a'                       / | \
+#                                            A3 A2 A1   <- definition classes
+#       class A2(Model):                      \ | /
+#           _inherit = 'a'                      a       <- registry class: registry['a']
+#                                               |
+#       class A3(Model):                     records    <- model instances, like env['a']
+#           _inherit = 'a'
+#
+# Note that when the model inherits from another model, we actually make the
+# registry classes inherit from each other, so that extensions to an inherited
+# model are visible in the registry class of the child model, like in the
+# following example.
+#
+#       class A1(Model):
+#           _name = 'a'                       Model
+#                                            / / \ \
+#       class B1(Model):                    / /   \ \
+#           _name = 'b'                    / A2   A1 \
+#                                         B2  \   /  B1
+#       class B2(Model):                   \   \ /   /
+#           _name = 'b'                     \   a   /
+#           _inherit = ['a', 'b']            \  |  /
+#                                             \ | /
+#       class A2(Model):                        b
+#           _inherit = 'a'
+#
+#
+# THE FIELDS OF A MODEL
+#
+# The fields of a model are given by the model's definition classes, inherited
+# models ('_inherit' and '_inherits') and other parties, like custom fields.
+# Note that a field can be partially overridden when it appears on several
+# definition classes of its model.  In that case, the field's final definition
+# depends on the presence or absence of each definition class, which itself
+# depends on the modules loaded in the registry.
+#
+# In order to avoid any ambiguity in a field's definition, all the fields of a
+# model are recreated on its registry class.  When a field is set up, it
+# retrieves its definition(s) from its model's ancestor classes.  It also
+# collects other information from its model's (registry) class, like compute
+# dependencies.
+#
+#       class A1(Model):                      Model
+#           _name = 'a'                        / \
+#           foo = ...                         /   \
+#           bar = ...                       A2     A1
+#                                            bar    foo, bar
+#       class A2(Model):                      \   /
+#           _inherit = 'a'                     \ /
+#           bar = ...                           a
+#                                                foo
+#                                                bar
+#
+#
+# SHARING FIELDS
+#
+# The registry class of a model is actually specific to a given registry.  In
+# order to reduce the memory footprint of a registry, the fields on registry
+# classes can be shared across registries.  A field on a registry class may
+# actually be shared with another registry class, provided it is not related and
+# the definition classes in the MRO of the registry classes are the same.
+# Related fields are banned from sharing, because one of their attribute refers
+# to another field from their registry, which is likely to not be shared across
+# the given registries.
+
+def is_definition_class(cls):
+    """ Return whether ``cls`` is a model definition class. """
+    return isinstance(cls, MetaModel) and getattr(cls, 'pool', None) is None
+
+
+def is_registry_class(cls):
+    """ Return whether ``cls`` is a model registry class. """
+    return getattr(cls, 'pool', None) is not None
+
+
 class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     """Base class for Odoo models.
 
@@ -493,41 +596,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         other registry classes.
 
         """
-
-        # In the simplest case, the model's registry class inherits from cls and
-        # the other classes that define the model in a flat hierarchy. The
-        # registry contains the instance ``model`` (on the left). Its class,
-        # ``ModelClass``, carries inferred metadata that is shared between all
-        # the model's instances for this registry only.
-        #
-        #   class A1(Model):                          Model
-        #       _name = 'a'                           / | \
-        #                                            A3 A2 A1
-        #   class A2(Model):                          \ | /
-        #       _inherit = 'a'                      ModelClass
-        #                                             /   \
-        #   class A3(Model):                      model   recordset
-        #       _inherit = 'a'
-        #
-        # When a model is extended by '_inherit', its base classes are modified
-        # to include the current class and the other inherited model classes.
-        # Note that we actually inherit from other ``ModelClass``, so that
-        # extensions to an inherited model are immediately visible in the
-        # current model class, like in the following example:
-        #
-        #   class A1(Model):
-        #       _name = 'a'                           Model
-        #                                            / / \ \
-        #   class B1(Model):                        / A2 A1 \
-        #       _name = 'b'                        /   \ /   \
-        #                                         B2  ModelA  B1
-        #   class B2(Model):                       \    |    /
-        #       _name = 'b'                         \   |   /
-        #       _inherit = ['a', 'b']                \  |  /
-        #                                             ModelB
-        #   class A2(Model):
-        #       _inherit = 'a'
-
         if getattr(cls, '_constraints', None):
             _logger.warning("Model attribute '_constraints' is no longer supported, "
                             "please use @api.constrains on methods instead.")
@@ -639,8 +707,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._sql_constraints = {}
 
         for base in reversed(cls.__bases__):
-            if not getattr(base, 'pool', None):
-                # the following attributes are not taken from model classes
+            if is_definition_class(base):
+                # the following attributes are not taken from registry classes
                 parents = [base._inherit] if base._inherit and isinstance(base._inherit, str) else (base._inherit or [])
                 if cls._name not in parents and not base._description:
                     _logger.warning("The model %s has no _description", cls._name)
@@ -2778,7 +2846,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cls._setup_done = False
 
         # the classes that define this model's base fields and methods
-        cls._model_classes = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
+        cls._model_classes = tuple(c for c in cls.mro() if not is_registry_class(c))
 
         # reset those attributes on the model's class for _setup_fields() below
         for attr in ('_rec_name', '_active_name'):
