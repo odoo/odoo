@@ -108,27 +108,19 @@ class SaleOrderLine(models.Model):
                     else:
                         order_line.qty_delivered = 0.0
 
-    def _get_bom_component_qty(self, bom):
-        bom_quantity = self.product_uom._compute_quantity(1, bom.product_uom_id)
-        boms, lines = bom.explode(self.product_id, bom_quantity)
-        components = {}
+    def _get_bom_component_qty(self):
+        bom_quantity = self.product_uom._compute_quantity(1, self.kit_bom_id.product_uom_id)
+        boms, lines = self.kit_bom_id.explode(self.product_id, bom_quantity)
+        components = defaultdict(float)
         for line, line_data in lines:
             product = line.product_id.id
-            uom = line.product_uom_id
-            qty = line.product_qty
-            if components.get(product, False):
-                if uom.id != components[product]['uom']:
-                    from_uom = uom
-                    to_uom = self.env['uom.uom'].browse(components[product]['uom'])
-                    qty = from_uom._compute_quantity(qty, to_uom)
-                components[product]['qty'] += qty
-            else:
-                # To be in the uom reference of the product
-                to_uom = self.env['product.product'].browse(product).uom_id
-                if uom.id != to_uom.id:
-                    from_uom = uom
-                    qty = from_uom._compute_quantity(qty, to_uom)
-                components[product] = {'qty': qty, 'uom': to_uom.id}
+            line_uom = line.product_uom_id
+            qty = line_data['qty']
+
+            product_uom = self.env['product.product'].browse(product).uom_id
+            if line_uom.id != product_uom.id:
+                qty = line_uom._compute_quantity(qty, product_uom)
+            components[product] += qty
         return components
 
     def _get_qty_procurement(self, previous_product_uom_qty=False):
