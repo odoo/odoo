@@ -6,7 +6,7 @@
  */
 export class KeepLast {
   constructor() {
-    this.id = 0;
+    this._id = 0;
   }
 
   /**
@@ -17,18 +17,18 @@ export class KeepLast {
    * @returns {Promise<T>}
    */
   add(promise) {
-    this.id++;
-    const currentId = this.id;
+    this._id++;
+    const currentId = this._id;
     return new Promise((resolve, reject) => {
       promise
         .then((value) => {
-          if (this.id === currentId) {
+          if (this._id === currentId) {
             resolve(value);
           }
         })
         .catch((reason) => {
           // not sure about this part
-          if (this.id === currentId) {
+          if (this._id === currentId) {
             reject(reason);
           }
         });
@@ -71,9 +71,9 @@ export class KeepLast {
  */
 export class Mutex {
   constructor() {
-    this.lock = Promise.resolve();
-    this.queueSize = 0;
-    this.unlockedProm = undefined;
+    this._lock = Promise.resolve();
+    this._queueSize = 0;
+    this._unlockedProm = undefined;
     this._unlock = undefined;
   }
   /**
@@ -84,22 +84,22 @@ export class Mutex {
    * @returns {Promise}
    */
   async exec(action) {
-    const currentLock = this.lock;
+    const currentLock = this._lock;
     let result;
-    this.queueSize++;
-    this.unlockedProm =
-      this.unlockedProm ||
+    this._queueSize++;
+    this._unlockedProm =
+      this._unlockedProm ||
       new Promise((resolve) => {
         this._unlock = resolve;
       });
-    this.lock = new Promise((unlockCurrent) => {
+    this._lock = new Promise((unlockCurrent) => {
       currentLock.then(() => {
         result = action();
         const always = (returnedResult) => {
           unlockCurrent();
-          this.queueSize--;
-          if (this.queueSize === 0) {
-            this.unlockedProm = undefined;
+          this._queueSize--;
+          if (this._queueSize === 0) {
+            this._unlockedProm = undefined;
             this._unlock();
           }
           return returnedResult;
@@ -107,7 +107,7 @@ export class Mutex {
         Promise.resolve(result).then(always).guardedCatch(always);
       });
     });
-    await this.lock;
+    await this._lock;
     return result;
   }
   /**
@@ -115,6 +115,6 @@ export class Mutex {
    *   (directly if it is currently idle)
    */
   getUnlockedDef() {
-    return this.unlockedProm || Promise.resolve();
+    return this._unlockedProm || Promise.resolve();
   }
 }
