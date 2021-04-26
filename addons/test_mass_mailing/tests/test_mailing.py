@@ -120,6 +120,60 @@ class TestMassMailing(TestMassMailCommon):
         self.assertEqual(recipients[1].message_bounce, 1)
 
     @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_reply_to_mode_new(self):
+        mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
+        recipients = self._create_mailing_test_records(model='mailing.test.blacklist', count=5)
+        self.assertEqual(len(recipients), 5)
+        initial_messages = recipients.message_ids
+        mailing.write({
+            'mailing_domain': [('id', 'in', recipients.ids)],
+            'keep_archives': False,
+            'reply_to_mode': 'email',
+            'reply_to': self.test_alias.display_name,
+        })
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        answer_rec = self.gateway_mail_reply_wemail(MAIL_TEMPLATE, recipients[0].email_normalized, target_model=self.test_alias.alias_model_id.model)
+        self.assertTrue(bool(answer_rec))
+        self.assertEqual(answer_rec.name, 'Re: %s' % mailing.subject)
+        self.assertEqual(
+            answer_rec.message_ids.subject, 'Re: %s' % mailing.subject,
+            'Answer should be logged')
+        self.assertEqual(recipients.message_ids, initial_messages)
+
+        self.assertMailingStatistics(mailing, expected=5, delivered=5, sent=5, opened=1, replied=1)
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_reply_to_mode_update(self):
+        mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
+        recipients = self._create_mailing_test_records(model='mailing.test.blacklist', count=5)
+        self.assertEqual(len(recipients), 5)
+        mailing.write({
+            'mailing_domain': [('id', 'in', recipients.ids)],
+            'keep_archives': False,
+            'reply_to_mode': 'thread',
+            'reply_to': self.test_alias.display_name,
+        })
+
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        answer_rec = self.gateway_mail_reply_wemail(MAIL_TEMPLATE, recipients[0].email_normalized, target_model=self.test_alias.alias_model_id.model)
+        self.assertFalse(bool(answer_rec))
+        self.assertEqual(
+            recipients[0].message_ids[1].subject, mailing.subject,
+            'Should have keep a log (to enable thread-based answer)')
+        self.assertEqual(
+            recipients[0].message_ids[0].subject, 'Re: %s' % mailing.subject,
+            'Answer should be logged')
+
+        self.assertMailingStatistics(mailing, expected=5, delivered=5, sent=5, opened=1, replied=1)
+
+    @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_mailing_trace_utm(self):
         """ Test mailing UTMs are caught on reply"""
