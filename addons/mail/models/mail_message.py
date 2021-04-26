@@ -1130,11 +1130,11 @@ class Message(models.Model):
             limit=limit, orderby=orderby, lazy=lazy,
         )
 
-    def export_data(self, fields_to_export, raw_data=False):
+    def export_data(self, fields_to_export):
         if not self.env.is_admin():
             raise AccessError(_("Only administrators are allowed to export mail message"))
 
-        return super(Message, self).export_data(fields_to_export, raw_data)
+        return super(Message, self).export_data(fields_to_export)
 
     # --------------------------------------------------
     # Moderation
