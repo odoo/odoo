@@ -535,10 +535,20 @@ class SurveyUserInputLine(models.Model):
         return super(SurveyUserInputLine, self).create(vals_list)
 
     def write(self, vals):
-        score_vals = self._get_answer_score_values(vals, compute_speed_score=False)
-        if not vals.get('answer_score'):
-            vals.update(score_vals)
-        return super(SurveyUserInputLine, self).write(vals)
+        res = True
+        for line in self:
+            vals_copy = {**vals}
+            getter_params = {
+                'user_input_id': line.user_input_id.id,
+                'answer_type': line.answer_type,
+                'question_id': line.question_id.id,
+                **vals_copy
+            }
+            score_vals = self._get_answer_score_values(getter_params, compute_speed_score=False)
+            if not vals_copy.get('answer_score'):
+                vals_copy.update(score_vals)
+            res = super(SurveyUserInputLine, line).write(vals_copy) and res
+        return res
 
     @api.model
     def _get_answer_score_values(self, vals, compute_speed_score=True):
