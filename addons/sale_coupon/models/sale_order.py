@@ -140,9 +140,8 @@ class SaleOrder(models.Model):
 
     def _get_reward_values_discount(self, program):
         if program.discount_type == 'fixed_amount':
-            taxes = program.discount_line_product_id.taxes_id
-            if self.fiscal_position_id:
-                taxes = self.fiscal_position_id.map_tax(taxes)
+            product_taxes = program.discount_line_product_id.taxes_id.filtered(lambda tax: tax.company_id == self.company_id)
+            taxes = self.fiscal_position_id.map_tax(product_taxes)
             return [{
                 'name': _("Discount: %s", program.name),
                 'product_id': program.discount_line_product_id.id,
