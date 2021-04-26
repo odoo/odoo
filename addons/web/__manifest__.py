@@ -458,6 +458,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/helpers/**/*',
+            ('remove', 'web/static/tests/legacy/helpers/test_utils_tests.js'),
             'web/static/tests/legacy/legacy_setup.js',
 
             'web/static/lib/fullcalendar/core/main.css',
@@ -503,6 +504,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/fields/signature_tests.js',
             'web/static/tests/legacy/fields/special_fields_tests.js',
             'web/static/tests/legacy/fields/upgrade_fields_tests.js',
+            'web/static/tests/legacy/helpers/test_utils_tests.js',
             'web/static/tests/legacy/services/**/*.js',
             'web/static/tests/legacy/tools/**/*.js',
             'web/static/tests/legacy/views/abstract_controller_tests.js',
