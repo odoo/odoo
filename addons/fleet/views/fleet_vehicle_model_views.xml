@@ -124,6 +124,20 @@
         <field name="arch" type="xml">
             <form string="Model Make">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_brand_model" icon="fa-car" type="object" context="{'vehicle_type': 'car'}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="car_count"/></span>
+                                <span class="o_stat_text">Car</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="action_brand_model" icon="fa-bicycle" type="object" context="{'vehicle_type': 'bike'}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="bike_count"/></span>
+                                <span class="o_stat_text">Bike</span>
+                            </div>
+                        </button>
+                    </div>
                     <group>
                         <div>
                             <field name="image_128" widget="image" class="oe_avatar"/>
@@ -168,6 +182,14 @@
                                     <a type="object" name="action_brand_model" class="oe_kanban_fleet_model"/>
                                     <field name="model_count"/> MODELS
                                 </div>
+                            </div>
+                            <div class="float-right">
+                                <field name="car_count"/>
+                                <div class="fa fa-car" title="Cars"/>
+                            </div>
+                            <div class="float-right mr-2">
+                                <field name="bike_count"/>
+                                <div class="fa fa-bicycle" title="Bikes"/>
                             </div>
                         </div>
                     </t>
