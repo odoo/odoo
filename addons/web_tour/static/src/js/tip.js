@@ -281,6 +281,7 @@ var Tip = Widget.extend({
         } while (
             $location.hasClass('dropdown-menu') ||
             $location.hasClass('o_notebook_headers') ||
+            $location.hasClass('o_forbidden_tooltip_parent') ||
             (
                 (o === "visible" || o.includes("hidden")) && // Possible case where the overflow = "hidden auto"
                 p !== "fixed" &&

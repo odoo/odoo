@@ -454,6 +454,12 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
         $selectTemplateBtn.on('click', () => {
             $snippetsSideBar.data('snippetMenu').activateCustomTab($themeSelector);
+            /**
+             * Ensure the parent of the theme selector is not used as parent for a
+             * tooltip as it is overflow auto and would result in the tooltip being
+             * hidden by the body of the mail.
+             */
+            $themeSelector.parent().addClass('o_forbidden_tooltip_parent');
             $selectTemplateBtn.addClass('active');
         });
 
