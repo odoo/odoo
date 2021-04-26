@@ -901,7 +901,10 @@ const Wysiwyg = Widget.extend({
      */
     _updateEditorUI: function (e) {
         this.odooEditor.automaticStepSkipStack();
-        const $target = e ? $(e.target) : $();
+        // We need to use the editor's window so the tooltip displays in its
+        // document even if it's in an iframe.
+        const editorWindow = this.odooEditor.document.defaultView;
+        const $target = e ? editorWindow.$(e.target) : editorWindow.$();
         // Restore paragraph dropdown button's default ID.
         this.toolbar.$el.find('#mediaParagraphDropdownButton').attr('id', 'paragraphDropdownButton');
         // Remove the alt tools.
