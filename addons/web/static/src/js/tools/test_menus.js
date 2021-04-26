@@ -14,7 +14,10 @@
 
     function createWebClientHooks() {
         var AbstractController = odoo.__DEBUG__.services['web.AbstractController'];
-        var DiscussWidget = odoo.__DEBUG__.services['@mail/widgets/discuss/discuss'][Symbol.for("default")];
+        // This test file is not respecting Odoo module dependencies.
+        // The following module might not be loaded (eg. if mail is not installed).
+        const DiscussWidgetModule = odoo.__DEBUG__.services['@mail/widgets/discuss/discuss'];
+        const DiscussWidget = DiscussWidgetModule && DiscussWidgetModule[Symbol.for("default")];
         var WebClient = odoo.__DEBUG__.services["web.WebClient"];
 
         WebClient.include({
