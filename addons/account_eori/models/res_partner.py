@@ -60,7 +60,7 @@ class ResPartner(models.Model):
     #@tools.ormcache('eori')
     def _validate_eori_gb(self, eori):
         # GB Validation
-        connection = http.client.HTTPSConnection('test-api.service.hmrc.gov.uk')
+        connection = http.client.HTTPSConnection('api.service.hmrc.gov.uk')
         connection.request('POST', '/customs/eori/lookup/check-multiple-eori', json.dumps({'eoris': [eori]}), {'Content-type': 'application/json'})
         response = connection.getresponse()
 
