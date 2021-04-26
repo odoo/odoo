@@ -538,11 +538,13 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/qweb_tests.js',
 
             'web/static/tests/actions/**/*.js',
+            'web/static/tests/commands/**/*.js',
             'web/static/tests/components/**/*.js',
             'web/static/tests/core/**/*.js',
             'web/static/tests/debug/**/*.js',
             'web/static/tests/effects/**/*.js',
             'web/static/tests/errors/**/*.js',
+            'web/static/tests/hotkeys/**/*.js',
             'web/static/tests/localization/**/*.js',
             'web/static/tests/notifications/**/*.js',
             'web/static/tests/py_js/**/*.js',
