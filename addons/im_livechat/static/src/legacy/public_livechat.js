@@ -837,7 +837,7 @@ var WebsiteLivechatMessage = AbstractMessage.extend({
     getAvatarSource: function () {
         var source = this._serverURL;
         if (this.hasAuthor()) {
-            source += '/web/partner_image/' + this.getAuthorID();
+            source += '/web/image/res.partner/' + this.getAuthorID() + '/avatar_128';
         } else {
             source += '/mail/static/src/img/smiley/avatar.jpg';
         }
@@ -1634,7 +1634,7 @@ var AbstractMessage = Class.extend({
      */
     getAvatarSource: function () {
         if (this.hasAuthor()) {
-            return '/web/image/res.partner/' + this.getAuthorID() + '/image_128';
+            return '/web/image/res.partner/' + this.getAuthorID() + '/avatar_128';
         }
     },
     /**

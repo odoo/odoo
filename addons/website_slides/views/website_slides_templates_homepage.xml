@@ -502,7 +502,7 @@
 <template id='slides_misc_user_image' name="User Avatar">
     <img t-att-class="img_class if img_class else 'rounded-circle float-left'"
         t-att-style="img_style if img_style else 'width: 32px; height: 32px; object-fit: cover;'"
-        t-att-src="'/profile/avatar/%s?field=image_128' % user.id"
+        t-att-src="'/profile/avatar/%s?field=avatar_128' % user.id"
         t-att-alt="user.name"/>
 </template>
 </data></odoo>

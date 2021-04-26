@@ -1049,7 +1049,7 @@ const Many2OneAvatar = FieldMany2One.extend({
      */
     _render() {
         const m2oAvatar = qweb.render(this._template, {
-            url: `/web/image/${this.field.relation}/${this.value.res_id}/image_128`,
+            url: `/web/image/${this.field.relation}/${this.value.res_id}/avatar_128`,
             value: this.m2o_value,
             widget: this,
         });
@@ -2769,7 +2769,7 @@ var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
     _getRenderTagsContext: function () {
         var result = this._super.apply(this, arguments);
         result.avatarModel = this.nodeOptions.avatarModel || this.field.relation;
-        result.avatarField = this.nodeOptions.avatarField || 'image_128';
+        result.avatarField = this.nodeOptions.avatarField || 'avatar_128';
         return result;
     },
 });

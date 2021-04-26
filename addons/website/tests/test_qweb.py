@@ -73,7 +73,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         <div widget="html"><span class="toto">
                 span<span class="fa"></span><img src="http://test.cdn/web/image/1" loading="lazy">
             </span></div>
-        <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/image_1920/%(filename)s" class="img img-fluid" alt="%(alt)s" loading="lazy"/></div>
+        <div widget="image"><img src="http://test.cdn/web/image/res.users/%(user_id)s/avatar_1920/%(filename)s" class="img img-fluid" alt="%(alt)s" loading="lazy"/></div>
     </body>
 </html>""" % format_data).encode('utf8'))
 

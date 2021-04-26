@@ -34,6 +34,7 @@ from . import report_layout
 from . import report_paperformat
 
 from . import image_mixin
+from . import avatar_mixin
 
 from . import res_country
 from . import res_lang

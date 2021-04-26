@@ -212,7 +212,7 @@ class MockModels {
                     description: { string: 'description', type: 'text' },
                     display_name: { string: "Displayed name", type: "char" },
                     email: { type: 'char' },
-                    image_128: { string: "Image 128", type: 'image' },
+                    avatar_128: { string: "Image 128", type: 'image' },
                     im_status: { string: "IM Status", type: 'char' },
                     message_follower_ids: { relation: 'mail.followers', string: "Followers", type: "one2many" },
                     message_attachment_count: { string: 'Attachment count', type: 'integer' },

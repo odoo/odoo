@@ -128,7 +128,7 @@ var CalendarView = AbstractView.extend({
                     }
                     if (!child.attrs.avatar_field && fields[fieldName].relation) {
                         if (fields[fieldName].relation.includes(['res.users', 'res.partner', 'hr.employee'])) {
-                            filters[fieldName].avatar_field = 'image_128';
+                            filters[fieldName].avatar_field = 'avatar_128';
                         }
                         filters[fieldName].avatar_model = fields[fieldName].relation;
                     }

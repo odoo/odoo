@@ -87,7 +87,7 @@ QUnit.test('basic rendering', async function (assert) {
     );
     assert.strictEqual(
         messageEl.querySelector(`:scope .o_Message_authorAvatar`).dataset.src,
-        '/web/image/res.partner/7/image_128',
+        '/web/image/res.partner/7/avatar_128',
         "message author avatar should GET image of the related partner"
     );
     assert.strictEqual(

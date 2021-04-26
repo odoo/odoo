@@ -10,9 +10,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.osv.query import Query
 from odoo.exceptions import ValidationError, AccessError
-from odoo.modules.module import get_module_resource
-from odoo.tools.misc import format_date
 from odoo.osv import expression
+from odoo.tools.misc import format_date
 
 
 class HrEmployeePrivate(models.Model):
@@ -26,7 +25,7 @@ class HrEmployeePrivate(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'image.mixin']
+    _inherit = ['hr.employee.base', 'mail.thread', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
 
     # resource and user
@@ -100,7 +99,6 @@ class HrEmployeePrivate(models.Model):
     km_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
 
     job_id = fields.Many2one(tracking=True)
-    image_1920 = fields.Image()
     phone = fields.Char(related='address_home_id.phone', related_sudo=False, readonly=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
@@ -125,11 +123,35 @@ class HrEmployeePrivate(models.Model):
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
 
-    def _get_placeholder_filename(self, field=None):
-        image_fields = ['image_%s' % size for size in [1920, 1024, 512, 256, 128]]
-        if field in image_fields:
-            return 'hr/static/src/img/default_image.png'
-        return super()._get_placeholder_filename(field=field)
+    @api.depends('name', 'user_id.avatar_1920', 'image_1920')
+    def _compute_avatar_1920(self):
+        super()._compute_avatar_1920()
+
+    @api.depends('name', 'user_id.avatar_1024', 'image_1024')
+    def _compute_avatar_1024(self):
+        super()._compute_avatar_1024()
+
+    @api.depends('name', 'user_id.avatar_512', 'image_512')
+    def _compute_avatar_512(self):
+        super()._compute_avatar_512()
+
+    @api.depends('name', 'user_id.avatar_256', 'image_256')
+    def _compute_avatar_256(self):
+        super()._compute_avatar_256()
+
+    @api.depends('name', 'user_id.avatar_128', 'image_128')
+    def _compute_avatar_128(self):
+        super()._compute_avatar_128()
+
+    def _compute_avatar(self, avatar_field, image_field):
+        for employee in self:
+            avatar = employee[image_field]
+            if not avatar:
+                if employee.user_id:
+                    avatar = employee.user_id[avatar_field]
+                else:
+                    avatar = employee._avatar_get_placeholder()
+            employee[avatar_field] = avatar
 
     def name_get(self):
         if self.check_access_rights('read', raise_exception=False):

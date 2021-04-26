@@ -373,7 +373,7 @@ function factory(dependencies) {
             if (this === this.env.messaging.partnerRoot) {
                 return '/mail/static/src/img/odoobot.png';
             }
-            return `/web/image/res.partner/${this.id}/image_128`;
+            return `/web/image/res.partner/${this.id}/avatar_128`;
         }
 
         /**
