@@ -34,6 +34,7 @@ class AccountAccountType(models.Model):
 
 class AccountAccount(models.Model):
     _name = "account.account"
+    _inherit = ['mail.thread']
     _description = "Account"
     _order = "is_off_balance, code, company_id"
     _check_company_auto = True
@@ -54,29 +55,30 @@ class AccountAccount(models.Model):
                                                            ('user_type_id', '=', data_unaffected_earnings.id)])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
-    name = fields.Char(string="Account Name", required=True, index=True)
+    name = fields.Char(string="Account Name", required=True, index=True, tracking=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
-        help="Forces all moves for this account to have this account currency.")
-    code = fields.Char(size=64, required=True, index=True)
-    deprecated = fields.Boolean(index=True, default=False)
+        help="Forces all moves for this account to have this account currency.", tracking=True)
+    code = fields.Char(size=64, required=True, index=True, tracking=True)
+    deprecated = fields.Boolean(index=True, default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
+    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, tracking=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
     internal_group = fields.Selection(related='user_type_id.internal_group', string="Internal Group", store=True, readonly=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
     #    help="The account has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
-    reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
+    reconcile = fields.Boolean(string='Allow Reconciliation', default=False, tracking=True,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes',
         check_company=True,
         context={'append_type_to_tax_name': True})
-    note = fields.Text('Internal Notes')
+    note = fields.Text('Internal Notes', tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
-    group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True)
+    group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True,
+                               help="Account prefixes can determine account groups.")
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
     allowed_journal_ids = fields.Many2many('account.journal', string="Allowed Journals", help="Define in which journals this account can be used. If empty, can be used in all journals.")
 
@@ -85,6 +87,9 @@ class AccountAccount(models.Model):
     opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', help="Opening balance value for this account.")
 
     is_off_balance = fields.Boolean(compute='_compute_is_off_balance', default=False, store=True, readonly=True)
+
+    current_balance = fields.Float(compute='_compute_current_balance')
+    related_taxes_amount = fields.Integer(compute='_compute_related_taxes_amount')
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -253,6 +258,26 @@ class AccountAccount(models.Model):
             if not rec:
                 return new_code
         raise UserError(_('Cannot generate an unused account code.'))
+
+    def _compute_current_balance(self):
+        balances = {
+            read['account_id'][0]: read['balance']
+            for read in self.env['account.move.line'].read_group(
+                domain=[('account_id', 'in', self.ids)],
+                fields=['balance', 'account_id'],
+                groupby=['account_id'],
+            )
+        }
+        for record in self:
+            record.current_balance = balances.get(record.id, 0)
+
+    def _compute_related_taxes_amount(self):
+        for record in self:
+            record.related_taxes_amount = self.env['account.tax'].search_count([
+                '|',
+                ('invoice_repartition_line_ids.account_id', '=', record.id),
+                ('refund_repartition_line_ids.account_id', '=', record.id),
+            ])
 
     def _compute_opening_debit_credit(self):
         self.opening_debit = 0
@@ -511,6 +536,22 @@ class AccountAccount(models.Model):
     def action_duplicate_accounts(self):
         for account in self.browse(self.env.context['active_ids']):
             account.copy()
+
+    def action_open_related_taxes(self):
+        related_taxes_ids = self.env['account.tax'].search([
+            '|',
+            ('invoice_repartition_line_ids.account_id', '=', self.id),
+            ('refund_repartition_line_ids.account_id', '=', self.id),
+        ]).ids
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Taxes'),
+            'res_model': 'account.tax',
+            'view_type': 'list',
+            'view_mode': 'list',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': [('id', 'in', related_taxes_ids)],
+        }
 
 
 class AccountGroup(models.Model):

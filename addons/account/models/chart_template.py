@@ -49,6 +49,7 @@ class AccountGroupTemplate(models.Model):
 
 class AccountAccountTemplate(models.Model):
     _name = "account.account.template"
+    _inherit = ['mail.thread']
     _description = 'Templates for Accounts'
     _order = "code"
 
