@@ -100,6 +100,9 @@ class MailMail(models.Model):
             self = self.with_context(dict(self._context, default_type=None))
         return super(MailMail, self).default_get(fields)
 
+    def action_retry(self):
+        self.filtered(lambda mail: mail.state == 'exception').mark_outgoing()
+
     def mark_outgoing(self):
         return self.write({'state': 'outgoing'})
 
