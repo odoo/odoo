@@ -3637,7 +3637,7 @@ QUnit.module('fields', {}, function () {
 
             assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
             assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Aline');
-            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/17/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
 
             await testUtils.form.clickEdit(form);
 
@@ -3645,16 +3645,16 @@ QUnit.module('fields', {}, function () {
             assert.containsOnce(form, '.o_input_dropdown');
             assert.strictEqual(form.$('.o_input_dropdown input').val(), 'Aline');
             assert.containsOnce(form, '.o_external_button');
-            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/17/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
 
             await testUtils.fields.many2one.clickOpenDropdown("user_id");
             await testUtils.fields.many2one.clickItem("user_id", "Christine");
-            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/19/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]');
             await testUtils.form.clickSave(form);
 
             assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
             assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Christine');
-            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/19/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]');
 
             await testUtils.form.clickEdit(form);
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="user_id"] input'),
@@ -3697,12 +3697,12 @@ QUnit.module('fields', {}, function () {
 
             assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
             assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Aline');
-            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/17/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
 
             await testUtils.fields.editInput(form.$('.o_field_widget[name=int_field]'), 1);
 
             assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Christine');
-            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/19/image_128"]');
+            assert.containsOnce(form, '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]');
 
             await testUtils.fields.editInput(form.$('.o_field_widget[name=int_field]'), 2);
 
@@ -3729,9 +3729,9 @@ QUnit.module('fields', {}, function () {
             });
 
             assert.strictEqual(list.$('.o_data_cell span').text(), 'AlineChristineAline');
-            assert.containsOnce(list.$('.o_data_cell:nth(0)'), '.o_m2o_avatar >img[data-src="/web/image/user/17/image_128"]');
-            assert.containsOnce(list.$('.o_data_cell:nth(1)'), '.o_m2o_avatar > img[data-src="/web/image/user/19/image_128"]');
-            assert.containsOnce(list.$('.o_data_cell:nth(2)'), '.o_m2o_avatar > img[data-src="/web/image/user/17/image_128"]');
+            assert.containsOnce(list.$('.o_data_cell:nth(0)'), '.o_m2o_avatar >img[data-src="/web/image/user/17/avatar_128"]');
+            assert.containsOnce(list.$('.o_data_cell:nth(1)'), '.o_m2o_avatar > img[data-src="/web/image/user/19/avatar_128"]');
+            assert.containsOnce(list.$('.o_data_cell:nth(2)'), '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
             assert.containsNone(list.$('.o_data_cell:nth(3)'), '.o_m2o_avatar > img');
 
             list.destroy();
@@ -3754,10 +3754,10 @@ QUnit.module('fields', {}, function () {
             });
 
             assert.strictEqual(list.$('.o_data_cell span').text(), 'AlineChristineAline');
-            assert.containsOnce(list.$('.o_data_cell:nth(0)'), '.o_m2o_avatar > img[data-src="/web/image/user/17/image_128"]');
+            assert.containsOnce(list.$('.o_data_cell:nth(0)'), '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
 
             await testUtils.dom.click(list.$('.o_data_row:first() .o_data_cell:first()'));
-            assert.containsOnce(list.$('.o_data_cell:nth(0)'), '.o_m2o_avatar > img[data-src="/web/image/user/17/image_128"]');
+            assert.containsOnce(list.$('.o_data_cell:nth(0)'), '.o_m2o_avatar > img[data-src="/web/image/user/17/avatar_128"]');
 
             list.destroy();
         });

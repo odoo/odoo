@@ -131,7 +131,7 @@ class Composer extends Component {
     get currentPartnerAvatar() {
         const avatar = this.env.messaging.currentUser
             ? this.env.session.url('/web/image', {
-                    field: 'image_128',
+                    field: 'avatar_128',
                     id: this.env.messaging.currentUser.id,
                     model: 'res.users',
                 })
