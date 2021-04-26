@@ -230,9 +230,8 @@ class SaleOrderLine(models.Model):
             uom_id=self.product_id.uom_po_id
         )
         fpos = purchase_order.fiscal_position_id
-        taxes = fpos.map_tax(self.product_id.supplier_taxes_id)
-        if taxes:
-            taxes = taxes.filtered(lambda t: t.company_id.id == self.company_id.id)
+        supplier_taxes = self.product_id.supplier_taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
+        taxes = fpos.map_tax(supplier_taxes)
 
         # compute unit price
         price_unit = 0.0
