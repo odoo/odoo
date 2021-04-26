@@ -41,6 +41,42 @@ class StockMove(models.Model):
                     values={'self': picking_id, 'origin': sale_order_id},
                     subtype_id=self.env.ref('mail.mt_note').id)
 
+    def _create_extra_so_line(self):
+        sale_order_lines_vals = []
+
+        moves_by_so_product = defaultdict(set)
+
+        for move in self:
+            sale_order = move.picking_id.sale_id
+            if not move.picking_id.sale_id or move.location_dest_id.usage != 'customer' or not move.quantity_done:
+                continue
+            moves_by_so_product[(move.product_id, sale_order)].add(move.id)
+
+        for (product, sale_order), move_ids in moves_by_so_product.items():
+            sale_order_lines = sale_order.order_line.filtered(
+                lambda l: l.product_id == product)
+
+            if sale_order_lines:
+                continue
+
+            extra_quantity = sum(self.env['stock.move'].browse(
+                move_ids).mapped('quantity_done'))
+            so_line_vals = {
+                'move_ids': [(4, move.id, 0)],
+                'name': product.display_name,
+                'order_id': sale_order.id,
+                'product_id': product.id,
+                'product_uom_qty': 0,
+                'qty_delivered': extra_quantity,
+            }
+            if product.invoice_policy == 'order':
+                # No unit price if the product is invoiced on the ordered qty.
+                so_line_vals['price_unit'] = 0
+            sale_order_lines_vals.append(so_line_vals)
+
+        if sale_order_lines_vals:
+            self.env['sale.order.line'].create(sale_order_lines_vals)
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
@@ -64,39 +100,7 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         res = super()._action_done()
-        sale_order_lines_vals = []
-
-        moves_by_so_product = defaultdict(set)
-
-        for move in self.move_lines:
-            sale_order = move.picking_id.sale_id
-            if not sale_order or move.location_dest_id.usage != 'customer' or not move.quantity_done:
-                continue
-            moves_by_so_product[(move.product_id, sale_order)].add(move.id)
-
-        for (product, sale_order), move_ids in moves_by_so_product.items():
-            sale_order_lines = sale_order.order_line.filtered(
-                lambda l: l.product_id == product)
-
-            if sale_order_lines:
-                continue
-
-            extra_quantity = sum(self.env['stock.move'].browse(move_ids).mapped('quantity_done'))
-            so_line_vals = {
-                'move_ids': [(4, move.id, 0)],
-                'name': product.display_name,
-                'order_id': sale_order.id,
-                'product_id': product.id,
-                'product_uom_qty': 0,
-                'qty_delivered': extra_quantity,
-            }
-            if product.invoice_policy == 'order':
-                # No unit price if the product is invoiced on the ordered qty.
-                so_line_vals['price_unit'] = 0
-            sale_order_lines_vals.append(so_line_vals)
-
-        if sale_order_lines_vals:
-            self.env['sale.order.line'].create(sale_order_lines_vals)
+        self.move_lines._create_extra_so_line()
         return res
 
 

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 
 
@@ -41,21 +43,26 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    kit_bom_id = fields.Many2one(
+        'mrp.bom', compute='_compute_kit_bom_id', string='BoM if the product is a kit', store=True)
+
+    @api.depends('product_id', 'company_id')
+    def _compute_kit_bom_id(self):
+        for line in self:
+            line.kit_bom_id = False
+            if not line.product_id.bom_ids or 'phantom' not in line.product_id.bom_ids.mapped('type'):
+                continue
+            bom = self.env['mrp.bom']._bom_find(
+                self.product_id, company_id=self.order_id.company_id.id, bom_type='phantom')[self.product_id]
+            if bom:
+                line.kit_bom_id = bom.id
+
     @api.depends('product_uom_qty', 'qty_delivered', 'product_id', 'state')
     def _compute_qty_to_deliver(self):
         """The inventory widget should now be visible in more cases if the product is consumable."""
         super(SaleOrderLine, self)._compute_qty_to_deliver()
         for line in self:
-            # Hide the widget for kits since forecast doesn't support them.
-            boms = self.env['mrp.bom']
-            if line.state == 'sale':
-                boms = line.move_ids.mapped('bom_line_id.bom_id')
-            elif line.state in ['draft', 'sent'] and line.product_id:
-                boms = boms._bom_find(line.product_id, company_id=line.company_id.id, bom_type='phantom')[line.product_id]
-            relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
-                    (b.product_id == line.product_id or
-                    (b.product_tmpl_id == line.product_id.product_tmpl_id and not b.product_id)))
-            if relevant_bom:
+            if line.kit_bom_id:
                 line.display_qty_widget = False
                 continue
             if line.state == 'draft' and line.product_type == 'consu':
@@ -63,50 +70,42 @@ class SaleOrderLine(models.Model):
                 if components and components != [line.product_id.id]:
                     line.display_qty_widget = True
 
-    def _compute_qty_delivered(self):
-        super(SaleOrderLine, self)._compute_qty_delivered()
-        for order_line in self:
-            if order_line.qty_delivered_method == 'stock_move':
-                boms = order_line.move_ids.mapped('bom_line_id.bom_id')
-                dropship = False
-                if not boms and any(m._is_dropshipped() for m in order_line.move_ids):
-                    boms = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
-                    dropship = True
-                # We fetch the BoMs of type kits linked to the order_line,
-                # the we keep only the one related to the finished produst.
-                # This bom shoud be the only one since bom_line_id was written on the moves
-                relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
-                        (b.product_id == order_line.product_id or
-                        (b.product_tmpl_id == order_line.product_id.product_tmpl_id and not b.product_id)))
-                if relevant_bom:
-                    # In case of dropship, we use a 'all or nothing' policy since 'bom_line_id' was
-                    # not written on a move coming from a PO.
-                    # FIXME: if the components of a kit have different suppliers, multiple PO
-                    # are generated. If one PO is confirmed and all the others are in draft, receiving
-                    # the products for this PO will set the qty_delivered. We might need to check the
-                    # state of all PO as well... but sale_mrp doesn't depend on purchase.
-                    if dropship:
-                        if order_line.move_ids and all(m.state == 'done' for m in order_line.move_ids):
-                            order_line.qty_delivered = order_line.product_uom_qty
-                        else:
-                            order_line.qty_delivered = 0.0
-                        continue
-                    moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
-                    filters = {
-                        'incoming_moves': lambda m: m.location_dest_id.usage == 'customer' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
-                        'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
-                    }
-                    order_qty = order_line.product_uom._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
-                    order_line.qty_delivered = moves._compute_kit_quantities(order_line.product_id, order_qty, relevant_bom, filters)
+    @api.depends('kit_bom_id')
+    def _compute_move_ids(self):
+        lines_kit = self.filtered(lambda l: l.kit_bom_id)
+        super(SaleOrderLine, self - lines_kit)._compute_move_ids()
+        move_by_product_so = defaultdict(lambda: self.env['stock.move'])
+        for sale_order in lines_kit.order_id:
+            sale_order_moves = set(sale_order.picking_ids.filtered(
+                lambda p: p.location_dest_id.usage == 'customer' or p.location_id.usage == 'customer'
+            ).move_lines.ids)
+            for move in self.env['stock.move'].browse(sale_order_moves):
+                move_by_product_so[(move.product_id, sale_order)] |= move
 
-                # If no relevant BOM is found, fall back on the all-or-nothing policy. This happens
-                # when the product sold is made only of kits. In this case, the BOM of the stock moves
-                # do not correspond to the product sold => no relevant BOM.
-                elif boms:
-                    if all(m.state == 'done' for m in order_line.move_ids):
-                        order_line.qty_delivered = order_line.product_uom_qty
-                    else:
-                        order_line.qty_delivered = 0.0
+        for sale_line in lines_kit:
+            dummy, lines = sale_line.kit_bom_id.explode(self.product_id, 1)
+            products = self.env['product.product']
+            for line in lines:
+                products |= line[0].product_id
+            moves = [move_by_product_so.get(
+                (p, sale_line.order_id), self.env['stock.move']) for p in products]
+            sale_line.move_ids = self.env['stock.move'].concat(*moves)
+
+    def _get_moves_quantity(self):
+        if not self.move_ids.bom_line_id:
+            return super()._get_moves_quantity()
+        qty_by_product = defaultdict(float)
+        for move in self.move_ids:
+            if move.state != 'done':
+                continue
+            if move.location_dest_id.usage == 'customer':
+                qty_by_product[move.product_id] += move.quantity_done
+            else:
+                qty_by_product[move.product_id] -= move.quantity_done
+        components_qty = self._get_bom_component_qty()
+        quantity_minimal = min(qty / components_qty[p.id] for p,
+                               qty in qty_by_product.items()) if qty_by_product else 0.0
+        return fields.Float.round(quantity_minimal, precision_digits=0, rounding_method="DOWN")
 
     def _get_bom_component_qty(self):
         bom_quantity = self.product_uom._compute_quantity(1, self.kit_bom_id.product_uom_id)

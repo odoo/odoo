@@ -263,10 +263,9 @@ class SaleOrderLine(models.Model):
 
     @api.depends('order_id.picking_ids', 'order_id.picking_ids.move_lines', 'order_id.picking_ids.location_dest_id', 'order_id.picking_ids.location_id')
     def _compute_move_ids(self):
-        sale_order_moves = set()
         move_by_product_so = defaultdict(lambda: self.env['stock.move'])
         for sale_order in self.order_id:
-            sale_order_moves |= set(sale_order.picking_ids.filtered(
+            sale_order_moves = set(sale_order.picking_ids.filtered(
                 lambda p: p.location_dest_id.usage == 'customer' or p.location_id.usage == 'customer'
             ).move_lines.ids)
             for move in self.env['stock.move'].browse(sale_order_moves):
