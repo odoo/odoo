@@ -145,3 +145,23 @@ class TestEventCrmFlow(TestEventCrmCommon):
         })
         self.assertEqual(len(self.event_0.registration_ids), 4)
         self.assertLeadConvertion(self.test_rule_attendee, registration, partner=None)
+
+    @users('user_eventmanager')
+    def test_order_rule_duplicate_lead(self):
+        """ Check when two rules match one event
+            but only one match the registration,
+            only one lead should be created
+        """
+        test_rule_order_2 = self.test_rule_order.copy(default={
+            'event_registration_filter': [['email', 'not ilike', '@test.example.com']]
+        })
+        self.env['event.registration'].create({
+            'name': 'My Registration',
+            'partner_id': False,
+            'email': 'super.email@test.example.com',
+            'phone': False,
+            'mobile': '0456332211',
+            'event_id': self.event_0.id,
+        })
+        self.assertEqual(len(self.test_rule_order.lead_ids), 1)
+        self.assertEqual(len(test_rule_order_2.lead_ids), 0)
