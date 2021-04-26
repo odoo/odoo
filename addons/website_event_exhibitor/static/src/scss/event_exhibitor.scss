@@ -1,0 +1,60 @@
+.o_kanban_view {
+    &.o_sponsor_kanban {
+        .ribbon {
+            &::before, &::after {
+                display: none;
+            }
+
+            span {
+                background-color: $o-brand-odoo;
+                padding: 5px;
+                font-size: small;
+                z-index: unset;
+                height: auto;
+            }
+        }
+        .ribbon-top-right {
+            margin-top: -$o-kanban-dashboard-vpadding;
+
+            span {
+                left: 0px;
+                right: 30px;
+            }
+        }
+
+        .o_sponsor_kanban_boxes {
+            display: flex;
+            flex-flow: row nowrap;
+
+            .o_kanban_primary_bottom {
+                margin-top: $o-kanban-dashboard-vpadding;
+                margin-bottom: -$o-kanban-dashboard-vpadding;
+
+                &.bottom_block {
+                    border-top: 1px solid gray('300');
+                    background-color: gray('200');
+                    padding-top: $o-kanban-dashboard-vpadding;
+                    padding-bottom: $o-kanban-dashboard-vpadding;
+                }
+            }
+
+            .o_sponsor_kanban_box {
+                position: relative;
+                padding: 0 0 0 0;
+                flex: 1 1 auto;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: center;
+
+                &:first-child {
+                    justify-content: flex-start;
+                    padding-left: 16px;
+                }
+                div:last-child {
+                    justify-content: flex-end;
+                    text-align: right;
+                }
+            }
+        }
+    }
+}

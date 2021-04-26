@@ -45,6 +45,8 @@
                 <field name="name"/>
                 <field name="email"/>
                 <field name="phone"/>
+                <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
+                <separator/>
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                 <separator/>
                 <filter string="Exhibitors" name="filter_is_exhibitor" domain="[('exhibitor_type', 'in', ['exhibitor', 'online'])]"/>
@@ -154,14 +156,18 @@
         <field name="name">event.sponsor.view.kanban</field>
         <field name="model">event.sponsor</field>
         <field name="arch" type="xml">
-            <kanban sample="1">
+            <kanban class="o_sponsor_kanban" sample="1">
                 <field name="id"/>
                 <field name="url"/>
                 <field name="partner_email"/>
                 <field name="sponsor_type_id"/>
+                <field name="website_published"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click overflow-hidden">
+                            <div class="ribbon ribbon-top-right" attrs="{'invisible': [('website_published', '=', False)]}">
+                                <span>Published</span>
+                            </div>
                             <div class="d-flex align-items-center">
                                 <div class="w-25 d-flex justify-content-center">
                                     <img t-att-src="kanban_image('event.sponsor', 'image_128', record.id.raw_value)" class="img-fluid" alt="Sponsor image"/>
@@ -172,6 +178,14 @@
                                     <span class="text-muted"><field name="exhibitor_type"/></span>
                                     <span class="o_text_overflow" t-esc="record.partner_email.value"/>
                                     <span class="o_text_overflow" t-esc="record.url.value"/>
+                                </div>
+                            </div>
+                            <div class="row o_sponsor_kanban_boxes">
+                                <div class="o_sponsor_kanban_box o_kanban_primary_bottom bottom_block">
+                                    <span>
+                                        <span class="mr-2">Published</span>
+                                        <field name="is_published" widget='boolean_toggle'/>
+                                    </span>
                                 </div>
                             </div>
                         </div>

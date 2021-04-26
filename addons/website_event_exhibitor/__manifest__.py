@@ -38,5 +38,8 @@
             'website_event_exhibitor/static/src/scss/event_exhibitor_templates.scss',
             'website_event_exhibitor/static/src/js/event_exhibitor_connect.js',
         ],
+        'web.assets_backend': [
+            '/website_event_exhibitor/static/src/scss/event_exhibitor.scss',
+        ]
     }
 }
