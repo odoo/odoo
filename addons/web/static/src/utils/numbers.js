@@ -35,7 +35,9 @@ function insertThousandsSep(num, thousandsSep = ",", grouping = [3, 0]) {
  * @returns number
  */
 function parseNumber(value, options = {}) {
-  value = value.replace(options.thousandsSep || ",", "");
+  // a number can have the thousand separator multiple times. ex: 1,000,000.00
+  value = value.replaceAll(options.thousandsSep || ",", "");
+  // a number only have one decimal separator
   value = value.replace(options.decimalPoint || ".", ".");
   return Number(value);
 }
