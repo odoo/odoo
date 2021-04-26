@@ -128,7 +128,8 @@ class MockEmail(common.BaseCase):
         """ Deprecated, remove in 14.4 """
         return self.gateway_mail_reply_wrecord(template, record, use_in_reply_to=use_in_reply_to)
 
-    def gateway_mail_reply_wrecord(self, template, record, use_in_reply_to=True):
+    def gateway_mail_reply_wrecord(self, template, record, use_in_reply_to=True,
+                                   target_model=None, target_field=None):
         """ Simulate a reply through the mail gateway. Usage: giving a record,
         find an email sent to him and use its message-ID to simulate a reply.
 
@@ -148,8 +149,32 @@ class MockEmail(common.BaseCase):
             subject='Re: %s' % mail_mail.subject,
             extra=extra,
             msg_id='<123456.%s.%d@test.example.com>' % (record._name, record.id),
-            target_model=record._name,
-            target_field=record._rec_name,
+            target_model=target_model or record._name,
+            target_field=target_field or record._rec_name,
+        )
+
+    def gateway_mail_reply_wemail(self, template, email_to, use_in_reply_to=True,
+                                  target_model=None, target_field=None):
+        """ Simulate a reply through the mail gateway. Usage: giving a record,
+        find an email sent to him and use its message-ID to simulate a reply.
+
+        Some noise is added in References just to test some robustness. """
+        sent_mail = self._find_sent_mail_wemail(email_to)
+
+        if use_in_reply_to:
+            extra = 'In-Reply-To:\r\n\t%s\n' % sent_mail['message_id']
+        else:
+            disturbing_other_msg_id = '<123456.654321@another.host.com>'
+            extra = 'References:\r\n\t%s\n\r%s' % (sent_mail['message_id'], disturbing_other_msg_id)
+
+        return self.format_and_process(
+            template,
+            sent_mail['email_to'],
+            sent_mail['reply_to'],
+            subject='Re: %s' % sent_mail['subject'],
+            extra=extra,
+            target_model=target_model,
+            target_field=target_field or 'name',
         )
 
     def from_string(self, text):
