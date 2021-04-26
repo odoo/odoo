@@ -65,7 +65,7 @@ class ResPartner(models.Model):
         response = connection.getresponse()
 
         if response.status != 200: 
-            raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(response.status_code))
+            raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(response.status))
 
         answer = json.loads(response.read().decode())
         if answer[0]['valid'] == True:
