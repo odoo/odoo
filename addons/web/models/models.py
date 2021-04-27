@@ -4,7 +4,7 @@ import pytz
 
 from odoo import _, api, fields, models
 from odoo.osv.expression import AND
-from odoo.tools import lazy
+from odoo.tools import date_utils, lazy
 from odoo.exceptions import UserError
 
 
@@ -143,7 +143,7 @@ class Base(models.AbstractModel):
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
             if group_by_value and field_type in ['date', 'datetime']:
                 locale = self._context.get('lang') or 'en_US'
-                group_by_value = fields.Datetime.to_datetime(group_by_value)
+                group_by_value = date_utils.start_of(fields.Datetime.to_datetime(group_by_value), group_by_modifier)
                 group_by_value = pytz.timezone('UTC').localize(group_by_value)
                 tz_info = None
                 if field_type == 'datetime' and self._context.get('tz') in pytz.all_timezones:
