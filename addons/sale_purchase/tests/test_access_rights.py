@@ -53,7 +53,6 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         sale_order.action_cancel()
 
         self.assertTrue(sale_order.name, "Saleperson can read its own SO")
-
         action = sale_order.sudo().action_view_purchase_orders()
 
         # try to access PO as sale person

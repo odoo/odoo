@@ -7,9 +7,6 @@ from odoo import api, fields, models
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    sale_line_ids = fields.Many2many(
-        'sale.order.line', 'purchase_sale_line_rel', 'purchase_line_id', 'sale_line_id')
-
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
         res = super()._update_purchase_order_line(product_id, product_qty, product_uom, company_id, values, line)
         res['sale_line_ids'] = line.sale_line_ids.ids + values.get('sale_line_ids', [])

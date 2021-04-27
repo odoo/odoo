@@ -89,10 +89,10 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.sale_order_2.action_confirm()
 
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.supplierinfo1.name.id), ('state', '=', 'draft')])
-        purchase_lines_so1 = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_1.order_line.ids)])
+        purchase_lines_so1 = self.env['purchase.order.line'].search([('sale_line_ids', 'in', self.sale_order_1.order_line.ids)])
         purchase_line1 = purchase_lines_so1[0]
 
-        purchase_lines_so2 = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_2.order_line.ids)])
+        purchase_lines_so2 = self.env['purchase.order.line'].search([('sale_line_ids', 'in', self.sale_order_2.order_line.ids)])
         purchase_line2 = purchase_lines_so2[0]
 
         self.assertEqual(len(purchase_order), 1, "Only one PO should have been created, from the 2 Sales orders")
@@ -117,7 +117,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
     def test_uom_conversion(self):
         """ Test generated PO use the right UoM according to product configuration """
         self.sale_order_2.action_confirm()
-        purchase_line = self.env['purchase.order.line'].search([('sale_line_id', '=', self.sol2_service_purchase_2.id)])  # only one line
+        purchase_line = self.env['purchase.order.line'].search([('sale_line_ids', '=', self.sol2_service_purchase_2.id)])  # only one line
 
         self.assertTrue(purchase_line, "The SO line should generate a PO line")
         self.assertEqual(purchase_line.product_uom, self.service_purchase_2.uom_po_id, "The UoM on the purchase line should be the one from the product configuration")
@@ -137,7 +137,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.sale_order_1.action_confirm()
 
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.supplierinfo1.name.id), ('state', '=', 'draft')])
-        purchase_lines = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_1.order_line.ids)])
+        purchase_lines = self.env['purchase.order.line'].search([('sale_line_ids', 'in', self.sale_order_1.order_line.ids)])
         purchase_line = purchase_lines[0]
 
         self.assertEqual(len(purchase_lines), 1, "Only one purchase line should be created on SO confirmation")
@@ -153,7 +153,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(len(purchase_order.activity_ids), 1, "One activity should be scheduled on the PO since a SO has been cancelled")
 
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.supplierinfo1.name.id), ('state', '=', 'draft')])
-        purchase_lines = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_1.order_line.ids)])
+        purchase_lines = self.env['purchase.order.line'].search([('sale_line_ids', 'in', self.sale_order_1.order_line.ids)])
         purchase_line = purchase_lines[0]
 
         self.assertEqual(len(purchase_lines), 1, "Always one purchase line even after SO cancellation")
@@ -168,7 +168,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.sale_order_1.action_confirm()
 
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.supplierinfo1.name.id), ('state', '=', 'draft')])
-        purchase_lines = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_1.order_line.ids)])
+        purchase_lines = self.env['purchase.order.line'].search([('sale_line_ids', 'in', self.sale_order_1.order_line.ids)])
         purchase_line = purchase_lines[0]
 
         self.assertEqual(len(purchase_lines), 1, "Still only one purchase line should be created even after SO reconfirmation")
@@ -192,7 +192,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.sale_order_1.action_confirm()
 
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.supplierinfo1.name.id), ('state', '=', 'draft')])
-        purchase_lines = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_1.order_line.ids)])
+        purchase_lines = self.env['purchase.order.line'].search([('sale_line_ids', 'in', self.sale_order_1.order_line.ids)])
         purchase_line = purchase_lines[0]
 
         self.assertEqual(purchase_order.state, 'draft', "The created purchase should be in draft state")
@@ -232,7 +232,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(len(purchase_order.activity_ids), 2, "Always 2 activity on confirmed the PO")
 
         purchase_order2 = self.env['purchase.order'].search([('partner_id', '=', self.supplierinfo1.name.id), ('state', '=', 'draft')])
-        purchase_lines = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_1.order_line.ids)])
+        purchase_lines = self.env['purchase.order.line'].search([('sale_line_ids', 'in', self.sale_order_1.order_line.ids)])
         purchase_lines2 = purchase_lines.filtered(lambda pol: pol.order_id == purchase_order2)
         purchase_line2 = purchase_lines2[0]
 
@@ -241,5 +241,5 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertNotEqual(purchase_order, purchase_order2, "The 2 PO are different")
         self.assertEqual(len(purchase_lines), 2, "The same Sale Line has created 2 purchase lines")
         self.assertEqual(len(purchase_order2.order_line), 1, "The 2nd PO has only one line")
-        self.assertEqual(purchase_line2.sale_line_id, self.sol1_service_purchase_1, "The 2nd PO line came from the SO line sol1_service_purchase_1")
+        self.assertEqual(purchase_line2.sale_line_ids, self.sol1_service_purchase_1, "The 2nd PO line came from the SO line sol1_service_purchase_1")
         self.assertEqual(purchase_line2.product_qty, delta, "The quantity of the new PO line is the quantity added on the Sale Line, after first PO confirmation")

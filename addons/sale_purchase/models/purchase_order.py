@@ -52,8 +52,8 @@ class PurchaseOrder(models.Model):
         sale_to_notify_map = {}  # map SO -> recordset of PO as {sale.order: set(purchase.order.line)}
         for order in self:
             for purchase_line in order.order_line:
-                if purchase_line.sale_line_id:
-                    sale_order = purchase_line.sale_line_id.order_id
+                if purchase_line.sale_line_ids:
+                    sale_order = purchase_line.sale_line_ids.order_id
                     sale_to_notify_map.setdefault(sale_order, self.env['purchase.order.line'])
                     sale_to_notify_map[sale_order] |= purchase_line
 
@@ -70,5 +70,5 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    sale_order_id = fields.Many2one(related='sale_line_id.order_id', string="Sale Order", store=True, readonly=True)
-    sale_line_id = fields.Many2one('sale.order.line', string="Origin Sale Item", index=True)
+    sale_order_id = fields.Many2one(related='sale_line_ids.order_id', string="Sale Order", store=True, readonly=True)
+    sale_line_ids = fields.Many2many('sale.order.line', 'purchase_sale_line_rel', 'purchase_line_id', 'sale_line_id')

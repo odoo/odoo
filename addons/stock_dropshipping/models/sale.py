@@ -7,9 +7,6 @@ from odoo import fields, models
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    purchase_line_ids = fields.Many2many(
-        'purchase.order.line', 'purchase_sale_line_rel', 'sale_line_id', 'purchase_line_id')
-
     def _compute_is_mto(self):
         super(SaleOrderLine, self)._compute_is_mto()
         for line in self:
