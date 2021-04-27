@@ -174,8 +174,8 @@ class GoogleEvent(abc.Set):
     def is_cancelled(self):
         return self.status == 'cancelled'
 
-    def is_recurrence_outlier(self):
-        return bool(self.originalStartTime)
+    def is_recurrence_follower(self):
+        return bool(not self.originalStartTime or self.originalStartTime == self.start)
 
     def cancelled(self):
         return self.filter(lambda e: e.status == 'cancelled')
