@@ -148,7 +148,7 @@ class GoogleSync(models.AbstractModel):
             dict(self._odoo_values(e, default_reminders), need_sync=False)
             for e in new
         ]
-        new_odoo = self._create_from_google(new, odoo_values)
+        new_odoo = self.with_context(dont_notify=True)._create_from_google(new, odoo_values)
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
         cancelled_odoo._cancel()
@@ -161,7 +161,7 @@ class GoogleSync(models.AbstractModel):
             # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
             if not odoo_record.write_date or updated >= pytz.utc.localize(odoo_record.write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
-                odoo_record._write_from_google(gevent, vals)
+                odoo_record.with_context(dont_notify=True)._write_from_google(gevent, vals)
                 synced_records |= odoo_record
 
         return synced_records
