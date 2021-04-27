@@ -66,7 +66,9 @@ class Meeting(models.Model):
         return [
             ('partner_ids.user_ids', 'in', self.env.user.id),
             ('stop', '>', lower_bound),
-            ('start', '<', upper_bound)
+            ('start', '<', upper_bound),
+            # Do not sync events that follow the recurrence, they are already synced at recurrence creation
+            '!', '&', '&', ('recurrency', '=', True), ('recurrence_id', '!=', False), ('follow_recurrence', '=', True)
         ]
 
     @api.model
@@ -90,6 +92,9 @@ class Meeting(models.Model):
 
         if not google_event.is_recurrence():
             values['google_id'] = google_event.id
+        if google_event.is_recurrent() and not google_event.is_recurrence():
+            # Propagate the follow_recurrence according to the google result
+            values['follow_recurrence'] = google_event.is_recurrence_follower()
         if google_event.start.get('dateTime'):
             # starting from python3.7, use the new [datetime, date].fromisoformat method
             start = parse(google_event.start.get('dateTime')).astimezone(pytz.utc).replace(tzinfo=None)
