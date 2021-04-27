@@ -77,8 +77,6 @@ const Link = Widget.extend({
                 }
                 $node = $node.parent();
             }
-            this.data.className = this.data.iniClassName.replace(/(^|\s+)btn(-[a-z0-9_-]*)?/gi, ' ');
-
             const textLink = this.$link[0] || this.data.range.cloneContents();
             const [encodedText, images] = this._encodeNodeToText(textLink);
             this.data.originalText = this._decodeText(encodedText, images);
@@ -116,7 +114,7 @@ const Link = Widget.extend({
                 }
                 active = subActive;
             } else {
-                active = !this.data.iniClassName || !this.data.iniClassName.includes('btn-');
+                active = !this.data.iniClassName || this.data.iniClassName.includes('btn-link') || !this.data.iniClassName.includes('btn-');
             }
             this._setSelectOption($option, active);
         }
@@ -144,6 +142,11 @@ const Link = Widget.extend({
      * @param {object} data
      */
     applyLinkToDom: function (data) {
+        // Some mass mailing template use <a class="btn btn-link"> instead of just a simple <a>.
+        // And we need to keep the classes because the a.btn.btn-link have some special css rules.
+        if (!data.classes.includes('btn') && this.data.iniClassName.includes("btn-link")) {
+            data.classes += " btn btn-link";
+        }
         const attrs = Object.assign({}, this.data.oldAttributes, {
             href: data.url,
             target: data.isNewWindow ? '_blank' : '',
