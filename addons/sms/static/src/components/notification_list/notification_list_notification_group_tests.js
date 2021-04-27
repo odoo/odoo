@@ -108,7 +108,7 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
         // first message that is expected to have a failure
         {
             id: 11, // random unique id, will be used to link failure to message
-            message_type: 'email', // different type from second message
+            message_type: 'sms', // different type from second message
             model: 'res.partner', // same model as second message (and not `mail.channel`)
             res_id: 31, // same res_id as second message
             res_model_name: "Partner", // random related model name
@@ -116,7 +116,7 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
         // second message that is expected to have a failure
         {
             id: 12, // random unique id, will be used to link failure to message
-            message_type: 'sms', // different type from first message
+            message_type: 'email', // different type from first message
             model: 'res.partner', // same model as first message (and not `mail.channel`)
             res_id: 31, // same res_id as first message
             res_model_name: "Partner", // same related model name for consistency
@@ -127,13 +127,13 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
         {
             mail_message_id: 11, // id of the related first message
             notification_status: 'exception', // necessary value to have a failure
-            notification_type: 'email', // different type from second failure
+            notification_type: 'sms', // different type from second failure
         },
         // second failure that is expected to be used in the test
         {
             mail_message_id: 12, // id of the related second message
             notification_status: 'exception', // necessary value to have a failure
-            notification_type: 'sms', // different type from first failure
+            notification_type: 'email', // different type from first failure
         }
     );
     await this.start();
