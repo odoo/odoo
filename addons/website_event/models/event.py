@@ -47,7 +47,7 @@ class Event(models.Model):
             for event in self:
                 domain = ['&','&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id),
                           ('event_id', '=', event.id), ('state', '!=', 'cancel')]
-                event.is_participating = self.env['event.registration'].search_count(domain)
+                event.is_participating = self.env['event.registration'].sudo().search_count(domain)
 
     @api.multi
     @api.depends('name')
