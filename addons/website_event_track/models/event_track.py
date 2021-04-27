@@ -390,6 +390,7 @@ class Track(models.Model):
         tracks = super(Track, self).create(vals_list)
 
         for track in tracks:
+            email_values = {} if self.env.user.email else {'email_from': self.env.company.catchall_formatted}
             track.event_id.message_post_with_view(
                 'website_event_track.event_track_template_new',
                 values={
@@ -397,6 +398,7 @@ class Track(models.Model):
                     'is_html_empty': is_html_empty,
                 },
                 subtype_id=self.env.ref('website_event_track.mt_event_track').id,
+                **email_values,
             )
             track._synchronize_with_stage(track.stage_id)
 
