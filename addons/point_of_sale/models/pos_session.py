@@ -417,11 +417,14 @@ class PosSession(models.Model):
 
             if order.is_invoiced:
                 # Combine invoice receivable lines
-                key = order.partner_id.property_account_receivable_id.id
-                invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order._get_amount_receivable()}, order.date_order)
+                key = order.partner_id.id
+                if self.config_id.cash_rounding:
+                    invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_paid}, order.date_order)
+                else:
+                    invoice_receivables[key] = self._update_amounts(invoice_receivables[key], {'amount': order.amount_total}, order.date_order)
                 # side loop to gather receivable lines by account for reconciliation
                 for move_line in order.account_move.line_ids.filtered(lambda aml: aml.account_id.internal_type == 'receivable' and not aml.reconciled):
-                    order_account_move_receivable_lines[move_line.account_id.id] |= move_line
+                    order_account_move_receivable_lines[move_line.partner_id.id] |= move_line
             else:
                 order_taxes = defaultdict(tax_amounts)
                 for order_line in order.lines:
@@ -581,12 +584,13 @@ class PosSession(models.Model):
 
         invoice_receivable_vals = defaultdict(list)
         invoice_receivable_lines = {}
-        for receivable_account_id, amounts in invoice_receivables.items():
-            invoice_receivable_vals[receivable_account_id].append(self._get_invoice_receivable_vals(receivable_account_id, amounts['amount'], amounts['amount_converted']))
-        for receivable_account_id, vals in invoice_receivable_vals.items():
+        for partner, amounts in invoice_receivables.items():
+            receivable_account_id = self.env['res.partner'].browse(partner).property_account_receivable_id.id
+            invoice_receivable_vals[partner].append(self._get_invoice_receivable_vals(receivable_account_id, amounts['amount'], amounts['amount_converted'], partner))
+        for partner, vals in invoice_receivable_vals.items():
             receivable_line = MoveLine.create(vals)
             if (not receivable_line.reconciled):
-                invoice_receivable_lines[receivable_account_id] = receivable_line
+                invoice_receivable_lines[partner] = receivable_line
 
         data.update({'invoice_receivable_lines': invoice_receivable_lines})
         return data
@@ -720,11 +724,16 @@ class PosSession(models.Model):
         }
         return self._debit_amounts(partial_vals, amount, amount_converted)
 
-    def _get_invoice_receivable_vals(self, account_id, amount, amount_converted):
+    def _get_invoice_receivable_vals(self, account_id, amount, amount_converted, partner=False):
+        description = 'From invoiced orders'
+        if partner:
+            partner_rec = self.env['res.partner'].browse(partner)
+            description = 'From invoiced orders for partner %s' % (partner_rec.name)
         partial_vals = {
             'account_id': account_id,
             'move_id': self.move_id.id,
-            'name': 'From invoiced orders'
+            'partner_id': partner,
+            'name': description
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
