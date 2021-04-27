@@ -15,7 +15,10 @@ class PaymentScreenStatus extends PosComponent {
         return this.env.model.formatCurrency(totalAmountToPay);
     }
     get remainingText() {
-        const remaining = this.env.model.getOrderDue(this.activeOrder);
+        const hasRoundedPayments = Boolean(
+            this.env.model.getPayments(this.activeOrder).find((payment) => this.env.model.getShouldBeRounded(payment))
+        );
+        const remaining = this.env.model.getOrderDue(this.activeOrder, hasRoundedPayments);
         return this.env.model.formatCurrency(remaining);
     }
 }

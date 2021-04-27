@@ -2147,7 +2147,8 @@ class PointOfSaleModel extends EventBus {
             {}
         );
         order.payment_ids.push(newPayment.id);
-        amount = amount === undefined ? this.getOrderDue(order) : amount;
+        const shouldBeRounded = this.getShouldBeRounded(newPayment);
+        amount = amount === undefined ? this.getOrderDue(order, shouldBeRounded) : amount;
         this.updateRecord('pos.payment', newPayment.id, {
             amount,
             payment_status: this.getPaymentTerminal(paymentMethod.id) ? 'pending' : '',
@@ -2649,7 +2650,7 @@ class PointOfSaleModel extends EventBus {
      * @return {number}
      */
     getRounding(amount) {
-        if (!this.cashRounding) return 0;
+        if (this.data.derived.roundingScheme === 'NO_ROUNDING') return 0;
         const total = round_precision(amount, this.cashRounding.rounding);
         const sign = total > 0 ? 1.0 : -1.0;
         let rounding_applied = sign * (total - amount);
@@ -2683,38 +2684,66 @@ class PointOfSaleModel extends EventBus {
         return sum(donePayments, (payment) => payment.amount);
     }
     /**
-     * Returns the change of the given order. Basically, it's the total amount of payments
-     * minus the total amount of the order.
-     * Note that this converts the change as long as the scheme is _not_ NO_ROUNDING, even if
-     * there are no cash payments in the order because change is always cash.
+     * Returns the change of the given order.
      * @param {'pos.order'} order
      * @return {number}
      */
     getOrderChange(order) {
-        const change = this.getPaymentsTotalAmount(order) - this.getTotalAmountToPay(order);
-        if (this.floatCompare(change, 0) > 0) {
-            return change + (this.data.derived.roundingScheme !== 'NO_ROUNDING' ? this.getRounding(change) : 0);
-        }
-        return 0;
+        const shouldRound = this.data.derived.roundingScheme !== 'NO_ROUNDING';
+        const due = this._getRemainingAmountToPay(order, shouldRound);
+        return this.floatCompare(due, 0) < 0 ? -due : 0;
+    }
+    getShouldBeRounded(payment) {
+        const scheme = this.data.derived.roundingScheme;
+        const paymentMethod = this.getRecord('pos.payment.method', payment.payment_method_id);
+        return scheme === 'ONLY_CASH_ROUNDING' ? paymentMethod.is_cash_count : scheme === 'WITH_ROUNDING';
     }
     /**
-     * Returns the remaining amount to pay. It rounds the result based on the existing payments
-     * and rounding scheme.
+     * Returns the remaining amount to pay. Rounds the result if shouldRound is true.
+     * @param {'pos.order'} order
+     * @param {boolean} [shouldRound=true]
+     * @return {number}
      */
-    getOrderDue(order) {
-        /**
-         * Function to determine whether the due should be rounded or not.
-         */
-        const getShouldBeRounded = (order) => {
-            const scheme = this.data.derived.roundingScheme;
-            const hasCashPayments = this._hasCashPayments(order);
-            return scheme === 'ONLY_CASH_ROUNDING' ? hasCashPayments : scheme === 'WITH_ROUNDING';
-        };
-        const due = this.getTotalAmountToPay(order) - this.getPaymentsTotalAmount(order);
-        if (this.floatCompare(due, 0) > 0) {
-            return due + (getShouldBeRounded(order) ? this.getRounding(due) : 0);
+    getOrderDue(order, shouldRound = true) {
+        const due = this._getRemainingAmountToPay(order, shouldRound);
+        return this.floatCompare(due, 0) > 0 ? due : 0;
+    }
+    /**
+     * Helper method to compute the remaining amount to be paid in the order.
+     * If it returns positive, it can be interpreted as the `due`.
+     * If it returns negative, it can be interpreted as the `change`
+     *  (provided it is negated to get the positive value).
+     *
+     * NOTE: If the roundingScheme is 'NO_ROUNDING' (config.cash_rounding == false),
+     * the result of this method won't be rounded even if shouldRound is true.
+     * @see getRounding
+     *
+     * @param {'pos.order'} order
+     * @param {boolean} shouldRound if false, it ignores any rounding.
+     * @return {number}
+     */
+    _getRemainingAmountToPay(order, shouldRound) {
+        // Separate the payments that are supposed to be rounded
+        // from the payments that don't need to be rounded.
+        const roundedPayments = [];
+        const noRoundingPayments = [];
+        for (const payment of this.getPayments(order)) {
+            if (this.getShouldBeRounded(payment)) {
+                roundedPayments.push(payment);
+            } else {
+                noRoundingPayments.push(payment);
+            }
         }
-        return 0;
+        const totalAmountToPay = this.getTotalAmountToPay(order);
+        // By subtracting the total amount of payments that don't need rounding
+        // from the total amount to pay, we get the portion of amount to be paid
+        // that should be paid by rounded payments.
+        let toBePaidByRoundedPayments = totalAmountToPay - sum(noRoundingPayments, (payment) => payment.amount);
+        const rounding = shouldRound ? this.getRounding(toBePaidByRoundedPayments) : 0;
+        toBePaidByRoundedPayments += rounding;
+        // To get the remaining amount to pay, we subtract the total rounded payments from
+        // the amount to be paid by rounded payments.
+        return toBePaidByRoundedPayments - sum(roundedPayments, (payment) => payment.amount);
     }
     /**
      * Returns the ancestor ids of the given category.
