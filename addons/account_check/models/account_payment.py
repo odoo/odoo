@@ -34,7 +34,6 @@ class AccountPayment(models.Model):
             available_checks = rec.env['account.check']
             operation, domain = rec._get_checks_operations()
             print ('domain', domain)
-            print ('domain', domain)
             if domain:
                 available_checks = available_checks.search(domain)
             rec.available_check_ids = available_checks
@@ -43,7 +42,7 @@ class AccountPayment(models.Model):
     def _compute_check_type(self):
         for rec in self:
             rec.check_type = 'third_check'
-            if rec.payment_method_code == 'new_in_checks':
+            if rec.payment_method_code == 'new_third_checks':
                 rec.check_type = 'third_check'
             elif rec.payment_method_code == 'new_out_checks':
                 rec.check_type = 'issue_check'
@@ -223,13 +222,12 @@ class AccountPayment(models.Model):
         """
         self.ensure_one()
         if self.check_type == 'third_check':
-            domain = []
-            import pdb; pdb.set_trace()
+            domain = [('type', '=', 'third_check')]
             if self.is_internal_transfer:
                 if self.payment_type == 'outbound':
                     # on every outgoing transfer we use "transfered", the actual operation is the incoming one
                     return 'transfered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
-                elif any(x.code == 'in_checks' for x in self.destination_journal_id.inbound_payment_method_ids):
+                elif any(x.code == 'in_third_checks' for x in self.destination_journal_id.inbound_payment_method_ids):
                     # a otro third checks
                     # we don't implement domain for now, they are suposed to be created automatically from the oubound payment transfer
                     # TODO rename holding for receiving? (lo mismo abajo)
@@ -250,15 +248,15 @@ class AccountPayment(models.Model):
                     raise UserError('Not implemented')
                     # return 'handed'
                     # withdrawed
-            elif self.payment_method_code == 'new_in_checks':
+            elif self.payment_method_code == 'new_third_checks':
                 return 'holding', False
             elif self.payment_method_code == 'out_checks':
                 # TODO falta implementar devolucion a cliente (si la hacemos)
                 return 'delivered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
-            elif self.payment_method_code == 'in_checks':
+            elif self.payment_method_code == 'in_third_checks':
                 return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'delivered'), ('partner_id.commercial_partner_id', '=', rec.partner_id.commercial_partner_id)]
         elif self.check_type == 'issue_check':
-            domain = []
+            domain = [('type', '=', 'issue_check')]
             if self.is_internal_transfer:
                 if self.payment_type == 'outbound':
                     # on every outgoing transfer we use "transfered", the actual operation is the incoming one
@@ -267,7 +265,7 @@ class AccountPayment(models.Model):
                     return 'withdrawed', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
             elif self.payment_method_code == 'new_out_checks':
                 return 'handed', False
-            elif self.payment_method_code == 'in_checks':
+            elif self.payment_method_code == 'in_issue_checks':
                 # TODO definir si usamos mismo nombre para rejected y devuelto
                 return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'handed'), ('partner_id.commercial_partner_id', '=', rec.partner_id.commercial_partner_id)]
         return False, False
