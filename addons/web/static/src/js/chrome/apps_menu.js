@@ -44,11 +44,11 @@ var AppsMenu = Widget.extend({
      */
     openFirstApp: function () {
         if (!this._apps.length) {
-            return false
+            return false;
         }
         var firstApp = this._apps[0];
         this._openApp(firstApp);
-        return true
+        return true;
     },
 
     //--------------------------------------------------------------------------
