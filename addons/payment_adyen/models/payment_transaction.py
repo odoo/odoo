@@ -138,6 +138,7 @@ class PaymentTransaction(models.Model):
 
         # Handle the payment state
         payment_state = data.get('resultCode')
+        refusal_reason = data.get('refusalReason')
         if not payment_state:
             raise ValidationError("Adyen: " + _("Received data with missing payment state."))
 
@@ -149,7 +150,19 @@ class PaymentTransaction(models.Model):
                 self._adyen_tokenize_from_feedback_data(data)
             self._set_done()
         elif payment_state in RESULT_CODES_MAPPING['cancel']:
+            _logger.warning("The transaction with reference %s was cancelled (reason: %s)",
+                            self.reference, refusal_reason)
             self._set_canceled()
+        elif payment_state in RESULT_CODES_MAPPING['error']:
+            _logger.warning("An error occurred on transaction with reference %s (reason: %s)",
+                            self.reference, refusal_reason)
+            self._set_error(
+                _("An error occured during processing of your payment. Please try again.")
+            )
+        elif payment_state in RESULT_CODES_MAPPING['refused']:
+            _logger.warning("The transaction with reference %s was refused (reason: %s)",
+                            self.reference, refusal_reason)
+            self._set_error(_("Your payment was refused. Please try again."))
         else:  # Classify unsupported payment state as `error` tx state
             _logger.warning("received data with invalid payment state: %s", payment_state)
             self._set_error(
