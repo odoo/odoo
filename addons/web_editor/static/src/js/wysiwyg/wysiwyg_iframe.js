@@ -121,7 +121,7 @@ Wysiwyg.include({
 
                 const $iframeWrapper = $('<div class="iframe-editor-wrapper">');
                 const $codeview = $('<textarea class="o_codeview d-none"/>');
-                self.$editable.attr('class', 'o_editable oe_structure');
+                self.$editable.addClass('o_editable oe_structure');
 
                 $iframeTarget.append($iframeWrapper);
                 $iframeTarget.append($utilsZone);
