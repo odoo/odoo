@@ -19,7 +19,7 @@ class HrWorkEntry(models.Model):
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(compute='_compute_date_stop', store=True, readonly=False, string='To')
     duration = fields.Float(compute='_compute_duration', store=True, string="Period")
-    work_entry_type_id = fields.Many2one('hr.work.entry.type')
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True)
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
