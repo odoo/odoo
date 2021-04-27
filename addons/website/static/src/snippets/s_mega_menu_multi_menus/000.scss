@@ -1,0 +1,9 @@
+
+// Adjust the layout for the vertical header
+@if o-website-value('header-template') == 'sidebar' { 
+    @include media-breakpoint-up(lg)  {
+        .s_mega_menu_multi_menus > .container > .row {
+            flex-direction: column !important;    
+        }
+    }
+}

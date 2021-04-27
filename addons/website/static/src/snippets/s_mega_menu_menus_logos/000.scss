@@ -1,0 +1,37 @@
+
+.s_mega_menu_menus_logo_last_col {
+    // Allow to show the grey background used in the pseudo-element
+    z-index: 1;
+
+    &:before {
+        content: '';
+        display: block;
+        width: 100vw;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: rgba(0,0,0, .05);
+    }  
+}
+
+.s_mega_menu_menus_logos_wrapper {
+    // Apply color transparency to match with the preset used
+    border-color: rgba(0,0,0, .05) !important;
+}
+
+// Adjust the layout for the vertical header
+@if o-website-value('header-template') == 'sidebar' { 
+    .s_mega_menu_menus_logos > .container > .row {
+        flex-direction: column !important;    
+    }
+    .s_mega_menu_menus_logo_last_col {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .s_mega_menu_menus_logos_wrapper img {
+        min-width: 50px;
+    }
+}

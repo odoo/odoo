@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_cards" name="Menu - Cards">
+    <section class="s_mega_menu_cards">
+        <div class="container oe_img_bg">
+            <nav class="row py-3">
+                <t t-set="items" t-value="[
+                    ['Our team', 'Created in 2021, the company is young and dynamic. Discover the composition of the team and their skills.'],
+                    ['Departments', 'Do you need specific information? Our specialists will help you with pleasure.'],
+                    ['Products', 'We offer tailor-made products according to your needs and your budget.'],
+                    ['Customers', 'Find out how we were able helping them and set in place solutions adapted to their needs.'],
+                    ['Events', 'From seminars to team building activities, we offer a wide choice of events to organize.'],
+                    ['Blog', 'Stay informed of our latest news and discover what will happen in the next weeks.'],
+                    ['Deliveries', 'Find all information about our deliveries, express deliveries and all you need to know to return a product.'],
+                    ['Points of sale', 'Need to pick up your order at one of our stores? Discover the nearest to you.']
+                ]"/>
+                <t t-foreach="items" t-as="item">
+                    <div class="col-12 col-sm-6 col-md">
+                        <a href="#" class="nav-link o_default_snippet_text rounded text-wrap text-center p-3" data-name="Menu Item">
+                            <img t-attf-src="/web/image/website.s_mega_menu_cards_default_image_{{item_index + 1}}" class="mb-3 rounded shadow img-fluid" alt=""/>
+                            <h4 t-esc="item[0]"/>
+                            <p class="o_default_snippet_text mb-0"><font style="font-size: 14px;" t-esc="item[1]"/></p>
+                        </a>
+                    </div>
+                    <t t-if="item_index == 3">
+                        <div class="w-100 d-none d-md-block"></div>
+                    </t>
+                </t>
+            </nav>
+        </div>
+    </section>
+</template>
+
+<record id="website.s_mega_menu_cards_css_000" model="ir.asset">
+    <field name="name">References 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_mega_menu_cards/000.scss</field>
+</record>
+
+</odoo>

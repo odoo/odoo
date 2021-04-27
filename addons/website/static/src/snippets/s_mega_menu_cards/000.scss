@@ -1,0 +1,15 @@
+
+.s_mega_menu_cards .nav-link {
+    @include hover-focus {
+        background: rgba(0,0,0, .05);
+    }
+}
+
+// Adjust the layout for the vertical header
+@if o-website-value('header-template') == 'sidebar' { 
+    @include media-breakpoint-up(lg)  {
+        .s_mega_menu_cards > .container > .row {
+            flex-direction: column !important;    
+        }
+    }
+}

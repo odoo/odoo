@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_big_icons_subtitles" name="Menu - Big icons &amp; subtitles">
+    <section class="s_mega_menu_big_icons_subtitles" data-oe-shape-data="{'shape':'web_editor/Zigs/03','flip':[]}">
+        <div class="o_we_shape o_web_editor_Zigs_03"></div>
+        <div class="container oe_img_bg" >
+            <div class="row py-4">
+                <t t-set="item_1" t-value="['About us', 'Discover our culture and our values', 'fa-user', 'bg-o-color-1']"/>
+                <t t-set="item_2" t-value="['Blog', 'Latests news and case studies', 'fa-newspaper-o', 'bg-o-color-2']"/>
+                <t t-set="item_3" t-value="['Events', 'Our seminars and trainings for you', 'fa-calendar', 'bg-o-color-3']"/>
+                <t t-set="item_4" t-value="['Customers', 'They trust us since years', 'fa-star', 'bg-o-color-5']"/>
+                <t t-set="item_5" t-value="['Services', 'Find the perfect solution for you', 'fa-handshake-o', 'bg-o-color-3']"/>
+                <t t-set="item_6" t-value="['Portfolio', 'Discover our realisations', 'fa-paint-brush', 'bg-o-color-2']"/>
+                <t t-set="item_7" t-value="['F.A.Q.', 'All informations you need', 'fa-question-circle', 'bg-o-color-1']"/>
+                <t t-set="item_8" t-value="['Points of sale', 'Find a store near you', 'fa-shopping-basket', 'bg-o-color-5']"/>
+                <t t-set="item_9" t-value="['Legal Notice', 'Discover our legal notice', 'fa-legal', 'bg-o-color-3']"/>
+                <div class="col-12 col-md-6 col-lg">
+                    <nav class="nav flex-column w-100">
+                        <t t-foreach="[item_1, item_2, item_3]" t-as="item">
+                            <a href="#" class="nav-link o_default_snippet_text px-2 my-2 rounded text-wrap" data-name="Menu Item">
+                                <div class="media align-items-center">
+                                    <i t-attf-class="fa rounded rounded-circle mr-3 {{item[2]}} {{item[3]}}"/>
+                                    <div class="media-body">
+                                        <h4 class="mt-0 mb-0" t-esc="item[0]"/>
+                                        <span><font style="font-size: 14px;" t-esc="item[1]"/></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </t>
+                    </nav>
+                </div>
+                <div class="col-12 col-md-6 col-lg">
+                    <nav class="nav flex-column w-100">
+                        <t t-foreach="[item_4, item_5, item_6]" t-as="item">
+                            <a href="#" class="nav-link o_default_snippet_text px-2 my-2 rounded text-wrap" data-name="Menu Item">
+                                <div class="media align-items-center">
+                                    <i t-attf-class="fa rounded rounded-circle mr-3 {{item[2]}} {{item[3]}}"/>
+                                    <div class="media-body">
+                                        <h4 class="mt-0 mb-0" t-esc="item[0]"/>
+                                        <span><font style="font-size: 14px;" t-esc="item[1]"/></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </t>
+                    </nav>
+                </div>
+                <div class="col-12 col-md-6 col-lg">
+                    <nav class="nav flex-column w-100">
+                        <t t-foreach="[item_7, item_8, item_9]" t-as="item">
+                            <a href="#" class="nav-link o_default_snippet_text px-2 my-2 rounded text-wrap" data-name="Menu Item">
+                                <div class="media align-items-center">
+                                    <i t-attf-class="fa rounded rounded-circle mr-3 {{item[2]}} {{item[3]}}"/>
+                                    <div class="media-body">
+                                        <h4 class="mt-0 mb-0" t-esc="item[0]"/>
+                                        <span><font style="font-size: 14px;" t-esc="item[1]"/></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </t>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<record id="website.s_mega_menu_big_icons_subtitles_css_000" model="ir.asset">
+    <field name="name">References 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_mega_menu_big_icons_subtitles/000.scss</field>
+</record>
+
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_thumbnails" name="Menu - Thumbnails">
+    <section class="s_mega_menu_thumbnails pt-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm col-md-12 col-lg px-0"> 
+                    <div class="container">
+                        <div class="row">
+                            <t t-set="items" t-value="['Laptops', 'Mouse', 'Keyboards', 'Printers', 'Storage', 'Tablets', 'Phones', 'Screens', 'Gaming', 'Sound']"/>
+                            <t t-foreach="items" t-as="item">
+                                <div class="col-6 col-sm text-center py-2">
+                                    <a href="#" class="nav-link o_default_snippet_text p-0" data-name="Menu Item">
+                                        <img class="img-fluid rounded shadow" t-attf-src="/web/image/website.s_mega_menu_thumbnails_default_image_{{item_index + 1}}" alt=""/>
+                                        <br/>
+                                        <span class="d-block p-2">
+                                            <b>
+                                                <font style="font-size:14px;" t-esc="item"/>
+                                            </b>
+                                        </span>
+                                    </a>
+                                </div>
+                                <t t-if="item_index == 4">
+                                    <div class="w-100 d-none d-md-block"></div>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </div>      
+                <div class="col col-sm-6 col-md-4 col-lg-3 text-center py-2 s_mega_menu_thumbnails_last_col">
+                    <a href="#" class="nav-link p-0 o_default_snippet_text" data-name="Menu Item">
+                        <img class="img-fluid rounded shadow" src="/web/image/website.s_mega_menu_thumbnails_default_image_11" alt=""/>
+                        <span class="d-block p-2">
+                            <b><font style="font-size:14px;">Discover our new products</font></b>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="s_mega_menu_thumbnails_foot container-fluid px-0">
+            <div class="container row mx-auto px-0 w-100 align-items-center">
+                <div class="col-12 col-md-6 col-lg d-flex justify-content-center align-items-center py-2">
+                    <p class="text-muted align-middle m-0">
+                        <i class="s_mega_menu_thumbnails_icon fa fa-cube mr-2"></i> Free returns
+                    </p>
+                </div>
+                <div class="col-12 col-md-6 col-lg d-flex justify-content-center align-items-center py-2">
+                    <p class="text-muted align-middle m-0">
+                        <i class="s_mega_menu_thumbnails_icon fa fa-shopping-basket mr-2"></i> Pickup in store
+                    </p>
+                </div>
+                <div class="col-12 col-md-6 col-lg d-flex justify-content-center align-items-center py-2">
+                    <p class="text-muted align-middle m-0">
+                        <i class="s_mega_menu_thumbnails_icon fa fa-truck mr-2"></i> Express delivery
+                    </p>
+                </div>
+                <div class="col-12 col-md-6 col-lg py-2">
+                    <a href="#" class="btn btn-secondary d-block o_default_snippet_text">
+                        <i class="s_mega_menu_thumbnails_icon fa fa-comments mr-2"></i> Contact us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<record id="website.s_mega_menu_thumbnails_css_000" model="ir.asset">
+    <field name="name">References 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_mega_menu_thumbnails/000.scss</field>
+</record>
+
+</odoo>

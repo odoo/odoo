@@ -1,0 +1,18 @@
+
+.s_mega_menu_thumbnails_foot {
+    background: rgba(0,0,0, .05);
+}
+
+// Adjust the layout for the vertical header
+@if o-website-value('header-template') == 'sidebar' { 
+    @include media-breakpoint-up(lg)  {
+        .s_mega_menu_thumbnails > .container > .row,
+        .s_mega_menu_thumbnails_foot > .row {
+            flex-direction: column !important;    
+        }
+        .s_mega_menu_thumbnails_last_col {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+}
