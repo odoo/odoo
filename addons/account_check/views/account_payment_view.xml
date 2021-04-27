@@ -15,6 +15,7 @@
                 <attribute name="force_save">1</attribute>
             </xpath>
             <field name="destination_journal_id" position="after">
+                <field name="check_operation"/>
                 <field
                     name="delivery_check_ids"
                     attrs="{'invisible': [('payment_method_code', 'not in', ['in_checks', 'out_checks'])]}"

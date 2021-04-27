@@ -24,31 +24,82 @@ class AccountPayment(models.Model):
     # TODO we should be able to remove this fields. Is only here because adding two times the same field with difrerent widget is not working
     delivery_check_ids = fields.Many2many(related='check_ids', string="Checks Delivered", readonly=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]})
     # this fields is to help with code and view
+    # TODO unificar metodos compute
     check_type = fields.Char(compute='_compute_check_type',)
+    check_operation = fields.Char(compute='_compute_check_data',)
+    available_check_ids = fields.Many2many('account.check', compute='_compute_check_data')
     amount = fields.Monetary(compute='_compute_amount', readonly=False, store=True)
-    available_check_ids = fields.Many2many('account.check', compute='_compute_available_checks')
+
+    def _get_checks_operations(self):
+        """
+        This method is called from:
+        * cancellation of payment to execute delete the right operation and unlink check if needed
+        * from post to add check operation and, if needded, change payment vals and/or create check and
+        """
+        self.ensure_one()
+        if self.check_type == 'third_check':
+            domain = [('type', '=', 'third_check')]
+            if self.is_internal_transfer:
+                if self.payment_type == 'outbound':
+                    if self.destination_journal_id.type == 'cash' and any(x.code == 'in_checks' for x in self.destination_journal_id.inbound_payment_method_ids):
+                        # transferencia a otro diario de terceros
+                        return (
+                            'transfered',
+                            domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')])
+                    else:
+                        # deposito o venta
+                        return (
+                            'selled' if self.destination_journal_id.type == 'cash' else 'deposited',
+                            domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')])
+                elif self.payment_type == 'inbound':
+                    # Deposit rejection
+                    return (
+                        'rejected',
+                        domain + [('journal_id', '=', self.journal_id.id), ('state', 'in', ['deposited', 'selled'])])
+            elif self.payment_method_code == 'new_in_checks':
+                return 'holding', False
+            elif self.payment_method_code == 'out_checks':
+                # TODO falta implementar devolucion a cliente (si la hacemos)
+                return 'delivered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
+            elif self.payment_method_code == 'in_checks':
+                return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'delivered'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
+        elif self.check_type == 'issue_check':
+            domain = [('type', '=', 'issue_check')]
+            if self.is_internal_transfer and self.payment_type == 'outbound':
+                    return 'withdrawed', False
+            elif self.payment_method_code == 'new_out_checks':
+                return 'handed', False
+            elif self.payment_method_code == 'in_checks':
+                # TODO definir si usamos mismo nombre para rejected y devuelto
+                return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'handed'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
+        raise UserError(_(
+            'This operatios is not implemented for checks:\n'
+            '* Payment type: %s\n'
+            '* Payment method: %s\n%s') % (
+                self.payment_type,
+                self.payment_method_code,
+                '* Destination journal: %s\n' % self.destination_journal_id.name if self.is_internal_transfer else ''))
+        # return False, False
 
     @api.depends('payment_method_code', 'partner_id', 'check_type', 'is_internal_transfer', 'journal_id')
-    def _compute_available_checks(self):
+    def _compute_check_data(self):
         for rec in self:
             available_checks = rec.env['account.check']
+            if not rec.check_type:
+                rec.check_operation = False
+                rec.available_check_ids = available_checks
+                continue
             operation, domain = rec._get_checks_operations()
-            print ('domain', domain)
-            print ('domain', domain)
             if domain:
                 available_checks = available_checks.search(domain)
             rec.available_check_ids = available_checks
+            rec.check_operation = operation
 
-    @api.depends('payment_method_code')
+    @api.depends('payment_method_code', 'journal_id.type')
     def _compute_check_type(self):
         for rec in self:
-            rec.check_type = 'third_check'
-            if rec.payment_method_code == 'new_in_checks':
-                rec.check_type = 'third_check'
-            elif rec.payment_method_code == 'new_out_checks':
-                rec.check_type = 'issue_check'
-            elif rec.check_ids:
-                rec.check_type = rec.check_ids[0].type
+            if rec.payment_method_code in ['new_in_checks', 'new_out_checks', 'out_checks', 'in_checks']:
+                rec.check_type = 'issue_check' if rec.journal_id.type == 'bank' else 'third_check'
             else:
                 rec.check_type = False
 
@@ -199,78 +250,12 @@ class AccountPayment(models.Model):
 
     def _do_checks_operations(self, cancel=False):
         operation, domain = self._get_checks_operations()
-        if not operation:
-            raise UserError(_(
-                'This operatios is not implemented for checks:\n'
-                '* Payment type: %s\n'
-                '* Payment method: %s\n'
-                '* Destination journal: %s\n') % (
-                    self.payment_type,
-                    self.payment_method_code,
-                    self.destination_journal_id.type))
-        elif cancel:
+        if cancel:
             self.check_ids._del_operation(self)
         else:
             self.check_ids._add_operation(operation, self, self.partner_id, date=self.date)
             # TODO implementar cambio de journal? o lo hacemos related al último y listo?
             # self.check_ids.write({'journal_id': self.destination_journal_id.id})
-
-    def _get_checks_operations(self):
-        """
-        This method is called from:
-        * cancellation of payment to execute delete the right operation and unlink check if needed
-        * from post to add check operation and, if needded, change payment vals and/or create check and
-        """
-        self.ensure_one()
-        if self.check_type == 'third_check':
-            domain = []
-            import pdb; pdb.set_trace()
-            if self.is_internal_transfer:
-                if self.payment_type == 'outbound':
-                    # on every outgoing transfer we use "transfered", the actual operation is the incoming one
-                    return 'transfered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
-                elif any(x.code == 'in_checks' for x in self.destination_journal_id.inbound_payment_method_ids):
-                    # a otro third checks
-                    # we don't implement domain for now, they are suposed to be created automatically from the oubound payment transfer
-                    # TODO rename holding for receiving? (lo mismo abajo)
-                    return 'holding', False
-                # TODO para estos dos falta definir ver si hay bypass de ir derecho a "credited"
-                elif self.journal_id.type == 'cash':
-                    # a caja
-                    # we don't implement domain for now, they are suposed to be created automatically from the oubound payment transfer
-                    return 'selled', False
-                elif self.journal_id.type == 'bank':
-                    # a banco
-                    return 'deposited', False
-                else:
-                    # TODO falta implementar de depositado/vendido a rechazado (depende si hacemos con otro diario o mismo diario)
-                    # elif self.journal_id.type == 'bank':
-                    # issue check
-                    # TODO implementar el criterio correcto
-                    raise UserError('Not implemented')
-                    # return 'handed'
-                    # withdrawed
-            elif self.payment_method_code == 'new_in_checks':
-                return 'holding', False
-            elif self.payment_method_code == 'out_checks':
-                # TODO falta implementar devolucion a cliente (si la hacemos)
-                return 'delivered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
-            elif self.payment_method_code == 'in_checks':
-                return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'delivered'), ('partner_id.commercial_partner_id', '=', rec.partner_id.commercial_partner_id)]
-        elif self.check_type == 'issue_check':
-            domain = []
-            if self.is_internal_transfer:
-                if self.payment_type == 'outbound':
-                    # on every outgoing transfer we use "transfered", the actual operation is the incoming one
-                    return 'transfered', False
-                else:
-                    return 'withdrawed', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
-            elif self.payment_method_code == 'new_out_checks':
-                return 'handed', False
-            elif self.payment_method_code == 'in_checks':
-                # TODO definir si usamos mismo nombre para rejected y devuelto
-                return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'handed'), ('partner_id.commercial_partner_id', '=', rec.partner_id.commercial_partner_id)]
-        return False, False
 
     # def _prepare_payment_moves(self):
     #     vals = super(AccountPayment, self)._prepare_payment_moves()
