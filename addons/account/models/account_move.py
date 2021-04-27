@@ -3538,7 +3538,7 @@ class AccountMoveLine(models.Model):
     def _onchange_amount_currency(self):
         for line in self:
             company = line.move_id.company_id
-            balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date)
+            balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date) if line.currency_id else line.amount_currency
             line.debit = balance if balance > 0.0 else 0.0
             line.credit = -balance if balance < 0.0 else 0.0
 
@@ -3559,7 +3559,7 @@ class AccountMoveLine(models.Model):
 
     @api.onchange('currency_id')
     def _onchange_currency(self):
-        for line in self:
+        for line in self.filtered(lambda l: l.currency_id):
             company = line.move_id.company_id
 
             if line.move_id.is_invoice(include_receipts=True):
