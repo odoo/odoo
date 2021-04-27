@@ -23,8 +23,8 @@ class PosPayment(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', related='pos_order_id.currency_id')
     currency_rate = fields.Float(string='Conversion Rate', related='pos_order_id.currency_rate', help='Conversion rate from company currency to order currency.')
     partner_id = fields.Many2one('res.partner', string='Customer', related='pos_order_id.partner_id')
-    session_id = fields.Many2one('pos.session', string='Session', related='pos_order_id.session_id', store=True)
-    company_id = fields.Many2one('res.company', string='Company', related='pos_order_id.company_id')
+    session_id = fields.Many2one('pos.session', string='Session', related='pos_order_id.session_id', store=True, index=True)
+    company_id = fields.Many2one('res.company', string='Company', related='pos_order_id.company_id')  # TODO: add store=True in master
     card_type = fields.Char('Type of card used')
     cardholder_name = fields.Char('Cardholder Name')
     transaction_id = fields.Char('Payment Transaction ID')
