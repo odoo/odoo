@@ -444,7 +444,7 @@ var FileWidget = SearchableMediaWidget.extend({
             }
             href += 'unique=' + img.checksum + '&download=true';
             this.$media.attr('href', href);
-            this.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
+            this.$media.addClass('o_image').attr('title', img.name);
         }
 
         this.$media.attr('alt', img.alt || img.description || '');
@@ -457,6 +457,10 @@ var FileWidget = SearchableMediaWidget.extend({
         removeOnImageChangeAttrs.forEach(attr => {
             delete this.media.dataset[attr];
         });
+        // Add mimetype for documents
+        if (!img.image_src) {
+            this.media.dataset.mimetype = img.mimetype;
+        }
         this.media.classList.remove('o_modified_image_to_save');
         this.$media.trigger('image_changed');
         return this.media;
