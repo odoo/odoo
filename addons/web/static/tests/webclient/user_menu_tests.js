@@ -91,8 +91,8 @@ QUnit.test("can be rendered", async (assert) => {
     userMenuEl.querySelector("img.o_user_avatar").src,
     "http://lordofthering/web/image?model=res.users&field=image_128&id=7"
   );
-  assert.containsOnce(userMenuEl, "span.o_user_name");
-  assert.strictEqual(userMenuEl.querySelector(".o_user_name").textContent, "Sauron");
+  assert.containsOnce(userMenuEl, "span.oe_topbar_name");
+  assert.strictEqual(userMenuEl.querySelector(".oe_topbar_name").textContent, "Sauron");
   assert.containsNone(userMenuEl, "ul.o_dropdown_menu li.o_dropdown_item");
   await click(userMenu.el.querySelector("button.o_dropdown_toggler"));
   userMenuEl = userMenu.el;
@@ -120,6 +120,6 @@ QUnit.test("display the correct name in debug mode", async (assert) => {
   userMenu = await mount(UserMenu, { env, target });
   let userMenuEl = userMenu.el;
   assert.containsOnce(userMenuEl, "img.o_user_avatar");
-  assert.containsOnce(userMenuEl, "span.o_user_name");
-  assert.strictEqual(userMenuEl.querySelector(".o_user_name").textContent, "Sauron (test)");
+  assert.containsOnce(userMenuEl, "span.oe_topbar_name");
+  assert.strictEqual(userMenuEl.querySelector(".oe_topbar_name").textContent, "Sauron (test)");
 });

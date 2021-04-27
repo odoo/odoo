@@ -3,7 +3,7 @@
 
     <t t-name="web.UserMenu" owl="1">
         <Dropdown class="o_user_menu" menuClass="'o_dropdown_menu_right'" t-on-dropdown-item-selected.stop="onDropdownItemSelected">
-            <img class="rounded-circle o_user_avatar" t-att-src="source" alt="User"/> <span class="o_user_name"><t t-esc="user.name"/><t t-if="env.debug" t-esc="' (' + user.db.name + ')'"/></span>
+            <img class="rounded-circle o_user_avatar" t-att-src="source" alt="User"/> <span class="oe_topbar_name"><t t-esc="user.name"/><t t-if="env.debug" t-esc="' (' + user.db.name + ')'"/></span>
             <t t-set-slot="menu">
                 <t t-foreach="getElements()" t-as="element" t-key="element_index">
                     <t t-if="!element.hide">
