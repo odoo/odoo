@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!--VATs-->
+    <!--VATs (SALES)-->
 
-
-    <record id="vat125s" model="account.tax.template">
+    <record id="vat_sale_3" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">VAT @12.5%</field>
-        <field name="description">VAT @ 12.5%</field>
-        <field eval="12.5" name="amount"/>
+        <field name="name">VAT for sales (3%)</field>
+        <field name="description">VAT 3%</field>
+        <field eval="3" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_vat_gh"/>
+        <field name="tax_group_id" ref="tax_group_vat_3"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -36,14 +35,80 @@
         ]"/>
     </record>
 
-    <record id="vat125p" model="account.tax.template">
+    <record id="vat_sale_125" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">VAT @12.5%</field>
-        <field name="description">VAT @ 12.5%</field>
+        <field name="name">VAT for sales (12.5%)</field>
+        <field name="description">VAT 12.5%</field>
+        <field eval="12.5" name="amount"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_vat_125"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2102008'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2102008'),
+            }),
+        ]"/>
+    </record>
+
+    <!--VATs (PURCHASE)-->
+
+    <record id="vat_purc_3" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_gh"/>
+        <field name="name">VAT for purchases (3%)</field>
+        <field name="description">VAT 3%</field>
+        <field eval="3" name="amount"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_vat_3"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2102008'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2102008'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="vat_purc_125" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_gh"/>
+        <field name="name">VAT for purchases (12.5%)</field>
+        <field name="description">VAT 12.5%</field>
         <field eval="12.5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_vat_gh"/>
+        <field name="tax_group_id" ref="tax_group_vat_125"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -68,16 +133,16 @@
         ]"/>
     </record>
 
-    <!-- GETFUND LEVY-->
+    <!-- GETFUND LEVY -->
 
-    <record id="getfund25s" model="account.tax.template">
+    <record id="getfund_levy" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">GETFUND @2.5</field>
-        <field name="description">Getfund @ 2.5%</field>
+        <field name="name">GETFund Levy</field>
+        <field name="description">GETFUND 2.5%</field>
         <field eval="2.5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_other_gh"/>
+        <field name="tax_group_id" ref="tax_group_getfund_25"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -104,14 +169,14 @@
 
     <!-- NHIL LEVY -->
 
-    <record id="nhil25s" model="account.tax.template">
+    <record id="nhil_levy" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">NHIL @2.5%</field>
-        <field name="description">NHIL @ 2.5%</field>
+        <field name="name">NHIL Levy</field>
+        <field name="description">NHIL 2.5%</field>
         <field eval="2.5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_other_gh"/>
+        <field name="tax_group_id" ref="tax_group_nhil_25"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -136,18 +201,16 @@
         ]"/>
     </record>
 
-    <!-- WITHHOLDING TAXES -->
+    <!-- WITHHOLDING TAXES (SALES) -->
 
-    <!-- WTH SALES -->
-
-    <record id="wht3s" model="account.tax.template">
+    <record id="wht_sale_3" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @3%</field>
-        <field name="description">WHT @ 3%</field>
+        <field name="name">WHT for sales (3%)</field>
+        <field name="description">WHT 3%</field>
         <field eval="-3.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_3"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -172,14 +235,14 @@
         ]"/>
     </record>
 
-    <record id="wht5s" model="account.tax.template">
+    <record id="wht_sale_5" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @5%</field>
-        <field name="description">WHT @ 5%</field>
+        <field name="name">WHT for sales (5%)</field>
+        <field name="description">WHT 5%</field>
         <field eval="-5.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_5"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -204,14 +267,14 @@
         ]"/>
     </record>
 
-    <record id="wht75s" model="account.tax.template">
+    <record id="wht_sale_75" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @7.5%</field>
-        <field name="description">WHT @ 7.5%</field>
+        <field name="name">WHT for sales (7.5%)</field>
+        <field name="description">WHT 7.5%</field>
         <field eval="-7.5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_75"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -236,14 +299,14 @@
         ]"/>
     </record>
 
-    <record id="wht10s" model="account.tax.template">
+    <record id="wht_sale_10" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @10%</field>
-        <field name="description">WHT @ 10%</field>
+        <field name="name">WHT for sales (10%)</field>
+        <field name="description">WHT 10%</field>
         <field eval="-10.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -268,14 +331,14 @@
         ]"/>
     </record>
 
-    <record id="wht15s" model="account.tax.template">
+    <record id="wht_sale_15" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @15%</field>
-        <field name="description">WHT @ 15%</field>
+        <field name="name">WHT for sales (15%)</field>
+        <field name="description">WHT 15%</field>
         <field eval="-15.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -300,16 +363,16 @@
         ]"/>
     </record>
 
-    <!--WTH PURCHASE-->
+    <!-- WITHHOLDING TAXES (PURCHASE) -->
 
-    <record id="wht3p" model="account.tax.template">
+    <record id="wht_purc_3" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @3%</field>
-        <field name="description">WHT @ 3%</field>
+        <field name="name">WHT for purchases (3%)</field>
+        <field name="description">WHT 3%</field>
         <field eval="-3.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_3"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -334,14 +397,14 @@
         ]"/>
     </record>
 
-    <record id="wht5p" model="account.tax.template">
+    <record id="wht_purc_5" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @5%</field>
-        <field name="description">WHT @ 5%</field>
+        <field name="name">WHT for purchases (5%)</field>
+        <field name="description">WHT 5%</field>
         <field eval="-5.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_5"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -366,14 +429,14 @@
         ]"/>
     </record>
 
-    <record id="wht75p" model="account.tax.template">
+    <record id="wht_purc_75" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @7.5%</field>
-        <field name="description">WHT @ 7.5%</field>
+        <field name="name">WHT for purchases (7.5%)</field>
+        <field name="description">WHT 7.5%</field>
         <field eval="-7.5" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_75"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -398,14 +461,14 @@
         ]"/>
     </record>
 
-    <record id="wht10p" model="account.tax.template">
+    <record id="wht_purc_10" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @10%</field>
-        <field name="description">WHT @ 10%</field>
+        <field name="name">WHT for purchases (10%)</field>
+        <field name="description">WHT 10%</field>
         <field eval="-10.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -430,14 +493,14 @@
         ]"/>
     </record>
 
-    <record id="wht15p" model="account.tax.template">
+    <record id="wht_purc_15" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gh"/>
-        <field name="name">WHT @15%</field>
-        <field name="description">WHT @ 15%</field>
+        <field name="name">WHT for purchases (15%)</field>
+        <field name="description">WHT 15%</field>
         <field eval="-15.0" name="amount"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="tax_group_id" ref="tax_group_wht_gh"/>
+        <field name="tax_group_id" ref="tax_group_wht_15"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -458,6 +521,38 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('2102007'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="vat_wht_purc_7" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_gh"/>
+        <field name="name">Withholding VAT</field>
+        <field name="description">Withholding VAT 7%</field>
+        <field eval="-7.0" name="amount"/>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_group_id" ref="tax_group_wht_vat_7"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2102011'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('2102011'),
             }),
         ]"/>
     </record>

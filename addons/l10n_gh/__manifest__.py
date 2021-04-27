@@ -3,22 +3,21 @@
 
 {
     'name': 'Ghana - Accounting',
-    'category': 'Localization/Account Charts',
+    'version': '1.0',
+    'category': 'Localization',
     'description': """
 This is the base module to manage the accounting chart for Ghana.
-===========================================================================
+==============================================================================
 
 * Chart of Accounts.
 
     """,
     'author': 'erpSOFTapp',
-    'license': 'AGPL-3',
+    'website': 'https://www.erpsoftapp.com',
     'depends': [
         'account',
-        'account_accountant',
-                'base'
-
     ],
+
     'data': [
         'data/l10n_gh_chart_data.xml',
         'data/account.account.template.csv',
@@ -28,12 +27,6 @@ This is the base module to manage the accounting chart for Ghana.
         'data/res.country.state.csv',
         'data/account_chart_template_data.xml',
     ],
-    'test': [
 
-    ],
-    'demo': [
-
-    ],
-    'installable': True,
-    'website': 'https://www.erpsoftapp.com',
+    'installable': True
 }
