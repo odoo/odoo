@@ -17,9 +17,9 @@ class AccountTaxCarryoverLine(models.Model):
     foreign_vat_fiscal_position_id = fields.Many2one(comodel_name='account.fiscal.position',
                                                      string='Fiscal position',
                                                      help="The foreign fiscal position for which this carryover is made.",
-                                                     domain=[('company_id', '=', company_id),
-                                                             ('country_id', '=', tax_report_country_id),
-                                                             ('foreign_vat', '!=', False)])
+                                                     domain="[('company_id', '=', company_id), "
+                                                            "('country_id', '=', tax_report_country_id), "
+                                                            "('foreign_vat', '!=', False)]")
 
     @api.constrains('foreign_vat_fiscal_position_id')
     def _check_fiscal_position(self):
