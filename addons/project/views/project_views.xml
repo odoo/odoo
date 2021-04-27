@@ -919,7 +919,7 @@
                                             <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                                             <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share</a>
                                             <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
-                                            <a t-if="widget.editable" role="menuitem" class="dropdown-item" name="toggle_active" type="object">
+                                            <a t-if="widget.archivable" role="menuitem" class="dropdown-item" name="toggle_active" type="object">
                                                 <t t-if="record.active.raw_value">Archive</t>
                                                 <t t-if="!record.active.raw_value">Restore</t>
                                             </a>

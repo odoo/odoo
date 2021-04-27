@@ -502,6 +502,7 @@ var KanbanRenderer = BasicRenderer.extend({
         // - is readonly (on the field attrs or in the view)
         var draggable = true;
         let recordDeletable = this.recordOptions.deletable;
+        let recordArchivable = this.recordOptions.archivable;
         var grouped_by_date = false;
         if (groupByFieldAttrs) {
             if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
@@ -511,8 +512,9 @@ var KanbanRenderer = BasicRenderer.extend({
                 // TODO: MSH: should we allow resequencing of record, if yes then this fix is OK else we need to disable recordsDraggable to false
                 // do not allow dragging of record if grouped by many2many
                 draggable = false;
-                // do not allow to delete records if grouped by many2many
+                // do not allow to delete/archive records if grouped by many2many
                 recordDeletable = false;
+                recordArchivable = false;
             } else if (groupByFieldAttrs.readonly !== undefined) {
                 draggable = !(groupByFieldAttrs.readonly);
             }
@@ -537,6 +539,7 @@ var KanbanRenderer = BasicRenderer.extend({
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
         this.recordOptions = _.extend(this.recordOptions, {
             deletable: recordDeletable,
+            archivable: recordArchivable,
         });
     },
     /**

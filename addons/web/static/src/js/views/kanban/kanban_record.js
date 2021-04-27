@@ -42,6 +42,7 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
         this.options = options;
         this.editable = options.editable;
         this.deletable = options.deletable;
+        this.archivable = options.archivable;
         this.read_only_mode = options.read_only_mode;
         this.selectionMode = options.selectionMode;
         this.qweb = options.qweb;

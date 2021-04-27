@@ -68,6 +68,7 @@ var KanbanView = BasicView.extend({
         this.rendererParams.record_options = {
             editable: activeActions.edit,
             deletable: activeActions.delete,
+            archivable: activeActions.edit,
             read_only_mode: params.readOnlyMode,
             selectionMode: params.selectionMode,
         };
