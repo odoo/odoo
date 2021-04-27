@@ -329,7 +329,7 @@ class PosSession(models.Model):
 
     def _create_picking_at_end_of_session(self):
         self.ensure_one()
-        lines_grouped_by_dest_location = {}
+        orders_grouped_by_dest_location = {}
         picking_type = self.config_id.picking_type_id
 
         if not picking_type or not picking_type.default_location_dest_id:
@@ -337,16 +337,28 @@ class PosSession(models.Model):
         else:
             session_destination_id = picking_type.default_location_dest_id.id
 
-        for order in self.order_ids:
-            if order.company_id.anglo_saxon_accounting and order.to_invoice:
-                continue
-            destination_id = order.partner_id.property_stock_customer.id or session_destination_id
-            if destination_id in lines_grouped_by_dest_location:
-                lines_grouped_by_dest_location[destination_id] |= order.lines
-            else:
-                lines_grouped_by_dest_location[destination_id] = order.lines
+        domain = [
+            ('session_id', '=', self.id),
+            '|',
+            ('company_id.anglo_saxon_accounting', '=', False),
+            ('to_invoice', '=', False),
+        ]
+        # Orders often don't have partner, so query such orders separately to avoid fields fetching
+        orders = self.env['pos.order'].search([('partner_id', '=', False)] + domain)
+        orders_grouped_by_dest_location[session_destination_id] = orders
 
-        for location_dest_id, lines in lines_grouped_by_dest_location.items():
+        orders = self.env['pos.order'].search([('partner_id', '!=', False)] + domain)
+        for order in orders:
+            destination_id = order.partner_id.property_stock_customer.id or session_destination_id
+            if destination_id in orders_grouped_by_dest_location:
+                orders_grouped_by_dest_location[destination_id] |= order
+            else:
+                orders_grouped_by_dest_location[destination_id] = order
+
+        for location_dest_id, orders in orders_grouped_by_dest_location.items():
+            lines = self.env['pos.order.line'].search(
+                [('order_id', 'in', orders.ids), ('product_id.type', 'in', ['product', 'consu']), ('qty', '!=', 0)]
+            )
             pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type)
             pickings.write({'pos_session_id': self.id, 'origin': self.name})
 
