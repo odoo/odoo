@@ -1475,7 +1475,7 @@
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <input type="file" class="o_input_file" name="ufile"
                 t-att="{'multiple': multi_upload ? 'multiple' : null, 'accept': widget.accepted_file_extensions || '*'}"/>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
     </div>
