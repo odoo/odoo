@@ -2048,7 +2048,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             }
             if tz_convert:
                 qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
-            qualified_field = "date_trunc('%s', %s::timestamp)" % (gb_function or 'month', qualified_field)
+            delta_start_week = 0
+            if gb_function == 'week':
+                iso_week_start = babel.Locale.parse(get_lang(self.env).code).first_week_day
+                delta_start_week = (7 - iso_week_start) % 7
+            qualified_field = "date_trunc('{0}', {1}::timestamp + interval '{delta} days') - interval '{delta} days'".format(
+                gb_function or 'month', qualified_field, delta=delta_start_week)
         if field_type == 'boolean':
             qualified_field = "coalesce(%s,false)" % qualified_field
         return {
