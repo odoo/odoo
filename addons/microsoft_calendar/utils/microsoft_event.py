@@ -178,7 +178,7 @@ class MicrosoftEvent(abc.Set):
             'count': range['numberOfOccurrences'],
             'day': pattern['dayOfMonth'],
             'byday': index_dict.get(pattern['index'], False),
-            'until': range['endDate'],
+            'until': range['type'] == 'endDate' and range['endDate'],
         }
 
         month_by_dict = {
