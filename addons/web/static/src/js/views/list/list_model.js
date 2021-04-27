@@ -86,7 +86,8 @@
                 let isM2MGrouped = false;
                 if (list.groupedBy.length) {
                     isM2MGrouped = list.groupedBy.some((group) => {
-                        return list.fields[group].type === "many2many";
+                        const groupByFieldName = group.split(':')[0];
+                        return list.fields[groupByFieldName].type === "many2many";
                     });
                 }
 

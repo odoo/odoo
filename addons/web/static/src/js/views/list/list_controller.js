@@ -427,7 +427,8 @@ var ListController = BasicController.extend({
         let isM2MGrouped = false;
         if (state.groupedBy.length) {
             isM2MGrouped = state.groupedBy.some((group) => {
-                return state.fields[group].type === "many2many";
+                const groupByFieldName = group.split(':')[0];
+                return state.fields[groupByFieldName].type === "many2many";
             });
         }
         if (!this.hasActionMenus || !this.selectedRecords.length) {

@@ -1292,14 +1292,14 @@ QUnit.module('Views', {
     });
 
     QUnit.only('basic grouped list rendering with groupby m2m field', async function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
         const list = await createView({
             View: ListView,
             model: 'foo',
             data: this.data,
             arch:
-                `<tree expand="1">
+                `<tree>
                     <field name="foo"/>
                     <field name="m2o"/>
                     <field name="m2m" widget="many2many_tags"/>
@@ -1309,9 +1309,20 @@ QUnit.module('Views', {
         });
 
         await testUtils.nextTick();
+        assert.strictEqual(list.$('th:contains(1 (3))').length, 1, "should contain 1 in group header");
+        assert.strictEqual(list.$('th:contains(2 (2))').length, 1, "should contain 2 in group header");
+        assert.strictEqual(list.$('th:contains(3 (1))').length, 1, "should contain 3 in group header");
+
         await testUtils.dom.click(list.$('th.o_group_name').first());
-        debugger;
-        // TODO: MSH: Add support of m2m domain in search_read like [('tag_ids', '=', '1')]
+        assert.containsN(list, 'tbody:eq(1) tr', 3, "open group should contain 3 records");
+        assert.strictEqual(list.$('tbody:eq(1) tr:first .o_field_many2manytags[name="m2m"]').text().replace(/\s/g, ''),
+            "Value1Value2", "the record 1 should be in first group");
+
+        await testUtils.dom.click(list.$('th.o_group_name:eq(1)'));
+        assert.containsN(list, 'tbody:eq(3) tr', 2, "open group should contain 2 record");
+        assert.strictEqual(list.$('tbody:eq(3) tr:first .o_field_many2manytags[name="m2m"]').text().replace(/\s/g, ''),
+            "Value1Value2", "the record 1 should be in first group");
+
         list.destroy();
     });
 
