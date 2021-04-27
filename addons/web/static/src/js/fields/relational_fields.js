@@ -2556,7 +2556,7 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
     limit: 100000,
     init: function () {
         this._super.apply(this, arguments);
-        this.m2mValues = this.record.specialData[this.name];
+        this.m2mValues = this.record.specialData[this.name] || [];
     },
 
     //--------------------------------------------------------------------------
@@ -2576,7 +2576,7 @@ var FieldMany2ManyCheckBoxes = AbstractField.extend({
      */
     _renderCheckboxes: function () {
         var self = this;
-        this.m2mValues = this.record.specialData[this.name];
+        this.m2mValues = this.record.specialData[this.name] || [];
         this.$el.html(qweb.render(this.template, {widget: this}));
         _.each(this.value.res_ids, function (id) {
             self.$('input[data-record-id="' + id + '"]').prop('checked', true);
