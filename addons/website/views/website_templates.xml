@@ -172,6 +172,9 @@
     <xpath expr="//footer[@id='bottom']" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.footer_visible else ''}" separator=" "/>
     </xpath>
+    <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
+        <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; Company name</span>
+    </xpath>
 </template>
 
 <template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
