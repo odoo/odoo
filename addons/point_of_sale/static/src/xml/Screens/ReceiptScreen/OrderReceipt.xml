@@ -152,11 +152,11 @@
             <t t-if="_receipt.is_payment_rounded">
                 <div class="pos-receipt-amount">
                   Rounding
-                    <span t-esc="env.model.formatCurrency(receipt.rounding_applied)" class="pos-receipt-right-align"/>
+                    <span t-esc="env.model.formatCurrency(_receipt.rounding_applied)" class="pos-receipt-right-align"/>
                 </div>
                 <div class="pos-receipt-amount">
                   To Pay
-                    <span t-esc="env.model.formatCurrency(receipt.total_rounded)" class="pos-receipt-right-align"/>
+                    <span t-esc="env.model.formatCurrency(_receipt.total_rounded)" class="pos-receipt-right-align"/>
               </div>
             </t>
             <br /><br />
