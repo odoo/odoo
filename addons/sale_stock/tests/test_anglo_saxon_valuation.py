@@ -1003,3 +1003,122 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         revalued_anglo_expense_amls = sale_order.picking_ids.mapped('move_lines.stock_valuation_layer_ids')[-1].stock_move_id.account_move_ids[-1].mapped('line_ids')
         revalued_cogs_aml = revalued_anglo_expense_amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
         self.assertEqual(revalued_cogs_aml.debit, 4, 'Price difference should have correctly reflected in expense account.')
+
+    def test_fifo_delivered_invoice_post_delivery_with_return(self):
+        """Receive 2@10. SO1 2@12. Return 1 from SO1. SO2 1@12. Receive 1@20.
+        Re-deliver returned from SO1. Invoice after delivering everything."""
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.invoice_policy = 'delivery'
+
+        # Receive 2@10.
+        in_move_1 = self.env['stock.move'].create({
+            'name': 'a',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 2,
+            'price_unit': 10,
+        })
+        in_move_1._action_confirm()
+        in_move_1.quantity_done = 2
+        in_move_1._action_done()
+
+        # Create, confirm and deliver a sale order for 2@12 (SO1)
+        so_1 = self._so_and_confirm_two_units()
+        so_1.picking_ids.move_lines.quantity_done = 2
+        so_1.picking_ids.button_validate()
+
+        # Return 1 from SO1
+        stock_return_picking_form = Form(
+            self.env['stock.return.picking'].with_context(
+                active_ids=so_1.picking_ids.ids, active_id=so_1.picking_ids.ids[0], active_model='stock.picking')
+        )
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.action_assign()
+        return_pick.move_lines.quantity_done = 1
+        return_pick._action_done()
+
+        # Create, confirm and deliver a sale order for 1@12 (SO2)
+        so_2 = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': 12,
+                    'tax_id': False,  # no love taxes amls
+                })],
+        })
+        so_2.action_confirm()
+        so_2.picking_ids.move_lines.quantity_done = 1
+        so_2.picking_ids.button_validate()
+
+        # Receive 1@20
+        in_move_2 = self.env['stock.move'].create({
+            'name': 'a',
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': 20,
+        })
+        in_move_2._action_confirm()
+        in_move_2.quantity_done = 1
+        in_move_2._action_done()
+
+        # Re-deliver returned 1 from SO1
+        stock_redeliver_picking_form = Form(
+            self.env['stock.return.picking'].with_context(
+                active_ids=return_pick.ids, active_id=return_pick.ids[0], active_model='stock.picking')
+        )
+        stock_redeliver_picking = stock_redeliver_picking_form.save()
+        stock_redeliver_picking.product_return_moves.quantity = 1.0
+        stock_redeliver_picking_action = stock_redeliver_picking.create_returns()
+        redeliver_pick = self.env['stock.picking'].browse(stock_redeliver_picking_action['res_id'])
+        redeliver_pick.action_assign()
+        redeliver_pick.move_lines.quantity_done = 1
+        redeliver_pick._action_done()
+
+        # Invoice the sale orders
+        invoice_1 = so_1._create_invoices()
+        invoice_1.action_post()
+        invoice_2 = so_2._create_invoices()
+        invoice_2.action_post()
+
+        # Check the resulting accounting entries
+        amls_1 = invoice_1.line_ids
+        self.assertEqual(len(amls_1), 4)
+        stock_out_aml_1 = amls_1.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+        self.assertEqual(stock_out_aml_1.debit, 0)
+        self.assertEqual(stock_out_aml_1.credit, 30)
+        cogs_aml_1 = amls_1.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(cogs_aml_1.debit, 30)
+        self.assertEqual(cogs_aml_1.credit, 0)
+        receivable_aml_1 = amls_1.filtered(lambda aml: aml.account_id == self.company_data['default_account_receivable'])
+        self.assertEqual(receivable_aml_1.debit, 24)
+        self.assertEqual(receivable_aml_1.credit, 0)
+        income_aml_1 = amls_1.filtered(lambda aml: aml.account_id == self.company_data['default_account_revenue'])
+        self.assertEqual(income_aml_1.debit, 0)
+        self.assertEqual(income_aml_1.credit, 24)
+
+        amls_2 = invoice_2.line_ids
+        self.assertEqual(len(amls_2), 4)
+        stock_out_aml_2 = amls_2.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+        self.assertEqual(stock_out_aml_2.debit, 0)
+        self.assertEqual(stock_out_aml_2.credit, 10)
+        cogs_aml_2 = amls_2.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
+        self.assertEqual(cogs_aml_2.debit, 10)
+        self.assertEqual(cogs_aml_2.credit, 0)
+        receivable_aml_2 = amls_2.filtered(lambda aml: aml.account_id == self.company_data['default_account_receivable'])
+        self.assertEqual(receivable_aml_2.debit, 12)
+        self.assertEqual(receivable_aml_2.credit, 0)
+        income_aml_2 = amls_2.filtered(lambda aml: aml.account_id == self.company_data['default_account_revenue'])
+        self.assertEqual(income_aml_2.debit, 0)
+        self.assertEqual(income_aml_2.credit, 12)
