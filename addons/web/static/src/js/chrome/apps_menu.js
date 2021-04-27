@@ -38,14 +38,17 @@ var AppsMenu = Widget.extend({
         return this._apps;
     },
     /**
-     * Open the first app in the list of apps
+     * Open the first app in the list of apps. Returns whether one was found.
+     *
+     * @returns {Boolean}
      */
     openFirstApp: function () {
         if (!this._apps.length) {
-            return
+            return false;
         }
         var firstApp = this._apps[0];
         this._openApp(firstApp);
+        return true;
     },
 
     //--------------------------------------------------------------------------
