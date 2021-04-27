@@ -509,7 +509,6 @@ var KanbanRenderer = BasicRenderer.extend({
                 draggable = false;
                 grouped_by_date = true;
             } else if (groupByFieldAttrs.type === "many2many") {
-                // TODO: MSH: should we allow resequencing of record, if yes then this fix is OK else we need to disable recordsDraggable to false
                 // do not allow dragging of record if grouped by many2many
                 draggable = false;
                 // do not allow to delete/archive records if grouped by many2many

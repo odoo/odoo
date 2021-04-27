@@ -59,6 +59,7 @@
             });
             var model = records[0].model;
             var recordResIds = _.pluck(records, 'res_id');
+            // const recordIds = _.pluck(records, 'id');
             var fieldNames = records[0].getFieldNames();
             var context = records[0].getContext();
 
@@ -75,39 +76,39 @@
                     context: context,
                 });
             }).then(function (results) {
-                results.forEach(function (data) {
-                    var record = _.findWhere(records, {res_id: data.id});
+                const updateLocalRecord = (record, data) => {
                     record.data = _.extend({}, record.data, data);
                     record._changes = {};
                     record._isDirty = false;
                     self._parseServerData(fieldNames, record, record.data);
-                });
-                // Note: if list is grouped by m2m field and user chages record then if same
-                // record is available in another group then update that record as well.
-                // TODO: MSH: We can move this whole logic above to avoid code duplication, may be create inner method to avoide code duplication
+                };
+
+                let isM2MGrouped = false;
                 if (list.groupedBy.length) {
-                    const isM2MGrouped = list.groupedBy.some((group) => {
+                    isM2MGrouped = list.groupedBy.some((group) => {
                         return list.fields[group].type === "many2many";
                     });
+                }
+
+                results.forEach(function (data) {
+                    var record = _.findWhere(records, {res_id: data.id});
+                    updateLocalRecord(record, data);
+
+                    // Note: if list is grouped by m2m field and user chages record then if same
+                    // record is available in another group then update that record as well.
                     if (isM2MGrouped) {
-                        const recordIds = _.pluck(records, 'id');
-                        results.forEach(function (data) {
-                            const sameResIdrecords = [];
-                            utils.traverse_records(listState, function (r) {
-                                if (r.res_id === data.id && !recordIds.includes(r.id)) {
-                                    sameResIdrecords.push(r);
-                                }
-                            });
-                            sameResIdrecords.forEach((rec) => {
-                                const record = self.localData[rec.id];
-                                record.data = _.extend({}, record.data, data);
-                                record._changes = {};
-                                record._isDirty = false;
-                                self._parseServerData(fieldNames, record, record.data);
-                            });
+                        const sameResIdrecords = [];
+                        utils.traverse_records(listState, function (r) {
+                            if (r.res_id === data.id && !recordIds.includes(r.id)) {
+                                sameResIdrecords.push(r);
+                            }
+                        });
+                        sameResIdrecords.forEach((rec) => {
+                            const record = self.localData[rec.id];
+                            updateLocalRecord(record, data);
                         });
                     }
-                }
+                });
             }).then(function () {
                 if (!list.groupedBy.length) {
                     return Promise.all([
