@@ -25,7 +25,7 @@ odoo.define('pos_sale.SetSaleOrderButton', function(require) {
         }
         get currentSaleOrderName() {
           return this.currentOrder && this.currentOrder.sale_order_origin_id
-              ? this.currentOrder.sale_order_origin_id.name
+              ? this.currentOrder.sale_order_origin_id.name + " - " + this.env.pos.format_currency(this.currentOrder.sale_order_origin_id.amount_total)
               : this.env._t('Quotation/Order');
         }
         async onClick() {

@@ -172,7 +172,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             let sale_order = await this.rpc({
                 model: 'sale.order',
                 method: 'read',
-                args: [[id],['order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id']],
+                args: [[id],['order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total']],
                 context: this.env.session.user_context,
               });
 
