@@ -120,12 +120,8 @@ class PaymentScreen extends PosComponent {
         }
     }
     async onValidateOrder(order) {
-        if (this._validating || !(await this._isOrderValid(order))) return;
-        try {
-            this._validating = true;
+        if (await this._isOrderValid(order)) {
             await this.env.model.actionHandler({ name: 'actionValidateOrder', args: [order, this.nextScreen] });
-        } finally {
-            this._validating = false;
         }
     }
     async _isOrderValid(order) {

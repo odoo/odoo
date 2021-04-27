@@ -372,7 +372,7 @@ class PointOfSaleModel extends EventBus {
             const searchString = unaccent(this._getProductSearchString(product));
             const categoryId = product.pos_categ_id ? product.pos_categ_id : 0;
             addProductOnCategory(categoryId, product.id, searchString);
-            for (const ancestor of this.getCategoryAncestorIds(categoryId) || []) {
+            for (const ancestor of this.getCategoryAncestorIds(categoryId)) {
                 addProductOnCategory(ancestor, product.id, searchString);
             }
         }
@@ -599,6 +599,9 @@ class PointOfSaleModel extends EventBus {
     _getNextId() {
         return uuidv4();
     }
+    /**
+     * Creates the default order and returns it.
+     */
     _createDefaultOrder() {
         const sequenceNumber = this.session.sequence_number;
         const uid = this._generateOrderUID(sequenceNumber);
@@ -644,12 +647,16 @@ class PointOfSaleModel extends EventBus {
         return ['ProductScreen', 'PaymentScreen', 'ReceiptScreen'].includes(screen);
     }
     /**
+     * Sets the given screen as activeScreen of the given order.
      * @param {'pos.order'} order
      * @param {string} screen one of the available screens
      */
     _setScreenToOrder(order, screen) {
         order._extras.activeScreen = screen;
     }
+    /**
+     * Returns true if line2merge can be merged with existingLine.
+     */
     _canBeMergedWith(existingLine, line2merge) {
         const existingLineUnit = this.getOrderlineUnit(existingLine);
         const existingLineProduct = this.getRecord('product.product', existingLine.product_id);
@@ -726,6 +733,10 @@ class PointOfSaleModel extends EventBus {
             _.some(product.attribute_line_ids, (id) => id in this.data.derived.attributes_by_ptal_id)
         );
     }
+    /**
+     * @param {{ [number]: number }} linesTaxDetails map of tax id to the tax amount
+     * @return {{ amount: number, tax: 'account.tax', name: string }}
+     */
     _getOrderTaxDetails(linesTaxDetails) {
         const details = {};
         for (const taxDetail of linesTaxDetails) {
@@ -758,19 +769,6 @@ class PointOfSaleModel extends EventBus {
             return s;
         };
         return zero_pad(this.session.id, 5) + '-' + zero_pad(odoo.login_number, 3) + '-' + zero_pad(sequenceNumber, 4);
-    }
-    /**
-     * There is no flag in the orm model stating that a unit price is manually set
-     * in an orderline. So we proxy it with this method such that if the current
-     * `price_unit` is zero, then it's unit price is _not_ manually set. This means
-     * that orderline's unit price is computed based on the price list computation.
-     * Otherwise, we use the _manually_ set `price_unit`. @see getOrderlineUnitPrice
-     *
-     * @param {'pos.order.line'} orderline
-     * @return {boolean}
-     */
-    _isManualPrice(orderline) {
-        return orderline.price_manually_set;
     }
     /**
      * @param {'pos.pack.operation.lot'[]} existingPackLots
@@ -1141,6 +1139,7 @@ class PointOfSaleModel extends EventBus {
         return false;
     }
     /**
+     * Returns the price of the given product based on the given pricelist and quantity.
      * @param {number} productId
      * @param {number} pricelistId
      * @param {number} quantity
@@ -1374,7 +1373,7 @@ class PointOfSaleModel extends EventBus {
      * sets the _extras.server_id and account_move to the corresponding order.
      * @param {'pos.order'[]} orders
      * @param {boolean} [draft=false]
-     * @return {Promise<{ pos_reference: string, id: number }[]>}
+     * @return {Promise<{ pos_reference: string, id: number, account_move: number }[]>}
      */
     async _pushOrders(orders, draft = false) {
         const orderData = orders.map((order) => {
@@ -1706,7 +1705,6 @@ class PointOfSaleModel extends EventBus {
     _getIdleDuration() {
         return 60000;
     }
-
     _manageOrderWhenOrderDone() {
         const ongoingOrders = this.getDraftOrders().filter((order) => {
             return order !== this.getActiveOrder() && order._extras.activeScreen == 'ProductScreen';
@@ -1845,8 +1843,9 @@ class PointOfSaleModel extends EventBus {
         this.data.uiState.activeCategoryId = categoryId;
     }
     /**
+     * Opens the EditListPopup to modify the pack lots of the given orderline.
      * @param {'pos.order.line'} orderline
-     * @return {{ cancelled: boolean }} result
+     * @return {{ cancelled: boolean }}
      */
     async actionSetOrderlineLots(orderline) {
         const product = this.getRecord('product.product', orderline.product_id);
@@ -1889,6 +1888,7 @@ class PointOfSaleModel extends EventBus {
      * @param {number?} [vals.qty]
      * @param {number?} [vals.price_unit]
      * @param {number?} [vals.discount]
+     * @return {'pos.order.line'?} created/updated orderline
      */
     async actionAddProduct(order, product, vals, extras) {
         if (!vals) vals = {};
@@ -1956,6 +1956,12 @@ class PointOfSaleModel extends EventBus {
         }
         this.updateRecord('pos.order.line', orderline.id, vals);
     }
+    /**
+     * Deletes the given orderline from the lines of the given order.
+     * If the orderline is the active orderline in the order, set a new active orderline.
+     * @param {'pos.order'} order
+     * @param {'pos.order.line'} orderline
+     */
     async actionDeleteOrderline(order, orderline) {
         // Do not set new active orderline if the line being deleted is not
         // the active orderline.
@@ -1973,6 +1979,7 @@ class PointOfSaleModel extends EventBus {
         }
     }
     /**
+     * This action is called if decreasing the quantity of an orderline is not allowed.
      * @alias actionDecreaseQuantityPopup
      */
     async actionShowDecreaseQuantityPopup(orderline) {
@@ -2148,14 +2155,20 @@ class PointOfSaleModel extends EventBus {
         order._extras.activePaymentId = newPayment.id;
         return newPayment;
     }
+    /**
+     * Sets the given payment as the active payment of it's order.
+     * @param {'pos.payment'} payment
+     */
     actionSelectPayment(payment) {
         const order = this.getRecord('pos.order', payment.pos_order_id);
         order._extras.activePaymentId = payment.id;
     }
+    /**
+     * Deletes the given payment. Wait to cancel the payment request if the payment
+     * is linked to a terminal.
+     */
     async actionDeletePayment(payment) {
         const order = this.getRecord('pos.order', payment.pos_order_id);
-        // If a paymentline with a payment terminal linked to is removed,
-        // the terminal should get a cancel request.
         if (['waiting', 'waitingCard', 'timeout'].includes(payment.payment_status)) {
             const paymentTerminal = this.getPaymentTerminal(payment.payment_method_id);
             try {
@@ -2183,7 +2196,6 @@ class PointOfSaleModel extends EventBus {
      */
     async actionOrderDone(order, nextScreen) {
         this._manageOrderWhenOrderDone();
-
         this._tryDeleteOrder(order);
         await this.actionShowScreen(nextScreen);
     }
@@ -2220,6 +2232,10 @@ class PointOfSaleModel extends EventBus {
     actionToggleToShip(order) {
         this.updateRecord('pos.order', order.id, { to_ship: !order.to_ship });
     }
+    /**
+     * Opens a number popup to ask for the tip amount and adds the tip line accordingly.
+     * @see _setTip.
+     */
     async actionAddTip(order) {
         const existingTipAmount = this._getExistingTipAmount(order);
         const hasTip = this.floatCompare(existingTipAmount, 0) !== 0;
@@ -2233,6 +2249,13 @@ class PointOfSaleModel extends EventBus {
             await this._setTip(order, amount);
         }
     }
+    /**
+     * Responsible for delegating the send_payment_request to the correct payment terminal
+     * of the given payment.
+     * @param {'pos.order'} order
+     * @param {'pos.payment'} payment
+     * @param {any[]} otherArgs optional args that is passed to send_payment_request
+     */
     async actionSendPaymentRequest(order, payment, ...otherArgs) {
         for (const _payment of this.getPayments(order)) {
             if (_payment !== payment) {
@@ -2250,6 +2273,13 @@ class PointOfSaleModel extends EventBus {
             await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'retry'] });
         }
     }
+    /**
+     * Responsible for delegating the send_payment_cancel to the correct payment terminal
+     * of the given payment.
+     * @param {'pos.order'} order
+     * @param {'pos.payment'} payment
+     * @param {any[]} otherArgs optional args that is passed to send_payment_cancel
+     */
     async actionSendPaymentCancel(order, payment, ...otherArgs) {
         const paymentTerminal = this.getPaymentTerminal(payment.payment_method_id);
         const prevPaymentStatus = payment.payment_status;
@@ -2261,6 +2291,13 @@ class PointOfSaleModel extends EventBus {
             await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, prevPaymentStatus] });
         }
     }
+    /**
+     * Responsible for delegating the send_payment_reversal to the correct payment terminal
+     * of the given payment.
+     * @param {'pos.order'} order
+     * @param {'pos.payment'} payment
+     * @param {any[]} otherArgs optional args that is passed to send_payment_reversal
+     */
     async actionSendPaymentReverse(order, payment, ...otherArgs) {
         const paymentTerminal = this.getPaymentTerminal(payment.payment_method_id);
         await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'reversing'] });
@@ -2279,6 +2316,13 @@ class PointOfSaleModel extends EventBus {
         payment.ticket += value;
     }
     /**
+     * When an order has enough payment, it can be validated. Validating an order is done in
+     * several steps:
+     * - remove payments that are not done (or not counted)
+     * - opens the cashbox if there is a cash payment
+     * - saves the order to the server
+     * - invoices the order is necessary
+     * - then show the next screen
      * @param {'pos.order'} order
      * @param {string} nextScreen
      */
@@ -2318,6 +2362,10 @@ class PointOfSaleModel extends EventBus {
     async actionPrevPage() {
         await this.orderFetcher.prevPage();
     }
+    /**
+     * Action to return to the backend. Before closing pos, unsynced paid orders are
+     * tried again to sync.
+     */
     async actionClosePos() {
         const ordersToSync = this.getOrdersToSync();
         if (!ordersToSync.length) {
@@ -2460,6 +2508,10 @@ class PointOfSaleModel extends EventBus {
             }
         }
     }
+    /**
+     * If no product data is loaded, install the onboarding data is she likes,
+     * otherwise, do nothing.
+     */
     async actionLoadDemoData() {
         const confirmed = await this.ui.askUser('ConfirmPopup', {
             title: _t('You do not have any products'),
@@ -2536,10 +2588,27 @@ class PointOfSaleModel extends EventBus {
     getActiveOrder() {
         return this.getRecord('pos.order', this.data.uiState.activeOrderId);
     }
+    /**
+     * Returns the translated name of the order.
+     * @param {'pos.order'} order
+     * @return {string}
+     */
     getOrderName(order) {
         if (order.pos_reference) return order.pos_reference;
         return _.str.sprintf(_t('Order %s'), order._extras.uid);
     }
+    /**
+     * Calculates all the total amounts of the given order.
+     * @param {'pos.order'} order
+     * @return {{
+     *  noTaxNoDiscount: number,
+     *  noTaxWithDiscount: number,
+     *  withTaxWithDiscount: number,
+     *  withTaxNoDiscount: number,
+     *  totalTax: number,
+     *  orderTaxDetails: { amount: number, tax: 'account.tax', name: string }
+     * }}
+     */
     getOrderTotals(order) {
         const orderlines = this.getOrderlines(order);
         let noTaxNoDiscount = 0,
@@ -2595,42 +2664,72 @@ class PointOfSaleModel extends EventBus {
         return sign * rounding_applied;
     }
     /**
+     * Returns the required amount to be paid of the given order.
      * @param {'pos.order'} order
-     * @return {boolean}
+     * @return {number}
      */
-    getShouldBeRounded(order) {
-        const scheme = this.data.derived.roundingScheme;
-        const hasCashPayments = this._hasCashPayments(order);
-        return scheme === 'ONLY_CASH_ROUNDING' ? hasCashPayments : scheme === 'WITH_ROUNDING';
-    }
     getTotalAmountToPay(order) {
         return this.getOrderTotals(order).withTaxWithDiscount;
     }
+    /**
+     * Returns the total amount of the payments of the given order.
+     * @param {'pos.order'} order
+     * @return {number}
+     */
     getPaymentsTotalAmount(order) {
         const donePayments = this.getPayments(order).filter((payment) =>
             payment.payment_status ? payment.payment_status === 'done' : true
         );
         return sum(donePayments, (payment) => payment.amount);
     }
+    /**
+     * Returns the change of the given order. Basically, it's the total amount of payments
+     * minus the total amount of the order.
+     * Note that this converts the change as long as the scheme is _not_ NO_ROUNDING, even if
+     * there are no cash payments in the order because change is always cash.
+     * @param {'pos.order'} order
+     * @return {number}
+     */
     getOrderChange(order) {
         const change = this.getPaymentsTotalAmount(order) - this.getTotalAmountToPay(order);
         if (this.floatCompare(change, 0) > 0) {
-            // Convert the change as long as the scheme is NO_ROUNDING, even if there are no
-            // cash payments in the order because change is always cash.
             return change + (this.data.derived.roundingScheme !== 'NO_ROUNDING' ? this.getRounding(change) : 0);
         }
         return 0;
     }
+    /**
+     * Returns the remaining amount to pay. It rounds the result based on the existing payments
+     * and rounding scheme.
+     */
     getOrderDue(order) {
+        /**
+         * Function to determine whether the due should be rounded or not.
+         */
+        const getShouldBeRounded = (order) => {
+            const scheme = this.data.derived.roundingScheme;
+            const hasCashPayments = this._hasCashPayments(order);
+            return scheme === 'ONLY_CASH_ROUNDING' ? hasCashPayments : scheme === 'WITH_ROUNDING';
+        };
         const due = this.getTotalAmountToPay(order) - this.getPaymentsTotalAmount(order);
         if (this.floatCompare(due, 0) > 0) {
-            return due + (this.getShouldBeRounded(order) ? this.getRounding(due) : 0);
+            return due + (getShouldBeRounded(order) ? this.getRounding(due) : 0);
         }
         return 0;
     }
+    /**
+     * Returns the ancestor ids of the given category.
+     * @param {number} categoryId
+     * @return {number[]}
+     */
     getCategoryAncestorIds(categoryId) {
         return this.data.derived.categoryAncestors[categoryId] || [];
     }
+    /**
+     * Returns the partners which are compatible to the given query string. It however only returns
+     * max of `searchLimit` items.
+     * @param {string | undefined | null } queryString
+     * @return {'res.partner'[]}
+     */
     getPartners(queryString) {
         const partnerIds = [];
         if (!queryString) return this.getRecords('res.partner').slice(0, this.searchLimit);
@@ -2647,8 +2746,11 @@ class PointOfSaleModel extends EventBus {
         return partnerIds.map((id) => this.getRecord('res.partner', id));
     }
     /**
+     * Returns the products of the given pos category which satisfies the given search string.
+     * Number of items returned is limited to `searchLimit`.
      * @param {string} categoryId
      * @param {string} searchTerm
+     * @return {'product.product'[]}
      */
     getProducts(categoryId, searchTerm) {
         if (!searchTerm) {
@@ -2725,22 +2827,36 @@ class PointOfSaleModel extends EventBus {
     getDecimalPrecision(name) {
         return this.data.derived.decimalPrecisionByName[name];
     }
+    /**
+     * Returns the pricelist of the given order.
+     * @param {string | number} orderId
+     * @return {'product.pricelist'}
+     */
     getOrderPricelist(orderId) {
         const order = this.getRecord('pos.order', orderId);
         return this.getRecord('product.pricelist', order.pricelist_id);
     }
     /**
+     * Returns the product that has the given barcode.
      * @param {string} barcode
+     * @return {'product.product'}
      */
     getProductByBarcode(barcode) {
         return this.data.derived.productByBarcode[barcode];
     }
     /**
+     * Returns the partner that has the given barcode.
      * @param {string} barcode
+     * @return {'res.partner'}
      */
     getPartnerByBarcode(barcode) {
         return this.data.derived.partnerByBarcode[barcode];
     }
+    /**
+     * Returns the unit of the given product.
+     * @param {number} productId
+     * @return {'uom.uom'}
+     */
     getProductUnit(productId) {
         const product = this.getRecord('product.product', productId);
         if (!productId || !product) return false;
@@ -2807,20 +2923,36 @@ class PointOfSaleModel extends EventBus {
         return [prices.total_excluded, prices.total_included];
     }
     /**
-     * Simply returns the unit price of the given orderline.
+     * Returns the unit price of the given orderline.
      * @param {'pos.order.line'} orderline
      * @return {number}
      */
     getOrderlineUnitPrice(orderline) {
         let unitPrice = orderline._extras.price_extra || 0.0;
         const order = this.getRecord('pos.order', orderline.order_id);
-        if (this._isManualPrice(orderline)) {
+        if (orderline.price_manually_set) {
             unitPrice += orderline.price_unit;
         } else {
             unitPrice += this.getProductPrice(orderline.product_id, order.pricelist_id, orderline.qty);
         }
         return unitPrice;
     }
+    /**
+     * Returns all the prices for the given orderline.
+     * @param {'pos.order.line'} orderline
+     * @return {{
+     *  priceWithTax: number,
+     *  priceWithoutTax: number,
+     *  noDiscountPriceWithTax: number,
+     *  noDiscountPriceWithoutTax: number,
+     *  priceSumTaxVoid: number,
+     *  tax: number,
+     *  taxDetails: Record<number, number>,
+     *  unitPrice: number,
+     *  noTaxUnitPrice: number,
+     *  withTaxUnitPrice: number,
+     * }}
+     */
     getOrderlinePrices(orderline) {
         const unitPrice = this.getOrderlineUnitPrice(orderline);
         const discountedUnitPrice = unitPrice * (1.0 - orderline.discount / 100.0);
