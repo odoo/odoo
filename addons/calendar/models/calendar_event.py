@@ -374,11 +374,12 @@ class Meeting(models.Model):
         events = super().create(other_vals)
 
         for vals in recurring_vals:
-
-            recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
             vals['follow_recurrence'] = True
-            event = super().create(vals)
-            events |= event
+        recurring_events = super().create(recurring_vals)
+        events += recurring_events
+
+        for event, vals in zip(recurring_events, recurring_vals):
+            recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
             if vals.get('recurrency'):
                 detached_events = event._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
@@ -387,8 +388,8 @@ class Meeting(models.Model):
             self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
         )
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys()})
-
-        events._setup_alarms()
+        if not self.env.context.get('dont_notify'):
+            events._setup_alarms()
 
         return events
 
@@ -473,8 +474,8 @@ class Meeting(models.Model):
 
         (detached_events & self).active = False
         (detached_events - self).with_context(archive_on_error=True).unlink()
-
-        self._setup_alarms()
+        if not self.env.context.get('dont_notify'):
+            self._setup_alarms()
 
         current_attendees = self.filtered('active').attendee_ids
         if 'partner_ids' in values:
@@ -641,7 +642,9 @@ class Meeting(models.Model):
                     # Don't trigger for past alarms, they would be skipped by design
                     cron._trigger(at=at)
             if any(alarm.alarm_type == 'notification' for alarm in event.alarm_ids):
-                alarm_manager._notify_next_alarm(event.partner_ids.ids)
+                # filter events before notifying attendees through calendar_alarm_manager
+                need_notifs = event.filtered(lambda ev: ev.alarm_ids and ev.stop >= fields.Datetime.now())
+                alarm_manager._notify_next_alarm(need_notifs.partner_ids.ids)
 
     # ------------------------------------------------------------
     # RECURRENCY

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 
@@ -137,12 +138,16 @@ class RecurrenceRule(models.Model):
             vals['calendar_event_ids'] = [(4, base_event.id)]
             # event_tz is written on event in Google but on recurrence in Odoo
             vals['event_tz'] = gevent.start.get('timeZone')
-        recurrence = super()._create_from_google(gevents, vals_list)
-        recurrence._apply_recurrence()
+        recurrence = super(RecurrenceRule, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
+        recurrence.with_context(dont_notify=True)._apply_recurrence()
         return recurrence
 
     def _get_sync_domain(self):
-        return [('calendar_event_ids.user_id', '=', self.env.user.id)]
+        # Empty rrule may exists in historical data. It is not a desired behavior but it could have been created with
+        # older versions of the module. When synced, these recurrency may come back from Google after database cleaning
+        # and trigger errors as the records are not properly populated.
+        # We also prevent sync of other user recurrent events.
+        return [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
 
     @api.model
     def _odoo_values(self, google_recurrence, default_reminders=()):
