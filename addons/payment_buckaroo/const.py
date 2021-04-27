@@ -7,4 +7,6 @@ STATUS_CODES_MAPPING = {
     'pending': (790, 791, 792, 793),
     'done': (190,),
     'cancel': (890, 891),
+    'refused': (690,),
+    'error': (490, 491, 492,),
 }
