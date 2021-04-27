@@ -125,11 +125,18 @@ class Attendee(models.Model):
                                 'mimetype': 'text/calendar',
                                 'datas': base64.b64encode(ics_file)})
                     ]
-                body = invitation_template.with_context(rendering_context)._render_field(
-                    'body_html',
-                    attendee.ids,
-                    compute_lang=True,
-                    post_process=True)[attendee.id]
+                try:
+                    body = invitation_template.with_context(rendering_context)._render_field(
+                        'body_html',
+                        attendee.ids,
+                        compute_lang=True,
+                        post_process=True)[attendee.id]
+                except UserError:   #TO BE REMOVED IN MASTER
+                    body = invitation_template.sudo().with_context(rendering_context)._render_field(
+                        'body_html',
+                        attendee.ids,
+                        compute_lang=True,
+                        post_process=True)[attendee.id]
                 subject = invitation_template._render_field(
                     'subject',
                     attendee.ids,
