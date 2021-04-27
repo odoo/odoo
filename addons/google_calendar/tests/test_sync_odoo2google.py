@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, date
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.google_calendar.models.res_users import User
-from odoo.addons.google_calendar.models.google_sync import GoogleSync
-from odoo.modules.registry import Registry
-from odoo.addons.google_account.models.google_service import TIMEOUT
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
 
 

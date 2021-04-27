@@ -681,3 +681,68 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
         self.assertFalse(event.exists(), "The old event should not exits anymore")
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_new_google_notifications(self):
+        """ Event from Google should not create notifications and trigger. It ruins the perfs on large databases """
+        cron_id = self.env.ref('calendar.ir_cron_scheduler_alarm').id
+        triggers_before = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        start = datetime.today() + relativedelta(months=1, day=1, hours=1)
+        end = datetime.today() + relativedelta(months=1, day=1, hours=2)
+        updated = datetime.today() + relativedelta(minutes=1)
+        values = {
+            'id': google_id,
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': 'admin@yourcompany.example.com',
+                'responseStatus': 'needsAction'
+            }, ],
+            'reminders': {'overrides': [{"method": "email", "minutes": 10}], 'useDefault': False},
+            'start': {
+                'dateTime': pytz.utc.localize(start).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': pytz.utc.localize(end).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        triggers_after = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
+        new_triggers = triggers_after - triggers_before
+        self.assertFalse(new_triggers, "The event should not be created with triggers.")
+
+        # Event was created from Google and now it will be Updated from Google.
+        # No further notifications should be created.
+        values = {
+            'id': google_id,
+            'updated': pytz.utc.localize(updated).isoformat(),
+            'description': 'New Super description',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing was not good, now it is correct',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': 'admin@yourcompany.example.com',
+                'responseStatus': 'needsAction'
+            }, ],
+            'reminders': {'overrides': [{"method": "email", "minutes": 10}], 'useDefault': False},
+            'start': {
+                'dateTime': pytz.utc.localize(start).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': pytz.utc.localize(end).isoformat(),
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        triggers_after = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
+        new_triggers = triggers_after - triggers_before
+        self.assertFalse(new_triggers, "The event should not be created with triggers.")
+        self.assertGoogleAPINotCalled()
