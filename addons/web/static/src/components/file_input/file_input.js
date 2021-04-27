@@ -41,7 +41,7 @@ export class FileInput extends Component {
    * - id: the id of the model target instance
    * @private
    */
-  async _onFileInputChange() {
+  async onFileInputChange() {
     const { action, model, id } = this.props;
     const params = {
       csrf_token: odoo.csrf_token,
@@ -65,7 +65,7 @@ export class FileInput extends Component {
    * Redirect clicks from the trigger element to the input.
    * @private
    */
-  _onTriggerClicked() {
+  onTriggerClicked() {
     this.fileInputRef.el.click();
   }
 }

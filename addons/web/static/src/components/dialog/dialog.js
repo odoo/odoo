@@ -15,7 +15,7 @@ export class Dialog extends Component {
       "escape",
       () => {
         if (!this.modalRef.el.classList.contains("o_inactive_modal")) {
-          this._close();
+          this.close();
         }
       },
       { altIsOptional: true }
@@ -51,7 +51,7 @@ export class Dialog extends Component {
    * Send an event signaling that the dialog should be closed.
    * @private
    */
-  _close() {
+  close() {
     this.trigger("dialog-closed");
   }
 }

@@ -36,25 +36,25 @@ export class DialogContainer extends Component {
   }
 
   onDialogClosed(id) {
-    this._doCloseDialog(id);
+    this.doCloseDialog(id);
   }
 
-  _doCloseDialog(id) {
+  doCloseDialog(id) {
     if (this.dialogs[id].options && this.dialogs[id].options.onCloseCallback) {
       this.dialogs[id].options.onCloseCallback();
     }
     delete this.dialogs[id];
   }
 
-  _errorCallBack(id) {
-    return () => this._doCloseDialog(id);
+  errorCallBack(id) {
+    return () => this.doCloseDialog(id);
   }
 }
 DialogContainer.components = { ErrorHandler };
 DialogContainer.template = tags.xml`
     <div class="o_dialog_manager">
       <t t-foreach="Object.values(dialogs)" t-as="dialog" t-key="dialog.id">
-        <ErrorHandler dialog="dialog" t-on-dialog-closed="onDialogClosed(dialog.id)" callback="_errorCallBack(dialog.id)" />
+        <ErrorHandler dialog="dialog" t-on-dialog-closed="onDialogClosed(dialog.id)" callback="errorCallBack(dialog.id)" />
       </t>
     </div>
     `;

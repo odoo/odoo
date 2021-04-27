@@ -17,8 +17,8 @@ export class Popover extends Component {
     this._onMouseEnter = this.onMouseEnter.bind(this);
     this._onMouseLeave = this.onMouseLeave.bind(this);
     this._onDocumentClick = this.onClickAway.bind(this);
-    this._onWindowScroll = throttle(this._compute.bind(this), 50);
-    this._onWindowResize = debounce(this._compute.bind(this), 250);
+    this._onWindowScroll = throttle(this.compute.bind(this), 50);
+    this._onWindowResize = debounce(this.compute.bind(this), 250);
 
     this._targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
     this._isTargetObserved = false;
@@ -27,16 +27,16 @@ export class Popover extends Component {
   }
 
   mounted() {
-    this._compute();
-    this._addTargetListeners();
+    this.compute();
+    this.addTargetListeners();
   }
   patched() {
-    this._compute();
+    this.compute();
   }
   willUnmount() {
-    this._disconnectTargetObserver();
-    this._removeTargetListeners();
-    this._removeExternalListeners();
+    this.disconnectTargetObserver();
+    this.removeTargetListeners();
+    this.removeExternalListeners();
   }
 
   //----------------------------------------------------------------------------
@@ -63,7 +63,7 @@ export class Popover extends Component {
   /**
    * @private
    */
-  _addExternalListeners() {
+  addExternalListeners() {
     if (!this._hasExternalListeners) {
       document.addEventListener("click", this._onDocumentClick);
       document.addEventListener("scroll", this._onWindowScroll);
@@ -74,7 +74,7 @@ export class Popover extends Component {
   /**
    * @private
    */
-  _addTargetListeners() {
+  addTargetListeners() {
     const target = this.target;
     if (target) {
       target.addEventListener("click", this._onClick);
@@ -92,19 +92,19 @@ export class Popover extends Component {
    *
    * @private
    */
-  _compute() {
+  compute() {
     const target = this.target;
     if (!target) {
       return;
     }
 
     if (!this.isDisplayed) {
-      this._removeExternalListeners();
-      this._disconnectTargetObserver();
+      this.removeExternalListeners();
+      this.disconnectTargetObserver();
       return;
     }
-    this._connectTargetObserver();
-    this._addExternalListeners();
+    this.connectTargetObserver();
+    this.addExternalListeners();
 
     const positioningData = this.constructor.computePositioningData(this.popoverRef.el, target);
 
@@ -147,7 +147,7 @@ export class Popover extends Component {
   /**
    * @private
    */
-  _connectTargetObserver() {
+  connectTargetObserver() {
     if (!this._isTargetObserved) {
       this._isTargetObserved = true;
       this._targetObserver.observe(this.target.parentElement, { childList: true });
@@ -156,7 +156,7 @@ export class Popover extends Component {
   /**
    * @private
    */
-  _disconnectTargetObserver() {
+  disconnectTargetObserver() {
     if (this._isTargetObserved) {
       this._isTargetObserved = false;
       this._targetObserver.disconnect();
@@ -165,7 +165,7 @@ export class Popover extends Component {
   /**
    * @private
    */
-  _removeExternalListeners() {
+  removeExternalListeners() {
     if (this._hasExternalListeners) {
       document.removeEventListener("click", this._onDocumentClick);
       document.removeEventListener("scroll", this._onWindowScroll);
@@ -176,7 +176,7 @@ export class Popover extends Component {
   /**
    * @private
    */
-  _removeTargetListeners() {
+  removeTargetListeners() {
     const target = this.target;
     if (target) {
       target.removeEventListener("click", this._onClick);
@@ -193,7 +193,7 @@ export class Popover extends Component {
    * Popover must recompute its position when children content changes.
    */
   onCompute() {
-    this._compute();
+    this.compute();
   }
   /**
    * Toggles the popover depending on its current state.
@@ -249,13 +249,13 @@ export class Popover extends Component {
   onTargetMutate() {
     const target = this.target;
     if (!target) {
-      this._disconnectTargetObserver();
+      this.disconnectTargetObserver();
       this.trigger("popover-closed");
     } else {
       for (const mutation of mutations) {
         for (const node of mutation.removedNodes) {
           if (node === target) {
-            this._disconnectTargetObserver();
+            this.disconnectTargetObserver();
             this.trigger("popover-closed");
             break;
           }

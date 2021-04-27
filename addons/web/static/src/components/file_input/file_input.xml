@@ -3,7 +3,7 @@
 
     <t t-name="web.FileInput" owl="1">
         <span class="o_file_input" aria-atomic="true">
-            <span class="o_file_input_trigger" t-on-click.prevent="_onTriggerClicked">
+            <span class="o_file_input_trigger" t-on-click.prevent="onTriggerClicked">
                 <t t-slot="default">
                     <button class="btn btn-primary">Choose File</button>
                 </t>
@@ -11,7 +11,7 @@
             <input type="file" name="ufile" class="o_input_file d-none"
                 t-att="{multiple: props.multi_upload, accept: props.accepted_file_extensions}"
                 t-ref="file-input"
-                t-on-change="_onFileInputChange"
+                t-on-change="onFileInputChange"
             />
         </span>
     </t>

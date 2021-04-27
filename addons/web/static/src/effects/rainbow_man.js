@@ -24,7 +24,7 @@ export class RainbowMan extends Component {
    * @param {string} [options.img_url] URL of the image to be displayed
    */
   setup() {
-    hooks.useExternalListener(document.body, "click", this._closeRainbowMan);
+    hooks.useExternalListener(document.body, "click", this.closeRainbowMan);
     const fadeout = "fadeout" in this.props ? this.props.fadeout : "medium";
     const delay = fadeout ? RainbowMan.rainbowFadeouts[fadeout] : false;
     this.delay = typeof delay === "number" ? delay : false;
@@ -39,14 +39,14 @@ export class RainbowMan extends Component {
     });
   }
 
-  _onAnimationEnd(ev) {
+  onAnimationEnd(ev) {
     if (this.delay !== false && ev.animationName === "reward-fading-reverse") {
       ev.stopPropagation();
-      this._closeRainbowMan();
+      this.closeRainbowMan();
     }
   }
 
-  _closeRainbowMan() {
+  closeRainbowMan() {
     this.trigger("close-rainbowman");
   }
 }

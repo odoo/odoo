@@ -23,7 +23,7 @@ export class Dropdown extends Component {
     }
     useBus(this.ui.bus, "active-element-changed", (activeElement) => {
       if (activeElement !== this.myActiveEl) {
-        this._close();
+        this.close();
       }
     });
 
@@ -54,7 +54,7 @@ export class Dropdown extends Component {
   // Private
   // ---------------------------------------------------------------------------
 
-  async _changeStateAndNotify(stateSlice) {
+  async changeStateAndNotify(stateSlice) {
     if ((stateSlice.open || stateSlice.groupIsOpen) && this.props.beforeOpen) {
       await this.props.beforeOpen();
     }
@@ -70,7 +70,7 @@ export class Dropdown extends Component {
   /**
    * @param {"PREV"|"NEXT"|"FIRST"|"LAST"} direction
    */
-  _setActiveItem(direction) {
+  setActiveItem(direction) {
     const items = [...this.el.querySelectorAll(":scope > ul.o_dropdown_menu > .o_dropdown_item")];
     const prevActiveIndex = items.findIndex((item) =>
       [...item.classList].includes("o_dropdown_active")
@@ -98,11 +98,11 @@ export class Dropdown extends Component {
     }
 
     const subs = {
-      "arrowup": () => this._setActiveItem("PREV"),
-      "arrowdown": () => this._setActiveItem("NEXT"),
-      "shift+arrowup": () => this._setActiveItem("FIRST"),
-      "shift+arrowdown": () => this._setActiveItem("LAST"),
-      "enter": () => {
+      arrowup: () => this.setActiveItem("PREV"),
+      arrowdown: () => this.setActiveItem("NEXT"),
+      "shift+arrowup": () => this.setActiveItem("FIRST"),
+      "shift+arrowdown": () => this.setActiveItem("LAST"),
+      enter: () => {
         const activeItem = this.el.querySelector(
           ":scope > ul.o_dropdown_menu > .o_dropdown_item.o_dropdown_active"
         );
@@ -110,7 +110,7 @@ export class Dropdown extends Component {
           activeItem.click();
         }
       },
-      "escape": this._close.bind(this),
+      escape: this.close.bind(this),
     };
 
     this.hotkeyTokens = [];
@@ -129,17 +129,17 @@ export class Dropdown extends Component {
     this.hotkeyTokens = [];
   }
 
-  _close() {
-    return this._changeStateAndNotify({ open: false, groupIsOpen: false });
+  close() {
+    return this.changeStateAndNotify({ open: false, groupIsOpen: false });
   }
 
-  _open() {
-    return this._changeStateAndNotify({ open: true, groupIsOpen: true });
+  open() {
+    return this.changeStateAndNotify({ open: true, groupIsOpen: true });
   }
 
-  _toggle() {
+  toggle() {
     const toggled = !this.state.open;
-    return this._changeStateAndNotify({
+    return this.changeStateAndNotify({
       open: toggled,
       groupIsOpen: toggled,
     });
@@ -157,7 +157,7 @@ export class Dropdown extends Component {
       dropdownClosingRequest.isFresh &&
       dropdownClosingRequest.mode === ParentClosingMode.ClosestParent;
     if (!this.props.manualOnly && (closeAll || closeSelf)) {
-      this._close();
+      this.close();
     }
     // Mark closing request as started
     ev.detail.dropdownClosingRequest.isFresh = false;
@@ -189,18 +189,18 @@ export class Dropdown extends Component {
     } else {
       // Another dropdown is now open ? Close myself and notify the world (i.e. siblings).
       if (this.state.open && args.newState.open) {
-        this._close();
+        this.close();
       }
     }
   }
 
   onTogglerClick() {
-    this._toggle();
+    this.toggle();
   }
 
   onTogglerMouseEnter() {
     if (this.state.groupIsOpen && !this.state.open) {
-      this._open();
+      this.open();
     }
   }
 
@@ -221,7 +221,7 @@ export class Dropdown extends Component {
     } while (element && element.parentElement && !gotClickedInside);
 
     if (!gotClickedInside) {
-      this._close();
+      this.close();
     }
   }
 }

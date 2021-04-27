@@ -15,14 +15,14 @@
                                 <h4 class="modal-title">
                                     <t t-esc="props.title"/>
                                 </h4>
-                                <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="_close">×</button>
+                                <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="close">×</button>
                             </header>
                             <main class="modal-body">
                                 <t t-slot="default"/>
                             </main>
                             <footer t-if="props.renderFooter" class="modal-footer">
                                 <t t-slot="buttons">
-                                    <button class="btn btn-primary" t-on-click="_close">
+                                    <button class="btn btn-primary" t-on-click="close">
                                         <t>Ok</t>
                                     </button>
                                 </t>
