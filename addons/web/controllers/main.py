@@ -1445,12 +1445,12 @@ class Binary(http.Controller):
         return self._content_image(xmlid=xmlid, model=model, id=id, field=field,
             filename_field=filename_field, unique=unique, filename=filename, mimetype=mimetype,
             download=download, width=width, height=height, crop=crop,
-            quality=int(kwargs.get('quality', 0)), access_token=access_token)
+            quality=int(kwargs.get('quality', 0)), grayscale=kwargs.get('grayscale', 0), access_token=access_token)
 
     def _content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename_field='name', unique=None, filename=None, mimetype=None,
-                       download=None, width=0, height=0, crop=False, quality=0, access_token=None,
-                       **kwargs):
+                       download=None, width=0, height=0, crop=False, quality=0, grayscale=0,
+                       access_token=None, **kwargs):
         status, headers, image_base64 = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
@@ -1458,13 +1458,13 @@ class Binary(http.Controller):
 
         return Binary._content_image_get_response(
             status, headers, image_base64, model=model, id=id, field=field, download=download,
-            width=width, height=height, crop=crop, quality=quality)
+            width=width, height=height, crop=crop, quality=quality, grayscale=grayscale)
 
     @staticmethod
     def _content_image_get_response(
             status, headers, image_base64, model='ir.attachment', id=None,
             field='datas', download=None, width=0, height=0, crop=False,
-            quality=0):
+            quality=0, grayscale=False):
         if status in [301, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
@@ -1478,8 +1478,13 @@ class Binary(http.Controller):
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
+        check_record_active = True
+        if grayscale and model in request.env:
+            record = request.env[model].with_context(active_test=False).search([('id', '=', id)])
+            check_record_active = record.active
+
         try:
-            image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+            image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality), grayscale=(not check_record_active))
         except Exception:
             return request.not_found()
 

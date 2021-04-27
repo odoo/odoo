@@ -14,7 +14,7 @@
             t-on-click="_onClick"
             t-att-data-partner-local-id="partner ? partner.localId : undefined"
         >
-            <t t-if="partner" name="rootCondition">
+            <t t-if="partner and partner.active" name="rootCondition">
                 <t t-if="props.hasBackground">
                     <i class="o_PartnerImStatusIcon_outerBackground fa fa-circle fa-stack-1x"/>
                     <i class="o_PartnerImStatusIcon_innerBackground fa fa-circle fa-stack-1x"/>

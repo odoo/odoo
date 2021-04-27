@@ -4,7 +4,7 @@ import base64
 import binascii
 import io
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageChops, ImageEnhance
 # We can preload Ico too because it is considered safe
 from PIL import IcoImagePlugin
 
@@ -261,17 +261,28 @@ class ImageProcess():
             self.operationsCount += 1
         return self
 
+    def grayscale(self):
+        if self.image:
+            self.image = ImageOps.grayscale(self.image)
+            image = ImageChops.constant(self.image, 150)
+            self.image.paste(image, mask=image)
+            self.image = ImageEnhance.Brightness(self.image).enhance(1.30)
+            self.operationsCount += 1
+        return self
 
-def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0, crop=None, colorize=False, output_format=''):
+
+def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0, crop=None, colorize=False, output_format='', grayscale=False):
     """Process the `base64_source` image by executing the given operations and
     return the result as a base64 encoded image.
     """
-    if not base64_source or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format):
+    if not base64_source or ((not size or (not size[0] and not size[1])) and not verify_resolution and not quality and not crop and not colorize and not output_format and not grayscale):
         # for performance: don't do anything if the image is falsy or if
         # no operations have been requested
         return base64_source
 
     image = ImageProcess(base64_source, verify_resolution)
+    if grayscale:
+        image.grayscale()
     if size:
         if crop:
             center_x = 0.5

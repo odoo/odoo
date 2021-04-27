@@ -1049,7 +1049,7 @@ const Many2OneAvatar = FieldMany2One.extend({
      */
     _render() {
         const m2oAvatar = qweb.render(this._template, {
-            url: `/web/image/${this.field.relation}/${this.value.res_id}/avatar_128`,
+            url: `/web/image/${this.field.relation}/${this.value.res_id}/avatar_128?grayscale=1`,
             value: this.m2o_value,
             widget: this,
         });

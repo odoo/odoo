@@ -373,7 +373,7 @@ function factory(dependencies) {
             if (this === this.env.messaging.partnerRoot) {
                 return '/mail/static/src/img/odoobot.png';
             }
-            return `/web/image/res.partner/${this.id}/avatar_128`;
+            return `/web/image/res.partner/${this.id}/avatar_128?grayscale=1`;
         }
 
         /**
@@ -444,9 +444,7 @@ function factory(dependencies) {
     }
 
     Partner.fields = {
-        active: attr({
-            default: true,
-        }),
+        active: attr(),
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
             dependencies: [

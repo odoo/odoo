@@ -132,6 +132,12 @@ class TestImage(TransactionCase):
         image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, quality=95))
         self.assertEqual(image.size, (1920, 1080), "OK return the image")
 
+        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, grayscale=True))
+        self.assertEqual(image.mode, 'L', "archived user avatar contains gray color")
+
+        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, grayscale=False))
+        self.assertEqual(image.mode, 'RGB', "unarchived user avatar contains RGB color")
+
         # test that nothing happens if no operation has been requested
         # (otherwise those would raise because of wrong base64)
         self.assertEqual(tools.image_process(wrong_base64), wrong_base64)

@@ -46,6 +46,7 @@ QUnit.test('on leave & online', async function (assert) {
         id: 7,
         name: "Demo User",
         im_status: 'leave_online',
+        active: true,
     });
     await this.createPartnerImStatusIcon(partner);
     assert.hasClass(
@@ -68,6 +69,7 @@ QUnit.test('on leave & away', async function (assert) {
         id: 7,
         name: "Demo User",
         im_status: 'leave_away',
+        active: true,
     });
     await this.createPartnerImStatusIcon(partner);
     assert.hasClass(
@@ -90,6 +92,7 @@ QUnit.test('on leave & offline', async function (assert) {
         id: 7,
         name: "Demo User",
         im_status: 'leave_offline',
+        active: true,
     });
     await this.createPartnerImStatusIcon(partner);
     assert.hasClass(
