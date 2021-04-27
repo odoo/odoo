@@ -1,0 +1,26 @@
+
+.s_mega_menu_little_icons:not([data-vcss]) {
+    .nav-link {
+        @include hover-focus {
+            background: rgba(0, 0, 0, .05);
+        }
+    }
+
+    .s_mega_menu_gray_area:last-child {
+        // Allow to show the grey background used in the pseudo-element
+        z-index: 1;
+
+        &:before {
+            content: '';
+            display: block;
+            width: 100vw;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: rgba(0, 0, 0, .05);
+        }
+    }
+}
