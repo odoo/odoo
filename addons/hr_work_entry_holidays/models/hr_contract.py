@@ -45,6 +45,9 @@ class HrContract(models.Model):
         # includes the whole interval.
         # Overriden in hr_work_entry_contract_holiday to select the
         # global time off first (eg: Public Holiday > Home Working)
+        if interval[2].work_entry_type_id in bypassing:
+            return interval[2].work_entry_type_id
+
         interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
         interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
         including_rcleaves = [l[2] for l in leaves if l[2] and interval_start >= l[2].date_from and interval_stop <= l[2].date_to]
