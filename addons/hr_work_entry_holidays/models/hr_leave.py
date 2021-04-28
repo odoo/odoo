@@ -161,6 +161,10 @@ class HrLeave(models.Model):
         with self.env['hr.work.entry']._error_checking(start=start, stop=stop):
             return super().action_confirm()
 
+    def _get_leaves_on_public_holiday(self):
+        return super()._get_leaves_on_public_holiday().filtered(
+            lambda l: l.holiday_status_id.work_entry_type_id.code not in ['LEAVE110', 'LEAVE280'])
+
     def action_validate(self):
         super(HrLeave, self).action_validate()
         self.sudo()._cancel_work_entry_conflict()  # delete preexisting conflicting work_entries
