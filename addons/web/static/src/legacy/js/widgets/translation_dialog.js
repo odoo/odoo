@@ -42,7 +42,7 @@ odoo.define('web.TranslationDialog', function (require) {
 
             this._super(parent, _.extend({
                 size: 'large',
-                title: _t('Translate: ') + `${this.fieldName}`,
+                title: _.str.sprintf(_t('Translate: %s'), this.fieldName),
                 buttons: [
                     { text: _t('Save'), classes: 'btn-primary', close: true, click: this._onSave.bind(this) },
                     { text: _t('Discard'), close: true },

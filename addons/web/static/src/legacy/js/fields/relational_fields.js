@@ -410,7 +410,7 @@ var FieldMany2One = AbstractField.extend({
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
             dynamicFilters: dynamicFilters || [],
-            title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
+            title: _.str.sprintf((view === 'search' ? _t("Search: %s") : _t("Create: %s")), this.string),
             initial_ids: ids,
             initial_view: view,
             disable_multiple_selection: true,

@@ -30,7 +30,7 @@ const PartnerInviteDialog = Dialog.extend({
         this.channelId = channel.id;
         this.env = env;
         this._super(parent, {
-            title: _.str.sprintf(this.env._t("Invite people to #%s"), owl.utils.escape(channel.displayName)),
+            title: _.str.sprintf(this.env._t("Invite people to #%s"), channel.displayName),
             size: 'medium',
             buttons: [{
                 text: this.env._t("Invite"),
