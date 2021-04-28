@@ -354,7 +354,7 @@ class TestInventory(TransactionCase):
         conflict_wizard_form = Form(self.env['stock.inventory.conflict'].with_context(conflict_wizard_values['context']))
         conflict_wizard = conflict_wizard_form.save()
         conflict_wizard.quant_to_fix_ids.inventory_quantity = 5
-        conflict_wizard.action_validate()
+        conflict_wizard.action_keep_counted_quantity()
         self.assertEqual(inventory_quant.inventory_diff_quantity, 0)
         self.assertEqual(inventory_quant.inventory_quantity, 0)
         self.assertEqual(inventory_quant.quantity, 5)

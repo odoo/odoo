@@ -60,6 +60,8 @@
         'wizard/stock_track_confirmation_views.xml',
         'wizard/stock_orderpoint_snooze_views.xml',
         'wizard/stock_package_destination_views.xml',
+        'wizard/stock_inventory_adjustment_name.xml',
+        'wizard/stock_inventory_warning.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
@@ -110,6 +112,7 @@
             'stock/static/src/js/stock_traceability_report_widgets.js',
             'stock/static/src/js/popover_widget.js',
             'stock/static/src/js/forecast_widget.js',
+            'stock/static/src/js/counted_quantity_widget.js',
             'stock/static/src/js/basic_model.js',
             'stock/static/src/js/stock_rescheduling_popover.js',
             'stock/static/tests/tours/stock_report_tests.js',

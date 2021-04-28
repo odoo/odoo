@@ -25,6 +25,9 @@
         <field name="res_model">stock.request.count</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="stock_inventory_request_count_form_view"/>
+        <field name="context">{
+            'default_quant_ids': active_ids
+        }</field>
         <field name="target">new</field>
     </record>
 </odoo>

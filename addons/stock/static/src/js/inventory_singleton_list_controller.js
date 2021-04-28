@@ -21,20 +21,6 @@ var _t = core._t;
  */
 
 var SingletonListController = InventoryReportListController.extend({
-    buttons_template: 'StockQuant.Buttons',
-
-    // -------------------------------------------------------------------------
-    // Public
-    // -------------------------------------------------------------------------
-    /**
-     * @override
-     */
-    renderButtons: function ($node) {
-        this._super.apply(this, arguments);
-        this.$buttons.on('click', '.o_button_apply_inventory', this._onApplyInventory.bind(this));
-        this.$buttons.on('click', '.o_button_request_count_inventory', this._onRequestCountInventory.bind(this));
-        this.$buttons.on('click', '.o_button_set_inventory', this._onSetInventory.bind(this));
-    },
 
     // -------------------------------------------------------------------------
     // Private
@@ -85,53 +71,9 @@ var SingletonListController = InventoryReportListController.extend({
         }
     },
 
-    /**
-     * Override to show/hide inventory adjustment specific buttons.
-     * Maybe a bit too hacky since it's not the intended purpose of this function,
-     * but for some reason `_updateControlPanel` isn't called during reload action
-     * after triggering any of these buttons.
-     *
-     * @override
-     */
-    _renderHeaderButtons() {
-        this._super.apply(this, arguments);
-
-        if (this.selectedRecords.length > 0 && !this.context.inventory_report_mode) {
-            $('.o_button_apply_inventory').removeClass('d-none');
-            $('.o_button_request_count_inventory').removeClass('d-none');
-            $('.o_button_set_inventory').removeClass('d-none');
-        } else {
-            $('.o_button_apply_inventory').addClass('d-none');
-            $('.o_button_request_count_inventory').addClass('d-none');
-            $('.o_button_set_inventory').addClass('d-none');
-        }
-    },
-
     // -------------------------------------------------------------------------
     // Handlers
     // -------------------------------------------------------------------------
-
-    _onApplyInventory: function (ev) {
-        var self = this;
-        var ids = this.getSelectedIds();
-        if (!ids.length) {
-            var modified_records = this.initialState.data.filter(record => record.data.inventory_diff_quantity != 0)
-            ids = modified_records.map(record => record.data.id)
-        }
-        if (ids.length) {
-            return this._rpc({
-                model: 'stock.quant',
-                method: 'action_apply_inventory',
-                args: [ids],
-                context: this.context,
-            }).then((result) => {
-                if (!result) {
-                    return self.trigger_up('reload');
-                }
-                return self.do_action(result, {on_close: () => this.reload(),});
-            })
-        }
-    },
 
     /**
      *
@@ -152,34 +94,6 @@ var SingletonListController = InventoryReportListController.extend({
         }).then(function () {
             self._enableButtons();
         }).guardedCatch(this._enableButtons.bind(this));
-    },
-
-    _onRequestCountInventory: function (ev) {
-        var ids = this.getSelectedIds();
-        if ( ids.length ) {
-            return this.do_action('stock.action_stock_request_count',
-            {
-                additional_context: {
-                        default_quant_ids: ids,
-                },
-                on_close: () => this.reload(),
-            });
-        }
-    },
-
-    _onSetInventory: function (ev) {
-        var self = this;
-        var ids = this.getSelectedIds();
-        if (ids.length) {
-            return this._rpc({
-                model: 'stock.quant',
-                method: 'action_set_inventory_quantity',
-                args: [ids],
-                context: this.context,
-            }).then(() => {
-                return self.trigger_up('reload');
-            });
-        }
     },
 });
 
