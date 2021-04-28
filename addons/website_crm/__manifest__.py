@@ -11,7 +11,7 @@ Generate leads or opportunities in the CRM app from a contact form published on 
 This form can be customized thanks to the *Form Builder* module (available in Odoo Enterprise).
 
 This module includes contact phone and mobile numbers validation.""",
-    'depends': ['website_form', 'crm'],
+    'depends': ['website', 'crm'],
     'data': [
         'security/ir.model.access.csv',
         'data/website_crm_data.xml',

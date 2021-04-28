@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <template id="contactus_form" name="Contact Form (Opportunity)" inherit_id="website_form.contactus_form" customize_show="True">
+        <template id="contactus_form" name="Contact Form (Opportunity)" inherit_id="website.contactus" customize_show="True">
             <xpath expr="//span[@data-for='contactus_form']" position="before">
                 <t t-set="logged_partner" t-value="request.env['website.visitor']._get_visitor_from_request().partner_id"/>
             </xpath>
