@@ -130,11 +130,22 @@
         </field>
     </record>
 
+    <record id="view_stock_move_line_graph" model="ir.ui.view">
+        <field name="name">stock.move.line.graph</field>
+        <field name="model">stock.move.line</field>
+        <field name="arch" type="xml">
+            <graph string="Stock Move Lines Analysis" type="line" sample="1">
+                <field name="qty_done" type="measure"/>
+                <field name="date"/>
+            </graph>
+        </field>
+    </record>
+
     <record id="stock_move_line_action" model="ir.actions.act_window">
             <field name="name">Product Moves</field>
             <field name="res_model">stock.move.line</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_mode">tree,kanban,pivot,form</field>
+            <field name="view_mode">tree,kanban,pivot,form,graph</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="context">{'search_default_filter_last_12_months': 1, 'search_default_done': 1, 'search_default_groupby_product_id': 1, 'create': 0}</field>
             <field name="help" type="html">
