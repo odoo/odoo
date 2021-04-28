@@ -434,8 +434,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             })
             self.assertEqual(event.attendee_ids.state, 'needsAction',
                              "The attendee state should be 'needsAction")
+            event.attendee_ids.do_decline()
 
-            event.attendee_ids.write({'state': 'declined'})
             self.assertGoogleEventPatched(event.google_id, {
                 'id': event.google_id,
                 'start': {'date': str(event.start_date)},

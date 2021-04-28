@@ -85,11 +85,13 @@ class Meeting(models.Model):
             'user_id': google_event.owner(self.env).id,
             'privacy': google_event.visibility or self.default_get(['privacy'])['privacy'],
             'attendee_ids': attendee_commands,
-            'partner_ids': partner_commands,
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent()
         }
-
+        if partner_commands:
+            # Add partner_commands only if set from Google. The write method on calendar_events will
+            # override attendee commands if the partner_ids command is set but empty.
+            values['partner_ids'] = partner_commands
         if not google_event.is_recurrence():
             values['google_id'] = google_event.id
         if google_event.is_recurrent() and not google_event.is_recurrence():
