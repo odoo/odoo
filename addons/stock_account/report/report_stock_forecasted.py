@@ -18,7 +18,9 @@ class ReplenishmentReport(models.AbstractModel):
         total_quantity = sum(svl.mapped('quantity'))
         # Because we can have negative quantities, `total_quantity` may be equal to zero even if the warehouse's `quantity` is positive.
         if svl and not float_is_zero(total_quantity, precision_rounding=svl.product_id.uom_id.rounding):
-            quantity = sum(svl.filtered(lambda layer: layer.stock_move_id.location_dest_id.id in wh_location_ids).mapped('quantity'))
+            def filter_on_locations(layer):
+                return layer.stock_move_id.location_dest_id.id in wh_location_ids or layer.stock_move_id.location_id.id in wh_location_ids
+            quantity = sum(svl.filtered(filter_on_locations).mapped('quantity'))
             value = sum(svl.mapped('value')) * (quantity / total_quantity)
         else:
             value = 0
