@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from datetime import datetime
+from unittest.mock import patch
+
+from odoo import Command, fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
@@ -199,6 +202,27 @@ class TestChannelInternals(MailCommon):
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_channel_chat_message_post_should_update_last_activity_time(self):
+        channel = self.env['mail.channel'].browse(self.test_channel.ids)
+        channel.write({'channel_type': 'chat'})
+        channel._action_add_members(self.partner_employee | self.partner_admin)
+        now = fields.Datetime.now()
+        with patch.object(fields.Datetime, 'now', lambda: now):
+            with self.mock_mail_gateway():
+                channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
+        channel_partner_employee = self.env['mail.channel.partner'].search([
+            ('partner_id', '=', self.partner_employee.id),
+            ('channel_id', '=', channel.id),
+        ])
+        channel_partner_admin = self.env['mail.channel.partner'].search([
+            ('partner_id', '=', self.partner_admin.id),
+            ('channel_id', '=', channel.id),
+        ])
+        self.assertEqual(channel_partner_employee.last_activity_time, now)
+        self.assertEqual(channel_partner_admin.last_activity_time, now)
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_channel(self):
         """ Posting a message on a channel should not send emails """
         channel = self.env['mail.channel'].browse(self.test_channel.ids)
@@ -314,6 +338,18 @@ class TestChannelInternals(MailCommon):
         # `channel_get` should return the existing channel every time the current partner is given
         same_solo_channel_info = self.env['mail.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)
         self.assertEqual(same_solo_channel_info['id'], solo_channel_info['id'])
+
+    @users('employee')
+    def test_channel_info_get_should_update_last_activity_time(self):
+        # create the channel via `channel_get`
+        self.env['mail.channel'].channel_get(partners_to=self.partner_admin.ids)
+
+        # `last_activity_time` should be updated again when `channel_get` is called
+        retrive_time = datetime(2021, 1, 1, 0, 0)
+        with patch.object(fields.Datetime, 'now', lambda: retrive_time):
+            channel_info = self.env['mail.channel'].channel_get(partners_to=self.partner_admin.ids)
+        self.assertEqual(channel_info['last_activity_time'], retrive_time)
+
 
     @users('employee')
     def test_channel_info_seen(self):

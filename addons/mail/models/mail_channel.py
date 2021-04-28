@@ -605,9 +605,16 @@ class Channel(models.Model):
         if moderation_status == 'rejected':
             return self.env['mail.message']
 
-        chat_channel = self.filtered(lambda channel: channel.is_chat)
-        chat_channel.mapped('channel_last_seen_partner_ids').sudo().write({'is_pinned': True})
-        chat_channel.channel_update_last_activity_time()
+        if self.is_chat:
+            self.mapped('channel_last_seen_partner_ids').sudo().write({'is_pinned': True})
+            partner_ids = self.channel_partner_ids.ids
+            self.env['mail.channel.partner'].search([
+                ('partner_id', 'in', partner_ids),
+                ('channel_id', '=', self.id),
+            ]).write({
+                'last_activity_time': fields.Datetime.now()
+            })
+            self._broadcast(partner_ids)
 
         # mail_post_autofollow=False is necessary to prevent adding followers
         # when using mentions in channels. Followers should not be added to
@@ -1073,12 +1080,6 @@ class Channel(models.Model):
         channel_partners.write({
             'custom_channel_name': name,
         })
-
-    def channel_update_last_activity_time(self, broadcast=True):
-        for channel in self:
-            partners_to = self.channel_partner_ids.ids if broadcast else self.env.user.partner_id.ids
-            self.env['mail.channel.partner'].search([('partner_id', 'in', partners_to), ('channel_id', '=', channel.id)]).write({'last_activity_time': fields.Datetime.now()})
-            self._broadcast(partners_to)
 
     def notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members
