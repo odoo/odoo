@@ -6,7 +6,7 @@
  *
  */
 
-var mvc = require('web.mvc');
+import * as mvc from 'web.mvc';
 
 // Renderers may display sample data when there is no real data to display. In
 // this case the data is displayed with opacity and can't be clicked. Moreover,
