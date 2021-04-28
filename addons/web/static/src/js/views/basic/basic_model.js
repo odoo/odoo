@@ -1183,6 +1183,7 @@ var BasicModel = AbstractModel.extend({
 
                             self.unfreezeOrder(record.id);
 
+                            // TODO: MSH: also reload and update other records with same res_id when editing signle record(not multi edit)
                             // Update the data directly or reload them
                             if (shouldReload) {
                                 self._fetchRecord(record).then(function () {
