@@ -109,7 +109,7 @@ odoo.define('payment.manage_form', require => {
                 args: [tokenId],
             }).then(result => {
                 const $dialogContentMessage = $(
-                    '<span>', {text: _("Are you sure you want to delete this payment method?")}
+                    '<span>', {text: _t("Are you sure you want to delete this payment method?")}
                 );
                 if (result.length > 0) { // There are documents linked to the token, list them
                     $dialogContentMessage.append($('<br>'));

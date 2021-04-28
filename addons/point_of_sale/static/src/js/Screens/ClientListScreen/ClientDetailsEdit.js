@@ -1,6 +1,7 @@
 odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
     'use strict';
 
+    const { _t } = require('web.core');
     const { getDataURLFromFile } = require('web.utils');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
@@ -47,7 +48,7 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
             if ((!this.props.partner.name && !processedChanges.name) ||
                 processedChanges.name === '' ){
                 return this.showPopup('ErrorPopup', {
-                  title: _('A Customer Name Is Required'),
+                  title: _t('A Customer Name Is Required'),
                 });
             }
             processedChanges.id = this.props.partner.id || false;
