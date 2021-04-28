@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cart_total_loyalty" name="Loyalty Total Cart" inherit_id="website_sale.total">
+        <xpath expr="//table/tr[last()]" position="after">
+            <t t-set="is_connected" t-value="not user_id._is_public()"/>
+            <t t-if="is_connected and request.params.get('type') != 'popover'">
+                <t t-if="website_sale_order.won_loyalty_points > 0">
+                    <tr>
+                        <td class="text-right border-0">Points Won:</td>
+                        <td class="text-xl-right border-0"><span t-out="website_sale_order.won_loyalty_points" t-options="{'widget': 'integer' if website_sale_order.won_loyalty_points.is_integer() else 'float'}"/></td>
+                    </tr>
+                    <tr>
+                        <td class="text-right border-0">Total Points:</td>
+                        <td class="text-xl-right border-0"><span t-field="website_sale_order.reached_loyalty_points" t-options="{'widget': 'integer' if website_sale_order.reached_loyalty_points.is_integer() else 'float'}"/></td>
+                    </tr>
+                </t>
+                <tr t-if="request.params.get('type') != 'popover'">
+                    <td colspan="3" class="text-center text-xl-right border-0">
+                        <a href="/my/loyalty">
+                            <t t-if="website_sale_order.partner_id.can_afford_reward">You are eligible to a free reward!<br/>Click here to claim it.</t>
+                            <t t-else="">Track your loyalty points here</t>
+                        </a>
+                    </td>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

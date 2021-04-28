@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="website" id="website.default_website">
+        <field name="has_loyalty">True</field>
+        <field name="loyalty_id" ref="loyalty.program" />
+    </record>
+
+    <record id="reward_01" model="loyalty.website.reward">
+        <field name="name">Gift Card</field>
+        <field name="loyalty_program_id" ref="loyalty.program"/>
+        <field name="point_cost">500</field>
+        <field name="gift_card_product_id" ref="gift_card.gift_card_product_50" />
+        <field name="validity">365</field>
+    </record>
+</odoo>

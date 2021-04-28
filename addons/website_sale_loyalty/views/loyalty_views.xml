@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_loyalty_program_form" model="ir.ui.view">
+        <field name="name">loyalty.program.form</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.view_loyalty_program_form"/>
+        <field name="arch" type="xml">
+            <notebook>
+                <page id="website_reward_ids" string="eCommerce Rewards">
+                    <p>Reward the eCommerce customer with gift cards for loyalty points</p>
+                    <field name="website_reward_ids" colspan="4" nolabel="1">
+                        <tree string="Rewards">
+                            <field name="name"/>
+                            <field name="initial_amount"/>
+                            <field name="validity"/>
+                            <field name="point_cost" />
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="view_loyalty_website_reward_form" model="ir.ui.view">
+        <field name="name">loyalty.website.reward.form</field>
+        <field name="model">loyalty.website.reward</field>
+        <field name="arch" type="xml">
+            <form string="Loyalty eCommerce Reward">
+                <div class="oe_title">
+                    <label for="name" string="Reward Name"/>
+                    <h1><field name="name" placeholder="e.g. $50 Gift Card"/></h1>
+                </div>
+                <group>
+                    <field name="point_cost" />
+                    <field name="gift_card_product_id" domain="[('detailed_type', '=', 'gift')]" placeholder="Select reward gift card product"/>
+                    <field name="initial_amount" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                    <field name="currency_id"/>
+                    <field name="validity" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

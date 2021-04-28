@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_menu_loyalty" name="Portal layout : loyalty menu entries" inherit_id="sale.portal_my_home_menu_sale" priority="35">
+        <xpath expr="//li[hasclass('o_portal_submenu_so')]" position="before">
+            <li t-if="page_name == 'loyalty'" t-attf-class="breadcrumb-item #{'active ' if not sale_order else ''}">
+                <a t-if="sale_order" t-attf-href="/my/loyalty?tab=won_points_history&amp;{{ keep_query() }}">Loyalty</a>
+                <t t-else="">Loyalty</t>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_loyalty" name="Show Loyalty" customize_show="True" inherit_id="portal.portal_my_home" priority="35">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry" t-if="website.has_loyalty">
+                <t t-set="title">Loyalty</t>
+                <t t-set="url" t-value="'/my/loyalty'" />
+                <t t-set="placeholder_count" t-value="'loyalty_points'" />
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_loyalty" name="Portal: My Loyalty">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True" />
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Loyalty</t>
+            </t>
+            <div class="o_portal_loyalty">
+                <p>
+                    You have <span t-field="partner.loyalty_points" t-options="{'widget': 'integer' if partner.loyalty_points.is_integer() else 'float'}"/> points available.
+                </p>
+                <ul class="nav nav-pills" role="tablist">
+                    <li class="nav-item">
+                        <a t-att-class="'nav-link active' if tab == 'rewards_catalog' else 'nav-link'" role="tab" href="/my/loyalty?tab=rewards_catalog">Rewards Catalog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a t-att-class="'nav-link active' if tab == 'won_points_history' else 'nav-link'" role="tab" href="/my/loyalty?tab=won_points_history">Won Points History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a t-att-class="'nav-link active' if tab == 'redeem_history' else 'nav-link'" role="tab" href="/my/loyalty?tab=redeem_history">Redeem History</a>
+                    </li>
+                </ul>
+                <br/>
+                <t t-if="tab == 'rewards_catalog'" t-call="website_sale_loyalty.portal_my_loyalty_reward_catalog"/>
+                <t t-elif="tab == 'won_points_history'" t-call="website_sale_loyalty.portal_my_loyalty_won_history"/>
+                <t t-elif="tab == 'redeem_history'" t-call="website_sale_loyalty.portal_my_loyalty_redeem_history"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_loyalty_reward_catalog" name="Portal: My Loyalty Reward Catalog">
+        <t t-if="rewards" t-call="portal.portal_table">
+            <thead>
+                <tr class="active">
+                    <th class="text-left">Reward</th>
+                    <th class="text-right">Value</th>
+                    <th class="text-right">Validity (days)</th>
+                    <th class="text-right">Points Cost</th>
+                    <th class="text-center"/>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="rewards" t-as="reward">
+                    <tr>
+                        <td class="text-left o_loyalty_reward_name">
+                            <span t-field="reward.name"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-field="reward.currency_id.symbol" t-if="reward.currency_id.position == 'before'"/>
+                            <span t-field="reward.initial_amount"/>
+                            <span t-field="reward.currency_id.symbol" t-if="reward.currency_id.position == 'after'"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-field="reward.validity"/>
+                        </td>
+                        <td class="text-right o_loyalty_reward_cost">
+                            <span t-field="reward.point_cost" t-options="{'widget': 'integer' if reward.point_cost.is_integer() else 'float'}"/>
+                        </td>
+                        <td class="text-right">
+                            <a role="button" t-att-data-reward-id="reward.id"
+                                t-attf-class="btn btn-secondary o_loyalty_redeem_reward_button d-block d-sm-inline-block {{'disabled' if reward.point_cost > partner.loyalty_points else ''}}"
+                                aria-label="Redeem now" title="Redeem now" href="#">
+                                <i class="fa fa-shopping-basket mr-2"/>Redeem now
+                            </a>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </t>
+        <t t-else="">
+            <p>There are currently no rewards defined in this loyalty program.</p>
+        </t>
+    </template>
+
+    <template id="portal_my_loyalty_won_history" name="Portal: My Loyalty Won History">
+        <div>
+            <t t-if="orders" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>
+                            <span class='d-none d-md-inline'>Sales Order #</span>
+                            <span class='d-block d-md-none'>Ref.</span>
+                        </th>
+                        <th>Order Date</th>
+                        <th class="text-center" />
+                        <th class="text-right">Points Won</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="orders" t-as="order">
+                        <tr>
+                            <td>
+                                <a t-att-href="order.get_portal_loyalty_url()">
+                                    <t t-esc="order.name" />
+                                </a>
+                            </td>
+                            <td>
+                                <span t-field="order.date_order" t-options="{'widget': 'date'}" />
+                                &amp;nbsp;
+                                <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}" />
+                            </td>
+                            <td class="text-center">
+                                <span t-if="order.state in ['sale', 'done']" class="badge badge-pill badge-success">
+                                    <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done" />
+                                    Done
+                                </span>
+                                <span t-elif="order.state == 'cancel'" class="badge badge-pill badge-error">
+                                    <i class="fa fa-fw fa-exclamation-triangle" role="img" aria-label="Cancelled" title="Cancelled" />
+                                    Cancelled
+                                </span>
+                                <span t-else="" class="badge badge-pill badge-warning">
+                                    <i class="fa fa-fw fa-hourglass-half" role="img" aria-label="Pending payment validation" title="Pending payment validation" />
+                                    Pending payment validation
+                                </span>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="order.won_loyalty_points"
+                                    t-options="{'widget': 'integer' if order.won_loyalty_points.is_integer() else 'float'}"
+                                    t-att-class="'text-info' if order.state not in ('sale', 'done') else ''"
+                                />
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            <t t-else="">
+                <p>There are currently no orders for your account.</p>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_my_loyalty_redeem_history" name="Portal: My Loyalty Redeem History">
+        <div>
+            <t t-if="redeemed_rewards" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Redeem Date</th>
+                        <th>Reward</th>
+                        <th>Expiry Date</th>
+                        <th colspan="2">Code</th>
+                        <th>Status</th>
+                        <th class="text-right">Points Used</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="redeemed_rewards" t-as="reward">
+                        <tr>
+                            <td>
+                                <span t-field="reward.create_date" t-options="{'widget': 'date'}" />
+                            </td>
+                            <td>
+                                <span t-field="reward.name" />
+                            </td>
+                            <td>
+                                <span t-field="reward.gift_card_id.expired_date" t-options="{'widget': 'date'}" />
+                            </td>
+                            <td>
+                                <span t-field="reward.gift_card_id.code" />
+                            </td>
+                            <td>
+                                <button t-if="reward.gift_card_id.state == 'valid' and reward.gift_card_id.balance > 0"
+                                        class='btn btn-primary ml-2 o_copy_gift_card_code' t-att-data-code="reward.gift_card_id.code">
+                                    <i class="fa fa-clipboard mr8"/>Copy
+                                </button>
+                            </td>
+                            <td>
+                                <span t-if="reward.gift_card_id.balance == 0" class="badge badge-pill badge-info">
+                                    <i class="fa fa-check" role="img" aria-label="Fully used" title="Fully used"/>
+                                    Fully used
+                                </span>
+                                <span t-elif="reward.gift_card_id.state == 'expired'" class="badge badge-pill badge-warning">
+                                    <i class="fa fa-hourglass-end" role="img" aria-label="Expired" title="Expired"/>
+                                    Expired
+                                </span>
+                                <span t-else="" class="badge badge-pill badge-success">
+                                    <i class="fa fa-credit-card" role="img" aria-label="Available" title="Available"/>
+                                    Available
+                                </span>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="reward.point_used" t-options="{'widget': 'integer' if reward.point_used.is_integer() else 'float'}"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            <t t-else="">
+                <p>There are no redeemed rewards for your account.</p>
+            </t>
+        </div>
+    </template>
+
+    <template id="sale_order_portal_content_loyalty" name="Loyalty Total Invoice" inherit_id="sale.sale_order_portal_content" priority="35">
+        <xpath expr="//section[@id='details']" position="after">
+            <section id="loyalty" style="page-break-inside: auto;" class="mt-5" t-if="(sale_order.won_loyalty_points > 0)">
+                <h3>Rewards Summary</h3>
+                <hr class="mt-0 mb-1"/>
+                <table>
+                    <tbody>
+                        <tr t-if='sale_order.won_loyalty_points > 0'>
+                            <td>Points Won:</td>
+                            <td class="text-right"><span class="ml16" t-field='sale_order.won_loyalty_points' t-options="{'widget': 'integer' if sale_order.won_loyalty_points.is_integer() else 'float'}"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Gift card info dialog -->
+    <t t-name="website_sale_loyalty.gift_card_info_dialog">
+        You will find below your gift card code.
+        <br/>
+        An email has been sent with it.
+        <br/>
+        You can use it starting now.
+        <br/>
+        <div class="button-row">
+            <span class="h5" t-out="code"/>
+            <button class='btn btn-primary ml-2'>
+                <i class="fa fa-clipboard mr8"/><span id="copy_button_text">Copy</span>
+            </button>
+        </div>
+        <br/>
+    </t>
+
+</templates>
