@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_loyalty_reward_form_inherit_website_sale" model="ir.ui.view">
+        <field name="name">loyalty.reward.form.inherit.website.sale</field>
+        <field name="inherit_id" ref="loyalty.view_loyalty_reward_form"/>
+        <field name="model">loyalty.reward</field>
+        <field name="arch" type="xml">
+            <div class="oe_title" position="before">
+                <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+            </div>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,23 @@
+table#cart_products, table#sales_order_table {
+    .badge {
+        background-color: nth($o-colors-secondary, 4);
+        border: 1px solid nth($o-colors-secondary, 3);
+    }
+
+    .points {
+        color: $link-color;
+        display: block;
+        white-space: nowrap;
+    }
+}
+
+table#rewards_catalog {
+    margin-bottom: 0;
+
+    td, th {
+        vertical-align: middle;
+    }
+    th:first-child {
+        padding-left: $grid-gutter-width*0.5;
+    }
+}

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_menu_loyalty" name="Portal layout : loyalty menu entries" inherit_id="sale.portal_my_home_menu_sale" priority="35">
+        <xpath expr="//li[hasclass('o_portal_submenu_so')]" position="before">
+            <li t-if="page_name == 'loyalty'" t-attf-class="breadcrumb-item #{'active ' if not sale_order else ''}">
+                <a t-if="sale_order" t-attf-href="/my/loyalty?{{ keep_query() }}">Loyalty</a>
+                <t t-else="">Loyalty</t>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_loyalty" name="Show Loyalty" customize_show="True" inherit_id="portal.portal_my_home" priority="35">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry" t-if="website.has_loyalty">
+                <t t-set="title">Loyalty</t>
+                <t t-set="url" t-value="'/my/loyalty'" />
+                <t t-set="placeholder_count" t-value="'loyalty_count'" />
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_loyalty" name="Portal: My Loyalty">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True" />
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Loyalty</t>
+            </t>
+            <p>
+                Currently Available Loyalty Points:
+                <t t-esc="total_points" />
+            </p>
+            <t t-if="orders" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>
+                            <span class='d-none d-md-inline'>Sales Order #</span>
+                            <span class='d-block d-md-none'>Ref.</span>
+                        </th>
+                        <th class="text-right">Order Date</th>
+                        <th class="text-center" />
+                        <th class="text-right">Won Points</th>
+                        <th class="text-right">Spent Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="orders" t-as="order">
+                        <tr>
+                            <td>
+                                <a t-att-href="order.get_portal_loyalty_url()">
+                                    <t t-esc="order.name" />
+                                </a>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="order.date_order" t-options="{'widget': 'date'}" />
+                                &amp;nbsp;
+                                <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}" />
+                            </td>
+                            <td class="text-center">
+                                <span t-if="order.state == 'sale' or order.state == 'done'" class="badge badge-pill badge-success">
+                                    <i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done" />
+                                    Done
+                                </span>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="order.won_loyalty_points" t-att-class="'text-info' if order.state not in ('sale', 'done') else ''" />
+                            </td>
+                            <td class="text-right">
+                                <span t-field="order.spent_loyalty_points" t-att-class="'text-info' if order.state not in ('sale', 'done') else ''" />
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+            <t t-else="">
+                <p>There are currently no orders for your account.</p>
+            </t>
+        </t>
+    </template>
+
+    <template id="sale_order_portal_content_loyalty" name="Loyalty Total Invoice" inherit_id="sale.sale_order_portal_content" priority="35">
+        <xpath expr="//table[@id='sales_order_table']//div[@t-if='line.discount']" position="after">
+            <span t-if="line.loyalty_reward_id and line.is_main_loyalty_reward" class="points">
+                <t t-esc="line.loyalty_reward_id.point_cost"/> Points
+            </span>
+        </xpath>
+
+        <xpath expr="//table[@id='sales_order_table']//span[@t-field='line.price_total']" position="after">
+            <span t-if="line.loyalty_reward_id and line.is_main_loyalty_reward" class="points">
+                <t t-esc="line.loyalty_reward_id.point_cost * line.product_uom_qty"/> Points
+            </span>
+        </xpath>
+
+        <xpath expr="//section[@id='details']" position="after">
+            <section id="loyalty" style="page-break-inside: auto;" class="mt-5" t-if="(sale_order.won_loyalty_points > 0) or (sale_order.spent_loyalty_points > 0)">
+                <h3>Rewards Summary</h3>
+                <hr class="mt-0 mb-1"/>
+                <table>
+                    <tbody>
+                        <tr t-if='sale_order.won_loyalty_points > 0'>
+                            <td>Points Won:</td>
+                            <td class="text-right"><span class="ml16" t-field='sale_order.won_loyalty_points'/></td>
+                        </tr>
+                        <tr t-if='sale_order.spent_loyalty_points > 0'>
+                            <td>Points Spent:</td>
+                            <td class="text-right"><span class="ml16" t-field='sale_order.spent_loyalty_points'/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </xpath>
+    </template>
+
+</odoo>

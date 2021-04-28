@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="cart_popover_loyalty" name="Loyalty Cart Popover" inherit_id="website_sale.cart_popover">
+        <xpath expr="//t[@t-call='website_sale.total']" position="inside">
+            <t t-set="hide_reward" t-value="True"/>
+        </xpath>
+        <xpath expr="//t[@t-set='use_line']" position="after">
+            <t t-set="use_line" t-value="use_line and not line.loyalty_reward_id"/>
+        </xpath>
+    </template>
+
+    <template id='reward_table' name='Loyalty Reward table'>
+        <h3>Rewards Catalog</h3>
+        <table class="mb16 table table-striped table-sm" id="rewards_catalog">
+            <thead>
+                <tr>
+                    <th colspan="2">Reward</th>
+                    <th class="text-center">Points Cost</th>
+                    <th class="td-action"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="available_rewards" t-as="reward">
+                    <td class="td-img text-center">
+                        <span t-field="reward.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
+                    </td>
+                    <td style="width: 50%;">
+                        <t t-set="reward_product" t-value="reward.gift_product_id if reward.reward_type == 'gift' else reward.discount_product_id" />
+                        <div><strong t-esc="reward_product.with_context(display_default_code=False).display_name" /></div>
+                        <div><span class="text-muted small" t-esc="reward['name']" /></div>
+                    </td>
+                    <td class="text-center"><span t-esc="reward['point_cost']" /></td>
+                    <td class="text-center">
+                        <a role="button" t-att-data-reward-id="reward.id"
+                            class="btn btn-secondary o_wloyalty_add_reward_button d-block d-sm-inline-block"
+                            aria-label="Add reward to cart" title="Add reward to cart" href="#">
+                            <i class="fa fa-shopping-cart"/> Add to Cart
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="cart_line_reward_link" name="Shopping Cart Line Reward Product Link" inherit_id="website_sale.cart_line_product_link">
+        <xpath expr="//a" position="before">
+            <t t-if="line.loyalty_reward_id" t-out="0"/>
+        </xpath>
+        <xpath expr="//a" position="attributes">
+            <attribute name="t-else">1</attribute>
+        </xpath>
+    </template>
+
+    <template id="cart_lines_reward" name="Shopping Cart Reward Line" inherit_id="website_sale.cart_lines">
+        <xpath expr="//tbody/t/tr/td[hasclass('td-img')][2]" position="replace">
+            <td align="center" t-if="line.loyalty_reward_id.image_128" class='td-img'>
+                <span><img t-att-src="image_data_uri(line.loyalty_reward_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/></span>
+            </td>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <xpath expr="//tbody/t/tr/td[hasclass('td-product_name')]" position="inside">
+            <div t-if="line.loyalty_reward_id">
+                <span class="badge">Reward</span>
+                <span t-if="line.is_main_loyalty_reward" class="text-muted small" t-esc="line.loyalty_reward_id['name']" />
+                <span t-else="" class="text-muted small" t-esc="line.name" />
+            </div>
+        </xpath>
+
+        <xpath expr="//tbody/t/tr/td[hasclass('td-price')]" position="inside">
+            <span t-if="line.loyalty_reward_id" class="points">
+                <t t-esc="line.loyalty_reward_id.point_cost"/> Points
+            </span>
+        </xpath>
+    </template>
+
+    <template id="cart_reward" name="Shopping Cart" inherit_id="website_sale.cart">
+        <xpath expr="//t[@t-set='has_checkout']" position="after">
+            <t t-set="has_checkout" t-value="has_checkout and website_sale_order.available_loyalty_points >= 0"/>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_cart')]" position="inside">
+            <t t-call="website_sale_loyalty.reward_table" t-if="website_sale_order.state == 'draft' and available_rewards"/>
+        </xpath>
+    </template>
+
+    <template id="cart_total_loyalty" name="Loyalty Total Cart" inherit_id="website_sale.total">
+        <xpath expr="//table/tr[last()]" position="after">
+            <table class="table" t-if="not hide_reward and website.has_loyalty">
+                <tr t-if="website_sale_order.spent_loyalty_points > 0">
+                    <td class="text-right border-0">Points Spent:</td>
+                    <td class="text-xl-right border-0"><span t-field="website_sale_order.spent_loyalty_points" /></td>
+                </tr>
+                <t t-if="0 > website_sale_order.available_loyalty_points">
+                    <tr class="text-info">
+                        <td class="text-right border-0">Usable Points:</td>
+                        <td class="text-xl-right border-0"><span t-field="website_sale_order.partner_id.loyalty_points" /></td>
+                    </tr>
+                    <tr class="text-warning">
+                        <td class="text-right border-0">Insufficient Points:</td>
+                        <td class="text-xl-right border-0"><span t-field="website_sale_order.available_loyalty_points" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="border-0">
+                            <div class="alert alert-warning">
+                                Some rewards must be removed from cart
+                            </div>
+                        </td>
+                    </tr>
+                </t>
+                <tr t-if="website_sale_order.won_loyalty_points > 0">
+                    <td class="text-right border-0">Points Won:</td>
+                    <td class="text-xl-right border-0"><span t-field="website_sale_order.won_loyalty_points" /></td>
+                </tr>
+                <tr t-if="website_sale_order.won_loyalty_points > 0 or website_sale_order.spent_loyalty_points > 0">
+                    <td class="text-right border-0">Total Points:</td>
+                    <td class="text-xl-right border-0"><span t-field="website_sale_order.reached_loyalty_points" /></td>
+                </tr>
+            </table>
+        </xpath>
+    </template>
+
+    <template id="cart_summary_loyalty" name="Loyalty cart summary" inherit_id="website_sale.cart_summary">
+        <xpath expr="//tbody/tr/td[hasclass('td-img')]" position="replace">
+            <td class='td-img text-center' t-if="line.loyalty_reward_id.image_128">
+                <span><img t-att-src="image_data_uri(line.loyalty_reward_id.image_128)" class="img o_image_64_max rounded" t-att-alt="line.name_short"/></span>
+            </td>
+            <t t-else="">$0</t>
+        </xpath>
+    </template>
+
+    <template id="short_cart_summary_loyalty" name="Loyalty short cart summary" inherit_id="website_sale.short_cart_summary">
+        <xpath expr="//t[@t-set='has_checkout']" position="after">
+            <t t-set="has_checkout" t-value="has_checkout and website_sale_order.available_loyalty_points >= 0"/>
+        </xpath>
+    </template>
+
+    <template id="product_configure_loyalty" name="Loyalty Configure Product" inherit_id="website_sale.product">
+        <xpath expr="//t[@t-set='has_add_to_cart']" position="after">
+            <t t-set="has_add_to_cart" t-value="has_add_to_cart and not request.website.contains_discount_reward(product)"/>
+        </xpath>
+        <xpath expr="//div[@id='product_details']/p[@t-else='']" position="before">
+            <p t-elif="request.website.contains_discount_reward(product)" class="alert alert-warning">This is a discount reward.</p>
+        </xpath>
+    </template>
+
+</odoo>

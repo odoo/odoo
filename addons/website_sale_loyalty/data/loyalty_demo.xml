@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="website" id="website.default_website">
+        <field name="has_loyalty">True</field>
+        <field name="loyalty_id" ref="loyalty.program" />
+    </record>
+
+    <function model="sale.order" name="recompute_loyalty_points">
+        <value model="sale.order" eval="obj().search([('website_id', '!=', False)]).ids"/>
+        <value eval="ref('loyalty.program')" />
+    </function>
+</odoo>
