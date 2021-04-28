@@ -1,3 +1,4 @@
+/* global Benchmark */
 odoo.define('web.kanban_benchmarks', function (require) {
     "use strict";
 

@@ -1,3 +1,4 @@
+/* global Stripe */
 odoo.define('payment_stripe.payment_form', require => {
     'use strict';
 

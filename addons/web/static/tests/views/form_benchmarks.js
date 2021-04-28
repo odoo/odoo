@@ -1,3 +1,4 @@
+/* global Benchmark */
 odoo.define('web.form_benchmarks', function (require) {
     "use strict";
 

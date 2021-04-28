@@ -1,3 +1,4 @@
+/* global AdyenCheckout */
 odoo.define('payment_adyen.payment_form', require => {
     'use strict';
 

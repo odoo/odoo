@@ -1,3 +1,4 @@
+/* global google, gapi */
 odoo.define('website.backend.dashboard', function (require) {
 'use strict';
 

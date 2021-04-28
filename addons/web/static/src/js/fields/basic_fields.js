@@ -1,3 +1,4 @@
+/* global ace */
 odoo.define('web.basic_fields', function (require) {
 "use strict";
 
