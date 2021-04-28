@@ -1,3 +1,4 @@
+/* globals google*/
 odoo.define('website.editor.snippets.options', function (require) {
 'use strict';
 

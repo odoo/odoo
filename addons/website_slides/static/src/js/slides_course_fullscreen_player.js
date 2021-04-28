@@ -1,3 +1,4 @@
+/* global YT */
 var onYouTubeIframeAPIReady = undefined;
 
 odoo.define('website_slides.fullscreen', function (require) {

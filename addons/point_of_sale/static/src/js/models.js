@@ -1,3 +1,4 @@
+/* global Backbone, waitForWebfonts */
 odoo.define('point_of_sale.models', function (require) {
 "use strict";
 
