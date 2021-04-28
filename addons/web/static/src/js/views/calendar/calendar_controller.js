@@ -426,10 +426,10 @@ var CalendarController = AbstractController.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onPrev: function () {
-        event.stopPropagation();
+    _onPrev: function (ev) {
+        ev.stopPropagation();
         this._move('prev');
     },
 
