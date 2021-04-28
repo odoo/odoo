@@ -2005,7 +2005,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         });
         if (!this.selectMenuEl.children.length) {
             const title = document.createElement('we-title');
-            title.textContent = _("No more records");
+            title.textContent = _t("No more records");
             this.selectMenuEl.appendChild(title);
         }
     },
