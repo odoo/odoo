@@ -1,32 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_partner_property_form" model="ir.ui.view">
-        <field name="name">res.partner.form.inherit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="point_of_sale.view_partner_property_form"/>
-        <field name="arch" type="xml">
-            <data>
-                <field name="barcode" position="after">
-                    <field name="loyalty_points"/>
-                </field>
-            </data>
-        </field>
-    </record>
-
-    <record id="view_pos_pos_form" model="ir.ui.view">
-        <field name="name">pos.order.form.inherit</field>
-        <field name="model">pos.order</field>
-        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//page[@name='extra']" position="inside">
-                <group name="loyalty" string="Loyalty Programs">
-                    <field name="loyalty_points" />
-                </group>
-            </xpath>
-        </field>
-    </record>
-
     <record id="view_loyalty_program_form" model="ir.ui.view">
         <field name="name">loyalty.program.form</field>
         <field name="model">loyalty.program</field>
@@ -123,10 +97,10 @@
                 <group>
                     <group>
                         <field name="reward_type" string="Reward" widget="radio"/>
-                        <field name="discount_product_id" string="Discount Product" attrs="{ 'invisible':[('reward_type','!=','discount')], 'required':[('reward_type','==','discount')] }" domain="[('available_in_pos', '=', True)]" context="{'default_available_in_pos': '1'}"/>
+                        <field name="discount_product_id" string="Discount Product" attrs="{'invisible': [('reward_type', '!=', 'discount')], 'required': [('reward_type', '=', 'discount')]}"/>
                     </group>
                     <group>
-                        <field name="gift_product_id" attrs="{ 'invisible':[('reward_type','!=','gift')], 'required':[('reward_type','==','gift')] }" domain="[('available_in_pos', '=', True)]" context="{'default_available_in_pos': '1'}" placeholder="Select reward product"/>
+                        <field name="gift_product_id" attrs="{'invisible': [('reward_type', '!=', 'gift')], 'required': [('reward_type', '=', 'gift')]}" placeholder="Select reward product"/>
                         <label string="Apply Discount" for="discount_type" attrs="{'invisible': [('reward_type', 'in', ('gift'))]}"/>
                         <div class="o_row" attrs="{ 'invisible':[('reward_type','!=','discount')] }">
                             <field name="discount_type" attrs="{ 'required':[('reward_type','=','discount')] }"/>
@@ -205,12 +179,5 @@
             </p>
         </field>
     </record>
-
-    <menuitem
-        parent="point_of_sale.pos_config_menu_catalog"
-        action="action_loyalty_program_form"
-        id="menu_loyalty_program"
-        sequence="30"
-        groups="point_of_sale.group_pos_manager" />
 
 </odoo>

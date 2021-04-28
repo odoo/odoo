@@ -3,8 +3,6 @@
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
-from odoo.tools.safe_eval import safe_eval
 
 
 class LoyaltyProgram(models.Model):
@@ -27,17 +25,6 @@ class LoyaltyRule(models.Model):
     points_quantity = fields.Float(string="Points per Unit")
     points_currency = fields.Float(string="Points per $ spent")
     rule_domain = fields.Char()
-    valid_product_ids = fields.One2many('product.product', compute='_compute_valid_product_ids')
-
-    @api.depends('rule_domain')
-    def _compute_valid_product_ids(self):
-        for rule in self:
-            if rule.rule_domain:
-                domain = safe_eval(rule.rule_domain)
-                domain = expression.AND([domain, [('available_in_pos', '=', True)]])
-                rule.valid_product_ids = self.env['product.product'].search(domain)
-            else:
-                rule.valid_product_ids = self.env['product.product'].search([('available_in_pos', '=', True)])
 
 
 class LoyaltyReward(models.Model):

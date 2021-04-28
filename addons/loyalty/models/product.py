@@ -14,5 +14,5 @@ class ProductProduct(models.Model):
                     ('gift_product_id', 'in', self.ids),
                     ('discount_product_id', 'in', self.ids)], limit=1)
             if product_in_reward:
-                raise ValidationError(_("The product cannot be archived because it's used in a point of sales loyalty program."))
+                raise ValidationError(_("The product cannot be archived because it's used in a loyalty program."))
         super().write(vals)
