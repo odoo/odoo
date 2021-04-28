@@ -4546,10 +4546,17 @@ class AccountMoveLine(models.Model):
                             continue
 
                         grouping_key = self.env['account.partial.reconcile']._get_cash_basis_base_line_grouping_key_from_record(line, account=account_to_fix)
-                        account_vals_to_fix[grouping_key] = {
-                            **vals,
-                            'account_id': account_to_fix.id,
-                        }
+
+                        if grouping_key not in account_vals_to_fix:
+                            account_vals_to_fix[grouping_key] = {
+                                **vals,
+                                'account_id': account_to_fix.id,
+                            }
+                        else:
+                            # Multiple base lines could share the same key, if the same
+                            # cash basis tax is used alone on several lines of the invoices
+                            account_vals_to_fix[grouping_key]['debit'] += vals['debit']
+                            account_vals_to_fix[grouping_key]['credit'] += vals['credit']
 
                 # ==========================================================================
                 # Subtract the balance of all previously generated cash basis journal entries
