@@ -1051,11 +1051,22 @@ class ChromeBrowser():
             res['success'] = 'test successful' in message
 
         if res.get('method') == 'Runtime.exceptionThrown':
-            exception_details = res['params']['exceptionDetails']
-            descr = exception_details.get('exception', {}).get('description')
-            self.take_screenshot()
-            self._save_screencast()
-            raise ChromeBrowserException(descr or pprint.pformat(exception_details))
+            details = res['params']['exceptionDetails']
+            message = details['text']
+            exception = details.get('exception')
+            if exception:
+                message += str(self._from_remoteobject(exception))
+            details['type'] = 'trace' # fake this so _format_stack works
+            stack = ''.join(self._format_stack(details))
+            if stack:
+                message += '\n' + stack
+
+            if raise_log_error:
+                self.take_screenshot()
+                self._save_screencast()
+                raise ChromeBrowserException(message)
+            else:
+                self._logger.getChild('browser').error(message)
 
         return res
 
@@ -1063,7 +1074,7 @@ class ChromeBrowser():
         'debug': logging.DEBUG,
         'log': logging.INFO,
         'info': logging.INFO,
-        'warning': logging.INFO, # logging.WARNING,
+        'warning': logging.WARNING,
         'error': logging.ERROR,
         # TODO: what do with
         # dir, dirxml, table, trace, clear, startGroup, startGroupCollapsed,
