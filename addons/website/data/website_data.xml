@@ -208,7 +208,7 @@
             </div>
         </t>
     </template>
-    <template id="website.our_services" name="Our Servicesw">
+    <template id="website.our_services" name="Services">
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="oe_structure">
@@ -216,7 +216,7 @@
                         <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
                         <div class="o_we_bg_filter bg-black-50"/>
                         <div class="container">
-                            <h1>Our Services</h1>
+                            <h1>Services</h1>
                         </div>
                     </section>
                 </div>
@@ -267,7 +267,7 @@
         <field name="icon">fa-building</field>
     </record>
     <record id="feature_page_our_services" model="website.configurator.feature">
-        <field name="name">Our Services</field>
+        <field name="name">Services</field>
         <field name="description">Description of your services offer</field>
         <field name="iap_page_code">our_services</field>
         <field name="sequence">3</field>
@@ -276,7 +276,7 @@
     </record>
     <record id="feature_page_pricing" model="website.configurator.feature">
         <field name="name">Pricing</field>
-        <field name="description">Design to drive conversion</field>
+        <field name="description">Designed to drive conversion</field>
         <field name="iap_page_code">pricing</field>
         <field name="sequence">4</field>
         <field name="page_view_id" ref="pricing"/>
@@ -294,7 +294,7 @@
     <!-- Configurator apps features -->
     <record id="feature_module_news" model="website.configurator.feature">
         <field name="name">News</field>
-        <field name="description">Perfect for news and useful content</field>
+        <field name="description">Blogging and posting relevant content</field>
         <field name="sequence">6</field>
         <field name="website_types_preselection">blog</field>
         <field name="module_id" ref="base.module_website_blog"/>
@@ -346,7 +346,7 @@
     </record>
     <record id="feature_module_elearning" model="website.configurator.feature">
         <field name="name">eLearning</field>
-        <field name="description">Share videos &#38; presentations, publicly or for a fee</field>
+        <field name="description">Share knowledge publicly or for a fee</field>
         <field name="sequence">13</field>
         <field name="website_types_preselection">elearning</field>
         <field name="module_id" ref="base.module_website_slides"/>
