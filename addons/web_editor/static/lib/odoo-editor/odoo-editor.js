@@ -684,7 +684,7 @@ var exportVariable = (function (exports) {
             let newNode = node.childNodes[offset];
             if (newNode) {
                 newNode = getNextVisibleNode(newNode);
-                if (!newNode || isEmptyBlock(newNode)) break;
+                if (!newNode || isVisibleEmpty(newNode)) break;
                 found = true;
                 node = newNode;
                 offset = 0;
@@ -696,7 +696,7 @@ var exportVariable = (function (exports) {
             while (node.hasChildNodes()) {
                 let newNode = node.childNodes[offset - 1];
                 newNode = getNextVisibleNode(newNode);
-                if (!newNode || isEmptyBlock(newNode)) break;
+                if (!newNode || isVisibleEmpty(newNode)) break;
                 node = newNode;
                 offset = nodeSize(node);
             }
@@ -799,7 +799,7 @@ var exportVariable = (function (exports) {
      * @param node
      */
     function isBlock(node) {
-        if (!(node instanceof Element)) {
+        if (node.nodeType !== Node.ELEMENT_NODE) {
             return false;
         }
         const tagName = node.nodeName.toUpperCase();
@@ -1727,6 +1727,61 @@ var exportVariable = (function (exports) {
                 })
                 .join('')
         );
+    }
+
+    function getRangePosition(el, options = {}) {
+        const selection = document.getSelection();
+        if (!selection.isCollapsed || !selection.rangeCount) return;
+        const range = selection.getRangeAt(0);
+
+        const marginRight = options.marginRight || 20;
+        const marginBottom = options.marginBottom || 20;
+        const marginTop = options.marginTop || 10;
+        const marginLeft = options.marginLeft || 10;
+
+        let offset;
+        if (range.endOffset - 1 > 0) {
+            const clonedRange = range.cloneRange();
+            clonedRange.setStart(range.endContainer, range.endOffset - 1);
+            clonedRange.setEnd(range.endContainer, range.endOffset);
+            const rect = clonedRange.getBoundingClientRect();
+            offset = { height: rect.height, left: rect.left + rect.width, top: rect.top };
+            clonedRange.detach();
+        }
+
+        if (!offset || offset.heigh === 0) {
+            const clonedRange = range.cloneRange();
+            const shadowCaret = document.createTextNode('|');
+            clonedRange.insertNode(shadowCaret);
+            clonedRange.selectNode(shadowCaret);
+            const rect = clonedRange.getBoundingClientRect();
+            offset = { height: rect.height, left: rect.left, top: rect.top };
+            shadowCaret.remove();
+            clonedRange.detach();
+        }
+
+        const leftMove = Math.max(0, offset.left + el.offsetWidth + marginRight - window.innerWidth);
+        if (leftMove && offset.left - leftMove > marginLeft) {
+            offset.left -= leftMove;
+        } else if (offset.left - leftMove < marginLeft) {
+            offset.left = marginLeft;
+        }
+
+        if (
+            offset.top - marginTop + offset.height + el.offsetHeight > window.innerHeight &&
+            offset.top - el.offsetHeight - marginBottom > 0
+        ) {
+            offset.top -= el.offsetHeight;
+        } else {
+            offset.top += offset.height;
+        }
+
+        if (offset) {
+            offset.top += window.scrollY;
+            offset.left += window.scrollX;
+        }
+
+        return offset;
     }
 
     Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -2879,9 +2934,9 @@ var exportVariable = (function (exports) {
             restoreCursor();
         },
         // Table
-        insertTable: (editor, { rowCount = 2, colCount = 2 } = {}) => {
-            const tdsHtml = new Array(colCount).fill('<td><br></td>').join('');
-            const trsHtml = new Array(rowCount).fill(`<tr>${tdsHtml}</tr>`).join('');
+        insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {
+            const tdsHtml = new Array(colNumber).fill('<td><br></td>').join('');
+            const trsHtml = new Array(rowNumber).fill(`<tr>${tdsHtml}</tr>`).join('');
             const tableHtml = `<table class="table table-bordered"><tbody>${trsHtml}</tbody></table>`;
             const sel = editor.document.getSelection();
             if (!sel.isCollapsed) {
@@ -2934,15 +2989,717 @@ var exportVariable = (function (exports) {
             siblingRow ? setCursor(...startPos(siblingRow)) : deleteTable(editor, table);
         },
         deleteTable: (editor, table) => deleteTable(editor, table),
+        insertHorizontalRule(editor) {
+            const selection = editor.document.getSelection();
+            const range = selection.getRangeAt(0);
+            const element = closestElement(
+                range.startContainer,
+                'P, PRE, H1, H2, H3, H4, H5, H6, BLOCKQUOTE',
+            );
+
+            if (element && ancestors(element).includes(editor.editable)) {
+                element.before(editor.document.createElement('hr'));
+            }
+        },
     };
+
+    /**
+     * program: "patienceDiff" algorithm implemented in javascript.
+     * author: Jonathan Trent
+     * version: 2.0
+     *
+     * use:  patienceDiff( aLines[], bLines[], diffPlusFlag)
+     *
+     * where:
+     *      aLines[] contains the original text lines.
+     *      bLines[] contains the new text lines.
+     *      diffPlusFlag if true, returns additional arrays with the subset of lines that were
+     *          either deleted or inserted.  These additional arrays are used by patienceDiffPlus.
+     *
+     * returns an object with the following properties:
+     *      lines[] with properties of:
+     *          line containing the line of text from aLines or bLines.
+     *          aIndex referencing the index in aLine[].
+     *          bIndex referencing the index in bLines[].
+     *              (Note:  The line is text from either aLines or bLines, with aIndex and bIndex
+     *               referencing the original index. If aIndex === -1 then the line is new from bLines,
+     *               and if bIndex === -1 then the line is old from aLines.)
+     *          moved is true if the line was moved from elsewhere in aLines[] or bLines[].
+     *      lineCountDeleted is the number of lines from aLines[] not appearing in bLines[].
+     *      lineCountInserted is the number of lines from bLines[] not appearing in aLines[].
+     *      lineCountMoved is the number of lines moved outside of the Longest Common Subsequence.
+     *
+     */
+
+    function patienceDiff(aLines, bLines, diffPlusFlag) {
+        //
+        // findUnique finds all unique values in arr[lo..hi], inclusive.  This
+        // function is used in preparation for determining the longest common
+        // subsequence.  Specifically, it first reduces the array range in question
+        // to unique values.
+        //
+        // Returns an ordered Map, with the arr[i] value as the Map key and the
+        // array index i as the Map value.
+        //
+        function findUnique(arr, lo, hi) {
+            var lineMap = new Map();
+
+            for (let i = lo; i <= hi; i++) {
+                let line = arr[i];
+                if (lineMap.has(line)) {
+                    lineMap.get(line).count++;
+                    lineMap.get(line).index = i;
+                } else {
+                    lineMap.set(line, { count: 1, index: i });
+                }
+            }
+
+            lineMap.forEach((val, key, map) => {
+                if (val.count !== 1) {
+                    map.delete(key);
+                } else {
+                    map.set(key, val.index);
+                }
+            });
+
+            return lineMap;
+        }
+
+        //
+        // uniqueCommon finds all the unique common entries between aArray[aLo..aHi]
+        // and bArray[bLo..bHi], inclusive.  This function uses findUnique to pare
+        // down the aArray and bArray ranges first, before then walking the comparison
+        // between the two arrays.
+        //
+        // Returns an ordered Map, with the Map key as the common line between aArray
+        // and bArray, with the Map value as an object containing the array indexes of
+        // the matching unique lines.
+        //
+        function uniqueCommon(aArray, aLo, aHi, bArray, bLo, bHi) {
+            let ma = findUnique(aArray, aLo, aHi);
+            let mb = findUnique(bArray, bLo, bHi);
+
+            ma.forEach((val, key, map) => {
+                if (mb.has(key)) {
+                    map.set(key, { indexA: val, indexB: mb.get(key) });
+                } else {
+                    map.delete(key);
+                }
+            });
+
+            return ma;
+        }
+
+        //
+        // longestCommonSubsequence takes an ordered Map from the function uniqueCommon
+        // and determines the Longest Common Subsequence (LCS).
+        //
+        // Returns an ordered array of objects containing the array indexes of the
+        // matching lines for a LCS.
+        //
+        function longestCommonSubsequence(abMap) {
+            var ja = [];
+
+            // First, walk the list creating the jagged array.
+            abMap.forEach((val, key, map) => {
+                let i = 0;
+                while (ja[i] && ja[i][ja[i].length - 1].indexB < val.indexB) {
+                    i++;
+                }
+
+                if (!ja[i]) {
+                    ja[i] = [];
+                }
+
+                if (0 < i) {
+                    val.prev = ja[i - 1][ja[i - 1].length - 1];
+                }
+
+                ja[i].push(val);
+            });
+
+            // Now, pull out the longest common subsequence.
+            var lcs = [];
+            if (0 < ja.length) {
+                let n = ja.length - 1;
+                var lcs = [ja[n][ja[n].length - 1]];
+                while (lcs[lcs.length - 1].prev) {
+                    lcs.push(lcs[lcs.length - 1].prev);
+                }
+            }
+
+            return lcs.reverse();
+        }
+
+        // "result" is the array used to accumulate the aLines that are deleted, the
+        // lines that are shared between aLines and bLines, and the bLines that were
+        // inserted.
+        let result = [];
+        let deleted = 0;
+        let inserted = 0;
+
+        // aMove and bMove will contain the lines that don't match, and will be returned
+        // for possible searching of lines that moved.
+
+        let aMove = [];
+        let aMoveIndex = [];
+        let bMove = [];
+        let bMoveIndex = [];
+
+        //
+        // addToResult simply pushes the latest value onto the "result" array.  This
+        // array captures the diff of the line, aIndex, and bIndex from the aLines
+        // and bLines array.
+        //
+        function addToResult(aIndex, bIndex) {
+            if (bIndex < 0) {
+                aMove.push(aLines[aIndex]);
+                aMoveIndex.push(result.length);
+                deleted++;
+            } else if (aIndex < 0) {
+                bMove.push(bLines[bIndex]);
+                bMoveIndex.push(result.length);
+                inserted++;
+            }
+
+            result.push({
+                line: 0 <= aIndex ? aLines[aIndex] : bLines[bIndex],
+                aIndex: aIndex,
+                bIndex: bIndex,
+            });
+        }
+
+        //
+        // addSubMatch handles the lines between a pair of entries in the LCS.  Thus,
+        // this function might recursively call recurseLCS to further match the lines
+        // between aLines and bLines.
+        //
+        function addSubMatch(aLo, aHi, bLo, bHi) {
+            // Match any lines at the beginning of aLines and bLines.
+            while (aLo <= aHi && bLo <= bHi && aLines[aLo] === bLines[bLo]) {
+                addToResult(aLo++, bLo++);
+            }
+
+            // Match any lines at the end of aLines and bLines, but don't place them
+            // in the "result" array just yet, as the lines between these matches at
+            // the beginning and the end need to be analyzed first.
+            let aHiTemp = aHi;
+            while (aLo <= aHi && bLo <= bHi && aLines[aHi] === bLines[bHi]) {
+                aHi--;
+                bHi--;
+            }
+
+            // Now, check to determine with the remaining lines in the subsequence
+            // whether there are any unique common lines between aLines and bLines.
+            //
+            // If not, add the subsequence to the result (all aLines having been
+            // deleted, and all bLines having been inserted).
+            //
+            // If there are unique common lines between aLines and bLines, then let's
+            // recursively perform the patience diff on the subsequence.
+            let uniqueCommonMap = uniqueCommon(aLines, aLo, aHi, bLines, bLo, bHi);
+            if (uniqueCommonMap.size === 0) {
+                while (aLo <= aHi) {
+                    addToResult(aLo++, -1);
+                }
+                while (bLo <= bHi) {
+                    addToResult(-1, bLo++);
+                }
+            } else {
+                recurseLCS(aLo, aHi, bLo, bHi, uniqueCommonMap);
+            }
+
+            // Finally, let's add the matches at the end to the result.
+            while (aHi < aHiTemp) {
+                addToResult(++aHi, ++bHi);
+            }
+        }
+
+        //
+        // recurseLCS finds the longest common subsequence (LCS) between the arrays
+        // aLines[aLo..aHi] and bLines[bLo..bHi] inclusive.  Then for each subsequence
+        // recursively performs another LCS search (via addSubMatch), until there are
+        // none found, at which point the subsequence is dumped to the result.
+        //
+        function recurseLCS(aLo, aHi, bLo, bHi, uniqueCommonMap) {
+            var x = longestCommonSubsequence(
+                uniqueCommonMap || uniqueCommon(aLines, aLo, aHi, bLines, bLo, bHi),
+            );
+            if (x.length === 0) {
+                addSubMatch(aLo, aHi, bLo, bHi);
+            } else {
+                if (aLo < x[0].indexA || bLo < x[0].indexB) {
+                    addSubMatch(aLo, x[0].indexA - 1, bLo, x[0].indexB - 1);
+                }
+
+                let i;
+                for (i = 0; i < x.length - 1; i++) {
+                    addSubMatch(x[i].indexA, x[i + 1].indexA - 1, x[i].indexB, x[i + 1].indexB - 1);
+                }
+
+                if (x[i].indexA <= aHi || x[i].indexB <= bHi) {
+                    addSubMatch(x[i].indexA, aHi, x[i].indexB, bHi);
+                }
+            }
+        }
+
+        recurseLCS(0, aLines.length - 1, 0, bLines.length - 1);
+
+        if (diffPlusFlag) {
+            return {
+                lines: result,
+                lineCountDeleted: deleted,
+                lineCountInserted: inserted,
+                lineCountMoved: 0,
+                aMove: aMove,
+                aMoveIndex: aMoveIndex,
+                bMove: bMove,
+                bMoveIndex: bMoveIndex,
+            };
+        }
+
+        return {
+            lines: result,
+            lineCountDeleted: deleted,
+            lineCountInserted: inserted,
+            lineCountMoved: 0,
+        };
+    }
+
+    /**
+     * Make `num` cycle from 0 to `max`.
+     */
+    function cycle(num, max) {
+        const y = max + 1;
+        return ((num % y) + y) % y;
+    }
+
+    class CommandBar {
+        constructor(options = {}) {
+            this.options = options;
+            this.options.width = this.options.width || 340;
+            if (!this.options._t) this.options._t = string => string;
+
+            this.el = document.createElement('div');
+            this.el.className = 'oe-commandbar-wrapper';
+            this.el.style.display = 'none';
+            this.el.style.width = `${this.options.width}px`;
+            document.body.append(this.el);
+
+            this.options.editable.addEventListener('keydown', this.onKeydown.bind(this), true);
+
+            this._mainWrapperElement = document.createElement('div');
+            this._mainWrapperElement.className = 'oe-commandbar-mainWrapper';
+            this.el.append(this._mainWrapperElement);
+        }
+
+        destroy() {
+            this.el.remove();
+        }
+
+        render(commands) {
+            this._mainWrapperElement.innerHTML = '';
+            clearTimeout(this._renderingTimeout);
+            this._hoverActive = false;
+
+            if (commands.length === 0) {
+                const groupWrapperEl = document.createElement('div');
+                groupWrapperEl.className = 'oe-commandbar-groupWrapper';
+                const groupNameEl = document.createElement('div');
+                groupNameEl.className = 'oe-commandbar-noResult';
+                groupWrapperEl.append(groupNameEl);
+                this._mainWrapperElement.append(groupWrapperEl);
+                groupNameEl.innerText = this.options._t('No results');
+                return;
+            }
+
+            this._currentSelectedCommand =
+                commands.find(c => c === this._currentSelectedCommand) || commands[0];
+            const groups = {};
+            for (const command of commands) {
+                groups[command.groupName] = groups[command.groupName] || [];
+                groups[command.groupName].push(command);
+            }
+            for (const [groupName, commands] of Object.entries(groups)) {
+                const groupWrapperEl = document.createElement('div');
+                groupWrapperEl.className = 'oe-commandbar-groupWrapper';
+                const groupNameEl = document.createElement('div');
+                groupNameEl.className = 'oe-commandbar-groupName';
+                groupWrapperEl.append(groupNameEl);
+                this._mainWrapperElement.append(groupWrapperEl);
+                groupNameEl.innerText = groupName;
+                for (const command of commands) {
+                    const commandElWrapper = document.createElement('div');
+                    commandElWrapper.className = 'oe-commandbar-commandWrapper';
+                    if (this._currentSelectedCommand === command) {
+                        commandElWrapper.classList.add('active');
+                        // use setTimeout in order to avoid to call it upon the
+                        // first rendering.
+                        this._renderingTimeout = setTimeout(() => {
+                            commandElWrapper.scrollIntoView({
+                                block: 'nearest',
+                                inline: 'nearest',
+                            });
+                        });
+                    }
+
+                    commandElWrapper.innerHTML = `
+                    <div class="oe-commandbar-commandLeftCol">
+                        <i class="oe-commandbar-commandImg fa"></i>
+                    </div>
+                    <div class="oe-commandbar-commandRightCol">
+                        <div class="oe-commandbar-commandTitle">
+                        </div>
+                        <div class="oe-commandbar-commandDescription">
+                        </div>
+                    </div>
+                `;
+                    const commandImgEl = commandElWrapper.querySelector('.oe-commandbar-commandImg');
+                    const commandTitleEl = commandElWrapper.querySelector(
+                        '.oe-commandbar-commandTitle',
+                    );
+                    const commandDescriptionEl = commandElWrapper.querySelector(
+                        '.oe-commandbar-commandDescription',
+                    );
+                    commandTitleEl.innerText = command.title;
+                    commandDescriptionEl.innerText = command.description;
+                    commandImgEl.classList.add(command.fontawesome);
+                    groupWrapperEl.append(commandElWrapper);
+
+                    const commandElWrapperMouseMove = () => {
+                        if (!this._hoverActive || commandElWrapper.classList.contains('active')) {
+                            return;
+                        }
+                        this.el
+                            .querySelector('.oe-commandbar-commandWrapper.active')
+                            .classList.remove('active');
+                        this._currentSelectedCommand = command;
+                        commandElWrapper.classList.add('active');
+                    };
+                    commandElWrapper.addEventListener('mousemove', commandElWrapperMouseMove);
+                    commandElWrapper.addEventListener(
+                        'mousedown',
+                        event => {
+                            this._currentValidate();
+                            event.preventDefault();
+                        },
+                        true,
+                    );
+                }
+            }
+        }
+
+        onKeydown(event) {
+            const selection = document.getSelection();
+            if (!selection.isCollapsed || !selection.rangeCount) return;
+
+            if (event.key === '/' && !this._active) {
+                this.options.onActivate && this.options.onActivate();
+
+                const showOnceOnKeyup = () => {
+                    this.show();
+                    event.target.removeEventListener('keyup', showOnceOnKeyup, true);
+                    initialTarget = event.target;
+                    oldValue = event.target.innerText;
+                };
+                event.target.addEventListener('keyup', showOnceOnKeyup, true);
+                this._active = true;
+                this.render(this.options.commands);
+                this._resetPosition();
+
+                let initialTarget;
+                let oldValue;
+
+                const keyup = event => {
+                    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+                        event.preventDefault();
+                        return;
+                    }
+                    if (!initialTarget) return;
+                    const diff = patienceDiff(
+                        oldValue.split(''),
+                        initialTarget.innerText.split(''),
+                        true,
+                    );
+                    this._lastText = diff.bMove.join('').trim();
+
+                    if (this._lastText.match(/\s/)) {
+                        this._stop();
+                        return;
+                    }
+                    const term = this._lastText;
+
+                    this._currentFilteredCommands = this._filter(term);
+                    this.render(this._currentFilteredCommands);
+                    this._resetPosition();
+                };
+                const keydown = e => {
+                    if (e.key === 'Enter') {
+                        e.stopImmediatePropagation();
+                        this._currentValidate();
+                        e.preventDefault();
+                    } else if (e.key === 'Escape') {
+                        e.stopImmediatePropagation();
+                        this._stop();
+                        e.preventDefault();
+                    } else if (e.key === 'Backspace' && !this._lastText) {
+                        this._stop();
+                    } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+
+                        const index = this._currentFilteredCommands.findIndex(
+                            c => c === this._currentSelectedCommand,
+                        );
+                        if (!this._currentFilteredCommands.length || index === -1) {
+                            this._currentSelectedCommand = undefined;
+                        } else {
+                            const n = e.key === 'ArrowDown' ? 1 : -1;
+                            const newIndex = cycle(index + n, this._currentFilteredCommands.length - 1);
+                            this._currentSelectedCommand = this._currentFilteredCommands[newIndex];
+                        }
+                        e.preventDefault();
+                        this.render(this._currentFilteredCommands);
+                    }
+                };
+                const mousemove = () => {
+                    this._hoverActive = true;
+                };
+
+                this._stop = () => {
+                    this._active = false;
+                    this.hide();
+                    this._currentSelectedCommand = undefined;
+
+                    document.removeEventListener('mousedown', this._stop);
+                    document.removeEventListener('keyup', keyup);
+                    document.removeEventListener('keydown', keydown, true);
+                    document.removeEventListener('mousemove', mousemove);
+
+                    this.options.onStop && this.options.onStop();
+                };
+                this._currentValidate = () => {
+                    const command = this._currentFilteredCommands.find(
+                        c => c === this._currentSelectedCommand,
+                    );
+                    if (command) {
+                        this.options.preValidate && this.options.preValidate();
+                        command.callback();
+                        this.options.postValidate && this.options.postValidate();
+                    }
+                    this._stop();
+                };
+                document.addEventListener('mousedown', this._stop);
+                document.addEventListener('keyup', keyup);
+                document.addEventListener('keydown', keydown, true);
+                document.addEventListener('mousemove', mousemove);
+            }
+        }
+
+        show() {
+            this.options.onShow && this.options.onShow();
+            this.el.style.display = 'flex';
+            this._resetPosition();
+        }
+
+        hide() {
+            this.el.style.display = 'none';
+            if (this._active) this._stop();
+        }
+
+        // -------------------------------------------------------------------------
+        // private
+        // -------------------------------------------------------------------------
+
+        _filter(term) {
+            let commands = this.options.commands;
+            term = term.toLowerCase();
+            term = term.replaceAll(/\s/g, '\\s');
+            const regex = new RegExp(
+                term
+                    .split('')
+                    .map(c => c.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'))
+                    .join('.*'),
+            );
+            if (term.length) {
+                commands = this.options.commands.filter(command => {
+                    const commandText = (command.groupName + ' ' + command.title).toLowerCase();
+                    return commandText.match(regex);
+                });
+            }
+            return commands;
+        }
+
+        _resetPosition() {
+            const position = getRangePosition(this.el);
+            if (!position) {
+                this.hide();
+                return;
+            }
+            const { left, top } = position;
+
+            this.el.style.left = `${left}px`;
+            this.el.style.top = `${top}px`;
+        }
+    }
+
+    class TablePicker extends EventTarget {
+        constructor(options = {}) {
+            super();
+            this.options = options;
+            this.options.minRowCount = this.options.minRowCount || 3;
+            this.options.minColCount = this.options.minColCount || 3;
+
+            this.rowNumber = this.options.minRowCount;
+            this.colNumber = this.options.minColCount;
+
+            this.tablePickerWrapper = document.createElement('div');
+            this.tablePickerWrapper.classList.add('oe-tablepicker-wrapper');
+            this.tablePickerWrapper.innerHTML = `
+            <div class="oe-tablepicker"></div>
+            <div class="oe-tablepicker-size"></div>
+        `;
+
+            if (this.options.floating) {
+                this.tablePickerWrapper.style.position = 'absolute';
+                this.tablePickerWrapper.classList.add('oe-floating');
+            }
+
+            this.tablePickerElement = this.tablePickerWrapper.querySelector('.oe-tablepicker');
+            this.tablePickerSizeViewElement = this.tablePickerWrapper.querySelector(
+                '.oe-tablepicker-size',
+            );
+
+            this.el = this.tablePickerWrapper;
+
+            this.hide();
+        }
+
+        render() {
+            this.tablePickerElement.innerHTML = '';
+
+            const colCount = Math.max(this.colNumber, this.options.minRowCount);
+            const rowCount = Math.max(this.rowNumber, this.options.minRowCount);
+            const extraCol = 1;
+            const extraRow = 1;
+
+            for (let rowNumber = 1; rowNumber <= rowCount + extraRow; rowNumber++) {
+                const rowElement = this.options.document.createElement('div');
+                rowElement.classList.add('oe-tablepicker-row');
+                this.tablePickerElement.appendChild(rowElement);
+                for (let colNumber = 1; colNumber <= colCount + extraCol; colNumber++) {
+                    const cell = this.options.document.createElement('div');
+                    cell.classList.add('oe-tablepicker-cell', 'btn');
+                    rowElement.appendChild(cell);
+
+                    if (rowNumber <= this.rowNumber && colNumber <= this.colNumber) {
+                        cell.classList.add('active');
+                    }
+
+                    const bindMouseMove = () => {
+                        cell.addEventListener('mouseover', () => {
+                            if (this.colNumber !== colNumber || this.rowNumber != rowNumber) {
+                                this.colNumber = colNumber;
+                                this.rowNumber = rowNumber;
+                                this.render();
+                            }
+                        });
+                        this.options.document.removeEventListener('mousemove', bindMouseMove);
+                    };
+                    this.options.document.addEventListener('mousemove', bindMouseMove);
+                    cell.addEventListener('mousedown', this.selectCell.bind(this));
+                }
+            }
+
+            this.tablePickerSizeViewElement.textContent = `${this.colNumber}x${this.rowNumber}`;
+        }
+
+        show() {
+            this.reset();
+            this.el.style.display = 'block';
+            if (this.options.floating) {
+                this._showFloating();
+            }
+        }
+
+        hide() {
+            this.el.style.display = 'none';
+        }
+
+        reset() {
+            this.rowNumber = this.options.minRowCount;
+            this.colNumber = this.options.minColCount;
+            this.render();
+        }
+
+        selectCell() {
+            this.dispatchEvent(
+                new CustomEvent('cell-selected', {
+                    detail: { colNumber: this.colNumber, rowNumber: this.rowNumber },
+                }),
+            );
+        }
+
+        _showFloating() {
+            const keydown = e => {
+                const actions = {
+                    ArrowRight: {
+                        colNumber: this.colNumber + 1,
+                        rowNumber: this.rowNumber,
+                    },
+                    ArrowLeft: {
+                        colNumber: this.colNumber - 1 || 1,
+                        rowNumber: this.rowNumber,
+                    },
+                    ArrowUp: {
+                        colNumber: this.colNumber,
+                        rowNumber: this.rowNumber - 1 || 1,
+                    },
+                    ArrowDown: {
+                        colNumber: this.colNumber,
+                        rowNumber: this.rowNumber + 1,
+                    },
+                };
+                const action = actions[e.key];
+                if (action) {
+                    this.rowNumber = action.rowNumber || this.rowNumber;
+                    this.colNumber = action.colNumber || this.colNumber;
+                    this.render();
+
+                    e.preventDefault();
+                } else if (e.key === 'Enter') {
+                    this.selectCell();
+                    e.preventDefault();
+                } else if (e.key === 'Escape') {
+                    stop();
+                    e.preventDefault();
+                }
+            };
+
+            const offset = getRangePosition(this.el);
+            this.el.style.left = `${offset.left}px`;
+            this.el.style.top = `${offset.top}px`;
+
+            const stop = () => {
+                this.hide();
+                this.options.document.removeEventListener('mousedown', stop);
+                this.removeEventListener('cell-selected', stop);
+                this.options.document.removeEventListener('keydown', keydown, true);
+            };
+
+            // Allow the mousedown that activate this command callback to release before adding the listener.
+            setTimeout(() => {
+                this.options.document.addEventListener('mousedown', stop);
+            });
+            this.options.document.addEventListener('keydown', keydown, true);
+            this.addEventListener('cell-selected', stop);
+        }
+    }
 
     const UNBREAKABLE_ROLLBACK_CODE = 'UNBREAKABLE';
     const UNREMOVABLE_ROLLBACK_CODE = 'UNREMOVABLE';
     const BACKSPACE_ONLY_COMMANDS = ['oDeleteBackward', 'oDeleteForward'];
     const BACKSPACE_FIRST_COMMANDS = BACKSPACE_ONLY_COMMANDS.concat(['oEnter', 'oShiftEnter']);
-
-    const TABLEPICKER_ROW_COUNT = 3;
-    const TABLEPICKER_COL_COUNT = 3;
 
     const KEYBOARD_TYPES = { VIRTUAL: 'VIRTUAL', PHYSICAL: 'PHYSICAL', UNKNOWN: 'UKNOWN' };
 
@@ -2972,6 +3729,7 @@ var exportVariable = (function (exports) {
                     toSanitize: true,
                     isRootEditable: true,
                     getContentEditableAreas: () => [],
+                    _t: string => string,
                 },
                 options,
             );
@@ -3034,6 +3792,16 @@ var exportVariable = (function (exports) {
 
             this.idSet(editable);
 
+            this._createCommandBar();
+
+            this.toolbarTablePicker = new TablePicker({ document: this.document });
+            this.toolbarTablePicker.addEventListener('cell-selected', ev => {
+                this.execCommand('insertTable', {
+                    rowNumber: ev.detail.rowNumber,
+                    colNumber: ev.detail.colNumber,
+                });
+            });
+
             // -----------
             // Bind events
             // -----------
@@ -3048,6 +3816,7 @@ var exportVariable = (function (exports) {
             this.addDomListener(this.editable, 'drop', this._onDrop);
 
             this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
+            this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
             this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
             this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
 
@@ -3061,13 +3830,14 @@ var exportVariable = (function (exports) {
                 // Ensure anchors in the toolbar don't trigger a hash change.
                 const toolbarAnchors = this.toolbar.querySelectorAll('a');
                 toolbarAnchors.forEach(a => a.addEventListener('click', e => e.preventDefault()));
-                this.tablePicker = this.toolbar.querySelector('.tablepicker');
-                if (this.tablePicker) {
-                    this.tablePickerSizeView = this.toolbar.querySelector('.tablepicker-size');
-                    this.toolbar
-                        .querySelector('#tableDropdownButton')
-                        .addEventListener('click', this._initTablePicker.bind(this));
-                }
+                const tablepickerDropdown = this.toolbar.querySelector('.oe-tablepicker-dropdown');
+                tablepickerDropdown && tablepickerDropdown.append(this.toolbarTablePicker.el);
+                this.toolbarTablePicker.show();
+                const tableDropdownButton = this.toolbar.querySelector('#tableDropdownButton');
+                tableDropdownButton &&
+                    tableDropdownButton.addEventListener('click', () => {
+                        this.toolbarTablePicker.reset();
+                    });
                 for (const colorLabel of this.toolbar.querySelectorAll('label')) {
                     colorLabel.addEventListener('mousedown', ev => {
                         // Hack to prevent loss of focus (done by preventDefault) while still opening
@@ -3097,6 +3867,8 @@ var exportVariable = (function (exports) {
         destroy() {
             this.observerUnactive();
             this._removeDomListener();
+            this.commandBar.destroy();
+            this.commandbarTablePicker.el.remove();
         }
 
         sanitize() {
@@ -3877,7 +4649,11 @@ var exportVariable = (function (exports) {
                 }
             }
         }
-
+        _removeContenteditableLinks() {
+            for (const node of this.editable.querySelectorAll('a[contenteditable]')) {
+                node.removeAttribute('contenteditable');
+            }
+        }
         _activateContenteditable() {
             this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
@@ -3955,6 +4731,164 @@ var exportVariable = (function (exports) {
             }
             const canRedo = this._historyStepsStates.get(pos) === 1 && totalConsumed <= 0;
             return canRedo ? pos : -1;
+        }
+
+        // COMMAND BAR
+        // ===========
+
+        _createCommandBar() {
+            this.options.noScrollSelector = this.options.noScrollSelector || 'body';
+
+            const revertHistoryBeforeCommandbar = () => {
+                let stepIndex = this._historySteps.length - 1;
+                while (stepIndex >= this._beforeCommandbarStepIndex) {
+                    const stepState = this._historyStepsStates.get(stepIndex);
+                    if (stepState !== 2) {
+                        this.historyRevert(this._historySteps[stepIndex]);
+                    }
+                    this._historyStepsStates.set(stepIndex, 2);
+                    stepIndex--;
+                }
+                this._historyStepsStates.set(this._historySteps.length - 1, 1);
+                this.historyStep(true);
+                setTimeout(() => {
+                    this.editable.focus();
+                    getDeepRange(this.editable, { select: true });
+                });
+            };
+
+            this.commandbarTablePicker = new TablePicker({
+                document: this.document,
+                floating: true,
+            });
+
+            document.body.appendChild(this.commandbarTablePicker.el);
+
+            this.commandbarTablePicker.addEventListener('cell-selected', ev => {
+                this.execCommand('insertTable', {
+                    rowNumber: ev.detail.rowNumber,
+                    colNumber: ev.detail.colNumber,
+                });
+            });
+
+            const mainCommands = [
+                {
+                    groupName: 'Basic blocks',
+                    title: 'Heading 1',
+                    description: 'Big section heading.',
+                    fontawesome: 'fa-header',
+                    callback: () => {
+                        this.execCommand('setTag', 'H1');
+                    },
+                },
+                {
+                    groupName: 'Basic blocks',
+                    title: 'Heading 2',
+                    description: 'Medium section heading.',
+                    fontawesome: 'fa-header',
+                    callback: () => {
+                        this.execCommand('setTag', 'H2');
+                    },
+                },
+                {
+                    groupName: 'Basic blocks',
+                    title: 'Heading 3',
+                    description: 'Small section heading.',
+                    fontawesome: 'fa-header',
+                    callback: () => {
+                        this.execCommand('setTag', 'H3');
+                    },
+                },
+                {
+                    groupName: 'Basic blocks',
+                    title: 'Text',
+                    description: 'Paragraph block.',
+                    fontawesome: 'fa-paragraph',
+                    callback: () => {
+                        this.execCommand('setTag', 'P');
+                    },
+                },
+                {
+                    groupName: 'Basic blocks',
+                    title: 'Bulleted list',
+                    description: 'Create a simple bulleted list.',
+                    fontawesome: 'fa-list-ul',
+                    callback: () => {
+                        this.execCommand('toggleList', 'UL');
+                    },
+                },
+                {
+                    groupName: 'Basic blocks',
+                    title: 'Numbered list',
+                    description: 'Create a list with numbering.',
+                    fontawesome: 'fa-list-ol',
+                    callback: () => {
+                        this.execCommand('toggleList', 'OL');
+                    },
+                },
+                {
+                    groupName: 'Basic blocks',
+                    title: 'Checklist',
+                    description: 'Track tasks with a checklist.',
+                    fontawesome: 'fa-tasks',
+                    callback: () => {
+                        this.execCommand('toggleList', 'CL');
+                    },
+                },
+                {
+                    groupName: 'Basic blocks',
+                    title: 'Horizontal rule',
+                    description: 'Insert an horizantal rule.',
+                    fontawesome: 'fa-minus',
+                    callback: () => {
+                        this.execCommand('insertHorizontalRule');
+                    },
+                },
+                {
+                    groupName: 'Basic blocks',
+                    title: 'Table',
+                    description: 'Insert a table.',
+                    fontawesome: 'fa-table',
+                    callback: () => {
+                        this.commandbarTablePicker.show();
+                    },
+                },
+            ];
+            // Translate the command title and description if a translate function
+            // is provided.
+            for (const command of mainCommands) {
+                command.title = this.options._t(command.title);
+                command.description = this.options._t(command.description);
+            }
+            this.commandBar = new CommandBar({
+                editable: this.editable,
+                _t: this.options._t,
+                onShow: () => {
+                    this.commandbarTablePicker.hide();
+                },
+                onActivate: () => {
+                    this._beforeCommandbarStepIndex = this._historySteps.length - 1;
+                    this.observerUnactive();
+                    for (const element of document.querySelectorAll(this.options.noScrollSelector)) {
+                        element.classList.add('oe-noscroll');
+                    }
+                    this.observerActive();
+                },
+                preValidate: () => {
+                    revertHistoryBeforeCommandbar();
+                },
+                postValidate: () => {
+                    this.historyStep(true);
+                },
+                onStop: () => {
+                    this.observerUnactive();
+                    for (const element of document.querySelectorAll('.oe-noscroll')) {
+                        element.classList.remove('oe-noscroll');
+                    }
+                    this.observerActive();
+                },
+                commands: [...mainCommands, ...(this.options.commands || [])],
+            });
         }
 
         // TOOLBAR
@@ -4281,6 +5215,70 @@ var exportVariable = (function (exports) {
             }
         }
 
+        clean() {
+            this.observerUnactive();
+            for (const hint of document.querySelectorAll('.oe-hint')) {
+                hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
+                hint.removeAttribute('placeholder');
+            }
+            this.observerActive();
+        }
+        /**
+         * Handle the hint preview for the commandbar.
+         * @private
+         */
+        _handleCommandHint() {
+            const selectors = {
+                BLOCKQUOTE: 'Empty quote',
+                H1: 'Heading 1',
+                H2: 'Heading 2',
+                H3: 'Heading 3',
+                H4: 'Heading 4',
+                H5: 'Heading 5',
+                H6: 'Heading 6',
+                'UL LI': 'List',
+                'OL LI': 'List',
+                'CL LI': 'To-do',
+            };
+
+            for (const hint of document.querySelectorAll('.oe-hint')) {
+                if (hint.classList.contains('oe-command-temporary-hint') || !isEmptyBlock(hint)) {
+                    this.observerUnactive();
+                    hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
+                    hint.removeAttribute('placeholder');
+                    this.observerActive();
+                }
+            }
+
+            for (const [selector, text] of Object.entries(selectors)) {
+                for (const el of this.editable.querySelectorAll(selector)) {
+                    this._makeHint(el, text);
+                }
+            }
+
+            const selection = document.getSelection();
+            if (!selection.isCollapsed || !selection.rangeCount) return;
+
+            const block = closestElement(selection.anchorNode, 'P, DIV');
+            this._makeHint(block, 'Type "/" for commands', true);
+        }
+        _makeHint(block, text, temporary = false) {
+            const content = block && block.innerHTML.trim();
+            if (
+                block &&
+                (content === '' || content === '<br>') &&
+                ancestors(block, this.editable).includes(this.editable)
+            ) {
+                this.observerUnactive();
+                block.setAttribute('placeholder', text);
+                block.classList.add('oe-hint');
+                if (temporary) {
+                    block.classList.add('oe-command-temporary-hint');
+                }
+                this.observerActive();
+            }
+        }
+
         _onMouseup(ev) {
             this._currentMouseState = ev.type;
 
@@ -4298,10 +5296,12 @@ var exportVariable = (function (exports) {
             this.automaticStepSkipStack();
             const link = closestElement(ev.target, 'a');
             if (link && !link.querySelector('div') && !closestElement(ev.target, '.o_not_editable')) {
+                this._removeContenteditableLinks();
                 const editableChildren = link.querySelectorAll('[contenteditable=true]');
                 this._stopContenteditable();
                 [...editableChildren, link].forEach(node => node.setAttribute('contenteditable', true));
             } else {
+                this._removeContenteditableLinks();
                 this._activateContenteditable();
             }
 
@@ -4405,85 +5405,6 @@ var exportVariable = (function (exports) {
                     ev.preventDefault();
                     this._updateToolbar();
                 });
-            }
-        }
-        _initTablePicker() {
-            for (const child of [...this.tablePicker.childNodes]) {
-                child.remove();
-            }
-            this.tablePicker.dataset.rowCount = 0;
-            this.tablePicker.dataset.colCount = 0;
-            for (let rowIndex = 0; rowIndex < TABLEPICKER_ROW_COUNT; rowIndex++) {
-                this._addTablePickerRow();
-            }
-            for (let colIndex = 0; colIndex < TABLEPICKER_COL_COUNT; colIndex++) {
-                this._addTablePickerColumn();
-            }
-            this.tablePicker.querySelector('.tablepicker-cell').classList.toggle('active', true);
-            this.tablePickerSizeView.textContent = '1x1';
-        }
-        _addTablePickerRow() {
-            const row = this.document.createElement('div');
-            row.classList.add('tablepicker-row');
-            row.dataset.rowId = this.tablePicker.querySelectorAll('.tablepicker-row').length + 1;
-            this.tablePicker.appendChild(row);
-            this.tablePicker.dataset.rowCount = +this.tablePicker.dataset.rowCount + 1;
-            for (let i = 0; i < +this.tablePicker.dataset.colCount; i++) {
-                this._addTablePickerCell(row);
-            }
-            return row;
-        }
-        _addTablePickerColumn() {
-            for (const row of this.tablePicker.querySelectorAll('.tablepicker-row')) {
-                this._addTablePickerCell(row);
-            }
-            this.tablePicker.dataset.colCount = +this.tablePicker.dataset.colCount + 1;
-        }
-        _addTablePickerCell(row) {
-            const rowId = +row.dataset.rowId;
-            const colId = row.querySelectorAll('.tablepicker-cell').length + 1;
-            const cell = this.document.createElement('div');
-            cell.classList.add('tablepicker-cell', 'btn');
-            cell.dataset.rowId = rowId;
-            cell.dataset.colId = colId;
-            row.appendChild(cell);
-            cell.addEventListener('mouseover', () => this._onHoverTablePickerCell(rowId, colId));
-        }
-        _onHoverTablePickerCell(targetRowId, targetColId) {
-            // Hightlight the active cells, remove highlight of the others.
-            for (const cell of this.tablePicker.querySelectorAll('.tablepicker-cell')) {
-                const [rowId, colId] = [+cell.dataset.rowId, +cell.dataset.colId];
-                const isActive = rowId <= targetRowId && colId <= targetColId;
-                cell.classList.toggle('active', isActive);
-            }
-            this.tablePickerSizeView.textContent = `${targetColId}x${targetRowId}`;
-
-            // Add/remove rows to expand/shrink the tablepicker.
-            if (targetRowId >= +this.tablePicker.dataset.rowCount) {
-                this._addTablePickerRow();
-            } else if (+this.tablePicker.dataset.rowCount > TABLEPICKER_ROW_COUNT) {
-                for (const row of this.tablePicker.querySelectorAll('.tablepicker-row')) {
-                    const rowId = +row.dataset.rowId;
-                    if (rowId >= TABLEPICKER_ROW_COUNT && rowId > targetRowId + 1) {
-                        row.remove();
-                        this.tablePicker.dataset.rowCount = +this.tablePicker.dataset.rowCount - 1;
-                    }
-                }
-            }
-            // Add/remove cols to expand/shrink the tablepicker.
-            const colCount = +this.tablePicker.dataset.colCount;
-            if (targetColId >= colCount) {
-                this._addTablePickerColumn();
-            } else if (colCount > TABLEPICKER_COL_COUNT) {
-                const removedColIds = new Set();
-                for (const cell of this.tablePicker.querySelectorAll('.tablepicker-cell')) {
-                    const colId = +cell.dataset.colId;
-                    if (colId >= TABLEPICKER_COL_COUNT && colId > targetColId + 1) {
-                        cell.remove();
-                        removedColIds.add(colId);
-                    }
-                }
-                this.tablePicker.dataset.colCount = colCount - removedColIds.size;
             }
         }
         _onTabulationInTable(ev) {
@@ -4610,6 +5531,7 @@ var exportVariable = (function (exports) {
     exports.getListMode = getListMode;
     exports.getNormalizedCursorPosition = getNormalizedCursorPosition;
     exports.getOuid = getOuid;
+    exports.getRangePosition = getRangePosition;
     exports.getSelectedNodes = getSelectedNodes;
     exports.getState = getState;
     exports.getTraversedNodes = getTraversedNodes;
