@@ -46,6 +46,7 @@ export async function annotateTraceback(error) {
     const subst = `:$1`;
     error.stack = error.stack.replace(regex, subst);
   }
+  // eslint-disable-next-line no-undef
   const frames = await StackTrace.fromError(error);
   const lines = traceback.split('\n');
   if (lines[lines.length-1].trim() === "") {

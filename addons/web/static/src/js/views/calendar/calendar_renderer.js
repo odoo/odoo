@@ -1,3 +1,4 @@
+/* global FullCalendar */
 odoo.define('web.CalendarRenderer', function (require) {
 "use strict";
 

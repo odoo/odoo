@@ -1,3 +1,4 @@
+/* global posmodel */
 odoo.define('point_of_sale.tour.pricelist', function (require) {
     "use strict";
 

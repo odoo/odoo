@@ -1,3 +1,4 @@
+/* global timapi */
 odoo.define('pos_six.payment', function (require) {
 "use strict";
 

@@ -1,3 +1,4 @@
+/* global checkVATNumber */
 odoo.define('partner.autocomplete.Mixin', function (require) {
 'use strict';
 

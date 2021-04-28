@@ -51,6 +51,7 @@ odoo.define('web.Class', function () {
 function OdooClass(){}
 
 var initializing = false;
+// eslint-disable-next-line no-undef
 var fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/;
 
 /**

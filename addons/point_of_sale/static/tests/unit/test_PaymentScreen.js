@@ -1,3 +1,4 @@
+/*global Backbone */
 odoo.define('point_of_sale.tests.PaymentScreen', function (require) {
     'use strict';
 
