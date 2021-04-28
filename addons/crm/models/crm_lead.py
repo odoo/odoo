@@ -302,10 +302,12 @@ class Lead(models.Model):
 
             # propose a new company based on responsible, limited by team
             if not proposal:
-                if not lead.user_id or lead.user_id == self.env.user:
+                if lead.user_id:
+                    proposal = lead.team_id.company_id or lead.user_id.company_id
+                elif lead.team_id:
+                    proposal = lead.team_id.company_id
+                else:
                     proposal = self.env.company
-                elif lead.user_id:
-                    proposal = lead.user_id.company_id
 
                 if lead.team_id.company_id and proposal != lead.team_id.company_id:
                     proposal = False
