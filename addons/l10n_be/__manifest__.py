@@ -39,6 +39,7 @@ Wizards provided by this module:
         'account',
         'base_iban',
         'base_vat',
+        'l10n_be_base',
         'l10n_multilang',
     ],
     'data': [
