@@ -718,7 +718,7 @@ class ResourceCalendarAttendance(models.Model):
         # avoid negative or after midnight
         self.hour_from = min(self.hour_from, 23.99)
         self.hour_from = max(self.hour_from, 0.0)
-        self.hour_to = min(self.hour_to, 23.99)
+        self.hour_to = min(self.hour_to, 24)
         self.hour_to = max(self.hour_to, 0.0)
 
         # avoid wrong order
