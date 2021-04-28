@@ -1,9 +1,80 @@
 .s_process_steps {
     .s_process_step_icon {
         margin: $grid-gutter-width 0;
+        span.s_process_step_line_right {
+            display: block;
+            overflow: hidden;
+            width: 50%;
+        }
+        span.s_process_step_line_left {
+            display: block;
+            overflow: hidden;
+            width: 50%;
+            right: Opx;
+        }
+        .fa {
+            display: block;
+        }
+    }
+    .s_process_step_content {
+        padding: 0 $grid-gutter-width/2;
+    }
+    .s_process_step_connector {
+        margin: $grid-gutter-width/2 $grid-gutter-width/4;
+        display: block;
+        overflow: hidden;
+        width: $grid-gutter-width*8;
+        @include o-position-absolute(0, 50%, 0, auto);
+    }
+    @include media-breakpoint-up(lg) {
+        overflow-x: hidden;
+        .s_process_step {
+            .s_process_step_icon {
+                position: relative;
+                z-index: 1;
+                span.s_process_step_line_right {
+                    content: '';
+                    z-index: -1;
+                    border-top: 1px solid gray('500');
+                    @include o-position-absolute(50%, 0, 0, auto);
+                }
+                span.s_process_step_line_left {
+                    content: '';
+                    z-index: -1;
+                    border-top: 1px solid gray('500');
+                    @include o-position-absolute(50%, 50%, 0, auto); //hauteur, largeur
+                }
+            }
+            .s_process_step_connector {
+                position: relative;
+                content: '';
+                z-index: -1;
+                border-top: 1px solid gray('500');
+                @include o-position-absolute(50%, 0, 0, auto);
+            }
+            /**
+            .s_process_step_icon {
+                span.s_process_step_line {
+                    width: 100%;
+                }
+            }
+            **/
+        }
+    }
+}
+
+
+
+
+/**
+.s_process_steps {
+    .s_process_step_icon {
+        margin: $grid-gutter-width 0;
         span.s_process_step_line {
             display: block;
             overflow: hidden;
+            width: 50%;
+            //left:0;
         }
         .fa {
             display: block;
@@ -54,3 +125,4 @@
         }
     }
 }
+**/

@@ -1708,13 +1708,15 @@ options.registry.ConnectorChoice = options.Class.extend({
     chooseConnector: function (previewMode, widgetValue, params) {
         this.$target[0].dataset.currentConnector = widgetValue;
         //const rows = this.$('.row');
-        const row = this.$target.children().first().children().first();
-        const lines = row.children().find('.s_process_step_line')
+        const $row = this.$target.children().first().children().first();
+        const $right_lines = $row.children().find('.s_process_step_line_right');
+        const $left_lines = $row.children().find('.s_process_step_line_left');
         switch (widgetValue) {
                 case 'None': {
                     //document.write(Object.keys(rows));
                     //debugger;
-                    lines.css('border-top-style', 'none');
+                    $right_lines.css('border-top-style', 'none');
+                    $left_lines.css('border-top-style', 'none');
                     break;
                     //document.write(widgetValue);
                     //rows.childNode;
@@ -1732,7 +1734,8 @@ options.registry.ConnectorChoice = options.Class.extend({
                     **/
                 }
                 case 'Line': {
-                    lines.css('border-top-style', 'solid');
+                    $right_lines.css('border-top-style', 'solid');
+                    $left_lines.css('border-top-style', 'solid');
                     break;
                     //document.write(widgetValue);
                     /**
@@ -1743,18 +1746,23 @@ options.registry.ConnectorChoice = options.Class.extend({
                     **/
                 }
                 case 'Straight arrow': {
-                    lines.css('border-top-style', 'dotted');
+                    $right_lines.css('border-top-style', 'dotted');
+                    $left_lines.css('border-top-style', 'dotted');
                     break;
                     //document.write(widgetValue);
                 }
                 case 'Curved arrow': {
-                    lines.css('border-top-style', 'solid');
-                    lines.css('border-top-left-radius', '-150px');
-                    lines.css('border-top-right-radius', '150px');
+                    $right_lines.css('border-top-style', 'solid');
+                    $left_lines.css('border-top-style', 'solid');
+                    $right_lines.css('border-top-left-radius', '150px');
+                    $left_lines.css('border-top-left-radius', '150px');
+                    $right_lines.css('border-top-right-radius', '150px');
+                    $left_lines.css('border-top-right-radius', '150px');
                     break;
                 }
                 default: {
-                    lines.css('border-top-style', 'solid');
+                    $right_lines.css('border-top-style', 'solid');
+                    $left_lines.css('border-top-style', 'solid');
                     break;
                     /**
                     var child;
