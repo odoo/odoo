@@ -684,11 +684,7 @@ var exportVariable = (function (exports) {
             let newNode = node.childNodes[offset];
             if (newNode) {
                 newNode = getNextVisibleNode(newNode);
-<<<<<<< HEAD
                 if (!newNode || isVisibleEmpty(newNode)) break;
-=======
-                if (!newNode || isEmptyBlock(newNode)) break;
->>>>>>> [FIX] web_editor: build editor up to commit fa480dd
                 found = true;
                 node = newNode;
                 offset = 0;
@@ -700,11 +696,7 @@ var exportVariable = (function (exports) {
             while (node.hasChildNodes()) {
                 let newNode = node.childNodes[offset - 1];
                 newNode = getNextVisibleNode(newNode);
-<<<<<<< HEAD
                 if (!newNode || isVisibleEmpty(newNode)) break;
-=======
-                if (!newNode || isEmptyBlock(newNode)) break;
->>>>>>> [FIX] web_editor: build editor up to commit fa480dd
                 node = newNode;
                 offset = nodeSize(node);
             }
