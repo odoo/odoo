@@ -2,7 +2,7 @@
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
         <xpath expr="//p[@name='payment_term']" position="after">
-            <p t-if="o.company_id.account_fiscal_country_id.code == 'AE' and o.partner_id.country_id.code != 'AE' and o.env.ref('l10n_ae.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
+            <p t-if="o.company_id.account_fiscal_country_id.code == 'AE' and o.partner_id.country_id.code != 'AE' and o.env.ref('l10n_ae_base.gcc_countries_group') in o.partner_id.country_id.country_group_ids">
                 Supply between <b>United Arad Emirates</b> and <b><span t-field="o.partner_id.country_id.name"/></b>
             </p>
         </xpath>
