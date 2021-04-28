@@ -64,7 +64,6 @@ class GoogleSync(models.AbstractModel):
         synced_fields = self._get_google_synced_fields()
         if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
             vals['need_sync'] = True
-
         result = super().write(vals)
         for record in self.filtered('need_sync'):
             if record.google_id:
