@@ -594,7 +594,7 @@ class AccountMove(models.Model):
                 quantity = 1.0
                 tax_type = base_line.tax_ids[0].type_tax_use if base_line.tax_ids else None
                 is_refund = (tax_type == 'sale' and base_line.debit) or (tax_type == 'purchase' and base_line.credit)
-                price_unit_wo_discount = base_line.balance
+                price_unit_wo_discount = base_line.amount_currency
 
             return base_line.tax_ids._origin.with_context(force_sign=move._get_tax_force_sign()).compute_all(
                 price_unit_wo_discount,
