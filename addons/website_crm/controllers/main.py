@@ -3,11 +3,11 @@
 
 from odoo import tools
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.website_form.controllers import main
+from odoo.addons.website.controllers import form
 from odoo.http import request
 
 
-class WebsiteForm(main.WebsiteForm):
+class WebsiteForm(form.WebsiteForm):
 
     def _get_country(self):
         visitor_partner = request.env['website.visitor']._get_visitor_from_request().partner_id

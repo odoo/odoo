@@ -10,7 +10,7 @@
         'iap_crm',
         'iap_mail',
         'crm_iap_lead',
-        'website_form'
+        'website'
     ],
     'data': [
         'data/reveal_data.xml',
