@@ -10,6 +10,7 @@ import os
 import re
 import sys
 import traceback
+import time
 
 import werkzeug
 import werkzeug.exceptions
@@ -20,13 +21,15 @@ import werkzeug.utils
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, MissingError
-from odoo.http import request, content_disposition
+from odoo.http import request, content_disposition, OpenERPSession
 from odoo.tools import consteq, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
 from odoo.http import ALLOWED_DEBUG_MODES
 from odoo.tools.misc import str2bool
+from odoo.tools._vendor import sessions
+from pathlib import Path
 
 _logger = logging.getLogger(__name__)
 
@@ -487,3 +490,39 @@ class IrHttp(models.AbstractModel):
             return werkzeug.utils.redirect(content, code=301)
         elif status != 200:
             return request.not_found()
+
+    @classmethod
+    def _get_session_store(cls):
+        """
+        Get the session store from the root session store
+        """
+        return http.root.session_store
+
+    @api.autovacuum
+    def _session_vacuum(self):
+        """
+        Remove all session file unused for some time based
+        on the ir.config_parameter base.unused_session_age_limit
+
+        Or default to one week in seconds.
+        """
+        Param = self.env['ir.config_parameter']
+        session_store = self._get_session_store()
+        week_in_seconds = 60*60*24*7
+
+        try:
+            session_age_limit = Param.sudo().get_param(
+                'base.unused_session_age_limit',
+                week_in_seconds
+            )
+            session_age_limit = int(session_age_limit)
+        except ValueError:
+            session_age_limit = week_in_seconds
+
+        last_week = time.time() - session_age_limit
+
+        session_path = Path(session_store.path)
+
+        for session_file in session_path.iterdir():
+            if session_file.stat().st_mtime < last_week:
+                session_file.unlink(True)

@@ -1126,7 +1126,8 @@ class OpenERPSession(sessions.Session):
         files = werkzeug.datastructures.MultiDict()
         # NOTE we do not store files in the session itself to avoid loading them in memory.
         #      By storing them in the session store, we ensure every worker (even ones on other
-        #      servers) can access them. It also allow stale files to be deleted by `session_gc`.
+        #      servers) can access them. It also allow stale files to be deleted by
+        #      `[ir.http]._session_vaccum`.
         for f in req.files.values():
             storename = 'werkzeug_%s_%s.file' % (self.sid, uuid.uuid4().hex)
             path = os.path.join(root.session_store.path, storename)
@@ -1159,18 +1160,6 @@ class OpenERPSession(sessions.Session):
                 except IOError:
                     pass
 
-
-def session_gc(session_store):
-    if random.random() < 0.001:
-        # we keep session one week
-        last_week = time.time() - 60*60*24*7
-        for fname in os.listdir(session_store.path):
-            path = os.path.join(session_store.path, fname)
-            try:
-                if os.path.getmtime(path) < last_week:
-                    os.unlink(path)
-            except OSError:
-                pass
 
 #----------------------------------------------------------
 # WSGI Layer
@@ -1322,9 +1311,6 @@ class Root(object):
         self.dispatch = DisableCacheMiddleware(app)
 
     def setup_session(self, httprequest):
-        # recover or create session
-        session_gc(self.session_store)
-
         sid = httprequest.args.get('session_id')
         explicit_session = True
         if not sid:
