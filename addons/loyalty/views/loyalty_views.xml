@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_property_form" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="point_of_sale.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name="barcode" position="after">
+                    <field name="loyalty_points"/>
+                </field>
+            </data>
+        </field>
+    </record>
+
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra']" position="inside">
+                <group name="loyalty" string="Loyalty Programs">
+                    <field name="loyalty_points" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_loyalty_program_form" model="ir.ui.view">
+        <field name="name">loyalty.program.form</field>
+        <field name="model">loyalty.program</field>
+        <field name="arch" type="xml">
+            <form string="Loyalty Program">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Loyalty Program Name"/></h1>
+                    </div>
+
+                    <div>
+                        <label for="points"/>
+                        <field name="points"/>
+                    </div>
+
+                    <notebook>
+                        <page id="rewards_ids" string="Rewards">
+                            <p>Reward the customer with gifts or discounts for loyalty points</p>
+                            <field name="reward_ids" colspan="4" nolabel="1">
+                                <tree string="Rewards">
+                                    <field name="name"/>
+                                    <field name="reward_type"/>
+                                    <field name="point_cost" />
+                                </tree>
+                            </field>
+                        </page>
+
+                        <page id="rules_ids" string="Points Rules">
+                            <p>Rules change how loyalty points are earned for specific products or categories</p>
+
+                            <field name="rule_ids" colspan="4" nolabel="1">
+                                <tree string="Rules">
+                                    <field name="name" />
+                                    <field name="points_quantity"/>
+                                    <field name="points_currency"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_loyalty_program_search" model="ir.ui.view">
+        <field name="name">loyalty.program.search</field>
+        <field name="model">loyalty.program</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Archived" name="active" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_loyalty_rule_form" model="ir.ui.view">
+        <field name="name">loyalty.rule.form</field>
+        <field name="model">loyalty.rule</field>
+        <field name="arch" type="xml">
+            <form string="Loyalty Rule">
+                <div class="oe_title">
+                    <label for="name" string="Rule Name"/>
+                    <h1><field name="name"/></h1>
+                </div>
+                <group col="2">
+                    <group col='2'>
+                        <field name="rule_domain" string="Based on Products" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
+                    </group>
+                    <group col='2'>
+                        <field name="points_quantity"/>
+                        <field name="points_currency"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_loyalty_reward_form" model="ir.ui.view">
+        <field name="name">loyalty.reward.form</field>
+        <field name="model">loyalty.reward</field>
+        <field name="arch" type="xml">
+            <form string="Loyalty Reward">
+                <div class="oe_title">
+                    <label for="name" string="Reward Name"/>
+                    <h1><field name="name" placeholder="e.g. Free Mug"/></h1>
+                </div>
+                <group>
+                    <field name="point_cost" attrs="{ 'invisible':[('reward_type','=','resale')] }"/>
+                    <field name="minimum_points" />
+                </group>
+                <group>
+                    <group>
+                        <field name="reward_type" string="Reward" widget="radio"/>
+                        <field name="discount_product_id" string="Discount Product" attrs="{ 'invisible':[('reward_type','!=','discount')], 'required':[('reward_type','==','discount')] }" domain="[('available_in_pos', '=', True)]" context="{'default_available_in_pos': '1'}"/>
+                    </group>
+                    <group>
+                        <field name="gift_product_id" attrs="{ 'invisible':[('reward_type','!=','gift')], 'required':[('reward_type','==','gift')] }" domain="[('available_in_pos', '=', True)]" context="{'default_available_in_pos': '1'}" placeholder="Select reward product"/>
+                        <label string="Apply Discount" for="discount_type" attrs="{'invisible': [('reward_type', 'in', ('gift'))]}"/>
+                        <div class="o_row" attrs="{ 'invisible':[('reward_type','!=','discount')] }">
+                            <field name="discount_type" attrs="{ 'required':[('reward_type','=','discount')] }"/>
+                            <field name="discount_percentage" attrs="{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}" class="oe_inline"/>
+                            <span attrs="{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}" class="oe_inline">%</span>
+                        </div>
+                        <label string="Fixed Amount" for="discount_fixed_amount" attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}" />
+                        <div attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}">
+                            <field name="discount_fixed_amount" class="oe_inline" attrs="{'required':[('discount_type', '=', 'fixed_amount')]}"/>
+                        </div>
+                        <label string="Minimum Amount" for="minimum_amount" attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}" />
+                        <div attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}">
+                            <field name="minimum_amount" class="oe_inline" attrs="{'required':[('discount_type', '=', 'fixed_amount')]}"/>
+                        </div>
+
+                        <field name="discount_apply_on" attrs="{'invisible':
+                        ['|', ('reward_type', 'in', ('product', 'gift')), ('discount_type', '!=', 'percentage')]}" widget="radio"/>
+                        <field name="discount_specific_product_ids" widget='many2many_tags' attrs="{'invisible': ['|', '|', ('discount_apply_on', '!=', 'specific_products'),('discount_type', '!=', 'percentage'), ('reward_type', 'in', ('product', 'gift'))], 'required': [('reward_type', '=', 'discount'),('discount_apply_on', '=', 'specific_products'),('discount_type', '=', 'percentage')]}" placeholder="Select products"/>
+                        <label for="discount_max_amount" string="Max Discount Amount" attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'gift')), ('discount_type', '!=', 'percentage')]}"/>
+                        <div attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'gift')), ('discount_type', '!=', 'percentage')]}">
+                            <field name="discount_max_amount" class="oe_inline"/>
+                            <span class="oe_grey">if 0, no limit</span>
+                        </div>
+                    </group>
+
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_loyalty_program_tree" model="ir.ui.view">
+        <field name="name">loyalty.program.form</field>
+        <field name="model">loyalty.program</field>
+        <field name="arch" type="xml">
+            <tree string="Loyalty Programs">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_loyalty_program_kanban" model="ir.ui.view">
+        <field name="name">loyalty.program.kanban</field>
+        <field name="model">loyalty.program</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="points"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="mb4">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div class="mb4" t-if="record.points.raw_value">
+                                <strong>Points:</strong>
+                                <span class="badge badge-pill float-right"><field name="points"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_loyalty_program_form" model="ir.actions.act_window">
+        <field name="name">Loyalty Programs</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">loyalty.program</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new loyalty program
+            </p><p>
+                Loyalty Programs allows you customer to earn points
+                and rewards when doing business at your shops.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        parent="point_of_sale.pos_config_menu_catalog"
+        action="action_loyalty_program_form"
+        id="menu_loyalty_program"
+        sequence="30"
+        groups="point_of_sale.group_pos_manager" />
+
+</odoo>

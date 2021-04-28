@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="simple_pen" model="product.product">
+        <field name="available_in_pos">True</field>
+        <field name="list_price">1.20</field>
+        <field name="name">Simple Pen</field>
+        <field name="weight">0.01</field>
+        <field name="default_code">CONS_0002</field>
+        <field name="uom_id" ref="uom.product_uom_unit" />
+        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="image_1920" type="base64" file="pos_loyalty/static/img/simple_pen.png"/>
+    </record>
+
+    <record id="reward_01" model="loyalty.reward">
+        <field name="name">Free Pen</field>
+        <field name="reward_type">gift</field>
+        <field name="point_cost">5</field>
+        <field name="gift_product_id" ref="pos_loyalty.simple_pen" />
+    </record>
+
+    <record id="program" model="loyalty.program">
+        <field name="name">Loyalty Program</field>
+        <field name="points">10</field>
+        <field name="reward_ids" eval="[(6, 0, [ref('pos_loyalty.reward_01')])]" />
+    </record>
+
+    <function model="pos.config" name="set_loyalty_program_to_main_config" />
+</odoo>
