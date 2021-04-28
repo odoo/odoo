@@ -18,9 +18,9 @@
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <filter name="on_hand" string="On Hand" domain="[('on_hand', '=', True)]"/>
+                    <filter name="to_apply" string="To Apply" domain="[('inventory_quantity_set', '=', True)]"/>
                     <separator/>
                     <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
-                    <filter name="positive" string="Positive Stock" domain="[('quantity', '&gt;', 0.0)]"/>
                     <filter name="reserved" string="Reservations" domain="[('reserved_quantity', '&gt;', 0.0)]"/>
                     <separator/>
                     <filter name="filter_in_date" date="in_date"/>
@@ -143,9 +143,7 @@
                 <field name="owner_id" groups="stock.group_tracking_owner"
                        attrs="{'readonly': [('id', '!=', False)]}"
                        options="{'no_create': True}"/>
-                <field name="inventory_quantity" string="Updated On Hand Quantity" decoration-danger="inventory_quantity &lt; 0"
-                       readonly="0"/>
-                <field name="quantity" string="On Hand Quantity"/>
+                <field name="inventory_quantity_auto_apply" string="On Hand Quantity" readonly="0"/>
                 <field name="available_quantity" optional="show"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company" optional="show"/>
@@ -340,9 +338,17 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" editable="bottom" create="1" edit="1" import="0" js_class="singleton_list" sample="1">
+            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="0" js_class="singleton_list" sample="1">
+                <header>
+                    <button name="stock.action_stock_inventory_adjustement_name" groups="stock.group_stock_manager" type="action" string="Apply"/>
+                    <button name="action_set_inventory_quantity" type="object" string="Set"/>
+                    <button name="action_reset" type="object" string="Clear"/>
+                    <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
+                </header>
                 <field name="id" invisible="1"/>
+                <field name="is_outdated" invisible="1"/>
                 <field name="tracking" invisible="1"/>
+                <field name="inventory_quantity_set" invisible="1"/>
                 <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" attrs="{'readonly': [('id', '!=', False)]}" invisible="context.get('hide_location', False)" options="{'no_create': True}"/>
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}" readonly="context.get('single_product', False)" force_save="1" options="{'no_create': True}"/>
                 <field name="lot_id" groups="stock.group_production_lot"
@@ -354,15 +360,15 @@
                 <field name="available_quantity" string="Available Quantity" decoration-danger="available_quantity &lt; 0" optional="hidden"/>
                 <field name="quantity" optional="show" string="On Hand Quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom" string="UoM"/>
-                <field name="inventory_quantity" decoration-muted="inventory_quantity == 0"/>
-                <field name="inventory_diff_quantity" string="Difference" decoration-muted="inventory_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
+                <field name="inventory_quantity" widget="counted_quantity_widget"/>
+                <field name="inventory_diff_quantity" string="Difference"  attrs="{'invisible': [('inventory_quantity_set', '=', False)]}" decoration-muted="inventory_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
                 <field name="inventory_date" optional="show"/>
                 <field name="user_id" string="User" optional="show"/>
                 <field name='company_id' groups="base.group_multi_company" optional="hide"/>
-                <button name="action_apply_inventory" groups="stock.group_stock_manager" type="object" string="Apply" class="btn btn-link" icon="fa-save" attrs="{'invisible': [('inventory_diff_quantity', '=', 0), ('inventory_quantity', '=', 0), ('quantity', '!=', 0)]}"/>
-                <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" attrs="{'invisible': ['|',  '|', ('quantity', '=', 0.0), ('inventory_diff_quantity', '!=', 0), ('inventory_quantity', '!=', 0)]}"/>
-                <button name="action_inventory_history" type="object" class="btn btn-link" icon="fa-history" string="History"/>
-                <button name="action_set_inventory_quantity_to_zero" type="object" string="Reset" class="btn" icon="fa-times" attrs="{'invisible': [('inventory_diff_quantity', '=', 0), ('inventory_quantity', '=', 0), ('quantity', '!=', 0)]}"/>
+                <button name="action_inventory_history" type="object" class="btn btn-link text-info" icon="fa-history" string="History"/>
+                <button name="action_apply_inventory" groups="stock.group_stock_manager" type="object" string="Apply" class="btn btn-link text-success" icon="fa-save" attrs="{'invisible': [('inventory_quantity_set', '=', False)]}"/>
+                <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" attrs="{'invisible': [('inventory_quantity_set', '=', True)]}"/>
+                <button name="action_set_inventory_quantity_to_zero" type="object" string="Clear" class="btn text-warning" icon="fa-times" attrs="{'invisible': [('inventory_quantity_set', '=', False)]}"/>
             </tree>
         </field>
     </record>

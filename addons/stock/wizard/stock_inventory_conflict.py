@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
-from odoo.exceptions import UserError
+from odoo import fields, models
 
 
 class StockInventoryConflict(models.TransientModel):
@@ -14,15 +13,12 @@ class StockInventoryConflict(models.TransientModel):
     quant_to_fix_ids = fields.Many2many(
         'stock.quant', string='Conflicts')
 
-    def action_validate(self):
-        for conflict in self:
-            quant_to_fix_ids = conflict.quant_to_fix_ids.filtered(
-                lambda q: q.quantity != (q.inventory_quantity - q.inventory_diff_quantity))
-            if quant_to_fix_ids:
-                if self.user_has_groups('stock.group_stock_multi_locations'):
-                    message = '\n'.join([_('%s at location %s', q.product_id.display_name, q.location_id.display_name) for q in quant_to_fix_ids])
-                else:
-                    message = '\n'.join([_('%s', q.product_id.display_name) for q in quant_to_fix_ids])
-                raise UserError(
-                    _('You still have conflicts to resolve:\n') + message)
-            conflict.quant_ids.action_apply_inventory()
+    def action_keep_counted_quantity(self):
+        for quant in self.quant_ids:
+            quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
+        return self.quant_ids.action_apply_inventory()
+
+    def action_keep_difference(self):
+        for quant in self.quant_ids:
+            quant.inventory_quantity = quant.quantity + quant.inventory_diff_quantity
+        return self.quant_ids.action_apply_inventory()
