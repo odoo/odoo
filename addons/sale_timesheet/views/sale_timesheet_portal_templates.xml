@@ -22,7 +22,14 @@
                         <em class="font-weight-normal text-muted">Timesheets for sales order item:</em>
                         <span t-field="sol.display_name"/>
                         <t t-if="sol.remaining_hours_available">
-                            <span class="text-muted font-weight-normal">(<span t-field="sol.product_uom_qty" t-options='{"widget": "float_time"}'></span> <span t-field="sol.product_uom.display_name"></span> Ordered, <span t-field="sol.remaining_hours" t-options='{"widget": "float_time"}'></span> <span t-field="sol.product_uom.display_name"></span> Remaining)</span>
+                            <span class="text-muted font-weight-normal">
+                                <t t-if="is_uom_day">
+                                    (<span t-esc="timesheets._convert_hours_to_days(sol.product_uom_qty)" t-options='{"widget": "timesheet_uom"}'></span> Days Ordered, <span t-esc="timesheets._convert_hours_to_days(sol.remaining_hours)" t-options='{"widget": "timesheet_uom"}'></span> Days Remaining)
+                                </t>
+                                <t t-else="">
+                                    (<span t-field="sol.product_uom_qty" t-options='{"widget": "float_time"}'></span> <span t-field="sol.product_uom.display_name"></span> Ordered, <span t-field="sol.remaining_hours" t-options='{"widget": "float_time"}'></span> <span t-field="sol.product_uom.display_name"></span> Remaining)
+                                </t>
+                            </span>
                         </t>
                     </t>
                 </th>
