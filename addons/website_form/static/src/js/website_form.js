@@ -141,6 +141,11 @@ odoo.define('website_form.animation', function (require) {
             }
 
             // Post form and handle result
+            self.post_form(form_values)
+        },
+
+        post_form: function(form_values) {
+            var self = this;
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action')||this.$target.data('model_name')), form_values)
             .then(function (result_data) {
                 result_data = JSON.parse(result_data);
@@ -274,4 +279,6 @@ odoo.define('website_form.animation', function (require) {
             });
         },
     });
+
+    return publicWidget.registry.form_builder_send
 });
