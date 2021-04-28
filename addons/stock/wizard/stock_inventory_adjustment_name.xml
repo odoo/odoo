@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_inventory_adjustment_name_form_view" model="ir.ui.view">
+        <field name="name">stock.inventory.adjustment.name.form.view</field>
+        <field name="model">stock.inventory.adjustment.name</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    <group>
+                        <field name="inventory_adjustment_name" string="Inventory Reference"/>
+                    </group>
+                </div>
+                <footer>
+                    <button name="action_apply" string="Apply" type="object" class="btn-primary"/>
+                    <button name="cancel_button" string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_stock_inventory_adjustement_name" model="ir.actions.act_window">
+        <field name="name">Name Inventory Adjustement</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.inventory.adjustment.name</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="stock_inventory_adjustment_name_form_view"/>
+        <field name="context">{
+            'default_quant_ids': active_ids
+        }</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
