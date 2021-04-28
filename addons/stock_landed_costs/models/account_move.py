@@ -32,7 +32,7 @@ class AccountMove(models.Model):
                 'name': l.product_id.name,
                 'account_id': l.product_id.product_tmpl_id.get_product_accounts()['stock_input'].id,
                 'price_unit': l.currency_id._convert(l.price_subtotal, l.company_currency_id, l.company_id, l.move_id.date),
-                'split_method': 'equal',
+                'split_method': l.product_id.split_method_landed_cost or 'equal',
             }) for l in landed_costs_lines],
         })
         action = self.env["ir.actions.actions"]._for_xml_id("stock_landed_costs.action_stock_landed_cost")
