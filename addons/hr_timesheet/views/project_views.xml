@@ -287,5 +287,40 @@
             </field>
         </record>
 
+        <record id="project_task_view_graph" model="ir.ui.view">
+            <field name="name">project.task.view.graph.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_project_task_graph"/>
+            <field name="arch" type="xml">
+                <xpath expr="//graph" position="attributes">
+                    <attribute name="js_class">hr_timesheet_graphview</attribute>
+                </xpath>
+                <xpath expr="//field[@name='stage_id']" position='after'>
+                    <field name="planned_hours" widget="timesheet_uom" type="measure"/>
+                    <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
+                    <field name="effective_hours" widget="timesheet_uom" type="measure"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" type="measure"/>
+                    <field name="overtime" widget="timesheet_uom" type="measure"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" type="measure"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_view_pivot" model="ir.ui.view">
+            <field name="name">project.task.view.pivot.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_project_task_pivot"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='stage_id']" position='after'>
+                    <field name="planned_hours" widget="timesheet_uom" type="measure"/>
+                    <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
+                    <field name="effective_hours" widget="timesheet_uom" type="measure"/>
+                    <field name="total_hours_spent" widget="timesheet_uom" type="measure"/>
+                    <field name="overtime" widget="timesheet_uom" type="measure"/>
+                    <field name="subtask_effective_hours" widget="timesheet_uom" type="measure"/>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>
