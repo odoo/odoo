@@ -620,7 +620,7 @@ var DataImport = AbstractAction.extend({
     _cleanFieldComments: function (changedField, fieldRemovedId) {
         // Check that the column was not mapped to same field than another column
         if (fieldRemovedId) {
-            var $sameMappedFields = self.$(`.oe_import_comment_cell[field=\"${fieldRemovedId}\"]`).find('.oe_import_same_mapped_field');
+            var $sameMappedFields = this.$(`.oe_import_comment_cell[field=\"${fieldRemovedId}\"]`).find('.oe_import_same_mapped_field');
             if ($sameMappedFields.length == 2) {
                 // remove all same mapped field comments
                 $sameMappedFields.remove();
@@ -659,7 +659,7 @@ var DataImport = AbstractAction.extend({
     _handleMappingComments: function (changedField, fieldInfo) {
         // check if two columns are mapped on the same fields (for char/text fields)
         var commentsToAdd = [];
-        var $sameMappedFields = self.$('.oe_import_comment_cell[field="' + fieldInfo.id + '"]');
+        var $sameMappedFields = this.$('.oe_import_comment_cell[field="' + fieldInfo.id + '"]');
 
         if (fieldInfo.type == 'many2many') {
             commentsToAdd.push(QWeb.render('ImportView.comment_m2m_field'));

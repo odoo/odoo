@@ -485,7 +485,7 @@ var SlideUploadDialog = Dialog.extend({
                  * In the mean time, this small fix allows not refactoring all of this and can not
                  * cause much harm.
                  */
-                Util = window.pdfjsLib.Util;
+                window.Util = window.pdfjsLib.Util;
                 window.pdfjsLib.getDocument(new Uint8Array(buffer), null, passwordNeeded).then(function getPdf(pdf) {
                     self._formSetFieldValue('duration', (pdf._pdfInfo.numPages || 0) * 5);
                     pdf.getPage(1).then(function getFirstPage(page) {

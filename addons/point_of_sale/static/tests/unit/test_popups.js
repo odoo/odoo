@@ -10,13 +10,12 @@ odoo.define('point_of_sale.test_popups', function(require) {
 
     QUnit.module('unit tests for Popups', {
         before() {
-            class Root extends PopupControllerMixin(PosComponent) {
-                static template = xml`
+            class Root extends PopupControllerMixin(PosComponent) { }
+            Root.template = xml`
                     <div>
                         <t t-if="popup.isShown" t-component="popup.component" t-props="popupProps" t-key="popup.name" />
                     </div>
                 `;
-            }
             Root.env = makePosTestEnv();
             this.Root = Root;
             Registries.Component.freeze();
