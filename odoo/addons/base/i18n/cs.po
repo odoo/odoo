@@ -1396,6 +1396,9 @@ msgid ""
 "    Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"Norský SAF-T je standardní formát souboru pro export různých typů účetních transakčních dat pomocí formátu XML.\n"
+"První verze SAF-T Financial je omezena na úroveň hlavní účetní knihy, včetně transakcí se zákazníky a dodavateli. Zahrnuta jsou také nezbytná kmenová data."
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payumoney
@@ -2667,6 +2670,23 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Registrovaná registrační pokladna v Belgii\n"
+"=================================\n"
+"\n"
+"Tento modul mění modul Místo Prodeje na certifikovanou belgickou registrační pokladnu.\n"
+"\n"
+"Více informací:\n"
+"* http://www.systemedecaisseenregistreuse.be/\n"
+"* http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Právní\n"
+"-----\n"
+"**Použití zdrojů pos_blackbox_be je certifikováno pouze na platformě SaaS odoo.com pro verzi 13.0.** Před instalací modulu pos_blackbox_be kontaktujte Odoo SA.\n"
+"\n"
+"Na webu může být uvedena zamlžená a certifikovaná verze pos_blackbox_be\n"
+"při požadavku na místní instalace.\n"
+"Žádná upravená verze není certifikována a podporována společností Odoo SA"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -4946,7 +4966,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Modul pro automatizaci dopisů pro nezaplacené faktury, s víceúrovňovými výzvami.\n"
+"Modul pro automatizaci dopisů pro neuhrazené faktury, s víceúrovňovými výzvami.\n"
 "==========================================================================\n"
 "\n"
 "V nabídce můžete definovat několik úrovní výzev:\n"
@@ -6125,6 +6145,12 @@ msgid ""
 "It also enables the \"optional products\" feature.\n"
 "    "
 msgstr ""
+"\n"
+"Technický modul nainstalovaný, když uživatel zaškrtne nastavení „module_sale_product_configurator“.\n"
+"Hlavním účelem je přepsat zobrazení sale_order, aby bylo možné konfigurovat produkty ve formuláři Prodejní objednávky.\n"
+"\n"
+"Umožňuje také funkci „volitelné produkty“.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -6340,6 +6366,16 @@ msgid ""
 "Set the payment reference type from the Sales Journal.\n"
 "    "
 msgstr ""
+"\n"
+"Toto je modul Odoo pro správu účetnictví ve Finsku.\n"
+"============================================================\n"
+"\n"
+"Po instalaci tohoto modulu budete mít přístup k:\n"
+"* Finská účtová osnova\n"
+"* Fiskální pozice\n"
+"* Typy odkazů na platby na faktuře (finská standardní reference a finská reference věřitele (RF))\n"
+"\n"
+"Nastavte typ odkazu na platbu z prodejního deníku."
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -8255,6 +8291,8 @@ msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
+"- Vytvořit / aktualizovat: povinné pole není nastaveno.\n"
+"- Odstranit: jiný model vyžaduje odstranění záznamu. Pokud je to možné, místo toho jej archivujte."
 
 #. module: base
 #: code:addons/models.py:0
@@ -9429,6 +9467,21 @@ msgid ""
 "\n"
 "Note: total digits configured by default are 6.\n"
 msgstr ""
+"Účetní graf pro Nizozemsko\n"
+"=================================\n"
+"\n"
+"Tento modul je speciálně vytvořen pro správu účetních funkcí podle holandských osvědčených postupů.\n"
+"\n"
+"Tento modul obsahuje nizozemskou účetní osnovu a schéma DPH. Toto schéma je vytvořeno pro nejběžnější Společnosti, a proto je vhodné jej použít téměř pro každou Společnost.\n"
+"\n"
+"Účty s DPH jsou okamžitě propojeny, aby vygenerovaly požadované přehledy. Příklady tohoto hlášení o mezikontinentálních transakcích.\n"
+"\n"
+"Po instalaci tohoto modulu bude konfigurace aktivována.\n"
+"Vyberte účtovou osnovu s názvem „Nizozemsko - účetnictví“.\n"
+"\n"
+"Dále zadejte název společnosti, celkové číslice účtové osnovy, číslo bankovního účtu a výchozí měnu.\n"
+"\n"
+"Poznámka: celkový počet nakonfigurovaných číslic je 6.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__act_window_id
@@ -11966,7 +12019,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_timesheet_forecast_sale
 msgid "Compare timesheets and forecast for your projects"
-msgstr "Porovnat časové rozvrhy a prognózy pro své projekty"
+msgstr "Porovnat pracovní výkazy a prognózy pro své projekty"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_forecast
@@ -17231,7 +17284,7 @@ msgstr "Jordánsko"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr "položky Deníku přidružené ke kontaktu"
+msgstr "Účetní deník přidružený ke kontaktu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_procurement_jit
@@ -21095,6 +21148,16 @@ msgstr ""
 "Odoo vám pomůže snadno sledovat všechny činnosti týkající se prodejce."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Program doporučení Odoo"
@@ -21261,6 +21324,10 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Platí pouze v případě, že se tento pohled dědí z jiného (inherit_id není False / Null).\n"
+"\n"
+"* pokud rozšiřuje (výchozí), pokud je toto zobrazení požadováno, vyhledá se nejbližší primární pohled (prostřednictvím inherit_id), pak se použijí všechny pohledy, které z něj dědí s modelem tohoto pohledu\n"
+"* pokud je primární, nejbližší primární pohled je plně vyřešen (i když používá jiný model než tento), pak se použijí specifikace dědičnosti tohoto pohledu (<xpath/>) a výsledek se použije, jako by to byl skutečný oblouk tohoto pohledu.\n"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -24231,7 +24298,7 @@ msgstr "Prodejte pracovní dobu helpdesku"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr "Prodeje na základě časových rozvrhů"
+msgstr "Prodeje na základě pracovních výkazu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_digital
@@ -25736,6 +25803,12 @@ msgstr "Celé jméno země."
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
 msgstr "Interní uživatel odpovědný za tento kontakt."
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids

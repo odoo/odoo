@@ -19,7 +19,7 @@ var _t = core._t;
  *  {
  *      valuenow: integer
  *      valuenow: valuemax
- *      [bank_statement_line_id]: {
+ *      [bank_statement_id]: {
  *          id: integer
  *          display_name: string
  *      }
@@ -235,8 +235,9 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         line.st_line.partner_id = partner && partner.id;
         line.st_line.partner_name = partner && partner.display_name || '';
-        line.mv_lines_match_rp = [];
-        line.mv_lines_match_other = [];
+        self.modes.filter(x => x.startsWith('match')).forEach(function (mode) {
+            line["mv_lines_"+mode] = [];
+        });
         return Promise.resolve(partner && this._changePartner(handle, partner.id))
                 .then(function() {
                     if(line.st_line.partner_id){
@@ -261,12 +262,9 @@ var StatementModel = BasicModel.extend({
     closeStatement: function () {
         var self = this;
         return this._rpc({
-                model: 'account.bank.statement.line',
+                model: 'account.bank.statement',
                 method: 'button_confirm_bank',
-                args: [self.bank_statement_line_id.id],
-            })
-            .then(function () {
-                return self.bank_statement_line_id.id;
+                args: [self.bank_statement_id.id],
             });
     },
     /**
@@ -413,7 +411,7 @@ var StatementModel = BasicModel.extend({
             })
             .then(function (statement) {
                 self.statement = statement;
-                self.bank_statement_line_id = self.statement_line_ids.length === 1 ? {id: self.statement_line_ids[0], display_name: statement.statement_name} : false;
+                self.bank_statement_id = statement.statement_id ? {id: statement.statement_id, display_name: statement.statement_name} : false;
                 self.valuenow = self.valuenow || statement.value_min;
                 self.valuemax = self.valuemax || statement.value_max;
                 self.context.journal_id = statement.journal_id;

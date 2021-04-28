@@ -37,6 +37,9 @@ msgid ""
 "user.env.company.name}: We are happy to confirm your registration for the "
 "${object.event_id.name} event."
 msgstr ""
+"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name}: siamo lieti di confermare la registrazione per "
+"l'evento ${object.event_id.name}."
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
@@ -61,7 +64,7 @@ msgstr "Evento: promemoria"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Pianificazione e-mail  su categoria evento"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration

@@ -5330,4 +5330,47 @@
 		    }),
 		]"/>
 	</record>
+
+	<record id="lu_2015_tax_ATN_sale" model="account.tax.template">
+		<field name="sequence">510</field>
+		<field name="description">17%</field>
+		<field name="name">17-ATN</field>
+		<field name="amount">17</field>
+		<field name="amount_type">percent</field>
+		<field name="type_tax_use">sale</field>
+		<field name="chart_template_id" ref="lu_2011_chart_1"/>
+		<field name="tax_group_id" ref="tax_group_17"/>
+		<field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+		    (0,0, {
+		        'factor_percent': 100,
+		        'repartition_type': 'base',
+		        'plus_report_line_ids': [
+		            ref('account_tax_report_line_1a_non_bus_gs'),
+		            ref('account_tax_report_line_2a_base_17'),
+		        ],
+		    }),
+		    (0,0, {
+		        'factor_percent': 100,
+		        'repartition_type': 'tax',
+		        'account_id': ref('lu_2020_account_461411'),
+		        'plus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
+		    }),
+		]"/>
+		<field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+		    (0,0, {
+		        'factor_percent': 100,
+		        'repartition_type': 'base',
+		        'minus_report_line_ids': [
+		            ref('account_tax_report_line_1a_non_bus_gs'),
+		            ref('account_tax_report_line_2a_base_17'),
+		        ],
+		    }),
+		    (0,0, {
+		        'factor_percent': 100,
+		        'repartition_type': 'tax',
+		        'account_id': ref('lu_2020_account_461411'),
+		        'minus_report_line_ids': [ref('account_tax_report_line_2a_tax_17')],
+		    }),
+		]"/>
+	</record>
 </odoo>

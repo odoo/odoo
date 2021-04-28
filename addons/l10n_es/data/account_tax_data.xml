@@ -1813,7 +1813,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="21"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="tax_group_iva_21"/>
+        <field name="tax_group_id" ref="tax_group_iva_nd"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -1844,7 +1844,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="tax_group_iva_10"/>
+        <field name="tax_group_id" ref="tax_group_iva_nd"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -1875,7 +1875,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="4"/>
         <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="tax_group_iva_4"/>
+        <field name="tax_group_id" ref="tax_group_iva_nd"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
@@ -2584,6 +2584,43 @@
             }),
         ]"/>
     </record>
+    <record id="account_tax_template_p_irpf24" model="account.tax.template">
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF 14%</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_08')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_09')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'tag_ids': [ref('mod_111_08')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+                'tag_ids': [ref('mod_111_09')],
+            }),
+        ]"/>
+    </record>
     <record id="account_tax_template_s_irpf20" model="account.tax.template">
         <field name="description">Retención 20%</field>
         <field name="type_tax_use">sale</field>
@@ -2626,6 +2663,40 @@
         <field name="amount" eval="-20"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_20"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_s_irpf24" model="account.tax.template">
+        <field name="description">Retención 24%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Retenciones a cuenta IRPF 24%</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,

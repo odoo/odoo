@@ -55,16 +55,16 @@
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # e2f <projects@e2f.com>, 2020
 # Martin Trigaux, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
 # lttlsnk <lttlsnk@gmail.com>, 2020
 # F4NNIU <sparkamax+fanniu@gmail.com>, 2020
 # Eddie Lim <bhweelim@yahoo.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # rejen he <251442037@qq.com>, 2020
 # as co02 <asco02@163.com>, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -72,7 +72,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11985,7 +11985,7 @@ msgstr "无法仅从名称中创建新的%s记录。请手动创建这些记录�
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
-msgstr ""
+msgstr "无法停用联系人当前使用的语言。"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -22379,6 +22379,20 @@ msgid "Odoo helps you easily track all activities related to a vendor."
 msgstr "Odoo帮助您轻松跟踪与供应商相关的所有活动。"
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+"Odoo无法合并附加到以下记录的PDF:\n"
+"%s\n"
+"\n"
+"请将其从选择中排除以继续。仍然可以通过单独选择每个受影响的记录来检索这些PDF，这将避免合并。"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Odoo引荐方案"
@@ -22448,7 +22462,7 @@ msgstr "一个你试图访问的单据已经被删除，请刷新后重试。"
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "One of the documents, you try to merge is encrypted"
-msgstr ""
+msgstr "您尝试合并的文档，其中一个文档是加密的"
 
 #. module: base
 #: code:addons/models.py:0
@@ -26955,6 +26969,12 @@ msgstr "国家全名"
 #: model:ir.model.fields,help:base.field_res_users__user_id
 msgid "The internal user in charge of this contact."
 msgstr "负责此联系人的内部用户。"
+
+#. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr "布局包含无效的格式键"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids

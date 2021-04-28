@@ -7795,6 +7795,8 @@ msgid ""
 "- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: "
 "%(values)s) belongs to another company."
 msgstr ""
+"- %(record)r appartiene all'azienda %(company)r e %(field)r (%(fname)s: "
+"%(values)s) appartiene a un'altra azienda."
 
 #. module: base
 #: code:addons/model.py:0
@@ -8750,7 +8752,7 @@ msgstr "Accesso agli indirizzi privati"
 #: code:addons/api.py:0 code:addons/api.py:0
 #, python-format
 msgid "Access to unauthorized or invalid companies."
-msgstr ""
+msgstr "Accesso ad aziende non autorizzate o non valide."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -11611,7 +11613,7 @@ msgstr "Procedure di configurazione"
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
-msgstr ""
+msgstr "Configura le commissioni dei rivenditori sulle vendite in abbonamento"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_timesheet_enterprise
@@ -13850,12 +13852,12 @@ msgstr "Executive 4   7.5 x 10 pollici, 190.5 x 254 mm"
 #: model:ir.module.category,name:base.module_category_accounting_expenses
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expenses"
-msgstr "Note spese"
+msgstr "Spese"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_expense
 msgid "Expenses in Payslips"
-msgstr "Note spese nelle buste paga"
+msgstr "Spese in busta paga"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_10
@@ -16072,7 +16074,7 @@ msgstr "Immagine 512"
 #. module: base
 #: model:ir.model,name:base.model_image_mixin
 msgid "Image Mixin"
-msgstr ""
+msgstr "Mixin immagine"
 
 #. module: base
 #: code:addons/image.py:0
@@ -20988,6 +20990,16 @@ msgstr ""
 "fornitore."
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"Odoo is unable to merge the PDFs attached to the following records:\n"
+"%s\n"
+"\n"
+"Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
 msgstr "Programma referenze Odoo"
@@ -23100,7 +23112,7 @@ msgstr "Data di riferimento"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_referrals
 msgid "Referrals"
-msgstr ""
+msgstr "Referenze"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
@@ -24883,13 +24895,12 @@ msgstr "Sottomenù"
 #: model:ir.module.module,summary:base.module_hr_expense
 #: model:ir.module.module,summary:base.module_hr_payroll_expense
 msgid "Submit, validate and reinvoice employee expenses"
-msgstr ""
-"Presentazione, conferma e rifatturazione delle note spese dei dipendenti"
+msgstr "Presentazione, conferma e rifatturazione delle spese dei dipendenti"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscription
 msgid "Subscription"
-msgstr "Iscrizione"
+msgstr "Abbonamento"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_sepa_direct_debit
@@ -25152,7 +25163,7 @@ msgstr "TaxCloud e Consegna - eCommerce"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_taxcloud
 msgid "TaxCloud and Subscriptions"
-msgstr "TaxCloud e sottoscrizioni"
+msgstr "TaxCloud e abbonamenti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
@@ -25557,6 +25568,12 @@ msgid "The internal user in charge of this contact."
 msgstr "L'utente interno responsabile di questo contatto. "
 
 #. module: base
+#: code:addons/base/models/res_country.py:106
+#, python-format
+msgid "The layout contains an invalid format key"
+msgstr "Lo schema contiene una chiave di formato non valido"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model__inherited_model_ids
 msgid "The list of models that extends the current model."
 msgstr "L'elenco dei modelli che estende il modello corrente."
@@ -25732,6 +25749,13 @@ msgid ""
 "Fields:\n"
 "%(fields_list)s"
 msgstr ""
+"Impossibile completare l'operazione richiesta a causa di restrizioni di sicurezza.\n"
+"\n"
+"Tipo di documento: %(document_kind)s (%(document_model)s)\n"
+"Operazione: %(operation)s\n"
+"Utente: %(user)s\n"
+"Campi:\n"
+"%(fields_list)s"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -25922,7 +25946,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "Il campo memorizza l'architettura della vista."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_prev

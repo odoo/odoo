@@ -317,6 +317,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                             _t("We are not able to redirect you to the payment form.") + " " +
                                 self._parseError(error)
                         );
+                        self.enableButton(button);
                     });
                 }
                 else {

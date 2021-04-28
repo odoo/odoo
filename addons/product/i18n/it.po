@@ -94,6 +94,10 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
+"- Immediatamente: tutte le possibili varianti vengono create non appena l'attributo e i relativi valori vengono aggiunti al prodotto.\n"
+"        - In modo dinamico: ciascuna variante viene creata solo quando i corrispondenti attributi e valori vengono aggiunti all'ordine di vendita.\n"
+"        - Mai: non vengono mai create varianti per l'attributo.\n"
+"        Nota: dopo aver utilizzato l'attributo in almeno un prodotto, la modalità di creazione delle varianti non può essere cambiata."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -419,6 +423,9 @@ msgid ""
 "Barcode used for packaging identification. Scan this packaging barcode from "
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
+"Codice a barre utilizzato per l'identificazione dell'imballaggio. "
+"Nell'applicazione, per movimentare tutte le unità contenute "
+"nell'imballaggio, acquisire il codice da un trasferimento"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -428,6 +435,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"Prezzo di riferimento per il calcolo.\n"
+"Prezzo di vendita: il prezzo base è il prezzo di vendita.\n"
+"Prezzo di costo: il prezzo base è il prezzo di costo.\n"
+"Altro listino prezzi: prezzo di riferimento calcolato in base a un altro listino prezzi."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
@@ -460,12 +471,12 @@ msgstr "Calcola prezzo prodotto per unità basato sulla versione di listino."
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "È possibile ingrandire l'immagine a 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr ""
+msgstr "È possibile ingrandire l'immagine a 1024 della variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
@@ -532,7 +543,7 @@ msgstr "Indice colore"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "Indici di combinazione"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -571,7 +582,7 @@ msgstr "Sedia da conferenza (configurabile)"
 #: model:product.product,description_sale:product.consu_delivery_02
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Conference room table"
-msgstr ""
+msgstr "Tavolo per sala riunioni"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
@@ -860,7 +871,7 @@ msgstr "Cassetto nero"
 #: model:product.product,description:product.product_product_27
 #: model:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities."
-msgstr ""
+msgstr "Cassettiera con due percorsi possibili."
 
 #. module: product
 #: model:product.attribute,name:product.product_attribute_3
@@ -876,6 +887,8 @@ msgstr "Dinamica"
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
 msgstr ""
+"Ciascun valore deve essere definito una sola volta per attributo e per "
+"prodotto."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -910,6 +923,8 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
 msgstr ""
+"Prezzo aggiuntivo per la variante con valore attributo nel prezzo di "
+"vendita, es. prezzo aggiuntivo 200, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -965,7 +980,7 @@ msgstr "Scrivania per quattro persone"
 #: model:product.product,description_sale:product.consu_delivery_03
 #: model:product.template,description_sale:product.consu_delivery_03_product_template
 msgid "Four person modern office workstation"
-msgstr ""
+msgstr "Postazione da ufficio moderna per quattro persone"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -1142,6 +1157,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Con prezzo standard e CMP: valore del prodotto (con CMP è calcolato automaticamente).\n"
+"        Con FIFO: valore dell'ultima unità che lascia la giacenza (calcolato automaticamente).\n"
+"        Utilizzato per dare un valore al prodotto quando il costo di acquisto non è noto (es. rettifica di inventario).\n"
+"        Utilizzato per calcolare i margini negli ordini di vendita."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1330,6 +1349,8 @@ msgid ""
 "Make this attribute value not compatible with other values of the product or"
 " some attribute values of optional and accessory products."
 msgstr ""
+"Rende il valore dell'attributo non compatibile con altri valori del prodotto"
+" o con alcuni valori attributo di prodotti opzionali e accessori."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -1495,6 +1516,8 @@ msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
 msgstr ""
+"Impossibile, nel prodotto %s, associare il valore %s con l'attributo %s, non"
+" corrispondono."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2020,7 +2043,7 @@ msgstr "Utente responsabile"
 #: model:product.product,name:product.expense_product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
-msgstr "Nota spese ristorante"
+msgstr "Spese ristorante"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2223,6 +2246,8 @@ msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
 msgstr ""
+"Impossibile cambiare l'attributo dopo aver utilizzato il valore in almeno un"
+" prodotto."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2296,6 +2321,9 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
+"Quantità da acquistare per beneficiare del prezzo, espressa nell'unità di "
+"misura prodotto del fornitore. Altrimenti, se non presente, nell'unità di "
+"misura predefinita del prodotto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2311,7 +2339,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
-msgstr ""
+msgstr "Valore %s non definito per l'attributo %s del prodotto %s"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2369,6 +2397,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"La precisione di arrotondamento è maggiore dell'accuratezza decimale (%s cifre).\n"
+"Ciò può comportare inconsistenze nei calcoli.\n"
+"Impostare una precisione tra %s e 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2392,7 +2423,7 @@ msgstr ""
 #: model:product.product,description_sale:product.consu_delivery_01
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
-msgstr ""
+msgstr "Divano a tre posti con lettino colore grigio scuro"
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_01
@@ -2502,7 +2533,7 @@ msgstr "Numero messaggi non letti"
 #: model:ir.model.fields,field_description:product.field_product_attribute__is_used_on_products
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
 msgid "Used on Products"
-msgstr ""
+msgstr "Usato nel prodotto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
@@ -2524,7 +2555,7 @@ msgstr "Valore"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr ""
+msgstr "Valore prezzo aggiuntivo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -2732,6 +2763,10 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
+"L'accuratezza decimale impostata è meno precisa di quella delle UdM:\n"
+"%s\n"
+"Ciò può comportare inconsistenze nei calcoli.\n"
+"Incrementare l'arrotondamento delle unità di misura o le cifre dell'accuratezza decimale."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2758,6 +2793,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Impossibile cambiare la modalità di creazione varianti dell'attributo %s, è utilizzato nei seguenti prodotti:\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2774,6 +2811,7 @@ msgstr ""
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
 msgstr ""
+"Impossibile cambiare il prodotto del valore %s impostato sul prodotto %s. "
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2839,6 +2877,8 @@ msgid ""
 "You cannot update related variants from the values. Please update related "
 "values from the variants."
 msgstr ""
+"Non è possibile aggiornare le varianti correlate dai valori. Aggiornare i "
+"valori correlati dalle varianti."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -2910,7 +2950,7 @@ msgstr "es. Rivenditori Italiani"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "per"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -2927,7 +2967,7 @@ msgstr "l'azienda madre"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr ""
+msgstr "modello prodotto."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view

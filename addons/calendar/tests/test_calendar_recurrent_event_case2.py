@@ -214,3 +214,17 @@ class TestRecurrentEvent(common.TransactionCase):
         meetings = self.CalendarEvent.with_context({'virtual_id': True}).search(['!', ['id', 'in', recurrent_ids[:1]]])
         excluded_meetings = (all_meetings - meetings).ids
         self.assertEqual(excluded_meetings, recurrent_ids, "Recurrent event is excluded by the domain")
+
+    def test_recurrent_meeting7(self):
+        self.CalendarEvent.create({
+            'start': '2000-04-11 12:00:00',
+            'stop': '2000-04-11 13:00:00',
+            'allday': False,
+            'name': 'SuperReccurentMeeting07',
+            'rrule': 'FREQ=DAILY;UNTIL=20000420T215959Z',
+            'duration': 1.0
+        })
+        meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '>=', '2000-04-11 12:00:00'), ('stop', '<=', '2000-04-21 13:00:00')
+        ])
+        self.assertEqual(meetings_count, 10, 'Recurrent daily meetings are not created !')

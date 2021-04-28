@@ -27,7 +27,7 @@ msgstr ""
 #: code:addons/barcodes/models/barcodes.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr ""
+msgstr "„*“ není platný vzor čárového kódu Regex. Mysleli jste '.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -55,6 +55,8 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
+"<i>Názvy čárových kódů</i> definují, jak jsou čárové kódy rozpoznávány a kategorizovány.\n"
+"Když je čárový kód naskenován, je spojen s <i>prvním</i> pravidlem se shodným vzorem. Syntaxe vzoru je stejná jako u regulárního výrazu a čárový kód se shoduje, pokud se regulární výraz shoduje s předponou čárového kódu."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -62,6 +64,8 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr ""
+"Nomenklatura čárových kódů definuje, jak prodejní místo čárové kódy "
+"identifikuje a interpretuje"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -82,7 +86,7 @@ msgstr "Vždy"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr ""
+msgstr "Interní identifikace tohoto pravidla nomenklatury čárových kódů"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
@@ -300,7 +304,7 @@ msgstr "Tabulky"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__pattern
 msgid "The barcode matching pattern"
-msgstr ""
+msgstr "Vzor shody čárového kódu"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
@@ -310,7 +314,7 @@ msgstr "Seznam pravidel čárového kódu"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
 msgid "The matched pattern will alias to this barcode"
-msgstr ""
+msgstr "Odpovídající vzor bude alias tohoto čárového kódu"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:0
@@ -384,6 +388,8 @@ msgstr "Jednotkový produkt"
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
+"Slouží k uspořádání pravidel tak, aby se nejprve shodovala pravidla s menší "
+"sekvencí"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned

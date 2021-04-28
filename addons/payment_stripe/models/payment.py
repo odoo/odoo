@@ -49,6 +49,8 @@ class PaymentAcquirerStripe(models.Model):
             'payment_intent_data[description]': tx_values['reference'],
             'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
         }
+        if tx_values['type'] == 'form_save':
+            stripe_session_data['payment_intent_data[setup_future_usage]'] = 'off_session'
 
         self._add_available_payment_method_types(stripe_session_data, tx_values)
 

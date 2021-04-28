@@ -2309,7 +2309,7 @@ class TestReconciliationExec(TestReconciliation):
                 'currency_id': self.currency_usd_id,
             }
         ])
-        move_product.post()
+        move_payment.post()
 
         # We are reconciling a move line in currency A with a move line in currency B and putting
         # the rest in a writeoff, this test ensure that the debit/credit value of the writeoff is

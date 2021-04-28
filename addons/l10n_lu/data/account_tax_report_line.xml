@@ -309,7 +309,7 @@
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="country_id" ref="base.lu"/>
-        <field name="formula">LUTAX_021 + LUTAX_037</field>
+        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456</field>
     </record>
 
     <record id="account_tax_report_line_1a_app_goods_non_bus" model="account.tax.report.line">
@@ -322,6 +322,7 @@
 
     <record id="account_tax_report_line_1a_non_bus_gs" model="account.tax.report.line">
         <field name="name">I.A.4. Non-business use of goods and supply of services free of charge (Art.16) (456)</field>
+        <field name="tag_name">I.A.4. Non-business use of goods and supply of services free of charge (Art.16) (456)</field>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
         <field name="country_id" ref="base.lu"/>
