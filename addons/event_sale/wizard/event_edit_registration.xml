@@ -6,17 +6,19 @@
             <field name="model">registration.editor</field>
             <field name="arch" type="xml">
                 <form string="Registration">
-                    <p>Before confirming <field name="sale_order_id" readonly="1" class="oe_inline"/>
-                    please give details about the registrations</p>
+                    <p >Before confirming this order, please enter the attendees' contact details, this will be displayed on their tickets</p>
+                    <field name="sale_order_id" readonly="1" class="oe_inline" invisible="1"/>
+                    <field name="show_event_column" invisible="1"/>
                     <field name="event_registration_ids">
-                        <tree string="Registration" editable="top" create="false" delete="false">
-                            <field name="event_id" readonly='1' force_save="1"/>
-                            <field name="registration_id" readonly='1' force_save="1"/>
+                        <tree string="Registration" create="false" delete="false" editable="bottom">
+                            <field name="event_id" readonly="1" attrs="{'column_invisible': [('parent.show_event_column', '=', False)]}"/>
+                            <field name="registration_id" readonly='1' force_save="1" invisible="1"/>
                             <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly='1' force_save="1"/>
-                            <field name="name"/>
+                            <field name="name" string="Attendee Name"/>
                             <field name="email"/>
-                            <field name="mobile" class="o_force_ltr"/>
+                            <field name="mobile" class="o_force_ltr" optional="hide"/>
                             <field name="phone" class="o_force_ltr"/>
+                            <field name="state" />
                             <field name="sale_order_line_id" invisible="1"/>
                         </tree>
                     </field>

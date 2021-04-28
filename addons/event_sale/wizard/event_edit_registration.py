@@ -9,6 +9,9 @@ class RegistrationEditor(models.TransientModel):
 
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', required=True)
     event_registration_ids = fields.One2many('registration.editor.line', 'editor_id', string='Registrations to Edit')
+    show_event_column = fields.Boolean("Show Event Column",
+                                       compute="_compute_show_event_column",
+                                       help="Technical field used to determine if the event column must be shown or not")
 
     @api.model
     def default_get(self, fields):
@@ -24,7 +27,7 @@ class RegistrationEditor(models.TransientModel):
 
         attendee_list = []
         for so_line in [l for l in sale_order.order_line if l.event_ticket_id]:
-            existing_registrations = [r for r in registrations if r.event_ticket_id == so_line.event_ticket_id]
+            existing_registrations = [r for r in registrations if r.sale_order_line_id.id == so_line.id]
             for reg in existing_registrations:
                 attendee_list.append([0, 0, {
                     'event_id': reg.event_id.id,
@@ -50,6 +53,12 @@ class RegistrationEditor(models.TransientModel):
         res = self._convert_to_write(res)
         return res
 
+    @api.depends('event_registration_ids')
+    def _compute_show_event_column(self):
+        for event_edit_registration in self:
+            #only show event column if there are multiple events
+            event_edit_registration.show_event_column = len(event_edit_registration.event_registration_ids.event_id) > 1
+
     def action_make_registration(self):
         self.ensure_one()
         registrations_to_create = []
@@ -70,17 +79,19 @@ class RegistrationEditorLine(models.TransientModel):
     """Event Registration"""
     _name = "registration.editor.line"
     _description = 'Edit Attendee Line on Sales Confirmation'
-    _order = "id desc"
+    _order = 'event_id, event_ticket_id'
 
     editor_id = fields.Many2one('registration.editor')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line')
-    event_id = fields.Many2one('event.event', string='Event', required=True)
+    event_id = fields.Many2one('event.event', string='Event')
     registration_id = fields.Many2one('event.registration', 'Original Registration')
-    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
+    event_ticket_id = fields.Many2one('event.event.ticket', string='Ticket Type')
     email = fields.Char(string='Email')
     phone = fields.Char(string='Phone')
     mobile = fields.Char(string='Mobile')
     name = fields.Char(string='Name', index=True)
+    state = fields.Selection([('cancel', 'Cancelled'), ('open', 'Confirmed'), ('draft', 'Unconfirmed')],
+                             string='Status', default='open')
 
     def get_registration_data(self):
         self.ensure_one()
@@ -92,6 +103,7 @@ class RegistrationEditorLine(models.TransientModel):
             'phone': self.phone or self.editor_id.sale_order_id.partner_id.phone,
             'mobile': self.mobile or self.editor_id.sale_order_id.partner_id.mobile,
             'email': self.email or self.editor_id.sale_order_id.partner_id.email,
+            'state': self.state,
             'sale_order_id': self.editor_id.sale_order_id.id,
             'sale_order_line_id': self.sale_order_line_id.id,
         }

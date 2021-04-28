@@ -47,6 +47,11 @@ class SaleOrder(models.Model):
         for sale_order in self:
             sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
 
+    def action_cancel(self):
+        super(SaleOrder, self).action_cancel()
+        if self.ids:
+            self.env['event.registration'].search([('sale_order_id', 'in', self.ids)]).action_cancel()
+
 
 class SaleOrderLine(models.Model):
 

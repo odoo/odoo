@@ -554,7 +554,7 @@
                             </group>
                             <group string="Event Information" name="event">
                                 <field class="o_text_overflow" name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
-                                <field name="event_ticket_id"
+                                <field name="event_ticket_id" string="Ticket Type"
                                     domain="[
                                         ('event_id', '=', event_id),
                                         '|', ('seats_limited', '=', False), ('seats_available', '>', 0)

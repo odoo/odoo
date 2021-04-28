@@ -5,18 +5,21 @@
         <field name="model">event.event.configurator</field>
         <field name="arch" type="xml">
             <form js_class="event_configurator_form">
-                <group>
+                <group attrs="{'invisible': [('has_available_events', '=', False)]}">
+                    <field name="has_available_events" invisible="1"/>
                     <field
                         name="event_id"
                         domain="[
                             ('event_ticket_ids.product_id','=', product_id),
-                            ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00'))
+                            ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00')),
+                            ('stage_id.pipe_end', '=', False)
                         ]"
-                        required="1"
+                        attrs="{'required': [('has_available_events', '=', True)]}"
                         options="{'no_open': True, 'no_create': True}"
                     />
                     <field
                         name="event_ticket_id"
+                        string="Ticket Type"
                         domain="[
                             ('event_id', '=', event_id),
                             ('product_id','=',product_id),
@@ -24,14 +27,17 @@
                         ]"
                         attrs="{
                             'invisible': [('event_id', '=', False)],
-                            'required': [('event_id', '!=', False)],
+                            'required': [('event_id', '!=', False), ('has_available_events', '=', True)],
                         }"
                         options="{'no_open': True, 'no_create': True}"
                     />
                     <field name="product_id" invisible="1"/>
                 </group>
+                <div attrs="{'invisible': [('has_available_events', '=', True)]}">
+                    No upcoming events with tickets, please go to Events to create or edit some.
+                </div>
                 <footer>
-                    <button string="Ok" class="btn-primary o_event_sale_js_event_configurator_ok" special="save"/>
+                    <button string="Confirm" class="btn-primary o_event_sale_js_event_configurator_ok" special="save" attrs="{'invisible': [('has_available_events', '=', False)]}"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
@@ -39,7 +45,7 @@
     </record>
 
     <record id="event_configurator_action" model="ir.actions.act_window">
-        <field name="name">Configure an event</field>
+        <field name="name">Select an event</field>
         <field name="res_model">event.event.configurator</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
