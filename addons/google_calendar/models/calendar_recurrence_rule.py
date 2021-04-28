@@ -162,10 +162,9 @@ class RecurrenceRule(models.Model):
             return {}
         values = event._google_values()
         values['id'] = self.google_id
-
         if not self._is_allday():
-            values['start']['timeZone'] = self.event_tz
-            values['end']['timeZone'] = self.event_tz
+            values['start']['timeZone'] = self.event_tz or 'Etc/UTC'
+            values['end']['timeZone'] = self.event_tz or 'Etc/UTC'
 
         # DTSTART is not allowed by Google Calendar API.
         # Event start and end times are specified in the start and end fields.
