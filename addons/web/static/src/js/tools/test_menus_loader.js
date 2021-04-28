@@ -4,6 +4,7 @@ odoo.define('web.clickEverywhere', function (require) {
     function startClickEverywhere(xmlId, appsMenusOnly) {
         ajax.loadJS('web/static/src/js/tools/test_menus.js').then(
             function() {
+                // eslint-disable-next-line no-undef
                 clickEverywhere(xmlId, appsMenusOnly);
             }
         );
