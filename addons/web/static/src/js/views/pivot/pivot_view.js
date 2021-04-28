@@ -18,7 +18,7 @@
     const _t = core._t;
     const _lt = core._lt;
 
-    const searchUtils = require('web.searchUtils');
+    import * as searchUtils from 'web.searchUtils';
     const GROUPABLE_TYPES = searchUtils.GROUPABLE_TYPES;
 
     const PivotView = AbstractView.extend({
