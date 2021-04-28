@@ -169,6 +169,7 @@
             'mail/static/src/models/chat_window_manager/chat_window_manager.js',
             'mail/static/src/models/chatter/chatter.js',
             'mail/static/src/models/composer/composer.js',
+            'mail/static/src/models/composer_suggestion_list/composer_suggestion_list.js',
             'mail/static/src/models/country/country.js',
             'mail/static/src/models/device/device.js',
             'mail/static/src/models/dialog/dialog.js',

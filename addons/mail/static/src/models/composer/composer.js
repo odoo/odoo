@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, insert, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, create, insert, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
 import {
     addLink,
@@ -45,13 +45,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
-
-        /**
-         * Closes the suggestion list.
-         */
-        closeSuggestions() {
-            this.update({ suggestionDelimiterPosition: clear() });
-        }
 
         /**
          * Hides the composer, which only makes sense if the composer is
@@ -125,7 +118,7 @@ function factory(dependencies) {
                     this.textInputContent.length
                 );
             }
-            const recordReplacement = this.activeSuggestedRecord.getMentionText();
+            const recordReplacement = this.composerSuggestionList.activeSuggestedRecord.getMentionText();
             const updateData = {
                 isLastStateChangeProgrammatic: true,
                 textInputContent: textLeft + recordReplacement + ' ' + textRight,
@@ -135,12 +128,12 @@ function factory(dependencies) {
             // Specific cases for channel and partner mentions: the message with
             // the mention will appear in the target channel, or be notified to
             // the target partner.
-            switch (this.activeSuggestedRecord.constructor.modelName) {
+            switch (this.composerSuggestionList.activeSuggestedRecord.constructor.modelName) {
                 case 'mail.thread':
-                    Object.assign(updateData, { mentionedChannels: link(this.activeSuggestedRecord) });
+                    Object.assign(updateData, { mentionedChannels: link(this.composerSuggestionList.activeSuggestedRecord) });
                     break;
                 case 'mail.partner':
-                    Object.assign(updateData, { mentionedPartners: link(this.activeSuggestedRecord) });
+                    Object.assign(updateData, { mentionedPartners: link(this.composerSuggestionList.activeSuggestedRecord) });
                     break;
             }
             this.update(updateData);
@@ -314,90 +307,10 @@ function factory(dependencies) {
             }
         }
 
-        /**
-         * Sets the first suggestion as active. Main and extra records are
-         * considered together.
-         */
-        setFirstSuggestionActive() {
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
-            const firstRecord = suggestedRecords[0];
-            this.update({ activeSuggestedRecord: link(firstRecord) });
-        }
-
-        /**
-         * Sets the last suggestion as active. Main and extra records are
-         * considered together.
-         */
-        setLastSuggestionActive() {
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
-            const { length, [length - 1]: lastRecord } = suggestedRecords;
-            this.update({ activeSuggestedRecord: link(lastRecord) });
-        }
-
-        /**
-         * Sets the next suggestion as active. Main and extra records are
-         * considered together.
-         */
-        setNextSuggestionActive() {
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
-            const activeElementIndex = suggestedRecords.findIndex(
-                suggestion => suggestion === this.activeSuggestedRecord
-            );
-            if (activeElementIndex === suggestedRecords.length - 1) {
-                // loop when reaching the end of the list
-                this.setFirstSuggestionActive();
-                return;
-            }
-            const nextRecord = suggestedRecords[activeElementIndex + 1];
-            this.update({ activeSuggestedRecord: link(nextRecord) });
-        }
-
-        /**
-         * Sets the previous suggestion as active. Main and extra records are
-         * considered together.
-         */
-        setPreviousSuggestionActive() {
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
-            const activeElementIndex = suggestedRecords.findIndex(
-                suggestion => suggestion === this.activeSuggestedRecord
-            );
-            if (activeElementIndex === 0) {
-                // loop when reaching the start of the list
-                this.setLastSuggestionActive();
-                return;
-            }
-            const previousRecord = suggestedRecords[activeElementIndex - 1];
-            this.update({ activeSuggestedRecord: link(previousRecord) });
-        }
-
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
 
-        /**
-         * Clears the active suggested record on closing mentions or adapt it if
-         * the active current record is no longer part of the suggestions.
-         *
-         * @private
-         * @returns {mail.model}
-         */
-        _computeActiveSuggestedRecord() {
-            if (
-                this.mainSuggestedRecords.length === 0 &&
-                this.extraSuggestedRecords.length === 0
-            ) {
-                return unlink();
-            }
-            if (
-                this.mainSuggestedRecords.includes(this.activeSuggestedRecord) ||
-                this.extraSuggestedRecords.includes(this.activeSuggestedRecord)
-            ) {
-                return;
-            }
-            const suggestedRecords = this.mainSuggestedRecords.concat(this.extraSuggestedRecords);
-            const firstRecord = suggestedRecords[0];
-            return link(firstRecord);
-        }
 
         /**
          * @private
@@ -411,46 +324,11 @@ function factory(dependencies) {
         }
 
         /**
-         * Clears the extra suggested record on closing mentions, and ensures
-         * the extra list does not contain any element already present in the
-         * main list, which is a requirement for the navigation process.
-         *
-         * @private
-         * @returns {mail.model[]}
-         */
-        _computeExtraSuggestedRecords() {
-            if (this.suggestionDelimiterPosition === undefined) {
-                return unlinkAll();
-            }
-            return unlink(this.mainSuggestedRecords);
-        }
-
-        /**
-         * @private
-         * @return {boolean}
-         */
-        _computeHasSuggestions() {
-            return this.mainSuggestedRecords.length > 0 || this.extraSuggestedRecords.length > 0;
-        }
-
-        /**
          * @private
          * @returns {boolean}
          */
         _computeHasUploadingAttachment() {
             return this.attachments.some(attachment => attachment.isUploading);
-        }
-
-        /**
-         * Clears the main suggested record on closing mentions.
-         *
-         * @private
-         * @returns {mail.model[]}
-         */
-        _computeMainSuggestedRecords() {
-            if (this.suggestionDelimiterPosition === undefined) {
-                return unlinkAll();
-            }
         }
 
         /**
@@ -744,9 +622,9 @@ function factory(dependencies) {
                     this.suggestionSearchTerm === searchTerm &&
                     this.suggestionModelName &&
                     this.env.models[this.suggestionModelName] === Model &&
-                    !this.hasSuggestions
+                    !this.composerSuggestionList.hasSuggestions
                 ) {
-                    this.closeSuggestions();
+                    this.composerSuggestionList.closeSuggestions();
                 }
             });
         }
@@ -783,6 +661,10 @@ function factory(dependencies) {
                 this.suggestionSearchTerm === undefined ||
                 !this.suggestionModelName
             ) {
+                this.composerSuggestionList.update({
+                    extraSuggestedRecords: clear(),
+                    mainSuggestedRecords: clear(),
+                });
                 return;
             }
             const Model = this.env.models[this.suggestionModelName];
@@ -799,27 +681,16 @@ function factory(dependencies) {
             mainSuggestedRecords.length = Math.min(mainSuggestedRecords.length, limit);
             extraSuggestedRecords.length = Math.min(extraSuggestedRecords.length, limit - mainSuggestedRecords.length);
             this.update({
-                extraSuggestedRecords: replace(extraSuggestedRecords),
                 hasToScrollToActiveSuggestion: true,
+            });
+            this.composerSuggestionList.update({
+                extraSuggestedRecords: replace(extraSuggestedRecords),
                 mainSuggestedRecords: replace(mainSuggestedRecords),
             });
         }
     }
 
     Composer.fields = {
-        /**
-         * Determines the suggested record that is currently active. This record
-         * is highlighted in the UI and it will be the selected record if the
-         * suggestion is confirmed by the user.
-         */
-        activeSuggestedRecord: many2one('mail.model', {
-            compute: '_computeActiveSuggestedRecord',
-            dependencies: [
-                'activeSuggestedRecord',
-                'extraSuggestedRecords',
-                'mainSuggestedRecords',
-            ],
-        }),
         attachments: many2many('mail.attachment', {
             inverse: 'composers',
         }),
@@ -842,6 +713,10 @@ function factory(dependencies) {
             ],
             default: false,
         }),
+        composerSuggestionList: one2one('mail.composer_suggestion_list', {
+            default: create(),
+            inverse: 'composer',
+        }),
         /**
          * Instance of discuss if this composer is used as the reply composer
          * from Inbox. This field is computed from the inverse relation and
@@ -849,20 +724,6 @@ function factory(dependencies) {
          */
         discussAsReplying: one2one('mail.discuss', {
             inverse: 'replyingToMessageOriginThreadComposer',
-        }),
-        /**
-         * Determines the extra records that are currently suggested.
-         * Allows to have different model types of mentions through a dynamic
-         * process. 2 arbitrary lists can be provided and the second is defined
-         * as "extra".
-         */
-        extraSuggestedRecords: many2many('mail.model', {
-            compute: '_computeExtraSuggestedRecords',
-            dependencies: [
-                'extraSuggestedRecords',
-                'mainSuggestedRecords',
-                'suggestionDelimiterPosition',
-            ],
         }),
         /**
          * This field determines whether some attachments linked to this
@@ -876,18 +737,6 @@ function factory(dependencies) {
             ],
         }),
         hasFocus: attr({
-            default: false,
-        }),
-        /**
-         * States whether there is any result currently found for the current
-         * suggestion delimiter and search term, if applicable.
-         */
-        hasSuggestions: attr({
-            compute: '_computeHasSuggestions',
-            dependencies: [
-                'extraSuggestedRecords',
-                'mainSuggestedRecords',
-            ],
             default: false,
         }),
         /**
@@ -917,19 +766,6 @@ function factory(dependencies) {
          * Determines whether a post_message request is currently pending.
          */
         isPostingMessage: attr(),
-        /**
-         * Determines the main records that are currently suggested.
-         * Allows to have different model types of mentions through a dynamic
-         * process. 2 arbitrary lists can be provided and the first is defined
-         * as "main".
-         */
-        mainSuggestedRecords: many2many('mail.model', {
-            compute: '_computeMainSuggestedRecords',
-            dependencies: [
-                'mainSuggestedRecords',
-                'suggestionDelimiterPosition',
-            ],
-        }),
         mentionedChannels: many2many('mail.thread', {
             compute: '_computeMentionedChannels',
             dependencies: ['textInputContent'],

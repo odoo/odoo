@@ -4,7 +4,7 @@
     <t t-name="mail.ComposerTextInput" owl="1">
         <div class="o_ComposerTextInput">
             <t t-if="composer">
-                <t t-if="composer.hasSuggestions">
+                <t t-if="composer.composerSuggestionList.hasSuggestions">
                     <ComposerSuggestionList
                         composerLocalId="props.composerLocalId"
                         isBelow="props.hasMentionSuggestionsBelowPosition"

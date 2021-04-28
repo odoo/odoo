@@ -5,21 +5,21 @@
         <div class="o_ComposerSuggestionList" t-att-class="{ 'o-lowPosition': props.isBelow }">
             <div class="o_ComposerSuggestionList_drop" t-att-class="{ 'dropdown': props.isBelow, 'dropup': !props.isBelow }">
                 <div class="o_ComposerSuggestionList_list dropdown-menu show">
-                    <t t-foreach="composer.mainSuggestedRecords" t-as="record" t-key="record.localId">
+                    <t t-foreach="composer.composerSuggestionList.mainSuggestedRecords" t-as="record" t-key="record.localId">
                         <ComposerSuggestion
                             composerLocalId="props.composerLocalId"
-                            isActive="record === composer.activeSuggestedRecord"
+                            isActive="record === composer.composerSuggestionList.activeSuggestedRecord"
                             modelName="composer.suggestionModelName"
                             recordLocalId="record.localId"
                         />
                     </t>
-                    <t t-if="composer.mainSuggestedRecords.length > 0 and composer.extraSuggestedRecords.length > 0">
+                    <t t-if="composer.composerSuggestionList.mainSuggestedRecords.length > 0 and composer.composerSuggestionList.extraSuggestedRecords.length > 0">
                         <div role="separator" class="dropdown-divider"/>
                     </t>
-                    <t t-foreach="composer.extraSuggestedRecords" t-as="record" t-key="record.localId">
+                    <t t-foreach="composer.composerSuggestionList.extraSuggestedRecords" t-as="record" t-key="record.localId">
                         <ComposerSuggestion
                             composerLocalId="props.composerLocalId"
-                            isActive="record === composer.activeSuggestedRecord"
+                            isActive="record === composer.composerSuggestionList.activeSuggestedRecord"
                             modelName="composer.suggestionModelName"
                             recordLocalId="record.localId"
                         />

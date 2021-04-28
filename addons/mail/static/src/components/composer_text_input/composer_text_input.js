@@ -29,7 +29,7 @@ class ComposerTextInput extends Component {
             const correspondent = thread ? thread.correspondent : undefined;
             return {
                 composerHasFocus: composer && composer.hasFocus,
-                composerHasSuggestions: composer && composer.hasSuggestions,
+                composerHasSuggestions: composer && composer.composerSuggestionList.hasSuggestions,
                 composerIsLastStateChangeProgrammatic: composer && composer.isLastStateChangeProgrammatic,
                 composerIsLog: composer && composer.isLog,
                 composerTextInputContent: composer && composer.textInputContent,
@@ -244,9 +244,9 @@ class ComposerTextInput extends Component {
     _onKeydownTextarea(ev) {
         switch (ev.key) {
             case 'Escape':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.composerSuggestionList.hasSuggestions) {
                     ev.preventDefault();
-                    this.composer.closeSuggestions();
+                    this.composer.composerSuggestionList.closeSuggestions();
                     markEventHandled(ev, 'ComposerTextInput.closeSuggestions');
                 }
                 break;
@@ -258,7 +258,7 @@ class ComposerTextInput extends Component {
             case 'Home':
             case 'End':
             case 'Tab':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.composerSuggestionList.hasSuggestions) {
                     // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
                     ev.preventDefault();
                 }
@@ -275,7 +275,7 @@ class ComposerTextInput extends Component {
      * @param {KeyboardEvent} ev
      */
     _onKeydownTextareaEnter(ev) {
-        if (this.composer.hasSuggestions) {
+        if (this.composer.composerSuggestionList.hasSuggestions) {
             ev.preventDefault();
             return;
         }
@@ -327,45 +327,45 @@ class ComposerTextInput extends Component {
                 break;
             // ENTER, HOME, END, UP, DOWN, PAGE UP, PAGE DOWN, TAB: check if navigation in mention suggestions
             case 'Enter':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.composerSuggestionList.hasSuggestions) {
                     this.composer.insertSuggestion();
-                    this.composer.closeSuggestions();
+                    this.composer.composerSuggestionList.closeSuggestions();
                     this.focus();
                 }
                 break;
             case 'ArrowUp':
             case 'PageUp':
-                if (this.composer.hasSuggestions) {
-                    this.composer.setPreviousSuggestionActive();
+                if (this.composer.composerSuggestionList.hasSuggestions) {
+                    this.composer.composerSuggestionList.setPreviousSuggestionActive();
                     this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'ArrowDown':
             case 'PageDown':
-                if (this.composer.hasSuggestions) {
-                    this.composer.setNextSuggestionActive();
+                if (this.composer.composerSuggestionList.hasSuggestions) {
+                    this.composer.composerSuggestionList.setNextSuggestionActive();
                     this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'Home':
-                if (this.composer.hasSuggestions) {
-                    this.composer.setFirstSuggestionActive();
+                if (this.composer.composerSuggestionList.hasSuggestions) {
+                    this.composer.composerSuggestionList.setFirstSuggestionActive();
                     this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'End':
-                if (this.composer.hasSuggestions) {
-                    this.composer.setLastSuggestionActive();
+                if (this.composer.composerSuggestionList.hasSuggestions) {
+                    this.composer.composerSuggestionList.setLastSuggestionActive();
                     this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'Tab':
-                if (this.composer.hasSuggestions) {
+                if (this.composer.composerSuggestionList.hasSuggestions) {
                     if (ev.shiftKey) {
-                        this.composer.setPreviousSuggestionActive();
+                        this.composer.composerSuggestionList.setPreviousSuggestionActive();
                         this.composer.update({ hasToScrollToActiveSuggestion: true });
                     } else {
-                        this.composer.setNextSuggestionActive();
+                        this.composer.composerSuggestionList.setNextSuggestionActive();
                         this.composer.update({ hasToScrollToActiveSuggestion: true });
                     }
                 }

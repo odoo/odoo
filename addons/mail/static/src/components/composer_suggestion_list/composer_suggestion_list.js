@@ -19,13 +19,13 @@ class ComposerSuggestionList extends Component {
         useStore(props => {
             const composer = this.env.models['mail.composer'].get(props.composerLocalId);
             const activeSuggestedRecord = composer
-                ? composer.activeSuggestedRecord
+                ? composer.composerSuggestionList.activeSuggestedRecord
                 : undefined;
             const extraSuggestedRecords = composer
-                ? composer.extraSuggestedRecords
+                ? composer.composerSuggestionList.extraSuggestedRecords
                 : [];
             const mainSuggestedRecords = composer
-                ? composer.mainSuggestedRecords
+                ? composer.composerSuggestionList.mainSuggestedRecords
                 : [];
             return {
                 activeSuggestedRecord,
