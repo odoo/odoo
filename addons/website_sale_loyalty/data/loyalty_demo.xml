@@ -5,8 +5,34 @@
         <field name="loyalty_id" ref="loyalty.program" />
     </record>
 
-    <function model="sale.order" name="recompute_loyalty_points">
-        <value model="sale.order" eval="obj().search([('website_id', '!=', False)]).ids"/>
-        <value eval="ref('loyalty.program')" />
-    </function>
+    <record model="loyalty.reward" id="loyalty.reward_01">
+        <field name="image_1920" type="base64" file="website_sale_loyalty/static/img/gift.svg"/>
+    </record>
+
+    <record model="loyalty.reward" id="loyalty.reward_02">
+        <field name="image_1920" type="base64" file="website_sale_loyalty/static/img/discount.svg"/>
+    </record>
+
+    <record model="loyalty.reward" id="loyalty.reward_03">
+        <field name="image_1920" type="base64" file="website_sale_loyalty/static/img/discount.svg"/>
+    </record>
+
+    <record id="loyalty.simple_pen" model="product.product">
+        <field name="taxes_id" eval="False"/>
+        <field name="supplier_taxes_id" eval="False"/>
+    </record>
+
+    <record id="loyalty.discount_percent" model="product.product">
+        <field name="sale_ok" eval="False"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="taxes_id" eval="False"/>
+        <field name="supplier_taxes_id" eval="False"/>
+    </record>
+
+    <record id="loyalty.discount_fix" model="product.product">
+        <field name="sale_ok" eval="False"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="taxes_id" eval="False"/>
+        <field name="supplier_taxes_id" eval="False"/>
+    </record>
 </odoo>

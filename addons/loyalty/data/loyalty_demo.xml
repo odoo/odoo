@@ -5,9 +5,21 @@
         <field name="name">Simple Pen</field>
         <field name="weight">0.01</field>
         <field name="default_code">CONS_0002</field>
-        <field name="uom_id" ref="uom.product_uom_unit" />
-        <field name="uom_po_id" ref="uom.product_uom_unit" />
         <field name="image_1920" type="base64" file="loyalty/static/img/simple_pen.png"/>
+    </record>
+
+    <record id="discount_percent" model="product.product">
+        <field name="list_price">0.00</field>
+        <field name="name">5% Discount</field>
+        <field name="default_code">DISC_0002</field>
+        <field name="image_1920" type="base64" file="loyalty/static/img/discount_5percent.svg"/>
+    </record>
+
+    <record id="discount_fix" model="product.product">
+        <field name="list_price">0.00</field>
+        <field name="name">-10 Discount</field>
+        <field name="default_code">DISC_0003</field>
+        <field name="image_1920" type="base64" file="loyalty/static/img/discount_fix.svg"/>
     </record>
 
     <record id="reward_01" model="loyalty.reward">
@@ -17,9 +29,29 @@
         <field name="gift_product_id" ref="loyalty.simple_pen" />
     </record>
 
+    <record id="reward_02" model="loyalty.reward">
+        <field name="name">5% Discount</field>
+        <field name="reward_type">discount</field>
+        <field name="point_cost">100</field>
+        <field name="discount_type">percentage</field>
+        <field name="discount_percentage">5</field>
+        <field name="discount_product_id" ref="loyalty.discount_percent" />
+    </record>
+
+    <record id="reward_03" model="loyalty.reward">
+        <field name="name">-10 Discount</field>
+        <field name="reward_type">discount</field>
+        <field name="point_cost">100</field>
+        <field name="discount_type">fixed_amount</field>
+        <field name="discount_fixed_amount">10</field>
+        <field name="discount_product_id" ref="loyalty.discount_fix" />
+    </record>
+
     <record id="program" model="loyalty.program">
         <field name="name">Loyalty Program</field>
         <field name="points">10</field>
-        <field name="reward_ids" eval="[(6, 0, [ref('loyalty.reward_01')])]" />
+        <field name="reward_ids" eval="[(6, 0, [ref('loyalty.reward_01'),
+                                                ref('loyalty.reward_02'),
+                                                ref('loyalty.reward_03')])]" />
     </record>
 </odoo>
