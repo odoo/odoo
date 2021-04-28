@@ -15,8 +15,10 @@ odoo.define('hr_timesheet.GraphView', function (require) {
             const currentCompanyId = session.user_context.allowed_company_ids[0];
             const currentCompany = session.user_companies.allowed_companies[currentCompanyId];
             const currentCompanyTimesheetUOMFactor = currentCompany.timesheet_uom_factor || 1;
+            const fields = ['unit_amount', 'effective_hours', 'planned_hours', 'remaining_hours', 'total_hours_spent', 'subtask_effective_hours',
+            'overtime', 'number_hours', 'difference', 'hours_effective', 'hours_planned', 'timesheet_unit_amount'];
 
-            if (this.chart.measure === 'unit_amount' && currentCompanyTimesheetUOMFactor !== 1) {
+            if (fields.includes(this.chart.measure) && currentCompanyTimesheetUOMFactor !== 1) {
                 // recalculate the Duration values according to the timesheet_uom_factor
                 this.chart.dataPoints.forEach(function (dataPt) {
                     dataPt.value *= currentCompanyTimesheetUOMFactor;

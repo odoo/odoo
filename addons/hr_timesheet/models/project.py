@@ -218,16 +218,17 @@ class Task(models.Model):
         result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
 
-        if view_type == 'tree' and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+        if view_type in ['tree', 'pivot', 'graph'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
             result['arch'] = self._apply_time_label(result['arch'])
         return result
 
     @api.model
-    def _apply_time_label(self, view_arch):
+    def _apply_time_label(self, view_arch, related_model=None):
         doc = etree.XML(view_arch)
+        Model = self.env[related_model or self._name]
         encoding_uom = self.env.company.timesheet_encode_uom_id
         for node in doc.xpath("//field[@widget='timesheet_uom'][not(@string)] | //field[@widget='timesheet_uom_no_toggle'][not(@string)]"):
-            name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom.name or '', self._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
+            name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom.name or '', Model._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
             node.set('string', name_with_uom)
 
         return etree.tostring(doc, encoding='unicode')
