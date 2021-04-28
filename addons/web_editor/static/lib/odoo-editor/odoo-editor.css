@@ -1,3 +1,13 @@
+.oe-floating {
+    box-shadow: 0px 3px 18px rgb(0 0 0 / 23%);
+    border-radius: 4px;
+    position: absolute;
+}
+
+.oe-noscroll {
+    overflow: hidden !important;
+}
+
 /* toolbar styling */
 
 .oe-toolbar {
@@ -57,27 +67,41 @@
 .oe-toolbar .btn.active {
     background: #555555;
 }
-.oe-toolbar .tablepicker {
+.oe-tablepicker-dropdown .oe-tablepicker {
     margin: -3px 2px -6px 2px;
+}
+.oe-tablepicker {
     width: max-content;
     width: -webkit-max-content;
 }
-.oe-toolbar .tablepicker .tablepicker-row .tablepicker-cell {
+.oe-tablepicker-wrapper.oe-floating {
+    padding: 3px;
+    z-index: 1051;
     background: white;
-    width: 5px;
-    height: 5px;
+}
+.oe-tablepicker-row {
+    line-height: 0;
+}
+.oe-tablepicker .oe-tablepicker-row .oe-tablepicker-cell {
+    display: inline-block;
+    background:  #EFEFEE;
+    width: 19px;
+    height: 19px;
+    padding: 0;
     margin-right: 3px;
     margin-bottom: 3px;
 }
-.oe-toolbar .tablepicker .tablepicker-row .tablepicker-cell:last-of-type {
+.oe-tablepicker .oe-tablepicker-row .oe-tablepicker-cell:last-of-type {
     margin-right: 0;
 }
-.oe-toolbar .tablepicker .tablepicker-row .tablepicker-cell.active {
-    background: #ddeafb;
-    border-color: #c3d9ff;
+.oe-tablepicker .oe-tablepicker-row .oe-tablepicker-cell.active {
+    background: #d3d1cb;
 }
-.oe-toolbar .tablepicker-size {
+.oe-tablepicker-size {
+    text-align: center;
     margin-top: 7px;
+}
+.oe-tablepicker-dropdown .oe-tablepicker-size {
     color: white;
 }
 .oe-toolbar .dropdown-toggle {
@@ -176,4 +200,100 @@
 li.oe-nested {
     display: block;
 }
+.oe-commandbar-wrapper {
+    position: absolute;
+    z-index: 1051;
+    border: black;
+    background-color: white;
+    max-height: 40vh;
+    box-sizing: border-box;
+    max-width: 100%;
+    box-shadow: 0px 3px 18px rgb(0 0 0 / 23%);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+}
+.oe-commandbar-mainWrapper {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 5px 0;
+}
 
+.oe-commandbar-groupName,  .oe-commandbar-noResult {
+    margin: 10px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 11px;
+}
+.oe-commandbar-groupName {
+    text-transform: uppercase;
+}
+.oe-commandbar-noResult {
+    font-size: 15px;
+}
+
+.oe-commandbar-commandWrapper {
+    display: flex;
+    padding: 3px 10px;
+    cursor: pointer;
+}
+
+.oe-commandbar-commandWrapper.active {
+    background: #EFEFEE;
+}
+
+i.oe-commandbar-commandImg {
+    display: flex;
+    height: 50px;
+    width: 50px;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    font-size: 25px;
+}
+
+.oe-commandbar-commandTitle {
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+.oe-commandbar-commandDescription {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 12px;
+    margin: 4px 0;
+}
+
+.oe-commandbar-commandRightCol {
+    margin: 0 10px;
+}
+
+.oe-commandbar-wrapper ::-webkit-scrollbar {
+    background: transparent;
+}
+.oe-commandbar-wrapper ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+.oe-commandbar-wrapper ::-webkit-scrollbar-thumb {
+    background: #D3D1CB;
+}
+.oe-commandbar-wrapper ::-webkit-scrollbar-track {
+    background: #EDECE9;
+}
+
+/* Command hints */
+
+.oe-hint {
+    position: relative;
+    caret-color: rgb(55, 53, 47);
+}
+.oe-hint:before {
+    content: attr(placeholder);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    color: rgba(55, 53, 47, 0.4);
+}
