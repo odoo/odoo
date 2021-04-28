@@ -985,9 +985,12 @@ class HolidaysRequest(models.Model):
             self.activity_update()
         return True
 
+    def _get_leaves_on_public_holiday(self):
+        return self.filtered(lambda l: l.employee_id and not l.number_of_days)
+
     def action_validate(self):
         current_employee = self.env.user.employee_id
-        leaves = self.filtered(lambda l: l.employee_id and not l.number_of_days)
+        leaves = self._get_leaves_on_public_holiday()
         if leaves:
             raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
 
