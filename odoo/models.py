@@ -651,9 +651,12 @@ class BaseModel(object):
         manual_fields = self.pool.get_manual_fields(self._cr, self._name)
         for name, field_data in manual_fields.iteritems():
             if name not in self._fields:
-                field = IrModelFields._instanciate(field_data, partial)
-                if field:
-                    self._add_field(name, field)
+                try:
+                    field = IrModelFields._instanciate(field_data, partial)
+                    if field:
+                        self._add_field(name, field)
+                except Exception:
+                    _logger.exception("Failed to load field %s.%s: skipped", self._name, name)
 
     @classmethod
     def _init_constraints_onchanges(cls):
@@ -2857,7 +2860,7 @@ class BaseModel(object):
             try:
                 field.setup_full(self)
             except Exception:
-                if partial and field.base_field.manual:
+                if field.base_field.manual:
                     # Something goes wrong when setup a manual field.
                     # This can happen with related fields using another manual many2one field
                     # that hasn't been loaded because the comodel does not exist yet.
