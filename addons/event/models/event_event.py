@@ -199,6 +199,7 @@ class EventEvent(models.Model):
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    city = fields.Char(related="address_id.city", store=True)
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
     # badge fields

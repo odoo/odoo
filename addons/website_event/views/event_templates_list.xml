@@ -145,6 +145,40 @@
     </xpath>
 </template>
 
+<!-- Filter - City -->
+<template id="event_city" inherit_id="website_event.index_topbar" active="False" customize_show="True" name="Filter by City">
+    <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
+        <li class="nav-item dropdown mr-2 my-1 my-lg-0">
+            <a
+                href="#"
+                role="button"
+                class="btn dropdown-toggle"
+                data-toggle="dropdown"
+            >
+                <i class="fa fa-folder-open" />
+                <t t-if="current_city" t-esc="current_city" />
+                <t t-else="">All Cities</t>
+            </a>
+            <div class="dropdown-menu">
+                <t t-foreach="cities" t-as="city">
+                    <t t-if="city['city']">
+                        <a
+                            t-att-href="keep('/event', city=city['city'])"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('city') == city['city'] and 'active'}"
+                        >
+                            <t t-esc="city['city']" />
+                            <span
+                                t-esc="city['city_count']"
+                                class="badge badge-pill badge-primary ml-3"
+                            />
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
 <!-- Index - Events list -->
 <template id="events_list" name="Events list">
     <!-- Options -->

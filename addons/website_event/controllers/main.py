@@ -37,6 +37,7 @@ class WebsiteEventController(http.Controller):
         searches.setdefault('tags', '')
         searches.setdefault('type', 'all')
         searches.setdefault('country', 'all')
+        searches.setdefault("city", _("All Cities"))
 
         website = request.website
         today = fields.Datetime.today()
@@ -107,6 +108,9 @@ class WebsiteEventController(http.Controller):
         elif searches["country"] == 'online':
             domain_search["country"] = [("country_id", "=", False)]
 
+        if searches["city"] != _("All Cities"):
+            domain_search["city"] = [("city", "=", searches["city"])]
+
         def dom_without(without):
             domain = []
             for key, search in domain_search.items():
@@ -126,6 +130,13 @@ class WebsiteEventController(http.Controller):
         countries.insert(0, {
             'country_id_count': sum([int(country['country_id_count']) for country in countries]),
             'country_id': ("all", _("All Countries"))
+        })
+
+        domain = dom_without('city')
+        cities = Event.read_group(domain, ["city"], groupby="city", orderby="city")
+        cities.insert(0, {
+            "city_count": sum(x["city_count"] for x in cities),
+            "city": _("All Cities"),
         })
 
         step = 12  # Number of events per page
@@ -149,11 +160,14 @@ class WebsiteEventController(http.Controller):
         values = {
             'current_date': current_date,
             'current_country': current_country,
+            'current_city': searches["city"],
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
             'dates': dates,
             'categories': request.env['event.tag.category'].search([]),
             'countries': countries,
+            'cities': cities,
+            'cities': cities,
             'pager': pager,
             'searches': searches,
             'search_tags': search_tags,
