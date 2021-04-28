@@ -11,6 +11,9 @@ import os
 import re
 import textwrap
 import uuid
+import io
+
+from lxml import etree
 
 import psycopg2
 try:
@@ -25,10 +28,207 @@ from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator
+from odoo.tools.misc import file_open
+from odoo.tools.translate import _
+
 from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
+
+class HomeStaticTemplateHelpers(object):
+    """
+    Helper Class that wraps the reading of static qweb templates files
+    and xpath inheritance applied to those templates
+    /!\ Template inheritance order is defined by ir.module.module natural order
+        which is "sequence, name"
+        Then a topological sort is applied, which just puts dependencies
+        of a module before that module
+    """
+    NAME_TEMPLATE_DIRECTIVE = 't-name'
+    STATIC_INHERIT_DIRECTIVE = 't-inherit'
+    STATIC_INHERIT_MODE_DIRECTIVE = 't-inherit-mode'
+    PRIMARY_MODE = 'primary'
+    EXTENSION_MODE = 'extension'
+    DEFAULT_MODE = PRIMARY_MODE
+
+    def __init__(self, addons, db, checksum_only=False, debug=False):
+        '''
+        :param str|list addons: plain list or comma separated list of addons
+        :param str db: the current db we are working on
+        :param bool checksum_only: only computes the checksum of all files for addons
+        :param str debug: the debug mode of the session
+        '''
+        super(HomeStaticTemplateHelpers, self).__init__()
+        self.addons = addons.split(',') if isinstance(addons, str) else addons
+        self.db = db
+        self.debug = debug
+        self.checksum_only = checksum_only
+        self.template_dict = OrderedDict()
+
+    def _get_parent_template(self, addon, template):
+        """Computes the real addon name and the template name
+        of the parent template (the one that is inherited from)
+
+        :param str addon: the addon the template is declared in
+        :param etree template: the current template we are are handling
+        :returns: (str, str)
+        """
+        original_template_name = template.attrib[self.STATIC_INHERIT_DIRECTIVE]
+        split_name_attempt = original_template_name.split('.', 1)
+        parent_addon, parent_name = tuple(split_name_attempt) if len(split_name_attempt) == 2 else (addon, original_template_name)
+        if parent_addon not in self.template_dict:
+            if original_template_name in self.template_dict[addon]:
+                parent_addon = addon
+                parent_name = original_template_name
+            else:
+                raise ValueError(_('Module %s not loaded or inexistent, or templates of addon being loaded (%s) are misordered') % (parent_addon, addon))
+
+        if parent_name not in self.template_dict[parent_addon]:
+            raise ValueError(_("No template found to inherit from. Module %s and template name %s") % (parent_addon, parent_name))
+
+        return parent_addon, parent_name
+
+    def _compute_xml_tree(self, addon, file_name, source):
+        """Computes the xml tree that 'source' contains
+        Applies inheritance specs in the process
+
+        :param str addon: the current addon we are reading files for
+        :param str file_name: the current name of the file we are reading
+        :param str source: the content of the file
+        :returns: etree
+        """
+        try:
+            all_templates_tree = etree.parse(io.BytesIO(source), parser=etree.XMLParser(remove_comments=True)).getroot()
+        except etree.ParseError as e:
+            _logger.error("Could not parse file %s: %s" % (file_name, e.msg))
+            raise e
+
+        self.template_dict.setdefault(addon, OrderedDict())
+        for template_tree in list(all_templates_tree):
+            if self.NAME_TEMPLATE_DIRECTIVE in template_tree.attrib:
+                template_name = template_tree.attrib[self.NAME_TEMPLATE_DIRECTIVE]
+                dotted_names = template_name.split('.', 1)
+                if len(dotted_names) > 1 and dotted_names[0] == addon:
+                    template_name = dotted_names[1]
+            else:
+                # self.template_dict[addon] grows after processing each template
+                template_name = 'anonymous_template_%s' % len(self.template_dict[addon])
+            if self.STATIC_INHERIT_DIRECTIVE in template_tree.attrib:
+                inherit_mode = template_tree.attrib.get(self.STATIC_INHERIT_MODE_DIRECTIVE, self.DEFAULT_MODE)
+                if inherit_mode not in [self.PRIMARY_MODE, self.EXTENSION_MODE]:
+                    raise ValueError(_("Invalid inherit mode. Module %s and template name %s") % (addon, template_name))
+                parent_addon, parent_name = self._get_parent_template(addon, template_tree)
+
+                # After several performance tests, we found out that deepcopy is the most efficient
+                # solution in this case (compared with copy, xpath with '.' and stringifying).
+                parent_tree = copy.deepcopy(self.template_dict[parent_addon][parent_name])
+
+                xpaths = list(template_tree)
+                if self.debug and inherit_mode == self.EXTENSION_MODE:
+                    for xpath in xpaths:
+                        xpath.insert(0, etree.Comment(" Modified by %s from %s " % (template_name, addon)))
+                elif inherit_mode == self.PRIMARY_MODE:
+                    parent_tree.tag = template_tree.tag
+                inherited_template = apply_inheritance_specs(parent_tree, xpaths)
+
+                if inherit_mode == self.PRIMARY_MODE:  # New template_tree: A' = B(A)
+                    for attr_name, attr_val in template_tree.attrib.items():
+                        if attr_name not in ('t-inherit', 't-inherit-mode'):
+                            inherited_template.set(attr_name, attr_val)
+                    if self.debug:
+                        self._remove_inheritance_comments(inherited_template)
+                    self.template_dict[addon][template_name] = inherited_template
+
+                else:  # Modifies original: A = B(A)
+                    self.template_dict[parent_addon][parent_name] = inherited_template
+            else:
+                if template_name in self.template_dict[addon]:
+                    raise ValueError(_("Template %s already exists in module %s") % (template_name, addon))
+                self.template_dict[addon][template_name] = template_tree
+            print('SET TRACE ===============================')
+            import pdb; pdb.set_trace()
+        return all_templates_tree
+
+    def _remove_inheritance_comments(self, inherited_template):
+        '''Remove the comments added in the template already, they come from other templates extending
+        the base of this inheritance
+
+        :param inherited_template:
+        '''
+        for comment in inherited_template.xpath('//comment()'):
+            if re.match(COMMENT_PATTERN, comment.text.strip()):
+                comment.getparent().remove(comment)
+
+    def _read_addon_file(self, file_path):
+        """Reads the content of a file given by file_path
+        Usefull to make 'self' testable
+        :param str file_path:
+        :returns: str
+        """
+        with file_open(file_path, 'rb') as fp:
+            contents = fp.read()
+        return contents
+
+    def _concat_xml(self, file_dict):
+        """Concatenate xml files
+
+        :param dict(list) file_dict:
+            key: addon name
+            value: list of files for an addon
+        :returns: (concatenation_result, checksum)
+        :rtype: (bytes, str)
+        """
+        checksum = hashlib.new('sha512')  # sha512/256
+        if not file_dict:
+            return b'', checksum.hexdigest()
+
+        root = None
+        for addon, fnames in file_dict.items():
+            for fname in fnames:
+                contents = self._read_addon_file(fname)
+                checksum.update(contents)
+                if not self.checksum_only:
+                    xml = self._compute_xml_tree(addon, fname, contents)
+
+                    if root is None:
+                        root = etree.Element('templates')
+
+        for addon in self.template_dict.values():
+            for template in addon.values():
+                root.append(template)
+
+        return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()[:64]
+
+    def _get_asset_paths(self):
+        """Proxy for ir_asset._get_asset_paths
+        Useful to make 'self' testable.
+        """
+        return request.env['ir.asset']._get_asset_paths(addons=self.addons, bundle='web.assets_qweb', xml=True)
+
+    def _get_qweb_templates(self):
+        """One and only entry point that gets and evaluates static qweb templates
+
+        :rtype: (str, str)
+        """
+        xml_paths = defaultdict(list)
+
+        # group paths by module, keeping them in order
+        for path, addon, _ in self._get_asset_paths():
+            addon_paths = xml_paths[addon]
+            if path not in addon_paths:
+                addon_paths.append(path)
+
+        content, checksum = self._concat_xml(xml_paths)
+        return content, checksum
+
+    @classmethod
+    def get_qweb_templates_checksum(cls, addons=None, db=None, debug=False):
+        return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates()[1]
+
+    @classmethod
+    def get_qweb_templates(cls, addons=None, db=None, debug=False):
+        return cls(addons, db, debug=debug)._get_qweb_templates()[0]
 
 class CompileError(RuntimeError): pass
 def rjsmin(script):
@@ -106,7 +306,7 @@ class AssetsBundle(object):
 
     TRACKED_BUNDLES = ['web.assets_common', 'web.assets_backend']
 
-    def __init__(self, name, files, env=None, css=True, js=True):
+    def __init__(self, name, files, env=None, css=True, js=True, qweb=True):
         """
         :param name: bundle name
         :param files: files to be added to the bundle
@@ -118,10 +318,12 @@ class AssetsBundle(object):
         self.javascripts = []
         self.stylesheets = []
         self.css_errors = []
+        self.qwebs = []
         self.files = files
         self.user_direction = self.env['res.lang']._lang_get(
             self.env.context.get('lang') or self.env.user.lang
         ).direction
+        print('In AssetBundle constructor, files:', files)
         # asset-wide html "media" attribute
         for f in files:
             if css:
@@ -135,8 +337,10 @@ class AssetsBundle(object):
                     self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
             if js and f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
+            if qweb and f['atype'] == 'text/xml':
+                self.qwebs.append(QWebAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], module=f['module']))
 
-    def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
+    def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, qweb=True):
         """
         :returns [(tagName, attributes, content)] if the tag is auto close
         """
@@ -177,6 +381,18 @@ class AssetsBundle(object):
             ])
             response.append(("script", attr, None))
 
+        print('In AssetBundle, self.qwebs:', self.qwebs)
+        if qweb and self.qwebs:
+            attachment = self.qweb()
+            attr = OrderedDict([
+                ["rel", "preload"],
+                ["type", "text/xml"],
+                ["href", attachment.url],
+                ['data-asset-bundle', self.name],
+                ['data-asset-version', self.version],
+            ])
+            response.append(("link", attr, None))
+
         return response
 
     @func.lazy_property
@@ -185,6 +401,7 @@ class AssetsBundle(object):
         return max(itertools.chain(
             (asset.last_modified for asset in self.javascripts),
             (asset.last_modified for asset in self.stylesheets),
+            (asset.last_modified for asset in self.qwebs),
         ))
 
     @func.lazy_property
@@ -297,7 +514,7 @@ class AssetsBundle(object):
 
         :return the ir.attachment records for a given bundle.
         """
-        assert extension in ('js', 'min.js', 'js.map', 'css', 'min.css', 'css.map')
+        assert extension in ('js', 'min.js', 'js.map', 'css', 'min.css', 'css.map', 'xml')
         ira = self.env['ir.attachment']
 
         # Set user direction in name to store two bundles
@@ -308,7 +525,8 @@ class AssetsBundle(object):
         mimetype = (
             'text/css' if extension in ['css', 'min.css'] else
             'application/json' if extension in ['js.map', 'css.map'] else
-            'application/javascript'
+            'application/javascript' if extension in ['js', 'min.js'] else
+            'text/xml'
         )
         values = {
             'name': fname,
@@ -463,6 +681,22 @@ class AssetsBundle(object):
         })
 
         return css_attachment
+
+    def qweb(self):
+        attachments = self.get_attachments('xml')
+
+        if not attachments:
+            file_dict = {}
+            for asset in self.qwebs:
+                if not asset.module in file_dict:
+                    file_dict[asset.module] = [asset.url]
+                else:
+                    file_dict[asset.module].append(asset.url)
+            content, _ = HomeStaticTemplateHelpers([], '', debug=False)._concat_xml(file_dict)
+            return self.save_attachment('xml', content.decode('utf-8'))
+
+        return attachments[0]
+
 
     def dialog_message(self, message):
         """
@@ -1048,3 +1282,9 @@ class LessStylesheetAsset(PreprocessedCSS):
             lessc = 'lessc'
         lesspath = get_resource_path('web', 'static', 'lib', 'bootstrap', 'less')
         return [lessc, '-', '--no-js', '--no-color', '--include-path=%s' % lesspath]
+
+
+class QWebAsset(WebAsset):
+    def __init__(self, bundle, inline=None, url=None, filename=None, module=None):
+        super().__init__(bundle, inline, url, filename)
+        self.module = module

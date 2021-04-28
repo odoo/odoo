@@ -1,5 +1,8 @@
 /** @odoo-module **/
 
+const { loadBundle } = require('web.ajax');
+const assets_mixed = loadBundle('web.assets_mixed');
+
 const { Component, QWeb } = owl;
 
 /**

@@ -18,7 +18,7 @@ from odoo.modules.module import get_resource_path
 
 from odoo.addons.base.models.qweb import QWeb, Contextifier
 from odoo.addons.base.models.assetsbundle import AssetsBundle
-from odoo.addons.base.models.ir_asset import can_aggregate, STYLE_EXTENSIONS, SCRIPT_EXTENSIONS
+from odoo.addons.base.models.ir_asset import can_aggregate, STYLE_EXTENSIONS, SCRIPT_EXTENSIONS, TEMPLATE_EXTENSIONS
 
 _logger = logging.getLogger(__name__)
 
@@ -281,19 +281,19 @@ class IrQWeb(models.AbstractModel, QWeb):
 
     # method called by computing code
 
-    def get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True):
-        return AssetsBundle(bundle_name, files, env=env, css=css, js=js)
+    def get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True, qweb=True):
+        return AssetsBundle(bundle_name, files, env=env, css=css, js=js, qweb=qweb)
 
     @api.model
-    def get_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+    def get_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None, qweb=False):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
         if debug and 'assets' in debug:
-            return self._generate_asset_nodes(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media)
+            return self._generate_asset_nodes(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media, qweb)
         else:
-            return self._generate_asset_nodes_cache(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media)
+            return self._generate_asset_nodes_cache(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media, qweb)
 
     @tools.conditional(
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
@@ -301,17 +301,18 @@ class IrQWeb(models.AbstractModel, QWeb):
         'xml' not in tools.config['dev_mode'],
         tools.ormcache_context('bundle', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', keys=("website_id",)),
     )
-    def _generate_asset_nodes_cache(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
-        return self._generate_asset_nodes(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media)
+    def _generate_asset_nodes_cache(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None, qweb=True):
+        return self._generate_asset_nodes(bundle, options, css, js, debug, async_load, defer_load, lazy_load, media, qweb)
 
-    def _generate_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+    def _generate_asset_nodes(self, bundle, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None, qweb=True):
         nodeAttrs = None
         if css and media:
             nodeAttrs = {
                 'media': media,
             }
         files, remains = self._get_asset_content(bundle, options, nodeAttrs)
-        asset = self.get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
+        print("Files:", files, "Remains:", remains)
+        asset = self.get_asset_bundle(bundle, files, env=self.env, css=css, js=js, qweb=qweb)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
         return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
 
@@ -328,15 +329,16 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         options['website_id'] = self.env.context.get('website_id')
 
-        asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
+        asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True, xml=True)
 
         files = []
         remains = []
-        for path, *_ in asset_paths:
+        for path, module, *_ in asset_paths:
             ext = path.split('.')[-1]
             is_js = ext in SCRIPT_EXTENSIONS
             is_css = ext in STYLE_EXTENSIONS
-            if not is_js and not is_css:
+            is_qweb = ext in TEMPLATE_EXTENSIONS
+            if not is_js and not is_css and not is_qweb:
                 continue
 
             mimetype = 'text/javascript' if is_js else 'text/%s' % ext
@@ -348,15 +350,17 @@ class IrQWeb(models.AbstractModel, QWeb):
                     'filename': get_resource_path(*segments) if segments else None,
                     'content': '',
                     'media': nodeAttrs and nodeAttrs.get('media'),
+                    'module': module,
                 })
             else:
+                # When do we hit this?
                 if is_js:
                     tag = 'script'
                     attributes = {
                         "type": mimetype,
                         "src": path,
                     }
-                else:
+                elif is_css:
                     tag = 'link'
                     attributes = {
                         "type": mimetype,
@@ -364,6 +368,8 @@ class IrQWeb(models.AbstractModel, QWeb):
                         "href": path,
                         'media': nodeAttrs and nodeAttrs.get('media'),
                     }
+                else:
+                    raise "Non-aggregate qweb"
                 remains.append((tag, attributes, ''))
 
         return (files, remains)

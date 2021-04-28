@@ -621,8 +621,9 @@ const loadBundle = (() => {
                 method: 'get_asset_nodes',
                 args: [bundleId, {}],
                 kwargs: {
-                    // TODO: quid of debug=assets?
-                    debug: config.isDebug(),
+                    // TODO: pass the real debug mode
+                    debug: false,
+                    qweb: true,
                 },
             });
             const jsLibs = [];
@@ -630,10 +631,14 @@ const loadBundle = (() => {
             nodes.forEach(([type, attributes]) => {
                 switch (type) {
                     case 'script':
-                        jsLibs.push(attributes.src);
+                        //jsLibs.push(attributes.src);
                         break;
                     case 'link':
-                        cssLibs.push(attributes.href);
+                        if (attributes.rel === 'stylesheet') {
+                            //cssLibs.push(attributes.href);
+                        } else {
+                            debugger;
+                        }
                         break;
                     default:
                         throw new Error(`Unrecognized asset node type "${type}": expected "script" or "link"`);
