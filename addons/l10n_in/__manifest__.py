@@ -3,7 +3,7 @@
 
 {
     'name': 'Indian - Accounting',
-    'version': '2.0',
+    'version': '2.1',
     'description': """
 Indian Accounting: Chart of Account.
 ====================================
@@ -18,7 +18,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
   """,
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
-        'account_tax_python', 'base_vat',
+        'account_tax_python', 'base_vat', 'l10n_in_base',
     ],
     'data': [
         'security/l10n_in_security.xml',
@@ -29,17 +29,12 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'data/l10n_in_chart_post_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_fiscal_position_data.xml',
-        'data/l10n_in.port.code.csv',
-        'data/res_country_state_data.xml',
         'data/uom_data.xml',
         'views/account_invoice_views.xml',
         'views/account_journal_views.xml',
         'views/res_config_settings_views.xml',
         'views/product_template_view.xml',
-        'views/port_code_views.xml',
         'views/report_invoice.xml',
-        'views/res_company_view.xml',
-        'views/res_country_state_view.xml',
         'views/res_partner_views.xml',
         'views/account_tax_views.xml',
         'views/uom_uom_views.xml',

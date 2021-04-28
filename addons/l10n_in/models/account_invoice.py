@@ -47,7 +47,7 @@ class AccountMove(models.Model):
         if partner.country_id and partner.country_id.code == 'IN' and not partner.state_id:
             raise ValidationError(_("State is missing from address in '%s'. First set state after post this invoice again.", partner.name))
         elif partner.country_id and partner.country_id.code != 'IN':
-            return self.env.ref('l10n_in.state_in_ot')
+            return self.env.ref('l10n_in_base.state_in_ot')
         return partner.state_id
 
 
