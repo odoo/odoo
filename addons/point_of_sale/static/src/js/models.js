@@ -1157,9 +1157,8 @@ exports.PosModel = Backbone.Model.extend({
                 timeout: timeout,
                 shadow: true,
             })
-            .then(function (ids) {
-                self.db.set_ids_removed_from_server(server_ids);
-                return server_ids;
+            .then(function (data) {
+                return self._post_remove_from_server(server_ids, data)
             }).catch(function (reason){
                 var error = reason.message;
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
@@ -1173,6 +1172,12 @@ exports.PosModel = Backbone.Model.extend({
                 console.warn('Failed to remove orders:', server_ids);
                 throw error;
             });
+    },
+
+    // to override
+    _post_remove_from_server(server_ids, data) {
+        this.db.set_ids_removed_from_server(server_ids);
+        return server_ids;
     },
 
     scan_product: function(parsed_code){
