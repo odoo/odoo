@@ -27,6 +27,10 @@ body.o_connected_user {
 
         &.editor_enable.editor_has_snippets {
             padding-right: 0 !important;
+
+            .modal:not(.o_technical_modal) {
+                right: 0;
+            }
         }
         #oe_main_menu_navbar, #web_editor-top-edit {
             transform: translateY(-100%);
