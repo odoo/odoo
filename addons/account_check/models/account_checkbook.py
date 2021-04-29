@@ -4,7 +4,6 @@
 ##############################################################################
 from odoo import fields, models, api, _
 import logging
-from odoo.exceptions import ValidationError
 _logger = logging.getLogger(__name__)
 
 
@@ -129,4 +128,3 @@ class AccountCheckbook(models.Model):
             if rec.range_to:
                 name += _(' up to %s') % rec.range_to
             rec.name = name
-

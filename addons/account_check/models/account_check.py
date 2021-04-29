@@ -1,6 +1,5 @@
-from odoo import fields, models, _, api
+from odoo import fields, models, api, _
 from odoo.exceptions import UserError, ValidationError
-import re
 import logging
 _logger = logging.getLogger(__name__)
 
@@ -15,7 +14,6 @@ class AccountCheck(models.Model):
     operation_ids = fields.One2many(
         'account.check.operation',
         'check_id',
-        auto_join=True,
         readonly=True,
     )
     name = fields.Char(
@@ -29,8 +27,6 @@ class AccountCheck(models.Model):
         required=True,
         readonly=True,
         states={'draft': [('readonly', False)]},
-        copy=False,
-        index=True,
         compute='_compute_number',
         inverse='_inverse_number',
     )
@@ -39,8 +35,6 @@ class AccountCheck(models.Model):
         'Checkbook',
         readonly=True,
         states={'draft': [('readonly', False)]},
-        auto_join=True,
-        index=True,
         ondelete='restrict',
     )
     own_check_subtype = fields.Selection(
@@ -53,35 +47,25 @@ class AccountCheck(models.Model):
     )
     partner_id = fields.Many2one(
         'res.partner',
+        # related is not working / updating as expected, we make computed
         compute='_compute_data',
-        # related is not working / updating as expected
-        # related='operation_ids.move_line_id.partner_id',
         store=True,
-        # index=True,
         string='Last operation partner',
     )
     first_partner_id = fields.Many2one(
         'res.partner',
-        # compute='_compute_data',
         string='First operation partner',
         readonly=True,
-        # store=True,
     )
     state = fields.Selection([
         ('draft', 'Draft'),
         ('holding', 'In Wallet'),
         ('deposited', 'Collected'),
-        # ('selled', 'Selled'),
         ('delivered', 'Delivered'),
-        # ('transfered', 'Transfered'),
-        # ('reclaimed', 'Reclaimed'),
         ('withdrawed', 'Withdrawed'),
         ('handed', 'Handed'),
-        # ('rejected', 'Rejected'),
         ('debited', 'Debited'),
         ('returned', 'Returned'),
-        # ('changed', 'Changed'),
-        # ('cancel', 'Cancel'),
     ],
         required=True,
         default='draft',
@@ -138,15 +122,8 @@ class AccountCheck(models.Model):
     journal_id = fields.Many2one(
         'account.journal',
         compute='_compute_data',
-        # related='operation_ids.move_line_id.journal_id',
         readonly=True,
         store=True,
-        # 'account.journal',
-        # string='Journal',
-        # required=True,
-        # domain=[('type', 'in', ['cash', 'bank'])],
-        # states={'draft': [('readonly', False)]},
-        # index=True,
     )
     company_id = fields.Many2one(
         'res.company',
@@ -164,43 +141,37 @@ class AccountCheck(models.Model):
 
     @api.onchange('number')
     def _inverse_number(self):
+        # TODO improve this, actually is harcoded to argentina the 8 digits number
         for rec in self:
             if rec.number:
                 rec.name = '%08d' % rec.number
-            # else:
-            #     rec.name = False
 
-    # TODO convert to new computed fields store=True, readonly=False
     @api.onchange('issuer_vat')
     def onchange_issuer_vat(self):
-        """
-        We suggest owner name from owner vat
-        """
+        """ We suggest owner name from owner vat """
         issuer_name = self.search([('issuer_vat', '=', self.issuer_vat)], limit=1).issuer_name
         if not issuer_name:
             issuer_name = self.partner_id.commercial_partner_id and self.partner_id.commercial_partner_id.name
         self.issuer_name = issuer_name
 
-    # TODO convert to new computed fields store=True, readonly=False
     @api.onchange('partner_id', 'type', 'journal_id')
     def onchange_type(self):
-        commercial_partner = self.partner_id.commercial_partner_id
         if self.type == 'third_check':
+            commercial_partner = self.partner_id.commercial_partner_id
             self.bank_id = commercial_partner.bank_ids and commercial_partner.bank_ids[0].bank_id or False
             self.issuer_vat = commercial_partner.vat
             self.checkbook_id = False
         else:
-            self.bank_id = self.journal_id.bank_id
+            self.bank_id = False
             self.issuer_name = False
             self.issuer_vat = False
-            self.checkbook_id = self.env['account.checkbook'].search(
-                [('state', '=', 'active'), ('journal_id', '=', self.journal_id.id)], limit=1)
+            self.checkbook_id = self.env['account.checkbook'].search([('state', '=', 'active'), ('journal_id', '=', self.journal_id.id)], limit=1)
 
-    # TODO convert to new computed fields store=True, readonly=False
     @api.onchange('checkbook_id')
     def onchange_checkbook(self):
         if self.checkbook_id and not self.checkbook_id.numerate_on_printing:
             self.number = self.checkbook_id.next_number
+            self._inverse_number()
         else:
             self.number = False
 
@@ -213,18 +184,6 @@ class AccountCheck(models.Model):
             if move_line.journal_id:
                 rec.journal_id = move_line.journal_id
 
-    # def onchange(self, values, field_name, field_onchange):
-    #     """
-    #     Con esto arreglamos el borrador del origin de una operacíón de deposito
-    #     (al menos depositos de v8 migrados), habría que ver si pasa en otros
-    #     casos y hay algo más que arreglar
-    #     # TODO si no pasa en v11 borrarlo
-    #     """
-    #     'operation_ids.origin' in field_onchange and field_onchange.pop(
-    #         'operation_ids.origin')
-    #     return super(AccountCheck, self).onchange(
-    #         values, field_name, field_onchange)
-
     @api.constrains('issue_date', 'payment_date')
     @api.onchange('issue_date', 'payment_date')
     def onchange_date(self):
@@ -232,58 +191,46 @@ class AccountCheck(models.Model):
             if rec.issue_date and rec.payment_date and rec.issue_date > rec.payment_date:
                 raise UserError(_('Check Payment Date must be greater than Issue Date'))
 
-    # TODO implement number field again (computed with inverse?)
-    # @api.constrains('type', 'number',)
-    # def issue_number_interval(self):
-    #     for rec in self:
-    #         # if not range, then we dont check it
-    #         if rec.type == 'own_check' and rec.checkbook_id.range_to:
-    #             if rec.number > rec.checkbook_id.range_to:
-    #                 raise UserError(_(
-    #                     "Check number (%s) can't be greater than %s on "
-    #                     "checkbook %s (%s)") % (
-    #                     rec.number,
-    #                     rec.checkbook_id.range_to,
-    #                     rec.checkbook_id.name,
-    #                     rec.checkbook_id.id,
-    #                 ))
-    #             elif rec.number == rec.checkbook_id.range_to:
-    #                 rec.checkbook_id.state = 'used'
-    #     return False
+    @api.constrains('type', 'name',)
+    def _own_number_interval(self):
+        for rec in self:
+            # if not range, then we dont check it
+            if rec.type == 'own_check' and rec.checkbook_id.range_to and rec.number:
+                if rec.number > rec.checkbook_id.range_to:
+                    raise UserError(_(
+                        "Check number (%s) can't be greater than %s on "
+                        "checkbook %s (%s)") % (
+                        rec.number,
+                        rec.checkbook_id.range_to,
+                        rec.checkbook_id.name,
+                        rec.checkbook_id.id,
+                    ))
+                elif rec.number == rec.checkbook_id.range_to:
+                    rec.checkbook_id.state = 'used'
 
-    # TODO re implement? use number or name?
-    # @api.constrains('type', 'issuer_name', 'bank_id')
-    # def _check_unique(self):
-    #     for rec in self:
-    #         if rec.type == 'own_check':
-    #             same_checks = self.search([
-    #                 ('checkbook_id', '=', rec.checkbook_id.id),
-    #                 ('type', '=', rec.type),
-    #                 ('number', '=', rec.number),
-    #             ])
-    #             same_checks -= self
-    #             if same_checks:
-    #                 raise ValidationError(_(
-    #                     'Check Number (%s) must be unique per Checkbook!\n'
-    #                     '* Check ids: %s') % (
-    #                     rec.name, same_checks.ids))
-    #         elif self.type == 'third_check':
-    #             # agregamos condicion de company ya que un cheque de terceros
-    #             # se puede pasar entre distintas cias
-    #             same_checks = self.search([
-    #                 ('company_id', '=', rec.company_id.id),
-    #                 ('bank_id', '=', rec.bank_id.id),
-    #                 ('issuer_name', '=', rec.issuer_name),
-    #                 ('type', '=', rec.type),
-    #                 ('number', '=', rec.number),
-    #             ])
-    #             same_checks -= self
-    #             if same_checks:
-    #                 raise ValidationError(_(
-    #                     'Check Number (%s) must be unique per Owner and Bank!'
-    #                     '\n* Check ids: %s') % (
-    #                     rec.name, same_checks.ids))
-    #     return True
+    @api.constrains('type', 'issuer_name', 'bank_id')
+    def _check_unique(self):
+        for rec in self:
+            if rec.type == 'own_check':
+                same_checks = self.search([('checkbook_id', '=', rec.checkbook_id.id), ('type', '=', rec.type), ('name', '=', rec.name)])
+                same_checks -= self
+                if same_checks:
+                    raise ValidationError(_(
+                        'Check Number (%s) must be unique per Checkbook!\n'
+                        '* Check ids: %s') % (rec.name, same_checks.ids))
+            elif self.type == 'third_check':
+                same_checks = self.search([
+                    ('company_id', '=', rec.company_id.id),
+                    ('bank_id', '=', rec.bank_id.id),
+                    ('issuer_vat', '=', rec.issuer_vat),
+                    ('type', '=', rec.type),
+                    ('name', '=', rec.name),
+                ])
+                same_checks -= self
+                if same_checks:
+                    raise ValidationError(_(
+                        'Check Number (%s) must be unique per Owner and Bank!'
+                        '\n* Check ids: %s') % (rec.name, same_checks.ids))
 
     def _del_operation(self, origin):
         """
@@ -296,7 +243,6 @@ class AccountCheck(models.Model):
                     'You can not cancel this operation because this is not '
                     'the last operation over the check.\nCheck (id): %s (%s)'
                 ) % (rec.name, rec.id))
-            # rec.operation_ids[0].move_line_id = False
             rec.operation_ids[0].unlink()
 
     def _add_operation(self, operation, origin, partner=None, date=False):
@@ -347,25 +293,18 @@ class AccountCheck(models.Model):
         * value is 'from states'
         """
         self.ensure_one()
-        # if we do it from _add_operation only, not from a contraint of before
-        # computing the value, we can just read it
         old_state = self.state
         operation_from_state_map = {
             # 'draft': [False],
-            'holding': [
-                'draft', 'deposited', 'selled', 'delivered', 'transfered'],
+            'holding': ['draft', 'deposited', 'delivered'],
             'delivered': ['holding'],
-            'deposited': ['holding', 'rejected'],
-            'selled': ['holding'],
+            'deposited': ['holding'],
             'handed': ['draft'],
-            'transfered': ['holding'],
             'withdrawed': ['draft'],
-            'rejected': ['delivered', 'deposited', 'selled', 'handed'],
+            'rejected': ['delivered', 'deposited', 'handed'],
             'debited': ['handed'],
             'returned': ['handed', 'holding'],
-            'changed': ['handed', 'holding'],
-            'cancel': ['draft'],
-            'reclaimed': ['rejected'],
+            # 'cancel': ['draft'],
         }
         from_states = operation_from_state_map.get(operation)
         if not from_states:
@@ -388,133 +327,6 @@ class AccountCheck(models.Model):
                 raise ValidationError(_(
                     'The Check must be in draft state for unlink !'))
 
-    # def _get_operation(self, operation, partner_required=False):
-    #     self.ensure_one()
-    #     op = self.operation_ids.search([
-    #         ('check_id', '=', self.id), ('operation', '=', operation)],
-    #         limit=1)
-    #     if partner_required:
-    #         if not op.partner_id:
-    #             raise ValidationError(_(
-    #                 'The %s (id %s) operation has no partner linked.'
-    #                 'You will need to do it manually.') % (operation, op.id))
-    #     return op
-
-    # def bank_debit(self):
-    #     self.ensure_one()
-    #     if self.state in ['handed']:
-    #         payment_values = self.get_payment_values(self.journal_id)
-    #         payment = self.env['account.payment'].with_context(
-    #             default_name=_('Check "%s" debit') % (self.name),
-    #             force_account_id=self.company_id._get_check_account(
-    #                 'deferred').id,
-    #         ).create(payment_values)
-    #         self.post_payment_check(payment)
-    #         self.handed_reconcile(payment.move_line_ids.mapped('move_id'))
-    #         self._add_operation('debited', payment, date=payment.payment_date)
-
-    # @api.model
-    # def post_payment_check(self, payment):
-    #     """ No usamos post() porque no puede obtener secuencia, hacemos
-    #     parecido a los statements donde odoo ya lo genera posteado
-    #     """
-    #     # payment.post()
-    #     move = self.env['account.move'].with_context(default_type='entry').create(payment._prepare_payment_moves())
-    #     move.post()
-    #     payment.write({'state': 'posted', 'move_name': move.name})
-
-    # def handed_reconcile(self, move):
-    #     """
-    #     Funcion que por ahora solo intenta conciliar cheques propios entregados
-    #     cuando se hace un debito o cuando el proveedor lo rechaza
-    #     """
-
-    #     self.ensure_one()
-    #     debit_account = self.company_id._get_check_account('deferred')
-
-    #     # conciliamos
-    #     if debit_account.reconcile:
-    #         operation = self._get_operation('handed')
-    #         if operation.origin._name == 'account.payment':
-    #             move_lines = operation.origin.move_line_ids
-    #         elif operation.origin._name == 'account.move':
-    #             move_lines = operation.origin.line_ids
-    #         move_lines |= move.line_ids
-    #         move_lines = move_lines.filtered(
-    #             lambda x: x.account_id == debit_account)
-    #         if len(move_lines) != 2:
-    #             raise ValidationError(_(
-    #                 'We have found more or less than two journal items to '
-    #                 'reconcile with check debit.\n'
-    #                 '*Journal items: %s') % move_lines.ids)
-    #         move_lines.reconcile()
-
-    # @api.model
-    # def get_third_check_account(self):
-    #     """
-    #     For third checks, if we use a journal only for third checks, we use
-    #     accounts on journal, if not we use company account
-    #     # TODO la idea es depreciar esto y que si se usa cheques de terceros
-    #     se use la misma cuenta que la del diario y no la cuenta configurada en
-    #     la cia, lo dejamos por ahora por nosotros y 4 clientes que estan asi
-    #     (cro, ncool, bog).
-    #     Esto era cuando permitíamos o usabamos diario de efectivo con cash y
-    #     cheques
-    #     """
-    #     # self.ensure_one()
-    #     # desde los pagos, pueden venir mas de un cheque pero para que
-    #     # funcione bien, todos los cheques deberian usar la misma cuenta,
-    #     # hacemos esa verificación
-    #     account = self.env['account.account']
-    #     for rec in self:
-    #         credit_account = rec.journal_id.default_credit_account_id
-    #         debit_account = rec.journal_id.default_debit_account_id
-    #         inbound_methods = rec.journal_id['inbound_payment_method_ids']
-    #         outbound_methods = rec.journal_id['outbound_payment_method_ids']
-    #         # si hay cuenta en diario y son iguales, y si los metodos de pago
-    #         # y cobro son solamente uno, usamos el del diario, si no, usamos el
-    #         # de la compañía
-    #         if credit_account and credit_account == debit_account and len(
-    #                 inbound_methods) == 1 and len(outbound_methods) == 1:
-    #             account |= credit_account
-    #         else:
-    #             account |= rec.company_id._get_check_account('holding')
-    #     if len(account) != 1:
-    #         raise ValidationError(_('Error not specified'))
-    #     return account
-
-    # def claim(self):
-    #     self.ensure_one()
-    #     if self.state in ['rejected'] and self.type == 'third_check':
-    #         # anulamos la operación en la que lo recibimos
-    #         return self.action_create_debit_note('reclaimed', 'customer', self.first_partner_id, self.company_id._get_check_account('rejected'))
-
-    # def customer_return(self):
-    #     self.ensure_one()
-    #     if self.state in ['holding'] and self.type == 'third_check':
-    #         return self.action_create_debit_note('returned', 'customer', self.first_partner_id, self.get_third_check_account())
-
-    # @api.model
-    # def get_payment_values(self, journal):
-    #     """ return dictionary with the values to create the reject check
-    #     payment record.
-    #     We create an outbound payment instead of a transfer because:
-    #     1. It is easier to inherit
-    #     2. Outbound payment withot partner type and partner is not seen by user
-    #     and we don't want to confuse them with this payments
-    #     """
-    #     action_date = self._context.get('action_date', fields.Date.today())
-    #     return {
-    #         'amount': self.amount,
-    #         'currency_id': self.currency_id.id,
-    #         'journal_id': journal.id,
-    #         'payment_date': action_date,
-    #         'payment_type': 'outbound',
-    #         'payment_method_id':
-    #         self.env.ref('account.account_payment_method_manual_out').id,
-    #         # 'check_ids': [(4, self.id, False)],
-    #     }
-
     @api.constrains('currency_id', 'amount', 'amount_company_currency')
     def _check_amounts(self):
         for rec in self.filtered(lambda x: not x.amount or not x.amount_company_currency):
@@ -529,104 +341,3 @@ class AccountCheck(models.Model):
                 rec.amount = rec.amount_company_currency
             elif not rec.amount_company_currency:
                 rec.amount_company_currency = rec.amount
-
-    # def reject(self):
-    #     self.ensure_one()
-    #     if self.state in ['deposited', 'selled']:
-    #         operation = self._get_operation(self.state)
-    #         if operation.origin._name == 'account.payment':
-    #             journal = operation.origin.destination_journal_id
-    #         # for compatibility with migration from v8
-    #         elif operation.origin._name == 'account.move':
-    #             journal = operation.origin.journal_id
-    #         else:
-    #             raise ValidationError(_(
-    #                 'The deposit operation is not linked to a payment.'
-    #                 'If you want to reject you need to do it manually.'))
-    #         payment_vals = self.get_payment_values(journal)
-    #         payment = self.env['account.payment'].with_context(
-    #             default_name=_('Check "%s" rejection') % (self.name),
-    #             force_account_id=self.company_id._get_check_account(
-    #                 'rejected').id,
-    #         ).create(payment_vals)
-    #         self.post_payment_check(payment)
-    #         self._add_operation('rejected', payment, date=payment.payment_date)
-    #     elif self.state == 'delivered':
-    #         operation = self._get_operation(self.state, True)
-    #         return self.action_create_debit_note(
-    #             'rejected', 'supplier', operation.partner_id,
-    #             self.company_id._get_check_account('rejected'))
-    #     elif self.state == 'handed':
-    #         operation = self._get_operation(self.state, True)
-    #         return self.action_create_debit_note(
-    #             'rejected', 'supplier', operation.partner_id,
-    #             self.company_id._get_check_account('deferred'))
-
-    # def action_create_debit_note(
-    #         self, operation, partner_type, partner, account):
-    #     self.ensure_one()
-    #     action_date = self._context.get('action_date')
-
-    #     if partner_type == 'supplier':
-    #         invoice_type = 'in_invoice'
-    #         journal_type = 'purchase'
-    #     else:
-    #         invoice_type = 'out_invoice'
-    #         journal_type = 'sale'
-
-    #     journal = self.env['account.journal'].search([
-    #         ('company_id', '=', self.company_id.id),
-    #         ('type', '=', journal_type),
-    #     ], limit=1)
-
-    #     # si pedimos rejected o reclamo, devolvemos mensaje de rechazo y cuenta
-    #     # de rechazo
-    #     if operation in ['rejected', 'reclaimed']:
-    #         name = 'Rechazo cheque "%s"' % (self.name)
-    #     # si pedimos la de holding es una devolucion
-    #     elif operation == 'returned':
-    #         name = 'Devolución cheque "%s"' % (self.name)
-    #     else:
-    #         raise ValidationError(_(
-    #             'Debit note for operation %s not implemented!' % (
-    #                 operation)))
-
-    #     inv_line_vals = {
-    #         # 'product_id': self.product_id.id,
-    #         'name': name,
-    #         'account_id': account.id,
-    #         'price_unit': self.amount,
-    #         # 'invoice_id': invoice.id,
-    #     }
-
-    #     inv_vals = {
-    #         # this is the reference that goes on account.move.line of debt line
-    #         # 'name': name,
-    #         # this is the reference that goes on account.move
-    #         'rejected_check_id': self.id,
-    #         'ref': name,
-    #         'invoice_date': action_date,
-    #         'invoice_origin': _('Check nbr (id): %s (%s)') % (self.name, self.id),
-    #         'journal_id': journal.id,
-    #         # this is done on muticompany fix
-    #         # 'company_id': journal.company_id.id,
-    #         'partner_id': partner.id,
-    #         'type': invoice_type,
-    #         'invoice_line_ids': [(0, 0, inv_line_vals)],
-    #     }
-    #     if self.currency_id:
-    #         inv_vals['currency_id'] = self.currency_id.id
-    #     # we send internal_type for compatibility with account_document
-    #     invoice = self.env['account.move'].with_context(
-    #         company_id=journal.company_id.id, force_company=journal.company_id.id,
-    #         internal_type='debit_note').create(inv_vals)
-    #     self._add_operation(operation, invoice, partner, date=action_date)
-
-    #     return {
-    #         'name': name,
-    #         'view_type': 'form',
-    #         'view_mode': 'form',
-    #         'res_model': 'account.move',
-    #         'res_id': invoice.id,
-    #         'type': 'ir.actions.act_window',
-    #     }

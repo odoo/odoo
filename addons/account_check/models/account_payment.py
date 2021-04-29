@@ -59,14 +59,8 @@ class AccountPayment(models.Model):
             elif self.payment_method_code == 'new_third_checks':
                 return 'holding', False
             elif self.payment_method_code == 'out_third_checks':
-                # TODO falta implementar devolucion a cliente (si la hacemos)
                 return 'delivered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
             elif self.payment_method_code == 'in_third_checks':
-                # we can get the rejected check in a diferent journal
-                # ('journal_id', '=', self.journal_id.id),
-                # no restringimos quien nos peude devolver el cheque porque cualquiera lo podria reclamar
-                # TODO tal vez filtro por defecto? del partner
-                # , ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)
                 return 'holding', domain + [('state', '=', 'delivered')]
         elif self.check_type == 'own_check':
             domain = [('type', '=', 'own_check')]
@@ -75,7 +69,6 @@ class AccountPayment(models.Model):
             elif self.payment_method_code == 'new_own_checks':
                 return 'handed', False
             elif self.payment_method_code == 'in_own_checks':
-                # TODO definir si usamos mismo nombre para rejected y devuelto
                 return 'returned', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'handed'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
         raise UserError(_(
             'This operatios is not implemented for checks:\n'
@@ -84,7 +77,6 @@ class AccountPayment(models.Model):
                 self.payment_type,
                 self.payment_method_code,
                 '* Destination journal: %s\n' % self.destination_journal_id.name if self.is_internal_transfer else ''))
-        # return False, False
 
     @api.onchange('available_check_ids')
     def reset_check_ids(self):
@@ -118,39 +110,33 @@ class AccountPayment(models.Model):
         for rec in self.filtered('check_type'):
             # TODO when fixed and no needed anymore delivery_check_ids change here
             rec.amount = sum((rec.check_ids | rec.delivery_check_ids).mapped('amount'))
-            # rec.amount = sum(rec.check_ids.mapped('amount'))
 
-    # TODO agregar que si se cambia method se borren cheques?
-
-    # TODO re enable this checks?
-    # @api.constrains('check_ids')
-    # def _check_checks(self):
-    #     for rec in self:
-    #         # we only overwrite if payment method is delivered
-    #         if rec.payment_method_code == 'delivered_third_check':
-    #             rec.amount = sum(rec.check_ids.mapped('amount'))
-    #             currency = rec.check_ids.mapped('currency_id')
-
-    #             if len(currency) > 1:
-    #                 raise ValidationError(_(
-    #                     'You are trying to deposit checks of difference'
-    #                     ' currencies, this functionality is not supported'))
-    #             elif len(currency) == 1:
-    #                 rec.currency_id = currency.id
-
-    #             # si es una entrega de cheques de terceros y es en otra moneda
-    #             # a la de la cia, forzamos el importe en moneda de cia de los
-    #             # cheques originales
-    #             # escribimos force_amount_company_currency directamente en vez
-    #             # de amount_company_currency por lo explicado en
-    #             # _inverse_amount_company_currency
-    #             if rec.currency_id != rec.company_currency_id:
-    #                 rec.force_amount_company_currency = sum(
-    #                     rec.check_ids.mapped('amount_company_currency'))
-
-    def _create_paired_internal_transfer_payment(self):
+    @api.constrains('check_ids')
+    def _check_checks(self):
         for rec in self:
-            super(AccountPayment, rec.with_context(default_check_ids=rec.check_ids))._create_paired_internal_transfer_payment()
+            # we only overwrite if payment method is delivered
+            if rec.payment_method_code == 'delivered_third_check':
+                rec.amount = sum(rec.check_ids.mapped('amount'))
+                currency = rec.check_ids.mapped('currency_id')
+                if len(currency) > 1:
+                    raise ValidationError(_('You are trying to deposit checks of difference currencies, this functionality is not supported'))
+                elif len(currency) == 1:
+                    rec.currency_id = currency.id
+
+                # TODO chequear esto
+                # # si es una entrega de cheques de terceros y es en otra moneda
+                # # a la de la cia, forzamos el importe en moneda de cia de los
+                # # cheques originales
+                # # escribimos force_amount_company_currency directamente en vez
+                # # de amount_company_currency por lo explicado en
+                # # _inverse_amount_company_currency
+                # if rec.currency_id != rec.company_currency_id:
+                #     rec.force_amount_company_currency = sum(
+                #         rec.check_ids.mapped('amount_company_currency'))
+
+    # def _create_paired_internal_transfer_payment(self):
+    #     for rec in self:
+    #         super(AccountPayment, rec.with_context(default_check_ids=rec.check_ids))._create_paired_internal_transfer_payment()
 
     def action_post(self):
         """ this method is called when posting an account_move of a payment or the payment directly and do two things:
@@ -201,8 +187,6 @@ class AccountPayment(models.Model):
         # all other lines when reseting too draft because of the design of _synchronize_to_moves
         for check, liquidity_line in zip_longest(checks, liquidity_lines):
             new_name % check.name
-            # payment_display_name['%s-%s' % (self.payment_type, self.partner_type)]
-            # document, amount, currency, date, partner
             document_name = _('Check %s %s') % (check.name, operation)
             check_vals = {
                 'name': liquidity_lines._get_default_line_name(
@@ -220,132 +204,9 @@ class AccountPayment(models.Model):
         self.move_id._check_balanced()
         return True
 
-    # def _split_aml_line_per_check(self, lines_vals):
-    #     """ Take an account mvoe, find the move lines related to check and
-    #     split them one per earch check related to the payment
-    #     """
-    #     checks = self.check_ids
-
-    #     liquidity_line = lines_vals[0]
-    #     amount_field = 'credit' if liquidity_line['credit'] else 'debit'
-    #     # new_name = _('Deposit check %s') if liquidity_line['credit'] else liquidity_line['name'] + _(' check %s')
-
-    #     # if the move line has currency then we are delivering checks on a
-    #     # different currency than company one
-    #     currency = liquidity_line['currency_id']
-    #     currency_sign = amount_field == 'debit' and 1.0 or -1.0
-    #     liquidity_line.update({
-    #         # 'name': new_name % checks[0].name,
-    #         amount_field: checks[0].amount_company_currency,
-    #         'date_maturity': checks[0].payment_date,
-    #         'amount_currency': currency and currency_sign * checks[0].amount,
-    #     })
-    #     checks -= checks[0]
-    #     for check in checks:
-    #         check_vals = liquidity_line.copy()
-    #         check_vals.update({
-    #             # 'name': new_name % check.name,
-    #             amount_field: check.amount_company_currency,
-    #             'date_maturity': check.payment_date,
-    #             'amount_currency': currency and currency_sign * check.amount,
-    #         })
-    #         lines_vals += [check_vals]
-    #     return True
-
-    # def _prepare_move_line_default_vals(self, write_off_line_vals=None):
-    #     res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
-    #     if self.check_type:
-    #         self._split_aml_line_per_check(res)
-    #     return res
-
     def _do_checks_operations(self, cancel=False):
         operation, domain = self._get_checks_operations()
         if cancel:
             self.check_ids._del_operation(self.move_id)
         else:
             self.check_ids._add_operation(operation, self.move_id, self.partner_id, date=self.date)
-            # TODO implementar cambio de journal? o lo hacemos related al último y listo?
-            # self.check_ids.write({'journal_id': self.destination_journal_id.id})
-
-    # def _prepare_payment_moves(self):
-    #     vals = super(AccountPayment, self)._prepare_payment_moves()
-
-    #     force_account_id = self._context.get('force_account_id')
-    #     all_moves_vals = []
-    #     for rec in self:
-    #         moves_vals = super(AccountPayment, rec)._prepare_payment_moves()
-
-    #         # edit liquidity lines
-    #         # Si se esta forzando importe en moneda de cia, usamos este importe para debito/credito
-    #         vals = rec.do_checks_operations()
-    #         if vals:
-    #             moves_vals[0]['line_ids'][1][2].update(vals)
-
-    #         # edit counterpart lines
-    #         # use check payment date on debt entry also so that it can be used for NC/ND adjustaments
-    #         if rec.check_type and rec.check_payment_date:
-    #             moves_vals[0]['line_ids'][0][2]['date_maturity'] = rec.check_payment_date
-    #         if force_account_id:
-    #             moves_vals[0]['line_ids'][0][2]['account_id'] = force_account_id
-
-    #         # split liquidity lines on detailed checks transfers
-    #         if rec.payment_type == 'transfer' and rec.payment_method_code == 'delivered_third_check' \
-    #            and rec.check_deposit_type == 'detailed':
-    #             rec._split_aml_line_per_check(moves_vals[0]['line_ids'])
-    #             rec._split_aml_line_per_check(moves_vals[1]['line_ids'])
-
-    #         all_moves_vals += moves_vals
-
-    #     return all_moves_vals
-
-    # def do_print_checks(self):
-    #     # si cambiamos nombre de check_report tener en cuenta en sipreco
-    #     checkbook = self.mapped('checkbook_id')
-    #     # si todos los cheques son de la misma chequera entonces buscamos
-    #     # reporte específico para esa chequera
-    #     report_name = len(checkbook) == 1 and  \
-    #         checkbook.report_template.report_name \
-    #         or 'check_report'
-    #     check_report = self.env['ir.actions.report'].search(
-    #         [('report_name', '=', report_name)], limit=1).report_action(self)
-    #     # ya el buscar el reporte da el error solo
-    #     # if not check_report:
-    #     #     raise UserError(_(
-    #     #       "There is no check report configured.\nMake sure to configure "
-    #     #       "a check report named 'account_check_report'."))
-    #     return check_report
-
-    # def print_checks(self):
-    #     if len(self.mapped('checkbook_id')) != 1:
-    #         raise UserError(_(
-    #             "In order to print multiple checks at once, they must belong "
-    #             "to the same checkbook."))
-    #     # por ahora preferimos no postearlos
-    #     # self.filtered(lambda r: r.state == 'draft').post()
-
-    #     # si numerar al imprimir entonces llamamos al wizard
-    #     if self[0].checkbook_id.numerate_on_printing:
-    #         if all([not x.check_name for x in self]):
-    #             next_check_number = self[0].checkbook_id.next_number
-    #             return {
-    #                 'name': _('Print Pre-numbered Checks'),
-    #                 'type': 'ir.actions.act_window',
-    #                 'res_model': 'print.prenumbered.checks',
-    #                 'view_type': 'form',
-    #                 'view_mode': 'form',
-    #                 'target': 'new',
-    #                 'context': {
-    #                     'payment_ids': self.ids,
-    #                     'default_next_check_number': next_check_number,
-    #                 }
-    #             }
-    #         # si ya están enumerados mandamos a imprimir directamente
-    #         elif all([x.check_name for x in self]):
-    #             return self.do_print_checks()
-    #         else:
-    #             raise UserError(_(
-    #                 'Está queriendo imprimir y enumerar cheques que ya han '
-    #                 'sido numerados. Seleccione solo cheques numerados o solo'
-    #                 ' cheques sin número.'))
-    #     else:
-    #         return self.do_print_checks()
