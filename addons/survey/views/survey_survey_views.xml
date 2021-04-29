@@ -182,9 +182,10 @@
         <field name="name">Kanban view for survey</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban sample="1">
+            <kanban class="o_survey_kanban" sample="1">
                 <field name="title" />
                 <field name="answer_done_count" />
+                <field name="question_ids" />
                 <field name="certification" />
                 <field name="scoring_type" />
                 <field name="color" />
@@ -194,58 +195,93 @@
                 <field name="success_count"/>
                 <field name="success_ratio"/>
                 <field name='active'/>
+                <field name="session_state" invisible="1"/>
                 <templates>
-                    <div t-name="kanban-box" 
-                        t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey 
+                    <div t-name="kanban-box"
+                        t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey
                             #{record.certification.raw_value ? 'o_kanban_card_survey_successed' : ''}">
-                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
+                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable" attrs="{'invisible': [('active', '=', False)]}">
 
                             <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                 <span class="fa fa-ellipsis-v"/>
                             </a>
                             <div class="dropdown-menu" role="menu">
                                 <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
-                                <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
+                                <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item o_grouped_visibility" name="action_send_survey">Share</a>
                                 <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
                                 <div role="separator" class="dropdown-divider"/>
                                 <div role="separator" class="dropdown-item-text">Color</div>
                                 <ul class="oe_kanban_colorpicker" data-field="color"/>
                             </div>
                         </div>
-                        <div class="o_kanban_record_top">
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="o_kanban_card_content_survey">
+                            <div class="o_kanban_record_top">
                                 <h4 class="o_kanban_record_title p-0 mb4"><field name="title" /></h4>
-                        </div>
-                        <div class="row">
-                            <div class="col-10 p-0 pb-1">
-                                <div class="container o_kanban_card_content" t-if="record.answer_done_count.raw_value != 0">
-                                    <div class="row mt-4 ml-5">
-                                        <div class="col-4 p-0">
-                                            <a name="action_result_survey" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="font-weight-bold"><field name="answer_done_count"/></span>
-                                                <span class="text-muted">Answers</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
-                                            <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="font-weight-bold"><field name="success_count"/></span>
-                                                <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
-                                                <span class="text-muted" t-else="">Certified</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
-                                            <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
-                                                <span class="font-weight-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
-                                                <span class="text-muted" >Success</span>
-                                            </a> 
+                                <span class="o_ungrouped_visibily"><field name="user_id" domain="[('share', '=', False)]"/> - <t t-esc="moment(record.create_date).format('MMM YYYY')"/></span>
+                            </div>
+                            <div class="row">
+                                <div class="o_kanban_content p-0 pb-1">
+                                    <div t-attf-class="container o_kanban_card_bottom #{record.answer_done_count.raw_value!=0 ? '' : 'o_ungrouped_visibily'}">
+                                        <div class="row mt-4 ml-5">
+                                            <div class="o_kanban_content_details o_ungrouped_visibily">
+                                                <span class="font-weight-bold" ><t t-esc="record.question_ids.raw_value.length"/></span>
+                                                <span class="text-muted">Questions</span>
+                                            </div>
+                                            <div class="o_kanban_content_details o_details_answers">
+                                                <a name="action_result_survey" type="object" class="d-flex flex-column align-items-center">
+                                                    <span class="font-weight-bold"><field name="answer_done_count"/></span>
+                                                    <span class="text-muted">Answers</span>
+                                                </a>
+                                            </div>
+                                            <div class="o_kanban_content_details o_ungrouped_visibily">
+                                                <span class="font-weight-bold"><field name="answer_count"/></span>
+                                                <span class="text-muted">Registered</span>
+                                            </div>
+                                            <div class="o_kanban_content_details" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                                <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
+                                                    <span class="font-weight-bold"><field name="success_count"/></span>
+                                                    <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
+                                                    <span class="text-muted" t-else="">Certified</span>
+                                                </a>
+                                            </div>
+                                            <div class="o_kanban_content_details o_details_success" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                                <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
+                                                    <span class="font-weight-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
+                                                    <span class="text-muted" >Success</span>
+                                                </a>
+                                            </div>
+                                            <div class="o_kanban_content_details o_ungrouped_visibily" t-if="record.average_duration.raw_value != 0">
+                                                <span class="font-weight-bold"><field name="average_duration"
+                                                    widget="float_time" options="{'unit':'seconds', 'pattern':'hh:mm:ss'}"/></span>
+                                                <span class="text-muted">Average Duration</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-2 align-self-end">
-                                <div class="o_kanban_record_bottom">
-                                    <div class="oe_kanban_bottom_left"/>
-                                    <div class="oe_kanban_bottom_right">
-                                        <field name="activity_ids" widget="kanban_activity"/>
+                                <div class="o_ungrouped_actions o_ungrouped_visibily">
+                                    <button name="action_send_survey" string="Share" type="object"
+                                        class="btn btn-secondary border" attrs="{'invisible': [('active', '=', False)]}">
+                                        Share</button>
+                                    <button name="action_test_survey" string="Test" type="object"
+                                        class="btn btn-secondary border" attrs="{'invisible': [('active', '=', False)]}">
+                                        Test</button>
+                                    <button name="action_start_session" string="Create Live Session" type="object"
+                                        class="btn btn-secondary border" attrs="{'invisible': ['|', ('session_state', '!=', False), '|', ('active', '=', False), ('certification', '=', True)]}">
+                                        Live Survey</button>
+                                    <button name="action_end_session" string="Close Live Session" type="object"
+                                        class="btn btn-secondary border" attrs="{'invisible': [('session_state', 'not in', ['ready', 'in_progress'])]}">
+                                        End Survey</button>
+                                    <button name="action_unarchive" string="Reopen" type="object"
+                                        class="btn btn-secondary border o_reopen" attrs="{'invisible': [('active', '=', True)]}">
+                                        Reopen</button>
+                                </div>
+                                <div class="o_kanban_activity col-2 align-self-end">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_left"/>
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="activity_ids" widget="kanban_activity" attrs="{'invisible': [('active', '=', False)]}"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

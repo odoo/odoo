@@ -43,4 +43,20 @@
             </xpath>
         </field>
     </record>
+
+    <record id="survey_survey_view_kanban" model="ir.ui.view">
+        <field name="name">survey.survey.view.kanban.inherit.website_slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_details_success')]" position="after">
+                <div class="o_kanban_content_details o_ungrouped_visibily"
+                    attrs="{'invisible': [('slide_channel_count', '=', 0)]}"
+                    groups="website_slides.group_website_slides_officer">
+                    <span class="font-weight-bold"><field name="slide_channel_count"/></span>
+                    <span class="text-muted">Courses</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
 </odoo>

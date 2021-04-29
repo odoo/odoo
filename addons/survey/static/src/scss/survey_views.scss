@@ -1,26 +1,135 @@
-.o_kanban_card_survey {
-    & > .row {
-    min-height: 60px;
+.o_survey_kanban {
+    .o_kanban_card_survey_successed {
+        background-image:
+            linear-gradient(rgba(255,255,255,.9),
+                            rgba(255,255,255,.9)),
+            url(/survey/static/src/img/trophy-solid.svg);
+        background-repeat: no-repeat;
     }
-}
+    .o_kanban_activity {
+        position: absolute;
+        right: 0px;
+        bottom: 6px;
+        max-width: max-content;
+        padding-right: 2px;
+    }
 
-.o_kanban_card_survey_successed{
-    background-image:
-        linear-gradient(rgba(255,255,255,.9), 
-                        rgba(255,255,255,.9)),
-        url(/survey/static/src/img/trophy-solid.svg);
-    background-repeat: no-repeat;
-    background-position: bottom 6px left -45px;
-    background-size: 100%, 100px;
-}
+    &.o_kanban_ungrouped {
+        padding: 0;
+        .o_kanban_card_survey {
+            width: 100%;
+            margin: 0px;
+            margin-top: -1px;
+            .o_kanban_card_content_survey {
+                display: flex;
+                .o_kanban_record_top {
+                    flex-flow: column;
+                    min-width: min-content;
+                    width: 400px;
+                    align-self: center;
+                    padding-left: 4px;
+                    padding-right: 16px;
+                }
+                & > .row {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-right: 0;
+                    align-self: center;
+                    flex-flow: row;
+                    .o_kanban_content {
+                        max-width: max-content;
+                        .o_kanban_card_bottom {
+                            & > .row {
+                                margin: 0 !important;
+                            }
+                            .o_kanban_content_details {
+                                padding: 4px;
+                                min-width: min-content;
+                                width: 110px;
+                                text-align: left;
+                                & > a {
+                                    color: #666666;
+                                    pointer-events: none;
+                                    > span {
+                                        align-self: start;
+                                    }
+                                }
+                                & > span {
+                                    display: block;
+                                }
+                            }
+                        }
+                    }
+                    .o_ungrouped_actions {
+                        align-self: center;
+                        margin-left: auto;
+                        margin-right: 35px;
+                        text-align: end;
+                        & .o_reopen {
+                            margin-right: -35px;
+                            margin-top: 25px;
+                        }
+                    }
+                }
+            }
+        }
 
-table.o_section_list_view tr.o_data_row.o_is_section {
-    font-weight: bold;
-    background-color: #DDD;
-    border-top: 1px solid #BBB;
-    border-bottom: 1px solid #BBB;
-}
+        .o_kanban_card_survey_successed {
+            background-position: center right -25px;
+            background-size: 100%, 55px;
+        }
 
-.icon_rotates {
-    transform: rotate(180deg);
+        .o_grouped_visibility {
+            display: none;
+        }
+    }
+
+    &.o_kanban_grouped {
+        .o_kanban_card_survey {
+            .o_kanban_content_details {
+                padding: 6px;
+                flex: 0 0 33.33333333%;
+                max-width: 33.33333333%;
+                &:not(.o_details_answers) {
+                    border-left: 1px solid #dee2e6;
+                }
+                & > a {
+                    min-width: 45px;
+                }
+            }
+        }
+
+        .o_kanban_card_survey_successed {
+            background-position: bottom 6px left -45px;
+            background-size: 100%, 100px;
+        }
+
+        .o_kanban_card_content_survey {
+            display: block;
+            & > .row {
+                min-height: 60px;
+            }
+            & o_kanban_activity {
+                position: absolute;
+                right: 0;
+                padding-right: 6px;
+                padding-left: 0;
+            }
+        }
+
+        table.o_section_list_view tr.o_data_row.o_is_section {
+            font-weight: bold;
+            background-color: #DDD;
+            border-top: 1px solid #BBB;
+            border-bottom: 1px solid #BBB;
+        }
+
+        .icon_rotates {
+            transform: rotate(180deg);
+        }
+
+        .o_ungrouped_visibily {
+            display: none;
+        }
+    }
 }

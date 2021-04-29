@@ -56,6 +56,7 @@ class Survey(models.Model):
     background_image = fields.Binary("Background Image")
     active = fields.Boolean("Active", default=True)
     user_id = fields.Many2one('res.users', string='Responsible', tracking=True, default=lambda self: self.env.user)
+    average_duration = fields.Float(string="Average Duration", compute="_compute_average_duration")
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
@@ -169,6 +170,20 @@ class Survey(models.Model):
         signup_allowed = self.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'
         for survey in self:
             survey.users_can_signup = signup_allowed
+
+    @api.depends('user_input_ids.survey_id', 'user_input_ids.start_datetime', 'user_input_ids.end_datetime')
+    def _compute_average_duration(self):
+        self._cr.execute('''
+            SELECT survey_id, avg((extract(epoch FROM end_datetime)) - (extract (epoch FROM start_datetime)))
+            FROM survey_user_input
+            WHERE survey_id = any(%s)
+            GROUP BY survey_id
+        ''', [self.ids])
+
+        result_per_survey_id = dict(self.env.cr.fetchall())
+
+        for survey in self:
+            survey.average_duration = result_per_survey_id.get(survey.id, 0)
 
     @api.depends('user_input_ids.state', 'user_input_ids.test_entry', 'user_input_ids.scoring_percentage', 'user_input_ids.scoring_success')
     def _compute_survey_statistic(self):
@@ -865,7 +880,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Test Survey",
-            'target': 'self',
+            'target': '_blank',
             'url': '/survey/test/%s' % self.access_token,
         }
 
@@ -926,7 +941,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Open Session Manager",
-            'target': 'self',
+            'target': '_blank',
             'url': '/survey/session/manage/%s' % self.access_token
         }
 
