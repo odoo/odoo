@@ -26,10 +26,10 @@
                 </div>
             </nav>
         </xpath>
-        <xpath expr="//div[@id='wrapwrap']/main/t[@t-raw='0']" position="before">
+        <xpath expr="//div[@id='wrapwrap']/main/t[@t-out='0']" position="before">
             <div t-if="o_portal_fullwidth_alert" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden">
                 <div class="container">
-                    <t t-raw="o_portal_fullwidth_alert"/>
+                    <t t-out="o_portal_fullwidth_alert"/>
                 </div>
             </div>
         </xpath>
@@ -94,7 +94,7 @@
 
     <template id="portal_back_in_edit_mode" name="Back to edit mode">
         <div t-ignore="true" class="text-center">
-            <t t-if="custom_html" t-raw="custom_html"/>
+            <t t-if="custom_html" t-out="custom_html"/>
             <t t-else="">This is a preview of the customer portal.</t>
             <a t-att-href="backend_url"><i class="fa fa-arrow-right mr-1"/>Back to edit mode</a>
         </div>
@@ -120,7 +120,7 @@
                     <t t-if="my_details">
                         <div class="row justify-content-between mt-4">
                             <div t-attf-class="col-12 col-md col-lg-6">
-                                <t t-raw="0"/>
+                                <t t-out="0"/>
                             </div>
                             <div id="o_my_sidebar" class="pt-3 pt-lg-0 col-12 col-md col-lg-4 col-xl-3 o_my_sidebar">
                                 <div class="o_my_contact" t-if="sales_user">
@@ -140,7 +140,7 @@
                         </div>
                     </t>
                     <t t-else="">
-                        <t t-raw="0"/>
+                        <t t-out="0"/>
                     </t>
                 </div>
             </div>
@@ -187,7 +187,7 @@
     <template id="portal_table" name="My Portal Table">
         <div t-attf-class="table-responsive border rounded border-top-0 #{classes if classes else ''}">
             <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
-                <t t-raw="0"/>
+                <t t-out="0"/>
             </table>
         </div>
         <div t-if="pager" class="o_portal_pager text-center">
@@ -199,9 +199,9 @@
         <div t-attf-class="#{classes}">
             <div class="card bg-white mb-4 sticky-top" id="sidebar_content">
                 <div t-if="title" class="card-body text-center pb-2 pt-3">
-                    <t t-raw="title"/>
+                    <t t-out="title"/>
                 </div>
-                <t t-if="entries" t-raw="entries"/>
+                <t t-if="entries" t-out="entries"/>
                 <div class="card-footer small text-center text-muted border-top-0 pt-1 pb-1 d-none d-lg-block">
                     Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal" title="odoo"><img src="/web/static/src/img/logo.png" alt="Odoo Logo" height="15"/></a>
                 </div>
@@ -294,7 +294,7 @@
                             </div>
                         </div>
                     </div>
-                    <t t-raw="0"/>
+                    <t t-out="0"/>
                 </div>
                 <form t-if="searchbar_inputs" class="form-inline o_portal_search_panel ml-lg-4 col-xl-4 col-md-5">
                     <div class="input-group input-group-sm w-100">
@@ -302,9 +302,9 @@
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"/>
                             <div class="dropdown-menu" role="menu">
                                 <t t-foreach='searchbar_inputs' t-as='input'>
-                                    <a t-att-href="'#' + searchbar_inputs[input]['input']"
-                                        t-attf-class="dropdown-item#{search_in == searchbar_inputs[input]['input'] and ' active' or ''}">
-                                        <span t-raw="searchbar_inputs[input]['label']"/>
+                                    <a t-att-href="'#' + input_value['input']"
+                                        t-attf-class="dropdown-item#{search_in == input_value['input'] and ' active' or ''}">
+                                        <span t-out="input_value['label']"/>
                                     </a>
                                 </t>
                             </div>
@@ -324,10 +324,10 @@
     <template id="portal_record_layout" name="Portal single record layout">
         <div t-attf-class="card mt-0 border-top-0 rounded-0 rounded-bottom #{classes if classes else ''}">
             <div t-if="card_header" t-attf-class="card-header #{header_classes if header_classes else ''}">
-                <t t-raw="card_header"/>
+                <t t-out="card_header"/>
             </div>
             <div t-if="card_body" t-attf-class="card-body #{body_classes if body_classes else ''}">
-                <t t-raw="card_body"/>
+                <t t-out="card_body"/>
             </div>
         </div>
     </template>
@@ -515,7 +515,7 @@
                 <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" t-attf-class="page-link #{extraLinkClass}">Prev</a>
             </li>
             <t t-foreach="pager['pages']" t-as="page">
-                <li t-attf-class="page-item #{'active' if page['num'] == pager['page']['num'] else ''}"> <a t-att-href="page['url']" t-attf-class="page-link #{extraLinkClass}" t-raw="page['num']"></a></li>
+                <li t-attf-class="page-item #{'active' if page['num'] == pager['page']['num'] else ''}"> <a t-att-href="page['url']" t-attf-class="page-link #{extraLinkClass}" t-out="page['num']"/></li>
             </t>
             <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == pager['page_count'] else ''}">
                 <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None" t-attf-class="page-link #{extraLinkClass}">Next</a>

@@ -90,7 +90,7 @@
                                     <li t-elif="tags" class="breadcrumb-item">All Tags</li>
                                 </ol>
                             </nav>
-                            <t t-raw="0"/>
+                            <t t-out="0"/>
                         </div>
                         <aside t-if="uid" class="d-none d-lg-flex justify-content-end col-auto">
                             <t t-call="website_forum.user_sidebar"/>
@@ -286,7 +286,7 @@
         </div>
     </div>
     <!--  Display post's content in moderation mode-->
-    <div><t t-raw="post_content"/></div>
+    <div><t t-out="post_content"/></div>
 </template>
 
 <template id="display_post">
@@ -754,10 +754,9 @@
                     <t t-set="_search_and_tag_str"><t t-if="search and tag">&amp;nbsp;and&amp;nbsp;</t></t>
                     <t t-set="_tag_str"><t t-if="tag">using the <span class="badge badge-light" t-esc="tag.name"/> tag</t></t>
                     <t t-set="result_msg">
-                        Sorry, we could not find any <b>%s</b> result <b>
-                        %s</b> %s%s%s.
+                        Sorry, we could not find any <b>%s</b> result <b>%s</b> %s%s%s.
                     </t>
-                    <span t-raw="result_msg % (_filters_str.strip(), _my_str.strip(), _search_str.strip(), _search_and_tag_str.strip(), _tag_str.strip())"/>
+                    <span t-out="result_msg % (_filters_str.strip(), _my_str.strip(), _search_str.strip(), _search_and_tag_str.strip(), _tag_str.strip())"/>
                 </div>
 
                 <t t-elif="not tag and not search and no_filters">
@@ -1021,7 +1020,7 @@
             t-att-data-karma="forum.karma_downvote"
             t-att-data-can-downvote="can_downvote"
             aria-label="Negative vote" title="Negative vote"/>
-        <t t-raw="0"/>
+        <t t-out="0"/>
     </div>
 </template>
 
