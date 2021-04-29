@@ -549,13 +549,13 @@ class HomeStaticTemplateHelpers(object):
 
         return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()[:64]
 
-    def _get_asset_paths(self):
+    def _get_asset_paths(self, bundle):
         """Proxy for ir_asset._get_asset_paths
         Useful to make 'self' testable.
         """
-        return request.env['ir.asset']._get_asset_paths(addons=self.addons, bundle='web.assets_qweb', xml=True)
+        return request.env['ir.asset']._get_asset_paths(addons=self.addons, bundle=bundle, xml=True)
 
-    def _get_qweb_templates(self):
+    def _get_qweb_templates(self, bundle):
         """One and only entry point that gets and evaluates static qweb templates
 
         :rtype: (str, str)
@@ -563,7 +563,7 @@ class HomeStaticTemplateHelpers(object):
         xml_paths = defaultdict(list)
 
         # group paths by module, keeping them in order
-        for path, addon, _ in self._get_asset_paths():
+        for path, addon, _ in self._get_asset_paths(bundle):
             addon_paths = xml_paths[addon]
             if path not in addon_paths:
                 addon_paths.append(path)
@@ -572,12 +572,12 @@ class HomeStaticTemplateHelpers(object):
         return content, checksum
 
     @classmethod
-    def get_qweb_templates_checksum(cls, addons=None, db=None, debug=False):
-        return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates()[1]
+    def get_qweb_templates_checksum(cls, addons=None, db=None, debug=False, bundle=None):
+        return cls(addons, db, checksum_only=True, debug=debug)._get_qweb_templates(bundle)[1]
 
     @classmethod
-    def get_qweb_templates(cls, addons=None, db=None, debug=False):
-        return cls(addons, db, debug=debug)._get_qweb_templates()[0]
+    def get_qweb_templates(cls, addons=None, db=None, debug=False, bundle=None):
+        return cls(addons, db, debug=debug)._get_qweb_templates(bundle)[0]
 
 
 class GroupsTreeNode:
@@ -934,12 +934,12 @@ class WebClient(http.Controller):
         ])
 
     @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
-    def qweb(self, unique, mods=None, db=None):
+    def qweb(self, unique, mods=None, db=None, bundle=None):
 
         if not request.db and mods is None:
             mods = odoo.conf.server_wide_modules or []
 
-        content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug)
+        content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug, bundle=bundle)
 
         return request.make_response(content, [
                 ('Content-Type', 'text/xml'),

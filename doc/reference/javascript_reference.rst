@@ -1293,7 +1293,9 @@ python implementation.
 Now, let us explain how the templates are loaded.  Whenever the web client
 starts, a rpc is made to the */web/webclient/qweb* route.  The server will then
 return a list of all templates defined in data files for each installed modules.
-The correct files are listed in the *qweb* entry in each module manifest.
+The correct files are listed in the *web.assets_qweb* entry in each module
+manifest. It is also possible to lazy-load another bundle's templates by calling
+this same route and giving it the corresponding "bundle" query parameter.
 
 The web client will wait for that list of template to be loaded, before starting
 its first widget.

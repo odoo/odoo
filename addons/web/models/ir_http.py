@@ -51,7 +51,7 @@ class Http(models.AbstractModel):
             mods = odoo.conf.server_wide_modules or []
             if request.db:
                 mods = list(request.registry._init_modules) + mods
-            qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug)
+            qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="web.assets_qweb")
             lang = user_context.get("lang")
             translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
             menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.session.debug), default=ustr, sort_keys=True).encode()
