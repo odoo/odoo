@@ -12,23 +12,23 @@ import { _t, qweb } from 'web.core';
 import { Mutex } from 'web.concurrency';
 import { format, parse } from 'web.field_utils';
 import { round_decimals, round_precision, float_is_zero, unaccent, is_email } from 'web.utils';
-import { cloneDeep, uuidv4, sum, maxDateString, generateWrappedName } from 'point_of_sale.utils';
+import { cloneDeep, uuidv4, sum, maxDateString, generateWrappedName, posRound } from 'point_of_sale.utils';
 const { EventBus } = owl.core;
 const { Component } = owl;
 const { onMounted, onWillUnmount } = owl.hooks;
 import { getImplementation } from 'point_of_sale.PaymentInterface';
 
 class PointOfSaleModel extends EventBus {
-    constructor(webClient, searchLimit = 100) {
+    constructor(webClient, searchLimit = 100, storage = null) {
         super(...arguments);
-        this.setup(webClient, searchLimit);
+        this.setup(webClient, searchLimit, storage);
     }
     /**
      * `constructor` is not patchable so we introduce this method as alternative
      * to be able to patch the initialization of this class.
      * This is a good place to declare the top-level fields.
      */
-    setup(webClient, searchLimit) {
+    setup(webClient, searchLimit, storage) {
         this.data = {
             records: this._initDataRecords(),
             derived: this._initDataDerived(),
@@ -58,6 +58,12 @@ class PointOfSaleModel extends EventBus {
         this.pickingType = {};
         this.backStatement = {};
         this.version = {};
+        if (!storage) {
+            this.storage = window.localStorage;
+        } else {
+            this.storage = storage;
+        }
+        this.POS_EPSILON = 1e-6;
     }
     useModel() {
         const component = Component.current;
@@ -793,6 +799,14 @@ class PointOfSaleModel extends EventBus {
             }
         }
         return [toUpdate, toAdd, new Set(toRemove)];
+    }
+    _roundGeneric(value, prec, method) {
+        return posRound(value, prec, method, this.POS_EPSILON);
+    }
+    roundAmount(amount) {
+        const prec = this.cashRounding.rounding;
+        const method = this.cashRounding.rounding_method;
+        return this._roundGeneric(amount, prec, method);
     }
     /**
      * Returns the formatted value based on the session's currency or explicitly provided
@@ -1779,7 +1793,7 @@ class PointOfSaleModel extends EventBus {
             .map((line) => line.pack_lot_ids.map((lotId) => this.getRecord('pos.pack.operation.lot', lotId)))
             .flat();
         const orderData = JSON.stringify({ order, orderlines, payments, packlots });
-        localStorage.setItem(this._constructPersistKey(order), orderData);
+        this.storage.setItem(this._constructPersistKey(order), orderData);
     }
     /**
      * Persist to the localStorage the active order.
@@ -1788,7 +1802,7 @@ class PointOfSaleModel extends EventBus {
         this.persistOrder(this.getActiveOrder());
     }
     removePersistedOrder(order) {
-        localStorage.removeItem(this._constructPersistKey(order));
+        this.storage.removeItem(this._constructPersistKey(order));
     }
     recoverPersistedOrders() {
         const ordersToLoad = this._getPersistedOrders();
@@ -1812,7 +1826,7 @@ class PointOfSaleModel extends EventBus {
      */
     _getPersistedOrders() {
         const orderData = [];
-        for (const [key, orderJSON] of Object.entries(localStorage)) {
+        for (const [key, orderJSON] of Object.entries(this.storage)) {
             const [prefix, configUUID] = this._desconstructPersistKey(key);
             if (!(prefix === 'odoo-pos-data' && configUUID === this.config.uuid)) continue;
             orderData.push([key, JSON.parse(orderJSON)]);
@@ -2147,8 +2161,7 @@ class PointOfSaleModel extends EventBus {
             {}
         );
         order.payment_ids.push(newPayment.id);
-        const shouldBeRounded = this.getShouldBeRounded(newPayment);
-        amount = amount === undefined ? this.getOrderDue(order, shouldBeRounded) : amount;
+        amount = amount === undefined ? this.getAutomaticPaymentAmount(order, paymentMethod) : amount;
         this.updateRecord('pos.payment', newPayment.id, {
             amount,
             payment_status: this.getPaymentTerminal(paymentMethod.id) ? 'pending' : '',
@@ -2414,7 +2427,7 @@ class PointOfSaleModel extends EventBus {
      */
     async actionRemoveOrders(orders) {
         for (const [key, { order }] of orders) {
-            localStorage.removeItem(key);
+            this.storage.removeItem(key);
             if (this.exists('pos.order', order.id)) {
                 this.deleteOrder(order.id);
             }
@@ -2451,7 +2464,7 @@ class PointOfSaleModel extends EventBus {
         if (json.paid_orders) {
             for (const [key, orderData] of json.paid_orders) {
                 this._loadOrderData(orderData);
-                localStorage.setItem(key, JSON.stringify(orderData));
+                this.storage.setItem(key, JSON.stringify(orderData));
             }
             report.paid = json.paid_orders.length;
         }
@@ -2477,7 +2490,7 @@ class PointOfSaleModel extends EventBus {
             });
             for (const [key, orderData] of ordersToLoad) {
                 this._loadOrderData(orderData);
-                localStorage.setItem(key, JSON.stringify(orderData));
+                this.storage.setItem(key, JSON.stringify(orderData));
             }
             report.unpaid = ordersToLoad.length;
             report.unpaid_skipped_sessions = _.keys(skipped_sessions);
@@ -2645,31 +2658,11 @@ class PointOfSaleModel extends EventBus {
         };
     }
     /**
-     * Returns the rounding value to properly round the give amount.
-     * @param {number} amount
-     * @return {number}
-     */
-    getRounding(amount) {
-        if (this.data.derived.roundingScheme === 'NO_ROUNDING') return 0;
-        const total = round_precision(amount, this.cashRounding.rounding);
-        const sign = total > 0 ? 1.0 : -1.0;
-        let rounding_applied = sign * (total - amount);
-        // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
-        if (float_is_zero(rounding_applied, this.currency.decimals)) {
-            return 0;
-        } else if (this.cashRounding.rounding_method === 'UP' && rounding_applied < 0) {
-            rounding_applied += this.cashRounding.rounding;
-        } else if (this.cashRounding.rounding_method === 'DOWN' && rounding_applied > 0) {
-            rounding_applied -= this.cashRounding.rounding;
-        }
-        return sign * rounding_applied;
-    }
-    /**
      * Returns the required amount to be paid of the given order.
      * @param {'pos.order'} order
      * @return {number}
      */
-    getTotalAmountToPay(order) {
+    getAmountToPay(order) {
         return this.getOrderTotals(order).withTaxWithDiscount;
     }
     /**
@@ -2683,6 +2676,11 @@ class PointOfSaleModel extends EventBus {
         );
         return sum(donePayments, (payment) => payment.amount);
     }
+    getAutomaticPaymentAmount(order, paymentMethod) {
+        const due = this.getOrderDue(order);
+        const shouldBeRounded = this.getShouldBeRounded(paymentMethod);
+        return shouldBeRounded ? this.roundAmount(due) : due;
+    }
     /**
      * Returns the change of the given order.
      * @param {'pos.order'} order
@@ -2693,57 +2691,29 @@ class PointOfSaleModel extends EventBus {
         const due = this._getRemainingAmountToPay(order, shouldRound);
         return this.floatCompare(due, 0) < 0 ? -due : 0;
     }
-    getShouldBeRounded(payment) {
+    getShouldBeRounded(paymentMethod) {
         const scheme = this.data.derived.roundingScheme;
-        const paymentMethod = this.getRecord('pos.payment.method', payment.payment_method_id);
         return scheme === 'ONLY_CASH_ROUNDING' ? paymentMethod.is_cash_count : scheme === 'WITH_ROUNDING';
     }
     /**
-     * Returns the remaining amount to pay. Rounds the result if shouldRound is true.
+     * Returns the remaining amount to pay.
      * @param {'pos.order'} order
-     * @param {boolean} [shouldRound=true]
      * @return {number}
      */
-    getOrderDue(order, shouldRound = true) {
-        const due = this._getRemainingAmountToPay(order, shouldRound);
-        return this.floatCompare(due, 0) > 0 ? due : 0;
+    getOrderDue(order) {
+        return this.getIsOrderPaid(order) ? 0 : this._getRemainingAmountToPay(order);
     }
     /**
-     * Helper method to compute the remaining amount to be paid in the order.
-     * If it returns positive, it can be interpreted as the `due`.
-     * If it returns negative, it can be interpreted as the `change`
-     *  (provided it is negated to get the positive value).
-     *
-     * NOTE: If the roundingScheme is 'NO_ROUNDING' (config.cash_rounding == false),
-     * the result of this method won't be rounded even if shouldRound is true.
-     * @see getRounding
-     *
      * @param {'pos.order'} order
      * @param {boolean} shouldRound if false, it ignores any rounding.
      * @return {number}
      */
     _getRemainingAmountToPay(order, shouldRound) {
-        // Separate the payments that are supposed to be rounded
-        // from the payments that don't need to be rounded.
-        const roundedPayments = [];
-        const noRoundingPayments = [];
-        for (const payment of this.getPayments(order)) {
-            if (this.getShouldBeRounded(payment)) {
-                roundedPayments.push(payment);
-            } else {
-                noRoundingPayments.push(payment);
-            }
-        }
-        const totalAmountToPay = this.getTotalAmountToPay(order);
-        // By subtracting the total amount of payments that don't need rounding
-        // from the total amount to pay, we get the portion of amount to be paid
-        // that should be paid by rounded payments.
-        let toBePaidByRoundedPayments = totalAmountToPay - sum(noRoundingPayments, (payment) => payment.amount);
-        const rounding = shouldRound ? this.getRounding(toBePaidByRoundedPayments) : 0;
-        toBePaidByRoundedPayments += rounding;
-        // To get the remaining amount to pay, we subtract the total rounded payments from
-        // the amount to be paid by rounded payments.
-        return toBePaidByRoundedPayments - sum(roundedPayments, (payment) => payment.amount);
+        const payments = this.getPayments(order);
+        const amountToPay = this.getAmountToPay(order);
+        const totalPaymentAmount = sum(payments, (payment) => payment.amount);
+        const diff = amountToPay - totalPaymentAmount;
+        return shouldRound ? this.roundAmount(diff) : diff;
     }
     /**
      * Returns the ancestor ids of the given category.
@@ -3184,27 +3154,35 @@ class PointOfSaleModel extends EventBus {
         return this.data.derived.paymentTerminals[paymentMethod.use_payment_terminal];
     }
     /**
+     * Checks if the given payment is valid based on the roundingScheme.
+     * @param {'pos.payment'} payment
+     * @return {boolean}
+     */
+    isPaymentValidOnRounding(payment) {
+        const paymentMethod = this.getRecord('pos.payment.method', payment.payment_method_id);
+        const scheme = this.data.derived.roundingScheme;
+        let shouldBeRounded;
+        if (scheme === 'NO_ROUNDING') {
+            shouldBeRounded = false;
+        } else if (scheme === 'ONLY_CASH_ROUNDING') {
+            shouldBeRounded = paymentMethod.is_cash_count;
+        } else {
+            shouldBeRounded = true;
+        }
+        if (!shouldBeRounded) return true;
+        const roundedAmount = this.roundAmount(payment.amount);
+        return this.floatCompare(payment.amount, roundedAmount) === 0;
+    }
+    getIsOrderPaid(order) {
+        const shouldRound = this.data.derived.roundingScheme !== 'NO_ROUNDING';
+        return this.floatCompare(this._getRemainingAmountToPay(order, shouldRound), 0) <= 0;
+    }
+    /**
      * Returns the first payment that is not rounded properly.
      * @param {'pos.order'} order
      */
     getInvalidRoundingPayment(order) {
-        const paymentsToCheck = this.getPayments(order).filter((payment) => {
-            const method = this.getRecord('pos.payment.method', payment.payment_method_id);
-            const scheme = this.data.derived.roundingScheme;
-            if (scheme === 'NO_ROUNDING') {
-                return false;
-            } else if (scheme === 'ONLY_CASH_ROUNDING') {
-                return method.is_cash_count;
-            } else {
-                return true;
-            }
-        });
-        for (const payment of paymentsToCheck) {
-            const roundedAmount = round_precision(payment.amount, this.cashRounding.rounding);
-            const isEqual = this.floatCompare(payment.amount, roundedAmount) === 0;
-            if (!isEqual) return payment;
-        }
-        return undefined;
+        return this.getPayments(order).find((payment) => !this.isPaymentValidOnRounding(payment));
     }
     getCashierName() {
         return this.user.name;

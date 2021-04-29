@@ -61,7 +61,11 @@ class PosController(http.Controller):
         return request.render('point_of_sale.index', qcontext=context)
 
     @http.route('/pos/ui/tests', type='http', auth="user")
-    def test_suite(self, mod=None, **kwargs):
+    def test_suite(self, mod=None, filenames=None, **kwargs):
+        if not filenames:
+            filenames = []
+        else:
+            filenames = [fname + '.js' for fname in filenames.strip().split(',')]
         domain = [
             ('state', '=', 'opened'),
             ('user_id', '=', request.session.uid),
@@ -72,6 +76,9 @@ class PosController(http.Controller):
         session_info['user_context']['allowed_company_ids'] = pos_session.company_id.ids
         context = {
             'session_info': session_info,
+            'pos_session_id': pos_session.id,
+            'login_number': pos_session.login_number,
+            'testfilenames': filenames,
         }
         return request.render('point_of_sale.qunit_suite', qcontext=context)
 

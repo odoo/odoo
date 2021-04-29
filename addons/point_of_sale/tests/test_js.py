@@ -1,22 +1,66 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.addons.web.tests.test_js
 import odoo.tests
+from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
 @odoo.tests.tagged("post_install", "-at_install")
-class WebSuite(odoo.tests.HttpCase):
-    def setUp(self):
-        super().setUp()
-        env = self.env(user=self.env.ref('base.user_admin'))
-        self.main_pos_config = env.ref('point_of_sale.pos_config_main')
+class PointOfSaleModelInvariants(TestPoSCommon):
+    """Test suite for the invariants of PointOfSaleModel of the POS UI.
 
-    def test_pos_js(self):
-        # open a session, the /pos/ui controller will redirect to it
-        self.main_pos_config.open_session_cb(check_coa=False)
+    Invariants because these tests shouldn't fail regardless of any patching
+    done on the model.
 
-        # point_of_sale desktop test suite
-        self.browser_js(
-            "/pos/ui/tests?mod=web&failfast", "", "", login="admin", timeout=1800
-        )
+    Basically, this test suite doesn't aim to test all features of the
+    PointOfSaleModel, only the features which behavior are known to be
+    absolute. This means that when you patched PointOfSaleModel and it resulted
+    to failure in this suite, then the patch will likely negaticely affect the
+    overall behavior of the PointOfSaleModel.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.cash_rounding_DOWN = cls.env['account.cash.rounding'].create({
+            'name': 'add_invoice_line',
+            'rounding': 0.05,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': cls.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': cls.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'DOWN',
+        })
+        cls.cash_rounding_HALF_UP = cls.env['account.cash.rounding'].create({
+            'name': 'add_invoice_line',
+            'rounding': 0.05,
+            'strategy': 'add_invoice_line',
+            'profit_account_id': cls.company_data['default_account_revenue'].copy().id,
+            'loss_account_id': cls.company_data['default_account_expense'].copy().id,
+            'rounding_method': 'HALF-UP',
+        })
+
+    def test_independent_to_config(self):
+        self.basic_config.open_session_cb(check_coa=False)
+        url = "/pos/ui/tests?&filenames=test_NumberBuffer,test_posRound&mod=web&failfast"
+        self.browser_js(url, "", "", login="accountman", timeout=1800)
+
+    def test_Rounding_UP(self):
+        self.basic_config.open_session_cb(check_coa=False)
+        self.basic_config.cash_rounding = True
+        self.basic_config.only_round_cash_method = True
+        self.basic_config.rounding_method = self.cash_rounding_a
+        self.browser_js("/pos/ui/tests?&filenames=test_Rounding_UP&mod=web&failfast", "", "", login="accountman", timeout=1800)
+
+    def test_Rounding_DOWN(self):
+        self.basic_config.open_session_cb(check_coa=False)
+        self.basic_config.cash_rounding = True
+        self.basic_config.only_round_cash_method = True
+        self.basic_config.rounding_method = self.cash_rounding_DOWN
+        self.browser_js("/pos/ui/tests?&filenames=test_Rounding_DOWN&mod=web&failfast", "", "", login="accountman", timeout=1800)
+
+    def test_Rounding_HALF_UP(self):
+        self.basic_config.open_session_cb(check_coa=False)
+        self.basic_config.cash_rounding = True
+        self.basic_config.only_round_cash_method = True
+        self.basic_config.rounding_method = self.cash_rounding_HALF_UP
+        self.browser_js("/pos/ui/tests?&filenames=test_Rounding_HALF_UP&mod=web&failfast", "", "", login="accountman", timeout=1800)

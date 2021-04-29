@@ -1,5 +1,7 @@
 /** @odoo-module alias=point_of_sale.utils **/
 
+import { float_is_zero, round_precision } from 'web.utils';
+
 function getFileAsText(file) {
     return new Promise((resolve, reject) => {
         if (!file) {
@@ -127,6 +129,66 @@ function generateWrappedName(name) {
     return wrapped;
 }
 
+/**
+ * Rounds the given value base on the given decimal precision. It considers the sign
+ * different from how round_precision does it. This is important because we observed
+ * a pattern in cash rounding such that the change of the order (the amount to be returned
+ * to the customer) can be computed by rounding the amount remaining that is negative.
+ * So, if the amount remaining is -0.51, and if rounding is necessary in the opened
+ * session, the change is `-round(-0.51)` which is `0.50` if the rounding precision
+ * is `0.05`.
+ * E.g.
+ * ```js
+ *  roundPrec(10.02, 0.03, 'HALF-UP') -> 10.03
+ *  roundPrec(10.01, 0.03, 'HALF-UP') -> 10
+ *  roundPrec(10.01, 0.05, 'UP') -> 10.05
+ *  roundPrec(10.04, 0.05, 'DOWN') -> 10.05
+ *  roundPrec(10.04, 0.05, 'DOWN') -> 10
+ *  // but the following should not round because exact multiple
+ *  roundPrec(10.05, 0.05, 'HALF-UP') -> 10.05
+ *  roundPrec(10.05, 0.05, 'UP') -> 10.05
+ *  roundPrec(10.05, 0.05, 'DOWN') -> 10.05
+ *  // and it considers the sign
+ *  roundPrec(-10.01, 0.05, 'DOWN') -> -10.05 // snaps to a lower value
+ *  roundPrec(-10.01, 0.05, 'UP') -> -10 // snaps to a higher value
+ * ```
+ * @param {number} value
+ * @param {number} prec
+ * @param {'HALF-UP' | 'UP' | 'DOWN'} [method=HALF-UP]
+ * @param {number} [epsilon=1e-6] used to identify if the value is a multiple of prec
+ * @return {number}
+ */
+function posRound(value, prec, method = 'HALF-UP', epsilon = 1e-6) {
+    const _isMultiple = (a, b) => {
+        const decimalPlaces = Math.log10(1 / epsilon);
+        const remainder = a % b;
+        if (float_is_zero(remainder, decimalPlaces)) {
+            return true;
+        } else {
+            // since we are taking modulo of floats, it is possible that the remainder
+            // is near the value of b which means it is still a multiple.
+            // try in the console: 10.02 % 0.02 -> 0.019999999999999366
+            return float_is_zero(remainder - b, decimalPlaces);
+        }
+    };
+    if (_isMultiple(value, prec)) {
+        return value;
+    } else {
+        // Calculation example:
+        // Say rounder = Math.round
+        // value = 10.03, prec = 0.02
+        // quotient -> 10.03 / 0.02 = 501.49999999999994
+        // enoughToBePreciseQuotient -> round_precision(501.49999999999994, epsilon) -> 501.5
+        // roundedQuotient -> rounder(501.5) -> 502
+        // result is 502 * 0.02 -> 10.040000000000001
+        const rounder = { 'HALF-UP': Math.round, UP: Math.ceil, DOWN: Math.floor }[method];
+        const quotient = value / prec;
+        const enoughToBePreciseQuotient = round_precision(quotient, epsilon);
+        const roundedQuotient = rounder(enoughToBePreciseQuotient);
+        return roundedQuotient * prec;
+    }
+}
+
 export default {
     getFileAsText,
     nextFrame,
@@ -137,4 +199,5 @@ export default {
     sum,
     maxDateString,
     generateWrappedName,
+    posRound,
 };

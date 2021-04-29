@@ -3,7 +3,7 @@ from random import randint
 
 from odoo import fields, tools
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo.tests.common import Form
+from odoo.tests.common import Form, HttpCase
 from odoo.tests import tagged
 
 
@@ -130,7 +130,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
 
 @tagged('post_install', '-at_install')
-class TestPoSCommon(ValuationReconciliationTestCommon):
+class TestPoSCommon(ValuationReconciliationTestCommon, HttpCase):
     """ Set common values for different special test cases.
 
     The idea is to set up common values here for the tests

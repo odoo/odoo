@@ -11,14 +11,11 @@ class PaymentScreenStatus extends PosComponent {
         return this.env.model.formatCurrency(change);
     }
     get totalDueText() {
-        const totalAmountToPay = this.env.model.getTotalAmountToPay(this.activeOrder);
+        const totalAmountToPay = this.env.model.getAmountToPay(this.activeOrder);
         return this.env.model.formatCurrency(totalAmountToPay);
     }
     get remainingText() {
-        const hasRoundedPayments = Boolean(
-            this.env.model.getPayments(this.activeOrder).find((payment) => this.env.model.getShouldBeRounded(payment))
-        );
-        const remaining = this.env.model.getOrderDue(this.activeOrder, hasRoundedPayments);
+        const remaining = this.env.model.getOrderDue(this.activeOrder);
         return this.env.model.formatCurrency(remaining);
     }
 }
