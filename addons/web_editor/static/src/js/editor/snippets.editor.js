@@ -2258,7 +2258,7 @@ var SnippetsMenu = Widget.extend({
                         return;
                     }
 
-                    self._activateSnippet(false);
+                    self._activateSnippet(false, true); // arg2 removes spinner on snippets on drag
                     self._activateInsertionZones($selectorSiblings, $selectorChildren);
 
                     self.getEditableArea().find('.oe_drop_zone').droppable({
