@@ -148,6 +148,14 @@ class AccountPayment(models.Model):
         help='Negative value of amount field if payment_type is outbound')
     amount_company_currency_signed = fields.Monetary(
         currency_field='company_currency_id', compute='_compute_amount_company_currency_signed')
+    company_id = fields.Many2one(comodel_name='res.company', string='Company',
+                                 store=True, readonly=True,
+                                 compute='_compute_company_id')
+
+    @api.depends('journal_id')
+    def _compute_company_id(self):
+        for move in self:
+            move.company_id = move.journal_id.company_id or move.company_id or self.env.company
 
     _sql_constraints = [
         (
