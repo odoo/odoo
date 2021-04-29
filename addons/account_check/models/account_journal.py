@@ -15,7 +15,7 @@ class AccountJournal(models.Model):
     @api.model
     def create(self, vals):
         rec = super(AccountJournal, self).create(vals)
-        issue_checks = self.env.ref('account_check.account_payment_method_new_out_checks')
+        issue_checks = self.env.ref('account_check.account_payment_method_new_own_checks')
         if (issue_checks in rec.outbound_payment_method_ids and not rec.checkbook_ids):
             rec._create_checkbook()
         return rec
@@ -39,9 +39,9 @@ class AccountJournal(models.Model):
             if not bank_journal.checkbook_ids:
                 bank_journal._create_checkbook()
             bank_journal.write({
-                'outbound_payment_method_ids': [(4, self.env.ref('account_check.account_payment_method_new_out_checks').id, None)],
+                'outbound_payment_method_ids': [(4, self.env.ref('account_check.account_payment_method_new_own_checks').id, None)],
                 'inbound_payment_method_ids': [
-                    (4, self.env.ref('account_check.account_payment_method_in_checks').id, None),
+                    (4, self.env.ref('account_check.account_payment_method_in_own_checks').id, None),
                     # if we dont send default payment method is not computed and not added to journal
                     (4, self._default_inbound_payment_methods().id, None)],
             })

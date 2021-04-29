@@ -57,11 +57,11 @@ class AccountChartTemplate(models.Model):
             'type': 'cash',
             'company_id': company.id,
             'inbound_payment_method_ids': [
-                (4, self.env.ref('account_check.account_payment_method_new_in_checks').id, None),
-                (4, self.env.ref('account_check.account_payment_method_in_checks').id, None),
+                (4, self.env.ref('account_check.account_payment_method_new_third_checks').id, None),
+                (4, self.env.ref('account_check.account_payment_method_in_third_checks').id, None),
             ],
             'outbound_payment_method_ids': [
-                (4, self.env.ref('account_check.account_payment_method_out_checks').id, None),
+                (4, self.env.ref('account_check.account_payment_method_out_third_checks').id, None),
             ],
         })
         # creamos diario para cheques de terceros rechazados
@@ -70,10 +70,10 @@ class AccountChartTemplate(models.Model):
             'type': 'cash',
             'company_id': company.id,
             'inbound_payment_method_ids': [
-                (4, self.env.ref('account_check.account_payment_method_in_checks').id, None),
+                (4, self.env.ref('account_check.account_payment_method_in_third_checks').id, None),
             ],
             'outbound_payment_method_ids': [
-                (4, self.env.ref('account_check.account_payment_method_out_checks').id, None),
+                (4, self.env.ref('account_check.account_payment_method_out_third_checks').id, None),
             ],
         })
 

@@ -23,9 +23,8 @@ class AccountPayment(models.Model):
     )
     # TODO we should be able to remove this fields. Is only here because adding two times the same field with difrerent widget is not working
     delivery_check_ids = fields.Many2many(related='check_ids', string="Checks Delivered", readonly=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]})
-    # this fields is to help with code and view
-    # TODO unificar metodos compute
-    check_type = fields.Char(compute='_compute_check_type',)
+    # this fields is to help with code and view but if needed this field could be removed and check everywhere for the payment_method_code
+    check_type = fields.Char(compute='_compute_check_type',) 
     check_operation = fields.Char(compute='_compute_check_data',)
     available_check_ids = fields.Many2many('account.check', compute='_compute_check_data')
     amount = fields.Monetary(compute='_compute_amount', readonly=False, store=True)
@@ -41,7 +40,7 @@ class AccountPayment(models.Model):
             domain = [('type', '=', 'third_check')]
             if self.is_internal_transfer:
                 if self.payment_type == 'outbound':
-                    if self.destination_journal_id.type == 'cash' and any(x.code == 'in_checks' for x in self.destination_journal_id.inbound_payment_method_ids):
+                    if any(x.code == 'in_third_checks' for x in self.destination_journal_id.inbound_payment_method_ids):
                         # transferencia a otro diario de terceros
                         return (
                             'transfered',
@@ -58,12 +57,12 @@ class AccountPayment(models.Model):
                         # we can get the rejected check in a diferent journal
                         # ('journal_id', '=', self.journal_id.id),
                         domain + [('state', '=', 'deposited')])
-            elif self.payment_method_code == 'new_in_checks':
+            elif self.payment_method_code == 'new_third_checks':
                 return 'holding', False
-            elif self.payment_method_code == 'out_checks':
+            elif self.payment_method_code == 'out_third_checks':
                 # TODO falta implementar devolucion a cliente (si la hacemos)
                 return 'delivered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
-            elif self.payment_method_code == 'in_checks':
+            elif self.payment_method_code == 'in_third_checks':
                 # we can get the rejected check in a diferent journal
                 # ('journal_id', '=', self.journal_id.id),
                 # no restringimos quien nos peude devolver el cheque porque cualquiera lo podria reclamar
@@ -74,9 +73,9 @@ class AccountPayment(models.Model):
             domain = [('type', '=', 'issue_check')]
             if self.is_internal_transfer and self.payment_type == 'outbound':
                 return 'withdrawed', False
-            elif self.payment_method_code == 'new_out_checks':
+            elif self.payment_method_code == 'new_own_checks':
                 return 'handed', False
-            elif self.payment_method_code == 'in_checks':
+            elif self.payment_method_code == 'in_own_checks':
                 # TODO definir si usamos mismo nombre para rejected y devuelto
                 return 'returned', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'handed'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
         raise UserError(_(
@@ -106,11 +105,14 @@ class AccountPayment(models.Model):
             rec.available_check_ids = available_checks
             rec.check_operation = operation
 
-    @api.depends('payment_method_code', 'journal_id.type')
+    @api.depends('payment_method_code')
     def _compute_check_type(self):
+        """ Method to """
         for rec in self:
-            if rec.payment_method_code in ['new_in_checks', 'new_out_checks', 'out_checks', 'in_checks']:
-                rec.check_type = 'issue_check' if rec.journal_id.type == 'bank' else 'third_check'
+            if rec.payment_method_code in ['new_third_checks', 'out_third_checks', 'in_third_checks']:
+                rec.check_type = 'third_check'
+            elif rec.payment_method_code in ['new_own_checks', 'in_own_checks']:
+                rec.check_type = 'own_check'
             else:
                 rec.check_type = False
 
