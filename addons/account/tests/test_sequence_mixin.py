@@ -202,6 +202,24 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
             ['J1/2010/00002', 'J0/2010/00002', 'J1/2010/00004', 'J1/2010/00003'],
         )
 
+        journals[0].code = 'OLD'
+        journals.flush()
+        journal_same_code = self.env['account.journal'].create([{
+            'name': 'Journal0',
+            'code': 'J0',
+            'type': 'general',
+        }])
+        moves = (
+            self.create_move(date='2010-01-01', journal=journal_same_code, name='J0/2010/00001')
+            + self.create_move(date='2010-01-01', journal=journal_same_code)
+            + self.create_move(date='2010-01-01', journal=journal_same_code)
+            + self.create_move(date='2010-01-01', journal=journals[0])
+        )._post()
+        self.assertEqual(
+            moves.mapped('name'),
+            ['J0/2010/00001', 'J0/2010/00002', 'J0/2010/00003', 'J0/2010/00003'],
+        )
+
     def test_journal_override_sequence_regex(self):
         """There is a possibility to override the regex and change the order of the paramters."""
         self.create_move(date='2020-01-01', name='00000876-G 0002/2020')
