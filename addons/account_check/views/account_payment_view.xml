@@ -38,12 +38,13 @@
                         <field name="owner_name" invisible="1"/>
                         <field name="owner_vat" invisible="1"/>
                         <field name="checkbook_id" invisible="1"/>
+                        <field name="company_id" invisible="1" force_save="1"/>
                     </tree>
                 </field>
             </field>
             <group>
                 <label for="check_ids" attrs="{'invisible': [('payment_method_code', 'not in', ['new_in_checks', 'new_out_checks'])]}"/>
-                <field context="{'default_partner_id': partner_id, 'default_journal_id': journal_id, 'default_currency_id': currency_id, 'default_type': check_type}" name="check_ids" widget="one2many" attrs="{'invisible': [('payment_method_code', 'not in', ['new_in_checks', 'new_out_checks'])]}">
+                <field context="{'default_company_id': company_id, 'default_partner_id': partner_id, 'default_journal_id': journal_id, 'default_currency_id': currency_id, 'default_type': check_type}" name="check_ids" widget="one2many" attrs="{'invisible': [('payment_method_code', 'not in', ['new_in_checks', 'new_out_checks'])]}">
                     <tree editable="bottom">
                         <field name="checkbook_id" attrs="{'required': [('parent.check_type', '=', 'issue_check')], 'column_invisible': [('parent.check_type', '!=', 'issue_check')]}" domain="[('journal_id', '=', journal_id), ('state', '=', 'active')]"/>
                         <field name="number"/>
@@ -59,6 +60,7 @@
                         <field name="state" invisible="1"/>
                         <field name="journal_id" invisible="1"/>
                         <field name="partner_id" invisible="1"/>
+                        <field name="company_id" invisible="1" force_save="1"/>
                     </tree>
                 </field>
             </group>

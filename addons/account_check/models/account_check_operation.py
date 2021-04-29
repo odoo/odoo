@@ -31,7 +31,7 @@ class AccountCheckOperation(models.Model):
         # ('reclaimed', 'Claim'),
         # ('rejected', 'Rejection'),
         ('debited', 'Debit'),
-        # ('returned', 'Return'),
+        ('returned', 'Return'),
         # al final no vamos a implemnetar esto ya que habria que hacer muchas
         # cosas hasta actualizar el asiento, mejor se vuelve atras y se
         # vuelve a generar deuda y listo, igualmente lo dejamos por si se

@@ -49,7 +49,7 @@ class AccountPayment(models.Model):
                     else:
                         # deposito o venta
                         return (
-                            'selled' if self.destination_journal_id.type == 'cash' else 'deposited',
+                            'deposited',
                             domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')])
                 elif self.payment_type == 'inbound':
                     # Deposit rejection
@@ -57,7 +57,7 @@ class AccountPayment(models.Model):
                         'rejected',
                         # we can get the rejected check in a diferent journal
                         # ('journal_id', '=', self.journal_id.id),
-                        domain + [('state', 'in', ['deposited', 'selled'])])
+                        domain + [('state', '=', 'deposited')])
             elif self.payment_method_code == 'new_in_checks':
                 return 'holding', False
             elif self.payment_method_code == 'out_checks':
@@ -73,12 +73,12 @@ class AccountPayment(models.Model):
         elif self.check_type == 'issue_check':
             domain = [('type', '=', 'issue_check')]
             if self.is_internal_transfer and self.payment_type == 'outbound':
-                    return 'withdrawed', False
+                return 'withdrawed', False
             elif self.payment_method_code == 'new_out_checks':
                 return 'handed', False
             elif self.payment_method_code == 'in_checks':
                 # TODO definir si usamos mismo nombre para rejected y devuelto
-                return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'handed'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
+                return 'returned', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'handed'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
         raise UserError(_(
             'This operatios is not implemented for checks:\n'
             '* Payment type: %s\n'

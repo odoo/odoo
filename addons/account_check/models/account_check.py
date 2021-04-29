@@ -78,7 +78,7 @@ class AccountCheck(models.Model):
         ('handed', 'Handed'),
         # ('rejected', 'Rejected'),
         ('debited', 'Debited'),
-        # ('returned', 'Returned'),
+        ('returned', 'Returned'),
         # ('changed', 'Changed'),
         # ('cancel', 'Cancel'),
     ],
@@ -148,8 +148,8 @@ class AccountCheck(models.Model):
         # index=True,
     )
     company_id = fields.Many2one(
-        related='journal_id.company_id',
-        store=True,
+        'res.company',
+        readonly=True,
     )
     company_currency_id = fields.Many2one(
         related='company_id.currency_id',
