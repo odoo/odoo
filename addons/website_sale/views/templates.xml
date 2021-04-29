@@ -155,7 +155,7 @@
             <form t-attf-class="o_wsale_products_searchbar_form o_wait_lazy_js #{_classes}" t-att-action="action if action else '/shop'" method="get" t-att-data-snippet="_snippet">
                 <t>$0</t>
                 <input name="order" type="hidden" class="o_wsale_search_order_by" value=""/>
-                <t t-raw="0"/>
+                <t t-out="0"/>
             </form>
         </xpath>
     </template>
@@ -213,7 +213,7 @@
             <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
             <t t-set="text_color" t-value="td_product['ribbon']['text_color']"/>
             <t t-set="bg_class" t-value="td_product['ribbon']['html_class']"/>
-            <span t-attf-class="o_ribbon #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-raw="td_product['ribbon']['html'] or ''"/>
+            <span t-attf-class="o_ribbon #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-out="td_product['ribbon']['html'] or ''"/>
         </form>
     </template>
 
@@ -357,7 +357,7 @@
                 <span class="d-none d-lg-inline font-weight-bold text-muted">Sort By:</span>
                 <a role="button" href="#" class="dropdown-toggle btn btn-light border-0 px-0 text-muted align-baseline" data-toggle="dropdown">
                     <span class="d-none d-lg-inline">
-                        <t t-if='len(website_sale_sortable_current)'>
+                        <t t-if='website_sale_sortable_current'>
                             <t t-esc="website_sale_sortable_current[0][0]"/>
                         </t>
                         <t t-else='1'>
@@ -369,7 +369,7 @@
                 <div class="dropdown-menu dropdown-menu-right" role="menu">
                     <t t-foreach="website_sale_sortable" t-as="sortby">
                         <a role="menuitem" rel="noindex,nofollow" t-att-href="keep('/shop', order=sortby[1])" class="dropdown-item">
-                            <span t-raw="sortby[0]"/>
+                            <span t-out="sortby[0]"/>
                         </a>
                     </t>
                 </div>
@@ -934,7 +934,7 @@
     <!-- We use this template where we want to give the user a link to the product of a sale order line. -->
     <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
         <a t-att-href="line.product_id.website_url">
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </a>
     </template>
 
@@ -1778,13 +1778,13 @@
                         <i class="fa fa-pencil"></i>
                     </a>
                     <t t-if="payment_tx_id.state == 'pending'">
-                        <t t-raw="payment_tx_id.acquirer_id.sudo().pending_msg"/>
+                        <t t-out="payment_tx_id.acquirer_id.sudo().pending_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'done'">
-                        <span t-if='payment_tx_id.acquirer_id.sudo().done_msg' t-raw="payment_tx_id.acquirer_id.sudo().done_msg"/>
+                        <span t-if='payment_tx_id.acquirer_id.sudo().done_msg' t-out="payment_tx_id.acquirer_id.sudo().done_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'cancel'">
-                        <t t-raw="payment_tx_id.acquirer_id.sudo().cancel_msg"/>
+                        <t t-out="payment_tx_id.acquirer_id.sudo().cancel_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
                         <span>Your payment has been authorized.</span>
@@ -1849,7 +1849,7 @@
                     <t t-foreach="product_images" t-as="product_image">
                         <div t-attf-class="carousel-item h-100#{' active' if product_image_first else ''}">
                             <div t-if="product_image._name == 'product.image' and product_image.embed_code" class="d-flex align-items-center justify-content-center h-100 embed-responsive embed-responsive-16by9">
-                                <t t-raw="product_image.embed_code"/>
+                                <t t-out="product_image.embed_code"/>
                             </div>
                             <div  t-else="" t-field="product_image.image_1920" class="d-flex align-items-center justify-content-center h-100" t-options='{"widget": "image", "preview_image": "image_1024", "class": "product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
                         </div>

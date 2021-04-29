@@ -179,7 +179,8 @@ todo_include_todos = False
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
-    'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
+    'werkzeug': ('https://werkzeug.palletsprojects.com/', None),
+    'markupsafe': ('https://markupsafe.palletsprojects.com/', None),
 }
 
 github_user = 'odoo'

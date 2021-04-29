@@ -12,7 +12,7 @@ from lxml.builder import E
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.qweb import QWebException
-from odoo.tools import misc, ustr
+from odoo.tools import misc, mute_logger
 
 
 class TestQWebTField(TransactionCase):
@@ -82,7 +82,7 @@ class TestQWebTField(TransactionCase):
                 <t t-name="base.dummy">
                     <root>
                         <script type="application/javascript">
-                            var s = <t t-raw="json.dumps({'key': malicious})"/>;
+                            var s = <t t-esc="json.dumps({'key': malicious})"/>;
                         </script>
                     </root>
                 </t>
@@ -631,6 +631,7 @@ class TestQWeb(TransactionCase):
 
         return lambda: self.run_test_file(os.path.join(path, f))
 
+    @mute_logger('odoo.addons.base.models.qweb') # tests t-raw which is deprecated
     def run_test_file(self, path):
         self.env.user.tz = 'Europe/Brussels'
         doc = etree.parse(path).getroot()
@@ -648,7 +649,7 @@ class TestQWeb(TransactionCase):
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
                 qweb._render(template, values=params, load=loader).strip(),
-                (result or u'').strip().encode('utf-8'),
+                (result or u'').strip().replace('&quot;', '&#34;').encode('utf-8'),
                 template
             )
 

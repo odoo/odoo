@@ -7,6 +7,7 @@ import re
 import string
 
 import requests
+from markupsafe import Markup
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
@@ -99,7 +100,7 @@ class PadCommon(models.AbstractModel):
                     if mo:
                         content = mo.group(1)
 
-        return content
+        return Markup(content)
 
     # TODO
     # reverse engineer protocol to be setHtml without using the api key

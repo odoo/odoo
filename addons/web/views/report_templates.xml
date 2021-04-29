@@ -27,7 +27,7 @@
             <body t-att-class="'container' if not full_width else 'container-fluid'">
                 <div id="wrapwrap">
                     <main>
-                        <t t-raw="0"/>
+                        <t t-out="0"/>
                     </main>
                 </div>
             </body>
@@ -49,7 +49,7 @@
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <style>
-                    <t t-raw="preview_css"/>
+                    <t t-out="preview_css"/>
 
                     /**
                         Some css is overridden as it doesn't work properly in the preview.
@@ -91,7 +91,7 @@
             </head>
             <body t-att-class="'container' if not full_width else 'container-fluid'">
                 <div id="wrapwrap">
-                        <t t-raw="0"/>
+                        <t t-out="0"/>
                 </div>
             </body>
         </html>
@@ -100,14 +100,14 @@
     <template id="html_container">
         <t t-set="body_classname" t-value="'container'"/>
         <t t-call="web.report_layout">
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </t>
     </template>
 
     <template id="html_preview_container">
         <t t-set="body_classname" t-value="'container'"/>
         <t t-call="web.report_preview_layout">
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </t>
     </template>
 
@@ -239,50 +239,47 @@
 
     <template id="minimal_layout">
         &lt;!DOCTYPE html&gt;
-        <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
         <html style="height: 0;">
             <head>
+                <base t-att-href="base_url"/>
                 <t t-call-assets="web.report_assets_pdf" t-js="false"/>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
                 <t t-call-assets="web.report_assets_pdf" t-css="false"/>
                 <meta charset="utf-8"/>
-                <t t-set="subst_needed" t-value="subst is True"/>
-                <t t-if="subst_needed">
-                    <script>
-                        function subst() {
-                            var vars = {};
-                            var x = document.location.search.substring(1).split('&amp;');
-                            for (var i in x) {
-                                var z = x[i].split('=', 2);
-                                vars[z[0]] = unescape(z[1]);
-                            }
-                            var x = ['sitepage', 'sitepages', 'section', 'subsection', 'subsubsection'];
-                            var z = {'sitepage': 'page', 'sitepages': 'topage'};
-                            for (var i in x) {
-                                var y = document.getElementsByClassName(z[x[i]] || x[i])
-                                for (var j=0; j&lt;y.length; ++j)
-                                    y[j].textContent = vars[x[i]];
-                            }
-
-                            var index = vars['webpage'].split('.', 4)[3];
-                            var header = document.getElementById('minimal_layout_report_headers');
-                            if(header !== null){
-                                var companyHeader = header.children[index];
-                                header.textContent = '';
-                                header.appendChild(companyHeader);
-                            }
-                            var footer = document.getElementById('minimal_layout_report_footers');
-                            if(footer !== null){
-                                var companyFooter = footer.children[index];
-                                footer.textContent = '';
-                                footer.appendChild(companyFooter);
-                            }
+                <script t-if="subst">
+                    function subst() {
+                        var vars = {};
+                        var x = document.location.search.substring(1).split('&amp;');
+                        for (var i in x) {
+                            var z = x[i].split('=', 2);
+                            vars[z[0]] = unescape(z[1]);
                         }
-                    </script>
-                </t>
+                        var x = ['sitepage', 'sitepages', 'section', 'subsection', 'subsubsection'];
+                        var z = {'sitepage': 'page', 'sitepages': 'topage'};
+                        for (var i in x) {
+                            var y = document.getElementsByClassName(z[x[i]] || x[i])
+                            for (var j=0; j&lt;y.length; ++j)
+                                y[j].textContent = vars[x[i]];
+                        }
+
+                        var index = vars['webpage'].split('.', 4)[3];
+                        var header = document.getElementById('minimal_layout_report_headers');
+                        if(header){
+                            var companyHeader = header.children[index];
+                            header.textContent = '';
+                            header.appendChild(companyHeader);
+                        }
+                        var footer = document.getElementById('minimal_layout_report_footers');
+                        if(footer){
+                            var companyFooter = footer.children[index];
+                            footer.textContent = '';
+                            footer.appendChild(companyFooter);
+                        }
+                    }
+                </script>
             </head>
-            <body class="container" t-att-onload="subst_needed and 'subst()'">
-                <t t-raw="body"/>
+            <body class="container" t-att-onload="subst and 'subst()'">
+                <t t-out="body"/>
             </body>
         </html>
     </template>
@@ -296,11 +293,11 @@
                 <t t-if="information_block">
                     <t t-set="colclass" t-value="'col-5 offset-1'"/>
                     <div name="information_block" class="col-6">
-                        <t t-raw="information_block"/>
+                        <t t-out="information_block"/>
                     </div>
                 </t>
                 <div name="address" t-att-class="colclass">
-                    <t t-raw="address"/>
+                    <t t-esc="address"/>
                 </div>
             </div>
         </t>
@@ -326,7 +323,7 @@
 
         <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </div>
 
         <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer">
@@ -376,7 +373,7 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </div>
 
         <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
@@ -425,7 +422,7 @@
 
         <div t-attf-class="article o_report_layout_clean o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </div>
 
         <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout">
@@ -476,7 +473,7 @@
                 <!-- This div ensures that the address is not cropped by the header. -->
                 <t t-call="web.address_layout"/>
             </div>
-            <t t-raw="0"/>
+            <t t-out="0"/>
         </div>
 
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
@@ -523,8 +520,8 @@
             </t>
         </t>
 
-        <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.key}}"><t t-raw="0"/></t>
-        <t t-else="else" t-call="web.external_layout_standard"><t t-raw="0"/></t>
+        <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.key}}"><t t-out="0"/></t>
+        <t t-else="else" t-call="web.external_layout_standard"><t t-out="0"/></t>
 
     </template>
 
@@ -562,7 +559,7 @@
             </div>
         </div>
         <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-          <t t-raw="0"/>
+          <t t-out="0"/>
         </div>
     </template>
 
@@ -570,7 +567,7 @@
         <t t-call="web.html_container">
             <t t-if="not o" t-set="o" t-value="doc"/>
             <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-                <t t-raw="0"/>
+                <t t-out="0"/>
             </div>
         </t>
     </template>

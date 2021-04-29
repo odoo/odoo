@@ -220,7 +220,7 @@ class TestViewSaving(TestViewSavingCommon):
         self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
         self.assertIn(
             replacement,
-            view._render().decode('utf-8').replace(u'&', u'&amp;'),
+            str(view._render().decode('utf-8')).replace(u'&', u'&amp;'),
             'text node characters wrongly unescaped when rendering'
         )
 

@@ -22,7 +22,7 @@ class ProductImage(models.Model):
     product_variant_id = fields.Many2one('product.product', "Product Variant", index=True, ondelete='cascade')
     video_url = fields.Char('Video URL',
                             help='URL of a video for showcasing your product.')
-    embed_code = fields.Char(compute="_compute_embed_code")
+    embed_code = fields.Html(compute="_compute_embed_code", sanitize=False)
 
     can_image_1024_be_zoomed = fields.Boolean("Can Image 1024 be zoomed", compute='_compute_can_image_1024_be_zoomed', store=True)
 

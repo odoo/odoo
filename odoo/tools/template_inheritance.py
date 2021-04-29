@@ -6,7 +6,8 @@ import itertools
 import logging
 
 from odoo.tools.translate import _
-from odoo.tools import SKIPPED_ELEMENT_TYPES
+from odoo.tools import SKIPPED_ELEMENT_TYPES, html_escape
+
 _logger = logging.getLogger(__name__)
 
 
@@ -107,8 +108,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
         """
         if len(spec):
             raise ValueError(
-                _("Invalid specification for moved nodes: '%s'") %
-                etree.tostring(spec)
+                _("Invalid specification for moved nodes: %r", etree.tostring(spec, encoding='unicode'))
             )
         pre_locate(spec)
         to_extract = locate_node(source, spec)
@@ -117,8 +117,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
             return to_extract
         else:
             raise ValueError(
-                _("Element '%s' cannot be located in parent view") %
-                etree.tostring(spec)
+                _("Element %r cannot be located in parent view", etree.tostring(spec, encoding='unicode'))
             )
 
     while len(specs):
@@ -225,7 +224,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
 
         else:
             attrs = ''.join([
-                ' %s="%s"' % (attr, spec.get(attr))
+                ' %s="%s"' % (attr, html_escape(spec.get(attr)))
                 for attr in spec.attrib
                 if attr != 'position'
             ])

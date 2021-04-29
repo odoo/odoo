@@ -24,7 +24,7 @@
                  "fields": ["address", "website", "phone", "email"]
              }'/>
         </address>
-        <t t-raw="left_column or ''"/>
+        <t t-out="left_column or ''"/>
     </div>
     <div class="col-lg-8 mt32">
         <t t-if="partner">
@@ -34,7 +34,7 @@
                 <div class="css_non_editable_mode_hidden" t-field="partner.website_short_description"/>
             </t>
         </t>
-        <t t-raw="right_column or ''"/>
+        <t t-out="right_column or ''"/>
     </div>
 </template>
 </odoo>

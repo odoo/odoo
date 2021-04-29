@@ -34,6 +34,7 @@ from operator import itemgetter
 
 import babel
 import babel.dates
+import markupsafe
 import passlib.utils
 import pytz
 import werkzeug.utils
@@ -1188,13 +1189,7 @@ def ignore(*exc):
     except exc:
         pass
 
-# Avoid DeprecationWarning while still remaining compatible with werkzeug pre-0.9
-if parse_version(getattr(werkzeug, '__version__', '0.0')) < parse_version('0.9.0'):
-    def html_escape(text):
-        return werkzeug.utils.escape(text, quote=True)
-else:
-    def html_escape(text):
-        return werkzeug.utils.escape(text)
+html_escape = markupsafe.escape
 
 def get_lang(env, lang_code=False):
     """

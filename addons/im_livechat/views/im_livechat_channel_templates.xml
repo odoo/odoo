@@ -17,7 +17,7 @@
                     <title><t t-esc="channel_name"/> Livechat Support Page</title>
 
                     <!-- Call the external Bundle to render the css, js, and js loader tags -->
-                    <t t-raw="channel.script_external"/>
+                    <t t-out="channel.script_external"/>
 
                     <style type="text/css">
                         body {
@@ -80,11 +80,11 @@
         -->
         <template id="external_loader" name="Livechat : external_script field of livechat channel">
             <!-- css style -->
-            <link t-att-href="'%s/im_livechat/external_lib.css' % (url)" rel="stylesheet"/>
+            <link t-attf-href="{{url}}/im_livechat/external_lib.css" rel="stylesheet"/>
             <!-- js of all the required lib (internal and external) -->
-            <script t-att-src="'%s/im_livechat/external_lib.js' % (url)" type="text/javascript" />
+            <script t-attf-src="{{url}}/im_livechat/external_lib.js" type="text/javascript" />
             <!-- the loader -->
-            <script t-att-src="'%s/im_livechat/loader/%i' % (url, channel_id)" type="text/javascript"/>
+            <script t-attf-src="{{url}}/im_livechat/loader/{{channel_id}}" type="text/javascript"/>
         </template>
 
         <!-- the js code to initialize the LiveSupport object -->
@@ -106,7 +106,7 @@
                         var button = new im_livechat.LivechatButton(
                             rootWidget,
                             "<t t-esc="info['server_url']"/>",
-                            <t t-raw="json.dumps(info.get('options', {}))"/>
+                            <t t-out="json.dumps(info.get('options', {}))"/>
                         );
                         button.appendTo(document.body);
                         window.livechat_button = button;

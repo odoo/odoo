@@ -22,10 +22,10 @@
                     };
                 </script>
 
-                <t t-raw="head or ''"/>
+                <t t-out="head or ''"/>
             </head>
             <body t-att-class="body_classname">
-                <t t-raw="0"/>
+                <t t-out="0"/>
             </body>
         </html>
     </template>
@@ -41,7 +41,7 @@
         </xpath>
         <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
             <script type="text/javascript">
-                odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+                odoo.session_info = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
                 if (!/(^|;\s)tz=/.test(document.cookie)) {
                     const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
                     document.cookie = `tz=${userTZ}; path=/`;
@@ -53,7 +53,7 @@
             <t t-call-assets="web.assets_common_lazy" t-css="false" lazy_load="True"/>
             <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
         </xpath>
-        <xpath expr="//t[@t-raw='0']" position="replace">
+        <xpath expr="//t[@t-out='0']" position="replace">
             <div id="wrapwrap" t-attf-class="#{pageName or ''}">
                 <header t-if="not no_header" id="top" data-anchor="true">
                     <img class="img-responsive d-block mx-auto"
@@ -61,7 +61,7 @@
                         alt="Logo"/>
                 </header>
                 <main>
-                    <t t-raw="0"/>
+                    <t t-out="0"/>
                 </main>
                 <footer t-if="not no_footer" id="bottom" data-anchor="true" t-attf-class="bg-light o_footer">
                     <div id="footer"/>
@@ -94,7 +94,7 @@
             </a>
         </t>
         <t t-set="final_message">Powered by %s%s</t>
-        <t t-raw="final_message % (odoo_logo, _message and ('- %s' % _message) or '')"/>
+        <t t-out="final_message % (odoo_logo, _message and ('- ' + _message) or '')"/>
     </template>
     <template id="brand_promotion" name="Brand Promotion">
         <div class="o_brand_promotion">
@@ -118,7 +118,7 @@
                         <div t-attf-class="text-center pb-3 border-bottom {{'mb-3' if form_small else 'mb-4'}}">
                             <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
                         </div>
-                        <t t-raw="0"/>
+                        <t t-out="0"/>
                         <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
                             <t t-if="not disable_database_manager">
                                 <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>
@@ -286,7 +286,7 @@
         <t t-call="web.layout">
             <t t-set="head_web">
                 <script type="text/javascript">
-                    odoo.session_info = <t t-raw="json.dumps(session_info)"/>;
+                    odoo.session_info = <t t-out="json.dumps(session_info)"/>;
                     odoo.reloadMenus = () => fetch(`/web/webclient/load_menus/${odoo.session_info.cache_hashes.load_menus}`).then(res => res.json());
                     odoo.loadMenusPromise = odoo.reloadMenus();
                 </script>

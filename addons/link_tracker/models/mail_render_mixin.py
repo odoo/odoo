@@ -3,6 +3,7 @@
 
 import re
 
+import markupsafe
 from werkzeug import urls, utils
 
 from odoo import api, models, tools
@@ -35,7 +36,7 @@ class MailRenderMixin(models.AbstractModel):
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         short_schema = base_url + '/r/'
         for match in re.findall(tools.HTML_TAG_URL_REGEX, html):
-            href = match[0]
+            href = markupsafe.Markup(match[0])
             long_url = match[1]
             label = (match[3] or '').strip()
 

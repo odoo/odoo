@@ -159,7 +159,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         ])
         self.assertTrue(activity)
         self.assertIn(
-            '<p> partner_a modified receipt dates for the following products:</p><p> \xa0 - product_a from 2020-06-06 to %s </p>' % fields.Date.today(),
+            '<p>partner_a modified receipt dates for the following products:</p>\n'
+            '<p> - product_a from 2020-06-06 to %s</p>' % fields.Date.today(),
             activity.note,
         )
 
@@ -167,6 +168,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         po._update_date_planned_for_lines([(po.order_line[1], fields.Datetime.today())])
         self.assertEqual(po.order_line[1].date_planned, fields.Datetime.today())
         self.assertIn(
-            '<p> partner_a modified receipt dates for the following products:</p><p> \xa0 - product_a from 2020-06-06 to %s </p><p> \xa0 - product_b from 2020-06-06 to %s </p>' % (fields.Date.today(), fields.Date.today()),
+            '<p>partner_a modified receipt dates for the following products:</p>\n'
+            '<p> - product_a from 2020-06-06 to %(today)s</p>\n'
+            '<p> - product_b from 2020-06-06 to %(today)s</p>' % {'today': fields.Date.today()},
             activity.note,
         )
