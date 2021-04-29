@@ -1117,13 +1117,15 @@ class AccountMove(models.Model):
         # the same counter for multiple groups that might be spread in multiple months.
         final_batches = []
         for journal_group in grouped.values():
+            journal_group_changed = True
             for date_group in journal_group.values():
                 if (
-                    not final_batches
+                    journal_group_changed
                     or final_batches[-1]['format'] != date_group['format']
                     or dict(final_batches[-1]['format_values'], seq=0) != dict(date_group['format_values'], seq=0)
                 ):
                     final_batches += [date_group]
+                    journal_group_changed = False
                 elif date_group['reset'] == 'never':
                     final_batches[-1]['records'] += date_group['records']
                 elif (
