@@ -1041,7 +1041,7 @@
     <t t-foreach="states" t-as="rec">
         <a role="menuitem" href="#" class="dropdown-item pl-4" t-att-data-value="rec.name">
             <span t-att-class="'o_status rounded-circle d-inline-block align-middle ' + (rec.state_class &amp;&amp; rec.state_class || '')"/>
-            <t t-raw="rec.state_name"/>
+            <t t-out="rec.state_name"/>
         </a>
     </t>
 </t>
