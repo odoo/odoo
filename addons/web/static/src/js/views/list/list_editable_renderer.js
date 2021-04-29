@@ -1872,6 +1872,12 @@ ListRenderer.include({
             return;
         }
 
+        // ignore click if search facet is removed as it will re-render whole
+        // listview again
+        if ($(event.target).hasClass('o_facet_remove')) {
+            return;
+        }
+
         this.unselectRow({
             // if save button is clicked then save the record forcefully even if
             // it is non dirty
