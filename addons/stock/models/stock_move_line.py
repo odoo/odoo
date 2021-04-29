@@ -447,7 +447,13 @@ class StockMoveLine(models.Model):
                                 if lot:
                                     ml.lot_id = lot.id
                                 else:
+<<<<<<< HEAD
                                     ml_ids_to_create_lot.add(ml.id)
+=======
+                                    lot_vals_to_create.append({'name': ml.lot_name, 'product_id': ml.product_id.id, 'company_id': ml.move_id.company_id.id})
+                                    associate_line_lot.append(ml)
+                                    continue  # Avoid the raise after because not lot_id is set
+>>>>>>> 8a4164db559... temp
                         elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:
                             # If the user disabled both `use_create_lots` and `use_existing_lots`
                             # checkboxes on the picking type, he's allowed to enter tracked
