@@ -296,7 +296,7 @@ class PosSession(models.Model):
 
     def _validate_session(self):
         self.ensure_one()
-        if self.order_ids:
+        if self.order_ids or self.statement_ids.line_ids:
             self.cash_real_transaction = self.cash_register_total_entry_encoding
             self.cash_real_expected = self.cash_register_balance_end
             self.cash_real_difference = self.cash_register_difference
