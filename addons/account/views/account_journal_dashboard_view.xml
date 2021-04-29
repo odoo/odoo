@@ -298,9 +298,17 @@
                                 </button>
                             </t>
                             <t t-if="journal_type == 'purchase'">
-                                <button class="btn btn-primary o_button_upload_bill oe_kanban_action_button" journal_type="purchase" groups="account.group_account_invoice">
-                                    <span>Upload</span>
-                                </button>
+                                <field name="entries_count" invisible="1"/>
+                                <t t-if="record.entries_count.raw_value > 0">
+                                    <button class="btn btn-primary o_button_upload_bill oe_kanban_action_button" journal_type="purchase" groups="account.group_account_invoice">
+                                        <span>Upload</span>
+                                    </button>
+                                </t>
+                                <t t-else="">
+                                    <button type="object" name="action_create_vendor_bill" class="btn btn-primary oe_kanban_action_button" journal_type="purchase" groups="account.group_account_invoice">
+                                        <span>Upload</span>
+                                    </button>
+                                </t>
                                 <a type="object" name="action_create_new" class="o_invoice_new" groups="account.group_account_invoice">Create Manually</a>
                             </t>
                         </div>
