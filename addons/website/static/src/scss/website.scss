@@ -1162,9 +1162,13 @@ header {
     }
 }
 .o_mega_menu_container_size {
-    @include media-breakpoint-up(md) {
-        left: 50%;
-        transform: translateX(-50%);
+    $-header-template: o-website-value('header-template');
+    @if not index(('sidebar', 'hamburger', 'magazine'), $-header-template) {
+        $bp: if($-header-template == 'minimalist', md, lg);
+        @include media-breakpoint-up($bp) {
+            left: 50%;
+            transform: translateX(-50%);
+        }
     }
 
     $-mm-max-widths: ();
