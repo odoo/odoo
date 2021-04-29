@@ -19,6 +19,7 @@ from . import test_account_invoice_report
 from . import test_account_journal_dashboard
 from . import test_fiscal_position
 from . import test_reconciliation
+from . import test_sequence_mixin
 from . import test_settings
 from . import test_tax
 from . import test_invoice_taxes
