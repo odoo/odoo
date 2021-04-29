@@ -330,7 +330,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                 // Display last screen if leaderboard activated
                 self.isLastQuestion = true;
                 self._setupLeaderboard().then(function () {
-                    self.$('.o_survey_session_leaderboard_title').text(_('Final Leaderboard'));
+                    self.$('.o_survey_session_leaderboard_title').text(_t('Final Leaderboard'));
                     self.$('.o_survey_session_navigation_next').addClass('d-none');
                     self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
                     self.leaderBoard.showLeaderboard(false, false);

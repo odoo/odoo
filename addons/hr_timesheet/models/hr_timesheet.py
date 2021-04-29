@@ -152,7 +152,7 @@ class AccountAnalyticLine(models.Model):
         if vals.get('project_id') and not vals.get('account_id'):
             project = self.env['project.project'].browse(vals.get('project_id'))
             vals['account_id'] = project.analytic_account_id.id
-            vals['company_id'] = project.analytic_account_id.company_id.id
+            vals['company_id'] = project.analytic_account_id.company_id.id or project.company_id.id
             if not project.analytic_account_id.active:
                 raise UserError(_('The project you are timesheeting on is not linked to an active analytic account. Set one on the project configuration.'))
         # employee implies user
