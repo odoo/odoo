@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_category_view_form" model="ir.ui.view">
+        <field name="name">event.booth.category.view.form.inherit.website.event.booth.exhibitor</field>
+        <field name="model">event.booth.category</field>
+        <field name="inherit_id" ref="event_booth.event_booth_category_view_form"/>
+        <field name="arch" type="xml">
+            <group name="details" position="after">
+                <group string="Sponsorship" name="sponsor">
+                    <field name="use_sponsor"/>
+                    <field name="sponsor_type_id" attrs="{'invisible': [('use_sponsor', '=', False)], 'required': True}"/>
+                    <field name="exhibitor_type" attrs="{'invisible': [('use_sponsor', '=', False)], 'required': True}"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="event_booth_category_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.category.view.tree.inherit.website.event.booth.exhibitor</field>
+        <field name="model">event.booth.category</field>
+        <field name="inherit_id" ref="event_booth.event_booth_category_view_tree"/>
+        <field name="priority">5</field>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="use_sponsor"/>
+            </field>
+        </field>
+    </record>
+
+</data></odoo>
