@@ -64,6 +64,18 @@ class AccountChartTemplate(models.Model):
                 (4, self.env.ref('account_check.account_payment_method_out_checks').id, None),
             ],
         })
+        # creamos diario para cheques de terceros rechazados
+        self.env['account.journal'].create({
+            'name': _('Rejected Third Checks'),
+            'type': 'cash',
+            'company_id': company.id,
+            'inbound_payment_method_ids': [
+                (4, self.env.ref('account_check.account_payment_method_in_checks').id, None),
+            ],
+            'outbound_payment_method_ids': [
+                (4, self.env.ref('account_check.account_payment_method_out_checks').id, None),
+            ],
+        })
 
         self.env['account.journal'].with_context(force_company_id=company.id)._enable_issue_check_on_bank_journals()
         return res

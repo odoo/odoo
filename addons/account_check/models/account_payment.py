@@ -55,14 +55,18 @@ class AccountPayment(models.Model):
                     # Deposit rejection
                     return (
                         'rejected',
-                        domain + [('journal_id', '=', self.journal_id.id), ('state', 'in', ['deposited', 'selled'])])
+                        # we can get the rejected check in a diferent journal
+                        # ('journal_id', '=', self.journal_id.id),
+                        domain + [('state', 'in', ['deposited', 'selled'])])
             elif self.payment_method_code == 'new_in_checks':
                 return 'holding', False
             elif self.payment_method_code == 'out_checks':
                 # TODO falta implementar devolucion a cliente (si la hacemos)
                 return 'delivered', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')]
             elif self.payment_method_code == 'in_checks':
-                return 'rejected', domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'delivered'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
+                # we can get the rejected check in a diferent journal
+                # ('journal_id', '=', self.journal_id.id),
+                return 'rejected', domain + [('state', '=', 'delivered'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
         elif self.check_type == 'issue_check':
             domain = [('type', '=', 'issue_check')]
             if self.is_internal_transfer and self.payment_type == 'outbound':
