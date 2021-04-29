@@ -649,12 +649,16 @@ class SaleOrder(models.Model):
 
     @api.model
     def _nothing_to_invoice_error(self):
-        msg = _("""There is nothing to invoice!\n
-Reason(s) of this behavior could be:
-- You should deliver your products before invoicing them: Click on the "truck" icon (top-right of your screen) and follow instructions.
-- You should modify the invoicing policy of your product: Open the product, go to the "Sales tab" and modify invoicing policy from "delivered quantities" to "ordered quantities".
-        """)
-        return UserError(msg)
+        return UserError(_(
+            "There is nothing to invoice!\n\n"
+            "Reason(s) of this behavior could be:\n"
+            "- You should deliver your products before invoicing them: Click on the \"truck\" icon "
+            "(top-right of your screen) and follow instructions.\n"
+            "- You should modify the invoicing policy of your product: Open the product, go to the "
+            "\"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered "
+            "quantities\". For Services, you should modify the Service Invoicing Policy to "
+            "'Prepaid'."
+        ))
 
     def _get_invoiceable_lines(self, final=False):
         """Return the invoiceable lines for order `self`."""

@@ -138,38 +138,35 @@
                                     <label for="form_partner_name" class="col-md-3 col-form-label">
                                         From
                                     </label>
-                                    <div class="col-md-9">
-                                        <span name="form_partner_name"
-                                              class="form-control"
-                                              t-esc="tx.partner_name"/>
-                                    </div>
+                                    <span name="form_partner_name"
+                                          class="col-md-9 col-form-label"
+                                          t-esc="tx.partner_name"/>
                                 </div>
+                                <hr/>
                                 <div class="form-group row">
                                     <label for="form_reference" class="col-md-3 col-form-label">
                                         Reference
                                     </label>
-                                    <div class="col-md-9">
-                                        <span name="form_reference"
-                                              class="form-control"
-                                              t-esc="tx.reference"/>
-                                    </div>
+                                    <span name="form_reference"
+                                          class="col-md-9 col-form-label"
+                                          t-esc="tx.reference"/>
                                 </div>
+                                <hr/>
                                 <div class="form-group row">
                                     <label for="form_amount" class="col-md-3 col-form-label">
                                         Amount
                                     </label>
-                                    <div class="col-md-9">
-                                        <span name="form_amount"
-                                              class="form-control"
-                                              t-esc="tx.amount"
-                                              t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
-                                    </div>
+                                    <span name="form_amount"
+                                          class="col-md-9 col-form-label"
+                                          t-esc="tx.amount"
+                                          t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                 </div>
+                                <hr/>
                                 <div class="row">
-                                    <div class="col-md-5 offset-md-3 text-muted">
+                                    <div class="col-md-5 text-muted">
                                         Processed by <t t-esc="tx.acquirer_id.sudo().name"/>
                                     </div>
-                                    <div class="col-md-4 mt-2 pl-0">
+                                    <div class="col-md-4 offset-md-3 mt-2 pl-0">
                                         <a role="button"
                                            t-attf-class="btn btn-#{status} float-right"
                                            href="/my/home">

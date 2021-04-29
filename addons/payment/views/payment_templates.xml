@@ -120,14 +120,7 @@
                             <!-- === Token name === -->
                             <span class="payment_option_name" t-esc="token.name"/>
                             <!-- === "V" check mark === -->
-                            <i t-if="token.verified" class="fa fa-check text-success"
-                               title="This payment method has been verified by our system."
-                               role="img"
-                               aria-label="Ok"/>
-                            <i t-else="" class="fa fa-check text-muted"
-                               title="This payment method has not been verified by our system."
-                               role="img"
-                               aria-label="Not verified"/>
+                            <t t-call="payment.verified_token_checkmark"/>
                         </label>
                     </div>
                     <!-- === Token inline form === -->
@@ -247,14 +240,7 @@
                             <!-- === Token name === -->
                             <span class="payment_option_name" t-esc="token.name"/>
                             <!-- === "V" check mark === -->
-                            <i t-if="token.verified" class="fa fa-check text-success"
-                               title="This payment method has been verified by our system."
-                               role="img"
-                               aria-label="Ok"/>
-                            <i t-else="" class="fa fa-check text-muted"
-                               title="This payment method has not been verified by our system."
-                               role="img"
-                               aria-label="Not verified"/>
+                            <t t-call="payment.verified_token_checkmark"/>
                         </label>
                         <!-- === "Delete" token button === -->
                         <button name="o_payment_delete_token"
@@ -313,6 +299,21 @@
                 </li>
             </t>
         </ul>
+    </template>
+
+    <!-- Verified token checkmark -->
+    <template id="verified_token_checkmark" name="Payment Verified Token Checkmark">
+        <t t-if="0" name="payment_test_hook"/>
+        <t t-else="">
+            <i t-if="token.verified" class="fa fa-check text-success"
+                title="This payment method has been verified by our system."
+                role="img"
+                aria-label="Ok"/>
+            <i t-else="" class="fa fa-check text-muted"
+                title="This payment method has not been verified by our system."
+                role="img"
+                aria-label="Not verified"/>
+        </t>
     </template>
 
     <!-- Generic footer for payment forms -->
