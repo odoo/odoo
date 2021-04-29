@@ -97,13 +97,13 @@ class AccountCheck(models.Model):
         states={'draft': [('readonly', False)]},
         default=fields.Date.context_today,
     )
-    owner_vat = fields.Char(
-        'Owner Vat',
+    issuer_vat = fields.Char(
+        'Issuer Vat',
         readonly=True,
         states={'draft': [('readonly', False)]}
     )
-    owner_name = fields.Char(
-        'Owner Name',
+    issuer_name = fields.Char(
+        'Issuer Name',
         readonly=True,
         states={'draft': [('readonly', False)]}
     )
@@ -171,15 +171,15 @@ class AccountCheck(models.Model):
             #     rec.name = False
 
     # TODO convert to new computed fields store=True, readonly=False
-    @api.onchange('owner_vat')
-    def onchange_owner_vat(self):
+    @api.onchange('issuer_vat')
+    def onchange_issuer_vat(self):
         """
         We suggest owner name from owner vat
         """
-        owner_name = self.search([('owner_vat', '=', self.owner_vat)], limit=1).owner_name
-        if not owner_name:
-            owner_name = self.partner_id.commercial_partner_id and self.partner_id.commercial_partner_id.name
-        self.owner_name = owner_name
+        issuer_name = self.search([('issuer_vat', '=', self.issuer_vat)], limit=1).issuer_name
+        if not issuer_name:
+            issuer_name = self.partner_id.commercial_partner_id and self.partner_id.commercial_partner_id.name
+        self.issuer_name = issuer_name
 
     # TODO convert to new computed fields store=True, readonly=False
     @api.onchange('partner_id', 'type', 'journal_id')
@@ -187,12 +187,12 @@ class AccountCheck(models.Model):
         commercial_partner = self.partner_id.commercial_partner_id
         if self.type == 'third_check':
             self.bank_id = commercial_partner.bank_ids and commercial_partner.bank_ids[0].bank_id or False
-            self.owner_vat = commercial_partner.vat
+            self.issuer_vat = commercial_partner.vat
             self.checkbook_id = False
         else:
             self.bank_id = self.journal_id.bank_id
-            self.owner_name = False
-            self.owner_vat = False
+            self.issuer_name = False
+            self.issuer_vat = False
             self.checkbook_id = self.env['account.checkbook'].search(
                 [('state', '=', 'active'), ('journal_id', '=', self.journal_id.id)], limit=1)
 
@@ -252,7 +252,7 @@ class AccountCheck(models.Model):
     #     return False
 
     # TODO re implement? use number or name?
-    # @api.constrains('type', 'owner_name', 'bank_id')
+    # @api.constrains('type', 'issuer_name', 'bank_id')
     # def _check_unique(self):
     #     for rec in self:
     #         if rec.type == 'own_check':
@@ -273,7 +273,7 @@ class AccountCheck(models.Model):
     #             same_checks = self.search([
     #                 ('company_id', '=', rec.company_id.id),
     #                 ('bank_id', '=', rec.bank_id.id),
-    #                 ('owner_name', '=', rec.owner_name),
+    #                 ('issuer_name', '=', rec.issuer_name),
     #                 ('type', '=', rec.type),
     #                 ('number', '=', rec.number),
     #             ])

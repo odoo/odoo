@@ -35,8 +35,8 @@
                         <field name="journal_id" invisible="1"/>
                         <field name="issue_date" invisible="1"/>
                         <field name="bank_id" invisible="1"/>
-                        <field name="owner_name" invisible="1"/>
-                        <field name="owner_vat" invisible="1"/>
+                        <field name="issuer_name" invisible="1"/>
+                        <field name="issuer_vat" invisible="1"/>
                         <field name="checkbook_id" invisible="1"/>
                         <field name="company_id" invisible="1" force_save="1"/>
                     </tree>
@@ -52,8 +52,8 @@
                         <field name="issue_date"/>
                         <field name="payment_date"/>
                         <field name="bank_id" attrs="{'required': [('parent.check_type', '=', 'third_check')], 'column_invisible': [('parent.check_type', '!=', 'third_check')]}"/>
-                        <field name="owner_vat" attrs="{'required': [('parent.check_type', '=', 'third_check')],'column_invisible': [('parent.check_type', '!=', 'third_check')]}"/>
-                        <field name="owner_name" attrs="{'required': [('parent.check_type', '=', 'third_check')],'column_invisible': [('parent.check_type', '!=', 'third_check')]}"/>
+                        <field name="issuer_vat" attrs="{'required': [('parent.check_type', '=', 'third_check')],'column_invisible': [('parent.check_type', '!=', 'third_check')]}"/>
+                        <field name="issuer_name" attrs="{'required': [('parent.check_type', '=', 'third_check')],'column_invisible': [('parent.check_type', '!=', 'third_check')]}"/>
                         <field name="amount"/>
                         <field name="type" invisible="1"/>
                         <field name="currency_id" invisible="1"/>

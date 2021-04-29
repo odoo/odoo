@@ -21,7 +21,7 @@
                 <field name="amount" sum="Total Amount"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
-                <field name="owner_name" invisible="context.get('default_type',False) != 'third_check'"/>
+                <field name="issuer_name" invisible="context.get('default_type',False) != 'third_check'"/>
                 <field name="currency_id" invisible="1"/>
             </tree>
         </field>
@@ -53,8 +53,8 @@
                         </group>
                         <group>
                             <field name="state"/>
-                            <field name="owner_name" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
-                            <field name="owner_vat" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
+                            <field name="issuer_name" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
+                            <field name="issuer_vat" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
                             <field name="issue_date"/>
                             <field name="payment_date"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -91,8 +91,8 @@
                 <field name="journal_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
-                <field name="owner_name"/>
-                <field name="owner_vat"/>
+                <field name="issuer_name"/>
+                <field name="issuer_vat"/>
                 <field name="payment_date"/>
                 <!-- no estaria funcionando en v9 -->
                 <!-- invisible="context.get('default_type',False) != 'third_check'"  -->
