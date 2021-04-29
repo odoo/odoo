@@ -155,6 +155,18 @@ class ProductTemplate(models.Model):
                 }]
         return res
 
+    def _get_product_combination_info(self, combination, product_id, parent_combination, only_template):
+        combination = combination or self.env['product.template.attribute.value']
+        if not product_id and not combination and not only_template:
+            combination = self._get_first_possible_combination(parent_combination)
+        if only_template:
+            product = self.env['product.product']
+        elif product_id and not combination:
+            product = self.env['product.product'].browse(product_id)
+        else:
+            product = self._get_variant_for_combination(combination)
+        return product, combination
+
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         """ Return info about a given combination.
 
@@ -208,21 +220,13 @@ class ProductTemplate(models.Model):
         display_name = self.display_name
 
         display_image = True
+
         quantity = self.env.context.get('quantity', add_qty)
         context = dict(self.env.context, quantity=quantity, pricelist=pricelist.id if pricelist else False)
         product_template = self.with_context(context)
 
-        combination = combination or product_template.env['product.template.attribute.value']
-
-        if not product_id and not combination and not only_template:
-            combination = product_template._get_first_possible_combination(parent_combination)
-
-        if only_template:
-            product = product_template.env['product.product']
-        elif product_id and not combination:
-            product = product_template.env['product.product'].browse(product_id)
-        else:
-            product = product_template._get_variant_for_combination(combination)
+        product, combination = product_template._get_product_combination_info(
+            combination, product_id, parent_combination, only_template)
 
         if product:
             # We need to add the price_extra for the attributes that are not

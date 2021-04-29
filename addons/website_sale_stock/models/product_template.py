@@ -17,6 +17,16 @@ class ProductTemplate(models.Model):
     custom_message = fields.Text(string='Custom Message', default='', translate=True)
 
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
+        product, __ = self._get_product_combination_info(
+            combination, product_id, parent_combination, only_template)
+
+        virtual_available = 0
+        if product:
+            website = self.env['website'].get_current_website()
+            product = product.sudo().with_context(warehouse=website.warehouse_id.id)
+            virtual_available = product.virtual_available
+            add_qty = min(add_qty, virtual_available)
+
         combination_info = super(ProductTemplate, self)._get_combination_info(
             combination=combination, product_id=product_id, add_qty=add_qty, pricelist=pricelist,
             parent_combination=parent_combination, only_template=only_template)
