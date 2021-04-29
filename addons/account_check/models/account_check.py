@@ -151,13 +151,13 @@ class AccountCheck(models.Model):
         """ We suggest owner name from owner vat """
         issuer_name = self.search([('issuer_vat', '=', self.issuer_vat)], limit=1).issuer_name
         if not issuer_name:
-            issuer_name = self.partner_id.commercial_partner_id and self.partner_id.commercial_partner_id.name
+            issuer_name = self.first_partner_id.commercial_partner_id and self.first_partner_id.commercial_partner_id.name
         self.issuer_name = issuer_name
 
-    @api.onchange('partner_id', 'type', 'journal_id')
+    @api.onchange('first_partner_id', 'type', 'journal_id')
     def onchange_type(self):
         if self.type == 'third_check':
-            commercial_partner = self.partner_id.commercial_partner_id
+            commercial_partner = self.first_partner_id.commercial_partner_id
             self.bank_id = commercial_partner.bank_ids and commercial_partner.bank_ids[0].bank_id or False
             self.issuer_vat = commercial_partner.vat
             self.checkbook_id = False
@@ -245,7 +245,7 @@ class AccountCheck(models.Model):
                 ) % (rec.name, rec.id))
             rec.operation_ids[0].unlink()
 
-    def _add_operation(self, operation, origin, partner=None, date=False):
+    def _add_operation(self, operation, origin, date=False):
         for rec in self:
             rec._check_state_change(operation)
             # agregamos validacion de fechas
@@ -266,7 +266,6 @@ class AccountCheck(models.Model):
                 'date': date,
                 'check_id': rec.id,
                 'move_line_id': origin.id,
-                'partner_id': partner and partner.id or False,
             }
             rec.operation_ids.create(vals)
 
@@ -296,7 +295,7 @@ class AccountCheck(models.Model):
         old_state = self.state
         operation_from_state_map = {
             # 'draft': [False],
-            'holding': ['draft', 'deposited', 'delivered'],
+            'holding': ['draft', 'deposited', 'delivered', 'holding'],
             'delivered': ['holding'],
             'deposited': ['holding'],
             'handed': ['draft'],

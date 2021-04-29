@@ -34,10 +34,6 @@ class AccountPayment(models.Model):
     available_check_ids = fields.Many2many('account.check', compute='_compute_check_data')
     amount = fields.Monetary(compute='_compute_amount', readonly=False, store=True)
 
-    def unlink(self):
-        self.check_ids.unlink()
-        return super().unlink()
-
     def _get_checks_operations(self):
         """
         This method is called from:
@@ -51,8 +47,9 @@ class AccountPayment(models.Model):
                 if self.payment_type == 'outbound':
                     if any(x.code == 'in_third_checks' for x in self.destination_journal_id.inbound_payment_method_ids):
                         # transferencia a otro diario de terceros
+                        # TODO implementar el movimiento entre diarios de cheques de terceros con dos operations?
                         return (
-                            'transfered',
+                            'holding',
                             domain + [('journal_id', '=', self.journal_id.id), ('state', '=', 'holding')])
                     else:
                         # deposito o venta
@@ -62,7 +59,7 @@ class AccountPayment(models.Model):
                 elif self.payment_type == 'inbound':
                     # Deposit rejection
                     return (
-                        'rejected',
+                        'holding',
                         # we can get the rejected check in a diferent journal
                         # ('journal_id', '=', self.journal_id.id),
                         domain + [('state', '=', 'deposited')])
@@ -91,8 +88,11 @@ class AccountPayment(models.Model):
     @api.onchange('available_check_ids')
     def reset_check_ids(self):
         # self.check_ids = False
-        self.new_check_ids.unlink()
         self.select_check_ids = False
+
+    @api.onchange('payment_method_code')
+    def unlink(self):
+        self.new_check_ids.unlink()
 
     @api.depends('payment_method_code', 'partner_id', 'check_type', 'is_internal_transfer', 'journal_id')
     def _compute_check_data(self):
@@ -222,4 +222,4 @@ class AccountPayment(models.Model):
         if cancel:
             self.check_ids._del_operation(self.move_id)
         else:
-            self.check_ids._add_operation(operation, self.move_id, self.partner_id, date=self.date)
+            self.check_ids._add_operation(operation, self.move_id, date=self.date)
