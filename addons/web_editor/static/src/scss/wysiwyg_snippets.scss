@@ -48,7 +48,13 @@ body.editor_enable.editor_has_snippets {
     background-color: $o-we-sidebar-blocks-content-snippet-bg;
 
     &.ui-draggable-dragging {
-        transform: rotate(-3deg) scale(1.2);
+        // Went for -12 instead of 348 to avoid having the snippet do a frontflip
+        transform: rotate(-12deg) translate(-6px, -10px);
+        background-color: rgba(62, 62, 70, 1);
+        cursor: -moz-grabbing;
+        cursor: -webkit-grabbing;
+        cursor: grabbing !important;
+
         box-shadow: 0 5px 25px -10px black;
         transition: transform 0.3s, box-shadow 0.3s;
     }
@@ -1579,6 +1585,15 @@ body.editor_enable.editor_has_snippets {
 
         .o_we_widget_opened {
             z-index: $zindex-dropdown;
+        }
+    }
+
+    .ui-draggable {
+        &:hover {
+            cursor: -moz-grab; // mozilla
+            cursor: -webkit-grab; // chrome
+            cursor: grab; // non-standard
+            cursor: move; // fallback
         }
     }
 }
