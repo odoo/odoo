@@ -14,19 +14,29 @@ class AccountPayment(models.Model):
 
     _inherit = 'account.payment'
 
+    # TODO this should be improoved. Check task for more information
     check_ids = fields.Many2many(
-        'account.check', string='Checks', copy=False,
-        # TODO check if it can be improoved in odoo, we need this because if we make readonly=True the related fields
-        # delivery_check_ids and own_check_ids where not being writeable
-        # readonly=True, states={'draft': [('readonly', False)]}
-        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]}
+        'account.check', string='Checks', compute='_compute_checks',
     )
-    # TODO we should be able to remove this fields. Is only here because adding two times the same field with difrerent widget is not working
-    delivery_check_ids = fields.Many2many(related='check_ids', string="Checks Delivered", readonly=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]})
+    new_check_ids = fields.Many2many(
+        'account.check', 'account_payment_check_rel', string='Checks ', copy=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]}
+    )
+    select_check_ids = fields.Many2many(
+        'account.check', 'account_payment_check_rel2', string='Checks  ', copy=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]}
+    )
+    @api.depends('select_check_ids', 'new_check_ids')
+    def _compute_checks(self):
+        for rec in self:
+            rec.check_ids = rec.new_check_ids + rec.select_check_ids
+
     # this fields is to help with code and view but if needed this field could be removed and check everywhere for the payment_method_code
     check_type = fields.Char(compute='_compute_check_type')
     available_check_ids = fields.Many2many('account.check', compute='_compute_check_data')
     amount = fields.Monetary(compute='_compute_amount', readonly=False, store=True)
+
+    def unlink(self):
+        self.check_ids.unlink()
+        return super().unlink()
 
     def _get_checks_operations(self):
         """
@@ -80,7 +90,9 @@ class AccountPayment(models.Model):
 
     @api.onchange('available_check_ids')
     def reset_check_ids(self):
-        self.check_ids = False
+        # self.check_ids = False
+        self.new_check_ids.unlink()
+        self.select_check_ids = False
 
     @api.depends('payment_method_code', 'partner_id', 'check_type', 'is_internal_transfer', 'journal_id')
     def _compute_check_data(self):
@@ -105,13 +117,14 @@ class AccountPayment(models.Model):
             else:
                 rec.check_type = False
 
-    @api.depends('check_ids.amount', 'check_type', 'delivery_check_ids.amount')
+    @api.depends('check_ids.amount', 'check_type', 'select_check_ids.amount')
     def _compute_amount(self):
         for rec in self.filtered('check_type'):
-            # TODO when fixed and no needed anymore delivery_check_ids change here
-            rec.amount = sum((rec.check_ids | rec.delivery_check_ids).mapped('amount'))
+            # TODO when fixed and no needed anymore select_check_ids change here
+            rec.amount = sum((rec.check_ids | rec.select_check_ids).mapped('amount'))
 
-    @api.constrains('check_ids')
+    @api.constrains('new_check_ids', 'select_check_ids')
+    # @api.constrains('check_ids')
     def _check_checks(self):
         for rec in self:
             # we only overwrite if payment method is delivered

@@ -213,12 +213,12 @@ class AccountCheck(models.Model):
         for rec in self:
             if rec.type == 'own_check':
                 same_checks = self.search([('checkbook_id', '=', rec.checkbook_id.id), ('type', '=', rec.type), ('name', '=', rec.name)])
-                same_checks -= self
+                same_checks -= rec
                 if same_checks:
                     raise ValidationError(_(
                         'Check Number (%s) must be unique per Checkbook!\n'
                         '* Check ids: %s') % (rec.name, same_checks.ids))
-            elif self.type == 'third_check':
+            elif rec.type == 'third_check':
                 same_checks = self.search([
                     ('company_id', '=', rec.company_id.id),
                     ('bank_id', '=', rec.bank_id.id),
@@ -226,7 +226,7 @@ class AccountCheck(models.Model):
                     ('type', '=', rec.type),
                     ('name', '=', rec.name),
                 ])
-                same_checks -= self
+                same_checks -= rec
                 if same_checks:
                     raise ValidationError(_(
                         'Check Number (%s) must be unique per Owner and Bank!'

@@ -16,12 +16,11 @@
             </xpath>
             <field name="destination_journal_id" position="after">
                 <field
-                    name="delivery_check_ids"
+                    name="select_check_ids"
                     attrs="{'invisible': [('payment_method_code', 'not in', ['in_own_checks', 'in_third_checks', 'out_third_checks'])]}"
                     options="{'no_create': True}"
                     domain="[('id', 'in', available_check_ids)]"
                 >
-                    <!-- domain="[('journal_id', '=', journal_id), ('state', '=', 'holding'), ('type', '=', 'third_check')]" -->
                     <tree >
                     <!-- <tree edit="false"> -->
                         <field name="name"/>
@@ -29,22 +28,12 @@
                         <field name="amount" sum="Total"/>
                         <field name="state" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
-                        <!-- this fields are only needed so that they are actually saved one creating throught check_ids field -->
-                        <field name="partner_id" invisible="1"/>
-                        <field name="type" invisible="1"/>
-                        <field name="journal_id" invisible="1"/>
-                        <field name="issue_date" invisible="1"/>
-                        <field name="bank_id" invisible="1"/>
-                        <field name="issuer_name" invisible="1"/>
-                        <field name="issuer_vat" invisible="1"/>
-                        <field name="checkbook_id" invisible="1"/>
-                        <field name="company_id" invisible="1" force_save="1"/>
                     </tree>
                 </field>
             </field>
             <group>
-                <label for="check_ids" attrs="{'invisible': [('payment_method_code', 'not in', ['new_third_checks', 'new_own_checks'])]}"/>
-                <field context="{'default_company_id': company_id, 'default_partner_id': partner_id, 'default_journal_id': journal_id, 'default_currency_id': currency_id, 'default_type': check_type}" name="check_ids" widget="one2many" attrs="{'invisible': [('payment_method_code', 'not in', ['new_third_checks', 'new_own_checks'])]}">
+                <label for="new_check_ids" attrs="{'invisible': [('payment_method_code', 'not in', ['new_third_checks', 'new_own_checks'])]}"/>
+                <field context="{'default_company_id': company_id, 'default_partner_id': partner_id, 'default_journal_id': journal_id, 'default_currency_id': currency_id, 'default_type': check_type}" name="new_check_ids" widget="one2many" attrs="{'invisible': [('payment_method_code', 'not in', ['new_third_checks', 'new_own_checks'])]}">
                     <tree editable="bottom">
                         <field name="checkbook_id" attrs="{'required': [('parent.check_type', '=', 'own_check')], 'column_invisible': [('parent.check_type', '!=', 'own_check')]}" domain="[('journal_id', '=', journal_id), ('state', '=', 'active')]"/>
                         <field name="number"/>
@@ -64,9 +53,6 @@
                     </tree>
                 </field>
             </group>
-            <!-- <field name="payment_method_id" position="after">
-                <field name="check_deposit_type" widget="radio" attrs="{'invisible': ['|', ('payment_type', '!=', 'transfer'), ('payment_method_code', '!=', 'delivered_third_check')]}"/>
-            </field> -->
         </field>
     </record>
 
@@ -79,9 +65,6 @@
             <field name="name" position="after">
                 <field name="check_ids"/>
             </field>
-            <!-- <xpath expr="//filter[@name='state_sent']" position="before">
-                <filter string="Checks To Print and Numerate" domain="[('payment_method_id.code', '=', 'own_check'), ('state','=','draft'), ('check_name', '=', False)]" name="checks_to_numerate"/>
-            </xpath> -->
         </field>
     </record>
 
