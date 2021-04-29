@@ -353,3 +353,24 @@ class SaleOrderLine(models.Model):
                         project = map_so_project[so_line.order_id.id]
                 if not so_line.task_id:
                     so_line._timesheet_create_task(project=project)
+
+    def _prepare_invoice_line(self, **optional_values):
+        """
+            If the sale order line isn't linked to a sale order which already have a default analytic account,
+            this method allows to retrieve the analytic account which is linked to project or task directly linked
+            to this sale order line, or the analytic account of the project which uses this sale order line, if it exists.
+        """
+        values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
+        if not values['analytic_account_id']:
+            if self.project_id.analytic_account_id:
+                values['analytic_account_id'] = self.project_id.analytic_account_id
+            elif self.task_id.project_id.analytic_account_id:
+                values['analytic_account_id'] = self.task_id.project_id.analytic_account_id
+            elif self.is_service and not self.is_expense:
+                project_analytic_account_id = self.env['project.project'].read_group([
+                    '|', ('sale_line_id', '=', self.id), ('task_ids.sale_line_id', '=', self.id)
+                ], ['analytic_account_id'], ['analytic_account_id'])
+                analytic_account_ids = {rec['analytic_account_id'][0] for rec in project_analytic_account_id}
+                if len(analytic_account_ids) == 1:
+                    values['analytic_account_id'] = analytic_account_ids.pop()
+        return values
