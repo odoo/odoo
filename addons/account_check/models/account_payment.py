@@ -66,7 +66,7 @@ class AccountPayment(models.Model):
             elif self.payment_method_code == 'in_checks':
                 # we can get the rejected check in a diferent journal
                 # ('journal_id', '=', self.journal_id.id),
-                return 'rejected', domain + [('state', '=', 'delivered'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
+                return 'holding', domain + [('state', '=', 'delivered'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
         elif self.check_type == 'issue_check':
             domain = [('type', '=', 'issue_check')]
             if self.is_internal_transfer and self.payment_type == 'outbound':
@@ -84,6 +84,10 @@ class AccountPayment(models.Model):
                 self.payment_method_code,
                 '* Destination journal: %s\n' % self.destination_journal_id.name if self.is_internal_transfer else ''))
         # return False, False
+
+    @api.onchange('available_check_ids')
+    def reset_check_ids(self):
+        self.check_ids = False
 
     @api.depends('payment_method_code', 'partner_id', 'check_type', 'is_internal_transfer', 'journal_id')
     def _compute_check_data(self):

@@ -17,26 +17,26 @@ class AccountCheckOperation(models.Model):
     operation = fields.Selection([
         # from payments
         ('holding', 'Receive'),
-        ('deposited', 'Deposit'),
-        ('selled', 'Sell'),
+        ('deposited', 'Collect'),
+        # ('selled', 'Sell'),
         ('delivered', 'Deliver'),
         # usado para hacer transferencias internas, es lo mismo que delivered
         # (endosado) pero no queremos confundir con terminos, a la larga lo
         # volvemos a poner en holding
-        ('transfered', 'Transfer'),
-        ('handed', 'Hand'),
+        # ('transfered', 'Transfer'),
         ('withdrawed', 'Withdrawal'),
+        ('handed', 'Hand'),
         # from checks
-        ('reclaimed', 'Claim'),
-        ('rejected', 'Rejection'),
+        # ('reclaimed', 'Claim'),
+        # ('rejected', 'Rejection'),
         ('debited', 'Debit'),
-        ('returned', 'Return'),
+        # ('returned', 'Return'),
         # al final no vamos a implemnetar esto ya que habria que hacer muchas
         # cosas hasta actualizar el asiento, mejor se vuelve atras y se
         # vuelve a generar deuda y listo, igualmente lo dejamos por si se
         # quiere usar de manera manual
-        ('changed', 'Change'),
-        ('cancel', 'Cancel'),
+        # ('changed', 'Change'),
+        # ('cancel', 'Cancel'),
     ],
         required=True,
         index=True,
