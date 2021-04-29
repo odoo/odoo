@@ -500,6 +500,38 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('prevent deletion when grouped by many2many field', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].category_ids = [6, 7];
+        this.data.partner.records[3].category_ids = [7];
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="foo"/>
+                                <t t-if="widget.deletable"><span class="thisisdeletable">delete</span></t>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ['category_ids'],
+        });
+
+        assert.containsNone(kanban, '.thisisdeletable', "records should not be deletable");
+
+        await kanban.reload({ groupBy: ['foo'] });
+        assert.containsN(kanban, '.thisisdeletable', 4, "records should not be deletable");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record without quick_create_view', async function (assert) {
         assert.expect(16);
 
@@ -2986,6 +3018,50 @@ QUnit.module('Views', {
                         "Should remain same records in first column(2 records)");
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length , 2,
                         "Should remain same records in 2nd column(2 record)");
+        kanban.destroy();
+    });
+
+    QUnit.test('prevent drag and drop if grouped by many2many field', async function (assert) {
+        assert.expect(7);
+
+        this.data.partner.records[0].category_ids = [6, 7];
+        this.data.partner.records[3].category_ids = [7];
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ['category_ids'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have 2 columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_column_title').text(), '6',
+            'first column should have correct title');
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_column_title').text(), '7',
+            'second column should have correct title');
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').text(), 'yopblip',
+            "first column should have 2 records");
+        assert.strictEqual(kanban.$('.o_kanban_group:last .o_kanban_record').text(), 'yopgnapblip',
+            "second column should have 3 records");
+
+        // drag&drop a record in another column
+        var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
+        var $group = kanban.$('.o_kanban_group:nth-child(2)');
+        await testUtils.dragAndDrop($record, $group);
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 2,
+            "1st column should contain 2 records");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 3,
+            "2nd column should contain 3 records");
+
         kanban.destroy();
     });
 

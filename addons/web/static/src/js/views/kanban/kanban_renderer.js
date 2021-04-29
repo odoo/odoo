@@ -501,8 +501,6 @@ var KanbanRenderer = BasicRenderer.extend({
         // - is a date or datetime since we group by month or
         // - is readonly (on the field attrs or in the view)
         var draggable = true;
-        let recordDeletable = this.recordOptions.deletable;
-        let recordArchivable = this.recordOptions.archivable;
         var grouped_by_date = false;
         if (groupByFieldAttrs) {
             if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
@@ -511,9 +509,6 @@ var KanbanRenderer = BasicRenderer.extend({
             } else if (groupByFieldAttrs.type === "many2many") {
                 // do not allow dragging of record if grouped by many2many
                 draggable = false;
-                // do not allow to delete/archive records if grouped by many2many
-                recordDeletable = false;
-                recordArchivable = false;
             } else if (groupByFieldAttrs.readonly !== undefined) {
                 draggable = !(groupByFieldAttrs.readonly);
             }
@@ -524,6 +519,7 @@ var KanbanRenderer = BasicRenderer.extend({
             }
         }
         this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
+        this.groupedByM2M = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2many');
         var relation = this.groupedByM2O && groupByFieldAttrs.relation;
         var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
         this.columnOptions = _.extend(this.columnOptions, {
@@ -531,15 +527,12 @@ var KanbanRenderer = BasicRenderer.extend({
             group_by_tooltip: groupByTooltip,
             groupedBy: groupByField,
             grouped_by_m2o: this.groupedByM2O,
+            grouped_by_m2m: this.groupedByM2M,
             grouped_by_date: grouped_by_date,
             relation: relation,
             quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(this.state),
         });
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
-        this.recordOptions = _.extend(this.recordOptions, {
-            deletable: recordDeletable,
-            archivable: recordArchivable,
-        });
     },
     /**
      * Remove date/datetime magic grouping info to get proper field attrs/info from state
