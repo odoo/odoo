@@ -1142,9 +1142,20 @@ header {
     }
 }
 .o_mega_menu_container_size {
-    @include media-breakpoint-up(md) {
-        left: 50%;
-        transform: translateX(-50%);
+    // Apply the center alignment when the narrow menu is with an absolute position
+    @if o-website-value('header-template') != 'sidebar' and
+        o-website-value('header-template') != 'hamburger' and
+        o-website-value('header-template') != 'magazine' { 
+
+        $bp: lg;
+        @if o-website-value('header-template') == 'minimalist' {
+            $bp: md;
+        }
+        
+        @include media-breakpoint-up($bp) {
+            left: 50%;
+            transform: translateX(-50%);
+        }
     }
 
     $-mm-max-widths: ();
