@@ -10326,6 +10326,53 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('removing a groupby while adding a line from list', async function (assert) {
+        assert.expect(1);
+
+        let checkUnselectRow = false;
+        testUtils.mock.patch(ListRenderer, {
+            unselectRow(options = {}) {
+                if (checkUnselectRow) {
+                    assert.step('unselectRow');
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree multi_edit="1" editable="bottom">
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                </tree>
+            `,
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <field name="foo"/>
+                        <group expand="1" string="Group By">
+                            <filter name="groupby_foo" context="{'group_by': 'foo'}"/>
+                        </group>
+                    </search>
+                `,
+            },
+        });
+
+        await cpHelpers.toggleGroupByMenu(list);
+        await cpHelpers.toggleMenuItem(list, 0);
+        // expand group
+        await testUtils.dom.click(list.el.querySelector('th.o_group_name'));
+        await testUtils.dom.click(list.el.querySelector('td.o_group_field_row_add a'));
+        checkUnselectRow = true;
+        await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
+        assert.verifySteps([]);
+        testUtils.mock.unpatch(ListRenderer);
+        list.destroy();
+    });
+
     QUnit.test('cell-level keyboard navigation in editable grouped list', async function (assert) {
         assert.expect(56);
 
