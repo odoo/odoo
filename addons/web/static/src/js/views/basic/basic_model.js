@@ -1183,7 +1183,7 @@ var BasicModel = AbstractModel.extend({
 
                             self.unfreezeOrder(record.id);
 
-                            // TODO: MSH: also reload and update other records with same res_id when editing signle record(not multi edit)
+                            self.updateSameResIdRecords(record, _changes);
                             // Update the data directly or reload them
                             if (shouldReload) {
                                 self._fetchRecord(record).then(function () {
@@ -1427,6 +1427,15 @@ var BasicModel = AbstractModel.extend({
         }
         list.orderedResIDs = null;
         this._sortList(list);
+    },
+    /**
+     * Overridden to update other records with same res_id, it used in case
+     * when datapoint is grouped by many2many and user update one of the record,
+     * in case of many2many same res_id record can be in multiple group, so to
+     * update record this method will be used.
+     */
+    updateSameResIdRecords(record, changes) {
+
     },
 
     //--------------------------------------------------------------------------

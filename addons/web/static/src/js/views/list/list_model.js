@@ -124,6 +124,39 @@
                 }
             });
         },
+        /**
+         * overridden to update records with same res_id in other groups
+         *
+         * @override
+         * @param {Object} datapoint
+         * @param {Object} changes
+         */
+        updateSameResIdRecords(datapoint, changes) {
+            const self = this;
+            const recordUpdated = datapoint;
+            while (datapoint.parentID) {
+                datapoint = this.localData[datapoint.parentID];
+            }
+            if (datapoint.groupedBy.length) {
+                const listState = this.get(datapoint.id);
+                const isM2MGrouped = datapoint.groupedBy.some((group) => {
+                    const groupByFieldName = group.split(':')[0];
+                    return datapoint.fields[groupByFieldName].type === "many2many";
+                });
+                if (isM2MGrouped) {
+                    const sameResIdrecords = [];
+                    utils.traverse_records(listState, function (r) {
+                        if (r.res_id === recordUpdated.res_id) {
+                            sameResIdrecords.push(r);
+                        }
+                    });
+                    sameResIdrecords.forEach((rec) => {
+                        const record = self.localData[rec.id];
+                        _.extend(record.data, changes);
+                    });
+                }
+            }
+        },
 
         //--------------------------------------------------------------------------
         // Private

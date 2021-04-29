@@ -556,13 +556,22 @@ var ListController = BasicController.extend({
      * @override
      * @param {string} recordId
      */
-    _saveRecord: function (recordId) {
+    _saveRecord: function (recordId, options) {
+        options = options || {};
         var record = this.model.get(recordId, { raw: true });
         if (record.isDirty() && this.renderer.isInMultipleRecordEdition(recordId)) {
             // do not save the record (see _saveMultipleRecords)
             const prom = this.multipleRecordsSavingPromise || Promise.reject();
             this.multipleRecordsSavingPromise = null;
             return prom;
+        }
+        var state = this.model.get(this.handle, { raw: true });
+        if (state.groupedBy.length) {
+            const isM2MGrouped = state.groupedBy.some((group) => {
+                const groupByFieldName = group.split(':')[0];
+                return state.fields[groupByFieldName].type === "many2many";
+            });
+            options.isM2mGrouped = isM2MGrouped;
         }
         return this._super.apply(this, arguments);
     },
@@ -921,8 +930,16 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onSaveLine: function (ev) {
+        const self = this;
         this.saveRecord(ev.data.recordID)
-            .then(ev.data.onSuccess)
+            .then(() => {
+                // TODO: MSH: only update if m2m grouped
+                return self.update({}, { reload: false }).then(() => {
+                    if (ev.data.onSuccess) {
+                        ev.data.onSuccess();
+                    }
+                });
+            })
             .guardedCatch(ev.data.onFailure);
     },
     /**
