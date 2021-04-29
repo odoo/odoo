@@ -176,7 +176,7 @@ QUnit.test('format float time', function (assert) {
     assert.strictEqual(fieldUtils.format.float_time(-0.5), '-00:30');
 
     const options = {
-        noLeadingZeroHour: true,
+        pattern: 'h:mm'
     };
     assert.strictEqual(fieldUtils.format.float_time(2, null, options), '2:00');
     assert.strictEqual(fieldUtils.format.float_time(3.5, null, options), '3:30');

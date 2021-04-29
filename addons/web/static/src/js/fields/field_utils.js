@@ -203,24 +203,74 @@ function formatFloatFactor(value, field, options) {
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options]
- * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30
- *        otherwise, format like 01:30
+ * @param {string} [unit] gives the unit of the original float in hours, minutes or seconds.
+ *        The default is 'hours'. (/!\ Do not precise the units as minutes if you don't want to change the default pattern)
+ *        Note: If the float must convert to the default xx:yy, no need to specify if those are minutes or hours.
+ * @param {string} [pattern] Allow any custom pattern to be used.
+ *         - Put the asked datas into brackets (e.i. '[D]')
+ *         - One character will have no leading zero ('[H]h' => 1h)
+ *         - Two characters will have a leading zero ('[HH]'h => 01h)
+ *         - Write any sentence to format ('Wow this took [D] days!' => Wow this took 2 days!)
+ *         - D = days
+ *           H = hours
+ *           M = minutes
+ *           S = seconds
+ *         - The DEFAULT patterns will be (depending on the relevant infos):
+ *           mm:ss || hh:mm (/!\ Do not precise the units as minutes if you don't want to change this pattern)
  * @returns {string}
  */
-function formatFloatTime(value, field, options) {
-    options = options || {};
-    var pattern = options.noLeadingZeroHour ? '%1d:%02d' : '%02d:%02d';
-    if (value < 0) {
-        value = Math.abs(value);
+
+ /*!!!! take negatives in account*/
+
+function formatFloatTime(value, field, {unit = 'hours', pattern = null} = {}) {
+    /*Convert the float in seconds*/
+    const seconds = moment.duration(Math.abs(value), unit).asSeconds();
+    /*Get days, hours, minutes, secondes*/
+    let d = Math.floor(seconds / (3600*24));
+    let h = Math.floor(seconds % (3600*24) / 3600);
+    let m = Math.floor(seconds % 3600 / 60);
+    let s = Math.round(seconds % 60);
+
+    /*If the seconds rounding goes to 60, we have to repercute that to one minute, etc.*/
+    if (s === 60)
+        [s, m] = [0, m+1];
+    if (m === 60)
+        [m, h] = [0, h+1];
+    if (h === 24)
+        [h, d] = [0, d+1];
+
+    /*This is to ensure compatibility with previous version, and have a default behavior*/
+    if (pattern == null) {
+        h = h + d*24;
+        pattern = _.str.sprintf('%02d:%02d', h, m);
+    }
+    /*Use those keys in the widget's pattern option*/
+    else {
+        const oneDigit = {
+            'd' : d,
+            'h' : h,
+            'm' : m,
+            's' : s
+        }
+        const twoDigits = {
+            'dd' : d,
+            'hh' : h,
+            'mm' : m,
+            'ss' : s
+        }
+
+        for (const [key, val] of Object.entries(twoDigits)) {
+            pattern = pattern.includes(key) ? _.str.sprintf(pattern.split(key).join('%02d'), val) : pattern;
+        }
+        for (const [key, val] of Object.entries(oneDigit)) {
+            pattern = pattern.includes(key) ? _.str.sprintf(pattern.split(key).join('%1d'), val) : pattern;
+        }
+    }
+
+    if (value < 0)
         pattern = '-' + pattern;
-    }
-    var hour = Math.floor(value);
-    var min = Math.round((value % 1) * 60);
-    if (min === 60){
-        min = 0;
-        hour = hour + 1;
-    }
-    return _.str.sprintf(pattern, hour, min);
+
+    return pattern;
 }
 
 /**
@@ -416,7 +466,7 @@ function formatSelection(value, field, options) {
 /**
  * Smart date inputs are shortcuts to write dates quicker.
  * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
- * 
+ *
  * e.g.
  *   "+1d" or "+1" will return now + 1 day
  *   "-2w" will return now - 2 weeks
@@ -635,9 +685,8 @@ function parseMonetary(value, field, options) {
  * @param {number} [options.factor]
  *          Conversion factor, default value is 1.0
  */
-function parseFloatFactor(value, field, options) {
+function parseFloatFactor(value, field, {factor = 1.0} = {}) {
     var parsed = parseFloat(value);
-    var factor = options.factor || 1.0;
     return parsed / factor;
 }
 
@@ -647,12 +696,20 @@ function parseFloatTime(value) {
         value = value.slice(1);
         factor = -1;
     }
-    var float_time_pair = value.split(":");
-    if (float_time_pair.length !== 2)
+    var float_time_split = value.split(":");
+    if (float_time_split.length !== 2 && float_time_split.length !== 3)
         return factor * parseFloat(value);
-    var hours = parseInteger(float_time_pair[0]);
-    var minutes = parseInteger(float_time_pair[1]);
-    return factor * (hours + (minutes / 60));
+    else  {
+        var hours = parseInteger(float_time_split[0]);
+        var minutes = parseInteger(float_time_split[1]);
+        if (float_time_split.length == 2) {
+            return factor * (hours + (minutes / 60));
+        }
+        else {
+            var seconds = parseInteger(float_time_split[2]);
+            return factor * (hours + (minutes / 60) + (seconds / 3600));
+        }
+    }
 }
 
 /**
