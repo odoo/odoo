@@ -177,10 +177,10 @@ const Link = Widget.extend({
      */
     getOrCreateLink: function (editable) {
         const doc = editable.ownerDocument;
-        const range = getDeepRange(editable, {splitText: true, select: true, correctTripleClick: true});
         this.needLabel = this.needLabel || false;
         let link = getInSelection(doc, 'a');
         const $link = $(link);
+        const range = getDeepRange(editable, {splitText: true, select: true, correctTripleClick: true});
         if (link && (!$link.has(range.startContainer).length || !$link.has(range.endContainer).length)) {
             // Expand the current link to include the whole selection.
             let before = link.previousSibling;
