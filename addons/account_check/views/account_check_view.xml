@@ -16,7 +16,6 @@
                 <field name="payment_date"/>
                 <field name="first_partner_id" optional="show"/>
                 <field name="partner_id" optional="show"/>
-                <field name="partner_id"/>
                 <field name="type" invisible="1"/>
                 <field name="bank_id" invisible="context.get('default_type',False) != 'third_check'"/>
                 <field name="amount" sum="Total Amount"/>
@@ -66,18 +65,9 @@
                             <tree>
                                 <field name="date"/>
                                 <field name="operation"/>
-                                <field name="origin_name" string="Origin"/>
+                                <field name="move_line_id"/>
                                 <field name="partner_id"/>
                             </tree>
-                            <form>
-                                <group>
-                                    <field name="date"/>
-                                    <field name="operation"/>
-                                    <field name="origin"/>
-                                    <field name="partner_id"/>
-                                    <field name="notes"/>
-                                </group>
-                            </form>
                         </field>
                     </group>
                 </sheet>
@@ -162,7 +152,7 @@
         <field name="res_model">account.check</field>
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
         <field name="domain">[('type','=','third_check')]</field>
-        <field name="context">{'search_default_state':'holding','default_type':'third_check'}</field>
+        <field name="context">{'search_default_state':'holding','default_type':'third_check', 'search_default_groupby_journal_id': 1}</field>
     </record>
 
     <menuitem

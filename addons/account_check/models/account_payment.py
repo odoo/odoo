@@ -66,7 +66,10 @@ class AccountPayment(models.Model):
             elif self.payment_method_code == 'in_checks':
                 # we can get the rejected check in a diferent journal
                 # ('journal_id', '=', self.journal_id.id),
-                return 'holding', domain + [('state', '=', 'delivered'), ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)]
+                # no restringimos quien nos peude devolver el cheque porque cualquiera lo podria reclamar
+                # TODO tal vez filtro por defecto? del partner
+                # , ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)
+                return 'holding', domain + [('state', '=', 'delivered')]
         elif self.check_type == 'issue_check':
             domain = [('type', '=', 'issue_check')]
             if self.is_internal_transfer and self.payment_type == 'outbound':
@@ -259,9 +262,9 @@ class AccountPayment(models.Model):
     def _do_checks_operations(self, cancel=False):
         operation, domain = self._get_checks_operations()
         if cancel:
-            self.check_ids._del_operation(self)
+            self.check_ids._del_operation(self.move_id)
         else:
-            self.check_ids._add_operation(operation, self, self.partner_id, date=self.date)
+            self.check_ids._add_operation(operation, self.move_id, self.partner_id, date=self.date)
             # TODO implementar cambio de journal? o lo hacemos related al último y listo?
             # self.check_ids.write({'journal_id': self.destination_journal_id.id})
 

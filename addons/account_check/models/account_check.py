@@ -52,17 +52,19 @@ class AccountCheck(models.Model):
     )
     partner_id = fields.Many2one(
         'res.partner',
-        compute='_compute_partners',
+        compute='_compute_data',
+        # related is not working / updating as expected
+        # related='operation_ids.move_line_id.partner_id',
         store=True,
-        index=True,
+        # index=True,
         string='Last operation partner',
     )
     first_partner_id = fields.Many2one(
         'res.partner',
-        compute='_compute_partners',
+        # compute='_compute_data',
         string='First operation partner',
         readonly=True,
-        store=True,
+        # store=True,
     )
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -134,12 +136,16 @@ class AccountCheck(models.Model):
     )
     journal_id = fields.Many2one(
         'account.journal',
-        string='Journal',
-        required=True,
-        domain=[('type', 'in', ['cash', 'bank'])],
+        compute='_compute_data',
+        # related='operation_ids.move_line_id.journal_id',
         readonly=True,
-        states={'draft': [('readonly', False)]},
-        index=True,
+        store=True,
+        # 'account.journal',
+        # string='Journal',
+        # required=True,
+        # domain=[('type', 'in', ['cash', 'bank'])],
+        # states={'draft': [('readonly', False)]},
+        # index=True,
     )
     company_id = fields.Many2one(
         related='journal_id.company_id',
@@ -197,16 +203,14 @@ class AccountCheck(models.Model):
         else:
             self.number = False
 
-    @api.depends('operation_ids.partner_id')
-    def _compute_partners(self):
-        for rec in self:
-            if not rec.operation_ids:
-                rec.partner_id = False
-                rec.first_partner_id = False
-                continue
-            operations = rec.operation_ids.sorted()
-            rec.first_partner_id = operations[-1].partner_id
-            rec.partner_id = operations[0].partner_id
+    @api.depends('operation_ids.move_line_id.partner_id', 'operation_ids.move_line_id.journal_id')
+    def _compute_data(self):
+        for rec in self.filtered('operation_ids'):
+            move_line = rec.operation_ids.sorted()[0].move_line_id
+            if move_line.partner_id:
+                rec.partner_id = move_line.partner_id
+            if move_line.journal_id:
+                rec.journal_id = move_line.journal_id
 
     # def onchange(self, values, field_name, field_onchange):
     #     """
@@ -286,12 +290,12 @@ class AccountCheck(models.Model):
         done (same as check state)
         """
         for rec in self:
-            if not rec.operation_ids or rec.operation_ids[0].origin != origin:
+            if not rec.operation_ids or rec.operation_ids[0].move_line_id != origin:
                 raise ValidationError(_(
                     'You can not cancel this operation because this is not '
                     'the last operation over the check.\nCheck (id): %s (%s)'
                 ) % (rec.name, rec.id))
-            rec.operation_ids[0].origin = False
+            # rec.operation_ids[0].move_line_id = False
             rec.operation_ids[0].unlink()
 
     def _add_operation(self, operation, origin, partner=None, date=False):
@@ -314,7 +318,7 @@ class AccountCheck(models.Model):
                 'operation': operation,
                 'date': date,
                 'check_id': rec.id,
-                'origin': '%s,%i' % (origin._name, origin.id),
+                'move_line_id': origin.id,
                 'partner_id': partner and partner.id or False,
             }
             rec.operation_ids.create(vals)
