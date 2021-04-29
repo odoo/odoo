@@ -15,8 +15,8 @@ class AccountJournal(models.Model):
     @api.model
     def create(self, vals):
         rec = super(AccountJournal, self).create(vals)
-        issue_checks = self.env.ref('account_check.account_payment_method_new_own_checks')
-        if (issue_checks in rec.outbound_payment_method_ids and not rec.checkbook_ids):
+        own_checks = self.env.ref('account_check.account_payment_method_new_own_checks')
+        if (own_checks in rec.outbound_payment_method_ids and not rec.checkbook_ids):
             rec._create_checkbook()
         return rec
 
@@ -26,8 +26,8 @@ class AccountJournal(models.Model):
             rec.checkbook_ids.create({'journal_id': rec.id, 'state': 'active'})
 
     @api.model
-    def _enable_issue_check_on_bank_journals(self):
-        """ Enables issue checks payment method
+    def _enable_own_check_on_bank_journals(self):
+        """ Enables Own Checks payment method
             Called upon module installation via data file.
         """
         domain = [('type', '=', 'bank')]
@@ -56,13 +56,13 @@ class AccountJournal(models.Model):
     #         ('journal_id', '=', self.id),
     #         ('state', '=', 'holding')
     #     ]
-    #     domain_handed_issue_checks = [
-    #         ('type', '=', 'issue_check'),
+    #     domain_handed_own_checks = [
+    #         ('type', '=', 'own_check'),
     #         ('journal_id', '=', self.id),
     #         ('state', '=', 'handed')
     #     ]
     #     handed_checks = self.env['account.check'].search(
-    #         domain_handed_issue_checks)
+    #         domain_handed_own_checks)
     #     holding_checks = self.env['account.check'].search(
     #         domain_holding_third_checks)
 
@@ -71,7 +71,7 @@ class AccountJournal(models.Model):
     #             [('report_name', '=', 'check_report')]):
     #         num_checks_to_numerate = self.env['account.payment'].search_count([
     #             ('journal_id', '=', self.id),
-    #             ('payment_method_id.code', '=', 'issue_check'),
+    #             ('payment_method_id.code', '=', 'own_check'),
     #             ('state', '=', 'draft'),
     #             ('check_name', '=', False),
     #         ])
@@ -82,10 +82,10 @@ class AccountJournal(models.Model):
     #         show_third_checks=(
     #             'received_third_check' in
     #             self.inbound_payment_method_ids.mapped('code')),
-    #         show_issue_checks=(
-    #             'issue_check' in
+    #         show_own_checks=(
+    #             'own_check' in
     #             self.outbound_payment_method_ids.mapped('code')),
-    #         num_handed_issue_checks=len(handed_checks),
+    #         num_handed_own_checks=len(handed_checks),
     #         handed_amount=formatLang(
     #             self.env, sum(handed_checks.mapped('amount_company_currency')),
     #             currency_obj=self.company_id.currency_id),
@@ -99,8 +99,8 @@ class AccountJournal(models.Model):
     #     check_type = self.env.context.get('check_type', False)
     #     if check_type == 'third_check':
     #         action_name = 'account_check.action_third_check'
-    #     elif check_type == 'issue_check':
-    #         action_name = 'account_check.action_issue_check'
+    #     elif check_type == 'own_check':
+    #         action_name = 'account_check.action_own_check'
     #     else:
     #         return False
     #     actions = self.env.ref(action_name)
@@ -124,6 +124,6 @@ class AccountJournal(models.Model):
     #             default_journal_id=self.id,
     #             default_payment_type='outbound',
     #             default_payment_method_id=self.env.ref(
-    #                 'account_check.account_payment_method_issue_check').id,
+    #                 'account_check.account_payment_method_own_check').id,
     #         ),
     #     }

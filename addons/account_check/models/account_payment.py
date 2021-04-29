@@ -17,15 +17,14 @@ class AccountPayment(models.Model):
     check_ids = fields.Many2many(
         'account.check', string='Checks', copy=False,
         # TODO check if it can be improoved in odoo, we need this because if we make readonly=True the related fields
-        # delivery_check_ids and issue_check_ids where not being writeable
+        # delivery_check_ids and own_check_ids where not being writeable
         # readonly=True, states={'draft': [('readonly', False)]}
         states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]}
     )
     # TODO we should be able to remove this fields. Is only here because adding two times the same field with difrerent widget is not working
     delivery_check_ids = fields.Many2many(related='check_ids', string="Checks Delivered", readonly=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]})
     # this fields is to help with code and view but if needed this field could be removed and check everywhere for the payment_method_code
-    check_type = fields.Char(compute='_compute_check_type',) 
-    check_operation = fields.Char(compute='_compute_check_data',)
+    check_type = fields.Char(compute='_compute_check_type')
     available_check_ids = fields.Many2many('account.check', compute='_compute_check_data')
     amount = fields.Monetary(compute='_compute_amount', readonly=False, store=True)
 
@@ -69,8 +68,8 @@ class AccountPayment(models.Model):
                 # TODO tal vez filtro por defecto? del partner
                 # , ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id)
                 return 'holding', domain + [('state', '=', 'delivered')]
-        elif self.check_type == 'issue_check':
-            domain = [('type', '=', 'issue_check')]
+        elif self.check_type == 'own_check':
+            domain = [('type', '=', 'own_check')]
             if self.is_internal_transfer and self.payment_type == 'outbound':
                 return 'withdrawed', False
             elif self.payment_method_code == 'new_own_checks':
@@ -96,14 +95,12 @@ class AccountPayment(models.Model):
         for rec in self:
             available_checks = rec.env['account.check']
             if not rec.check_type:
-                rec.check_operation = False
                 rec.available_check_ids = available_checks
                 continue
             operation, domain = rec._get_checks_operations()
             if domain:
                 available_checks = available_checks.search(domain)
             rec.available_check_ids = available_checks
-            rec.check_operation = operation
 
     @api.depends('payment_method_code')
     def _compute_check_type(self):
@@ -173,7 +170,7 @@ class AccountPayment(models.Model):
                     'La suma del pago no coincide con la suma de los cheques seleccionados. Por favor intente eliminar '
                     'y volver a agregar un cheque.'))
             # TODO check if needed
-            # if rec.payment_method_code == 'issue_check' and (
+            # if rec.payment_method_code == 'own_check' and (
             #         not rec.check_number or not rec.check_name):
             #     raise UserError(_(
             #         'Para mandar a proceso de firma debe definir número '

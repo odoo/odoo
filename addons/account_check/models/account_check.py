@@ -41,12 +41,13 @@ class AccountCheck(models.Model):
         states={'draft': [('readonly', False)]},
         auto_join=True,
         index=True,
+        ondelete='restrict',
     )
-    issue_check_subtype = fields.Selection(
-        related='checkbook_id.issue_check_subtype',
+    own_check_subtype = fields.Selection(
+        related='checkbook_id.own_check_subtype',
     )
     type = fields.Selection(
-        [('issue_check', 'Issue Check'), ('third_check', 'Third Check')],
+        [('own_check', 'Own Check'), ('third_check', 'Third Check')],
         required=True,
         index=True,
     )
@@ -236,7 +237,7 @@ class AccountCheck(models.Model):
     # def issue_number_interval(self):
     #     for rec in self:
     #         # if not range, then we dont check it
-    #         if rec.type == 'issue_check' and rec.checkbook_id.range_to:
+    #         if rec.type == 'own_check' and rec.checkbook_id.range_to:
     #             if rec.number > rec.checkbook_id.range_to:
     #                 raise UserError(_(
     #                     "Check number (%s) can't be greater than %s on "
@@ -254,7 +255,7 @@ class AccountCheck(models.Model):
     # @api.constrains('type', 'owner_name', 'bank_id')
     # def _check_unique(self):
     #     for rec in self:
-    #         if rec.type == 'issue_check':
+    #         if rec.type == 'own_check':
     #             same_checks = self.search([
     #                 ('checkbook_id', '=', rec.checkbook_id.id),
     #                 ('type', '=', rec.type),

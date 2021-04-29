@@ -20,9 +20,9 @@ class AccountCheckbook(models.Model):
         'ir.sequence',
         'Sequence',
         copy=False,
-        domain=[('code', '=', 'issue_check')],
+        domain=[('code', '=', 'own_check')],
         help="Checks numbering sequence.",
-        context={'default_code': 'issue_check'},
+        context={'default_code': 'own_check'},
     )
     next_number = fields.Integer(
         'Next Number',
@@ -31,7 +31,7 @@ class AccountCheckbook(models.Model):
         compute='_compute_next_number',
         inverse='_inverse_next_number',
     )
-    issue_check_subtype = fields.Selection(
+    own_check_subtype = fields.Selection(
         [('deferred', 'Deferred'), ('currents', 'Currents'), ('electronic', 'Electronic')],
         string='Check Subtype',
         required=True,
@@ -61,12 +61,6 @@ class AccountCheckbook(models.Model):
         # states={'draft': [('readonly', False)]},
         help='If you set a number here, this checkbook will be automatically'
         ' set as used when this number is raised.'
-    )
-    issue_check_ids = fields.One2many(
-        'account.check',
-        'checkbook_id',
-        string='Issue Checks',
-        readonly=True,
     )
     state = fields.Selection(
         [('draft', 'Draft'), ('active', 'In Use'), ('used', 'Used')],
@@ -116,28 +110,23 @@ class AccountCheckbook(models.Model):
                 'implementation': 'no_gap',
                 'padding': 8,
                 'number_increment': 1,
-                'code': 'issue_check',
+                'code': 'own_check',
                 # si no lo pasamos, en la creacion se setea 1
                 'number_next_actual': next_number,
                 'company_id': rec.journal_id.company_id.id,
             })
 
-    @api.depends('issue_check_subtype', 'range_to')
+    @api.depends('own_check_subtype', 'range_to')
     def _compute_name(self):
         for rec in self:
-            if not rec.issue_check_subtype:
+            if not rec.own_check_subtype:
                 rec.name = False
                 continue
             name = {
                 'deferred': _('Deferred Checks'),
                 'currents': _('Currents Checks'),
-                'electronic': _('Electronic Checks')}.get(rec.issue_check_subtype)
+                'electronic': _('Electronic Checks')}.get(rec.own_check_subtype)
             if rec.range_to:
                 name += _(' up to %s') % rec.range_to
             rec.name = name
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_if_manual(self):
-        if self.mapped('issue_check_ids'):
-            raise ValidationError(
-                _('You can drop a checkbook if it has been used on checks!'))

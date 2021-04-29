@@ -23,7 +23,7 @@
     'category': 'Accounting',
     'summary': 'Checks Management',
     'description': """
-This module add checks management including functionality for issue and third checks.
+This module add checks management including functionality for own and third checks.
 
 To see option of checks to print on accounting dashboard you need to create a report named "check_report"
 

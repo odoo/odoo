@@ -46,7 +46,7 @@ class AccountChartTemplate(models.Model):
 
     def _create_bank_journals(self, company, acc_template_ref):
         """
-        Creates third checks journal and enable issue checks on banks
+        Creates third checks journal and enable own checks on banks
         """
 
         res = super(AccountChartTemplate, self)._create_bank_journals(company, acc_template_ref)
@@ -77,5 +77,5 @@ class AccountChartTemplate(models.Model):
             ],
         })
 
-        self.env['account.journal'].with_context(force_company_id=company.id)._enable_issue_check_on_bank_journals()
+        self.env['account.journal'].with_context(force_company_id=company.id)._enable_own_check_on_bank_journals()
         return res

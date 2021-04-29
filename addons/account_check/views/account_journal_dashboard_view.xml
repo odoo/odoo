@@ -19,12 +19,12 @@
                         </div>
                     </div>
                 </div>
-                <div t-if="dashboard.show_issue_checks">
+                <div t-if="dashboard.show_own_checks">
                     <div class="row">
                         <div class="col-6">
-                            <a role="menuitem" type="object" name="open_action_checks" context="{'check_type': 'issue_check'}">
-                                <t t-esc="dashboard.num_handed_issue_checks"/>
-                                <t>Issue Check(s) handed</t>
+                            <a role="menuitem" type="object" name="open_action_checks" context="{'check_type': 'own_check'}">
+                                <t t-esc="dashboard.num_handed_own_checks"/>
+                                <t>Own Check(s) handed</t>
                             </a>
                         </div>
                         <div class="col-6 text-right">
