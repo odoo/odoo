@@ -37,7 +37,7 @@ _ref_vat = {
     'de': 'DE123456788',
     'dk': 'DK12345674',
     'do': 'DO1-01-85004-3 or 101850043',
-    'ec': 'EC1792060346-001',
+    'ec': 'EC1792060346001',
     'ee': 'EE123456780',
     'el': 'EL12345670',
     'es': 'ESA12345674',
@@ -229,6 +229,70 @@ class ResPartner(models.Model):
             check = (11 - (csum % 11)) % 11
             return check == int(num[8])
         return False
+
+    def _checksum_ci_ec(self,number):
+        """Calculate a checksum over the number."""
+        fold = lambda x: x - 9 if x > 9 else x
+        return sum(fold((2, 1)[i % 2] * int(n))
+                for i, n in enumerate(number)) % 10
+
+    def _checksum_ruc_ec(self, number, weights):
+        """Calculate a checksum over the number given the weights."""
+        return sum(w * int(n) for w, n in zip(weights, number)) % 11
+
+    def is_valid_ci_ec(self,vat):
+        """Check if the number provided is a valid CI number. This checks the
+        length, formatting and check digit."""
+        if len(vat) != 10:
+            return False 
+        if not vat.isdigit():
+            return False 
+        if vat[:2] < '01' or vat[:2] > '24':
+            if vat[:2] != '30':
+                return False
+        if vat[2] > '6':
+            return False
+        if self._checksum_ci_ec(vat) != 0:
+            return False
+        return True
+
+    def is_valid_ruc_ec(self, vat):
+        """Check if the number provided is a valid RUC number. This checks the
+        length, formatting, check digit and check sum."""
+        if len(vat) != 13:
+            return False
+        if not vat.isdigit():
+            return False
+        if vat[:2] < '01' or vat[:2] > '24':
+            return False
+        if vat[2] <= '5':
+            # 0..5 = natural RUC: CI plus establishment number
+            if vat[-3:] == '000':
+                return False
+            return self.is_valid_ci_ec(vat[:10])
+        elif vat[2] == '6':
+            # 6 = public RUC
+            #if vat[-4:] == '0000':
+            #    return False
+            if self._checksum_ruc_ec(vat[:9], (3, 2, 7, 6, 5, 4, 3, 2, 1)) != 0:
+                return False
+        elif vat[2] == '9':
+            # 9 = juridical RUC
+            if vat[-3:] == '000':
+                return False
+            if self._checksum_ruc_ec(vat[:10], (4, 3, 2, 7, 6, 5, 4, 3, 2, 1)) != 0:
+                return False
+        else:
+            return False
+        return True
+
+    def check_vat_ec(self, vat):
+        try:
+            from stdnum.util import clean
+        except:
+            return True
+        vat = clean(vat, ' -.').upper().strip()
+        return self.is_valid_ruc_ec(vat)
 
     def _ie_check_char(self, vat):
         vat = vat.zfill(8)

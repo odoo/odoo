@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<data>
+<template id="out_invoice">
+<factura id="comprobante" version="2.1.0">
+  <infoTributaria>
+    <ambiente><t t-esc="ambiente" /></ambiente>
+    <tipoEmision><t t-esc="tipoEmision" /></tipoEmision>
+    <razonSocial><t t-esc="razonSocial" /></razonSocial>
+    <nombreComercial><t t-esc="razonSocial" /></nombreComercial>
+    <ruc><t t-esc="ruc" /></ruc>
+    <claveAcceso><t t-esc="claveAcceso" /></claveAcceso>
+    <codDoc><t t-esc="codDoc" /></codDoc>
+    <estab><t t-esc="estab" /></estab>
+    <ptoEmi><t t-esc="ptoEmi" /></ptoEmi>
+    <secuencial><t t-esc="secuencial" /></secuencial>
+    <dirMatriz><t t-esc="dirMatriz" /></dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision><t t-esc="fechaEmision" /></fechaEmision> {# dd/mm/aaaa #}
+    <contribuyenteEspecial><t t-esc="contribuyenteEspecial" /></contribuyenteEspecial>
+    <obligadoContabilidad><t t-esc="obligadoContabilidad" /></obligadoContabilidad>
+    <tipoIdentificacionComprador><t t-esc="tipoIdentificacionComprador" /></tipoIdentificacionComprador>
+    <razonSocialComprador><t t-esc="razonSocialComprador" /></razonSocialComprador>
+    <identificacionComprador><t t-esc="identificacionComprador" /></identificacionComprador>
+    <direccionComprador><t t-esc="direccionComprador" /></direccionComprador>
+    <totalSinImpuestos><t t-esc="totalSinImpuestos" /></totalSinImpuestos>
+    <totalDescuento><t t-esc="totalDescuento" /></totalDescuento>
+    <totalConImpuestos t-foreach="totalConImpuestos" t-as="item">
+      <totalImpuesto>
+        <codigo><t t-esc="item['codigo']" /></codigo>
+        <codigoPorcentaje><t t-esc="item['codigoPorcentaje']" /></codigoPorcentaje>
+        <baseImponible><t t-esc="item['baseImponible']" /></baseImponible>
+        <tarifa><t t-esc="item['tarifa']" /></tarifa>
+        <valor><t t-esc="item['valor']" /></valor>
+      </totalImpuesto>
+      </totalConImpuestos>
+    <compensaciones t-if="compensaciones">
+        <compensacion t-foreach="compensaciones" t-as="c">
+            <codigo><t t-esc="c['codigo']" /></codigo>
+            <tarifa><t t-esc="c['tarifa']" /></tarifa>
+            <valor><t t-esc="c['valor']" /></valor>
+        </compensacion>
+    </compensaciones>
+    <propina>0.00</propina>
+    <importeTotal><t t-esc="importeTotal" /></importeTotal>
+    <moneda>DOLAR</moneda>
+    <pagos>
+        <pago>
+            <formaPago><t t-esc="formaPago" /></formaPago>
+            <total><t t-esc="importeTotal" /></total>
+        </pago>
+    </pagos>
+    <valorRetIva><t t-esc="valorRetIva" /></valorRetIva>
+    <valorRetRenta><t t-esc="valorRetRenta" /></valorRetRenta>
+  </infoFactura>
+  <detalles>
+    <detalle t-foreach="detalles" t-as="item">
+      <codigoPrincipal><t t-esc="item['codigoPrincipal']" /></codigoPrincipal>
+      <descripcion><t t-esc="item['descripcion']" /></descripcion>
+      <cantidad><t t-esc="item['cantidad']" /></cantidad>
+      <precioUnitario><t t-esc="item['precioUnitario']" /></precioUnitario>
+      <descuento><t t-esc="item['descuento']" /></descuento>
+      <precioTotalSinImpuesto><t t-esc="item['precioTotalSinImpuesto']" /></precioTotalSinImpuesto>
+      <impuestos>
+        <impuesto t-foreach="item['impuestos']" t-as="tax">
+          <codigo><t t-esc="tax['codigo']" /></codigo>
+          <codigoPorcentaje><t t-esc="tax['codigoPorcentaje']" /></codigoPorcentaje>
+          <tarifa><t t-esc="tax['tarifa']" /></tarifa>
+          <baseImponible><t t-esc="tax['baseImponible']" /></baseImponible>
+          <valor><t t-esc="tax['valor']" /></valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+</factura>
+</template>
+</data>
+</odoo>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Ecuadorian Accounting',
+    'name': 'Ecuadorian Accounting EDI',
     'version': '3.3',
     'description': '''
 Functional
@@ -43,37 +43,22 @@ Authors:
     'website': 'https://opa-consulting.com',
     'license': 'OEEL-1',
     'depends': [
-        'l10n_latam_invoice_document',
-        'l10n_latam_base',
+     'l10n_ec',
     ],   
     'data': [
-        #Chart of Accounts
-        'data/account_chart_template_data.xml',
-        'data/account_group_template_data.xml',
-        'data/account.account.template.csv',
-        'data/account_chart_template_setup_accounts.xml',
-        #Taxes
         'data/account_tax_group_data.xml',
-        'data/account_tax_tag_data.xml',
         'data/account_tax_template_vat_data.xml',
         'data/account_tax_template_withhold_profit_data.xml',
         'data/account_tax_template_withhold_vat_data.xml',
-        'data/account_fiscal_position_template.xml',
-        
-        #Partners data
-        'data/res.bank.csv',
-        'data/l10n_latam_identification_type_data.xml',
-        'data/res_partner_data.xml',
-        #Other data
-        
-        'data/account_chart_template_configure_data.xml'
-        
+        'data/account_chart_template_configure_data.xml',
+        'data/l10n_latam_document_type_data.xml',
+        'data/l10n.ec.sri.payment.csv',
+        'views/account_tax_view.xml',
+        'views/l10n_latam_document_type_view.xml',
+        'views/l10n_ec_sri_payment.xml',
+        'security/ir.model.access.csv'
     ],
-    'demo': [
-        'demo/demo_company.xml',
-    ],
-
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
     'application': False,
 }
