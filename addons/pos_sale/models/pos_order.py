@@ -50,28 +50,16 @@ class PosOrder(models.Model):
     def create_from_ui(self, orders, draft=False):
         order_ids = super(PosOrder, self).create_from_ui(orders, draft)
         for order in self.sudo().browse([o['id'] for o in order_ids]):
-            if order.sale_order_origin_id:
-                for line in order.lines:
-                    sale_line = self.env['sale.order.line'].create({
-                        'order_id': order.sale_order_origin_id.id,
-                        'product_id': line.product_id.id,
-                        'price_unit': line.price_unit,
-                        'product_uom_qty': - line.qty,
-                        'tax_id': [(6, 0, line.tax_ids.ids)],
-                        'discount': line.discount,
-                    })
-                    sale_line._compute_tax_id()
-            else:
-                for line in order.lines.filtered(lambda l: l.sale_order_origin_id):
-                    sale_line = self.env['sale.order.line'].create({
-                        'order_id': line.sale_order_origin_id.id,
-                        'product_id': line.product_id.id,
-                        'price_unit': line.price_unit,
-                        'product_uom_qty': - line.qty,
-                        'tax_id': [(6, 0, line.tax_ids.ids)],
-                        'discount': line.discount,
-                    })
-                    sale_line._compute_tax_id()
+            for line in order.lines.filtered(lambda l: l.sale_order_origin_id):
+                sale_line = self.env['sale.order.line'].create({
+                    'order_id': line.sale_order_origin_id.id,
+                    'product_id': line.product_id.id,
+                    'price_unit': line.price_unit,
+                    'product_uom_qty': - line.qty,
+                    'tax_id': [(6, 0, line.tax_ids.ids)],
+                    'discount': line.discount,
+                })
+                sale_line._compute_tax_id()
 
         return order_ids
 

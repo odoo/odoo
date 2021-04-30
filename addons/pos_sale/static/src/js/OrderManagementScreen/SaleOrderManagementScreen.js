@@ -140,7 +140,16 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                 }
               }
               else {
-                  currentPOSOrder.sale_order_origin_id = clickedOrder;
+                let new_line = new models.Orderline({}, {
+                    pos: this.env.pos,
+                    order: this.env.pos.get_order(),
+                    product: this.env.pos.db.get_product_by_id(this.env.pos.config.down_payment_product_id[0]),
+                    price: sale_order.amount_untaxed,
+                    price_manually_set: true,
+                    sale_order_origin_id: clickedOrder,
+                });
+                new_line.set_unit_price(sale_order.amount_untaxed);
+                this.env.pos.get_order().add_orderline(new_line);
               }
 
               currentPOSOrder.trigger('change');
@@ -172,7 +181,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             let sale_order = await this.rpc({
                 model: 'sale.order',
                 method: 'read',
-                args: [[id],['order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total']],
+                args: [[id],['order_line', 'partner_id', 'pricelist_id', 'fiscal_position_id', 'amount_total', 'amount_untaxed']],
                 context: this.env.session.user_context,
               });
 
