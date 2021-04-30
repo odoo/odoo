@@ -46,8 +46,11 @@ class Event(models.Model):
                 domain = ['&','&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id),
                           ('event_id', '=', event.id), ('state', '!=', 'cancel')]
                 event.is_participating = self.env['event.registration'].sudo().search_count(domain)
+<<<<<<< HEAD
         else:
             self.is_participating = False
+=======
+>>>>>>> be9c0c0571f... temp
 
     @api.depends('name')
     def _compute_website_url(self):

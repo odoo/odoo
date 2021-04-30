@@ -436,11 +436,19 @@ class EventRegistration(models.Model):
 
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
+<<<<<<< HEAD
         if not self.env.is_admin() and not self.user_has_groups('event.group_event_user'):
             if raise_exception:
                 raise AccessError(_('Only event users or managers are allowed to create or update registrations.'))
             return False
         return super(EventRegistration, self).check_access_rights(operation, raise_exception)
+=======
+        if not self.env.user._is_admin() and not self.user_has_groups('event.group_event_user'):
+            if raise_exception:
+                raise AccessError(_('Only event users or managers are allowed to create or update registrations.'))
+            return False
+        return super(EventRegistration, self).check_access_rights(operation, raise_exception=raise_exception)
+>>>>>>> be9c0c0571f... temp
 
     @api.model
     def _prepare_attendee_values(self, registration):
