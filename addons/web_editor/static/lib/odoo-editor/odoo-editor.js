@@ -4995,6 +4995,15 @@ var exportVariable = (function (exports) {
                 this._positionToolbar();
             }
         }
+        updateToolbarPosition() {
+            if (
+                this.options.autohideToolbar &&
+                !this.isMobile &&
+                getComputedStyle(this.toolbar).visibility === 'visible'
+            ) {
+                this._positionToolbar();
+            }
+        }
         _positionToolbar() {
             const OFFSET = 10;
             let isBottom = false;
