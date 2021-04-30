@@ -50,6 +50,7 @@ class ResConfigSettings(models.TransientModel):
     company_name = fields.Char(related="company_id.display_name", string="Company Name")
     company_informations = fields.Text(compute="_compute_company_informations")
     profiling_enabled_until = fields.Datetime("Profiling enabled until", config_parameter='base.profiling_enabled_until')
+    module_product_images = fields.Boolean("Get product pictures using barcode")
 
     def open_company(self):
         return {
