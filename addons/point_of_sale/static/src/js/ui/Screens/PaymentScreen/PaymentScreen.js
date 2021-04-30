@@ -26,9 +26,23 @@ class PaymentScreen extends PosComponent {
         });
         this._validating = false;
     }
-    _onAddPayment(event) {
+    async _onAddPayment(event) {
         const paymentMethod = event.detail;
-        this.env.model.actionHandler({
+        const invalidPayment = this.env.model.getInvalidRoundingPayment(this.props.activeOrder);
+        if (invalidPayment) {
+            const paymentMethod = this.env.model.getRecord('pos.payment.method', invalidPayment.payment_method_id);
+            const message = _.str.sprintf(
+                this.env._t('The %s payment with amount %s is not properly rounded.'),
+                paymentMethod.name,
+                this.env.model.formatCurrency(invalidPayment.amount)
+            );
+            await this.env.ui.askUser('ErrorPopup', {
+                title: this.env._t('Existing unrounded payment'),
+                body: message,
+            });
+            return
+        }
+        await this.env.model.actionHandler({
             name: 'actionAddPayment',
             args: [this.props.activeOrder, paymentMethod],
         });
