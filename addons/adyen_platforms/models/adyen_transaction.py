@@ -44,6 +44,8 @@ class AdyenTransaction(models.Model):
     ], default='unknown')
     dispute_reference = fields.Char('Dispute Reference')
 
+    adyen_payout_id = fields.Many2one('adyen.payout') # TODO remove in master
+
     _sql_constraints = [
         ('reference_unique', 'unique(reference)', 'A transaction with the same reference already exists.'),
     ]
