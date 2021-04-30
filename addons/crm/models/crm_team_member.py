@@ -30,7 +30,9 @@ class Team(models.Model):
     def _compute_lead_month_count(self):
         for member in self:
             if member.user_id.id and member.crm_team_id.id:
-                member.lead_month_count = self.env['crm.lead'].search_count(member._get_lead_month_domain())
+                member.lead_month_count = self.env['crm.lead'].with_context(active_test=False).search_count(
+                    member._get_lead_month_domain()
+                )
             else:
                 member.lead_month_count = 0
 
@@ -53,7 +55,6 @@ class Team(models.Model):
             ('user_id', '=', self.user_id.id),
             ('team_id', '=', self.crm_team_id.id),
             ('date_open', '>=', limit_date),
-            ('probability', '<', 100)
         ]
 
     # ------------------------------------------------------------
