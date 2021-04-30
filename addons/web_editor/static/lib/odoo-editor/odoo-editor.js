@@ -799,7 +799,7 @@ var exportVariable = (function (exports) {
      * @param node
      */
     function isBlock(node) {
-        if (!(node instanceof Element)) {
+        if (node.nodeType !== Node.ELEMENT_NODE) {
             return false;
         }
         const tagName = node.nodeName.toUpperCase();
@@ -3877,7 +3877,11 @@ var exportVariable = (function (exports) {
                 }
             }
         }
-
+        _removeContenteditableLinks() {
+            for (const node of this.editable.querySelectorAll('a[contenteditable]')) {
+                node.removeAttribute('contenteditable');
+            }
+        }
         _activateContenteditable() {
             this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
@@ -4058,6 +4062,15 @@ var exportVariable = (function (exports) {
             const redoButton = this.toolbar.querySelector('#redo');
             redoButton && redoButton.classList.toggle('disabled', !this.historyCanRedo());
             if (this.options.autohideToolbar && !this.isMobile) {
+                this._positionToolbar();
+            }
+        }
+        updateToolbarPosition() {
+            if (
+                this.options.autohideToolbar &&
+                !this.isMobile &&
+                getComputedStyle(this.toolbar).visibility === 'visible'
+            ) {
                 this._positionToolbar();
             }
         }
@@ -4298,10 +4311,12 @@ var exportVariable = (function (exports) {
             this.automaticStepSkipStack();
             const link = closestElement(ev.target, 'a');
             if (link && !link.querySelector('div') && !closestElement(ev.target, '.o_not_editable')) {
+                this._removeContenteditableLinks();
                 const editableChildren = link.querySelectorAll('[contenteditable=true]');
                 this._stopContenteditable();
                 [...editableChildren, link].forEach(node => node.setAttribute('contenteditable', true));
             } else {
+                this._removeContenteditableLinks();
                 this._activateContenteditable();
             }
 
