@@ -27,10 +27,11 @@
                             </div>
                         </div>
                         <form t-on-submit.prevent="onSendEmail" class="send-email">
-                            <div class="email-icon"><i class="fa fa-envelope-o" aria-hidden="true"></i></div>
                             <div class="input-email">
                                 <input type="email" placeholder="Email Receipt" t-model="orderUiState.inputEmail" />
-                                <button class="send" t-att-class="{ highlight: is_email(orderUiState.inputEmail) }" type="submit">Send</button>
+                                <button class="send" t-att-class="{ highlight: is_email(orderUiState.inputEmail) }" type="submit">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"/>
+                                </button>
                             </div>
                         </form>
                         <div class="notice">
