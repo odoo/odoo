@@ -51,9 +51,9 @@ odoo.define('pos_restaurant.SplitBillScreen', function (require) {
         _splitQuantity(line) {
             const split = this.splitlines[line.id];
             const unit = this.env.model.getOrderlineUnit(line);
-            if (this.env.model.floatCompare(split.quantity, split.maxQuantity) < 0) {
+            if (this.env.model.floatLT(split.quantity, split.maxQuantity)) {
                 split.quantity += unit.is_pos_groupable ? 1 : unit.rounding;
-                if (this.env.model.floatCompare(split.quantity, split.maxQuantity) > 0) {
+                if (this.env.model.floatGT(split.quantity, split.maxQuantity)) {
                     split.quantity = split.maxQuantity;
                 }
             } else {
@@ -63,7 +63,7 @@ odoo.define('pos_restaurant.SplitBillScreen', function (require) {
         _hasEmptySplit() {
             for (const lineId in this.splitlines) {
                 const split = this.splitlines[lineId];
-                if (this.env.model.floatCompare(split.quantity, 0, 5) !== 0) {
+                if (!this.env.model.floatEQ(split.quantity, 0, 5)) {
                     return false;
                 }
             }
@@ -77,10 +77,10 @@ odoo.define('pos_restaurant.SplitBillScreen', function (require) {
                     this.env.model.getRecord('pos.order.line', id)
                 );
                 if (
-                    this.env.model.floatCompare(
+                    this.env.model.floatGT(
                         sum([referenceLine, ...otherLines], (line) => line.qty),
                         0
-                    ) > 0
+                    )
                 ) {
                     result.push([lineId, referenceLine, otherLines]);
                 }

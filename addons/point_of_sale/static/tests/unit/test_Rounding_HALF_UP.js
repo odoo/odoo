@@ -43,7 +43,7 @@ odoo.define('point_of_sale.unit.test_Rounding_HALF_UP', function (require) {
                 await model.actionUpdateOrderline(orderline, { price_unit: 12.13 });
 
                 const amountToPay = model.getAmountToPay(activeOrder);
-                assert.ok(model.floatCompare(amountToPay, 12.13) === 0);
+                assert.ok(model.monetaryEQ(amountToPay, 12.13));
 
                 const checkPayment = createCheckPayment(assert, model, activeOrder);
 

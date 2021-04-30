@@ -117,7 +117,7 @@ odoo.define('pos_mercury.payment', function (require) {
         async credit_code_transaction(payment, parsed_result, deferred, retry_nr) {
             const order = this.model.getRecord('pos.order', payment.pos_order_id);
 
-            if (this.model.floatCompare(payment.amount, 0) < 0) {
+            if (this.model.monetaryLT(payment.amount, 0)) {
                 this.model.ui.askUser('ErrorPopup', {
                     title: _t('Refunds not supported'),
                     body: _t(

@@ -134,7 +134,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
             if ('qty' in vals) {
                 if (
                     this.ifacePrinters &&
-                    this.floatCompare(orderline.qty, vals.qty, 5) !== 0 &&
+                    !this.floatEQ(orderline.qty, vals.qty) &&
                     this._isProductInCategory(this.data.derived.printersCategoryIds, orderline.product_id)
                 ) {
                     vals.mp_dirty = true;
@@ -475,7 +475,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
                     const split = splitlines[splitID];
 
                     // don't take into account the split that has zero quantity
-                    if (this.floatCompare(split.quantity, 0) === 0) continue;
+                    if (this.floatEQ(split.quantity, 0)) continue;
 
                     // create orderline for the new order
                     let originalOrderLine = this.getRecord('pos.order.line', splitID);
@@ -489,7 +489,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
                     // update the order being split
                     if (!this.checkDisallowDecreaseQuantity(originalOrderLine, newQuantity)) {
                         // update the orderline if quantity change is allowed
-                        if (this.floatCompare(newQuantity, 0) === 0) {
+                        if (this.floatEQ(newQuantity, 0)) {
                             await this.actionDeleteOrderline(originalOrder, originalOrderLine);
                         } else {
                             await this.actionUpdateOrderline(originalOrderLine, { qty: newQuantity });
@@ -841,7 +841,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
             const amountPaid = this.getPaymentsTotalAmount(order);
             const amountDiff = withTaxWithDiscount - amountPaid;
             // if amountDiff is zero, do nothing.
-            if (this.floatCompare(amountDiff, 0, 5) == 0) return;
+            if (this.monetaryEQ(amountDiff, 0)) return;
             this.actionUpdatePayment(payment, { amount: previousAmount + amountDiff });
             await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'waiting'] });
             const paymentTerminal = this.getPaymentTerminal(paymentMethod.id);
@@ -860,7 +860,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
         },
         async actionValidateTip(order, amount, nextScreen) {
             const serverId = order._extras.server_id;
-            if (this.floatCompare(amount, 0) === 0) {
+            if (this.monetaryEQ(amount, 0)) {
                 await this._rpc({
                     method: 'set_no_tip',
                     model: 'pos.order',
@@ -870,7 +870,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
             }
 
             const { withTaxWithDiscount } = this.getOrderTotals(order);
-            if (this.floatCompare(amount, 0.25 * withTaxWithDiscount) > 0) {
+            if (this.monetaryGT(amount, 0.25 * withTaxWithDiscount)) {
                 const msg = _t("%s is more than 25% of the order's total amount. Are you sure of this tip amount?");
                 const confirmed = await this.ui.askUser('ConfirmPopup', {
                     title: _t('Are you sure?'),
@@ -932,7 +932,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
                     await paymentTerminal.send_payment_adjust(payment.id);
                 }
 
-                if (this.floatCompare(amount, 0) === 0) {
+                if (this.monetaryEQ(amount, 0)) {
                     await this._rpc({
                         method: 'set_no_tip',
                         model: 'pos.order',

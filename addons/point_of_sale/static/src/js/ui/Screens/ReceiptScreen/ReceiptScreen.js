@@ -78,7 +78,7 @@ class ReceiptScreen extends AbstractReceiptScreen {
         const tip_product_id = this.env.model.config.tip_product_id;
         const tipLine = this.env.model.getOrderlines(order).find((line) => line.product_id === tip_product_id);
         const { priceWithTax: tipAmount } = tipLine ? this.env.model.getOrderlinePrices(tipLine) : { priceWithTax: 0 };
-        if (this.env.model.floatCompare(tipAmount, 0) === 0) {
+        if (this.env.model.monetaryEQ(tipAmount, 0)) {
             // meaning, tipAmount is zero
             return this.env.model.formatCurrency(orderTotal);
         } else {

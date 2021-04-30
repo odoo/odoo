@@ -169,7 +169,7 @@ class PaymentScreen extends PosComponent {
             return false;
         }
         // The exact amount must be paid if there is no cash payment method defined.
-        const isChangeZero = this.env.model.floatCompare(this.env.model.getOrderChange(order), 0) === 0;
+        const isChangeZero = this.env.model.monetaryEQ(this.env.model.getOrderChange(order), 0);
         const hasCashPaymentMethod = _.some(
             this.env.model.data.derived.paymentMethods,
             (method) => method.is_cash_count
@@ -187,7 +187,7 @@ class PaymentScreen extends PosComponent {
         // if the change is too large, it's probably an input error, make the user confirm.
         const { withTaxWithDiscount } = this.env.model.getOrderTotals(order);
         const totalPayment = this.env.model.getPaymentsTotalAmount(order);
-        if (this.env.model.floatCompare(withTaxWithDiscount, 0) > 0 && withTaxWithDiscount * 1000 < totalPayment) {
+        if (this.env.model.monetaryGT(withTaxWithDiscount, 0) && withTaxWithDiscount * 1000 < totalPayment) {
             const confirmed = await this.env.ui.askUser('ConfirmPopup', {
                 title: this.env._t('Please Confirm Large Amount'),
                 body: _.str.sprintf(

@@ -9,9 +9,7 @@ odoo.define('pos_restaurant.PaymentScreenElectronicPayment', function (require) 
             const order = this.env.model.getRecord('pos.order', payment.pos_order_id);
             const { withTaxWithDiscount } = this.env.model.getOrderTotals(order);
             const totalPaid = this.env.model.getPaymentsTotalAmount(order);
-            return (
-                this.env.model.canBeAdjusted(payment) && this.env.model.floatCompare(totalPaid, withTaxWithDiscount) < 0
-            );
+            return this.env.model.canBeAdjusted(payment) && this.env.model.monetaryLT(totalPaid, withTaxWithDiscount);
         },
     });
 

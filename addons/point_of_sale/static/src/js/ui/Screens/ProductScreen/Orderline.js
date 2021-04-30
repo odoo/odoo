@@ -47,7 +47,7 @@ class Orderline extends PosComponent {
     showListPrice(orderline, displayUnitPrice, lstPrice) {
         return (
             this.env.model.getDiscountPolicy(orderline) == 'without_discount' &&
-            this.env.model.floatCompare(displayUnitPrice, lstPrice, this.env.model.currency.decimal_places) === -1
+            this.env.model.monetaryLT(displayUnitPrice, lstPrice)
         );
     }
     getFormattedProductLstPrice(lstPrice) {

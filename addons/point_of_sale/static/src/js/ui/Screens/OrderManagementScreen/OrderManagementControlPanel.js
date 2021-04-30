@@ -4,7 +4,7 @@ import PosComponent from 'point_of_sale.PosComponent';
 
 class OrderManagementControlPanel extends PosComponent {
     get showPageControls() {
-        return this.env.model.floatCompare(this.env.model.orderFetcher.lastPage, 1, 5) === 1;
+        return this.env.model.floatGT(this.env.model.orderFetcher.lastPage, 1);
     }
     get pageNumber() {
         const currentPage = this.env.model.orderFetcher.currentPage;

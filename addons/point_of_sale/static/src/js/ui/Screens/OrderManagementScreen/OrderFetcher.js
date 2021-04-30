@@ -65,7 +65,7 @@ class OrderFetcher {
     get lastPage() {
         const nItems = this.nActiveOrders + this.totalCount;
         const npages = nItems / this.nPerPage;
-        if (this.model.floatCompare(npages, Math.trunc(npages), 5) === 0) {
+        if (this.model.floatEQ(npages, Math.trunc(npages))) {
             return Math.round(npages);
         } else {
             return Math.trunc(npages + 1);
@@ -83,12 +83,12 @@ class OrderFetcher {
         try {
             let limit, offset;
             let start, end;
-            if (this.model.floatCompare(this.currentPage, this.lastPageFullOfActiveOrders) !== 1) {
+            if (this.model.floatLTE(this.currentPage, this.lastPageFullOfActiveOrders)) {
                 // Show only active orders.
                 start = (this.currentPage - 1) * this.nPerPage;
                 end = this.currentPage * this.nPerPage;
                 this.ordersToShow = this.activeOrders.slice(start, end);
-            } else if (this.model.floatCompare(this.currentPage, this.lastPageFullOfActiveOrders + 1) === 0) {
+            } else if (this.model.floatEQ(this.currentPage, this.lastPageFullOfActiveOrders + 1)) {
                 // Show partially the remaining active orders and
                 // some orders from the backend.
                 offset = 0;
@@ -154,13 +154,13 @@ class OrderFetcher {
         });
     }
     async nextPage() {
-        if (this.model.floatCompare(this.currentPage, this.lastPage, 5) === -1) {
+        if (this.model.floatLT(this.currentPage, this.lastPage)) {
             this.currentPage += 1;
             await this.fetch();
         }
     }
     async prevPage() {
-        if (this.model.floatCompare(this.currentPage, 1, 5) === 1) {
+        if (this.model.floatGT(this.currentPage, 1)) {
             this.currentPage -= 1;
             await this.fetch();
         }

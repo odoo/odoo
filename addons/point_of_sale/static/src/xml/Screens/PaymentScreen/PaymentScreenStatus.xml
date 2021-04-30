@@ -17,7 +17,7 @@
                 <div class="payment-status-remaining">
                     <span class="label">Remaining</span>
                     <span class="amount"
-                          t-att-class="{ highlight: env.model.floatCompare(env.model.getOrderDue(activeOrder), 0) === 1 }">
+                          t-att-class="{ highlight: env.model.monetaryGT(env.model.getOrderDue(activeOrder), 0) }">
                         <t t-esc="remainingText" />
                     </span>
                 </div>
@@ -32,7 +32,7 @@
                 <div class="payment-status-change">
                     <span class="label">Change</span>
                     <span class="amount"
-                          t-att-class="{ highlight: env.model.floatCompare(env.model.getOrderChange(activeOrder), 0) === 1 }">
+                          t-att-class="{ highlight: env.model.monetaryGT(env.model.getOrderChange(activeOrder), 0) }">
                         <t t-esc="changeText" />
                     </span>
                 </div>

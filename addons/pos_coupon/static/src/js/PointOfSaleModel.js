@@ -585,9 +585,7 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
         _getSpecificDiscount: function (order, program, coupon_id, productRewards) {
             const productIdsToAccount = new Set();
             const amountsToDiscount = {};
-            const nonZeroQtyOrderlines = this._getRegularOrderlines(order).filter(
-                (line) => this.floatCompare(line.qty, 0) !== 0
-            );
+            const nonZeroQtyOrderlines = this._getRegularOrderlines(order).filter((line) => !this.floatEQ(line.qty, 0));
             for (const line of nonZeroQtyOrderlines) {
                 if (this.isDiscountSpecificProductOnProgram(program.id, line.product_id)) {
                     const { priceWithoutTax } = this.getOrderlinePrices(line);
@@ -614,9 +612,7 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
          */
         _getOnCheapestProductDiscount: function (order, program, coupon_id) {
             const amountsToDiscount = {};
-            const nonZeroQtyOrderlines = this._getRegularOrderlines(order).filter(
-                (line) => this.floatCompare(line.qty, 0) !== 0
-            );
+            const nonZeroQtyOrderlines = this._getRegularOrderlines(order).filter((line) => !this.floatEQ(line.qty, 0));
             if (nonZeroQtyOrderlines.length > 0) {
                 const [cheapestLine, cheapestUnitPrice] = nonZeroQtyOrderlines.reduce(
                     ([line, unitPrice], otherLine) => {
@@ -648,9 +644,7 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
         _getOnOrderDiscountRewards: function (order, program, coupon_id, productRewards) {
             const productIdsToAccount = new Set();
             const amountsToDiscount = {};
-            const nonZeroQtyOrderlines = this._getRegularOrderlines(order).filter(
-                (line) => this.floatCompare(line.qty, 0) !== 0
-            );
+            const nonZeroQtyOrderlines = this._getRegularOrderlines(order).filter((line) => !this.floatEQ(line.qty, 0));
             for (const line of nonZeroQtyOrderlines) {
                 const { priceWithoutTax } = this.getOrderlinePrices(line);
                 const key = this._getGroupKey(line);

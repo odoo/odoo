@@ -189,6 +189,21 @@ function posRound(value, prec, method = 'HALF-UP', epsilon = 1e-6) {
     }
 }
 
+/**
+ * /!\ ATTENTION: not the same to `float_compare` of orm.
+ *
+ * Compares a and b based on the given decimal digits.
+ * @param {number} val1
+ * @param {number} val2
+ * @param {number?} decimalPlaces number of decimal digits
+ * @return {-1 | 0 | 1} If a and b are equal, returns 0. If a greater than b, returns 1. Otherwise returns -1.
+ */
+function posFloatCompare(val1, val2, decimalPlaces) {
+    const delta = val1 - val2;
+    if (float_is_zero(delta, decimalPlaces)) return 0;
+    return delta > 0 ? 1 : -1;
+}
+
 export default {
     getFileAsText,
     nextFrame,
@@ -200,4 +215,5 @@ export default {
     maxDateString,
     generateWrappedName,
     posRound,
+    posFloatCompare,
 };

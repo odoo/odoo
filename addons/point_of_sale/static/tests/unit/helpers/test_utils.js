@@ -3,7 +3,7 @@ odoo.define('point_of_sale.unit.utils', function (require) {
     function createCheckPayment(assert, model, order) {
         return function (caseName, payment, { amount, orderIsPaid, remaining, change, paymentIsValid }) {
             assert.ok(
-                model.floatCompare(payment.amount, amount) === 0,
+                model.monetaryEQ(payment.amount, amount),
                 `${caseName}: payment amount ${payment.amount} should be ${amount}`
             );
             assert.ok(
@@ -12,12 +12,12 @@ odoo.define('point_of_sale.unit.utils', function (require) {
             );
             const computedRemaining = model.getOrderDue(order);
             assert.ok(
-                model.floatCompare(computedRemaining, remaining) === 0,
+                model.monetaryEQ(computedRemaining, remaining),
                 `${caseName}: remaining ${computedRemaining} should be ${remaining}`
             );
             const computedChange = model.getOrderChange(order);
             assert.ok(
-                model.floatCompare(computedChange, change) === 0,
+                model.monetaryEQ(computedChange, change),
                 `${caseName}: change ${computedChange} should be ${change}`
             );
             assert.ok(

@@ -12,7 +12,15 @@ import { _t, qweb } from 'web.core';
 import { Mutex } from 'web.concurrency';
 import { format, parse } from 'web.field_utils';
 import { round_decimals, round_precision, float_is_zero, unaccent, is_email } from 'web.utils';
-import { cloneDeep, uuidv4, sum, maxDateString, generateWrappedName, posRound } from 'point_of_sale.utils';
+import {
+    cloneDeep,
+    uuidv4,
+    sum,
+    maxDateString,
+    generateWrappedName,
+    posRound,
+    posFloatCompare,
+} from 'point_of_sale.utils';
 const { EventBus } = owl.core;
 const { Component } = owl;
 const { onMounted, onWillUnmount } = owl.hooks;
@@ -64,6 +72,7 @@ class PointOfSaleModel extends EventBus {
             this.storage = storage;
         }
         this.POS_EPSILON = 1e-6;
+        this.POS_N_DECIMALS = Math.log10(1 / this.POS_EPSILON);
     }
     useModel() {
         const component = Component.current;
@@ -670,7 +679,7 @@ class PointOfSaleModel extends EventBus {
             return false;
         } else if (!existingLineUnit || !existingLineUnit.is_pos_groupable) {
             return false;
-        } else if (existingLine.discount > 0 && this.floatCompare(existingLine.discount, line2merge.discount) !== 0) {
+        } else if (existingLine.discount > 0 && !this.floatEQ(existingLine.discount, line2merge.discount)) {
             return false;
         } else if (
             existingLineProduct.tracking == 'lot' &&
@@ -679,12 +688,7 @@ class PointOfSaleModel extends EventBus {
             return false;
         } else if (existingLine._extras.description !== line2merge._extras.description) {
             return false;
-        } else if (
-            !float_is_zero(
-                this.getOrderlineUnitPrice(existingLine) - this.getOrderlineUnitPrice(line2merge),
-                this.currency.decimal_places
-            )
-        ) {
+        } else if (!this.monetaryEQ(this.getOrderlineUnitPrice(existingLine), this.getOrderlineUnitPrice(line2merge))) {
             return false;
         } else {
             return true;
@@ -1233,22 +1237,54 @@ class PointOfSaleModel extends EventBus {
         return price;
     }
     /**
-     * /!\ ATTENTION: not the same to `float_compare` of orm.
-     *
-     * Compares a and b based on the given decimal digits. If decimal digits
-     * is not provided, the config's currency will be used.
+     * Compares a and b based on the given decimal digits.
      * @param {number} a
      * @param {number} b
      * @param {number?} decimalPlaces number of decimal digits
      * @return {-1 | 0 | 1} If a and b are equal, returns 0. If a greater than b, returns 1. Otherwise returns -1.
      */
     floatCompare(a, b, decimalPlaces) {
-        if (!decimalPlaces) {
-            decimalPlaces = this.currency.decimal_places;
-        }
-        const delta = a - b;
-        if (float_is_zero(delta, decimalPlaces)) return 0;
-        return delta > 0 ? 1 : -1;
+        return posFloatCompare(a, b, decimalPlaces || this.POS_N_DECIMALS);
+    }
+    floatEQ(a, b, decimalPlaces) {
+        return this.floatCompare(a, b, decimalPlaces) === 0;
+    }
+    floatLT(a, b, decimalPlaces) {
+        return this.floatCompare(a, b, decimalPlaces) === -1;
+    }
+    floatLTE(a, b, decimalPlaces) {
+        return this.floatCompare(a, b, decimalPlaces) <= 0;
+    }
+    floatGT(a, b, decimalPlaces) {
+        return this.floatCompare(a, b, decimalPlaces) === 1;
+    }
+    floatGTE(a, b, decimalPlaces) {
+        return this.floatCompare(a, b, decimalPlaces) >= 0;
+    }
+    /**
+     * Compares monetary amounts a and b. Comparison is based on the
+     * currencies decimal places.
+     * @param {number} a
+     * @param {number} b
+     * @return {-1 | 0 | 1} If a and b are equal, returns 0. If a greater than b, returns 1. Otherwise returns -1.
+     */
+    monetaryCompare(a, b) {
+        return posFloatCompare(a, b, this.currency.decimal_places);
+    }
+    monetaryEQ(a, b) {
+        return this.monetaryCompare(a, b) === 0;
+    }
+    monetaryLT(a, b) {
+        return this.monetaryCompare(a, b) === -1;
+    }
+    monetaryLTE(a, b) {
+        return this.monetaryCompare(a, b) <= 0;
+    }
+    monetaryGT(a, b) {
+        return this.monetaryCompare(a, b) === 1;
+    }
+    monetaryGTE(a, b) {
+        return this.monetaryCompare(a, b) >= 0;
     }
     /**
      * @param {'pos.order'} order
@@ -1306,7 +1342,7 @@ class PointOfSaleModel extends EventBus {
      */
     async _setTip(order, amount) {
         const tipLine = this._getTipLine(order);
-        const amountIsZero = this.floatCompare(amount, 0) === 0;
+        const amountIsZero = this.monetaryEQ(amount, 0);
         if (tipLine) {
             if (amountIsZero) {
                 await this.actionDeleteOrderline(order, tipLine);
@@ -2008,7 +2044,7 @@ class PointOfSaleModel extends EventBus {
         });
         if (!confirm || (confirm && inputNumber === '')) return;
         const newQuantity = parse.float(inputNumber);
-        if (this.floatCompare(newQuantity, currentQuantity) >= 0) {
+        if (this.floatGTE(newQuantity, currentQuantity)) {
             this.actionUpdateOrderline(orderline, { qty: orderline.qty - currentQuantity + newQuantity });
         } else {
             const decreasedQuantity = currentQuantity - newQuantity;
@@ -2252,7 +2288,7 @@ class PointOfSaleModel extends EventBus {
      */
     async actionAddTip(order) {
         const existingTipAmount = this._getExistingTipAmount(order);
-        const hasTip = this.floatCompare(existingTipAmount, 0) !== 0;
+        const hasTip = !this.monetaryEQ(existingTipAmount, 0);
         const startingValue = hasTip ? existingTipAmount : this.getOrderChange(order);
         const [confirmed, amountStr] = await this.ui.askUser('NumberPopup', {
             title: hasTip ? _t('Change Tip') : _t('Add Tip'),
@@ -2689,7 +2725,7 @@ class PointOfSaleModel extends EventBus {
     getOrderChange(order) {
         const shouldRound = this.data.derived.roundingScheme !== 'NO_ROUNDING';
         const due = this._getRemainingAmountToPay(order, shouldRound);
-        return this.floatCompare(due, 0) < 0 ? -due : 0;
+        return this.monetaryLT(due, 0) ? -due : 0;
     }
     getShouldBeRounded(paymentMethod) {
         const scheme = this.data.derived.roundingScheme;
@@ -3130,9 +3166,9 @@ class PointOfSaleModel extends EventBus {
     checkDisallowDecreaseQuantity(orderline, newQuantity) {
         if (!this.shouldDisallowDecreaseQuantity()) return false;
         if (this.isLastOrderline(orderline)) {
-            return this.floatCompare(orderline.qty, 1) === 1 && this.floatCompare(newQuantity, orderline.qty) < 0;
+            return this.floatGT(orderline.qty, 1) && this.floatLT(newQuantity, orderline.qty);
         } else {
-            return this.floatCompare(newQuantity, orderline.qty) < 0;
+            return this.floatLT(newQuantity, orderline.qty);
         }
     }
     shouldDisallowDecreaseQuantity() {
@@ -3171,11 +3207,11 @@ class PointOfSaleModel extends EventBus {
         }
         if (!shouldBeRounded) return true;
         const roundedAmount = this.roundAmount(payment.amount);
-        return this.floatCompare(payment.amount, roundedAmount) === 0;
+        return this.monetaryEQ(payment.amount, roundedAmount);
     }
     getIsOrderPaid(order) {
         const shouldRound = this.data.derived.roundingScheme !== 'NO_ROUNDING';
-        return this.floatCompare(this._getRemainingAmountToPay(order, shouldRound), 0) <= 0;
+        return this.monetaryLTE(this._getRemainingAmountToPay(order, shouldRound), 0);
     }
     /**
      * Returns the first payment that is not rounded properly.
@@ -3262,7 +3298,7 @@ class PointOfSaleModel extends EventBus {
             subtotal: noTaxWithDiscount,
             total_with_tax: withTaxWithDiscount,
             // If amount paid and the total amount are not exactly equal, then the payment is rounded.
-            is_payment_rounded: this.floatCompare(amountPaid, withTaxWithDiscount) !== 0,
+            is_payment_rounded: !this.monetaryEQ(amountPaid, withTaxWithDiscount),
             rounding_applied: amountPaid - withTaxWithDiscount,
             total_rounded: amountPaid,
             total_tax: totalTax,

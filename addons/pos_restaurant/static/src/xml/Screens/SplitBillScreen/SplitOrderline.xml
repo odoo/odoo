@@ -5,7 +5,7 @@
         <t t-set="_orderlinePrices" t-value="env.model.getOrderlinePrices(props.line)" />
         <t t-set="_otherOrderlinePrices" t-value="props.otherLines.map(line => env.model.getOrderlinePrices(line))" />
         <t t-set="_isSelected" t-value="props.split.quantity !== 0" />
-        <li class="orderline" t-att-class="{ selected: _isSelected, partially: env.model.floatCompare(props.split.quantity, props.line.qty) !== 0 }">
+        <li class="orderline" t-att-class="{ selected: _isSelected, partially: !env.model.floatEQ(props.split.quantity, props.line.qty) }">
             <span class="product-name">
                 <t t-esc="env.model.getFullProductName(props.line)" />
             </span>
