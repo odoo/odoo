@@ -804,13 +804,10 @@ class PointOfSaleModel extends EventBus {
         }
         return [toUpdate, toAdd, new Set(toRemove)];
     }
-    _roundGeneric(value, prec, method) {
-        return posRound(value, prec, method, this.POS_N_DECIMALS);
-    }
     roundAmount(amount) {
         const prec = this.cashRounding.rounding;
         const method = this.cashRounding.rounding_method;
-        return this._roundGeneric(amount, prec, method);
+        return posRound(amount, prec, method, this.POS_N_DECIMALS);
     }
     /**
      * Returns the formatted value based on the session's currency or explicitly provided
