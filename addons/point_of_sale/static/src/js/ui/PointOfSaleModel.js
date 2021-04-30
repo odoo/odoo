@@ -71,8 +71,8 @@ class PointOfSaleModel extends EventBus {
         } else {
             this.storage = storage;
         }
-        this.POS_EPSILON = 1e-6;
-        this.POS_N_DECIMALS = Math.log10(1 / this.POS_EPSILON);
+        this.POS_N_DECIMALS = 6;
+
     }
     useModel() {
         const component = Component.current;
@@ -805,7 +805,7 @@ class PointOfSaleModel extends EventBus {
         return [toUpdate, toAdd, new Set(toRemove)];
     }
     _roundGeneric(value, prec, method) {
-        return posRound(value, prec, method, this.POS_EPSILON);
+        return posRound(value, prec, method, this.POS_N_DECIMALS);
     }
     roundAmount(amount) {
         const prec = this.cashRounding.rounding;

@@ -4,8 +4,7 @@ odoo.define('point_of_sale.unit.test_posRound', function (require) {
     const { posRound } = require('point_of_sale.utils');
     const { float_is_zero } = require('web.utils');
 
-    const EPSILON = 1e-6;
-    const N_DECIMAL = Math.log10(1 / EPSILON);
+    const N_DECIMAL = 6;
 
     function createChecker(assert, rounder) {
         return function (valueToRound, prec, expectedRoundedValue) {
@@ -19,7 +18,7 @@ odoo.define('point_of_sale.unit.test_posRound', function (require) {
 
     QUnit.test('round HALF-UP, assume default epsilon of 1e-6', async function (assert) {
         assert.expect(44);
-        const roundHalfUp = (value, prec) => posRound(value, prec, 'HALF-UP', EPSILON);
+        const roundHalfUp = (value, prec) => posRound(value, prec, 'HALF-UP', N_DECIMAL);
         const _check = createChecker(assert, roundHalfUp);
 
         _check(10, 0.05, 10);
@@ -73,7 +72,7 @@ odoo.define('point_of_sale.unit.test_posRound', function (require) {
 
     QUnit.test('round UP, assume default epsilon of 1e-6', async function (assert) {
         assert.expect(56);
-        const roundHalfUp = (value, prec) => posRound(value, prec, 'UP', EPSILON);
+        const roundHalfUp = (value, prec) => posRound(value, prec, 'UP', N_DECIMAL);
         const _check = createChecker(assert, roundHalfUp);
 
         _check(10, 0.02, 10);
@@ -140,7 +139,7 @@ odoo.define('point_of_sale.unit.test_posRound', function (require) {
 
     QUnit.test('round DOWN, assume default epsilon of 1e-6', async function (assert) {
         assert.expect(56);
-        const roundHalfUp = (value, prec) => posRound(value, prec, 'DOWN', EPSILON);
+        const roundHalfUp = (value, prec) => posRound(value, prec, 'DOWN', N_DECIMAL);
         const _check = createChecker(assert, roundHalfUp);
 
         _check(10, 0.02, 10);
