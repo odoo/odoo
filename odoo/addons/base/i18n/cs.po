@@ -6451,6 +6451,8 @@ msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
+"- Vytvořit / aktualizovat: povinné pole není nastaveno.\n"
+"- Odstranit: jiný model vyžaduje odstranění záznamu. Pokud je to možné, místo toho jej archivujte."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7571,6 +7573,21 @@ msgid ""
 "\n"
 "Note: total digits configured by default are 6.\n"
 msgstr ""
+"Účetní graf pro Nizozemsko\n"
+"=================================\n"
+"\n"
+"Tento modul je speciálně vytvořen pro správu účetních funkcí podle holandských osvědčených postupů.\n"
+"\n"
+"Tento modul obsahuje nizozemskou účetní osnovu a schéma DPH. Toto schéma je vytvořeno pro nejběžnější Společnosti, a proto je vhodné jej použít téměř pro každou Společnost.\n"
+"\n"
+"Účty s DPH jsou okamžitě propojeny, aby vygenerovaly požadované přehledy. Příklady tohoto hlášení o mezikontinentálních transakcích.\n"
+"\n"
+"Po instalaci tohoto modulu bude konfigurace aktivována.\n"
+"Vyberte účtovou osnovu s názvem „Nizozemsko - účetnictví“.\n"
+"\n"
+"Dále zadejte název společnosti, celkové číslice účtové osnovy, číslo bankovního účtu a výchozí měnu.\n"
+"\n"
+"Poznámka: celkový počet nakonfigurovaných číslic je 6.\n"
 
 #. module: base
 #: selection:ir.actions.act_url,binding_type:0
@@ -17795,6 +17812,10 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Platí pouze v případě, že se tento pohled dědí z jiného (inherit_id není False / Null).\n"
+"\n"
+"* pokud rozšiřuje (výchozí), pokud je toto zobrazení požadováno, vyhledá se nejbližší primární pohled (prostřednictvím inherit_id), pak se použijí všechny pohledy, které z něj dědí s modelem tohoto pohledu\n"
+"* pokud je primární, nejbližší primární pohled je plně vyřešen (i když používá jiný model než tento), pak se použijí specifikace dědičnosti tohoto pohledu (<xpath/>) a výsledek se použije, jako by to byl skutečný oblouk tohoto pohledu.\n"
 
 #. module: base
 #: sql_constraint:res.currency.rate:0
