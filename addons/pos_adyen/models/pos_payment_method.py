@@ -26,6 +26,7 @@ class PosPaymentMethod(models.Model):
 
     # Odoo Payments by Adyen
     adyen_account_id = fields.Many2one('adyen.account', related='company_id.adyen_account_id')
+    adyen_payout_id = fields.Many2one('adyen.payout', string='Adyen Payout', domain="[('adyen_account_id', '=', adyen_account_id)]")
     adyen_terminal_id = fields.Many2one('adyen.terminal', string='Adyen Terminal', domain="[('adyen_account_id', '=', adyen_account_id)]")
 
     adyen_latest_response = fields.Char(help='Technical field used to buffer the latest asynchronous notification from Adyen.', copy=False, groups='base.group_erp_manager')
@@ -134,9 +135,9 @@ class PosPaymentMethod(models.Model):
 
     def _proxy_adyen_request_odoo_proxy(self, data, operation):
         try:
-            return self.env.company.sudo().adyen_account_id._adyen_rpc('v1/%s' % operation, {
+            return self.env.company.sudo().adyen_account_id._adyen_rpc(operation, {
                 'request_data': data,
-                'account_code': self.sudo().adyen_account_id.account_code,
+                'account_code': self.sudo().adyen_payout_id.code,
                 'notification_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             })
         except Forbidden:

@@ -13,8 +13,10 @@ class ResCompany(models.Model):
     payment_onboarding_payment_method = fields.Selection(
         string="Selected onboarding payment method",
         selection=[
-            ('odoo', "Credit & Debit Card with Odoo Payment"),
+            ('paypal', "PayPal"),
+            ('stripe', "Stripe"),
             ('manual', "Manual"),
+            ('other', "Other"),
         ])
 
     @api.model
