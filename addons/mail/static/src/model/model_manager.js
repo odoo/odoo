@@ -70,12 +70,6 @@ class ModelManager {
          * O(1) reads/writes.
          */
         this._toComputeFields = new Map();
-        /**
-         * Map of "update after" on records that have been registered.
-         * These are processed after any explicit update and computed/related
-         * fields.
-         */
-        this._toUpdateAfters = new Map();
     }
 
     /**
@@ -583,6 +577,7 @@ class ModelManager {
             });
             // Ensure X2many relations are Set initially (other fields can stay undefined).
             for (const field of Model.__fieldList) {
+                record.__values[field.fieldName] = undefined;
                 if (field.fieldType === 'relation') {
                     if (['one2many', 'many2many'].includes(field.relationType)) {
                         record.__values[field.fieldName] = new Set();
@@ -644,10 +639,9 @@ class ModelManager {
         this._hasAnyChangeDuringCycle = true;
         // TODO ideally deleting the record should be done at the top of the
         // method, and it shouldn't be needed to manually remove
-        // _toComputeFields and _toUpdateAfters, but it is not possible until
-        // related are also properly unlinked during `set`
+        // _toComputeFields, but it is not possible until related are also
+        // properly unlinked during `set`.
         this._toComputeFields.delete(record);
-        this._toUpdateAfters.delete(record);
         delete Model.__records[record.localId];
     }
 
@@ -682,19 +676,6 @@ class ModelManager {
                         throw new Error("No compute method defined on this field definition");
                     }
                 }
-            }
-        }
-
-        // Execution of _updateAfter
-        while (this._toUpdateAfters.size > 0) {
-            for (const [record, previous] of this._toUpdateAfters) {
-                // delete at every step to avoid recursion, indeed _updateAfter
-                // might trigger an update cycle itself
-                this._toUpdateAfters.delete(record);
-                if (!record.exists()) {
-                    throw Error(`Cannot _updateAfter for already deleted record ${record.localId}.`);
-                }
-                record._updateAfter(previous);
             }
         }
 
@@ -1081,11 +1062,6 @@ class ModelManager {
             throw Error(`Cannot update already deleted record ${record.localId}.`);
         }
         const { allowWriteReadonly = false } = options;
-        if (!this._toUpdateAfters.has(record)) {
-            // queue updateAfter before calling field.set to ensure previous
-            // contains the value at the start of update cycle
-            this._toUpdateAfters.set(record, record._updateBefore());
-        }
         const Model = record.constructor;
         let hasChanged = false;
         for (const fieldName of Object.keys(data)) {

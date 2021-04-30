@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { create } from '@mail/model/model_field_command';
+import { create, replace } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -32,16 +32,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
-
-        /**
-         * @returns {boolean}
-         */
-        isNotificationPermissionDefault() {
-            const windowNotification = this.env.browser.Notification;
-            return windowNotification
-                ? windowNotification.permission === 'default'
-                : false;
-        }
 
         /**
          * Open the form view of the record with provided id and model.
@@ -143,9 +133,42 @@ function factory(dependencies) {
             return this.env.messaging.openDocument({ id, model });
         }
 
+        /**
+         * Refreshes the value of `isNotificationPermissionDefault`.
+         *
+         * Must be called in flux-specific way because the browser does not
+         * provide an API to detect when this value changes.
+         */
+        refreshIsNotificationPermissionDefault() {
+            this.update({ isNotificationPermissionDefault: this._computeIsNotificationPermissionDefault() });
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         */
+        _computeAllChannels() {
+            return replace(this.allThreads.filter(thread => thread.model === 'mail.channel'));
+        }
+
+        /**
+         * @private
+         */
+        _computeAllPinnedChannels() {
+            return replace(this.allChannels.filter(channel => channel.isPinned));
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsNotificationPermissionDefault() {
+            const browserNotification = this.env.browser.Notification;
+            return browserNotification ? browserNotification.permission === 'default' : false;
+        }
 
         /**
          * @private
@@ -160,6 +183,47 @@ function factory(dependencies) {
     }
 
     Messaging.fields = {
+        /**
+         * States all known channels.
+         */
+        allChannels: one2many('mail.thread', {
+            compute: '_computeAllChannels',
+            dependencies: [
+                'allThreads',
+                'allThreadsModel',
+            ],
+            readonly: true,
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        allChannelsIsPinned: attr({
+            related: 'allChannels.isPinned',
+        }),
+        /**
+         * States all known pinned channels.
+         */
+        allPinnedChannels: one2many('mail.thread', {
+            compute: '_computeAllPinnedChannels',
+            dependencies: [
+                'allChannels',
+                'allChannelsIsPinned',
+            ],
+            readonly: true,
+        }),
+        /**
+         * States all known threads.
+         */
+        allThreads: one2many('mail.thread', {
+            inverse: 'messaging',
+            readonly: true,
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        allThreadsModel: attr({
+            related: 'allThreads.model',
+        }),
         cannedResponses: one2many('mail.canned_response'),
         chatWindowManager: one2one('mail.chat_window_manager', {
             default: create(),
@@ -202,6 +266,14 @@ function factory(dependencies) {
         }),
         isInitialized: attr({
             default: false,
+        }),
+        /**
+         * States whether browser Notification Permission is currently in its
+         * 'default' state. This means it is allowed to make a request to the
+         * user to enable notifications.
+         */
+        isNotificationPermissionDefault: attr({
+            compute: '_computeIsNotificationPermissionDefault',
         }),
         locale: one2one('mail.locale', {
             default: create(),
