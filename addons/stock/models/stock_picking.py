@@ -413,7 +413,7 @@ class Picking(models.Model):
         pickings.products_availability = _('Available')
         for picking in pickings:
             forecast_date = max(picking.move_lines.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
-            if any(float_compare(move.forecast_availability, move.product_qty, move.product_id.uom_id.rounding) == -1 for move in picking.move_lines):
+            if any(float_compare(move.forecast_availability, move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in picking.move_lines):
                 picking.products_availability = _('Not Available')
                 picking.products_availability_state = 'late'
             elif forecast_date:
