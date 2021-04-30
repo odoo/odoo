@@ -11,19 +11,23 @@ FormEditorRegistry.add('create_lead', {
         type: 'char',
         required: true,
         name: 'contact_name',
+        fillWith: 'name',
         string: 'Your Name',
     }, {
         type: 'tel',
         name: 'phone',
+        fillWith: 'phone',
         string: 'Phone Number',
     }, {
         type: 'email',
         required: true,
+        fillWith: 'email',
         name: 'email_from',
         string: 'Your Email',
     }, {
         type: 'char',
         required: true,
+        fillWith: 'commercial_company_name',
         name: 'partner_name',
         string: 'Your Company',
     }, {
