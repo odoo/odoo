@@ -109,7 +109,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
             email=test_lead.email_from,
             include_lost=False
         )
-        self.assertEqual(result, test_lead + dup_leads - (lead_lost + opp_proba100 + opp_won + opp_lost))
+        self.assertEqual(result, test_lead + dup_leads - (lead_lost + opp_won + opp_lost))
 
         # include_lost = remove archived opp only
         result = test_lead._get_lead_duplicates(
