@@ -143,8 +143,13 @@ class TestLeadAssign(TestLeadAssignCommon):
         existing_leads.flush()
 
         self.members.invalidate_cache(fnames=['lead_month_count'])
-        self.assertEqual(self.sales_team_1_m3.lead_month_count, 12)
+        self.assertEqual(self.sales_team_1_m3.lead_month_count, 14)
         self.assertEqual(self.sales_team_convert_m1.lead_month_count, 0)
+
+        # re-assign existing leads, check monthly count is updated
+        existing_leads[-2:]._handle_salesmen_assignment(user_ids=self.user_sales_manager.ids)
+        self.members.invalidate_cache(fnames=['lead_month_count'])
+        self.assertEqual(self.sales_team_1_m3.lead_month_count, 12)
 
         with self.with_user('user_sales_manager'):
             self.env['crm.team'].browse(self.sales_team_1.ids)._action_assign_leads(work_days=4)
