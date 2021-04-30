@@ -3468,14 +3468,6 @@ td {
     display: flex;
 }
 
-.receipt-screen .default-view .actions .send-email .email-icon {
-    padding: 1rem;
-    border: solid 1px rgb(209, 209, 209);
-    border-right: none;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-}
-
 .receipt-screen .default-view .actions .send-email .input-email {
     display: flex;
     flex: 1;
@@ -3522,14 +3514,14 @@ td {
 }
 
 .receipt-screen .notice .send-mail-info {
-    position: absolute;
-    right: 1.5rem;
+    width: 100%;
+    text-align: right;
     font-style: italic;
 }
 
 @media screen and (max-width: 768px) {
     .receipt-screen .default-view {
-        flex-direction: column-reverse;
+        flex-direction: column;
         overflow: auto;
     }
     .receipt-screen .default-view .actions {
