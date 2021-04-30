@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.osv import expression
 
@@ -10,6 +12,22 @@ class AccountMove(models.Model):
 
     timesheet_ids = fields.One2many('account.analytic.line', 'timesheet_invoice_id', string='Timesheets', readonly=True, copy=False)
     timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count')
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
+    timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
+
+    @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
+    def _compute_timesheet_total_duration(self):
+        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
+            self.timesheet_total_duration = 0
+            return
+        group_data = self.env['account.analytic.line'].read_group([
+            ('timesheet_invoice_id', 'in', self.ids)
+        ], ['timesheet_invoice_id', 'unit_amount'], ['timesheet_invoice_id'])
+        timesheet_unit_amount_dict = defaultdict(float)
+        timesheet_unit_amount_dict.update({data['timesheet_invoice_id'][0]: data['unit_amount'] for data in group_data})
+        for invoice in self:
+            total_time = invoice.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[invoice.id], invoice.timesheet_encode_uom_id)
+            invoice.timesheet_total_duration = round(total_time)
 
     @api.depends('timesheet_ids')
     def _compute_timesheet_count(self):
