@@ -3516,7 +3516,11 @@ td {
     cursor: pointer;
     background: rgb(230, 230, 230);
 }
-
+@media screen and (max-width: 768px) {
+    .receipt-screen .default-view .actions .buttons .button.print {
+        padding: inherit;
+    }
+}
 .receipt-screen .default-view .actions .send-email {
     display: flex;
 }
