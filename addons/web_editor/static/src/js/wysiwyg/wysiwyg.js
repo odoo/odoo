@@ -667,7 +667,7 @@ const Wysiwyg = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _configureToolbar: function () {
+    _configureToolbar: function (options) {
         const $toolbar = this.toolbar.$el;
         const openTools = e => {
             e.preventDefault();
@@ -790,6 +790,18 @@ const Wysiwyg = Widget.extend({
         if ($colorpickerGroup.length) {
             this._createPalette();
         }
+        // we need the Timeout to be sure the editable content is loaded
+        // before calculating the scrollParent() element.
+        setTimeout(() => {
+            const scrollableContainer = this.$el.scrollParent();
+            if (!options.snippets && scrollableContainer.length) {
+                this.odooEditor.addDomListener(
+                  scrollableContainer[0],
+                  'scroll',
+                  this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
+                );
+            }
+        }, 0);
     },
     _createPalette() {
         const $dropdownContent = this.toolbar.$el.find('#colorInputButtonGroup .colorPalette');
