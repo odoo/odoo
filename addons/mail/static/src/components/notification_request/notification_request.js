@@ -52,8 +52,7 @@ class NotificationRequest extends Component {
      * @param {string} value
      */
     _handleResponseNotificationPermission(value) {
-        // manually force recompute because the permission is not in the store
-        this.env.messaging.messagingMenu.update();
+        this.env.messaging.refreshIsNotificationPermissionDefault();
         if (value !== 'granted') {
             this.env.services['bus_service'].sendNotification({
                 message: this.env._t("Odoo will not have the permission to send native notifications on this device."),
