@@ -825,6 +825,8 @@ var FieldMany2One = AbstractField.extend({
             this.reinitialize({ id: firstValue.id, display_name: firstValue.name });
         } else if (this.can_create) {
             new M2ODialog(this, this.string, this.$input.val()).open();
+        } else {
+            this.$input.val("");
         }
     },
     /**
@@ -858,14 +860,6 @@ var FieldMany2One = AbstractField.extend({
             this.floating = true;
             this._updateExternalButton();
         }
-    },
-    /**
-     * @override
-     * @private
-     */
-    _onKeydown: function () {
-        this.floating = false;
-        this._super.apply(this, arguments);
     },
     /**
      * @private
