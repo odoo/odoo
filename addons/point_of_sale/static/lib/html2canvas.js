@@ -1226,7 +1226,26 @@
               }
             });
           }
-    
+
+          // !! ODOO FIX START !!
+          // Based on https://github.com/niklasvh/html2canvas/pull/778
+          // For thai language
+          if (textAlign == 'center') {
+            textList.slice(1).forEach(function(word, index) {
+              if (/[\u0E30-\u0E3A\u0E47-\u0E4E]/.test(word)) {
+                if (textList[index] !== '') {
+                  // for vowel only
+                  textList[index] += word;
+                } else {
+                  // for vowel and tone marks
+                  textList[index-1] += word;
+                }
+                textList[index+1] = '';
+              }
+            });
+          }
+          // !! ODOO FIX END !!
+
           textList.forEach(function(text, index) {
             var bounds = getTextBounds(state, text, textDecoration, (index < textList.length - 1), stack.transform.matrix);
             if (bounds) {
