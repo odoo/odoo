@@ -56,9 +56,9 @@ class PaymentTransaction(models.Model):
             'shopperLocale': lang_code,
             'shopperReference': self.acquirer_id._odoo_compute_shopper_reference(
                 self.partner_id.id
-            ),
-            'recurringProcessingModel': 'CardOnFile',
-            'storePaymentMethod': self.tokenize and self.state == 'enabled',  # True by default on Adyen side
+            ) if self.tokenize else '',
+            'recurringProcessingModel': 'Subscription',
+            'storePaymentMethod': self.tokenize,  # True by default on Adyen side
             # Since the Pay by Link API redirects the customer without any payload, we use the
             # /payment/status route directly as return url.
             'returnUrl': urls.url_join(base_url, '/payment/status'),
@@ -119,7 +119,7 @@ class PaymentTransaction(models.Model):
                 'payout': self.acquirer_id.odoo_adyen_account_id.account_code,
             },  # Proxy-specific data
         }
-        response_content = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('payments', data)
+        response_content = self.acquirer_id.odoo_adyen_account_id._adyen_rpc('v1/payments', data)
 
         # Handle the payment request response
         _logger.info("payment request response:\n%s", pprint.pformat(response_content))
@@ -211,7 +211,7 @@ class PaymentTransaction(models.Model):
         # Retrieve all stored payment methods for the customer from the API and match them with the
         # acquirer reference of the transaction to find its payment method
         response_content = self.acquirer_id.odoo_adyen_account_id._adyen_rpc(
-            'payment_methods',
+            'v1/payment_methods',
             dict(shopperReference=data['additionalData']['recurring.shopperReference']),
         )
         payment_methods = response_content['storedPaymentMethods']

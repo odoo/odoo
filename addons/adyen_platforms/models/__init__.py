@@ -8,3 +8,6 @@ from . import adyen_kyc
 from . import adyen_shareholder
 from . import adyen_transaction
 from . import res_company
+
+# TODO remove in master - not used
+from . import adyen_payout
