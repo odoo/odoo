@@ -97,7 +97,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
             }
         ])
         lead_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate lead: same email_from, lost')
-        opp_proba100 = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, proba 100 but not won')
+        _opp_proba100 = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, proba 100 but not won')
         opp_won = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, won')
         opp_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate: lost opportunity')
 
