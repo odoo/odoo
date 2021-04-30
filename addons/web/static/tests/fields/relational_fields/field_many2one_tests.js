@@ -2503,7 +2503,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('no_create option on a many2one', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
             var form = await createView({
                 View: FormView,
@@ -2516,10 +2516,11 @@ QUnit.module('fields', {}, function () {
                     '</form>',
             });
 
-            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
-                'new partner', ['keyup', 'focusout']);
-            await testUtils.nextTick();
+            await testUtils.fields.editInput(form.$('.o_field_many2one input'), 'new partner');
+            form.$('.o_field_many2one input').trigger('keyup').trigger('focusout');
             assert.strictEqual($('.modal').length, 0, "should not display the create modal");
+            assert.strictEqual(form.$('.o_field_many2one input').val(), "",
+                "many2one value should cleared on focusout if many2one is no_create");
             form.destroy();
         });
 
