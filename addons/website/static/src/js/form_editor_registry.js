@@ -20,19 +20,23 @@ FormEditorRegistry.add('send_mail', {
         type: 'char',
         custom: true,
         required: true,
+        fillWith: 'name',
         name: 'Your Name',
     }, {
         type: 'tel',
         custom: true,
+        fillWith: 'phone',
         name: 'Phone Number',
     }, {
         type: 'email',
         modelRequired: true,
+        fillWith: 'email',
         name: 'email_from',
         string: 'Your Email',
     }, {
         type: 'char',
         custom: true,
+        fillWith: 'commercial_company_name',
         name: 'Your Company',
     }, {
         type: 'char',
