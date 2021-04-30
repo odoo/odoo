@@ -44,6 +44,13 @@
             <field name="act_window_id" ref="act_hr_timesheet_report"/>
         </record>
 
+        <record id="act_hr_timesheet_report_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+            <field name="act_window_id" ref="act_hr_timesheet_report"/>
+        </record>
+
         <record id="timesheet_action_report_by_project" model="ir.actions.act_window">
             <field name="name">Timesheets By Project</field>
             <field name="res_model">account.analytic.line</field>
@@ -87,6 +94,13 @@
             <field name="act_window_id" ref="timesheet_action_report_by_project"/>
         </record>
 
+        <record id="timesheet_action_view_report_by_project_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+            <field name="act_window_id" ref="timesheet_action_report_by_project"/>
+        </record>
+
         <record id="timesheet_action_report_by_task" model="ir.actions.act_window">
             <field name="name">Timesheets By Task</field>
             <field name="res_model">account.analytic.line</field>
@@ -127,6 +141,13 @@
             <field name="sequence" eval="15"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="act_window_id" ref="timesheet_action_report_by_task"/>
+        </record>
+
+        <record id="timesheet_action_view_report_by_task_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
             <field name="act_window_id" ref="timesheet_action_report_by_task"/>
         </record>
 

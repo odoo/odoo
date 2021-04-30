@@ -17,7 +17,7 @@ const TaskWithHours = FieldMany2One.extend({
      * @override
      */
     _getDisplayNameWithoutHours: function (value) {
-        return value.split(' ‒ ')[0];
+        return value && value.split(' ‒ ')[0];
     },
     /**
      * @override

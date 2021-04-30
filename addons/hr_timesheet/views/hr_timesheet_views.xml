@@ -53,7 +53,7 @@
             <field name="name">account.analytic.line.pivot</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <pivot string="Timesheet" sample="1">
+                <pivot string="Timesheets" sample="1">
                     <field name="employee_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
                     <field name="unit_amount" type="measure" widget="timesheet_uom"/>
@@ -78,7 +78,7 @@
             <field name="name">account.analytic.line.graph</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <graph string="Timesheet" sample="1" js_class="hr_timesheet_graphview">
+                <graph string="Timesheets" sample="1" js_class="hr_timesheet_graphview">
                     <field name="task_id" type="row"/>
                     <field name="project_id" type="row"/>
                     <field name="unit_amount" type="measure" widget="timesheet_uom"/>
