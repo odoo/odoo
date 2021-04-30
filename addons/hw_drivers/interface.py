@@ -12,8 +12,6 @@ _logger = logging.getLogger(__name__)
 
 class InterfaceMetaClass(type):
     def __new__(cls, clsname, bases, attrs):
-        if clsname in interfaces:
-            return interfaces[clsname]
         new_interface = super(InterfaceMetaClass, cls).__new__(cls, clsname, bases, attrs)
         interfaces[clsname] = new_interface
         return new_interface
