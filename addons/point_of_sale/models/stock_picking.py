@@ -117,8 +117,10 @@ class StockPicking(models.Model):
                                             'product_id': line.product_id.id,
                                             'name': lot.lot_name,
                                         })
+                                    quant = existing_lot.quant_ids.filtered(lambda q: q.quantity > 0.0 or q.location_id.parent_path.startswith(move.location_id.parent_path))[-1:]
                                     ml_vals.update({
                                         'lot_id': existing_lot.id,
+                                        'location_id': quant.location_id.id or move.location_id.id
                                     })
                                 else:
                                     ml_vals.update({
