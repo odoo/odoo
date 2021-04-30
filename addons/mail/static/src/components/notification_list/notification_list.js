@@ -143,7 +143,7 @@ class NotificationList extends Component {
                 }).concat(notifications);
         }
         // native notification request
-        if (props.filter === 'all' && this.env.messaging.isNotificationPermissionDefault()) {
+        if (props.filter === 'all' && this.env.messaging.isNotificationPermissionDefault) {
             notifications.unshift({
                 type: 'odoobotRequest',
                 uniqueId: 'odoobotRequest',

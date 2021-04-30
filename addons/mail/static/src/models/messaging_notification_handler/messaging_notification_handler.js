@@ -271,8 +271,6 @@ function factory(dependencies) {
             if (!wasChannelExisting) {
                 return;
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -325,8 +323,6 @@ function factory(dependencies) {
                 // FIXME force the computing of message values (cf task-2261221)
                 this.env.models['mail.message_seen_indicator'].recomputeSeenValues(channel);
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -382,8 +378,6 @@ function factory(dependencies) {
             if (originThread && message.isNeedaction) {
                 originThread.update({ message_needaction_counter: increment() });
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -487,8 +481,6 @@ function factory(dependencies) {
                 });
             }
             // a new thread with unread messages could have been added
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -512,8 +504,6 @@ function factory(dependencies) {
             }
             // deleting message might have deleted notifications, force recompute
             this.messaging.notificationGroupManager.computeGroups();
-            // manually force recompute of counter (after computing the groups)
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -532,8 +522,6 @@ function factory(dependencies) {
                 }
             }
             this.messaging.notificationGroupManager.computeGroups();
-            // manually force recompute of counter (after computing the groups)
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -577,8 +565,6 @@ function factory(dependencies) {
                 // messages on the server.
                 inbox.mainCache.update({ hasToLoadMessages: true });
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -594,8 +580,6 @@ function factory(dependencies) {
             if (moderationMailbox) {
                 moderationMailbox.update({ counter: increment() });
             }
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
@@ -641,8 +625,6 @@ function factory(dependencies) {
                 isTransient: true,
             }));
             this._notifyThreadViewsMessageReceived(message);
-            // manually force recompute of counter
-            this.messaging.messagingMenu.update();
         }
 
         /**
