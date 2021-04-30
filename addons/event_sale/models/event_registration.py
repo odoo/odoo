@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import float_is_zero
 
 
@@ -97,7 +97,7 @@ class EventRegistration(models.Model):
     def _synchronize_so_line_values(self, so_line):
         if so_line:
             return {
-                'partner_id': so_line.order_id.partner_id.id,
+                'partner_id': False if self.env.user._is_public() else so_line.order_id.partner_id.id,
                 'event_id': so_line.event_id.id,
                 'event_ticket_id': so_line.event_ticket_id.id,
                 'sale_order_id': so_line.order_id.id,

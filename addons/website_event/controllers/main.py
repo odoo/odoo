@@ -368,7 +368,7 @@ class WebsiteEventController(http.Controller):
             if not registration_values.get('partner_id') and visitor_sudo.partner_id:
                 registration_values['partner_id'] = visitor_sudo.partner_id.id
             elif not registration_values.get('partner_id'):
-                registration_values['partner_id'] = request.env.user.partner_id.id
+                registration_values['partner_id'] = False if request.env.user._is_public() else request.env.user.partner_id.id
 
             if visitor_sudo:
                 # registration may give a name to the visitor, yay
