@@ -70,6 +70,8 @@ class ReplenishmentReport(models.AbstractModel):
         }
 
     def _get_report_data(self, product_template_ids=False, product_variant_ids=False):
+        FloatConverter = self.env['ir.qweb.field.float']
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         assert product_template_ids or product_variant_ids
         res = {}
 
@@ -94,16 +96,16 @@ class ReplenishmentReport(models.AbstractModel):
             res['product_variants'] = product_templates.product_variant_ids
             res['multiple_product'] = len(product_templates.product_variant_ids) > 1
             res['uom'] = product_templates[:1].uom_id.display_name
-            res['quantity_on_hand'] = sum(product_templates.mapped('qty_available'))
-            res['virtual_available'] = sum(product_templates.mapped('virtual_available'))
+            res['quantity_on_hand'] = FloatConverter.value_to_html(sum(product_templates.mapped('qty_available')), {'precision':  precision})
+            res['virtual_available'] = FloatConverter.value_to_html(sum(product_templates.mapped('virtual_available')), {'precision':  precision})
         elif product_variant_ids:
             product_variants = self.env['product.product'].browse(product_variant_ids)
             res['product_templates'] = False
             res['product_variants'] = product_variants
             res['multiple_product'] = len(product_variants) > 1
             res['uom'] = product_variants[:1].uom_id.display_name
-            res['quantity_on_hand'] = sum(product_variants.mapped('qty_available'))
-            res['virtual_available'] = sum(product_variants.mapped('virtual_available'))
+            res['quantity_on_hand'] = FloatConverter.value_to_html(sum(product_variants.mapped('qty_available')), {'precision':  precision})
+            res['virtual_available'] = FloatConverter.value_to_html(sum(product_variants.mapped('virtual_available')), {'precision':  precision})
         res.update(self._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids))
 
         res['lines'] = self._get_report_lines(product_template_ids, product_variant_ids, wh_location_ids)
@@ -111,6 +113,8 @@ class ReplenishmentReport(models.AbstractModel):
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reservation=False):
         timezone = self._context.get('tz')
+        FloatConverter = self.env['ir.qweb.field.float']
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
         return {
@@ -125,7 +129,7 @@ class ReplenishmentReport(models.AbstractModel):
             'receipt_date': format_datetime(self.env, move_in.date, timezone, dt_format=False) if move_in else False,
             'delivery_date': format_datetime(self.env, move_out.date, timezone, dt_format=False) if move_out else False,
             'is_late': is_late,
-            'quantity': quantity,
+            'quantity': FloatConverter.value_to_html(quantity, {'precision':  precision}),
             'move_out': move_out,
             'move_in': move_in,
             'reservation': reservation,
