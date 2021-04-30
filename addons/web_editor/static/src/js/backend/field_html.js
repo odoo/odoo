@@ -110,7 +110,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * @override
      */
     getFocusableElement: function () {
-        return this.$wysiwygWrapper || $();
+        return this.wysiwyg && this.wysiwyg.$editable || $();
     },
     /**
      * Do not re-render this field if it was the origin of the onchange call.
