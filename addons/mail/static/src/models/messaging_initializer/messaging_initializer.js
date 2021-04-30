@@ -223,8 +223,6 @@ function factory(dependencies) {
                 }
             }));
             this.messaging.notificationGroupManager.computeGroups();
-            // manually force recompute of counter (after computing the groups)
-            this.messaging.messagingMenu.update();
         }
 
         /**
