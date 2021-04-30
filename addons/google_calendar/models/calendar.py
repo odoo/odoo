@@ -78,8 +78,10 @@ class Meeting(models.Model):
 
         alarm_commands = self._odoo_reminders_commands(google_event.reminders.get('overrides') or default_reminders)
         attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
+        related_event = self.search([('google_id', '=', google_event.id)], limit=1)
+        name = google_event.summary or related_event and related_event.name or _("(No title)")
         values = {
-            'name': google_event.summary or _("(No title)"),
+            'name': name,
             'description': google_event.description,
             'location': google_event.location,
             'user_id': google_event.owner(self.env).id,
@@ -229,15 +231,17 @@ class Meeting(models.Model):
             values['visibility'] = self.privacy
         if not self.active:
             values['status'] = 'cancelled'
-        if self.user_id and self.user_id != self.env.user:
+
+        if self.user_id and self.user_id != self.env.user and not bool(self.user_id.sudo().google_calendar_token):
+            # The organizer is an Odoo user that do not sync his calendar
             values['extendedProperties']['shared']['%s_owner_id' % self.env.cr.dbname] = self.user_id.id
         elif not self.user_id:
-            # We don't store the real owner identity (mail)
-            # We can't store on the shared properties in that case without getting a 403
-            # If several odoo users are attendees but the owner is not in odoo, the event will be duplicated on odoo database
-            # if we are not the owner, we should change the post values to avoid errors because we don't have enough rights
+            # We can't store on the shared properties in that case without getting a 403. It can happen when
+            # the owner is not an Odoo user: We don't store the real owner identity (mail)
+            # If we are not the owner, we should change the post values to avoid errors because we don't have
+            # write permissions
             # See https://developers.google.com/calendar/concepts/sharing
-            keep_keys = ['id', 'attendees', 'start', 'end', 'reminders']
+            keep_keys = ['id', 'summary', 'attendees', 'start', 'end', 'reminders']
             values = {key: val for key, val in values.items() if key in keep_keys}
             # values['extendedProperties']['private] should be used if the owner is not an odoo user
             values['extendedProperties'] = {
