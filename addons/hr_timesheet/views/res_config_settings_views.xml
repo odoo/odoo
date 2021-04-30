@@ -71,12 +71,19 @@
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('module_project_timesheet_synchro', '=', False), ('is_encode_uom_days', '=', True)]}">
                             <div class="o_setting_right_pane">
-                                <strong>Round Timesheets</strong>
-                                <div class="o_row w-30">
-                                    <span class="o_light_label"><label for="timesheet_min_duration"/><field name="timesheet_min_duration" class="col-lg-2 text-center"/> minutes</span>
+                                <strong>Time Rounding</strong>
+                                <div class="text-muted">
+                                    Minimal duration and rounding applied when using the timer
                                 </div>
-                                <div class="o_row">
-                                    <span class="o_light_label"><label for="timesheet_rounding"/><field name="timesheet_rounding" class="col-lg-2 text-center"/> minutes</span>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <div class="o_row w-30">
+                                            <span class="o_light_label"><label for="timesheet_min_duration"/><field name="timesheet_min_duration" class="col-lg-2 text-center"/> minutes</span>
+                                        </div>
+                                        <div class="o_row">
+                                            <span class="o_light_label"><label for="timesheet_rounding"/><field name="timesheet_rounding" class="col-lg-2 text-center"/> minutes</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
