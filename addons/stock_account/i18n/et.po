@@ -12,8 +12,8 @@
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Algo Kärp <algokarp@gmail.com>, 2020
 # Triine Aavik <triine@avalah.ee>, 2021
-# Eneli Õigus <enelioigus@gmail.com>, 2021
 # Piia Paurson <piia@avalah.ee>, 2021
+# Eneli Õigus <enelioigus@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:11+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2021\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,14 +33,14 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr "Toote kulu uuendatud %(previous)sst %(new_cost)sni."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
-msgstr ""
+msgstr "%(user)s muutis kulu %(previous)sst %(new_price)sni - %(product)s"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -50,6 +50,7 @@ msgid ""
 "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - "
 "%(product)s"
 msgstr ""
+"%(user)s muutis laohindamist  %(previous)sst %(new_value)sni - %(product)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -57,6 +58,8 @@ msgid ""
 ")\n"
 "                            <small class=\"mx-2 font-italic\">Use a negative added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 font-italic\">kasutage negatiivset lisatud väärtust salvestamaks toote väärtuse vähenemine</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -98,7 +101,7 @@ msgstr "Raamatupidamise informatsioon"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Add Manual Valuation"
-msgstr ""
+msgstr "Lisage manuaalne hindamine"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -109,12 +112,12 @@ msgstr "Lisage lisakulu (transport, toll, ...) toote väärtusele"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Added Value"
-msgstr ""
+msgstr "Lisatud väärtus"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr ""
+msgstr "Lisatud väärtus"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -123,6 +126,8 @@ msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
 msgstr ""
+"Mõjutavad maaletoomistegevuse kulusid ja jagavad need toodete vahel, et "
+"uuendada nende sisseostuhinda. "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -202,7 +207,7 @@ msgstr "Kuluarvutusmeetod"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "Kulumeetodi muudatus tootekategoorias: %s: enne %s pärast %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -215,6 +220,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"Kõik andmikku sissetulevad varud kantakse sellele kontole, kui just pole kindlat hindamise kontot\n"
+"               määratud allika asukohas. See on vaikimisi väärtus kõigile toodetele selles kategoorias. Seda saab määrata ka igal tootel eraldi."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -238,13 +245,13 @@ msgstr "Valuuta"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr ""
+msgstr "Praegune kogus"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Current Value"
-msgstr ""
+msgstr "Praegune väärtus"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -258,6 +265,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
+"Raamatupidamiskannete kuupäev automatiseeritud laovarude hindamise korral. "
+"Kui see on tühi, kasutatakse inventuuri kuupäeva."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -305,6 +314,8 @@ msgid ""
 "                                has changed for product template %s: from %s"
 " to %s."
 msgstr ""
+"Tootekategooria muudatuse tõttu (%s - %s), kulumeetod on muutunud toote "
+"mallis %s: enne %s pärast %s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -319,7 +330,7 @@ msgstr "Rühmita ..."
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
-msgstr ""
+msgstr "On konto liikumisi"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
@@ -433,7 +444,7 @@ msgstr "Viimati uuendatud"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "Seotud"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -444,13 +455,13 @@ msgstr "Käsitsi"
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "Manuaalne laoseisu hindamine: %s."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr ""
+msgstr "Manuaalne laoseisu hindamine: põhjust ei ole antud."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -468,12 +479,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
 msgid "New value"
-msgstr ""
+msgstr "Uus väärtus"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr ""
+msgstr "Uus väärtus koguse alusel"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
@@ -492,6 +503,8 @@ msgid ""
 "Please define an expense account for this product: \"%s\" (id:%d) - or for "
 "its category: \"%s\"."
 msgstr ""
+"Palun määrake kulukonto sellele tootele: \"%s\" (id:%d) - või selle "
+"kategooriale: \"%s\"."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
@@ -516,7 +529,7 @@ msgstr "Toote liikumised"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
 msgid "Product Revaluation"
-msgstr ""
+msgstr "Toote ümberhindamine"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -528,7 +541,7 @@ msgstr "Toote mall"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
-msgstr ""
+msgstr "Toote väärtus manuaalselt muudetud (enne %s pärast %s)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -539,7 +552,7 @@ msgstr "Kogus"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr ""
+msgstr "Kogus Svl"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -554,12 +567,12 @@ msgstr "Põhjus"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "Ümberhindamine põhjus"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr ""
+msgstr "Seotud toode"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -579,18 +592,18 @@ msgstr "Tagastuskorje"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Tagasta korjerida"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "Ümberhindamine %s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "Hinda ümber"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__categ_id
@@ -679,12 +692,12 @@ msgstr "Laovarude konto (väljaminev)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Lao hindamise kiht"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Technical field used to retrieve the anglo-saxon lines."
-msgstr ""
+msgstr "Tehniline väli, mida kasutatakse anglo-saksi ridade hankimisel."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -693,6 +706,7 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"Lao sisend- ja/või väljundkonto ei tohi olla sama kui laohindamise konto."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -702,12 +716,14 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
+"Selle toimingu tulemusel luuakse andmiku kanne, millele teil pole "
+"juurdepääsuõigusi."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
+msgstr "Lisatud väärtusel ei ole mingit mõju lao hindamisele."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -716,6 +732,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
+"Liigutatavad read ei ole järjepidevad: mõned sisenevad ning mõned lahkuvad "
+"ettevõttest."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -744,6 +762,8 @@ msgid ""
 "There is no valuation layers. Valuation layers are created when some product"
 " moves should impact the valuation of the stock."
 msgstr ""
+"Hindamiskihte pole.  Hindamiskihid luuakse, kui mõni toote liikumine peaks "
+"mõjutama lao hindamist."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
@@ -769,7 +789,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
 msgid "Unit Value"
-msgstr ""
+msgstr "Ühiku väärtus"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
@@ -781,7 +801,7 @@ msgstr "Mõõtühik"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "Uuenda koguseid müügi-/ostutellimusel"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -822,7 +842,7 @@ msgstr "Hindamine"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
-msgstr ""
+msgstr "Hindamise meetodi muudatus tootekategoorias %s: enne %s pärast %s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -832,7 +852,7 @@ msgstr "Väärtus"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr ""
+msgstr "Väärtus Svl"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -846,6 +866,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Kui automatiseeritud laovarude hindamine on sellel tootel lubatud, siis see "
+"konto hoiab praegust toote väärtust."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -854,6 +876,9 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"Automaatsel varude hindamisel kantakse kõik andmikust väljaminevad varud sellele kontole\n"
+"                kui just pole kindlat hindamise kontot määratud allika asukohas  See on vaikimisi väärtus kõigile toodetele selles kategoorias.\n"
+"                Seda saab määrata ka igal tootel eraldi."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -861,23 +886,25 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Automaatse varude hindamise raamatupidamisandmik, mille kanded tehakse "
+"automaatselt kui lao liikumised on tehtud."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr ""
+msgstr "Mudel toote laovaru ümberhindamiseks"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
+msgstr "Te ei saa ümber hinnata standard kuluhinna meetodiga toodet."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
+msgstr "Te ei saa ümber hinnata tühja või negatiivset laoseisu."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -887,6 +914,8 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"Toote maksumust ei saa automaatse hindamise kaudu värskendada, kuna see viib"
+" andmiku kande loomiseni, millele teil pole juurdepääsuõigusi."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -895,6 +924,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Teil ei ole ühtegi sisendkontot määratud tootekategooriale. Jätkamiseks "
+"peate määrama vähemalt ühe. "
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -903,6 +934,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts."
 msgstr ""
+"Tootekategoorias ei ole lao andmikku defineeritud. Palun kontrollige, kas "
+"olete lisanud kontoplaani."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -921,7 +954,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr ""
+msgstr "Oma tootekategooria jaoks peate määrama vaste konto."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view

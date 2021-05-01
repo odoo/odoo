@@ -6,6 +6,7 @@
 # Triine Aavik <triine@avalah.ee>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
 # Piia Paurson <piia@avalah.ee>, 2020
+# Algo Kärp <algokarp@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2020\n"
+"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,24 +28,27 @@ msgid ""
 "<span> No company data found based on the email address or email address is "
 "one of an email provider. No credit was consumed. </span>"
 msgstr ""
+"<span>E-posti aadressi või e-posti aadressi põhjal leitud ettevõtte andmed "
+"ei kuulu e-posti teenuse pakkujate hulka. Krediiti ei kasutatud.</span>"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_email
 msgid ""
 "<span>Enrichment could not be done as no email address was provided.</span>"
 msgstr ""
+"<span>Andmete täiendamine ei õnnestunud, kuna puudus e-posti aadress.</span>"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__show_enrich_button
 msgid "Allow manual enrich"
-msgstr ""
+msgstr "Luba manuaalselt andmeid täiendada"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.actions.server,name:crm_iap_lead_enrich.ir_cron_lead_enrichment_ir_actions_server
 #: model:ir.cron,cron_name:crm_iap_lead_enrich.ir_cron_lead_enrichment
 #: model:ir.cron,name:crm_iap_lead_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
-msgstr ""
+msgstr "CRM: täienda müügivihjeid (IAP)"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model,name:crm_iap_lead_enrich.model_res_config_settings
@@ -62,32 +66,35 @@ msgstr "Kuva nimi"
 #: model:ir.actions.server,name:crm_iap_lead_enrich.action_enrich_mail
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
 msgid "Enrich"
-msgstr ""
+msgstr "Täienda"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
 msgid "Enrich this lead with company data based on the email address"
 msgstr ""
+"Täiendage seda müügivihjet e-posti aadressi põhjal ettevõtte andmetega"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
 msgid "Enrich this opportunity with company data based on the email address"
 msgstr ""
+"Täiendage seda müügivõimalust ettevõtte andmetega, mis põhinevad e-posti "
+"aadressil"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__iap_enrich_done
 msgid "Enrichment done"
-msgstr ""
+msgstr "Täiendamine tehtud"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model,name:crm_iap_lead_enrich.model_iap_enrich_api
 msgid "IAP Lead Enrichment API"
-msgstr ""
+msgstr "IAP Müügivihje täiendamine API"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 msgid "IAP account"
-msgstr ""
+msgstr "IAP-konto"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__id
@@ -114,7 +121,7 @@ msgstr "Müügivihjete täiendamine emaili aadresside alusel"
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 #, python-format
 msgid "Lead enriched based on email address"
-msgstr ""
+msgstr "Müügivihjet on täiendatud e-posti aadressi põhjal."
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model,name:crm_iap_lead_enrich.model_crm_lead
@@ -136,4 +143,4 @@ msgstr ""
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 msgid "to buy credits."
-msgstr ""
+msgstr "krediiti ostma."

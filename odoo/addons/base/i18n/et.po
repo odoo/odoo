@@ -16,10 +16,10 @@
 # Ants Peetsalu <ants@avalah.ee>, 2020
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Andre Roomet <andreroomet@gmail.com>, 2021
-# Eneli Õigus <enelioigus@gmail.com>, 2021
 # Piia Paurson <piia@avalah.ee>, 2021
-# Martin Talts <martin.t@avalah.ee>, 2021
 # Triine Aavik <triine@avalah.ee>, 2021
+# Eneli Õigus <enelioigus@gmail.com>, 2021
+# Martin Talts <martin.t@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2021\n"
+"Last-Translator: Martin Talts <martin.t@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +49,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Austria raamatupidamise raportid.\n"
+"================================\n"
+"\n"
+"    * Defines the following reports:\n"
+"        * Profit/Loss (§ 231 UGB Gesamtkostenverfahren)\n"
+"        * Balance Sheet (§ 224 UGB)\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -86,6 +96,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Austria kontoplaan (Einheitskontenrahmen 2010).\n"
+"==========================================================\n"
+"\n"
+"    * Defines the following chart of account templates:\n"
+"        * Austrian General Chart of accounts 2010\n"
+"    * Defines templates for VAT on sales and purchases\n"
+"    * Defines tax templates\n"
+"    * Defines fiscal positions for Austrian fiscal legislation\n"
+"    * Defines tax reports U1/U30\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -200,6 +223,88 @@ msgid ""
 "Copyright 2018 Odoo House ApS\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Taani lokalisatsiooni moodul\n"
+"===============================\n"
+"\n"
+"This is the module to manage the **accounting chart for Denmark**. Cover both one-man business as well as I/S, IVS, ApS and A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"\n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
+"Copyright 2018 Odoo House ApS\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -2080,6 +2185,9 @@ msgid ""
 "Configure your own methods with a pricing grid or integrate with carriers for a fully automated shipping process.\n"
 "    "
 msgstr ""
+"\n"
+"Lisage oma e-kaubanduse poodi tarneviiside valik. \n"
+"Konfigureerige hinnavõrgustikuga või integreerige operaatoritega täielikult automatiseeritud saatmisprotsessi jaoks."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -2133,6 +2241,8 @@ msgid ""
 "\n"
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
+"\n"
+"Lisa seos müügitellimuste ja ostutellimuste vahel, kui Telli (MTO) on aktiveeritud ühel müüdud tootel.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -2148,6 +2258,9 @@ msgid ""
 "Add the ability to create signatures from the document module.\n"
 "The first element of the selection (in DRM) will be used as the signature attachment.\n"
 msgstr ""
+"\n"
+"Lisage võimalus allkirjade loomiseks dokumendimoodulist.\n"
+"Valiku esimest elementi (DRM-is) kasutatakse allkirja manusena.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_hr_recruitment
@@ -2155,6 +2268,8 @@ msgid ""
 "\n"
 "Add the ability to manage resumés and letters from the Documents app.\n"
 msgstr ""
+"\n"
+"Rakenduses Dokumendid kokkuvõtete ja kirjade haldamise võimaluse lisamine.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -2196,6 +2311,8 @@ msgid ""
 "\n"
 "Adds fleet data to documents\n"
 msgstr ""
+"\n"
+"Lisab dokumentidele sõidukipargi andmed\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_product
@@ -2204,6 +2321,9 @@ msgid ""
 "Adds the ability to create products from the document module and adds the\n"
 "option to send products' attachments to the documents app.\n"
 msgstr ""
+"\n"
+"Lisab võimaluse luua tooteid dokumendimoodulist ja lisab\n"
+"võimaluse saata toodete manuseid dokumentide moodulisse.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
@@ -2212,6 +2332,8 @@ msgid ""
 "Adds the lead partner to phonecall list\n"
 "    "
 msgstr ""
+"\n"
+"Lisab  põhi partneri telefonikõnede loendisse"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_enterprise
@@ -2220,6 +2342,8 @@ msgid ""
 "Advanced features for the PoS like better views \n"
 "for IoT Box config.   \n"
 msgstr ""
+"\n"
+"Kassa lisavõimalused nagu paremad vaated IoT Boxi konfiguratsiooni jaoks. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_calendar
@@ -2260,6 +2384,8 @@ msgid ""
 "Allow shoppers of your eCommerce store to create personalized collections of products they want to buy and save them for future reference.\n"
 "    "
 msgstr ""
+"\n"
+"Luba oma e-poe ostjatel luua personaalseid toodete nimekirju, mida nad soovivad osta ja salvestada need edaspidiseks kasutamiseks."
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -2301,6 +2427,9 @@ msgid ""
 "by external providers and will automatically generate purchase orders directed to the service seller.\n"
 "    "
 msgstr ""
+"\n"
+"Võimaldab teenuste allhanget. See moodul võimaldab müüa\n"
+"väliste pakkujate teenuseidja genereerib automaatselt teenuse müüjale suunatud ostutellimuse."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_purchase
@@ -2309,6 +2438,9 @@ msgid ""
 "Allows to access purchase orders from Project Overview\n"
 "======================================================\n"
 msgstr ""
+"\n"
+"Võimaldab juurdepääsu ostutellimustele projekti ülevaatest\n"
+"======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project
@@ -2318,6 +2450,10 @@ msgid ""
 "=============================================\n"
 "This module allows to generate a project/task from sales orders.\n"
 msgstr ""
+"\n"
+"Võimaldab luua tööülesande müügitellimuselt\n"
+"=============================================\n"
+"See moodul võimaldab luua projekti/ülessande müügitellimuselt.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip
@@ -2353,6 +2489,9 @@ msgid ""
 "Allows to use in the Point of Sale the devices that are connected to an IoT Box.\n"
 "Supported devices include payment terminals, receipt printers, scales and customer displays.\n"
 msgstr ""
+"\n"
+"Võimaldab kassas kasutada seadmeid, mis on ühendatud IoT-kastiga.\n"
+"Toetatud seadmed on makseterminalid, kviitungiprinterid, kaalud ja kliendikuvarid.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_amazon_delivery
@@ -2361,6 +2500,10 @@ msgid ""
 "Allows to use tracking numbers for products sold on Amazon\n"
 "==========================================================\n"
 msgstr ""
+"\n"
+"Võimaldab kasutada Amazonis müüdavate toodete jälgimisnumbreid\n"
+"\n"
+"==========================================================\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock_renting
@@ -2378,6 +2521,10 @@ msgid ""
 "=====================================================\n"
 "        "
 msgstr ""
+"\n"
+"Võimaldab kasutajatel saata dokumente postiga\n"
+"=====================================================\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_snailmail_account
@@ -2387,6 +2534,12 @@ msgid ""
 "=====================================================\n"
 "        "
 msgstr ""
+"\n"
+"Võimaldab kasutajatel saata arveid postiga\n"
+"\n"
+"\n"
+"=====================================================\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_iot
@@ -2394,6 +2547,9 @@ msgid ""
 "\n"
 "Allows using IoT devices, such as scales and printers, for delivery operations.\n"
 msgstr ""
+"\n"
+"Lubab saatetoiminguteks kasutada IoT-seadmeid nt kaalusid ja printereid.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -2559,6 +2715,30 @@ msgid ""
 "The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
 "    "
 msgstr ""
+"\n"
+"Australia raamatupidamise moodul\n"
+"============================\n"
+"\n"
+"Taxable Payments Annual Reports (TPAR) for Australia\n"
+"\n"
+"The Taxable payments annual report (TPAR) allows:\n"
+"\n"
+"    • Payments made to contractors (or subcontractors) for services, or\n"
+"    • Grants paid by government entities to ABN holders\n"
+"\n"
+"to be reported where required under the Taxable Payments Reporting System (TPRS) and the Taxable Government Grants and Payments reporting measure.\n"
+"\n"
+"The TPAR is due by 28th August each year.\n"
+"\n"
+"Penalties may apply if you don’t lodge your TPAR on time.\n"
+"\n"
+"For further information on who is required to lodge a Taxable payments annual report refer to\n"
+"https://softwaredevelopers.ato.gov.au/tprs\n"
+"\n"
+"The annual report must be provided to the Commissioner no later than 28 August after the end of the financial year. Reports can be sent more frequently for those that wish to do so.\n"
+"\n"
+"The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -2635,6 +2815,42 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't\n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Brasiilia lokalisatsiooni põhimoodul\n"
+"==========================================\n"
+"\n"
+"This module consists of:\n"
+"\n"
+" - Generic Brazilian chart of accounts\n"
+" - Brazilian taxes such as:\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"The field tax_discount has also been added in the account.tax.template and\n"
+"account.tax objects to allow the proper computation of some Brazilian VATs\n"
+"such as ICMS. The chart of account creation wizard has been extended to\n"
+"propagate those new data properly.\n"
+"\n"
+"It's important to note however that this module lack many implementations to\n"
+"use Odoo properly in Brazil. Those implementations (such as the electronic\n"
+"fiscal Invoicing which is already operational) are brought by more than 15\n"
+"additional modules of the Brazilian Launchpad localization project\n"
+"https://launchpad.net/openerp.pt-br-localiz and their dependencies in the\n"
+"extra addons branch. Those modules aim at not breaking with the remarkable\n"
+"Odoo modularity, this is why they are numerous but small. One of the\n"
+"reasons for maintaining those modules apart is that Brazilian Localization\n"
+"leaders need commit rights agility to complete the localization as companies\n"
+"fund the remaining legal requirements (such as soon fiscal ledgers,\n"
+"accounting SPED, fiscal SPED and PAF ECF that are still missing as September\n"
+"2011). Those modules are also strictly licensed under AGPL V3 and today don't\n"
+"come with any additional paid permission for online use of 'private modules'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -2706,6 +2922,25 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Belgia sularaha register\n"
+"================================\n"
+"\n"
+"This module turns the Point Of Sale module into a certified Belgian cash register.\n"
+"\n"
+"More info:\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Legal\n"
+"-----\n"
+"**The use of pos_blackbox_be sources is only certified on odoo.com SaaS platform\n"
+"for version 13.0.** Contact Odoo SA before installing pos_blackbox_be module.\n"
+"\n"
+"An obfuscated and certified version of the pos_blackbox_be may be provided on\n"
+"requests for on-premise installations.\n"
+"No modified version is certified and supported by Odoo SA.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -2847,6 +3082,34 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"Venetsueela kontoplaan\n"
+"===============================\n"
+"\n"
+"Venezuela doesn't have any chart of account by law, but the default\n"
+"proposed in Odoo should comply with some Accepted best practices in Venezuela,\n"
+"this plan comply with this practices.\n"
+"\n"
+"This module has been tested as base for more of 1000 companies, because\n"
+"it is based in a mixtures of most common software in the Venezuelan\n"
+"market what will allow for sure to accountants feel them first steps with\n"
+"Odoo more comfortable.\n"
+"\n"
+"This module doesn't pretend be the total localization for Venezuela,\n"
+"but it will help you to start really quickly with Odoo in this country.\n"
+"\n"
+"This module give you.\n"
+"---------------------\n"
+"\n"
+"- Basic taxes for Venezuela.\n"
+"- Have basic data to run tests with community localization.\n"
+"- Start a company from 0 if your needs are basic from an accounting PoV.\n"
+"\n"
+"We recomend use of account_anglo_saxon if you want valued your\n"
+"stocks as Venezuela does with out invoices.\n"
+"\n"
+"If you install this module, and select Custom chart a basic chart will be proposed,\n"
+"but you will need set manually account defaults for taxes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -2904,6 +3167,10 @@ msgid ""
 "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
 "    "
 msgstr ""
+"\n"
+"Tšiili kontoplaan ja maksude lokaliseerimine..\n"
+"Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_city
@@ -3084,6 +3351,12 @@ msgid ""
 "sent mails with personal token for the invitation of the survey.\n"
 "    "
 msgstr ""
+"\n"
+"Looge ilusad veebiküsitlused ja visualiseerige vastused\n"
+"==================================================\n"
+"\n"
+"See sõltub erinevate kasutajate antud küsimuste vastustest või arvustustest. Küsitluses võib olla mitmeid lehekülgi. Igal lehel võib olla mitu küsimust ja vastust. Erinevad vastajad võivad anda erinevaid vastuseid. Partneritele saadetakse personaalne kutse küsitlusele.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_coupon
@@ -3929,6 +4202,18 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
 "  "
 msgstr ""
+"\n"
+"India raamatupidamine: kontoplaan.\n"
+"====================================\n"
+"\n"
+"Indian accounting chart and localization.\n"
+"\n"
+"Odoo allows to manage Indian Accounting by providing Two Formats Of Chart of Accounts i.e Indian Chart Of Accounts - Standard and Indian Chart Of Accounts - Schedule VI.\n"
+"\n"
+"Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n"
+"31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
+"Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -3950,6 +4235,22 @@ msgid ""
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 "    "
 msgstr ""
+"\n"
+"Indian palgareeglid.\n"
+"============================\n"
+"\n"
+"    -Configuration of hr_payroll for India localization\n"
+"    -All main contributions rules for India payslip.\n"
+"    * New payslip report\n"
+"    * Employee Contracts\n"
+"    * Allow to configure Basic / Gross / Net Salary\n"
+"    * Employee PaySlip\n"
+"    * Allowance / Deduction\n"
+"    * Integrated with Leaves Management\n"
+"    * Medical Allowance, Travel Allowance, Child Allowance, ...\n"
+"    - Payroll Advice and Report\n"
+"    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_github
@@ -3981,6 +4282,10 @@ msgid ""
 "==================\n"
 "    "
 msgstr ""
+"\n"
+"Intrastati raportid\n"
+"==================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -4019,6 +4324,10 @@ msgid ""
 "This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Lisakulude juhtimine\n"
+"=======================\n"
+"See moodul võimaldab teil hõlpsasti lisada lisakulusid noppelehtedele ja otsustada nende kulude jaotus.    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_score
@@ -13429,7 +13738,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
 msgid "Fichier d'Échange Informatisé (FEC) for France"
-msgstr ""
+msgstr "Fichier d'Échange Informatisé (FEC) for France"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec
@@ -13475,6 +13784,46 @@ msgid ""
 "* Alexis de Lattre <alexis.delattre@akretion.com>\n"
 "\n"
 msgstr ""
+"Fichier d'Échange Informatisé (FEC) pour la France\n"
+"==================================================\n"
+"\n"
+"Ce module permet de générer le fichier FEC tel que définit par `l'arrêté du 29\n"
+"Juillet 2013 <http://legifrance.gouv.fr/eli/arrete/2013/7/29/BUDE1315492A/jo/texte>`\n"
+"portant modification des dispositions de l'article A. 47 A-1 du\n"
+"livre des procédures fiscales.\n"
+"\n"
+"Cet arrêté prévoit l'obligation pour les sociétés ayant une comptabilité\n"
+"informatisée de pouvoir fournir à l'administration fiscale un fichier\n"
+"regroupant l'ensemble des écritures comptables de l'exercice. Le format de ce\n"
+"fichier, appelé *FEC*, est définit dans l'arrêté.\n"
+"\n"
+"Le détail du format du FEC est spécifié dans le bulletin officiel des finances publiques `BOI-CF-IOR-60-40-20-20131213 <http://bofip.impots.gouv.fr/bofip/ext/pdf/createPdfWithAnnexePermalien/BOI-CF-IOR-60-40-20-20131213.pdf?doc=9028-PGP&identifiant=BOI-CF-IOR-60-40-20-20131213>` du 13 Décembre 2013. Ce module implémente le fichier\n"
+"FEC au format texte et non au format XML, car le format texte sera facilement\n"
+"lisible et vérifiable par le comptable en utilisant un tableur.\n"
+"\n"
+"La structure du fichier FEC généré par ce module a été vérifiée avec le logiciel\n"
+"*Test Compta Demat* version 1_00_05 disponible sur\n"
+"`le site de la direction générale des finances publiques <http://www.economie.gouv.fr/dgfip/outil-test-des-fichiers-des-ecritures-comptables-fec>`\n"
+"en utilisant une base de donnée Odoo réelle.\n"
+"\n"
+"Configuration\n"
+"=============\n"
+"\n"
+"Aucune configuration n'est nécessaire.\n"
+"\n"
+"Utilisation\n"
+"===========\n"
+"\n"
+"Pour générer le *FEC*, allez dans le menu *Accounting > Reporting > French Statements > FEC* qui va démarrer l'assistant de génération du FEC.\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"Contributors\n"
+"------------\n"
+"\n"
+"* Alexis de Lattre <alexis.delattre@akretion.com>\n"
+"\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default__field_id
@@ -13706,12 +14055,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__datas
 msgid "File Content (base64)"
-msgstr ""
+msgstr "Faili sisu (base64)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__raw
 msgid "File Content (raw)"
-msgstr ""
+msgstr "Faili sisu (raw)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__format
@@ -14613,7 +14962,7 @@ msgstr "HTML"
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Routing"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -14623,7 +14972,7 @@ msgstr "Haiti"
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Handle lunch orders of your employees"
-msgstr ""
+msgstr "Töötajate lõunatellimuste käsitlemine"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -14633,7 +14982,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Hea meel olla Sponsor"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -14711,7 +15060,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_repair
 msgid "Helpdesk Repair"
-msgstr ""
+msgstr "Kasutajatugi parandamine"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_coupon
@@ -14751,52 +15100,52 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sales
 msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr ""
+msgstr "Aitab teil hallata oma pakkumisi, müügitellimusi ja arveldamist."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_attendances
 msgid "Helps you manage the attendances."
-msgstr ""
+msgstr "Aitab teil osavõtjaid hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_services_timesheets
 msgid "Helps you manage the timesheets."
-msgstr ""
+msgstr "Aitab hallata ajatabeleid."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_user_type
 msgid "Helps you manage users."
-msgstr ""
+msgstr "Aitab kasutajaid hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing_events
 msgid "Helps you manage your Events."
-msgstr ""
+msgstr "Aitab sündmusi hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_appraisals
 msgid "Helps you manage your appraisals."
-msgstr ""
+msgstr "Aitab hindamisi hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_approvals
 msgid "Helps you manage your approvals."
-msgstr ""
+msgstr "Aitab kinnitusi hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_contracts
 msgid "Helps you manage your contracts."
-msgstr ""
+msgstr "Aitab lepinguid hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_employees
 msgid "Helps you manage your employees."
-msgstr ""
+msgstr "Aitab töötajaid hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_expenses
 msgid "Helps you manage your expenses."
-msgstr ""
+msgstr "Aitab kulusid hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_inventory_inventory
@@ -14804,6 +15153,7 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
+"Aitab teil hallata oma ladu ja laotoiminguid: tellimusi, saatelehti jne."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing_manufacturing
@@ -14811,6 +15161,8 @@ msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
 msgstr ""
+"Aitab teil hallata tootmisprotsesse ja koostada nende protsesside kohta "
+"aruandeid."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing_email_marketing
@@ -14822,7 +15174,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_payroll
 msgid "Helps you manage your payrolls."
-msgstr ""
+msgstr "Aitab teil palgaarvestust hallata."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_services_project
@@ -14830,6 +15182,8 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
+"Aitab teil hallata projekte ja ülesandeid, jälgides neid, luues plaane "
+"jne..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_inventory_purchase
@@ -14837,6 +15191,7 @@ msgid ""
 "Helps you manage your purchase-related processes such as requests for "
 "quotations, supplier bills, etc..."
 msgstr ""
+"Aitab hallata ostuga seotud protsesse, nagu pakkumised, tarnijaarved jne..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_manufacturing_quality
@@ -14846,7 +15201,7 @@ msgstr "Aitab hallata kvaliteediteateid ja -kontrolle"
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_recruitment
 msgid "Helps you manage your recruitments."
-msgstr ""
+msgstr "Aitab värbamisi hallata"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing_surveys
@@ -14861,7 +15216,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
 msgid "Helps you sign and complete your documents easily."
-msgstr ""
+msgstr "Aitab teil dokumente hõlpsalt allkirjastada ja lõpule viia."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -26620,7 +26975,7 @@ msgstr "Wallis ja Futuna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_batch
 msgid "Warehouse Management: Batch Transfer"
-msgstr "Laohaldus: koondsiire"
+msgstr "Laohaldus: koondsaateleht"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0
