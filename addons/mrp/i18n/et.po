@@ -52,12 +52,15 @@ msgid ""
 "            * Waiting: The material is not available to start the production.\n"
 "            The material availability is impacted by the manufacturing readiness            defined on the BoM."
 msgstr ""
+" * Valmis: Materjal on tootmise alustamiseks saadaval.\n"
+"            * Ootel: Materjal pole tootmise alustamiseks saadaval.\n"
+"            Materjali saadavuse staatust mõjutab retseptis määratud           tootmisvalmidus."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
-msgstr ""
+msgstr " <br/><br/> Komponendid võetakse <b>%s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -101,17 +104,17 @@ msgstr "Retsepte, kus kasutatud"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
-msgstr ""
+msgstr "%s ei saa kustutada. Proovige neid esmalt tühistada."
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Structure - %s' % object.display_name"
-msgstr ""
+msgstr "'Retsepti struktuur - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
 msgid "'Finished products - %s' % object.name"
-msgstr ""
+msgstr "'Valmistooted - %s' % object.name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
@@ -131,7 +134,7 @@ msgstr ""
 #: model:product.product,description:mrp.product_product_computer_desk_leg
 #: model:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
-msgstr ""
+msgstr "18″ x 2½″ Square Leg"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -142,17 +145,17 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-pause\" role=\"img\" aria-label=\"Pause\" title=\"Pause\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-play\" role=\"img\" aria-label=\"Run\" title=\"Run\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-stop\" role=\"img\" aria-label=\"Stop\" title=\"Stop\"/>"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -301,7 +304,7 @@ msgstr "<strong>Minutite arv</strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Operation</strong>"
-msgstr ""
+msgstr "<strong>Tegevus</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -316,7 +319,7 @@ msgstr "<strong>Põhjus: </strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Responsible:</strong><br/>"
-msgstr ""
+msgstr "<strong>Vastutav:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -350,6 +353,7 @@ msgstr "<strong>Töökeskus: </strong>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "A BoM of type kit is used to split the product into its components."
 msgstr ""
+"BoMi tüüpi komplekti kasutatakse selleks, et eraldada toodet komponetideks."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -362,7 +366,7 @@ msgstr "Tootmistellimus on juba tehtud või tühistatud"
 #, python-format
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr ""
+msgstr "Komplekti-tüüpi retseptil ei saa olla juurdetellimisreeglit."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -455,6 +459,8 @@ msgstr "Lisage oma töökäskudele kvaliteedikontroll"
 #, python-format
 msgid "Add some materials to consume before marking this MO as to do."
 msgstr ""
+"Lisa tarbitavaid materjale, enne kui märgite selle tootmistellimuse "
+"tehtavaks."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -483,7 +489,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__use_create_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Allow to create new lot/serial numbers for the components"
-msgstr ""
+msgstr "Luba lisada komponentidele uusi partii/seerianumbreid"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allowed_lots_domain
@@ -511,6 +517,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
+"Alternatiivsed töökeskused, mida saab selle vastu asendada tootmise ümber "
+"suunamiseks"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -518,6 +526,7 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
+"Lahti võtmise käsku kasutatakse lõpptoote komponentideks tagasi võtmiseks."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
@@ -551,12 +560,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
-msgstr ""
+msgstr "Tootmistellimuse loomisel."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Stock Transfer."
-msgstr ""
+msgstr "Laoliikumise loomisel."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -583,7 +592,7 @@ msgstr "Manused"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attachments_count
 msgid "Attachments Count"
-msgstr ""
+msgstr "Manuste arv"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__availability
@@ -612,6 +621,8 @@ msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Keskmine viiteaeg päevades selle toote tootmiseks. Multi-astmelise retsepto "
+"korral lisatakse juurde komponentide tootmise viiteajad."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -621,7 +632,7 @@ msgstr "BOMi tootevariandid"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr ""
+msgstr "Vajalikud retsepti variatsioonid selle rea kasutamiseks."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
@@ -679,6 +690,8 @@ msgid ""
 "Bill of Materials allow you to define the list of required components to "
 "make a finished product."
 msgstr ""
+"Retsept võimaldab määrata ära valmistoote jaoks nõutud komponentide "
+"nimekirja."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -693,6 +706,9 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
+"Koostematerjalide nimekiri võimaldab kirjeldada kõik toormaterjalid,\n"
+"                mida kasutatakse lõpp-toote toomiseks läbi tootmistellimuse \n"
+"                või toodete pakkimise."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -725,7 +741,7 @@ msgstr "Viimase kuu aja jooksul blokeeritud tunnid"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__name
 msgid "Blocking Reason"
-msgstr ""
+msgstr "Blokeerimise põhjus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -790,6 +806,8 @@ msgid ""
 "BoM cannot concern product %s and have a line with attributes (%s) at the "
 "same time."
 msgstr ""
+"Retsept ei saa olla seotud tootega %s ning samaaegselt omada rida "
+"atribuutidega (%s)."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
@@ -800,7 +818,7 @@ msgstr "BOMi üksikasjad"
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
-msgstr ""
+msgstr "Retsepti rea toode %s ei tohiks olla sama mis retsepti toode."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -821,7 +839,7 @@ msgstr "Kõrvalsaadus"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
 msgid "By-product line that generated the move in a manufacturing order"
-msgstr ""
+msgstr "Kõrvaltoote rida, mis genereeris tootmistellimuses liikumise"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__byproduct_ids
@@ -837,7 +855,7 @@ msgstr "Kõrvalsaadused"
 #: model:ir.model,name:mrp.model_mrp_bom_byproduct
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_byproduct_form_view
 msgid "Byproduct"
-msgstr ""
+msgstr "Kõrvaltoode"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -863,7 +881,7 @@ msgstr "Tühistatud"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Cannot delete a manufacturing order in done state."
-msgstr ""
+msgstr "Ei saa kustutada tehtud staatuses tootmistellimust."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity
@@ -1004,7 +1022,7 @@ msgstr "Seadistused"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__confirm_cancel
 msgid "Confirm Cancel"
-msgstr ""
+msgstr "Kinnita tühistamine"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__confirmed
@@ -1091,7 +1109,7 @@ msgstr "Kulude info"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__use_create_components_lots
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Create New Lots/Serial Numbers for Components"
-msgstr ""
+msgstr "Loo komponentidele uusi partii/seerianumbreid"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1199,13 +1217,13 @@ msgstr "Andmebaasi andmed"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_planned_finished
 msgid "Date at which you plan to finish the production."
-msgstr ""
+msgstr "Kuupäev, milla planeerite tootmise lõpetada."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_planned_start
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_date
 msgid "Date at which you plan to start the production."
-msgstr ""
+msgstr "Kuupäev, millal planeerite tootmist alustada"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_deadline
@@ -1239,6 +1257,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet_type
 msgid "Defines if you want to use a PDF or a Google Slide as work sheet."
 msgstr ""
+"Määrab ära, kas te soovite kasutada PDFi või Google Slide'i töölehena."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__ready_to_produce
@@ -1340,19 +1359,19 @@ msgstr "Planeerimata"
 #: model:product.product,name:mrp.product_product_drawer_drawer
 #: model:product.template,name:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer Black"
-msgstr ""
+msgstr "Must sahtel"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_drawer_case
 #: model:product.template,name:mrp.product_product_drawer_case_product_template
 msgid "Drawer Case Black"
-msgstr ""
+msgstr "Must sahtlitega kummut"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_drawer_drawer
 #: model:product.template,description:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer on casters for great usability."
-msgstr ""
+msgstr "Ratastel kummut paremaks kasutamiseks."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
@@ -1453,7 +1472,7 @@ msgstr "Faili suurus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Files attached to the product"
-msgstr ""
+msgstr "Tootega seotud failid"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1484,7 +1503,7 @@ msgstr "Lõppenud partiid on olemas"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_finished_ids
 msgid "Finished Moves"
-msgstr ""
+msgstr "Lõpetatud siirded"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__finished_move_line_ids
@@ -1609,12 +1628,12 @@ msgstr "Annab järjestuse tellimuste loendi kuvamisel."
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__worksheet_google_slide
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__worksheet_type__google_slide
 msgid "Google Slide"
-msgstr ""
+msgstr "Google Slide"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Google Slide Link"
-msgstr ""
+msgstr "Google Slide Link"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -1758,22 +1777,22 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
 msgid "Image Height"
-msgstr ""
+msgstr "Pildi kõrgus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "Pildi Src"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_width
 msgid "Image Width"
-msgstr ""
+msgstr "Pildi laius"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Impacted Transfer(s):"
-msgstr ""
+msgstr "Mõjutatud siirded:"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -1812,6 +1831,8 @@ msgid ""
 "Informative date allowing to define when the manufacturing order should be "
 "processed at the latest to fulfill delivery on time."
 msgstr ""
+"Informatiivne kuupäev, mis võimaldab määrata, millal tootmistellimus tuleks "
+"kõige hiljemalt tööle panna, et täita nõutud tarnekuupäeva."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line__lot_produced_qty
@@ -1957,7 +1978,7 @@ msgstr "Viimati uuendatud (millal)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__last_working_user_id
 msgid "Last user that worked on this work order."
-msgstr ""
+msgstr "Selle töökäsuga viimati töötanud kasutaja."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1980,7 +2001,7 @@ msgstr "Üle tähtaja tegevused"
 #: model:product.product,description:mrp.product_product_wood_ply
 #: model:product.template,description:mrp.product_product_wood_ply_product_template
 msgid "Layers that are stick together to assemble wood panels."
-msgstr ""
+msgstr "Puupaneelide kokkupanemiseks koosolevad kihid."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__leave_id
@@ -2005,7 +2026,7 @@ msgstr "Asukoht"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr ""
+msgstr "Lahti võetava toote asukoht."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
@@ -2022,7 +2043,7 @@ msgstr "Asukoht, kuhu süsteem paneb valmistooted."
 msgid ""
 "Location where you want to send the components resulting from the unbuild "
 "order."
-msgstr ""
+msgstr "Asukoht, kuhu soovite lahti võetud komponendid panna."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2059,7 +2080,7 @@ msgstr "Partii/Seerianumber"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__lot_id
 msgid "Lot/Serial Number of the product to unbuild."
-msgstr ""
+msgstr "Lahti võetava toote partii/seerianumber."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_finisehd_move_line
@@ -2137,7 +2158,7 @@ msgstr "Tooda (1 samm)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_mto_pull_id
 msgid "Manufacture MTO Rule"
-msgstr ""
+msgstr "Tooda MTO reegel"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_pull_id
@@ -2501,6 +2522,8 @@ msgid ""
 "has a capacity of 5 and you have to produce 10 units on your work order, the"
 " usual operation time will be multiplied by 2."
 msgstr ""
+"Paralleelselt toodetavate tükkide arv. Kui töökeskuse maht on 5 ja teil on "
+"töökäsuga vaja toota 10 tk, korrutatakse tavapärane tegevuse aeg kahega."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
@@ -2573,7 +2596,7 @@ msgstr "Tegevused"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Operations Done"
-msgstr ""
+msgstr "Tehtud tegevused"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -2603,7 +2626,7 @@ msgstr "Algne toodangukogus"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
 msgid "Overall Effective Efficiency Target in percentage"
-msgstr ""
+msgstr "Üleüldise tõhususe ja mõjususe eesmärk protsendis"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
@@ -2647,7 +2670,7 @@ msgstr "Peamine BoM"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
 msgid "Parent Product Template"
-msgstr ""
+msgstr "Ülem tootemall"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__routing_id
@@ -2660,7 +2683,7 @@ msgstr "Peamine marsruut"
 msgid ""
 "Paste the url of your Google Slide. Make sure the access to the document is "
 "public."
-msgstr ""
+msgstr "Kleebi Google Slide URL. Veendu, et dokumendile on kõigile saadaval."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2739,7 +2762,7 @@ msgstr "Noppetüüp"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
 msgid "Picking associated to this manufacturing order"
-msgstr ""
+msgstr "Selle toomistellimusega seotud tootmistellimus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_loc_id
@@ -2795,7 +2818,7 @@ msgstr "Planeerimine"
 #: model:product.product,name:mrp.product_product_plastic_laminate
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
 msgid "Plastic Laminate"
-msgstr ""
+msgstr "Plastiklaminaat"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -2816,18 +2839,18 @@ msgstr ""
 #: model:product.product,name:mrp.product_product_wood_ply
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
 msgid "Ply Layer"
-msgstr ""
+msgstr "Turvisekiht"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_ply_veneer
 #: model:product.template,name:mrp.product_product_ply_veneer_product_template
 msgid "Ply Veneer"
-msgstr ""
+msgstr "Vineer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__possible_bom_product_template_attribute_value_ids
 msgid "Possible Bom Product Template Attribute Value"
-msgstr ""
+msgstr "Võimaliku Retsepti tootemalli atribuudi väärtus"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2897,6 +2920,8 @@ msgid ""
 "Produce : Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"Tooda: Siirda tootmisasukoha komponendid automaatselt tootmisasukohta ning alusta tootmisprotsessiga.\n"
+"Grupeeri / Tooda: Paiguta esmalt komponendid laost vahealale ning seejärel suuna nad tootmsasukohta."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -2945,7 +2970,7 @@ msgstr "Toode"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Product Attachments"
-msgstr ""
+msgstr "Toote manused"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -3024,7 +3049,7 @@ msgstr "Tootmiskäsk"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__raw_material_production_id
 msgid "Production Order for components"
-msgstr ""
+msgstr "Komponentide tootmisjärjekord"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
@@ -3087,7 +3112,7 @@ msgstr "Tarbitavad tooted"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
 msgid "Progress Done (%)"
-msgstr ""
+msgstr "Tehtud progess (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date
@@ -3160,7 +3185,7 @@ msgstr "Kogus tootmiseks"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
 msgid "Quantity To Consume"
-msgstr ""
+msgstr "Tarbitav kogus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__product_qty
@@ -3188,7 +3213,7 @@ msgstr "Kogus:"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_raw_ids
 msgid "Raw Moves"
-msgstr ""
+msgstr "Toored liikumised"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__assigned
@@ -3434,7 +3459,7 @@ msgstr "Praak"
 #: model:product.product,name:mrp.product_product_computer_desk_screw
 #: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
 msgid "Screw"
-msgstr ""
+msgstr "Kruvi"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -3491,7 +3516,7 @@ msgstr "Tootmiseelse komplekteerimise järjestus"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence production"
-msgstr ""
+msgstr "Tootmisjärjestus"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -3530,19 +3555,19 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
-msgstr ""
+msgstr "Märgi ära töökeskuste kalendrisse, kui planeeritud"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_head
 #: model:product.template,description:mrp.product_product_computer_desk_head_product_template
 msgid "Solid wood is a durable natural material."
-msgstr ""
+msgstr "Solid wood is a durable natural material."
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk
 #: model:product.template,description:mrp.product_product_computer_desk_product_template
 msgid "Solid wood table."
-msgstr ""
+msgstr "Solid wood table."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3559,6 +3584,8 @@ msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
 msgstr ""
+"Mõningad kõrvaltooted on jälgitavad, te peate märkima üles konkreetse "
+"tootmistellimuse, et saada kätte õiged kõrvaltooted."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3567,6 +3594,8 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
+"Mõningad kõrvaltooted on jälgitavad, te peate märkima üles konkreetse "
+"tootmistellimuse, et saada kätte õiged komponendid."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3574,6 +3603,8 @@ msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process ?"
 msgstr ""
+"Mõned tooteliikumised on juba ära kinnitatud, seda tootmistellimust ei saa "
+"lõplikult tühistada. Kas olede kindel, et soovite tegevust läbi viia ?"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3582,6 +3613,8 @@ msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"Mõningad töökäsud on juba täidetud, te ei saa seda tootmistellimust plaanist"
+" maha võtta."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3590,6 +3623,8 @@ msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
 msgstr ""
+"Mõningate töökäskudega on juba alustatud, te ei saa seda tootmistellimust "
+"plaanist maha võtta."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -3610,13 +3645,13 @@ msgstr "Täpsustage töökoha kulu tunni kohta."
 #: model:product.product,description:mrp.product_product_computer_desk_screw
 #: model:product.template,description:mrp.product_product_computer_desk_screw_product_template
 msgid "Stainless steel screw"
-msgstr ""
+msgstr "Stainless steel screw"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_bolt
 #: model:product.template,description:mrp.product_product_computer_desk_bolt_product_template
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
-msgstr ""
+msgstr "Stainless steel screw full (dia - 5mm, Length - 10mm)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start
@@ -3729,7 +3764,7 @@ msgstr "Salvestatud faili nimi"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_product_produce__consumption__strict
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__consumption__strict
 msgid "Strict"
-msgstr ""
+msgstr "Range"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -3767,13 +3802,13 @@ msgstr "Lauakomplekt"
 #: model:product.product,name:mrp.product_product_computer_desk_leg
 #: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
 msgid "Table Leg"
-msgstr ""
+msgstr "Lauajalg"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_head
 #: model:product.template,name:mrp.product_product_computer_desk_head_product_template
 msgid "Table Top"
-msgstr ""
+msgstr "Lauaplaat"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_table_kit
@@ -3905,6 +3940,8 @@ msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
+"Töökäskude planeeritud lõppkuupäev  ei saa olla enne planeeritud algusaega, "
+"palun parandage see, et salvestada töökäsk."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
@@ -3945,7 +3982,7 @@ msgstr ""
 msgid ""
 "The unit of measure you choose is in a different category than the product "
 "unit of measure."
-msgstr ""
+msgstr "Teie valitud mõõtühk on teises kategoorias toote enda mõõtühikust."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -3954,6 +3991,8 @@ msgid ""
 "There is no Bill of Material of type manufacture or kit found for the "
 "product %s. Please define a Bill of Material for this product."
 msgstr ""
+"Tootele %s ei ole leitud tootmise ega komplektiga seotud retsepti. Palun "
+"määrake selle toote jaoks ära retsept."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
@@ -3966,6 +4005,7 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
+"Seda välja kasutatakse määramaks ajavööndit, millal ressursid teevad tööd."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_efficiency
@@ -3985,7 +4025,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 msgid "This is a BoM of type Kit!"
-msgstr ""
+msgstr "See on Komplekti tüüpi retsept!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -3993,11 +4033,13 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
+"See kulu põhineb toote retseptil. Selle arvutamiseks summeeritakse toote "
+"valmistamiseks minevate komponentide ja tegevuste kulu."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "This is the cost defined on the product."
-msgstr ""
+msgstr "See on tootel määratud kulu."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
@@ -4139,12 +4181,12 @@ msgstr "Tänased tegevused"
 #: model:product.product,description:mrp.product_product_wood_wear
 #: model:product.template,description:mrp.product_product_wood_wear_product_template
 msgid "Top layer of a wood panel."
-msgstr ""
+msgstr "Top layer of a wood panel."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
-msgstr ""
+msgstr "Kogukestus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -4417,7 +4459,7 @@ msgstr ""
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Variant:"
-msgstr ""
+msgstr "Variatsioon:"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__3
@@ -4455,7 +4497,7 @@ msgstr "Ootel materjalid"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Waiting for Component"
-msgstr ""
+msgstr "Komponendi oodel"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending
@@ -4470,7 +4512,7 @@ msgstr "Ladu"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr ""
+msgstr "Hoiata puuduvat lahti võtmise kogust"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4489,7 +4531,7 @@ msgstr "Hoiatused"
 #: model:product.product,name:mrp.product_product_wood_wear
 #: model:product.template,name:mrp.product_product_wood_wear_product_template
 msgid "Wear Layer"
-msgstr ""
+msgstr "Wear Layer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
@@ -4538,12 +4580,14 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
+"Kui tooteid vajatakse <b>%s</b>, <br/> tootmistellimus luuakse nõudluse "
+"rahuldamiseks."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_panel
 #: model:product.template,name:mrp.product_product_wood_panel_product_template
 msgid "Wood Panel"
-msgstr ""
+msgstr "Wood Panel"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -4637,6 +4681,9 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
+"Töökäskude tegevused võimaldavad luua ja hallata tootmisoperatsioone, mida "
+"peaks toote valmistamiseks järgima. Need on seotud retseptiga, milles "
+"määratakse ära nõutud komponendid."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -4789,6 +4836,10 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
+"Tei ei ole lubatud luua ega muuta komponentide seeria- ja partiinumbreid, "
+"kui operatsiooni tüübiks on määratud \"Tootmine\". Selle muutmiseks minge "
+"operatsiooni tüübi peale ning märkige linnukesega \"Loo komponentidele uued "
+"partii/seerianumbrid\"."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__type
@@ -4818,6 +4869,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"Te ei saa luua komplekt-tüüpi retsepti toodetele, millel on küljes vähemalt "
+"üks juurdetellimisreegel."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4842,6 +4895,7 @@ msgid ""
 "You cannot change the workcenter of a work order that is in progress or "
 "done."
 msgstr ""
+"Te ei saa muuta töökeskust töökäsul, mis on töös või tehtud staatusega."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4857,31 +4911,34 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "You cannot create a new Bill of Material from here."
-msgstr ""
+msgstr "Te ei saa siit luua uut retsepti."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr ""
+msgstr "Te ei saa kustutada lahti võtmise käsku, kui staatus on \"Tehtud2."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot have %s  as the finished product and in the Byproducts"
 msgstr ""
+"Teil ei saa olla toode %s samaaegselt nii lõpptoode kui ka kõrvaltoode."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
-msgstr ""
+msgstr "Te ei saa ühendada seda töökäsku teise tootmistellimusega."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
 msgstr ""
+"Te ei saa liigutada tootmistellimust, kui see on kord tühistatud või tehtuks"
+" märgitud."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4967,7 +5024,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "You need to provide a lot for the finished product."
-msgstr ""
+msgstr "Te peate lisama partii lõpptootele."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4981,14 +5038,14 @@ msgstr ""
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You should provide a lot number for the final product."
-msgstr ""
+msgstr "Te peaksite lisama lõpptootele partiinumbri."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid ""
 "You should provide either a product or a product template to search a BoM"
-msgstr ""
+msgstr "Te peaksite lisama retsepti otsimiseks kas toote või tootemalli"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time

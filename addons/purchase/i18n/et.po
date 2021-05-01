@@ -119,6 +119,24 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Lugupeetud ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Edastame teile hinnapäringu<strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            viitega: ${object.partner_ref}\n"
+"        % endif\n"
+"        ettevõttelt ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Kui teil on lisaküsimusi, palun võtke meiega ühendust.\n"
+"        <br/><br/>\n"
+"        Lugupidamisega,\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -126,6 +144,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-cart\" role=\"img\" aria-label=\"Shopping "
+"cart\" title=\"Shopping cart\"/>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -133,6 +153,8 @@ msgid ""
 "<span class=\"badge badge-info\"><i class=\"fa fa-fw fa-file-text\"/> "
 "Waiting for Bill</span>"
 msgstr ""
+"<span class=\"badge badge-info\"><i class=\"fa fa-fw fa-file-text\"/> Arve "
+"ootel</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -276,6 +298,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Ladustatav toode on toode, millel haldate laovarusid. Lao moodul peab olema alla laetud.\n"
+"Tarbitav toode on toode, millel ei hallata laovarusid.\n"
+"Teenus on teiepoolt pakutav mittemateriaalne toode."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -755,7 +780,7 @@ msgstr "Jälgijad (partnerid)"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr ""
+msgstr "Keelatud väärtused mittearvestataval ostutellimuse real"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -841,12 +866,14 @@ msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
 msgstr ""
+"Kui see on installitud, lisatakse tootevariatsioonid ostutellimustele "
+"võrgustiku sisestuse kaudu."
 
 #. module: purchase
 #: code:addons/purchase/models/product.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr ""
+msgstr "Toodete impordimall"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -982,7 +1009,7 @@ msgstr "Manual Invoices"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
 msgid "Manual Received Qty"
-msgstr ""
+msgstr "Manuaalne vastuvõetud kogus"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
@@ -1043,7 +1070,7 @@ msgstr "Minimaalne kogus, mis vajab kahekordset kinnitamist"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr ""
+msgstr "Arveldatava ostutellimuse real puuduvad kohustuslikud väljad."
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1151,6 +1178,8 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
+"Tellitud koguste alusel: arveldamine tellitud koguste alusel.\n"
+"Saadud koguste alusel: arveldamine saadud koguste alusel"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__receive
@@ -1348,7 +1377,7 @@ msgstr "Ostuselgitus"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_product_matrix
 msgid "Purchase Grid Entry"
-msgstr ""
+msgstr "Ostu võrgustikku sisestus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
@@ -1502,7 +1531,7 @@ msgstr "Ostud"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Ostude ja arvete ühendus"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -1526,7 +1555,7 @@ msgstr "Tellitud kogus"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
 msgid "Qty Received"
-msgstr ""
+msgstr "Vastuvõetud kogus"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
@@ -1592,7 +1621,7 @@ msgstr "Hinnapäringud ja ostud"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
 msgid "Ratio between the purchase order currency and the company currency"
-msgstr ""
+msgstr "Ostutellimuse valuuta ja ettevõtte valuuta suhe"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
