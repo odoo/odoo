@@ -89,16 +89,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-"* Concept: de overdracht is nog niet bevestigd. Reservering is niet van toepassing.\n"
-"  * Wachten op een andere bewerking: deze overdracht wacht op een andere bewerking voordat deze gereed is.\n"
-"  * Wachten: de overdracht wacht op de beschikbaarheid van sommige producten.\n"
+" * Concept: de verplaatsing is nog niet bevestigd. Reservering is niet van toepassing.\n"
+" * Wachten op een andere bewerking: deze overdracht wacht op een andere bewerking voordat deze gereed is.\n"
+" * Wachten: de verplaatsing wacht op de beschikbaarheid van sommige producten.\n"
 "(a) Het verzendbeleid is \"Zo snel mogelijk\": er kan geen product worden gereserveerd.\n"
 "(b) Het verzendbeleid is \"Wanneer alle producten gereed zijn\": niet alle producten kunnen worden gereserveerd.\n"
-"  * Gereed: de overdracht kan worden verwerkt.\n"
-"(a) Het verzendbeleid is \"Zo snel mogelijk\": er is ten minste één product gereserveerd.\n"
+" * Gereed: de verplaatsing kan worden verwerkt.\n"
+"(a) Het verzendbeleid is \"Zo snel mogelijk\": er is tenminste één product gereserveerd.\n"
 "(b) Het verzendbeleid is \"Wanneer alle producten gereed zijn\": alle producten zijn gereserveerd.\n"
-"  * Gereed: de overdracht is verwerkt.\n"
-"  * Geannuleerd: de overdracht is geannuleerd."
+" * Gereed: de verplaatsing is verwerkt.\n"
+" * Geannuleerd: de verplaatsing is geannuleerd."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -595,7 +595,7 @@ msgstr "<strong>Status:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
 msgid "<strong>The initial demand has been updated.</strong>"
-msgstr "<strong>De initiële vraag is geüpdatet.</strong>"
+msgstr "<strong>De eerste vraag is bijgewerkt.</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -4737,7 +4737,7 @@ msgstr "Voorkeursroute"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
 msgid "Preferred Routes"
-msgstr "voorkeursroutes"
+msgstr "Voorkeursroutes"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
@@ -6076,7 +6076,7 @@ msgstr "Verzendconnectoren"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_type
 msgid "Shipping Policy"
-msgstr "Behandelwijze"
+msgstr "Leveringsbeleid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7045,7 +7045,7 @@ msgid ""
 "This user will be responsible of the next activities related to logistic "
 "operations for this product."
 msgstr ""
-"Deze gebruiker is verantwoordelijk voor de volgende activiteiten met "
+"Deze gebruiker is verantwoordelijk voor het opvolgen van activiteiten met "
 "betrekking tot logistieke activiteiten voor dit product."
 
 #. module: stock
@@ -7269,7 +7269,7 @@ msgstr "Activeer"
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_order
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule"
-msgstr "Trigger een andere regel"
+msgstr "Activeer een andere regel"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -7751,7 +7751,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
 msgid "When all products are ready"
-msgstr "Wanneer alle producten klaar zijn"
+msgstr "Wanneer alle producten beschikbaar zijn"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable

@@ -8,6 +8,7 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
+"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 #: code:addons/website_mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid "<p>Thanks for subscribing!</p>"
-msgstr ""
+msgstr "<p>Kiitos tilauksestasi!</p>"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -46,28 +47,32 @@ msgstr "Lisää uutiskirjeen tilausnappi"
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
-msgstr ""
+msgstr "Lisää \"Tilaa uutiskirje\" -ponnahdusikkuna"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
 msgid "Always <b>First</b>."
-msgstr ""
+msgstr "Aina <b>Ensimmäinen</b>."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
 msgid "Always First."
-msgstr ""
+msgstr "Aina ensimmäinen."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
 msgid "Be the first to find out all the latest news, products, and trends."
 msgstr ""
+"Ole ensimmäinen, joka saa selville kaikki uusimmat uutiset, tuotteet ja "
+"trendit."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
 msgid ""
 "Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
+"Ole ensimmäinen, joka saa selville kaikki uusimmat uutiset,<br/> tuotteet ja"
+" trendit."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -124,6 +129,8 @@ msgid ""
 "Do you want to install Google reCAPTCHA to secure your newsletter "
 "subscriptions?"
 msgstr ""
+"Haluatko asentaa Google reCAPTCHA -palvelun uutiskirjeen tilausten "
+"turvaamiseksi?"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -141,6 +148,8 @@ msgid ""
 "Google reCAPTCHA is now installed! You can configure it from your website "
 "settings."
 msgstr ""
+"Google reCAPTCHA on nyt asennettu! Voit määrittää sen verkkosivustosi "
+"asetuksista."
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__id
@@ -154,7 +163,7 @@ msgstr "Tunniste (ID)"
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
 msgid "Install now"
-msgstr ""
+msgstr "Asenna nyt"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list____last_update
@@ -182,7 +191,7 @@ msgstr "Postituslista"
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_website_mass_mailing_popup
 msgid "Mailing list popup"
-msgstr ""
+msgstr "Postituslistan ponnahdusikkuna"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -212,7 +221,7 @@ msgstr "Onnistuminen"
 #: code:addons/website_mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Suspicious activity detected by Google reCaptcha."
-msgstr ""
+msgstr "Google reCaptcha on havainnut epäilyttävää toimintaa."
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
@@ -232,17 +241,17 @@ msgstr "Verkkosivu"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__popup_content
 msgid "Website Popup Content"
-msgstr ""
+msgstr "Verkkosivun ponnahdusikkunan sisältö"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__website_popup_ids
 msgid "Website Popups"
-msgstr ""
+msgstr "Verkkosivun ponnahdusikkunat"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.mailing_list_view_form
 msgid "Website popups"
-msgstr ""
+msgstr "Verkkosivun ponnahdusikkunat"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -252,13 +261,15 @@ msgid ""
 "Website popups can only be translated through mailing list configuration in "
 "the Email Marketing app."
 msgstr ""
+"Verkkosivun ponnahdusikkunat voidaan kääntää vain sähköpostimarkkinoinnin "
+"sovelluksen postituslistojen määritysten avulla."
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
 msgid "Website settings"
-msgstr ""
+msgstr "Verkkosivun asetukset"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
