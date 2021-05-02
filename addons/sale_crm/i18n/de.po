@@ -3,18 +3,25 @@
 # 	* sale_crm
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Wolfgang Taferner, 2017
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# key six <mobile.umts@gmail.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# Chris Egal <sodaswed@web.de>, 2019
 # JackTheHunter <Maximilian.N98@gmail.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
-# Christian Mahlich <c.mahlich@gmail.com>, 2019
+# Martin Trigaux, 2020
+# Andreas Schmidt <schmigo@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Christian Mahlich <c.mahlich@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Andreas Schmidt <schmigo@gmail.com>, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +37,7 @@ msgstr "<span class=\"o_stat_text\"> Aufträge</span>"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__lead_id
 msgid "Associated Lead"
-msgstr ""
+msgstr "Verbundenes Lead"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
@@ -43,9 +50,15 @@ msgid "Confirm"
 msgstr "Bestätigen"
 
 #. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__create
+msgid "Create a new customer"
+msgstr "Neuen Kunden anlegen"
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_quotation_partner
 msgid "Create new or use existing Customer on new Quotation"
 msgstr ""
+"Neuen Kunden anlegen oder vorhandenen Kunden für neues Angebot verwenden"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_uid
@@ -68,6 +81,11 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__nothing
+msgid "Do not link to a customer"
+msgstr "Nicht mit einem Kunden verknüpfen"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
 msgid "ID"
 msgstr "ID"
@@ -80,12 +98,12 @@ msgstr "Fakturiert im Kaufauftragsziel"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
 msgid "Last Modified on"
-msgstr "Letzte Änderung am"
+msgstr "Zuletzt geändert am"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert von"
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_date
@@ -98,6 +116,11 @@ msgid "Lead/Opportunity"
 msgstr "Interessent / Chance"
 
 #. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
+msgid "Link to an existing customer"
+msgstr "Verknüpfe mit Bestandskunde"
+
+#. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
 msgstr "Melden Sie sich im Chatter an, aus dessen Chance der Auftrag stammt"
@@ -105,7 +128,7 @@ msgstr "Melden Sie sich im Chatter an, aus dessen Chance der Auftrag stammt"
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "My Quotations"
-msgstr "Meine Angebote"
+msgstr "Meine Zitate"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.crm_quotation_partner_action
@@ -142,7 +165,7 @@ msgstr "Angebot"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__action
 msgid "Quotation Customer"
-msgstr ""
+msgstr "Angebot Kunde"
 
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -158,7 +181,7 @@ msgstr "Statistik Verkaufsaufträge"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 msgid "Sales Order"
-msgstr "Verkaufsauftrag "
+msgstr "Verkaufsauftrag"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
@@ -177,11 +200,6 @@ msgid "Sum of Orders"
 msgstr "Summe der Aufträge"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order__tag_ids
-msgid "Tags"
-msgstr "Stichwörter"
-
-#. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
 msgid "Untaxed Total of Confirmed Orders"
 msgstr "Unversteuerter Gesamtbetrag der bestätigten Aufträge"
@@ -195,4 +213,4 @@ msgstr "Benutzer"
 #: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
 #, python-format
 msgid "You can only apply this action from a lead."
-msgstr ""
+msgstr "Sie können diese Aktion nur von einem Lead aus anwenden."
