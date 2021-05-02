@@ -15,10 +15,10 @@
 # Helen Sulaoja <helen@avalah.ee>, 2018
 # Maidu Targama <m.targama@gmail.com>, 2019
 # Algo Kärp <algokarp@gmail.com>, 2020
-# Eneli Õigus <enelioigus@gmail.com>, 2020
 # Andre Roomet <andreroomet@gmail.com>, 2021
-# Piia Paurson <piia@avalah.ee>, 2021
 # Triine Aavik <triine@avalah.ee>, 2021
+# Eneli Õigus <enelioigus@gmail.com>, 2021
+# Piia Paurson <piia@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2021\n"
+"Last-Translator: Piia Paurson <piia@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -251,6 +251,9 @@ msgid ""
 "Report\" aria-label=\"Traceability Report\"><i class=\"fa fa-fw fa-level-up "
 "fa-rotate-270\"/></span>"
 msgstr ""
+"<span role=\"img\" class=\"o_stock_reports_stream\" title=\"Traceability "
+"Report\" aria-label=\"Traceability Report\"><i class=\"fa fa-fw fa-level-up "
+"fa-rotate-270\"/></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -326,7 +329,7 @@ msgstr "<strong>Asukoht</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr ""
+msgstr "<strong>Partii/Seerianumber</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -437,6 +440,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Ladustatav toode on toode, millel haldate laovarusid. Lao moodul peab olema alla laetud.\n"
+"Tarbitav toode on toode, millel ei hallata laovarusid.\n"
+"Teenus on teiepoolt pakutav mittemateriaalne toode."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -790,7 +796,7 @@ msgstr "Triipkoodilugeja"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr "Grupeeritud laokorjed"
+msgstr "Grupeeritud laolehed"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -3878,7 +3884,7 @@ msgstr "Pakendi ribakood (PDF)"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Content"
-msgstr ""
+msgstr "Paki triipkood koos sisuga"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -4034,7 +4040,7 @@ msgstr "Laokorje"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__picking_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "Noppimine"
+msgstr "Laoleht"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4939,7 +4945,7 @@ msgstr "Tagastuskorje"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Tagasta korjerida"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:103
@@ -5577,7 +5583,7 @@ msgstr "Lao tegevus"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_destination
 msgid "Stock Package Destination"
-msgstr ""
+msgstr "Lao pakendi sihtkoht"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
@@ -6174,7 +6180,7 @@ msgstr "Tegemiseks"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Process"
-msgstr "Töötlema"
+msgstr "Töös"
 
 #. module: stock
 #: selection:stock.picking,activity_state:0
@@ -6694,7 +6700,7 @@ msgstr "Hoiatus"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Warning on the Picking"
-msgstr "Hoiatus noppimisel"
+msgstr "Hoiatus laolehel"
 
 #. module: stock
 #: code:addons/stock/models/product.py:306
@@ -7222,7 +7228,7 @@ msgstr "punkti"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
+msgstr "protsessitud selle asemel"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
