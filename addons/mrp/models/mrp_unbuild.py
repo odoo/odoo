@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare
+from odoo.osv import expression
 
 
 class MrpUnbuild(models.Model):
@@ -76,17 +77,12 @@ class MrpUnbuild(models.Model):
     @api.depends('company_id', 'product_id')
     def _compute_allowed_mo_ids(self):
         for unbuild in self:
-            if unbuild.product_id:
-                domain = [
+            domain = [
                     ('state', '=', 'done'),
-                    ('product_id', '=', unbuild.product_id.id),
                     ('company_id', '=', unbuild.company_id.id)
                 ]
-            else:
-                domain = [
-                    ('state', 'in', ['done', 'cancel']),
-                    ('company_id', '=', unbuild.company_id.id)
-                ]
+            if unbuild.product_id:
+                domain = expression.AND([domain, [('product_id', '=', unbuild.product_id.id)]])
             allowed_mos = self.env['mrp.production'].search_read(domain, ['id'])
             if allowed_mos:
                 unbuild.allowed_mo_ids = [mo['id'] for mo in allowed_mos]
