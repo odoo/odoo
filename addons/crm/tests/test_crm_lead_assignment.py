@@ -196,6 +196,8 @@ class TestLeadAssign(TestLeadAssignCommon):
             self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
+        # due to duplicate management keeping master team, we may not ensure leads to be
+        # fulfilling their original team volume
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
         leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
         leads_stc = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
@@ -411,5 +413,5 @@ class TestLeadAssign(TestLeadAssignCommon):
 
         sales_team_dupe._action_assign_leads(work_days=2)
         self.assertFalse(dupe_lead.exists())
-        self.assertEqual(master_opp.team_id, sales_team_dupe, 'Opportunity: current team wins lead even if was on duplicated lead')
+        self.assertEqual(master_opp.team_id, self.sales_team_1, 'Opportunity: should keep its sales team')
         self.assertEqual(master_opp.user_id, self.user_sales_manager, 'Opportunity: should keep its salesman')
