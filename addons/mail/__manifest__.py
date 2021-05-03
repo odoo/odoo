@@ -182,6 +182,7 @@
             'mail/static/src/models/mail_template/mail_template.js',
             'mail/static/src/models/message/message.js',
             'mail/static/src/models/message_seen_indicator/message_seen_indicator.js',
+            'mail/static/src/models/message_tracking_value/message_tracking_value.js',
             'mail/static/src/models/messaging/messaging.js',
             'mail/static/src/models/messaging_initializer/messaging_initializer.js',
             'mail/static/src/models/messaging_menu/messaging_menu.js',

@@ -126,9 +126,9 @@ function factory(dependencies) {
                 data2.subtype_id = data.subtype_id;
             }
             if ('tracking_value_ids' in data) {
-                data2.tracking_value_ids = data.tracking_value_ids;
+                data2.trackingValues = insert(data.tracking_value_ids.map(trackData => 
+                    this.env.models['mail.message_tracking_value'].convertData(trackData)))
             }
-
             return data2;
         }
 
@@ -438,7 +438,7 @@ function factory(dependencies) {
             return (
                 isBodyEmpty &&
                 this.attachments.length === 0 &&
-                this.tracking_value_ids.length === 0 &&
+                this.trackingValues.length === 0 &&
                 !this.subtype_description
             );
         }
@@ -659,7 +659,7 @@ function factory(dependencies) {
                 'attachments',
                 'body',
                 'subtype_description',
-                'tracking_value_ids',
+                'trackingValues',
             ],
         }),
         isModeratedByCurrentPartner: attr({
@@ -821,8 +821,8 @@ function factory(dependencies) {
             ],
             inverse: 'messages',
         }),
-        tracking_value_ids: attr({
-            default: [],
+        trackingValues: one2many('mail.message_tracking_value', {
+            inverse: 'message',
         }),
     };
 

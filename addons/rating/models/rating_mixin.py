@@ -189,15 +189,16 @@ class RatingMixin(models.AbstractModel):
         else:
             rating = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
         if rating:
-            rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
+            rating.write({'rating': rate, 'feedback': feedback, 'consumed': True,})
             if hasattr(self, 'message_post'):
                 feedback = tools.plaintext2html(feedback or '')
-                self.message_post(
+                message = self.message_post(
                     body="<img src='/rating/static/src/img/rating_%s.png' alt=':%s/10' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
                     % (rate, rate, feedback),
                     subtype_xmlid=subtype_xmlid or "mail.mt_comment",
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
                 )
+                rating.message_id = message.id
             if hasattr(self, 'stage_id') and self.stage_id and hasattr(self.stage_id, 'auto_validation_kanban_state') and self.stage_id.auto_validation_kanban_state:
                 if rating.rating > 2:
                     self.write({'kanban_state': 'done'})
