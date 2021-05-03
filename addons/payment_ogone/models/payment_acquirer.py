@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from hashlib import sha256
+from hashlib import sha1
 
 import requests
 
@@ -85,14 +85,14 @@ class PaymentAcquirer(models.Model):
         def _filter_key(_key):
             return not incoming or _key in VALID_KEYS
 
-        key = self.ogone_shakey_in if incoming else self.ogone_shakey_out
+        key = self.ogone_shakey_out if incoming else self.ogone_shakey_in  # Swapped for Ogone's POV
         if format_keys:
             formatted_items = [(k.upper().replace('_', '.'), v) for k, v in values.items()]
         else:
             formatted_items = [(k.upper(), v) for k, v in values.items()]
         sorted_items = sorted(formatted_items)
         signing_string = ''.join(f'{k}={v}{key}' for k, v in sorted_items if _filter_key(k) and v)
-        shasign = sha256(signing_string.encode("utf-8")).hexdigest()
+        shasign = sha1(signing_string.encode()).hexdigest()
         return shasign
 
     def _ogone_make_request(self, api_key, payload=None, method='POST'):
