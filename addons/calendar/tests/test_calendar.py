@@ -123,7 +123,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-2)).date())
 
         # update event with a description that have a special character and a new line
-        test_description3 = 'Test & \n Description'
+        test_description3 = 'Test & <br> Description'
         test_note3 = '<p>Test &amp; <br> Description</p>'
         test_event.write({
             'description': test_description3,
