@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, create, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { clear, create, link, replace, unlink, unlinkAll, update } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -353,6 +353,22 @@ function factory(dependencies) {
             return;
         }
 
+        /**
+         * @private
+         * @returns {mail.thread_viewer}
+         */
+        _computeThreadViewer() {
+            const threadViewerData = {
+                hasThreadView: this.hasThreadView,
+                selectedMessage: this.replyingToMessage ? link(this.replyingToMessage) : unlink(),
+                stringifiedDomain: this.stringifiedDomain,
+                thread: this.thread ? link(this.thread) : unlink(),
+            };
+            if (!this.threadViewer) {
+                return create(threadViewerData);
+            }
+            return update(threadViewerData);
+        }
     }
 
     Discuss.fields = {
@@ -552,10 +568,16 @@ function factory(dependencies) {
          * Determines the `mail.thread_viewer` managing the display of `this.thread`.
          */
         threadViewer: one2one('mail.thread_viewer', {
-            default: create(),
-            inverse: 'discuss',
+            compute: '_computeThreadViewer',
+            dependencies: [
+                'hasThreadView',
+                'replyingToMessage',
+                'stringifiedDomain',
+                'thread',
+            ],
             isCausal: true,
             readonly: true,
+            required: true,
         }),
     };
 
