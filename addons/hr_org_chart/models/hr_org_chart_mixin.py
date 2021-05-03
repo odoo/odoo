@@ -9,7 +9,7 @@ class HrEmployeeBase(models.AbstractModel):
 
     child_all_count = fields.Integer(
         'Indirect Subordinates Count',
-        compute='_compute_subordinates', store=False,
+        compute='_compute_subordinates', recursive=True, store=False,
         compute_sudo=True)
 
     def _get_subordinates(self, parents=None):

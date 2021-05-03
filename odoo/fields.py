@@ -7,14 +7,16 @@ from collections import defaultdict
 from datetime import date, datetime, time
 from operator import attrgetter
 from xmlrpc.client import MAXINT
-import itertools
-import logging
 import base64
 import binascii
 import enum
-import pytz
-import psycopg2
+import itertools
+import logging
+import warnings
+
 from markupsafe import Markup
+import psycopg2
+import pytz
 
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
@@ -52,17 +54,18 @@ def first(records):
 
 def resolve_mro(model, name, predicate):
     """ Return the list of successively overridden values of attribute ``name``
-        in mro order on ``model`` that satisfy ``predicate``.  Model classes
-        (the ones that appear in the registry) are ignored.
+        in mro order on ``model`` that satisfy ``predicate``.  Model registry
+        classes are ignored.
     """
     result = []
-    for cls in model._model_classes:
-        value = cls.__dict__.get(name, Default)
-        if value is Default:
-            continue
-        if not predicate(value):
-            break
-        result.append(value)
+    for cls in type(model).mro():
+        if not is_registry_class(cls):
+            value = cls.__dict__.get(name, Default)
+            if value is Default:
+                continue
+            if not predicate(value):
+                break
+            result.append(value)
     return result
 
 
@@ -210,8 +213,12 @@ class Field(MetaField('DummyField', (object,), {})):
     args = None                         # the parameters given to __init__()
     _module = None                      # the field's module name
     _modules = None                     # modules that define this field
-    _setup_done = None                  # the field's setup state: None, 'base' or 'full'
+    _setup_done = True                  # whether the field is completely set up
     _sequence = None                    # absolute ordering of the field
+    _base_fields = ()                   # the fields defining self, in override order
+    _extra_keys = ()                    # unknown attributes set on the field
+    _direct = False                     # whether self may be used directly (shared)
+    _toplevel = False                   # whether self is on the model's registry class
 
     automatic = False                   # whether the field is automatically created ("magic" field)
     inherited = False                   # whether the field is inherited (_inherits)
@@ -274,47 +281,89 @@ class Field(MetaField('DummyField', (object,), {})):
     #
     # Base field setup: things that do not depend on other models/fields
     #
+    # The base field setup is done by field.__set_name__(), which determines the
+    # field's name, model name, module and its parameters.
+    #
+    # The dictionary field.args gives the parameters passed to the field's
+    # constructor.  Most parameters have an attribute of the same name on the
+    # field.  The parameters as attributes are assigned by the field setup.
+    #
+    # When several definition classes of the same model redefine a given field,
+    # the field occurrences are "merged" into one new field instantiated at
+    # runtime on the registry class of the model.  The occurrences of the field
+    # are given to the new field as the parameter '_base_fields'; it is a list
+    # of fields in override order (or reverse MRO).
+    #
+    # In order to save memory, a field should avoid having field.args and/or
+    # many attributes when possible.  We call "direct" a field that can be set
+    # up directly from its definition class.  Direct fields are non-related
+    # fields defined on models, and can be shared across registries.  We call
+    # "toplevel" a field that is put on the model's registry class, and is
+    # therefore specific to the registry.
+    #
+    # Toplevel field are set up once, and are no longer set up from scratch
+    # after that.  Those fields can save memory by discarding field.args and
+    # field._base_fields once set up, because those are no longer necessary.
+    #
+    # Non-toplevel non-direct fields are the fields on definition classes that
+    # may not be shared.  In other words, those fields are never used directly,
+    # and are always recreated as toplevel fields.  On those fields, the base
+    # setup is useless, because only field.args is used for setting up other
+    # fields.  We therefore skip the base setup for those fields.  The only
+    # attributes of those fields are: '_sequence', 'args', 'model_name', 'name'
+    # and '_module', which makes their __dict__'s size minimal.
 
-    def setup_base(self, model, name):
-        """ Base setup: things that do not depend on other models/fields. """
-        if self._setup_done and not self.related:
-            # optimization for regular fields: keep the base setup
-            self._setup_done = 'base'
-        else:
-            # do the base setup from scratch
-            self._setup_attrs(model, name)
-            if not self.related:
-                self._setup_regular_base(model)
-            self._setup_done = 'base'
+    def __set_name__(self, owner, name):
+        """ Perform the base setup of a field.
+
+        :param owner: the owner class of the field (the model's definition or registry class)
+        :param name: the name of the field
+        """
+        assert issubclass(owner, BaseModel)
+        self.model_name = owner._name
+        self.name = name
+        if is_definition_class(owner):
+            # only for fields on definition classes, not registry classes
+            self._module = owner._module
+            owner._field_definitions.append(self)
+
+        if not self.args.get('related'):
+            self._direct = True
+        if self._direct or self._toplevel:
+            self._setup_attrs(owner, name)
+            if self._toplevel:
+                # free memory, self.args and self._base_fields are no longer useful
+                self.__dict__.pop('args', None)
+                self.__dict__.pop('_base_fields', None)
 
     #
     # Setup field parameter attributes
     #
 
-    def _can_setup_from(self, field):
-        """ Return whether ``self`` can retrieve parameters from ``field``. """
-        return isinstance(field, type(self))
-
-    def _get_attrs(self, model, name):
+    def _get_attrs(self, model_class, name):
         """ Return the field parameter attributes as a dictionary. """
         # determine all inherited field attributes
-        modules = set()
         attrs = {}
-        if self.args.get('automatic') and resolve_mro(model, name, self._can_setup_from):
-            # prevent an automatic field from overriding a real field
-            self.args.clear()
-        if not (self.args.get('automatic') or self.args.get('manual')):
-            # magic and custom fields do not inherit from parent classes
-            for field in reversed(resolve_mro(model, name, self._can_setup_from)):
-                attrs.update(field.args)
-                if '_module' in field.args:
-                    modules.add(field.args['_module'])
-        attrs.update(self.args)         # necessary in case self is not in class
+        modules = []
+        for field in self.args.get('_base_fields', ()):
+            if not isinstance(self, type(field)):
+                # 'self' overrides 'field' and their types are not compatible;
+                # so we ignore all the parameters collected so far
+                attrs.clear()
+                modules.clear()
+                continue
+            attrs.update(field.args)
+            if field._module:
+                modules.append(field._module)
+        attrs.update(self.args)
+        if self._module:
+            modules.append(self._module)
 
         attrs['args'] = self.args
-        attrs['model_name'] = model._name
+        attrs['model_name'] = model_class._name
         attrs['name'] = name
-        attrs['_modules'] = modules
+        attrs['_module'] = modules[-1] if modules else None
+        attrs['_modules'] = set(modules)
 
         # initialize ``self`` with ``attrs``
         if name == 'state':
@@ -361,21 +410,15 @@ class Field(MetaField('DummyField', (object,), {})):
 
         return attrs
 
-    def _setup_attrs(self, model, name):
+    def _setup_attrs(self, model_class, name):
         """ Initialize the field parameter attributes. """
-        attrs = self._get_attrs(model, name)
-        # validate arguments
-        for key in attrs:
-            # TODO: improve filter as there are attributes on the class which
-            #       are not valid on the field, probably
-            if not (hasattr(self, key) or model._valid_field_parameter(self, key)):
-                _logger.warning(
-                    "Field %s.%s: unknown parameter %r, if this is an actual"
-                    " parameter you may want to override the method"
-                    " _valid_field_parameter on the relevant model in order to"
-                    " allow it",
-                    model._name, name, key
-                )
+        attrs = self._get_attrs(model_class, name)
+
+        # determine parameters that must be validated
+        extra_keys = [key for key in attrs if not hasattr(self, key)]
+        if extra_keys:
+            attrs['_extra_keys'] = extra_keys
+
         self.__dict__.update(attrs)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
@@ -389,48 +432,68 @@ class Field(MetaField('DummyField', (object,), {})):
                 name[:-3] if name.endswith('_id') else name
             ).replace('_', ' ').title()
 
-        # self.default must be a callable
-        if self.default is not None:
+        # self.default must be either None or a callable
+        if self.default is not None and not callable(self.default):
             value = self.default
-            self.default = value if callable(value) else lambda model: value
+            self.default = lambda model: value
 
     ############################################################################
     #
-    # Full field setup: everything else, except recomputation triggers
+    # Complete field setup: everything else
     #
 
-    def setup_full(self, model):
-        """ Full setup: everything else, except recomputation triggers. """
-        if self._setup_done != 'full':
-            if not self.related:
-                self._setup_regular_full(model)
+    def prepare_setup(self):
+        self._setup_done = False
+
+    def setup(self, model):
+        """ Perform the complete setup of a field. """
+        if not self._setup_done:
+            # validate field params
+            for key in self._extra_keys:
+                if not model._valid_field_parameter(self, key):
+                    _logger.warning(
+                        "Field %s: unknown parameter %r, if this is an actual"
+                        " parameter you may want to override the method"
+                        " _valid_field_parameter on the relevant model in order to"
+                        " allow it",
+                        self, key
+                    )
+            if self.related:
+                self.setup_related(model)
             else:
-                self._setup_related_full(model)
-            self._setup_done = 'full'
+                self.setup_nonrelated(model)
+            self._setup_done = True
 
     #
     # Setup of non-related fields
     #
 
-    def _setup_regular_base(self, model):
-        """ Setup the attributes of a non-related field. """
+    def setup_nonrelated(self, model):
+        """ Determine the dependencies and inverse field(s) of ``self``. """
         pass
 
-    def _setup_regular_full(self, model):
-        """ Determine the dependencies and inverse field(s) of ``self``. """
+    def get_depends(self, model):
+        """ Return the field's dependencies and cache dependencies. """
         if self._depends is not None:
             # the parameter 'depends' has priority over 'depends' on compute
-            self.depends = self._depends
-            self.depends_context = self._depends_context or ()
-            return
+            return self._depends, self._depends_context or ()
+
+        if self.related:
+            if self._depends_context is not None:
+                depends_context = self._depends_context
+            else:
+                related_model = model.env[self.related_field.model_name]
+                depends, depends_context = self.related_field.get_depends(related_model)
+            return ['.'.join(self.related)], depends_context
+
+        if not self.compute:
+            return (), self._depends_context or ()
 
         # determine the functions implementing self.compute
         if isinstance(self.compute, str):
             funcs = resolve_mro(model, self.compute, callable)
-        elif self.compute:
-            funcs = [self.compute]
         else:
-            funcs = []
+            funcs = [self.compute]
 
         # collect depends and depends_context
         depends = []
@@ -440,20 +503,19 @@ class Field(MetaField('DummyField', (object,), {})):
             depends.extend(deps(model) if callable(deps) else deps)
             depends_context.extend(getattr(func, '_depends_context', ()))
 
-        self.depends = tuple(depends)
-        self.depends_context = tuple(depends_context)
-
         # display_name may depend on context['lang'] (`test_lp1071710`)
         if self.automatic and self.name == 'display_name' and model._rec_name:
             if model._fields[model._rec_name].base_field.translate:
-                if 'lang' not in self.depends_context:
-                    self.depends_context += ('lang',)
+                if 'lang' not in depends_context:
+                    depends_context.append('lang')
+
+        return depends, depends_context
 
     #
     # Setup of related fields
     #
 
-    def _setup_related_full(self, model):
+    def setup_related(self, model):
         """ Setup the attributes of a related field. """
         # fix the type of self.related if necessary
         if isinstance(self.related, str):
@@ -463,8 +525,8 @@ class Field(MetaField('DummyField', (object,), {})):
         model_name = self.model_name
         for name in self.related:
             field = model.pool[model_name]._fields[name]
-            if field._setup_done != 'full':
-                field.setup_full(model.env[model_name])
+            if not field._setup_done:
+                field.setup(model.env[model_name])
             model_name = field.comodel_name
 
         self.related_field = field
@@ -474,10 +536,6 @@ class Field(MetaField('DummyField', (object,), {})):
             raise TypeError("Type of related field %s is inconsistent with %s" % (self, field))
 
         # determine dependencies, compute, inverse, and search
-        if self._depends is not None:
-            self.depends = self._depends
-        else:
-            self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
@@ -490,9 +548,9 @@ class Field(MetaField('DummyField', (object,), {})):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-        for attr, value in field.__dict__.items():
+        for attr in field._extra_keys:
             if not hasattr(self, attr) and model._valid_field_parameter(self, attr):
-                setattr(self, attr, value)
+                setattr(self, attr, getattr(field, attr))
 
         # special cases of inherited fields
         if self.inherited:
@@ -506,11 +564,6 @@ class Field(MetaField('DummyField', (object,), {})):
             # being on the abstract model) are assigned an XML id
             self._modules.update(model._fields[self.related[0]]._modules)
             self._modules.update(field._modules)
-
-        if self._depends_context is not None:
-            self.depends_context = self._depends_context
-        else:
-            self.depends_context = field.depends_context
 
     def traverse_related(self, record):
         """ Traverse the fields of the related field `self` except for the last
@@ -583,7 +636,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Determine the domain to search on field ``self``. """
         return [('.'.join(self.related), operator, value)]
 
-    # properties used by _setup_related_full() to copy values from related field
+    # properties used by setup_related() to copy values from related field
     _related_comodel_name = property(attrgetter('comodel_name'))
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
@@ -637,7 +690,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return the dependencies of `self` as a collection of field tuples. """
         Model0 = registry[self.model_name]
 
-        for dotnames in self.depends:
+        for dotnames in registry.field_depends[self]:
             field_seq = []
             model_name = self.model_name
 
@@ -655,8 +708,9 @@ class Field(MetaField('DummyField', (object,), {})):
                         f"Wrong @depends on '{self.compute}' (compute method of field {self}). "
                         f"Dependency field '{fname}' not found in model {model_name}."
                     )
-                if field is self and index:
+                if field is self and index and not self.recursive:
                     self.recursive = True
+                    warnings.warn(f"Field {self} should be declared with recursive=True")
 
                 field_seq.append(field)
 
@@ -692,7 +746,6 @@ class Field(MetaField('DummyField', (object,), {})):
     # properties used by get_description()
     _description_store = property(attrgetter('store'))
     _description_manual = property(attrgetter('manual'))
-    _description_depends = property(attrgetter('depends'))
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
     _description_readonly = property(attrgetter('readonly'))
@@ -702,6 +755,9 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_change_default = property(attrgetter('change_default'))
     _description_deprecated = property(attrgetter('deprecated'))
     _description_group_operator = property(attrgetter('group_operator'))
+
+    def _description_depends(self, env):
+        return env.registry.field_depends[self]
 
     @property
     def _description_searchable(self):
@@ -1396,40 +1452,42 @@ class Monetary(Field):
     def __init__(self, string=Default, currency_field=Default, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
 
-    _description_currency_field = property(attrgetter('currency_field'))
+    def _description_currency_field(self, env):
+        return self.get_currency_field(env[self.model_name])
 
-    def _setup_currency_field(self, model):
-        if not self.currency_field:
-            # pick a default, trying in order: 'currency_id', 'x_currency_id'
-            if 'currency_id' in model._fields:
-                self.currency_field = 'currency_id'
-            elif 'x_currency_id' in model._fields:
-                self.currency_field = 'x_currency_id'
-        assert self.currency_field in model._fields, \
-            "Field %s with unknown currency_field %r" % (self, self.currency_field)
+    def get_currency_field(self, model):
+        """ Return the name of the currency field. """
+        return self.currency_field or (
+            'currency_id' if 'currency_id' in model._fields else
+            'x_currency_id' if 'x_currency_id' in model._fields else
+            None
+        )
 
-    def _setup_regular_full(self, model):
-        super(Monetary, self)._setup_regular_full(model)
-        self._setup_currency_field(model)
+    def setup_nonrelated(self, model):
+        super().setup_nonrelated(model)
+        assert self.get_currency_field(model) in model._fields, \
+            "Field %s with unknown currency_field %r" % (self, self.get_currency_field(model))
 
-    def _setup_related_full(self, model):
-        super(Monetary, self)._setup_related_full(model)
+    def setup_related(self, model):
+        super().setup_related(model)
         if self.inherited:
-            self.currency_field = self.related_field.currency_field
-        self._setup_currency_field(model)
+            self.currency_field = self.related_field.get_currency_field(model.env[self.related_field.model_name])
+        assert self.get_currency_field(model) in model._fields, \
+            "Field %s with unknown currency_field %r" % (self, self.get_currency_field(model))
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
-        if values and self.currency_field in values:
-            field = record._fields[self.currency_field]
-            currency = field.convert_to_cache(values[self.currency_field], record, validate)
+        currency_field = self.get_currency_field(record)
+        if values and currency_field in values:
+            field = record._fields[currency_field]
+            currency = field.convert_to_cache(values[currency_field], record, validate)
             currency = field.convert_to_record(currency, record)
         else:
             # Note: this is wrong if 'record' is several records with different
             # currencies, which is functional nonsense and should not happen
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
-            currency = record[:1].with_context(prefetch_fields=False)[self.currency_field]
+            currency = record[:1].with_context(prefetch_fields=False)[currency_field]
 
         value = float(value or 0.0)
         if currency:
@@ -1444,7 +1502,8 @@ class Monetary(Field):
             # a function or related field!
             # BEWARE: do not prefetch other fields, because 'value' may be in
             # cache, and would be overridden by the value read from database!
-            currency = record.sudo().with_context(prefetch_fields=False)[self.currency_field]
+            currency_field = self.get_currency_field(record)
+            currency = record.sudo().with_context(prefetch_fields=False)[currency_field]
             if len(currency) > 1:
                 raise ValueError("Got multiple currencies while assigning values of monetary field %s" % str(self))
             elif currency:
@@ -1472,8 +1531,8 @@ class _String(Field):
             kwargs['translate'] = bool(kwargs['translate'])
         super(_String, self).__init__(string=string, **kwargs)
 
-    def _setup_attrs(self, model, name):
-        super()._setup_attrs(model, name)
+    def _setup_attrs(self, model_class, name):
+        super()._setup_attrs(model_class, name)
         if self.prefetch is None:
             # do not prefetch complex translated fields by default
             self.prefetch = not callable(self.translate)
@@ -1623,6 +1682,11 @@ class Char(_String):
     size = None                         # maximum size of values (deprecated)
     trim = True                         # whether value is trimmed (only by web client)
 
+    def _setup_attrs(self, model_class, name):
+        super()._setup_attrs(model_class, name)
+        assert self.size is None or isinstance(self.size, int), \
+            "Char field %s with non-integer size %r" % (self, self.size)
+
     @property
     def column_type(self):
         return ('varchar', pg_varchar(self.size))
@@ -1640,11 +1704,6 @@ class Char(_String):
     _related_trim = property(attrgetter('trim'))
     _description_size = property(attrgetter('size'))
     _description_trim = property(attrgetter('trim'))
-
-    def _setup_regular_base(self, model):
-        super(Char, self)._setup_regular_base(model)
-        assert self.size is None or isinstance(self.size, int), \
-            "Char field %s with non-integer size %r" % (self, self.size)
 
     def convert_to_column(self, value, record, values=None, validate=True):
         if value is None or value is False:
@@ -1705,9 +1764,9 @@ class Html(_String):
     strip_style = False                 # whether to strip style attributes (removed and therefore not sanitized)
     strip_classes = False               # whether to strip classes attributes
 
-    def _get_attrs(self, model, name):
+    def _get_attrs(self, model_class, name):
         # called by _setup_attrs(), working together with _String._setup_attrs()
-        attrs = super()._get_attrs(model, name)
+        attrs = super()._get_attrs(model_class, name)
         # Translated sanitized html fields must use html_translate or a callable.
         if attrs.get('translate') is True and attrs.get('sanitize', True):
             attrs['translate'] = html_translate
@@ -1996,8 +2055,8 @@ class Binary(Field):
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
 
-    def _get_attrs(self, model, name):
-        attrs = super(Binary, self)._get_attrs(model, name)
+    def _get_attrs(self, model_class, name):
+        attrs = super()._get_attrs(model_class, name)
         if not attrs.get('store', True):
             attrs['attachment'] = False
         return attrs
@@ -2292,33 +2351,32 @@ class Selection(Field):
     def __init__(self, selection=Default, string=Default, **kwargs):
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
-    def _setup_regular_base(self, model):
-        super(Selection, self)._setup_regular_base(model)
+    def setup_nonrelated(self, model):
+        super().setup_nonrelated(model)
         assert self.selection is not None, "Field %s without selection" % self
-        if isinstance(self.selection, list):
-            assert all(isinstance(v, str) for v, _ in self.selection), \
-                "Field %s with non-str value in selection" % self
 
-    def _setup_related_full(self, model):
-        super(Selection, self)._setup_related_full(model)
+    def setup_related(self, model):
+        super().setup_related(model)
         # selection must be computed on related field
         field = self.related_field
         self.selection = lambda model: field._description_selection(model.env)
 
-    def _get_attrs(self, model, name):
-        attrs = super(Selection, self)._get_attrs(model, name)
+    def _get_attrs(self, model_class, name):
+        attrs = super()._get_attrs(model_class, name)
         # arguments 'selection' and 'selection_add' are processed below
         attrs.pop('selection_add', None)
         return attrs
 
-    def _setup_attrs(self, model, name):
-        super(Selection, self)._setup_attrs(model, name)
+    def _setup_attrs(self, model_class, name):
+        super()._setup_attrs(model_class, name)
+        if not self._base_fields:
+            return
 
         # determine selection (applying 'selection_add' extensions)
         values = None
         labels = {}
 
-        for field in reversed(resolve_mro(model, name, self._can_setup_from)):
+        for field in self._base_fields:
             # We cannot use field.selection or field.selection_add here
             # because those attributes are overridden by ``_setup_attrs``.
             if 'selection' in field.args:
@@ -2384,13 +2442,17 @@ class Selection(Field):
         if values is not None:
             self.selection = [(value, labels[value]) for value in values]
 
+        if isinstance(self.selection, list):
+            assert all(isinstance(v, str) for v, _ in self.selection), \
+                "Field %s with non-str value in selection" % self
+
     def _selection_modules(self, model):
         """ Return a mapping from selection values to modules defining each value. """
         if not isinstance(self.selection, list):
             return {}
         value_modules = defaultdict(set)
-        for field in reversed(resolve_mro(model, self.name, self._can_setup_from)):
-            module = field.args.get('_module')
+        for field in reversed(resolve_mro(model, self.name, type(self).__instancecheck__)):
+            module = field._module
             if not module:
                 continue
             if 'selection' in field.args:
@@ -2516,8 +2578,8 @@ class _Relational(Field):
         # multirecord case: use mapped
         return self.mapped(records)
 
-    def _setup_regular_base(self, model):
-        super(_Relational, self)._setup_regular_base(model)
+    def setup_nonrelated(self, model):
+        super().setup_nonrelated(model)
         if self.comodel_name not in model.pool:
             _logger.warning("Field %s with unknown comodel_name %r", self, self.comodel_name)
             self.comodel_name = '_unknown'
@@ -2602,17 +2664,17 @@ class Many2one(_Relational):
     def __init__(self, comodel_name=Default, string=Default, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
-    def _setup_attrs(self, model, name):
-        super(Many2one, self)._setup_attrs(model, name)
+    def _setup_attrs(self, model_class, name):
+        super()._setup_attrs(model_class, name)
         # determine self.delegate
-        if not self.delegate:
-            self.delegate = name in model._inherits.values()
+        if not self.delegate and name in model_class._inherits.values():
+            self.delegate = True
         # self.delegate implies self.auto_join
         if self.delegate:
             self.auto_join = True
 
-    def _setup_regular_base(self, model):
-        super()._setup_regular_base(model)
+    def setup_nonrelated(self, model):
+        super().setup_nonrelated(model)
         # 3 cases:
         # 1) The ondelete attribute is not defined, we assign it a sensible default
         # 2) The ondelete attribute is defined and its definition makes sense
@@ -3172,14 +3234,15 @@ class _RelationalMulti(_Relational):
     def convert_to_display_name(self, value, record):
         raise NotImplementedError()
 
-    def _setup_regular_full(self, model):
-        super(_RelationalMulti, self)._setup_regular_full(model)
-        if isinstance(self.domain, list):
-            self.depends = tuple(unique(itertools.chain(self.depends, (
+    def get_depends(self, model):
+        depends, depends_context = super().get_depends(model)
+        if not self.related and isinstance(self.domain, list):
+            depends = unique(itertools.chain(depends, (
                 self.name + '.' + arg[0]
                 for arg in self.domain
                 if isinstance(arg, (tuple, list)) and isinstance(arg[0], str)
-            ))))
+            )))
+        return depends, depends_context
 
     def create(self, record_values):
         """ Write the value of ``self`` on the given records, which have just
@@ -3259,8 +3322,8 @@ class One2many(_RelationalMulti):
             **kwargs
         )
 
-    def _setup_regular_full(self, model):
-        super(One2many, self)._setup_regular_full(model)
+    def setup_nonrelated(self, model):
+        super(One2many, self).setup_nonrelated(model)
         if self.inverse_name:
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
@@ -3561,8 +3624,8 @@ class Many2many(_RelationalMulti):
             **kwargs
         )
 
-    def _setup_regular_base(self, model):
-        super(Many2many, self)._setup_regular_base(model)
+    def setup_nonrelated(self, model):
+        super().setup_nonrelated(model)
         # 3 cases:
         # 1) The ondelete attribute is not defined, we assign it a sensible default
         # 2) The ondelete attribute is defined and its definition makes sense
@@ -3596,8 +3659,6 @@ class Many2many(_RelationalMulti):
         else:
             self.relation = self.column1 = self.column2 = None
 
-    def _setup_regular_full(self, model):
-        super(Many2many, self)._setup_regular_full(model)
         if self.relation:
             m2m = model.pool._m2m
 
@@ -4001,5 +4062,9 @@ def apply_required(model, field_name):
 
 
 # imported here to avoid dependency cycle issues
+# pylint: disable=wrong-import-position
 from .exceptions import AccessError, MissingError, UserError
-from .models import check_pg_name, BaseModel, NewId, IdType, expand_ids, PREFETCH_MAX
+from .models import (
+    check_pg_name, expand_ids, is_definition_class, is_registry_class,
+    BaseModel, IdType, NewId, PREFETCH_MAX,
+)
