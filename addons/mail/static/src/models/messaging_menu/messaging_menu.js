@@ -130,6 +130,7 @@ function factory(dependencies) {
                 'messagingInbox',
                 'messagingInboxMainCache',
             ],
+            isOnChange: true,
         }),
         /**
          * Determine whether the mobile new message input is visible or not.
