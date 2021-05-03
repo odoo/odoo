@@ -14,14 +14,15 @@ VALIDATION_KARMA_GAIN = 3
 class Users(models.Model):
     _inherit = 'res.users'
 
-    def __init__(self, pool, cr):
-        init_res = super(Users, self).__init__(pool, cr)
-        type(self).SELF_WRITEABLE_FIELDS = list(
-            set(
-                self.SELF_WRITEABLE_FIELDS +
-                ['country_id', 'city', 'website', 'website_description', 'website_published']))
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + ['karma']
-        return init_res
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['karma']
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + [
+            'country_id', 'city', 'website', 'website_description', 'website_published',
+        ]
 
     @api.model
     def _generate_profile_token(self, user_id, email):
