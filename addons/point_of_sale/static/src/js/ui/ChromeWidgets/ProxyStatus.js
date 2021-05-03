@@ -22,7 +22,7 @@ class ProxyStatus extends PosComponent {
     }
     async onClick() {
         try {
-            await this.env.model.actionHandler({ name: 'actionConnectToProxy' });
+            await this.env.model._connectToProxy();
         } catch (error) {
             if (error instanceof Error) {
                 throw error;

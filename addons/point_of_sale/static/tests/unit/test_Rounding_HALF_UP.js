@@ -11,7 +11,7 @@ odoo.define('point_of_sale.unit.test_Rounding_HALF_UP', function (require) {
     QUnit.module('invariants for rounding HALF_UP by 0.05', {
         async before() {
             model = new PointOfSaleModel(webClient, 100, new RamStorage());
-            await model.loadPosData();
+            await model._fetchAndProcessPosData();
             cashPaymentMethod = model.data.derived.paymentMethods.find((method) => method.name === 'Cash');
             bankPaymentMethod = model.data.derived.paymentMethods.find((method) => method.name === 'Bank');
             product1 = model.getProducts(0)[0];

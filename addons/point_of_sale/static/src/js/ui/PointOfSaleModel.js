@@ -72,7 +72,6 @@ class PointOfSaleModel extends EventBus {
             this.storage = storage;
         }
         this.POS_N_DECIMALS = 6;
-
     }
     useModel() {
         const component = Component.current;
@@ -264,18 +263,19 @@ class PointOfSaleModel extends EventBus {
     //#region LOADING
 
     /**
-     * This is called after call to `loadPosData` succeeded.
-     */
-    async afterLoadPosData() {
-        await this._loadPersistedOrders();
-        if (this.getUseProxy()) {
-            await this.actionHandler({ name: 'actionConnectToProxy' });
-        }
-    }
-    /**
      * Method called when the `PointOfSaleUI` component is mounted.
      */
     async loadPosData() {
+        await this._fetchAndProcessPosData();
+        await this._connectToProxy();
+        await this.actionHandler({ name: 'actionDoneLoading' });
+        await this._afterDoneLoading();
+    }
+    /**
+     * First step of the loading.
+     * Fetches the data needed from the backend then process the loaded data.
+     */
+    async _fetchAndProcessPosData() {
         const [records, sortedIds, fields] = await this._rpc({
             model: 'pos.session',
             method: 'load_pos_data',
@@ -286,6 +286,84 @@ class PointOfSaleModel extends EventBus {
         this._assignDataFields(fields);
         await this._assignTopLevelFields();
         await this._assignDataDerived();
+        await this._loadPersistedOrders();
+    }
+    /**
+     * Second step of the loading.
+     * Connect to proxy if necessary.
+     */
+    async _connectToProxy() {
+        if (!this.getUseProxy()) {
+            return;
+        }
+        this.barcodeReader.disconnect_from_proxy();
+        await this.actionHandler({ name: 'actionShowSkipButton' });
+        try {
+            await this.proxy.autoconnect({
+                force_ip: this.config.proxy_ip || undefined,
+            });
+            if (this.config.iface_scan_via_proxy) {
+                await this.barcodeReader.connect_to_proxy(this.proxy);
+            }
+        } catch (error) {
+            if (error instanceof Error) throw error;
+            const [statusText, url] = error;
+            if (statusText == 'error' && window.location.protocol == 'https:') {
+                this.ui.askUser('ErrorPopup', {
+                    title: _t('HTTPS connection to IoT Box failed'),
+                    body: _.str.sprintf(
+                        _t(
+                            'Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.'
+                        ),
+                        url
+                    ),
+                });
+            }
+        }
+    }
+    /**
+     * Final step of loading.
+     * At this point, the UI is ready. Use this method as a hook to run
+     * needed background tasks after loading.
+     */
+    async _afterDoneLoading() {
+        this._loadFonts();
+        this._preloadImages();
+    }
+    /**
+     * /!\ ATTENTION: This works as long as you are in production mode. In dev mode,
+     * different js files are asking for the images (this file and the owl.js file).
+     * Because of that, even if this file already preloaded the images, owl.js (during
+     * rendering) will still ask for them and it will appear that the images are not
+     * cached (you will see that it still tries to reach the server). Not sure if
+     * this is a bug or a feature of chrome.
+     */
+    async _preloadImages() {
+        const imageUrls = [];
+        for (const product of this.getProducts(0)) {
+            imageUrls.push(this.getImageUrl('product.product', product));
+        }
+        for (const category of this.getRecords('pos.category')) {
+            if (category.id == 0) continue;
+            imageUrls.push(this.getImageUrl('pos.category', category));
+        }
+        for (const imageName of ['backspace.png', 'bc-arrow-big.png']) {
+            imageUrls.push(`/point_of_sale/static/src/img/${imageName}`);
+        }
+        await this.loadImages(imageUrls);
+    }
+    _loadFonts() {
+        return new Promise(function (resolve) {
+            // Waiting for fonts to be loaded to prevent receipt printing
+            // from printing empty receipt while loading Inconsolata
+            // ( The font used for the receipt )
+            waitForWebfonts(['Lato', 'Inconsolata'], function () {
+                resolve();
+            });
+            // The JS used to detect font loading is not 100% robust, so
+            // do not wait more than 5sec
+            setTimeout(resolve, 5000);
+        });
     }
     _assignDataRecords(records) {
         Object.assign(this.data.records, records);
@@ -2582,32 +2660,6 @@ class PointOfSaleModel extends EventBus {
     }
     actionShowSkipButton() {
         this.data.uiState.LoadingScreen.skipButtonIsShown = true;
-    }
-    async actionConnectToProxy() {
-        this.barcodeReader.disconnect_from_proxy();
-        await this.noMutexActionHandler({ name: 'actionShowSkipButton' });
-        try {
-            await this.proxy.autoconnect({
-                force_ip: this.config.proxy_ip || undefined,
-            });
-            if (this.config.iface_scan_via_proxy) {
-                await this.barcodeReader.connect_to_proxy(this.proxy);
-            }
-        } catch (error) {
-            if (error instanceof Error) throw error;
-            const [statusText, url] = error;
-            if (statusText == 'error' && window.location.protocol == 'https:') {
-                this.ui.askUser('ErrorPopup', {
-                    title: _t('HTTPS connection to IoT Box failed'),
-                    body: _.str.sprintf(
-                        _t(
-                            'Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box.'
-                        ),
-                        url
-                    ),
-                });
-            }
-        }
     }
 
     //#endregion ACTIONS

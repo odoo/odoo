@@ -13,7 +13,7 @@ odoo.define('pos_hr.PointOfSaleModel', function (require) {
             result.LoginScreen = { prevScreen: null };
             return result;
         },
-        async loadPosData() {
+        async _fetchAndProcessPosData() {
             await this._super(...arguments);
             const employees = this.getRecords('hr.employee');
             if (!employees.length) {

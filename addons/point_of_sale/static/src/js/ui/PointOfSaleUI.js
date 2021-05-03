@@ -58,9 +58,7 @@ class PointOfSaleUI extends PosComponent {
         this._buildChrome();
         this._disableBackspaceBack();
         this._replaceCrashmanager();
-        this._loadPos().then(() => {
-            this._afterLoadPos();
-        });
+        this._loadPos();
     }
     willUnmount() {
         BarcodeEvents.stop();
@@ -109,8 +107,6 @@ class PointOfSaleUI extends PosComponent {
     async _loadPos() {
         try {
             await this.env.model.loadPosData();
-            await this.env.model.afterLoadPosData();
-            await this.env.model.actionHandler({ name: 'actionDoneLoading' });
         } catch (error) {
             console.error(error);
             let title = this.env._t('Unknown Error');
@@ -140,51 +136,12 @@ class PointOfSaleUI extends PosComponent {
             });
         }
     }
-    async _afterLoadPos() {
-        this._preloadImages();
-        this._loadFonts();
-    }
     async stopSearching() {
         await this.env.model.proxy.stop_searching();
     }
 
     //#region MISC
 
-    /**
-     * /!\ ATTENTION: This works as long as you are in production mode. In dev mode,
-     * different js files are asking for the images (this file and the owl.js file).
-     * Because of that, even if this file already preloaded the images, owl.js (during
-     * rendering) will still ask for them and it will appear that the images are not
-     * cached (you will see that it still tries to reach the server). Not sure if
-     * this is a bug or a feature of chrome.
-     */
-    async _preloadImages() {
-        const imageUrls = [];
-        for (const product of this.env.model.getProducts(0)) {
-            imageUrls.push(this.env.model.getImageUrl('product.product', product));
-        }
-        for (const category of this.env.model.getRecords('pos.category')) {
-            if (category.id == 0) continue;
-            imageUrls.push(this.env.model.getImageUrl('pos.category', category));
-        }
-        for (const imageName of ['backspace.png', 'bc-arrow-big.png']) {
-            imageUrls.push(`/point_of_sale/static/src/img/${imageName}`);
-        }
-        await this.env.model.loadImages(imageUrls);
-    }
-    _loadFonts() {
-        return new Promise(function (resolve, reject) {
-            // Waiting for fonts to be loaded to prevent receipt printing
-            // from printing empty receipt while loading Inconsolata
-            // ( The font used for the receipt )
-            waitForWebfonts(['Lato', 'Inconsolata'], function () {
-                resolve();
-            });
-            // The JS used to detect font loading is not 100% robust, so
-            // do not wait more than 5sec
-            setTimeout(resolve, 5000);
-        });
-    }
     _buildChrome() {
         if ($.browser.chrome) {
             var chrome_version = $.browser.version.split('.')[0];

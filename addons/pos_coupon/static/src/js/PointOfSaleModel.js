@@ -170,7 +170,7 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
             }
             this.data.derived.rewardsContainerMap = {};
         },
-        async afterLoadPosData() {
+        async _fetchAndProcessPosData() {
             await this._super(...arguments);
             const activeOrder = this.getActiveOrder();
             if (activeOrder) {
