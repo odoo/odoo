@@ -16,6 +16,7 @@
 
         <!-- External page: rate and submit feedback -->
         <template id="rating_external_page_submit" name="Rating Page Submit">
+<<<<<<< HEAD
             <t t-call="web.frontend_layout">
                 <div class="container card mb-5 mt-4 o_rating_page_submit">
                     <div class="card-body">
@@ -40,6 +41,23 @@
                                 <textarea class="form-control" name="feedback" rows="8" t-att-value="rating.feedback"></textarea>
                                 <button type="submit" class="btn btn-primary" style="margin-top:8px;">Send Feedback</button>
                             </form>
+=======
+            <t t-call="web.layout">
+                <t t-set="head">
+                    <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+                </t>
+                <div class="container">
+                    <div class="row" style="display: inline">
+                        <h1 class="text-center">Thanks! We appreciate your feedback.</h1>
+                        <h4 class="text-center text-muted" style="margin-bottom: 32px;">Your rating has been submitted.</h4>
+                        <div class="float-left">
+                            <img t-attf-src='/rating/static/src/img/rating_#{rate}.png' t-att-alt="rate_name"/>
+                        </div>
+                        <div style="margin-left: 80px;">
+                            you are <b t-esc="rate_name"></b><br/>
+                            on our services on "<b t-esc="rating.res_name"></b>"<br/>
+                            <t t-if="rating.rated_partner_id">by <b t-esc="rating.rated_partner_id.name"></b>.</t>
+>>>>>>> e37f3886a87... temp
                         </div>
                     </div>
                 </div>
