@@ -273,6 +273,7 @@ function factory(dependencies) {
                 'threadId',
                 'threadModel',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger its compute method when one of the
@@ -283,6 +284,7 @@ function factory(dependencies) {
             dependencies: [
                 'threadIsLoadingAttachments',
             ],
+            isOnChange: true,
         }),
         /**
          * Determines the `mail.thread` that should be displayed by `this`.

@@ -54,6 +54,16 @@ class ModelManager {
          */
         this._hasAnyChangeDuringCycle = false;
         /**
+         * States whether an update cycle is currently in progress. The update
+         * cycle is considered in progress while there are computed fields still
+         * to compute or required fields for which to verify the existence.
+         * Life cycle hooks such as `_created()` or "on change" computes are not
+         * considerer part of the update cycle by this variable.
+         * The main goal of this variable is to detect programming errors: to
+         * prevent from calling create/update/delete from inside a compute.
+         */
+        this._isInUpdateCycle = false;
+        /**
          * Set of records that have been updated during the current update
          * cycle. Useful to allow observers (typically components) to detect
          * whether specific records have been changed.
@@ -70,6 +80,14 @@ class ModelManager {
          * O(1) reads/writes.
          */
         this._toComputeFields = new Map();
+        /**
+         * "on change" methods flagged to call during an update cycle. Similar
+         * to computes but called after all other computes are done, and does
+         * not actually assign any value to its respective field.
+         * This is deprecated but when it is necessary due to other limitations
+         * in code it is better using "on change" than polluting real computes.
+         */
+        this._toCallOnChange = new Map();
     }
 
     /**
@@ -300,6 +318,7 @@ class ModelManager {
                             'default',
                             'dependencies',
                             'fieldType',
+                            'isOnChange',
                             'readonly',
                             'related',
                             'required',
@@ -318,6 +337,7 @@ class ModelManager {
                             'fieldType',
                             'inverse',
                             'isCausal',
+                            'isOnChange',
                             'readonly',
                             'related',
                             'relationType',
@@ -362,6 +382,9 @@ class ModelManager {
                     if (unknownDependencies.length > 0) {
                         throw new Error(`Compute field "${Model.modelName}/${fieldName}" contains some unknown dependencies: "${unknownDependencies.join(", ")}".`);
                     }
+                }
+                if (field.isOnChange && !field.compute) {
+                    throw Error(`isOnChange field "${Model.modelName}/${fieldName}" must be a computed field.`);
                 }
                 // 4. Related field.
                 if (field.compute && field.related) {
@@ -642,6 +665,7 @@ class ModelManager {
         // _toComputeFields, but it is not possible until related are also
         // properly unlinked during `set`.
         this._toComputeFields.delete(record);
+        this._toCallOnChange.delete(record);
         delete Model.__records[record.localId];
     }
 
@@ -652,18 +676,23 @@ class ModelManager {
      * @private
      */
     _flushUpdateCycle(func) {
+        if (this._isInUpdateCycle) {
+            throw Error('Already in update cycle. You are probably trying to manually create/update/delete a record from inside a compute method, which is not supported.');
+        }
+        this._isInUpdateCycle = true;
         // Execution of computes
         while (this._toComputeFields.size > 0) {
             for (const [record, fields] of this._toComputeFields) {
-                // delete at every step to avoid recursion, indeed doCompute
-                // might trigger an update cycle itself
+                // Delete at every step to detect if the change due to compute
+                // registered extra fields to compute.
                 this._toComputeFields.delete(record);
                 if (!record.exists()) {
                     throw Error(`Cannot execute computes for already deleted record ${record.localId}.`);
                 }
                 while (fields.size > 0) {
                     for (const field of fields) {
-                        // delete at every step to avoid recursion
+                        // Delete at every step to detect if the change due to
+                        // compute registered extra fields to compute.
                         fields.delete(field);
                         if (field.compute) {
                             this._update(record, { [field.fieldName]: record[field.compute]() }, { allowWriteReadonly: true });
@@ -678,12 +707,28 @@ class ModelManager {
                 }
             }
         }
-
+        // Verify the existence of value for required fields (of non-deleted records).
+        for (const record of this._updatedRecords) {
+            if (!record.exists()) {
+                continue;
+            }
+            for (const required of record.constructor.__requiredFieldsList) {
+                if (record[required.fieldName] === undefined) {
+                    throw Error(`Field ${required.fieldName} of ${record.localId} is required.`);
+                }
+            }
+        }
+        // Increment record rev number (for useStore comparison)
+        for (const record of this._updatedRecords) {
+            record.__state++;
+        }
+        this._updatedRecords.clear();
+        this._isInUpdateCycle = false;
         // Execution of _created
         while (this._createdRecords.size > 0) {
             for (const record of this._createdRecords) {
-                // delete at every step to avoid recursion, indeed _created
-                // might trigger an update cycle itself
+                // Delete at every step to avoid recursion, indeed _created
+                // might trigger an update cycle itself.
                 this._createdRecords.delete(record);
                 if (!record.exists()) {
                     throw Error(`Cannot call _created for already deleted record ${record.localId}.`);
@@ -691,23 +736,32 @@ class ModelManager {
                 record._created();
             }
         }
-
-        // Increment record rev number (for useStore comparison)
-        for (const record of this._updatedRecords) {
-            record.__state++;
-        }
-
-        // handle required field.
-        for (const record of this._updatedRecords) {
-            for (const required of record.constructor.__requiredFieldsList) {
-                if (record[required.fieldName] === undefined) {
-                    throw Error(`Field ${required.fieldName} of ${record.localId} is required.`);
+        // Execution of "on change".
+        while (this._toCallOnChange.size > 0) {
+            for (const [record, fields] of this._toCallOnChange) {
+                // Delete at every step to detect if the change due to "on change"
+                // registered extra fields for which to call "on change".
+                this._toCallOnChange.delete(record);
+                if (!record.exists()) {
+                    throw Error(`Cannot execute 'on change' for already deleted record ${record.localId}.`);
+                }
+                while (fields.size > 0) {
+                    for (const field of fields) {
+                        // Delete at every step to detect if the change due to "on change"
+                        // registered extra fields for which to call "on change".
+                        fields.delete(field);
+                        if (field.compute) {
+                            const res = record[field.compute]();
+                            if (res !== undefined) {
+                                throw new Error("'on change' compute method is not supposed to return any value.");
+                            }
+                            continue;
+                        }
+                        throw new Error("No compute method defined on this field definition");
+                    }
                 }
             }
         }
-
-        this._updatedRecords.clear();
-
         // Trigger at most one useStore call per update cycle
         if (this._hasAnyChangeDuringCycle) {
             this.env.store.state.messagingRevNumber++;
@@ -1035,6 +1089,21 @@ class ModelManager {
     }
 
     /**
+     * Register a pair record/field for the on change step of the update cycle
+     * in progress.
+     *
+     * @private
+     * @param {mail.model} record
+     * @param {ModelField} field
+     */
+    _registerToCallOnChange(record, field) {
+        if (!this._toCallOnChange.has(record)) {
+            this._toCallOnChange.set(record, new Set());
+        }
+        this._toCallOnChange.get(record).add(field);
+    }
+
+    /**
      * Register a pair record/field for the compute step of the update cycle in
      * progress.
      *
@@ -1043,6 +1112,11 @@ class ModelManager {
      * @param {ModelField} field
      */
     _registerToComputeField(record, field) {
+        if (field.isOnChange) {
+            // Separate "on change" computes from real ones.
+            this._registerToCallOnChange(record, field);
+            return;
+        }
         if (!this._toComputeFields.has(record)) {
             this._toComputeFields.set(record, new Set());
         }
