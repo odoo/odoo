@@ -750,9 +750,18 @@ class BaseModel(metaclass=MetaModel):
         def is_constraint(func):
             return callable(func) and hasattr(func, '_constrains')
 
+        def wrap(func, names):
+            # wrap func into a proxy function with explicit '_constrains'
+            @api.constrains(*names)
+            def wrapper(self):
+                return func(self)
+            return wrapper
+
         cls = type(self)
         methods = []
         for attr, func in getmembers(cls, is_constraint):
+            if callable(func._constrains):
+                func = wrap(func, func._constrains(self))
             for name in func._constrains:
                 field = cls._fields.get(name)
                 if not field:
