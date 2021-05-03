@@ -30,7 +30,7 @@ class AccountReconcileModelPartnerMapping(models.Model):
                     re.compile(record.payment_ref_regex)
                 if record.narration_regex:
                     current_regex = record.narration_regex
-                    re.compile(record.narration_regex) 
+                    re.compile(record.narration_regex)
             except re.error:
                 raise ValidationError(_("The following regular expression is invalid to create a partner mapping: %s") % current_regex)
 
@@ -612,6 +612,7 @@ class AccountReconcileModel(models.Model):
         LEFT JOIN account_move move             ON move.id = aml.move_id AND move.state = 'posted'
         LEFT JOIN account_account account       ON account.id = aml.account_id
         LEFT JOIN res_partner aml_partner       ON aml.partner_id = aml_partner.id
+        LEFT JOIN account_payment payment       ON payment.move_id = move.id
         WHERE
             aml.company_id = st_line_move.company_id
             AND move.state = 'posted'
@@ -725,9 +726,11 @@ class AccountReconcileModel(models.Model):
             st_ref_list += ['st_line_move.ref']
         if not st_ref_list:
             return "FALSE"
-        return r'''(move.payment_reference IS NOT NULL AND ({}))'''.format(
+
+        # payment_reference is not used on account.move for payments; ref is used instead
+        return r'''((move.payment_reference IS NOT NULL OR (payment.id IS NOT NULL AND move.ref IS NOT NULL)) AND ({}))'''.format(
             ' OR '.join(
-                rf"regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace({st_ref}, '\s+', '', 'g')"
+                rf"regexp_replace(CASE WHEN payment.id IS NULL THEN move.payment_reference ELSE move.ref END, '\s+', '', 'g') = regexp_replace({st_ref}, '\s+', '', 'g')"
                 for st_ref in st_ref_list
             )
         )
