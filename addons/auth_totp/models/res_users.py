@@ -25,10 +25,9 @@ class Users(models.Model):
     totp_secret = fields.Char(copy=False, groups=fields.NO_ACCESS)
     totp_enabled = fields.Boolean(string="Two-factor authentication", compute='_compute_totp_enabled')
 
-    def __init__(self, pool, cr):
-        init_res = super().__init__(pool, cr)
-        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['totp_enabled']
-        return init_res
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['totp_enabled']
 
     def _mfa_url(self):
         r = super()._mfa_url()
