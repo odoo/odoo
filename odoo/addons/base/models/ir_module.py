@@ -546,6 +546,12 @@ class Module(models.Model):
 
     @api.multi
     def _button_immediate_function(self, function):
+        if not self.env.registry.loaded:
+            # We are currently loading the registry. Avoid recursive loading. Change the modules
+            # states (call the `function`) and let the loop loading (STEP 3) handle the changes.
+            function(self)
+            return True
+
         try:
             # This is done because the installation/uninstallation/upgrade can modify a currently
             # running cron job and prevent it from finishing, and since the ir_cron table is locked
