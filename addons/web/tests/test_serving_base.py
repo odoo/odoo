@@ -145,7 +145,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
                 </form>
                 <t t-name="template_1_2">
                     <div>And I grew strong</div>
-                    <!-- Modified by anonymous_template_2 from module_2 -->
                     <div>And I learned how to get along</div>
                 </t>
                 <form t-name="template_2_1" random-attr="gloria">
@@ -351,7 +350,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
             <templates>
                 <form t-name="template_1_1">
                     <div>At first I was afraid</div>
-                    <!-- Modified by template_1_2 from module_1 -->
                     <div>I was petrified</div>
                     <div>Kept thinking I could never live without you by my side</div>
                 </form>
@@ -408,9 +406,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
             <templates>
                 <form t-name="template_1_1">
                     <div>I am a man of constant sorrow</div>
-                    <!-- Modified by template_2_1 from module_2 -->
                     <div>In constant sorrow all through his days</div>
-                    <!-- Modified by template_3_1 from module_3 -->
                     <div>Oh Brother !</div>
                     <div>I've seen trouble all my days</div>
                 </form>
@@ -476,7 +472,7 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         expected = b"""
             <templates>
                 <div overriden-attr="overriden" t-name="template_1_1">
-                    <!-- Modified by template_1_2 from module_1 -->And I grew strong
+                    And I grew strong
                 </div>
             </templates>
         """
@@ -510,7 +506,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         expected = b"""
             <templates>
                 <div t-name="template_1_1">
-                    <!-- Modified by template_1_2 from module_1 -->
                     And I grew strong
                     <p>And I learned how to get along</p>
                     And so you're back
@@ -551,7 +546,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         expected = b"""
             <templates>
                 <div t-name="template_1_1">
-                    <!-- Modified by template_1_2 from module_1 -->
                     And I grew strong
                     <p>And I learned how to get along</p>
                 </div>
@@ -590,7 +584,6 @@ class TestStaticInheritance(TestStaticInheritanceCommon):
         expected = b"""
             <templates>
                 <div t-name="template_1_1">
-                    <!-- Modified by template_1_2 from module_1 -->
                     Form replacer
                 </div>
             </templates>
