@@ -57,19 +57,13 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         for user in self:
             user.moderation_counter = result.get(user.id, 0)
 
-    def __init__(self, pool, cr):
-        """ Override of __init__ to add access rights on notification_email_send
-            fields. Access rights are disabled by default, but allowed on some
-            specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
-        """
-        init_res = super(Users, self).__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        type(self).SELF_WRITEABLE_FIELDS.extend(['notification_type'])
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        type(self).SELF_READABLE_FIELDS.extend(['notification_type'])
-        return init_res
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['notification_type']
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + ['notification_type']
 
     @api.model_create_multi
     def create(self, vals_list):

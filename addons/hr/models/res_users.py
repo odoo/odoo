@@ -5,6 +5,70 @@ from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
 
 
+HR_READABLE_FIELDS = [
+    'active',
+    'child_ids',
+    'employee_id',
+    'address_home_id',
+    'employee_ids',
+    'employee_parent_id',
+    'hr_presence_state',
+    'last_activity',
+    'last_activity_time',
+    'can_edit',
+]
+
+HR_WRITABLE_FIELDS = [
+    'additional_note',
+    'private_street',
+    'private_street2',
+    'private_city',
+    'private_state_id',
+    'private_zip',
+    'private_country_id',
+    'address_id',
+    'barcode',
+    'birthday',
+    'category_ids',
+    'children',
+    'coach_id',
+    'country_of_birth',
+    'department_id',
+    'display_name',
+    'emergency_contact',
+    'emergency_phone',
+    'employee_bank_account_id',
+    'employee_country_id',
+    'gender',
+    'identification_id',
+    'is_address_home_a_company',
+    'job_title',
+    'private_email',
+    'km_home_work',
+    'marital',
+    'mobile_phone',
+    'notes',
+    'employee_parent_id',
+    'passport_id',
+    'permit_no',
+    'employee_phone',
+    'pin',
+    'place_of_birth',
+    'spouse_birthdate',
+    'spouse_complete_name',
+    'visa_expire',
+    'visa_no',
+    'work_email',
+    'work_location_id',
+    'work_phone',
+    'certificate',
+    'study_field',
+    'study_school',
+    'private_lang',
+    'employee_type',
+]
+
+
 class User(models.Model):
     _inherit = ['res.users']
 
@@ -79,79 +143,13 @@ class User(models.Model):
         for user in self.with_context(active_test=False):
             user.employee_count = len(user.employee_ids)
 
-    def __init__(self, pool, cr):
-        """ Override of __init__ to add access rights.
-            Access rights are disabled by default, but allowed
-            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
-        """
-        hr_readable_fields = [
-            'active',
-            'child_ids',
-            'employee_id',
-            'address_home_id',
-            'employee_ids',
-            'employee_parent_id',
-            'hr_presence_state',
-            'last_activity',
-            'last_activity_time',
-            'can_edit',
-        ]
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + HR_READABLE_FIELDS + HR_WRITABLE_FIELDS
 
-        hr_writable_fields = [
-            'additional_note',
-            'private_street',
-            'private_street2',
-            'private_city',
-            'private_state_id',
-            'private_zip',
-            'private_country_id',
-            'address_id',
-            'barcode',
-            'birthday',
-            'category_ids',
-            'children',
-            'coach_id',
-            'country_of_birth',
-            'department_id',
-            'display_name',
-            'emergency_contact',
-            'emergency_phone',
-            'employee_bank_account_id',
-            'employee_country_id',
-            'gender',
-            'identification_id',
-            'is_address_home_a_company',
-            'job_title',
-            'private_email',
-            'km_home_work',
-            'marital',
-            'mobile_phone',
-            'notes',
-            'employee_parent_id',
-            'passport_id',
-            'permit_no',
-            'employee_phone',
-            'pin',
-            'place_of_birth',
-            'spouse_birthdate',
-            'spouse_complete_name',
-            'visa_expire',
-            'visa_no',
-            'work_email',
-            'work_location_id',
-            'work_phone',
-            'certificate',
-            'study_field',
-            'study_school',
-            'private_lang',
-            'employee_type',
-        ]
-
-        init_res = super(User, self).__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + hr_readable_fields + hr_writable_fields
-        type(self).SELF_WRITEABLE_FIELDS = type(self).SELF_WRITEABLE_FIELDS + hr_writable_fields
-        return init_res
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + HR_WRITABLE_FIELDS
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

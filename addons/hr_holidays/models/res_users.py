@@ -17,13 +17,9 @@ class User(models.Model):
     allocation_display = fields.Char(related='employee_id.allocation_display')
     hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
 
-    def __init__(self, pool, cr):
-        """ Override of __init__ to add access rights.
-            Access rights are disabled by default, but allowed
-            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
-        """
-
-        readable_fields = [
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + [
             'leave_manager_id',
             'show_leaves',
             'allocation_used_count',
@@ -34,10 +30,6 @@ class User(models.Model):
             'allocation_display',
             'hr_icon_display',
         ]
-        init_res = super(User, self).__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + readable_fields
-        return init_res
 
     def _compute_im_status(self):
         super(User, self)._compute_im_status()

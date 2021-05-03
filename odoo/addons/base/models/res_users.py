@@ -261,10 +261,23 @@ class Users(models.Model):
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
 
-    # User can write on a few of his own fields (but not his groups for example)
-    SELF_WRITEABLE_FIELDS = ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
-    # User can read a few of his own fields
-    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image_1920', 'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz', 'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id']
+    @property
+    def SELF_READABLE_FIELDS(self):
+        """ The list of fields a user can read on their own user record.
+        In order to add fields, please override this property on model extensions.
+        """
+        return [
+            'signature', 'company_id', 'login', 'email', 'name', 'image_1920',
+            'image_1024', 'image_512', 'image_256', 'image_128', 'lang', 'tz',
+            'tz_offset', 'groups_id', 'partner_id', '__last_update', 'action_id',
+        ]
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        """ The list of fields a user can write on their own user record.
+        In order to add fields, please override this property on model extensions.
+        """
+        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz']
 
     def _default_groups(self):
         default_user_id = self.env['ir.model.data'].xmlid_to_res_id('base.default_user', raise_if_not_found=False)
@@ -519,8 +532,9 @@ class Users(models.Model):
 
     def read(self, fields=None, load='_classic_read'):
         if fields and self == self.env.user:
+            readable = self.SELF_READABLE_FIELDS
             for key in fields:
-                if not (key in self.SELF_READABLE_FIELDS or key.startswith('context_')):
+                if not (key in readable or key.startswith('context_')):
                     break
             else:
                 # safe fields only, so we read as super-user to bypass access rights
@@ -565,8 +579,9 @@ class Users(models.Model):
                 if not user.active and not user.partner_id.active:
                     user.partner_id.toggle_active()
         if self == self.env.user:
+            writeable = self.SELF_WRITEABLE_FIELDS
             for key in list(values):
-                if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
+                if not (key in writeable or key.startswith('context_')):
                     break
             else:
                 if 'company_id' in values:
@@ -1585,12 +1600,13 @@ class APIKeysUser(models.Model):
 
     api_key_ids = fields.One2many('res.users.apikeys', 'user_id', string="API Keys")
 
-    def __init__(self, pool, cr):
-        init_res = super().__init__(pool, cr)
-        # duplicate list to avoid modifying the original reference
-        type(self).SELF_WRITEABLE_FIELDS = self.SELF_WRITEABLE_FIELDS + ['api_key_ids']
-        type(self).SELF_READABLE_FIELDS = self.SELF_READABLE_FIELDS + ['api_key_ids']
-        return init_res
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS + ['api_key_ids']
+
+    @property
+    def SELF_WRITEABLE_FIELDS(self):
+        return super().SELF_WRITEABLE_FIELDS + ['api_key_ids']
 
     def _rpc_api_keys_only(self):
         """ To be overridden if RPC access needs to be restricted to API keys, e.g. for 2FA """
