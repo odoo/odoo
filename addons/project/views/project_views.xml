@@ -506,6 +506,7 @@
                 <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors" on_create="project.open_create_project" sample="1">
                     <field name="name"/>
                     <field name="partner_id"/>
+                    <field name="commercial_partner_id"/>
                     <field name="color"/>
                     <field name="task_count"/>
                     <field name="label_tasks"/>
@@ -529,7 +530,7 @@
                                             <div class="o_primary">
                                                 <span class="o_text_overflow"><t t-esc="record.name.value"/></span>
                                                 <span class="o_text_overflow" t-if="record.partner_id.value">
-                                                    <strong><t t-esc="record.partner_id.value"/></strong>
+                                                    <strong><t t-esc="record.commercial_partner_id.value"/></strong>
                                                 </span>
                                                 <div t-if="record.date.raw_value">
                                                     <field name="date" widget="remaining_days"/>

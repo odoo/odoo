@@ -178,6 +178,7 @@ class Project(models.Model):
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Phone", readonly=False, store=True, copy=False)
+    commercial_partner_id = fields.Many2one(related="partner_id.commercial_partner_id")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
