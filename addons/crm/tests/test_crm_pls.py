@@ -109,7 +109,7 @@ class TestCRMPLS(TransactionCase):
         country_ids = self.env['res.country'].search([], limit=3).ids
         stage_ids = self.env['crm.stage'].search([], limit=3).ids
         won_stage_id = self.env['crm.stage'].search([('is_won', '=', True)], limit=1).id
-        team_ids = self.env['crm.team'].create([{'name': 'Team Test 1'}, {'name': 'Team Test 2'}]).ids
+        team_ids = self.env['crm.team'].create([{'name': 'Team Test 1'}, {'name': 'Team Test 2'}, {'name': 'Team Test 3'}]).ids
         # create bunch of lost and won crm_lead
         leads_to_create = []
         #   for team 1
@@ -132,7 +132,21 @@ class TestCRMPLS(TransactionCase):
         leads_to_create.append(
             self._get_lead_values(team_ids[1], 'team_2_%s' % str(9), country_ids[1], state_ids[0], state_values[1], state_values[0], source_ids[1], stage_ids[1]))
 
+        #   for leads with no team
+        leads_to_create.append(
+            self._get_lead_values(False, 'no_team_%s' % str(10), country_ids[1], state_ids[1], state_values[2], state_values[0], source_ids[1], stage_ids[2]))
+        leads_to_create.append(
+            self._get_lead_values(False, 'no_team_%s' % str(11), country_ids[0], state_ids[1], state_values[1], state_values[1], source_ids[0], stage_ids[0]))
+        leads_to_create.append(
+            self._get_lead_values(False, 'no_team_%s' % str(12), country_ids[1], state_ids[2], state_values[0], state_values[1], source_ids[2], stage_ids[0]))
+        leads_to_create.append(
+            self._get_lead_values(False, 'no_team_%s' % str(13), country_ids[0], state_ids[1], state_values[2], state_values[0], source_ids[2], stage_ids[1]))
+
         leads = Lead.create(leads_to_create)
+
+        # assign team 3 to all leads with no teams (also take data into account).
+        leads_with_no_team = self.env['crm.lead'].sudo().search([('team_id', '=', False)])
+        leads_with_no_team.write({'team_id': team_ids[2]})
 
         # Set the PLS config
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
@@ -147,6 +161,10 @@ class TestCRMPLS(TransactionCase):
         leads[5].action_set_lost()
         leads[6].action_set_lost()
         leads[7].action_set_won()
+        # Leads with no team
+        leads[10].action_set_won()
+        leads[11].action_set_lost()
+        leads[12].action_set_lost()
 
         # A. Test Full Rebuild
         # rebuild frequencies table and recompute automated_probability for all leads.
@@ -157,6 +175,18 @@ class TestCRMPLS(TransactionCase):
 
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 33.49, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 7.74, 2), 0)
+        lead_13_team_3_proba = leads[13].automated_probability
+        self.assertEqual(tools.float_compare(lead_13_team_3_proba, 35.09, 2), 0)
+
+        # Probability for Lead with no teams should be based on all the leads no matter their team.
+        # De-assign team 3 and rebuilt frequency table and recompute.
+        # Proba should be different as "no team" is not considered as a separated team.
+        leads_with_no_team.write({'team_id': False})
+        Lead._cron_update_automated_probabilities()
+        leads.invalidate_cache()
+        lead_13_no_team_proba = leads[13].automated_probability
+        self.assertTrue(lead_13_team_3_proba != leads[13].automated_probability, "Probability for leads with no team should be different than if they where in their own team.")
+        self.assertEqual(tools.float_compare(lead_13_no_team_proba, 36.65, 2), 0)
 
         # Test frequencies
         lead_4_stage_0_freq = LeadScoringFrequency.search([('team_id', '=', leads[4].team_id.id), ('variable', '=', 'stage_id'), ('value', '=', stage_ids[0])])
