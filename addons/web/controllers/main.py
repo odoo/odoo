@@ -476,7 +476,9 @@ class HomeStaticTemplateHelpers(object):
                 parent_tree = copy.deepcopy(self.template_dict[parent_addon][parent_name])
 
                 xpaths = list(template_tree)
-                if self.debug and inherit_mode == self.EXTENSION_MODE:
+                # owl chokes on comments, disable debug comments for now
+                # pylint: disable=W0125
+                if False: # self.debug and inherit_mode == self.EXTENSION_MODE:
                     for xpath in xpaths:
                         xpath.insert(0, etree.Comment(" Modified by %s from %s " % (template_name, addon)))
                 elif inherit_mode == self.PRIMARY_MODE:
