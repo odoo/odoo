@@ -56,10 +56,11 @@
                 <tree>
                     <field name="company_id" invisible="1"/>
                     <field name="tax_report_country_id" invisible="1"/>
+                    <field name="tax_report_id" invisible="1"/>
                     <field name="name"/>
                     <field name="date"/>
                     <field name="amount"/>
-                    <field name="foreign_vat_fiscal_position_id"/>
+                    <field name="foreign_vat_fiscal_position_id"  optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -72,6 +73,7 @@
                     <sheet>
                         <group>
                             <group>
+                                <field name="tax_report_id" invisible="1"/>
                                 <field name="name"/>
                                 <field name="tax_report_line_id"/>
                                 <field name="tax_report_country_id"/>
@@ -109,12 +111,14 @@
                             <field name="formula"/>
                         </group>
                     </group>
-                    <group>
+                    <group string="Carryover">
                         <group>
                             <field name="carry_over_condition_method" placeholder="No carryover"/>
+                            <field name="is_carryover_persistent"/>
                         </group>
                         <group>
                             <field name="carry_over_destination_line_id" placeholder="Same report line"/>
+                            <field name="is_carryover_used_in_balance"/>
                         </group>
                     </group>
                     <notebook>
