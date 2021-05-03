@@ -277,8 +277,11 @@
 @mixin o-kanban-record-color {
     @for $size from 2 through length($o-colors) {
         // Note: the first color is not defined as it is the 'no color' for kanban
-        .oe_kanban_color_#{$size - 1}::after {
-            background-color: nth($o-colors, $size);
+        .oe_kanban_color_#{$size - 1} {
+            border-left-color: nth($o-colors, $size);
+            &:after {
+                background-color: nth($o-colors, $size);
+            }
         }
     }
 }

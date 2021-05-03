@@ -122,10 +122,10 @@
 </t>
 
 <t t-name="KanbanView.SetCoverModal">
-    <div t-if="attachmentIds.length" class="ml32 mr0 o_kanban_cover_container">
+    <div t-if="attachmentIds.length" class="o_kanban_cover_container bg-100">
         <t t-foreach="attachmentIds" t-as="attachment">
-            <div t-attf-class="o_kanban_cover_image#{coverId === attachment.id ? ' o_selected' : ''}">
-                <img t-attf-src="/web/image/#{attachment.id}?unique=1" t-att-data-id="attachment.id" t-att-data-name="attachment.name" alt="Attachment"/>
+            <div t-attf-class="o_kanban_cover_image position-relative d-inline-block m-2 bg-white #{coverId === attachment.id ? ' o_selected' : ''}">
+                <img t-attf-src="/web/image/#{attachment.id}?unique=1" t-att-data-id="attachment.id" t-att-data-name="attachment.name" class="m-auto mw-100" alt="Attachment"/>
             </div>
         </t>
     </div>
