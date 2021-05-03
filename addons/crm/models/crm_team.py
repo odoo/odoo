@@ -159,43 +159,51 @@ class Team(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def _cron_assign_leads(self):
+    def _cron_assign_leads(self, work_days=None):
         """ Cron method assigning leads. Leads are allocated to all teams and
-        assigned to their members. It is based on cron configuration to
-        deduce parameters of assignment to perform. Purpose of cron is to assign
-        leads to sales persons. Assigned workload is set to 2 times the workload
-        those sales people should perform between two cron iterations. Giving
-        more allows more flexibility in their organization. If their maximum
-        capacity is reached assign process won't give more leads to those people.
+        assigned to their members. It is based on either cron configuration
+        either forced through ``work_days`` parameter.
+
+        When based on cron configuration purpose of cron is to assign leads to
+        sales persons. Assigned workload is set to the workload those sales
+        people should perform between two cron iterations. If their maximum
+        capacity is reached assign process will not assign them any more lead.
 
         e.g. cron is active with interval_number 3, interval_type days. This
-        means cron runs every 3 days. Cron will assign leads for 6 work days
+        means cron runs every 3 days. Cron will assign leads for 3 work days
         to salespersons each 3 days unless their maximum capacity is reached.
 
-        If cron runs on an hour-based schedule minimum assignment performed is
-        equivalent to 2 workdays. Max assignment performed is for 30 days as it
-        is better to run more often than planning for more than one month.
+        If cron runs on an hour- or minute-based schedule minimum assignment
+        performed is equivalent to 0.2 workdays to avoid rounding issues.
+        Max assignment performed is for 30 days as it is better to run more
+        often than planning for more than one month. Assign process is best
+        designed to run every few hours (~4 times / day) or each few days.
 
         See ``CrmTeam.action_assign_leads()`` and its sub methods for more
         details about assign process.
+
+        :param float work_days: see ``CrmTeam.action_assign_leads()``;
         """
         assign_cron = self.sudo().env.ref('crm.ir_cron_crm_lead_assign', raise_if_not_found=False)
-        work_days = 2
-        if assign_cron and assign_cron.active:
+        if not work_days and assign_cron and assign_cron.active:
             if assign_cron.interval_type == 'months':
                 work_days = 30  # maximum one month of work
             elif assign_cron.interval_type == 'weeks':
-                work_days = 2 * assign_cron.interval_number * 7
+                work_days = min(30, assign_cron.interval_number * 7)  # max at 30 (better lead repartition)
             elif assign_cron.interval_type == 'days':
-                work_days = 2 * assign_cron.interval_number * 1
-        work_days = 30 if work_days > 30 else work_days
+                work_days = min(30, assign_cron.interval_number * 1)  # max at 30 (better lead repartition)
+            elif assign_cron.interval_type == 'hours':
+                work_days = max(0.2, assign_cron.interval_number / 24)    # min at 0.2 to avoid small numbers issues
+            elif assign_cron.interval_type == 'minutes':
+                work_days = max(0.2, assign_cron.interval_number / 1440)    # min at 0.2 to avoid small numbers issues
+        work_days = work_days if work_days else 1  # avoid void values
         self.env['crm.team'].search([
             '&', '|', ('use_leads', '=', True), ('use_opportunities', '=', True),
             ('assignment_optout', '=', False)
         ])._action_assign_leads(work_days=work_days)
         return True
 
-    def action_assign_leads(self, work_days=2, log=True):
+    def action_assign_leads(self, work_days=1, log=True):
         """ Manual (direct) leads assignment. This method both
 
           * assigns leads to teams given by self;
@@ -203,7 +211,7 @@ class Team(models.Model):
 
         See sub methods for more details about assign process.
 
-        :param int work_days: number of work days to consider when assigning leads
+        :param float work_days: number of work days to consider when assigning leads
           to teams or salespersons. We consider that Member.assignment_max (or
           its equivalent on team model) targets 30 work days. We make a ratio
           between expected number of work days and maximum assignment for those
@@ -238,7 +246,7 @@ class Team(models.Model):
             }
         }
 
-    def _action_assign_leads(self, work_days=2):
+    def _action_assign_leads(self, work_days=1):
         """ Private method for lead assignment. This method both
 
           * assigns leads to teams given by self;
@@ -246,7 +254,7 @@ class Team(models.Model):
 
         See sub methods for more details about assign process.
 
-        :param int work_days: see ``CrmTeam.action_assign_leads()``;
+        :param float work_days: see ``CrmTeam.action_assign_leads()``;
 
         :return teams_data, members_data: structure-based result of assignment
           process. For more details about data see ``CrmTeam._allocate_leads()``
@@ -255,7 +263,7 @@ class Team(models.Model):
         if not self.env.user.has_group('sales_team.group_sale_manager') and not self.env.user.has_group('base.group_system'):
             raise exceptions.UserError(_('Lead/Opportunities automatic assignment is limited to managers or administrators'))
 
-        _logger.info('### START Lead Assignment (%d teams, %d sales persons, %d work_days)' % (len(self), len(self.crm_team_member_ids), work_days))
+        _logger.info('### START Lead Assignment (%d teams, %d sales persons, %.2f work_days)' % (len(self), len(self.crm_team_member_ids), work_days))
         teams_data = self._allocate_leads(work_days=work_days)
         _logger.info('### Team repartition done. Starting salesmen assignment.')
         members_data = self.crm_team_member_ids._assign_and_convert_leads(work_days=work_days)
@@ -328,7 +336,7 @@ class Team(models.Model):
 
         return message_parts
 
-    def _allocate_leads(self, work_days=2):
+    def _allocate_leads(self, work_days=1):
         """ Allocate leads to teams given by self. This method sets ``team_id``
         field on lead records that are unassigned (no team and no responsible).
         No salesperson is assigned in this process. Its purpose is simply to
@@ -389,7 +397,7 @@ class Team(models.Model):
           to let automated actions prepare leads and score before PLS was added
           into CRM. This is now not required anymore but still supported;
 
-        :param int work_days: see ``CrmTeam.action_assign_leads()``;
+        :param float work_days: see ``CrmTeam.action_assign_leads()``;
 
         :return teams_data: dict() with each team assignment result:
           team: {
@@ -402,9 +410,9 @@ class Team(models.Model):
               are already removed at return of this method;
           }, ...
         """
-        if not work_days or work_days > 30:
+        if work_days < 0.2 or work_days > 30:
             raise ValueError(
-                _('Leads team allocation should be done for at least 1 or maximum 30 work days, not %s.', work_days)
+                _('Leads team allocation should be done for at least 0.2 or maximum 30 work days, not %.2f.', work_days)
             )
         # assignment_max is valid for "30 days" -> divide by requested work_days
         # to have number of leads to assign
