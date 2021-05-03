@@ -684,9 +684,6 @@ class AccountJournal(models.Model):
     def _get_journal_bank_account_balance(self, domain=None):
         ''' Get the bank balance of the current journal by filtering the journal items using the journal's accounts.
 
-        /!\ The current journal is not part of the applied domain. This is the expected behavior since we only want
-        a logic based on accounts.
-
         :param domain:  An additional domain to be applied on the account.move.line model.
         :return:        Tuple having balance expressed in journal's currency
                         along with the total number of move lines having the same account as of the journal's default account.
@@ -701,6 +698,7 @@ class AccountJournal(models.Model):
             ('account_id', 'in', tuple(self.default_account_id.ids)),
             ('display_type', 'not in', ('line_section', 'line_note')),
             ('move_id.state', '!=', 'cancel'),
+            ('journal_id', '=', self.id),
         ]
         query = self.env['account.move.line']._where_calc(domain)
         tables, where_clause, where_params = query.get_sql()
@@ -725,9 +723,6 @@ class AccountJournal(models.Model):
         ''' Get the outstanding payments balance of the current journal by filtering the journal items using the
         journal's accounts.
 
-        /!\ The current journal is not part of the applied domain. This is the expected behavior since we only want
-        a logic based on accounts.
-
         :param domain:  An additional domain to be applied on the account.move.line model.
         :param date:    The date to be used when performing the currency conversions.
         :return:        The balance expressed in the journal's currency.
@@ -750,6 +745,7 @@ class AccountJournal(models.Model):
             ('display_type', 'not in', ('line_section', 'line_note')),
             ('move_id.state', '!=', 'cancel'),
             ('reconciled', '=', False),
+            ('journal_id', '=', self.id),
         ]
         query = self.env['account.move.line']._where_calc(domain)
         tables, where_clause, where_params = query.get_sql()
