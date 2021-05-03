@@ -126,7 +126,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         this.diff = [];
         if (this._isUnitVisible('d') && !(this.onlyOneUnit && delta < 86400)) {
             this.diff.push({
-                canvas: $('<div class="s_countdown_canvas_flex o_temp_auto_element"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
+                canvas: $('<div class="s_countdown_canvas_flex"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
                 // There is no logical number of unit (total) on which day units
                 //  can be compared against, so we use an arbitrary number.
                 total: 15,
@@ -136,7 +136,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         }
         if (this._isUnitVisible('h') || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
             this.diff.push({
-                canvas: $('<div class="s_countdown_canvas_flex o_temp_auto_element"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
+                canvas: $('<div class="s_countdown_canvas_flex"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
                 total: 24,
                 label: _t("Hours"),
                 nbSeconds: 3600,
@@ -144,7 +144,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         }
         if (this._isUnitVisible('m') || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
             this.diff.push({
-                canvas: $('<div class="s_countdown_canvas_flex o_temp_auto_element"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
+                canvas: $('<div class="s_countdown_canvas_flex"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
                 total: 60,
                 label: _t("Minutes"),
                 nbSeconds: 60,
@@ -152,7 +152,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         }
         if (this._isUnitVisible('s') || (this.onlyOneUnit && delta < 60)) {
             this.diff.push({
-                canvas: $('<div class="s_countdown_canvas_flex o_temp_auto_element"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
+                canvas: $('<div class="s_countdown_canvas_flex"><canvas class="w-100"/></div>').appendTo(this.$wrapper)[0],
                 total: 60,
                 label: _t("Seconds"),
                 nbSeconds: 1,
