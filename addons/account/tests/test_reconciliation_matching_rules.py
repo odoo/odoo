@@ -919,3 +919,39 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'status': 'write_off', 'partner': self.bank_line_1.partner_id},
             self.bank_line_2.id: {'aml_ids': [self.invoice_line_2.id], 'model': second_inv_matching_rule, 'partner': self.bank_line_2.partner_id}
         }, statements=self.bank_st)
+
+    def test_payment_similar_communications(self):
+        def create_payment_line(amount, memo, partner):
+            payment = self.env['account.payment'].create({
+                'amount': amount,
+                'payment_type': 'inbound',
+                'partner_type': 'customer',
+                'partner_id': partner.id,
+                'ref': memo,
+                'destination_account_id': self.company_data['default_account_receivable'].id,
+            })
+            payment.action_post()
+
+            return payment.line_ids.filtered(lambda x: x.account_id.user_type_id.type not in {'receivable', 'payable'})
+
+        payment_partner = self.env['res.partner'].create({
+            'name': "Bernard Gagnant",
+        })
+
+        self.rule_1.match_partner_ids = [(6, 0, payment_partner.ids)]
+
+        pmt_line_1 = create_payment_line(500, 'a1b2c3', payment_partner)
+        pmt_line_2 = create_payment_line(500, 'a1b2c3', payment_partner)
+        pmt_line_3 = create_payment_line(500, 'd1e2f3', payment_partner)
+
+        self.bank_line_1.write({
+            'amount': 1000,
+            'payment_ref': 'a1b2c3',
+            'partner_id': payment_partner.id,
+        })
+        self.bank_line_2.unlink()
+        self.rule_1.match_total_amount = False
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': (pmt_line_1 + pmt_line_2).ids, 'model': self.rule_1, 'partner': payment_partner},
+        }, statements=self.bank_line_1.statement_id)
