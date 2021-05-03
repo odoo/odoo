@@ -401,7 +401,7 @@ msgstr "صورت مواد اولیه نوع کیت برای تقسیم کالا 
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled."
-msgstr "سفارش ساخت قبلا لغو یا انجام شده است"
+msgstr "سفارش تولید قبلا لغو یا انجام شده است"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -611,7 +611,7 @@ msgstr "بایگانی شده"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
-msgstr "هنگام ایجاد سفارش سفارش تولید"
+msgstr "هنگام ایجاد سفارش تولید"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -811,7 +811,7 @@ msgid ""
 "                order or a pack of products."
 msgstr ""
 "صورت مواد اولیه به شما امکان می‌دهد لیستی از مواد اولیه مورد نیاز \n"
-"برای ساخت یک کالای نهایی را تعریف کنید; از طریق سفارش تولید \n"
+"برای تولید یک کالای نهایی را تعریف کنید; از طریق سفارش تولید \n"
 "یا بسته کالاها."
 
 #. module: mrp
@@ -943,7 +943,7 @@ msgstr "کالای جانبی"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
 msgid "By-product line that generated the move in a manufacturing order"
-msgstr "ردیف کالاهای جانبی که منجر به ایجاد حواله در سفارش ساخت شده است"
+msgstr "ردیف کالاهای جانبی که منجر به ایجاد حواله در سفارش تولید شده است"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__byproduct_ids
@@ -1232,7 +1232,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
 msgid "Create a new manufacturing order"
-msgstr "ایجاد سفارش ساخت جدید"
+msgstr "ایجاد سفارش تولید جدید"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -1413,7 +1413,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__ready_to_produce
 msgid "Defines when a Manufacturing Order is considered as ready to be started"
-msgstr "زمانی را که یک سفارش ساخت برای شروع ساخت آماده است را تعیین می‌کند "
+msgstr "زمانی را که یک سفارش تولید برای شروع ساخت آماده است را تعیین می‌کند "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2082,7 +2082,7 @@ msgid ""
 "Informative date allowing to define when the manufacturing order should be "
 "processed at the latest to fulfill delivery on time."
 msgstr ""
-"تاریخ اطلاع رسانی اجازه می‌دهد تا زمانی را که سفارش ساخت باید پردازش شود، تا"
+"تاریخ اطلاع رسانی اجازه می‌دهد تا زمانی را که سفارش تولید باید پردازش شود، تا"
 " به موقع تحویل داده شود را تعیین کنید."
 
 #. module: mrp
@@ -2516,7 +2516,7 @@ msgstr "تولید در 365 روز گذشته"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #, python-format
 msgid "Manufacturing"
-msgstr "ساخت"
+msgstr "تولید"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -2531,7 +2531,7 @@ msgstr "مدت زمان تولید کالا"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
 msgid "Manufacturing Operation Type"
-msgstr "نوع عملیات ساخت"
+msgstr "نوع عملیات تولید"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__mo_id
@@ -2567,18 +2567,18 @@ msgstr "سفارشات تولید"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are in confirmed state."
-msgstr "سفارشات ساختی که در وضعیت تایید شده می‌باشند."
+msgstr "سفارشات تولیدی که در وضعیت تایید شده می‌باشند."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__ready_to_produce
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Manufacturing Readiness"
-msgstr "آمادگی ساختن"
+msgstr "آمادگی تولید"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Manufacturing Reference"
-msgstr "مرجع ساختن"
+msgstr "مرجع تولید"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -2588,7 +2588,7 @@ msgid ""
 "                workers and/or machines, they are used for costing,"
 " scheduling, capacity planning, etc."
 msgstr ""
-"عملیات ساخت در مراکز کار پردازش می‌شوند. یک مرکز کار می‌تواند متشکل از"
+"عملیات تولید در مراکز کار پردازش می‌شوند. یک مرکز کار می‌تواند متشکل از"
 " کارگران ویا ماشین آلات باشد، \n"
 "آنها برای هزینه، برنامه‌ریزی، ظرفیت و غیره استفاده می‌شوند. "
 
@@ -2601,7 +2601,7 @@ msgid ""
 " scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"عملیات ساخت در مراکز کار پردازش می‌شوند. یک مرکز کار می‌تواند متشکل از"
+"عملیات تولید در مراکز کار پردازش می‌شوند. یک مرکز کار می‌تواند متشکل از"
 " کارگران ویا ماشین آلات باشد، \n"
 "آنها برای هزینه، برنامه‌ریزی، ظرفیت و غیره استفاده می‌شوند. \n"
 "آنها را می‌توان از طریق منوی پیکربندی تعریف کرد."
@@ -2759,7 +2759,7 @@ msgstr "همچنان بدون دیتا!"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "No manufacturing order found. Let's create one."
-msgstr "هیچ سفارش ساختی یافت تشد. بیایید یکی بسازیم."
+msgstr "هیچ سفارش تولیدی یافت تشد. بیایید یکی بسازیم."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -3106,7 +3106,7 @@ msgstr "نوع حواله"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
 msgid "Picking associated to this manufacturing order"
-msgstr "حواله انبار مرتبط به این سفارش ساخت "
+msgstr "حواله انبار مرتبط به این سفارش تولید "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_loc_id
@@ -3127,7 +3127,7 @@ msgstr "برنامه‌ریزی سفارش‌ها"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr "سفارشات ساخت یا خرید را بر اساس پیش‌بینی‌ها برنامه‌ریزی کنید"
+msgstr "سفارشات تولید یا خرید را بر اساس پیش‌بینی‌ها برنامه‌ریزی کنید"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -3250,7 +3250,7 @@ msgid ""
 "Pick / Produce : Unload        the components from the Stock to Input"
 " location first, and then        transfer it to the Production location."
 msgstr ""
-"تولید: قطعات را مستقیما به محل تولید منتقل کرده و مراحل ساخت شروع شود. \n"
+"تولید: قطعات را مستقیما به محل تولید منتقل کرده و مراحل تولید شروع شود. \n"
 "انتخاب / تولید: ابتدا قطعات را از محل انبار به محل ورودی بارگیری شده و سپس آن"
 " را به محل تولید منتقل شود."
 
@@ -3672,7 +3672,7 @@ msgstr "ذخیره"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Schedule manufacturing orders earlier to avoid delays"
-msgstr "برای جلوگیری از تاخیر، سفارشات ساخت را زودتر برنامه‌ریزی کنید"
+msgstr "برای جلوگیری از تاخیر، سفارشات تولید را زودتر برنامه‌ریزی کنید"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_start
@@ -3876,7 +3876,7 @@ msgid ""
 "order in order to retrieve the correct byproducts."
 msgstr ""
 "برخی از کالاهای جانبی شما ردیابی می‌شوند، برای بدست آوردن کالاهای جانبی صحیح"
-" باید سفارش ساخت مشخص برای آنها تعیین کنید."
+" باید سفارش تولید مشخص برای آنها تعیین کنید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3885,7 +3885,7 @@ msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct components."
 msgstr ""
-"برخی از قطعات شما ردیابی می‌شوند، برای بازیابی قطعات صحیح باید سفارش ساخت را"
+"برخی از قطعات شما ردیابی می‌شوند، برای بازیابی قطعات صحیح باید سفارش تولید را"
 " تعیین کنید."
 
 #. module: mrp
@@ -3894,7 +3894,7 @@ msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process ?"
 msgstr ""
-"برخی از حواله‌های کالا قبلا تایید شده است، این سفارش ساخت نمی‌تواند به طور"
+"برخی از حواله‌های کالا قبلا تایید شده است، این سفارش تولید نمی‌تواند به طور"
 " کامل لغو شود. آیا هنوز مطمئن هستید که می‌خواهید آن را پردازش کنید؟"
 
 #. module: mrp
@@ -3904,7 +3904,7 @@ msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
 msgstr ""
-"برخی سفارش‌های کاری قبلا انجام شده است، شما نمی توانید این سفارش ساخت را لغو"
+"برخی سفارش‌های کاری قبلا انجام شده است، شما نمی‌توانید این سفارش تولید را لغو"
 " کنید."
 
 #. module: mrp
@@ -3992,12 +3992,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_type_id
 msgid "Stock After Manufacturing Operation Type"
-msgstr "انبار پس از نوع عملیات ساخت"
+msgstr "انبار پس از نوع عملیات تولید"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
 msgid "Stock After Manufacturing Rule"
-msgstr "انبار پس از قاعده ساخت"
+msgstr "انبار پس از قاعده تولید"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
@@ -4032,7 +4032,7 @@ msgstr "قاعده انبار"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
 msgid "Stock after Manufacturing Location"
-msgstr "انبار پس از مکان ساخت"
+msgstr "انبار پس از مکان تولید"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
@@ -4415,7 +4415,7 @@ msgstr "منطقه‌ زمانی"
 #: model:digest.tip,name:mrp.digest_tip_mrp_0
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
 msgid "Tip: Use tablets in the shop to control manufacturing"
-msgstr "نکته: برای کنترل ساخت از تبلت‌ها موجود در فروشگاه استفاده کنید"
+msgstr "نکته: برای کنترل تولید از تبلت‌ها موجود در فروشگاه استفاده کنید"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
@@ -4733,7 +4733,7 @@ msgid ""
 "forecasts."
 msgstr ""
 "استفاده از گزارش ‌برنامه‌ریزی تولید، برای برنامه‌ریزی سفارش مجدد و عملیات"
-" تولید هنگامی کارآمد است که، زمان تولید طولانی باشد ویا  بر اساس فروش"
+" تولید هنگامی کارآمد است که، زمان تولید طولانی باشد ویا بر اساس فروش"
 " پیش‌بینی شده تولید می‌کنید."
 
 #. module: mrp
@@ -4858,7 +4858,7 @@ msgstr ""
 "هنگامی که یک تامین دارای مسیر تامین \"تولید\" با نوع عملیات تنظیم شده"
 " می‌باشد، سعی خواهد کرد با استفاده از صورت مواد اولیه با همان نوع عملیات، یک"
 " سفارش ساخت برای آن کالا ایجاد کند. این اجازه می‌دهد تا قوانین انبار را طوری"
-" تعریف کرد که منجر به فعال کردن سفارش‌های ساخت مختلف فعال با صورت مواد اولیه"
+" تعریف کرد که منجر به فعال کردن سفارش‌های تولید مختلف فعال با صورت مواد اولیه"
 " مختلف می‌شود."
 
 #. module: mrp
@@ -4880,7 +4880,7 @@ msgid ""
 "created to fulfill the need."
 msgstr ""
 "هنگامی که نیاز به کالا در <b>%s</b>، <br/> می‌باشد، برای تامین نیاز ، دستور"
-" ساخت ایجاد می‌شود."
+" تولید ایجاد می‌شود."
 
 #. module: mrp
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
@@ -5040,9 +5040,9 @@ msgid ""
 "                    Operations are defined in the bill of materials or added"
 " in the manufacturing order directly."
 msgstr ""
-"سفارش‌های کار عملیاتی هستند که، به عنوان بخشی از سفارش ساخت انجام می‌شوند. \n"
+"سفارش‌های کار عملیاتی هستند که، به عنوان بخشی از سفارش تولید انجام می‌شوند. \n"
 "                     عملیات‌ها در صورت مواد اولیه تعریف می‌شوند یا مستقیما در"
-" سفارش ساخت اضافه می‌شوند."
+" سفارش تولید اضافه می‌شوند."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -5054,9 +5054,9 @@ msgid ""
 "            Operations are defined in the bill of materials or added in the"
 " manufacturing order directly."
 msgstr ""
-"سفارش‌های کار عملیاتی هستند که، به عنوان بخشی از سفارش ساخت انجام می‌شوند. \n"
+"سفارش‌های کار عملیاتی هستند که، به عنوان بخشی از سفارش تولید انجام می‌شوند. \n"
 "                     عملیات‌ها در صورت مواد اولیه تعریف می‌شوند یا مستقیما در"
-" سفارش ساخت اضافه می‌شوند."
+" سفارش تولید اضافه می‌شوند."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -5139,7 +5139,7 @@ msgid ""
 "Components\"."
 msgstr ""
 "شما مجاز به ایجاد یا ویرایش سری ساخت یا شماره سریال برای قطعات با نوع عملیات"
-" \"ساخت\" نیستید. برای تغییر این، به نوع عملیات رفته و کادر \"ایجاد سری"
+" \"تولید\" نیستید. برای تغییر این، به نوع عملیات رفته و کادر \"ایجاد سری"
 " ساخت/شماره سریال جدید برای قطعات\" را علامت بزنید."
 
 #. module: mrp
@@ -5158,7 +5158,7 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
-"شما نمی‌توانید صورت مواد اولیه‌ای که مرتبط به سفارش‌های ساخت در حال اجرا است"
+"شما نمی‌توانید صورت مواد اولیه‌ای که مرتبط به سفارش‌های تولید در حال اجرا است"
 " را حذف کنید. \n"
 "لطفا ابتدا آن را ببندید یا لغو کنید."
 
@@ -5196,13 +5196,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
-msgstr "نمی‌توانید این سفارش کار را به یک سفارش ساخت دیگر پیوند دهید."
+msgstr "نمی‌توانید این سفارش کار را به یک سفارش تولید دیگر پیوند دهید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
-msgstr "با لغو یا پایان یک سفارش ساخت، نمی‌توانید آن را انتقال دهید."
+msgstr "با لغو یا پایان یک سفارش تولید، نمی‌توانید آن را انتقال دهید."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
