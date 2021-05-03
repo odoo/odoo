@@ -152,7 +152,7 @@ class Partner(models.Model):
         return values
 
     name = fields.Char(index=True)
-    display_name = fields.Char(compute='_compute_display_name', store=True, index=True)
+    display_name = fields.Char(compute='_compute_display_name', recursive=True, store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
@@ -224,8 +224,9 @@ class Partner(models.Model):
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
     # technical field used for managing commercial fields
-    commercial_partner_id = fields.Many2one('res.partner', compute='_compute_commercial_partner',
-                                             string='Commercial Entity', store=True, index=True)
+    commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity',
+                                            compute='_compute_commercial_partner', recursive=True,
+                                            store=True, index=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')

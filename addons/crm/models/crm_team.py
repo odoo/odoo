@@ -51,7 +51,7 @@ class Team(models.Model):
         string='Overdue Opportunities Revenues', compute='_compute_opportunities_overdue_data',)
     # alias: improve fields coming from _inherits, use inherited to avoid replacing them
     alias_user_id = fields.Many2one(
-        'res.users', related='alias_id.alias_user_id', inherited=True,
+        'res.users', related='alias_id.alias_user_id', readonly=False, inherited=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman_all_leads').id)])
 
     @api.depends('crm_team_member_ids.assignment_max')

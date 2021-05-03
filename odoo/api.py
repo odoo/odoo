@@ -775,7 +775,7 @@ class Environment(Mapping):
         yield
 
     def cache_key(self, field):
-        """ Return the cache key corresponding to ``field.depends_context``. """
+        """ Return the cache key of the given ``field``. """
         try:
             return self._cache_key[field]
 
@@ -802,7 +802,7 @@ class Environment(Mapping):
                     else:
                         return val
 
-            result = tuple(get(key) for key in field.depends_context)
+            result = tuple(get(key) for key in self.registry.field_depends_context[field])
             self._cache_key[field] = result
             return result
 
@@ -828,6 +828,7 @@ class Environments(object):
 
 # sentinel value for optional parameters
 NOTHING = object()
+EMPTY_DICT = frozendict()
 
 
 class Cache(object):
@@ -836,19 +837,28 @@ class Cache(object):
         # {field: {record_id: value}, field: {context_key: {record_id: value}}}
         self._data = defaultdict(dict)
 
+    def _get_field_cache(self, model, field):
+        """ Return the field cache of the given field, but not for modifying it. """
+        field_cache = self._data.get(field, EMPTY_DICT)
+        if field_cache and model.pool.field_depends_context[field]:
+            field_cache = field_cache.get(model.env.cache_key(field), EMPTY_DICT)
+        return field_cache
+
+    def _set_field_cache(self, model, field):
+        """ Return the field cache of the given field for modifying it. """
+        field_cache = self._data[field]
+        if model.pool.field_depends_context[field]:
+            field_cache = field_cache.setdefault(model.env.cache_key(field), {})
+        return field_cache
+
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """
-        field_cache = self._data.get(field, ())
-        if field_cache and field.depends_context:
-            field_cache = field_cache.get(record.env.cache_key(field), ())
-        return record.id in field_cache
+        return record.id in self._get_field_cache(record, field)
 
     def get(self, record, field, default=NOTHING):
         """ Return the value of ``field`` for ``record``. """
         try:
-            field_cache = self._data[field]
-            if field.depends_context:
-                field_cache = field_cache[record.env.cache_key(field)]
+            field_cache = self._get_field_cache(record, field)
             return field_cache[record._ids[0]]
         except KeyError:
             if default is NOTHING:
@@ -857,33 +867,25 @@ class Cache(object):
 
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
-        field_cache = self._data[field]
-        if field.depends_context:
-            field_cache = field_cache.setdefault(record.env.cache_key(field), {})
+        field_cache = self._set_field_cache(record, field)
         field_cache[record._ids[0]] = value
 
     def update(self, records, field, values):
         """ Set the values of ``field`` for several ``records``. """
-        field_cache = self._data[field]
-        if field.depends_context:
-            field_cache = field_cache.setdefault(records.env.cache_key(field), {})
+        field_cache = self._set_field_cache(records, field)
         field_cache.update(zip(records._ids, values))
 
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
         try:
-            field_cache = self._data[field]
-            if field.depends_context:
-                field_cache = field_cache[record.env.cache_key(field)]
+            field_cache = self._set_field_cache(record, field)
             del field_cache[record._ids[0]]
         except KeyError:
             pass
 
     def get_values(self, records, field):
         """ Return the cached values of ``field`` for ``records``. """
-        field_cache = self._data[field]
-        if field.depends_context:
-            field_cache = field_cache.get(records.env.cache_key(field), {})
+        field_cache = self._get_field_cache(records, field)
         for record_id in records._ids:
             try:
                 yield field_cache[record_id]
@@ -892,9 +894,7 @@ class Cache(object):
 
     def get_until_miss(self, records, field):
         """ Return the cached values of ``field`` for ``records`` until a value is not found. """
-        field_cache = self._data[field]
-        if field.depends_context:
-            field_cache = field_cache.get(records.env.cache_key(field), {})
+        field_cache = self._get_field_cache(records, field)
         vals = []
         for record_id in records._ids:
             try:
@@ -905,9 +905,7 @@ class Cache(object):
 
     def get_records_different_from(self, records, field, value):
         """ Return the subset of ``records`` that has not ``value`` for ``field``. """
-        field_cache = self._data[field]
-        if field.depends_context:
-            field_cache = field_cache.get(records.env.cache_key(field), {})
+        field_cache = self._get_field_cache(records, field)
         ids = []
         for record_id in records._ids:
             try:
@@ -922,26 +920,17 @@ class Cache(object):
     def get_fields(self, record):
         """ Return the fields with a value for ``record``. """
         for name, field in record._fields.items():
-            if name == 'id':
-                continue
-            field_cache = self._data.get(field, {})
-            if field.depends_context:
-                field_cache = field_cache.get(record.env.cache_key(field), ())
-            if record.id in field_cache:
+            if name != 'id' and record.id in self._get_field_cache(record, field):
                 yield field
 
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """
-        field_cache = self._data[field]
-        if field.depends_context:
-            field_cache = field_cache.get(model.env.cache_key(field), ())
+        field_cache = self._get_field_cache(model, field)
         return model.browse(field_cache)
 
     def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """
-        field_cache = self._data[field]
-        if field.depends_context:
-            field_cache = field_cache.get(records.env.cache_key(field), ())
+        field_cache = self._get_field_cache(records, field)
         for record_id in records._ids:
             if record_id not in field_cache:
                 yield record_id
@@ -954,12 +943,14 @@ class Cache(object):
             for field, ids in spec:
                 if ids is None:
                     self._data.pop(field, None)
-                else:
-                    field_cache = self._data.get(field, {})
-                    field_caches = field_cache.values() if field.depends_context else [field_cache]
-                    for field_cache in field_caches:
-                        for id in ids:
-                            field_cache.pop(id, None)
+                    continue
+                cache = self._data.get(field)
+                if not cache:
+                    continue
+                caches = cache.values() if isinstance(next(iter(cache)), tuple) else [cache]
+                for field_cache in caches:
+                    for id_ in ids:
+                        field_cache.pop(id_, None)
 
     def check(self, env):
         """ Check the consistency of the cache for the given environment. """
@@ -969,6 +960,8 @@ class Cache(object):
         # make a copy of the cache, and invalidate it
         dump = dict(self._data)
         self.invalidate()
+
+        depends_context = env.registry.field_depends_context
 
         # re-fetch the records, and compare with their former cache
         invalids = []
@@ -990,9 +983,9 @@ class Cache(object):
 
         for field, field_dump in dump.items():
             model = env[field.model_name]
-            if field.depends_context:
+            if depends_context[field]:
                 for context_keys, field_cache in field_dump.items():
-                    context = dict(zip(field.depends_context, context_keys))
+                    context = dict(zip(depends_context[field], context_keys))
                     check(model.with_context(context), field, field_cache)
             else:
                 check(model, field, field_dump)
