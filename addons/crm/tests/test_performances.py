@@ -54,6 +54,8 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
+        # due to duplicate management keeping master team, we may not ensure leads to be
+        # fulfilling their original team volume
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
         leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
         leads_stc = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
