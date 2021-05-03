@@ -117,21 +117,10 @@ class TestMailingListMerge(MassMailCommon):
         # The mailing list C contains the same email address than 'Norbert' in list B
         # This test ensure that the mailing lists are correctly merged and no
         # duplicates are appearing in C
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> [FW][FIX] mass_mailing: improve default values management when merging mailing lists
         merge_form = Form(self.env['mailing.list.merge'].with_context(
             active_ids=[self.mailing_list_1.id, self.mailing_list_2.id],
             active_model='mailing.list'
         ))
-<<<<<<< HEAD
-=======
-
-        merge_form = Form(self.env['mailing.list.merge'].with_context(active_ids=[self.mailing_list_1.id, self.mailing_list_2.id]))
->>>>>>> [FIX] mass_mailing: Traceback on mass mailing list merging
-=======
->>>>>>> [FW][FIX] mass_mailing: improve default values management when merging mailing lists
         merge_form.new_list_name = False
         merge_form.dest_list_id = self.mailing_list_3
         merge_form.merge_options = 'existing'
