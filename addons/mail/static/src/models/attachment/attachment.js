@@ -128,10 +128,11 @@ function factory(dependencies) {
         }
 
         /**
+         * Reconciliation between uploading attachment and real attachment.
+         *
          * @private
-         * @returns {mail.composer[]}
          */
-        _computeComposers() {
+        _created() {
             if (this.isUploading) {
                 return;
             }
@@ -143,9 +144,8 @@ function factory(dependencies) {
             if (relatedUploadingAttachment) {
                 const composers = relatedUploadingAttachment.composers;
                 relatedUploadingAttachment.delete();
-                return replace(composers);
+                this.update({ composers: replace(composers) });
             }
-            return;
         }
 
         /**
@@ -336,7 +336,6 @@ function factory(dependencies) {
         }),
         checkSum: attr(),
         composers: many2many('mail.composer', {
-            compute: '_computeComposers',
             inverse: 'attachments',
         }),
         defaultSource: attr({
