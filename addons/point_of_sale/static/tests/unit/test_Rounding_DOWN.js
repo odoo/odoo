@@ -34,7 +34,8 @@ odoo.define('point_of_sale.unit.test_Rounding_DOWN', function (require) {
     });
 
     QUnit.test('invariants for rounding DOWN by 0.05', async function (assert) {
-        assert.expect(156);
+        assert.expect(168);
+        let payment1, payment2, payment3, payment4, payment5;
         await model.actionCreateNewOrder();
         const activeOrder = model.getActiveOrder();
         const orderline = await model.actionAddProduct(activeOrder, product1, {});
@@ -46,7 +47,7 @@ odoo.define('point_of_sale.unit.test_Rounding_DOWN', function (require) {
         const checkPayment = createCheckPayment(assert, model, activeOrder);
 
         // case 1
-        let payment1 = await model.actionAddPayment(activeOrder, cashPaymentMethod);
+        payment1 = await model.actionAddPayment(activeOrder, cashPaymentMethod);
         checkPayment('case1', payment1, {
             amount: 12.1,
             orderIsPaid: true,
@@ -76,7 +77,7 @@ odoo.define('point_of_sale.unit.test_Rounding_DOWN', function (require) {
             change: 0,
             paymentIsValid: true,
         });
-        let payment2 = await model.actionAddPayment(activeOrder, cashPaymentMethod, 2.2);
+        payment2 = await model.actionAddPayment(activeOrder, cashPaymentMethod, 2.2);
         checkPayment('case3_2', payment2, {
             amount: 2.2,
             orderIsPaid: true,
@@ -116,7 +117,20 @@ odoo.define('point_of_sale.unit.test_Rounding_DOWN', function (require) {
             change: 0,
             paymentIsValid: false,
         });
+        payment2 = await model.actionAddPayment(activeOrder, bankPaymentMethod);
+        checkPayment('case5_2', payment2, {
+            amount: 2.12,
+            orderIsPaid: true,
+            remaining: 0,
+            change: 0,
+            paymentIsValid: true,
+        });
+        assert.ok(
+            model.getInvalidRoundingPayment(activeOrder) === payment1,
+            'case5_1: payment1 is the invalid payment of the order'
+        );
         await model.actionDeletePayment(payment1);
+        await model.actionDeletePayment(payment2);
 
         // case 6
         payment1 = await model.actionAddPayment(activeOrder, bankPaymentMethod, 10.01);
@@ -199,7 +213,7 @@ odoo.define('point_of_sale.unit.test_Rounding_DOWN', function (require) {
             change: 0,
             paymentIsValid: true,
         });
-        let payment3 = await model.actionAddPayment(activeOrder, bankPaymentMethod, 2.99);
+        payment3 = await model.actionAddPayment(activeOrder, bankPaymentMethod, 2.99);
         checkPayment('case11_3', payment3, {
             amount: 2.99,
             orderIsPaid: false,
@@ -207,7 +221,7 @@ odoo.define('point_of_sale.unit.test_Rounding_DOWN', function (require) {
             change: 0,
             paymentIsValid: true,
         });
-        let payment4 = await model.actionAddPayment(activeOrder, cashPaymentMethod, 1.01);
+        payment4 = await model.actionAddPayment(activeOrder, cashPaymentMethod, 1.01);
         checkPayment('case11_4', payment4, {
             amount: 1.01,
             orderIsPaid: false,
@@ -215,10 +229,23 @@ odoo.define('point_of_sale.unit.test_Rounding_DOWN', function (require) {
             change: 0,
             paymentIsValid: false,
         });
+        payment5 = await model.actionAddPayment(activeOrder, cashPaymentMethod, 6.1);
+        checkPayment('case11_5', payment5, {
+            amount: 6.1,
+            orderIsPaid: true,
+            remaining: 0,
+            change: 0,
+            paymentIsValid: true,
+        });
+        assert.ok(
+            model.getInvalidRoundingPayment(activeOrder) === payment4,
+            'case11_5: payment4 is the invalid payment of the order'
+        );
         await model.actionDeletePayment(payment1);
         await model.actionDeletePayment(payment2);
         await model.actionDeletePayment(payment3);
         await model.actionDeletePayment(payment4);
+        await model.actionDeletePayment(payment5);
 
         // case 12
         payment1 = await model.actionAddPayment(activeOrder, bankPaymentMethod, 1.01);
@@ -291,7 +318,7 @@ odoo.define('point_of_sale.unit.test_Rounding_DOWN', function (require) {
             change: 0,
             paymentIsValid: true,
         });
-        let payment5 = await model.actionAddPayment(activeOrder, bankPaymentMethod, 0.1);
+        payment5 = await model.actionAddPayment(activeOrder, bankPaymentMethod, 0.1);
         checkPayment('case13_5', payment5, {
             amount: 0.1,
             orderIsPaid: true,
