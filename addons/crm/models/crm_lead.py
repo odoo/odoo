@@ -1909,19 +1909,17 @@ class Lead(models.Model):
 
         # get all team_ids from frequencies
         frequency_teams = frequencies.mapped('team_id')
-        frequency_team_ids = [0] + [team.id for team in frequency_teams]
+        frequency_team_ids = [team.id for team in frequency_teams]
 
         # 1. Compute each variable value count individually
         # regroup each variable to be able to compute their own probabilities
         # As all the variable does not enter into account (as we reject unset values in the process)
         # each value probability must be computed only with their own variable related total count
-        # special case: for lead for which team_id is not in frequency table,
+        # special case: for lead for which team_id is not in frequency table or lead with no team_id,
         # we consider all the records, independently from team_id (this is why we add a result[-1])
         result = dict((team_id, dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)) for team_id in frequency_team_ids)
         result[-1] = dict((field, dict(won_total=0, lost_total=0)) for field in leads_fields)
         for frequency in frequencies:
-            team_result = result[frequency.team_id.id if frequency.team_id else 0]
-
             field = frequency['variable']
             value = frequency['value']
 
@@ -1930,9 +1928,11 @@ class Lead(models.Model):
             if field == 'tag_id' and (frequency['won_count'] + frequency['lost_count']) < 50:
                 continue
 
-            team_result[field][value] = {'won': frequency['won_count'], 'lost': frequency['lost_count']}
-            team_result[field]['won_total'] += frequency['won_count']
-            team_result[field]['lost_total'] += frequency['lost_count']
+            if frequency.team_id:
+                team_result = result[frequency.team_id.id]
+                team_result[field][value] = {'won': frequency['won_count'], 'lost': frequency['lost_count']}
+                team_result[field]['won_total'] += frequency['won_count']
+                team_result[field]['lost_total'] += frequency['lost_count']
 
             if value not in result[-1][field]:
                 result[-1][field][value] = {'won': 0, 'lost': 0}
@@ -1960,8 +1960,8 @@ class Lead(models.Model):
                 lead_probabilities[lead_id] = 100
                 continue
 
-            lead_team_id = lead_values['team_id'] if lead_values['team_id'] else 0  # team_id = None -> Convert to 0
-            lead_team_id = lead_team_id if lead_team_id in result else -1  # team_id not in frequency Table -> convert to -1
+            # team_id not in frequency Table -> convert to -1
+            lead_team_id = lead_values['team_id'] if lead_values['team_id'] in result else -1
             if lead_team_id != save_team_id:
                 save_team_id = lead_team_id
                 team_won = result[save_team_id]['team_won']
