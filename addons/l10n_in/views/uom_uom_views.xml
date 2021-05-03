@@ -16,9 +16,9 @@
         <field name="model">uom.category</field>
         <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
+            <xpath expr="//field[@name='uom_ids']/tree/field[@name='name']" position="after">
                 <field name="l10n_in_code"/>
-            </field>
+            </xpath>
         </field>
     </record>
 </odoo>
