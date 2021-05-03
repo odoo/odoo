@@ -1369,12 +1369,6 @@ var SnippetsMenu = Widget.extend({
             // animation). (TODO wait for real animation end)
             setTimeout(() => {
                 this.$window.trigger('resize');
-
-                // Hacky way to prevent to switch to text tools on editor
-                // start. Only allow switching after some delay. Switching to
-                // tools is only useful for out-of-snippet texts anyway, so
-                // snippet texts can still be enabled immediately.
-                this._mutex.exec(() => this._textToolsSwitchingEnabled = true);
             }, 1000);
         });
     },
@@ -2387,7 +2381,6 @@ var SnippetsMenu = Widget.extend({
      * @param {this.tabs.VALUE} [tab='blocks'] - the tab to select
      */
     _updateRightPanelContent: function ({content, tab, ...options}) {
-        clearTimeout(this._textToolsSwitchingTimeout);
         this._closeWidgets();
 
         this._currentTab = tab || this.tabs.BLOCKS;
