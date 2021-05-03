@@ -66,6 +66,12 @@ $bronze: #eea91e;
         p {
             margin-bottom: 0.5rem;
         }
+
+        &::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
     }
 
     textarea.o_wysiwyg_loader + .note-editor {
