@@ -53,19 +53,10 @@ var PivotController = AbstractController.extend({
      * @override
      */
     start: function () {
-        var self = this;
         this.$el.toggleClass('o_enable_linking', this.enableLinking);
         this.$fieldSelection = this.$('.o_field_selection');
         core.bus.on('click', this, function () {
             this.$fieldSelection.empty();
-        });
-        $(window).on('mousedown', this, function (ev) {
-            if ($(ev.target).parents('.o_pivot_measures_list').length ||
-                $(ev.target).parents('.o_pivot_field_menu').length) {
-                return;
-            }
-            self.$fieldSelection.empty();
-            $(".o_pivot_measures_list.show").parent().dropdown("toggle");
         });
         return this._super();
     },

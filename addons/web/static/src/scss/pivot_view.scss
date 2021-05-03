@@ -88,3 +88,12 @@
         top: 9px;
     }
 }
+
+// Show measure dropdown top of all other dropdowns
+.o_control_panel {
+    > .o_cp_left {
+        .o_pivot_measures_list {
+            z-index: 1001;
+        }
+    }
+}
