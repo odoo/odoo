@@ -127,7 +127,12 @@ def constrains(*args):
         sure a constraint will always be triggered (e.g. to test the absence of
         value).
 
+    One may also pass a single function as argument.  In that case, the field
+    names are given by calling the function with a model instance.
+
     """
+    if args and callable(args[0]):
+        args = args[0]
     return attrsetter('_constrains', args)
 
 

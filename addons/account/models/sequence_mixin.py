@@ -45,10 +45,7 @@ class SequenceMixin(models.AbstractModel):
                     field=sql.Identifier(self._sequence_field),
                 ))
 
-    def __init__(self, pool, cr):
-        api.constrains(self._sequence_field, self._sequence_date_field)(type(self)._constrains_date_sequence)
-        return super().__init__(pool, cr)
-
+    @api.constrains(lambda self: (self._sequence_field, self._sequence_date_field))
     def _constrains_date_sequence(self):
         # Make it possible to bypass the constraint to allow edition of already messed up documents.
         # /!\ Do not use this to completely disable the constraint as it will make this mixin unreliable.
