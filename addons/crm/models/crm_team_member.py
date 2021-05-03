@@ -62,7 +62,7 @@ class Team(models.Model):
     # LEAD ASSIGNMENT
     # ------------------------------------------------------------
 
-    def _assign_and_convert_leads(self, work_days=2):
+    def _assign_and_convert_leads(self, work_days=1):
         """ Main processing method to assign leads to sales team members. It also
         converts them into opportunities. This method should be called after
         ``_allocate_leads`` as this method assigns leads already allocated to
@@ -107,7 +107,7 @@ class Team(models.Model):
         point of view but increases probability leads are correctly distributed
         within the team.
 
-        :param int work_days: see ``CrmTeam.action_assign_leads()``;
+        :param float work_days: see ``CrmTeam.action_assign_leads()``;
 
         :return members_data: dict() with each member assignment result:
           membership: {
@@ -115,9 +115,9 @@ class Team(models.Model):
           }, ...
 
         """
-        if not work_days or work_days > 30:
+        if work_days < 0.2 or work_days > 30:
             raise ValueError(
-                _('Leads assignment should be done for at least 1 or maximum 30 work days, not %s.', work_days)
+                _('Leads team allocation should be done for at least 0.2 or maximum 30 work days, not %.2f.', work_days)
             )
         # assignment_max is valid for "30 days" -> divide by requested work_days
         # to have number of leads to assign
