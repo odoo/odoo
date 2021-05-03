@@ -14,6 +14,7 @@ const SEARCH_LIMIT = 1000;
 async function setup(webClient) {
     // Publish a singleton posmodel
     env.model = new PointOfSaleModel(webClient, SEARCH_LIMIT);
+    window.posmodel = env.model;
 
     // Setup responsive
     const isMobile = () => window.innerWidth <= 768;
@@ -57,7 +58,6 @@ async function setup(webClient) {
 
     env.ui = ui;
     env.model.ui = ui;
-    window.posmodel = env.model;
 }
 
 AbstractService.prototype.deployServices(env);
