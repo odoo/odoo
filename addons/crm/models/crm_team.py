@@ -497,11 +497,12 @@ class Team(models.Model):
                     leads_assigned += lead
                     leads_done_ids.add(lead.id)
 
-        leads_assigned._handle_salesmen_assignment(user_ids=None, team_id=self.id)
+        duplicates_to_assign = self.env['crm.lead'].union(*leads_dups_dict.keys())
+        (leads_assigned | duplicates_to_assign)._handle_salesmen_assignment(user_ids=None, team_id=self.id)
 
         for lead in leads.filtered(lambda lead: lead in leads_dups_dict):
             lead_duplicates = leads_dups_dict[lead]
-            merged = lead_duplicates._merge_opportunity(user_id=False, team_id=self.id, max_length=0)
+            merged = lead_duplicates._merge_opportunity(user_id=False, team_id=False, max_length=0)
             leads_dup_ids.update((lead_duplicates - merged).ids)
             leads_merged_ids.add(merged.id)
 
