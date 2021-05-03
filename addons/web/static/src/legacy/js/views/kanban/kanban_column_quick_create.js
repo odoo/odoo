@@ -36,6 +36,7 @@ var ColumnQuickCreate = Widget.extend({
         this.examples = options.examples;
         this.folded = true;
         this.isMobile = false;
+        this.isFirstColumn = options.isFirstColumn;
     },
     /**
      * @override
@@ -45,8 +46,10 @@ var ColumnQuickCreate = Widget.extend({
         this.$quickCreateUnfolded = this.$('.o_quick_create_unfolded');
         this.$input = this.$('input');
 
-        // destroy the quick create when the user clicks outside
-        core.bus.on('click', this, this._onWindowClicked);
+        if (!this.isFirstColumn) {
+            // destroy the quick create when the user clicks outside
+            core.bus.on('click', this, this._onWindowClicked);
+        }
 
         this._update();
 
