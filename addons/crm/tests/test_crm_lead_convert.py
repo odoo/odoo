@@ -29,6 +29,32 @@ class TestLeadConvertForm(crm_common.TestLeadConvertCommon):
         self.assertEqual(wizard.action, 'exist')
         self.assertEqual(wizard.partner_id, customer)
 
+    @users('user_sales_manager')
+    def test_form_name_onchange(self):
+        """ Test Lead._find_matching_partner() """
+        lead = self.env['crm.lead'].browse(self.lead_1.ids)
+        lead_dup = lead.copy({'name': 'Duplicate'})
+        customer = self.env['res.partner'].create({
+            "name": "Amy Wong",
+            "email": '"Amy, PhD Student, Wong" Tiny <AMY.WONG@test.example.com>'
+        })
+
+        wizard = Form(self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': lead.id,
+            'active_ids': lead.ids,
+        }))
+
+        self.assertEqual(wizard.name, 'merge')
+        self.assertEqual(wizard.action, 'exist')
+        self.assertEqual(wizard.partner_id, customer)
+        self.assertEqual(wizard.duplicated_lead_ids[:], lead + lead_dup)
+
+        wizard.name = 'convert'
+        wizard.action = 'create'
+        self.assertEqual(wizard.action, 'create', 'Should keep user input')
+        self.assertEqual(wizard.name, 'convert', 'Should keep user input')
+
 
 @tagged('lead_manage')
 class TestLeadConvert(crm_common.TestLeadConvertCommon):
