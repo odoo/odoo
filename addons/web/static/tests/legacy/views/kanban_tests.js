@@ -3853,6 +3853,38 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create column should not be closed on widnow click if there is no column', async function (assert) {
+        assert.expect(4);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ['product_id'],
+            domain: [['foo', '=', 'norecord']],
+        });
+
+        assert.containsNone(kanban, '.o_kanban_group');
+        assert.containsOnce(kanban, '.o_column_quick_create');
+        assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the quick create should be opened");
+        // click outside should not discard quick create column
+        await testUtils.dom.click(kanban.$('.o_kanban_example_background_container'));
+        assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the quick create should still be opened");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create several columns in a row', async function (assert) {
         assert.expect(10);
 
