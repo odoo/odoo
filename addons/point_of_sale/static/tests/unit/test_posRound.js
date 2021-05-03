@@ -9,7 +9,7 @@ odoo.define('point_of_sale.unit.test_posRound', function (require) {
     function createChecker(assert, rounder) {
         return function (valueToRound, prec, expectedRoundedValue) {
             const rounded = rounder(valueToRound, prec);
-            const msg = `round(${valueToRound}, ${prec}) result to ${rounded}, expected: ${expectedRoundedValue}`;
+            const msg = `round(${valueToRound}, ${prec}) resulted to ${rounded}, expected: ${expectedRoundedValue}`;
             assert.ok(float_is_zero(rounded - expectedRoundedValue, N_DECIMAL), msg);
         };
     }
