@@ -484,6 +484,14 @@ class ModelField {
                             hasChanged = true;
                         }
                         break;
+                    case 'update':
+                        if (!['one2one', 'many2one'].includes(this.relationType)) {
+                            throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "update". Only x2one relations are supported.`);
+                        }
+                        if (this._setRelationUpdateX2One(record, newVal, options)) {
+                            hasChanged = true;
+                        }
+                        break;
                     default:
                         throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
                 }
@@ -789,6 +797,25 @@ class ModelField {
             case 'one2one':
                 return this._setRelationUnlinkX2One(record, options);
         }
+    }
+
+    /**
+     * Set on this relational field in 'update' mode. Basically data provided
+     * during set on this relational field contain data to update target record.
+     *
+     * @private
+     * @param {mail.model} record
+     * @param {Object} data
+     * @param {Object} [options]
+     * @returns {boolean} whether the value changed for the current field
+     */
+    _setRelationUpdateX2One(record, data, options) {
+        const otherRecord = this.read(record);
+        if (!otherRecord) {
+            throw Error(`Record ${record.localId} cannot update undefined relational field ${this.fieldName}.`);
+        }
+        this.env.modelManager._update(otherRecord, data);
+        return false;
     }
 
     /**
