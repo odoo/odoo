@@ -48,6 +48,8 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
+            'project/static/src/components/thread_needaction_preview/thread_needaction_preview.scss',
+            'project/static/src/components/thread_preview/thread_preview.scss',
             'project/static/src/css/project.css',
             'project/static/src/js/project_form.js',
             'project/static/src/js/project_kanban.js',
