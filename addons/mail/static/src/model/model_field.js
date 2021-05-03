@@ -24,6 +24,7 @@ class ModelField {
         hashes: extraHashes = [],
         inverse,
         isCausal = false,
+        isOnChange,
         readonly = false,
         related,
         relationType,
@@ -130,6 +131,16 @@ class ModelField {
          * relation is removed, the related record is automatically deleted.
          */
         this.isCausal = isCausal;
+        /**
+         * Determines whether this field is an "on change" field. Only applies
+         * to computed fields. An "on change" is a fake compute designed to be
+         * called when one of its dependencies change. It is called after all
+         * other computes are done, and it does not actually assign any value to
+         * its respective field.
+         * This is deprecated but when it is necessary due to other limitations
+         * in code it is better using "on change" than polluting real computes.
+         */
+        this.isOnChange = isOnChange;
         /**
          * Determines whether the field is read only. Read only field
          * can't be updated once the record is created.
@@ -456,7 +467,7 @@ class ModelField {
                     case 'link':
                         if (this._setRelationLink(record, newVal, options)) {
                             hasChanged = true;
-                        };
+                        }
                         break;
                     case 'replace':
                         if (this._setRelationReplace(record, newVal, options)) {
@@ -464,9 +475,9 @@ class ModelField {
                         }
                         break;
                     case 'unlink':
-                        if (this._setRelationUnlink(record, newVal, options)){
+                        if (this._setRelationUnlink(record, newVal, options)) {
                             hasChanged = true;
-                        };
+                        }
                         break;
                     case 'unlink-all':
                         if (this._setRelationUnlink(record, this.read(record), options)) {

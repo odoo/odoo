@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
-import { create, link, unlink } from '@mail/model/model_field_command';
+import { create, insert, link, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -128,7 +128,10 @@ function factory(dependencies) {
             if (!this.thread) {
                 return unlink();
             }
-            return link(this.thread.cache(this.stringifiedDomain));
+            return insert({
+                stringifiedDomain: this.stringifiedDomain,
+                thread: link(this.thread),
+            });
         }
 
         /**

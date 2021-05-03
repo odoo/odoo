@@ -960,6 +960,7 @@ function factory(dependencies) {
                 'suggestionSearchTerm',
                 'thread',
             ],
+            isOnChange: true,
         }),
         /**
          * Determines the extra `mail.partner` (on top of existing followers)

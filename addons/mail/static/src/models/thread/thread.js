@@ -1347,7 +1347,10 @@ function factory(dependencies) {
          * @returns {mail.thread_cache}
          */
         _computeMainCache() {
-            return link(this.cache());
+            return insert({
+                stringifiedDomain: '[]',
+                thread: link(this),
+            });
         }
 
         /**
@@ -2059,6 +2062,7 @@ function factory(dependencies) {
             dependencies: [
                 'followersPartner',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onChangeLastSeenByCurrentPartnerMessageId` when one of
@@ -2069,6 +2073,7 @@ function factory(dependencies) {
             dependencies: [
                 'lastSeenByCurrentPartnerMessageId',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onChangeThreadViews` when one of
@@ -2079,6 +2084,7 @@ function factory(dependencies) {
             dependencies: [
                 'threadViews',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onIsServerPinnedChanged` when one of
@@ -2089,6 +2095,7 @@ function factory(dependencies) {
             dependencies: [
                 'isServerPinned',
             ],
+            isOnChange: true,
         }),
         /**
          * Not a real field, used to trigger `_onServerFoldStateChanged` when one of
@@ -2099,6 +2106,7 @@ function factory(dependencies) {
             dependencies: [
                 'serverFoldState',
             ],
+            isOnChange: true,
         }),
         /**
          * All messages ordered like they are displayed.
