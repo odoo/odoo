@@ -336,7 +336,7 @@ class MailComposer(models.TransientModel):
                     new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
                     attachment_ids.append(new_attach_id.id)
                 attachment_ids.reverse()
-                mail_values['attachment_ids'] = self.env['mail.thread']._message_post_process_attachments(
+                mail_values['attachment_ids'] = self.env['mail.thread'].with_context(attached_to=record)._message_post_process_attachments(
                     mail_values.pop('attachments', []),
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
