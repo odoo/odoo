@@ -133,8 +133,61 @@
                            data-apply-to=".s_website_form_date input"/>
             <we-checkbox string="Required" data-name="required_opt" data-no-preview="true"
                 data-toggle-required="s_website_form_required"/>
-            <we-checkbox string="Hidden" data-name="hidden_opt" data-no-preview="true"
-                data-select-class="s_website_form_field_hidden"/>
+            <we-select string="Visibility" data-no-preview="true">
+                <we-button data-set-visibility="visible" data-select-class="">Always Visible</we-button>
+                <we-button data-set-visibility="hidden" data-select-class="s_website_form_field_hidden">Hidden</we-button>
+                <we-button data-set-visibility="conditional" data-select-class="s_website_form_field_hidden_if d-none">Visible only if</we-button>
+            </we-select>
+            <we-row data-name="hidden_condition_opt" string="">
+                <we-select data-name="hidden_condition_opt" data-no-preview="true">
+                    <!-- Load every existing form input -->
+                </we-select>
+                <we-select data-name="hidden_condition_no_text_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
+                    <we-button data-select-data-attribute="selected">Is equal to</we-button>
+                    <we-button data-select-data-attribute="!selected">Is not equal to</we-button>
+                </we-select>
+                <we-select data-name="hidden_condition_text_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
+                    <!-- str comparator possibilities -->
+                    <we-button data-select-data-attribute="contains">Contains</we-button>
+                    <we-button data-select-data-attribute="!contains">Doesn't contain</we-button>
+                    <we-button data-select-data-attribute="equal">Is equal to</we-button>
+                    <we-button data-select-data-attribute="!equal">Is not equal to</we-button>
+                    <we-button data-select-data-attribute="set">Is set</we-button>
+                    <we-button data-select-data-attribute="!set">Is not set</we-button>
+                </we-select>
+                <we-select data-name="hidden_condition_num_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
+                    <!-- number comparator possibilities -->
+                    <we-button data-select-data-attribute="equal">Is equal to</we-button>
+                    <we-button data-select-data-attribute="!equal">Is not equal to</we-button>
+                    <we-button data-select-data-attribute="greater">Is greater than</we-button>
+                    <we-button data-select-data-attribute="less">Is less than</we-button>
+                    <we-button data-select-data-attribute="greater or equal">Is greater than or equal to</we-button>
+                    <we-button data-select-data-attribute="less or equal">Is less than or equal to</we-button>
+                    <we-button data-select-data-attribute="set">Is set</we-button>
+                    <we-button data-select-data-attribute="!set">Is not set</we-button>
+                </we-select>
+                <we-select data-name="hidden_condition_time_comparators_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
+                    <!-- date & datetime comparator possibilities -->
+                    <we-button data-select-data-attribute="dateEqual">Is equal to</we-button>
+                    <we-button data-select-data-attribute="date!equal">Is not equal to</we-button>
+                    <we-button data-select-data-attribute="after">Is after</we-button>
+                    <we-button data-select-data-attribute="before">Is before</we-button>
+                    <we-button data-select-data-attribute="equal or after">Is after or equal to</we-button>
+                    <we-button data-select-data-attribute="equal or before">Is before or equal to</we-button>
+                    <we-button data-select-data-attribute="set">Is set</we-button>
+                    <we-button data-select-data-attribute="!set">Is not set</we-button>
+                    <we-button data-select-data-attribute='between'>Is between (included)</we-button>
+                    <we-button data-select-data-attribute='!between'>Is not between (excluded)</we-button>
+                </we-select>
+            </we-row>
+            <we-select class="o_we_large" data-name="hidden_condition_no_text_opt" data-attribute-name="visibilityCondition" data-no-preview="true">
+                <!-- checkbox, select, radio possible values -->
+            </we-select>
+            <we-input class="o_we_large" data-name="hidden_condition_additional_text" data-attribute-name="visibilityCondition" data-select-data-attribute=""/>
+            <we-datetimepicker data-name="hidden_condition_additional_datetime" data-attribute-name="visibilityCondition" data-select-data-attribute="" />
+            <we-datepicker data-name="hidden_condition_additional_date" data-attribute-name="visibilityCondition" data-select-data-attribute=""/>
+            <we-datetimepicker data-name="hidden_condition_datetime_between" data-attribute-name="visibilityBetween" data-select-data-attribute=""/>
+            <we-datepicker data-name="hidden_condition_date_between" data-attribute-name="visibilityBetween" data-select-data-attribute="" />
         </div>
 
         <div data-js="WebsiteFormSubmit" data-selector=".s_website_form_submit" data-exclude=".s_website_form_no_submit_options">

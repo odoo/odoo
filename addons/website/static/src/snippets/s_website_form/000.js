@@ -48,6 +48,8 @@ odoo.define('website.s_website_form', function (require) {
         init: function () {
             this._super(...arguments);
             this._recaptcha = new ReCaptcha();
+            this._visibilityFunctionByFieldName = new Map();
+            this._visibilityFunctionByFieldEl = new Map();
             this.__started = new Promise(resolve => this.__startResolve = resolve);
         },
         willStart: async function () {
@@ -71,9 +73,28 @@ odoo.define('website.s_website_form', function (require) {
         start: function () {
             var self = this;
 
+            // Prepare visibility data and update field visibilities
+            const visibilityFunctionsByFieldName = new Map();
+            for (const fieldEl of this.$target[0].querySelectorAll('[data-visibility-dependency]')) {
+                const inputName = fieldEl.querySelector('.s_website_form_input').name;
+                if (!visibilityFunctionsByFieldName.has(inputName)) {
+                    visibilityFunctionsByFieldName.set(inputName, []);
+                }
+                const func = this._buildVisibilityFunction(fieldEl);
+                visibilityFunctionsByFieldName.get(inputName).push(func);
+                this._visibilityFunctionByFieldEl.set(fieldEl, func);
+            }
+            for (const [name, funcs] of visibilityFunctionsByFieldName.entries()) {
+                this._visibilityFunctionByFieldName.set(name, () => funcs.some(func => func()));
+            }
+            this._updateFieldsVisibility();
+
+            this._onFieldInputDebounced = _.debounce(this._onFieldInput.bind(this), 400);
+            this.$el.on('input.s_website_form', '.s_website_form_field', this._onFieldInputDebounced);
+
             // Initialize datetimepickers
             var datepickers_options = {
-                minDate: moment({ y: 1000 }),
+                minDate: moment({y: 1000}),
                 maxDate: moment({y: 9999, M: 11, d: 31}),
                 calendarWeeks: true,
                 icons: {
@@ -119,6 +140,13 @@ odoo.define('website.s_website_form', function (require) {
                 });
             }
 
+            // Check disabled states
+            this.inputEls = this.$target[0].querySelectorAll('.s_website_form_field.s_website_form_field_hidden_if .s_website_form_input');
+            this._disabledStates = new Map();
+            for (const inputEl of this.inputEls) {
+                this._disabledStates[inputEl] = inputEl.disabled;
+            }
+
             return this._super(...arguments).then(() => this.__startResolve());
         },
 
@@ -156,6 +184,16 @@ odoo.define('website.s_website_form', function (require) {
 
             // Reinitialize dates
             this.$allDates.removeClass('s_website_form_datepicker_initialized');
+
+            // Restore disabled attribute
+            for (const inputEl of this.inputEls) {
+                inputEl.disabled = !!this._disabledStates.get(inputEl);
+            }
+
+            // All 'hidden if' fields start with d-none
+            this.$target[0].querySelectorAll('.s_website_form_field_hidden_if:not(.d-none)').forEach(el => el.classList.add('d-none'));
+
+            this.$el.off('.s_website_form');
         },
 
         send: async function (e) {
@@ -395,6 +433,11 @@ odoo.define('website.s_website_form', function (require) {
                 message: message,
             })));
         },
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
         /**
          * Gets the user's field needed to be fetched to pre-fill the form.
          *
@@ -402,6 +445,133 @@ odoo.define('website.s_website_form', function (require) {
          */
         _getUserPreFillFields() {
             return ['name', 'phone', 'email', 'commercial_company_name'];
+        },
+        /**
+         * Compares the value with the comparable (and the between) with
+         * comparator as a means to compare
+         *
+         * @private
+         * @param {string} comparator The way that $value and $comparable have
+         *      to be compared
+         * @param {string} [value] The value of the field
+         * @param {string} [comparable] The value to compare
+         * @param {string} [between] The maximum date value in case comparator
+         *      is between or !between
+         * @returns {boolean}
+         */
+        _compareTo(comparator, value = '', comparable, between) {
+            switch (comparator) {
+                case 'contains':
+                    return value.includes(comparable);
+                case '!contains':
+                    return !value.includes(comparable);
+                case 'equal':
+                case 'selected':
+                    return value === comparable;
+                case '!equal':
+                case '!selected':
+                    return value !== comparable;
+                case 'set':
+                    return value;
+                case '!set':
+                    return !value;
+                case 'greater':
+                    return value > comparable;
+                case 'less':
+                    return value < comparable;
+                case 'greater or equal':
+                    return value >= comparable;
+                case 'less or equal':
+                    return value <= comparable;
+            }
+            // Date & Date Time comparison requires formatting the value
+            if (value.includes(':')) {
+                const datetimeFormat = time.getLangDatetimeFormat();
+                value = moment(value, datetimeFormat)._d.getTime() / 1000;
+            } else {
+                const dateFormat = time.getLangDateFormat();
+                value = moment(value, dateFormat)._d.getTime() / 1000;
+            }
+            comparable = parseInt(comparable);
+            between = parseInt(between) || '';
+            switch (comparator) {
+                case 'dateEqual':
+                    return value === comparable;
+                case 'date!equal':
+                    return value !== comparable;
+                case 'before':
+                    return value < comparable;
+                case 'after':
+                    return value > comparable;
+                case 'equal or before':
+                    return value <= comparable;
+                case 'between':
+                    return value >= comparable && value <= between;
+                case '!between':
+                    return !(value >= comparable && value <= between);
+                case 'equal or after':
+                    return value >= comparable;
+            }
+        },
+        /**
+         * @private
+         * @param {HTMLElement} fieldEl the field we want to have a function
+         *      that calculates its visibility
+         * @returns {function} the function to be executed when we want to
+         *      recalculate the visibility of fieldEl
+         */
+        _buildVisibilityFunction(fieldEl) {
+            const visibilityCondition = fieldEl.dataset.visibilityCondition;
+            const dependencyName = fieldEl.dataset.visibilityDependency;
+            const comparator = fieldEl.dataset.visibilityComparator;
+            const between = fieldEl.dataset.visibilityBetween;
+            return () => {
+                // To be visible, at least one field with the dependency name must be visible.
+                const dependencyVisibilityFunction = this._visibilityFunctionByFieldName.get(dependencyName);
+                const dependencyIsVisible = !dependencyVisibilityFunction || dependencyVisibilityFunction();
+                if (!dependencyIsVisible) {
+                    return false;
+                }
+
+                const formData = new FormData(this.$target[0]);
+                const currentValueOfDependency = formData.get(dependencyName);
+                return this._compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
+            };
+        },
+        /**
+         * Calculates the visibility for each field with conditional visibility
+         */
+        _updateFieldsVisibility() {
+            for (const [fieldEl, visibilityFunction] of this._visibilityFunctionByFieldEl.entries()) {
+                this._updateFieldVisibility(fieldEl, visibilityFunction());
+            }
+        },
+        /**
+         * Changes the visibility of a field.
+         *
+         * @param {HTMLElement} fieldEl
+         * @param {boolean} haveToBeVisible
+         */
+        _updateFieldVisibility(fieldEl, haveToBeVisible) {
+            const fieldContainerEl = fieldEl.closest('.s_website_form_field');
+            fieldContainerEl.classList.toggle('d-none', !haveToBeVisible);
+            for (const inputEl of fieldContainerEl.querySelectorAll('.s_website_form_input')) {
+                // Hidden inputs should also be disabled so that their data are
+                // not sent on form submit.
+                inputEl.disabled = !haveToBeVisible;
+            }
+        },
+
+        //----------------------------------------------------------------------
+        // Handlers
+        //----------------------------------------------------------------------
+
+        /**
+         * Calculates the visibility of the fields at each input event on the
+         * form (this method should be debounced in the start).
+         */
+        _onFieldInput() {
+            this._updateFieldsVisibility();
         },
     });
 });
