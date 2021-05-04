@@ -4,6 +4,11 @@ odoo.define('website.tour.form_editor', function (require) {
     const rpc = require('web.rpc');
     const tour = require("web_tour.tour");
 
+    // Visibility possible values:
+    const VISIBLE = 'Always Visible';
+    const HIDDEN = 'Hidden';
+    const CONDITIONALVISIBILITY = 'Visible only if';
+
     const selectButtonByText = function (text) {
         return [{
             content: "Open the select",
@@ -23,7 +28,7 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: `we-select we-button[${data}]`,
         }];
     };
-    const addField = function (data, name, type, label, required, hidden) {
+    const addField = function (data, name, type, label, required, display = {visibility: VISIBLE, condition: ''}) {
         const ret = [{
             content: "Select form",
             extra_trigger: '.s_website_form_field',
@@ -37,20 +42,22 @@ odoo.define('website.tour.form_editor', function (require) {
             content: "Wait for field to load",
             trigger: `.s_website_form_field[data-type="${name}"], .s_website_form_input[name="${name}"]`, //custom or existing field
             run: function () {},
-        }];
+        },
+        ...selectButtonByText(display.visibility),
+    ];
         let testText = '.s_website_form_field';
+        if (display.condition) {
+            ret.push({
+                content: "Set the visibility condition",
+                trigger: 'we-input[data-attribute-name="visibilityCondition"] input',
+                run: `text ${display.condition}`,
+            });
+        }
         if (required) {
             testText += '.s_website_form_required';
             ret.push({
                 content: "Mark the field as required",
                 trigger: 'we-button[data-name="required_opt"] we-checkbox',
-            });
-        }
-        if (hidden) {
-            testText += '.s_website_form_field_hidden';
-            ret.push({
-                content: "Mark the field as hidden",
-                trigger: 'we-button[data-name="hidden_opt"] we-checkbox',
             });
         }
         if (label) {
@@ -72,11 +79,11 @@ odoo.define('website.tour.form_editor', function (require) {
         });
         return ret;
     };
-    const addCustomField = function (name, type, label, required, hidden) {
-        return addField(`data-custom-field="${name}"`, name, type, label, required, hidden);
+    const addCustomField = function (name, type, label, required, display) {
+        return addField(`data-custom-field="${name}"`, name, type, label, required, display);
     };
-    const addExistingField = function (name, type, label, required, hidden) {
-        return addField(`data-existing-field="${name}"`, name, type, label, required, hidden);
+    const addExistingField = function (name, type, label, required, display) {
+        return addField(`data-existing-field="${name}"`, name, type, label, required, display);
     };
 
     tour.register("website_form_editor_tour", {
@@ -104,9 +111,11 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '[data-field-name="email_to"] input',
             run: 'text_blur test@test.test',
         },
+        ...addExistingField('email_cc', 'text', 'Test conditional visibility', false, {visibility: CONDITIONALVISIBILITY, condition: 'odoo'}),
+
         ...addExistingField('date', 'text', 'Test Date', true),
 
-        ...addExistingField('record_name', 'text', 'Awesome Label', false, true),
+        ...addExistingField('record_name', 'text', 'Awesome Label', false, {visibility: HIDDEN}),
 
         ...addExistingField('body_html', 'textarea', 'Your Message', true),
 
@@ -393,6 +402,25 @@ odoo.define('website.tour.form_editor', function (require) {
             content:  "Complete Your Question field",
             trigger:  "textarea[name='description']",
             run:      "text magan"
+        },
+        {
+            content: "Check if conditional field is visible, it shouldn't.",
+            trigger: "body",
+            run: function () {
+                const style = window.getComputedStyle(this.$anchor[0].getElementsByClassName('s_website_form_field_hidden_if')[0]);
+                if (style.display !== 'none') {
+                    console.error('error This field should be invisible when the name is not odoo');
+                }
+            }
+        },
+        {
+            content: "Change name input",
+            trigger: "input[name='name']",
+            run: "text odoo",
+        },
+        {
+            content: "Check if conditional field is visible, it should.",
+            trigger: "input[name='email_cc']",
         },
         {
             content:  "Send the form",
