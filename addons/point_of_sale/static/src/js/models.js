@@ -2104,6 +2104,7 @@ exports.Orderline = Backbone.Model.extend({
      * _compute_amount in addons/account/models/account.py
      */
     _compute_all: function(tax, base_amount, quantity, price_exclude) {
+<<<<<<< HEAD
         if(price_exclude === undefined)
             var price_include = tax.price_include;
         else
@@ -2128,6 +2129,9 @@ exports.Orderline = Backbone.Model.extend({
             return base_amount - (base_amount * (tax.amount / 100));
         }
         return false;
+=======
+        return this.pos._compute_all(tax, base_amount, quantity, price_exclude)
+>>>>>>> 6a9c486dfdf... temp
     },
     /**
      * Mirror JS method of:
@@ -2136,6 +2140,7 @@ exports.Orderline = Backbone.Model.extend({
      * Read comments in the python side method for more details about each sub-methods.
      */
     compute_all: function(taxes, price_unit, quantity, currency_rounding, handle_price_include=true) {
+<<<<<<< HEAD
         var self = this;
 
         // 1) Flatten the taxes.
@@ -2264,6 +2269,10 @@ exports.Orderline = Backbone.Model.extend({
             'total_excluded': sign * round_pr(total_excluded, this.pos.currency.rounding),
             'total_included': sign * round_pr(total_included, this.pos.currency.rounding),
         }
+=======
+        return this.pos.compute_all(taxes, price_unit, quantity, currency_rounding, handle_price_include)
+
+>>>>>>> 6a9c486dfdf... temp
     },
     get_all_prices: function(){
         var self = this;
@@ -2323,11 +2332,11 @@ exports.Orderline = Backbone.Model.extend({
 
             if (mapped_included_taxes.length > 0) {
                 if (new_included_taxes.length > 0) {
-                    var price_without_taxes = this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded
-                    return this.compute_all(new_included_taxes, price_without_taxes, 1, order.pos.currency.rounding, false).total_included
+                    var price_without_taxes = this.pos.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded
+                    return this.pos.compute_all(new_included_taxes, price_without_taxes, 1, order.pos.currency.rounding, false).total_included
                 }
                 else{
-                    return this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
+                    return this.pos.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
                 }
             }
         }
