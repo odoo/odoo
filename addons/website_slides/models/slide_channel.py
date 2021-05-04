@@ -11,6 +11,7 @@ from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import AccessError
 from odoo.osv import expression
+from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -148,8 +149,8 @@ class Channel(models.Model):
     # description
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True, tracking=100)
-    description = fields.Text('Description', translate=True, help="The description that is displayed on top of the course page, just below the title")
-    description_short = fields.Text('Short Description', translate=True, help="The description that is displayed on the course card")
+    description = fields.Html('Description', translate=True, help="The description that is displayed on top of the course page, just below the title")
+    description_short = fields.Html('Short Description', translate=True, help="The description that is displayed on the course card")
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
         ('training', 'Training'), ('documentation', 'Documentation')],
@@ -455,7 +456,7 @@ class Channel(models.Model):
             vals['channel_partner_ids'] = [(0, 0, {
                 'partner_id': self.env.user.partner_id.id
             })]
-        if vals.get('description') and not vals.get('description_short'):
+        if not is_html_empty(vals.get('description')) and  is_html_empty(vals.get('description_short')):
             vals['description_short'] = vals['description']
         channel = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
 
@@ -468,7 +469,7 @@ class Channel(models.Model):
 
     def write(self, vals):
         # If description_short wasn't manually modified, there is an implicit link between this field and description.
-        if vals.get('description') and not vals.get('description_short') and self.description == self.description_short:
+        if not is_html_empty(vals.get('description')) and is_html_empty(vals.get('description_short')) and self.description == self.description_short:
             vals['description_short'] = vals.get('description')
 
         res = super(Channel, self).write(vals)
