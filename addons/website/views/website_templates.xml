@@ -2278,33 +2278,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </sitemapindex>
 </template>
 
-<template id="company_description" name="Company Description">
-    <address itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <!-- TODO widget contact must add itemprop attributes -->
-        <div t-field="res_company.partner_id" t-options='{
-                "widget": "contact",
-                "fields": ["name", "address", "phone", "mobile", "email"]}'/>
-        <t t-if="not res_company.google_map_img()">
-            <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/>
-            <a t-att-href="res_company.google_map_link()" target="_BLANK">Google Maps</a>
-            <a t-if="editable"
-                class="fa fa-cog ml-1"
-                href="/web#action=website.action_website_configuration"
-                title="Add your key in the settings."/>
-        </t>
-    </address>
-</template>
-
-<template id="company_description_google_map" inherit_id="website.company_description" name="Google map" customize_show="True">
-    <xpath expr="//address" position="after">
-        <t t-if="res_company.google_map_img()">
-            <a t-att-href="res_company.google_map_link()" target="_BLANK">
-                <img class="img-fluid" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
-            </a>
-        </t>
-    </xpath>
-</template>
-
 <template id="website_search_box" name="Website Searchbox">
     <div t-attf-class="input-group #{_classes}" role="search">
         <t t-set="search_placeholder">Search...</t>
