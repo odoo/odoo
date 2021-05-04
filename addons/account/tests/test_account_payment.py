@@ -189,6 +189,37 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             },
         ])
 
+        # ==== Check editing the account.payment ====
+
+        payment.write({
+            'amount': payment.amount + 0.1,
+        })
+        self.assertRecordValues(payment.line_ids.sorted('balance'), [
+            {
+                **expected_counterpart_line,
+                'debit': 0.0,
+                'credit': 75.1,
+                'amount_currency': -75.1,
+                'partner_id': self.partner_b.id,
+            },
+            {
+                'debit': 0.0,
+                'credit': 25.0,
+                'amount_currency': -25.0,
+                'currency_id': self.company_data['currency'].id,
+                'account_id': self.company_data['default_account_revenue'].id,
+                'partner_id': self.partner_b.id,
+            },
+            {
+                **expected_liquidity_line,
+                'debit': 100.1,
+                'credit': 0.0,
+                'amount_currency': 100.1,
+                'account_id': self.payment_debit_account_id.id,
+                'partner_id': self.partner_b.id,
+            },
+        ])
+
     def test_payment_move_sync_onchange(self):
 
         pay_form = Form(self.env['account.payment'].with_context(default_journal_id=self.company_data['default_journal_bank'].id))
