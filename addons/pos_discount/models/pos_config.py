@@ -11,6 +11,11 @@ class PosConfig(models.Model):
     discount_pc = fields.Float(string='Discount Percentage', help='The default discount percentage', default=10.0)
     discount_product_id = fields.Many2one('product.product', string='Discount Product',
         domain="[('sale_ok', '=', True)]", help='The product used to model the discount.')
+    pos_discount_control_button = [
+        ('DiscountButton', 'Discount')
+    ]
+    first_control_button_product_screen = fields.Selection(selection_add=pos_discount_control_button)
+    second_control_button_product_screen = fields.Selection(selection_add=pos_discount_control_button)
 
     @api.onchange('company_id','module_pos_discount')
     def _default_discount_product_id(self):

@@ -178,6 +178,15 @@ class PosConfig(models.Model):
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=100)
     partner_load_background = fields.Boolean()
+    pos_control_button = [
+        ('SetFiscalPositionButton', 'Fiscal Position'),
+        ('SetPricelistButton', 'Price List')]
+    first_control_button_product_screen = fields.Selection(pos_control_button,
+       string="First Control Button",
+       help="Define the first quick access on control button on mobile")
+    second_control_button_product_screen = fields.Selection(pos_control_button,
+       string="Second Control Button",
+       help="Define the first quick access on control button on mobile")
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):

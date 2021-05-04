@@ -8,8 +8,15 @@
                     <OrderWidget/>
                     <div class="pads">
                         <div class="control-buttons">
-                            <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
-                                <t t-component="cb.component" t-key="cb.name" />
+                            <t t-if="env.isMobile and controlButtons.length > 3">
+                                <t t-if="firstControlButton" t-component="firstControlButton.component" />
+                                <t t-if="secondControlButton" t-component="secondControlButton.component" />
+                                <div class="control-button" t-on-click="_displayAllControlPopup">...</div>
+                            </t>
+                            <t t-else="">
+                                <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
+                                    <t t-component="cb.component" t-key="cb.name"/>
+                                </t>
                             </t>
                         </div>
                         <div class="subpads">

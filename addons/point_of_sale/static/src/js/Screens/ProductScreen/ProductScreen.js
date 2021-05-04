@@ -67,6 +67,12 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         get currentOrder() {
             return this.env.pos.get_order();
         }
+        get firstControlButton() {
+            return this.controlButtons.find(controlButton => controlButton.name === this.env.pos.config.first_control_button_product_screen);
+        }
+        get secondControlButton() {
+            return this.controlButtons.find(controlButton => controlButton.name === this.env.pos.config.second_control_button_product_screen);
+        }
         async _getAddProductOptions(product, base_code) {
             let price_extra = 0.0;
             let draftPackLotLines, weight, description, packLotLinesToEdit;
@@ -304,6 +310,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             } else {
                 return code.code;
             }
+        }
+        async _displayAllControlPopup() {
+            await this.showPopup('ControlButtonPopup', {
+                controlButtons: this.controlButtons
+            });
         }
         /**
          * override this method to perform procedure if the scale is not available.
