@@ -43,7 +43,8 @@ This module adds several features to the Point of Sale that are specific to rest
             'pos_restaurant/static/tests/tours/**/*',
         ],
         'web.assets_qweb': [
-            'pos_restaurant/static/src/xml/**/*',
+            'pos_restaurant/static/src/js/**/*.xml',
+            'pos_restaurant/static/src/xml/**/*.xml',
         ],
     }
 }
