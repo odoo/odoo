@@ -333,6 +333,18 @@ class PurchaseOrderLine(models.Model):
             self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
         return result
 
+    def unlink(self):
+        self.move_ids._action_cancel()
+
+        ppg_cancel_lines = self.filtered(lambda line: line.propagate_cancel)
+        ppg_cancel_lines.move_dest_ids._action_cancel()
+
+        not_ppg_cancel_lines = self.filtered(lambda line: not line.propagate_cancel)
+        not_ppg_cancel_lines.move_dest_ids.write({'procure_method': 'make_to_stock'})
+        not_ppg_cancel_lines.move_dest_ids.recompute_state()
+
+        return super().unlink()
+
     # --------------------------------------------------
     # Business methods
     # --------------------------------------------------
