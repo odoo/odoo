@@ -1,24 +1,19 @@
-odoo.define('project.project_rating_reporting', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const core = require('web.core');
-const _t = core._t;
+import { _t } from 'web.core';
+import GraphController from 'web.GraphController';
+import GraphView from 'web.GraphView';
+import PivotController from 'web.PivotController';
+import PivotView from 'web.PivotView';
+import viewRegistry from 'web.view_registry';
 
-const viewRegistry = require('web.view_registry');
-
-const PivotController = require('web.PivotController');
-const PivotView = require('web.PivotView');
-
-const GraphController = require('web.GraphController');
-const GraphView = require('web.GraphView');
-
-var ProjectPivotController = PivotController.extend({
+const ProjectPivotController = PivotController.extend({
     /**
      * @override
      */
     init: function () {
         this._super.apply(this, arguments);
-        var measures = JSON.parse(JSON.stringify(this.measures));
+        const measures = JSON.parse(JSON.stringify(this.measures));
         if ('res_id' in measures) {
             measures.res_id.string = _t('Task');
         }
@@ -32,15 +27,15 @@ var ProjectPivotController = PivotController.extend({
     },
 });
 
-var ProjectPivotView = PivotView.extend({
-    config: _.extend({}, PivotView.prototype.config, {
+const ProjectPivotView = PivotView.extend({
+    config: Object.assign({}, PivotView.prototype.config, {
         Controller: ProjectPivotController,
     }),
 });
 
 viewRegistry.add('project_rating_pivot', ProjectPivotView);
 
-var ProjectGraphController = GraphController.extend({
+const ProjectGraphController = GraphController.extend({
     /**
      * @override
      */
@@ -58,12 +53,10 @@ var ProjectGraphController = GraphController.extend({
     },
 });
 
-var ProjectGraphView = GraphView.extend({
-    config: _.extend({}, GraphView.prototype.config, {
+const ProjectGraphView = GraphView.extend({
+    config: Object.assign({}, GraphView.prototype.config, {
         Controller: ProjectGraphController,
     }),
 });
 
 viewRegistry.add('project_rating_graph', ProjectGraphView);
-
-});
