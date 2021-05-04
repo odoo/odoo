@@ -45,6 +45,12 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return True if self.code == 'facturx_1_0_05' else super()._is_embedding_to_invoice_pdf_needed()
 
+    def _get_embedding_to_invoice_pdf_values(self, invoice):
+        values = super()._get_embedding_to_invoice_pdf_values(invoice)
+        if self.code == 'facturx_1_0_05':
+            values['name'] = 'factur-x.xml'
+        return values
+
     def _export_facturx(self, invoice):
 
         def format_date(dt):
