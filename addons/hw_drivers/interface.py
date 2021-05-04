@@ -51,8 +51,12 @@ class Interface(Thread, metaclass=InterfaceMetaClass):
                     _logger.info('Device %s is now connected', identifier)
                     d = driver(identifier, devices[identifier])
                     d.daemon = True
-                    d.start()
                     iot_devices[identifier] = d
+                    # Start the thread after creating the iot_devices entry so the
+                    # thread can assume the iot_devices entry will exist while it's
+                    # running, at least until the `disconnect` above gets triggered
+                    # when `removed` is not empty.
+                    d.start()
                     break
 
     def get_devices(self):
