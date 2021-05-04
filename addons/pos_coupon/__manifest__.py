@@ -31,7 +31,7 @@
             'pos_coupon/static/tests/tours/**/*',
         ],
         'web.assets_qweb': [
-            'pos_coupon/static/src/xml/**/*',
+            'pos_coupon/static/src/js/**/*.xml',
         ],
     }
 }
