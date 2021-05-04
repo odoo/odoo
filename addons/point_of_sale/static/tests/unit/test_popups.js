@@ -76,13 +76,13 @@ odoo.define('point_of_sale.test_popups', function(require) {
         let promResponse, userResponse;
 
         // Step: show NumberPopup and confirm with empty buffer
-        promResponse = root.showPopup('NumberPopup', {});
+        promResponse = root.showPopup('NumberPopup', { startingValue: 1 });
         await testUtils.nextTick();
         testUtils.dom.triggerEvent(root.el.querySelector('.confirm'), 'mousedown');
         await testUtils.nextTick();
         userResponse = await promResponse;
         assert.strictEqual(userResponse.confirmed, true);
-        assert.strictEqual(userResponse.payload, "");
+        assert.strictEqual(userResponse.payload, "1");
 
         // Step: show NumberPopup and cancel
         promResponse = root.showPopup('NumberPopup', {});
