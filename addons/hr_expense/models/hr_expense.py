@@ -486,10 +486,10 @@ class HrExpense(models.Model):
             'employee_id': employee.id,
             'product_id': product.id,
             'product_uom_id': product.uom_id.id,
-            'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id],
+            'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id.filtered(lambda r: r.company_id == company)],
             'quantity': 1,
             'unit_amount': price,
-            'company_id': employee.company_id.id,
+            'company_id': company.id,
             'currency_id': employee.company_id.currency_id.id,
         })
         if account:
