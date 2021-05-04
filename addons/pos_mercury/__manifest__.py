@@ -39,7 +39,7 @@ following:
             'pos_mercury/static/src/js/**/*.js',
         ],
         'web.assets_qweb': [
-            'pos_mercury/static/src/xml/**/*.xml',
+            'pos_mercury/static/src/js/**/*.xml',
         ],
     }
 }
