@@ -21,10 +21,10 @@ discount to a customer.
     'installable': True,
     'assets': {
         'point_of_sale.assets': [
-            'pos_discount/static/src/js/**/*',
+            'pos_discount/static/src/js/**/*.js',
         ],
         'web.assets_qweb': [
-            'pos_discount/static/src/xml/**/*',
+            'pos_discount/static/src/js/**/*.xml',
         ],
     }
 }
