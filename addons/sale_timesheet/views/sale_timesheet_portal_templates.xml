@@ -98,4 +98,38 @@
         </xpath>
     </template>
 
+    <template id="portal_my_task_inherit" inherit_id="project.portal_my_task">
+        <xpath expr="//div[@name='portal_my_task_second_column']" position="inside">
+            <t t-if="task.project_id.allow_billable">
+                <div t-if="task.sale_order_id"><strong>Sales Order:</strong>
+                    <span t-if="so_accessible"><a t-attf-href="/my/orders/{{ task.sale_order_id.id }}" t-field="task.sale_order_id"></a></span>
+                    <span t-else="" t-field="task.sale_order_id"></span>
+                </div>
+                <div t-if="task.sale_order_id.invoice_ids"><strong>Invoices:</strong>
+                    <span t-foreach="task.sale_order_id.invoice_ids" t-as="invoice_line">
+                        <t t-if="invoice_line.id in invoices_accessible">
+                            <a t-attf-href="/my/invoices/{{ invoice_line.id }}" t-esc="invoice_line.name"></a><span t-if="not invoice_line_last">,</span>
+                        </t>
+                        <t t-else=""><span t-esc="invoice_line.name"></span><span t-if="not invoice_line_last">,</span></t>
+                    </span>
+                </div>
+                <div t-if="task.sale_line_id.untaxed_amount_invoiced > 0"><strong>Invoiced:</strong>
+                    <span t-field="task.sale_line_id.untaxed_amount_invoiced"/>
+                </div>
+                <div t-if="task.sale_line_id.untaxed_amount_to_invoice > 0"><strong>To invoice:</strong>
+                    <span t-field="task.sale_line_id.untaxed_amount_to_invoice"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_timesheet_table_inherit" inherit_id="hr_timesheet.portal_timesheet_table">
+        <xpath expr="//div[@name='planned_time']" position="after">
+            <span t-if="task.allow_billable and task.sale_line_id">
+                <div t-if="is_uom_day">Remaining Days on SO: <span t-esc="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/></div>
+                <div t-else="">Remaining Hours on SO: <span t-esc="task.remaining_hours_so" t-options='{"widget": "float_time"}'/></div>
+            </span>
+        </xpath>
+    </template>
+
 </odoo>

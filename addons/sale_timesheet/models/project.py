@@ -342,9 +342,7 @@ class ProjectTask(models.Model):
                 return project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
         return res
 
-    # override sale_order_id and make it computed stored field instead of regular field.
-    sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False,
-    domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
+    sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
     analytic_account_id = fields.Many2one('account.analytic.account', related='sale_order_id.analytic_account_id')
     pricing_type = fields.Selection(related="project_id.pricing_type")
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
@@ -380,20 +378,11 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
 
-    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'commercial_partner_id')
+    @api.depends('allow_billable')
     def _compute_sale_order_id(self):
-        for task in self:
-            if not task.allow_billable:
-                task.sale_order_id = False
-            else:
-                if task.sale_line_id:
-                    task.sale_order_id = task.sale_line_id.sudo().order_id
-                elif task.project_id.sale_order_id:
-                    task.sale_order_id = task.project_id.sale_order_id
-                if task.commercial_partner_id != task.sale_order_id.partner_id.commercial_partner_id:
-                    task.sale_order_id = False
-                if task.sale_order_id and not task.partner_id:
-                    task.partner_id = task.sale_order_id.partner_id
+        billable_tasks = self.filtered('allow_billable')
+        super(ProjectTask, billable_tasks)._compute_sale_order_id()
+        (self - billable_tasks).sale_order_id = False
 
     @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):

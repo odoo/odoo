@@ -140,7 +140,13 @@
                                 <th t-if="groupby == 'stage'">
                                     <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in stage:</em>
                                     <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/></th>
-                                <th t-if="groupby != 'project'" class="text-center">Project</th>
+                                <th t-if="groupby == 'user'">
+                                    <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().user_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> assigned to:</em>
+                                    <span class="text-truncate" t-field="tasks[0].sudo().user_id.name"/></th>
+                                <th t-if="groupby == 'customer'">
+                                    <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().partner_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for customer:</em>
+                                    <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
+                                <th t-if="groupby != 'project'" class="text-center" name="portal_my_tasks_project_th">Project</th>
                                 <th t-if="groupby != 'stage'" class="text-center">Stage</th>
                             </tr>
                         </thead>
@@ -181,10 +187,12 @@
                     <div class="row no-gutters">
                         <div class="col-12">
                             <h5 class="d-flex mb-1 mb-md-0 row">
-                                <span t-field="task.name" class="col-9 text-truncate"/>
-                                <small class="text-muted d-none d-md-inline"> (#<span t-field="task.id"/>)</small>
-                                <div class="col-3 col-md-2 text-right">
-                                    <small class="text-right">Status:</small>
+                                <div class="col-9">
+                                    <span t-field="task.name" class="text-truncate"/>
+                                    <small class="text-muted d-none d-md-inline"> (#<span t-field="task.id"/>)</small>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <small class="text-right">Stage:</small>
                                     <span t-field="task.stage_id.name" class=" badge badge-pill badge-info" title="Current stage of this task"/>
                                 </div>
                             </h5>
@@ -192,43 +200,47 @@
                     </div>
                 </t>
                 <t t-set="card_body">
-                    <div class="mb-1" t-if="user.partner_id.id in task.sudo().project_id.message_partner_ids.ids">
-                        <strong>Project:</strong> <a t-attf-href="/my/project/#{task.project_id.id}" t-field="task.project_id.name"/>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="col-12 col-md-6 mb-1">
-                            <strong>Date:</strong> <span t-field="task.create_date" t-options='{"widget": "date"}'/>
-                        </div>
-                        <div class="col-12 col-md-6" t-if="task.date_deadline">
-                            <strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "date"}'/>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4" t-if="task.user_id or task.partner_id">
+                    <div class="row" t-if="task.user_id or task.partner_id">
                         <div class="col-12 col-md-6 pb-2" t-if="task.user_id">
                             <strong>Assigned to</strong>
                             <div class="row">
-                                <div class="col flex-grow-0 pr-3">
+                                <div class="col d-flex align-items-center flex-grow-0 pr-3">
                                     <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.user_id.avatar_1024)" alt="Contact"/>
                                 </div>
                                 <div class="col pl-md-0">
-                                    <div t-field="task.user_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                                    <div t-field="task.user_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                    <a t-attf-href="mailto:{{task.user_id.email}}" t-if="task.user_id.email"><div t-field="task.user_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
+                                    <a t-attf-href="tel:{{task.user_id.phone}}" t-if="task.user_id.phone"><div t-field="task.user_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
                                 </div>
                             </div>
                         </div>
                         <div class="coll-12 col-md-6 pb-2" t-if="task.partner_id">
-                            <strong>Reported by</strong>
+                            <strong>Customer</strong>
                             <div class="row">
-                                <div class="col flex-grow-0 pr-3">
+                                <div class="col d-flex align-items-center flex-grow-0 pr-3">
                                     <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.avatar_1024)" alt="Contact"/>
                                 </div>
                                 <div class="col pl-md-0">
-                                    <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"]}'/>
+                                    <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                    <a t-attf-href="mailto:{{task.partner_id.email}}" t-if="task.partner_id.email"><div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
+                                    <a t-attf-href="tel:{{task.partner_id.phone}}" t-if="task.partner_id.phone"><div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row mb-4">
+                        <div class="col-12 col-md-6">
+                            <div t-if="project_accessible"><strong>Project:</strong> <a t-attf-href="/my/project/#{task.project_id.id}" t-field="task.project_id"/></div>
+                            <div t-else=""><strong>Project:</strong> <a t-field="task.project_id"/></div>
+                            <div t-if="task.date_deadline"><strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "date"}'/></div>
+                            <div name="portal_my_task_planned_hours">
+                                <t t-call="project.portal_my_task_planned_hours_template"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6" name="portal_my_task_second_column"></div>
+                    </div>
+
                     <div class="row" t-if="task.description or task.attachment_ids">
                         <div t-if="task.description" t-attf-class="col-12 col-lg-7 mb-4 mb-md-0 {{'col-lg-7' if task.attachment_ids else 'col-lg-12'}}">
                             <hr class="mb-1"/>
@@ -265,5 +277,9 @@
                 </t>
             </div>
         </t>
+    </template>
+
+    <template id="portal_my_task_planned_hours_template">
+        <strong>Planned Hours:</strong> <span t-esc="task.planned_hours" t-options='{"widget": "float_time"}'/>
     </template>
 </odoo>

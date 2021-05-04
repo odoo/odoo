@@ -33,6 +33,11 @@ class TimesheetCustomerPortal(CustomerPortal):
             'task': {'input': 'task', 'label': _('Search in Task')}
         }
 
+    def _task_get_searchbar_sortings(self):
+        values = super()._task_get_searchbar_sortings()
+        values['progress'] = {'label': _('Progress'), 'order': 'progress asc'}
+        return values
+
     def _get_searchbar_groupby(self):
         return {
             'none': {'input': 'none', 'label': _('None')},
