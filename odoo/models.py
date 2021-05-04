@@ -2362,7 +2362,10 @@ class BaseModel(metaclass=MetaModel):
         groupby_list = groupby[:1] if lazy else groupby
         annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
-        order = orderby or ','.join([g for g in groupby_list])
+        order = orderby or ','.join(
+            [next((o for o in self._order.split(',') if o.split()[0] == g), g)  # find group_field in model._order or use group_field
+            for g in groupby_list]
+        )
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
         self._apply_ir_rules(query, 'read')
