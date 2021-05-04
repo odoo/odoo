@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http, _
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 from odoo.osv import expression
 
@@ -62,6 +63,24 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
             so='order_id',
             invoice='timesheet_invoice_id')
         return groupby_mapping
+
+    def _task_get_page_view_values(self, task, access_token, **kwargs):
+        values = super()._task_get_page_view_values(task, access_token, **kwargs)
+        values['so_accessible'] = False
+        try:
+            if task.sale_order_id and self._document_check_access('sale.order', task.sale_order_id.id):
+                values['so_accessible'] = True
+        except (AccessError, MissingError):
+            pass
+
+        values['invoices_accessible'] = []
+        for invoice in task.sale_order_id.invoice_ids:
+            try:
+                if self._document_check_access('account.move', invoice.id):
+                    values['invoices_accessible'].append(invoice.id)
+            except (AccessError, MissingError):
+                pass
+        return values
 
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='sol', **kw):

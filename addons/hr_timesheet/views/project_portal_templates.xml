@@ -8,10 +8,20 @@
                 <h5 class="mt-2 mb-2">Timesheets</h5>
                 <t t-call="hr_timesheet.portal_timesheet_table"/>
             </div>
-            <t t-if="timesheets_by_subtask">
-                <t t-call="hr_timesheet.portal_subtask_timesheet_tables"/>
-            </t>
         </xpath>
+        <xpath expr="//div[@name='portal_my_task_planned_hours']" position="after">
+            <div t-if="task.planned_hours > 0"><strong>Progress:</strong> <span t-field="task.progress"/>%</div>
+        </xpath>
+        <xpath expr="//div[@name='portal_my_task_planned_hours']/t" position="replace">
+            <t t-call="hr_timesheet.portal_my_task_planned_hours_template"></t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_task_planned_hours_template">
+        <t t-if="is_uom_day and timesheets[0]._convert_hours_to_days(task.planned_hours) > 0">
+            <strong>Planned Days:</strong> <span t-esc="timesheets[0]._convert_hours_to_days(task.planned_hours)" t-options='{"widget": "timesheet_uom"}'/>
+        </t>
+        <t t-if="not is_uom_day and task.planned_hours > 0" t-call="project.portal_my_task_planned_hours_template"></t>
     </template>
 
     <template id="portal_timesheet_table" name="Portal Timesheet Table">
@@ -38,50 +48,23 @@
                 <tr>
                     <th colspan="3"></th>
                     <th class="text-right">
-                        <t t-if="is_uom_day">
-                            Total Days: <span t-esc="timesheets._convert_hours_to_days(round(sum(timesheets.mapped('unit_amount')), 2))" t-options='{"widget": "timesheet_uom"}'/>
-                        </t>
-                        <t t-else="">
-                            Total Hours: <span t-esc="round(sum(timesheets.mapped('unit_amount')), 2)" t-options='{"widget": "float_time"}'/>
-                        </t>
+                        <t t-set="timesheets_amount" t-value="round(sum(timesheets.mapped('unit_amount')), 2) or 0.0"></t>
+                        <div t-if="is_uom_day"><strong>Days recorded:</strong> <span t-esc="timesheets._convert_hours_to_days(timesheets_amount)" t-options='{"widget": "timesheet_uom"}'/></div>
+                        <div t-else=""><strong>Hours recorded:</strong> <span t-esc="timesheets_amount" t-options='{"widget": "float_time"}'/></div>
+                        <t t-set="timesheets_by_subtask_amount" t-value="round(sum(sum(timesheet_by_subtask.mapped('unit_amount') or 0.0) for timesheet_by_subtask in timesheets_by_subtask.values()), 2) or 0.0"></t>
+                        <div t-if="timesheets_by_subtask">
+                            <div t-if="is_uom_day">Days recorded on sub-tasks: <span t-esc="timesheets._convert_hours_to_days(timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/></div>
+                            <div t-else="">Hours recorded on sub-tasks: <span t-esc="timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/></div>
+                        </div>
+                        <t t-set="planned_time" t-value="task.planned_hours"></t>
+                        <div t-if="planned_time > 0" name="planned_time">
+                            <div t-if="is_uom_day">Remaining Days: <span t-esc="timesheets._convert_hours_to_days(planned_time - timesheets_amount - timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/></div>
+                            <div t-else="">Remaining Hours: <span t-esc="planned_time - timesheets_amount - timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/></div>
+                        </div>
                     </th>
-                </tr>             
+                </tr>
             </tfoot>
         </table>
-    </template>
-
-    <template id="portal_subtask_timesheet_tables" name="Portal Subtask Timesheet Tables">
-        <t t-foreach="timesheets_by_subtask.values()" t-as="timesheets">
-            <t t-set="total_hours" t-value="round(sum(timesheets.mapped('unit_amount')), 2)"/>
-            <t t-if="total_hours &gt; 0">
-                <div class="container">
-                    <hr class="mt-4 mb-1"/>
-                    <h5 class="mt-2 mb-2">Timesheets for sub-task: <t t-esc="timesheets[0].task_id.name" /></h5>
-                    <table class="table table-sm">
-                        <thead>
-                          <tr>
-                            <th>Date</th>
-                            <th>Employee</th>
-                            <th>Description</th>
-                            <th class="text-right">Duration</th>
-                          </tr>
-                        </thead>
-                        <tr t-foreach="timesheets" t-as="timesheet">
-                            <td><t t-esc="timesheet.date" t-options='{"widget": "date"}'/></td>
-                            <td><t t-esc="timesheet.employee_id.name"/></td>
-                            <td><t t-esc="timesheet.name"/></td>
-                            <td class="text-right"><span t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/></td>
-                        </tr>
-                        <tfoot>
-                            <tr>
-                                <th class="text-right" colspan="3"></th>
-                                <th class="text-right">Total Hours: <span t-esc="total_hours" t-options='{"widget": "float_time"}'/></th>
-                            </tr>             
-                        </tfoot>
-                    </table>
-                </div>
-            </t>
-        </t>
     </template>
 
 </odoo>
