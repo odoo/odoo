@@ -89,25 +89,25 @@ class PaymentScreen extends PosComponent {
         }
     }
     async _onSendPaymentRequest({ detail: [payment, ...otherArgs] }) {
-        this.env.model.noMutexActionHandler({
+        this.env.model._actionHandler({
             name: 'actionSendPaymentRequest',
             args: [this.props.activeOrder, payment, ...otherArgs],
         });
     }
     async _onSendPaymentCancel({ detail: [payment, ...otherArgs] }) {
-        this.env.model.noMutexActionHandler({
+        this.env.model._actionHandler({
             name: 'actionSendPaymentCancel',
             args: [this.props.activeOrder, payment, ...otherArgs],
         });
     }
     async _onSendPaymentReverse({ detail: [payment, ...otherArgs] }) {
-        this.env.model.noMutexActionHandler({
+        this.env.model._actionHandler({
             name: 'actionSendPaymentReverse',
             args: [this.props.activeOrder, payment, ...otherArgs],
         });
     }
     async _onSendForceDone({ detail: [payment] }) {
-        this.env.model.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'done'] });
+        this.env.model._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'done'] });
     }
     get previousScreen() {
         return 'ProductScreen';

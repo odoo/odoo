@@ -230,7 +230,7 @@ odoo.define('pos_mercury.payment', function (require) {
                                 mercury_data: response,
                             };
 
-                            await this.model.noMutexActionHandler({
+                            await this.model._actionHandler({
                                 name: 'actionUpdatePayment',
                                 args: [payment, vals, extras],
                             });

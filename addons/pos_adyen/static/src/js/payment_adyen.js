@@ -201,7 +201,7 @@ var PaymentAdyen = PaymentInterface.extend({
                     });
 
                     if (cashier_receipt) {
-                        await this.model.noMutexActionHandler({
+                        await this.model._actionHandler({
                             name: 'actionUpdatePayment',
                             args: [
                                 payment,
@@ -219,7 +219,7 @@ var PaymentAdyen = PaymentInterface.extend({
                     });
 
                     if (customer_receipt) {
-                        await this.model.noMutexActionHandler({
+                        await this.model._actionHandler({
                             name: 'actionSetReceiptInfo',
                             args: [payment, this._convert_receipt_info(customer_receipt.OutputContent.OutputText)],
                         });
@@ -228,7 +228,7 @@ var PaymentAdyen = PaymentInterface.extend({
                     var tip_amount = payment_result.AmountsResp.TipAmount;
                     if (this.model.config.adyen_ask_customer_for_tip && tip_amount > 0) {
                         await this.model._setTip(order, tip_amount);
-                        await this.model.noMutexActionHandler({
+                        await this.model._actionHandler({
                             name: 'actionUpdatePayment',
                             args: [payment, { amount: payment_result.AmountsResp.AuthorizedAmount }],
                         });
@@ -318,10 +318,10 @@ var PaymentAdyen = PaymentInterface.extend({
     },
 
     async _setPaymentStatus(payment, status) {
-        await this.model.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, status] });
+        await this.model._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, status] });
     },
     async _setPaymentTicket(payment, ticket) {
-        await this.model.noMutexActionHandler({ name: 'actionUpdatePayment', args: [payment, { ticket }] });
+        await this.model._actionHandler({ name: 'actionUpdatePayment', args: [payment, { ticket }] });
     },
 });
 

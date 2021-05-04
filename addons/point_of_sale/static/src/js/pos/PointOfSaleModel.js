@@ -85,13 +85,6 @@ class PointOfSaleModel extends EventBus {
         });
     }
     /**
-     * Use this with caution. It doesn't use mutex so if multiple actions are triggered simultaneously,
-     * race condition issues may happen.
-     */
-    noMutexActionHandler(action) {
-        return this._actionHandler(action);
-    }
-    /**
      * Use this to dispatch an action. We use mutex to `sequentialize` the execution of actions.
      * This means that the succeeding actions won't be executed until the previous action has resolved
      * (or rejected).
@@ -117,6 +110,12 @@ class PointOfSaleModel extends EventBus {
             });
         });
     }
+    /**
+     * This can be used to dispatch an action inside another dispatched action. However,
+     * use this with caution because it doesn't use mutex. So if multiple actions are
+     * dispatched simultaneously using this, race condition issues may happen because of
+     * interleaving async method calls.
+     */
     async _actionHandler(action) {
         try {
             const handler = this[action.name];
@@ -2388,14 +2387,14 @@ class PointOfSaleModel extends EventBus {
                 _payment._extras.can_be_reversed = false;
             }
         }
-        await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'waiting'] });
+        await this._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'waiting'] });
         const paymentTerminal = this.getPaymentTerminal(payment.payment_method_id);
         const isPaymentSuccessful = await paymentTerminal.send_payment_request(payment.id, ...otherArgs);
         if (isPaymentSuccessful) {
             payment._extras.can_be_reversed = paymentTerminal.supports_reversals;
-            await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'done'] });
+            await this._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'done'] });
         } else {
-            await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'retry'] });
+            await this._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'retry'] });
         }
     }
     /**
@@ -2408,12 +2407,12 @@ class PointOfSaleModel extends EventBus {
     async actionSendPaymentCancel(order, payment, ...otherArgs) {
         const paymentTerminal = this.getPaymentTerminal(payment.payment_method_id);
         const prevPaymentStatus = payment.payment_status;
-        await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'waitingCancel'] });
+        await this._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'waitingCancel'] });
         try {
             await paymentTerminal.send_payment_cancel(order, payment.id, ...otherArgs);
-            await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'retry'] });
+            await this._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'retry'] });
         } catch (error) {
-            await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, prevPaymentStatus] });
+            await this._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, prevPaymentStatus] });
         }
     }
     /**
@@ -2425,13 +2424,13 @@ class PointOfSaleModel extends EventBus {
      */
     async actionSendPaymentReverse(order, payment, ...otherArgs) {
         const paymentTerminal = this.getPaymentTerminal(payment.payment_method_id);
-        await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'reversing'] });
+        await this._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'reversing'] });
         const isReversalSuccessful = await paymentTerminal.send_payment_reversal(payment.id, ...otherArgs);
         if (isReversalSuccessful) {
             payment.amount = 0;
-            await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'reversed'] });
+            await this._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'reversed'] });
         } else {
-            await this.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'done'] });
+            await this._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'done'] });
         }
     }
     actionSetPaymentStatus(payment, status) {

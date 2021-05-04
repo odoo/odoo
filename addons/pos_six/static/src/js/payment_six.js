@@ -73,7 +73,7 @@ var PaymentSix = PaymentInterface.extend({
     send_payment_request: async function (paymentId) {
         this._super.apply(this, arguments);
         const payment = this.model.getRecord('pos.payment', paymentId);
-        await this.model.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'waitingCard'] })
+        await this.model._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'waitingCard'] })
         return this._sendTransaction(timapi.constants.TransactionType.purchase, payment);
     },
 
@@ -83,7 +83,7 @@ var PaymentSix = PaymentInterface.extend({
     send_payment_reversal: function (paymentId) {
         this._super.apply(this, arguments);
         const payment = this.model.getRecord('pos.payment', paymentId);
-        this.model.noMutexActionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'reversing'] })
+        this.model._actionHandler({ name: 'actionSetPaymentStatus', args: [payment, 'reversing'] })
         return this._sendTransaction(timapi.constants.TransactionType.reversal, payment);
     },
 
@@ -143,7 +143,7 @@ var PaymentSix = PaymentInterface.extend({
             } else if (receipt.recipient === timapi.constants.Recipient.cardholder) {
                 const activeOrder = this.model.getActiveOrder();
                 const activePayment = this.model.getActivePayment(activeOrder);
-                this.model.noMutexActionHandler({ name: 'actionSetReceiptInfo', args: [activePayment, value] });
+                this.model._actionHandler({ name: 'actionSetReceiptInfo', args: [activePayment, value] });
             }
         });
     },

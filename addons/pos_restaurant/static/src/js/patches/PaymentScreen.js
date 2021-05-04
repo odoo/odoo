@@ -11,7 +11,7 @@ odoo.define('pos_restaurant.PaymentScreen', function (require) {
             useListener('send-payment-adjust', this._onSendPaymentAdjust);
         },
         _onSendPaymentAdjust({ detail: [payment, ...otherArgs] }) {
-            this.env.model.noMutexActionHandler({
+            this.env.model._actionHandler({
                 name: 'actionSendPaymentAdjust',
                 args: [this.props.activeOrder, payment, ...otherArgs],
             });
