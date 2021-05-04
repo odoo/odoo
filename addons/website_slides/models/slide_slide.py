@@ -18,7 +18,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import Warning, UserError, AccessError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
-from odoo.tools import sql
+from odoo.tools import html2plaintext, sql
 
 
 class SlidePartnerRelation(models.Model):
@@ -132,7 +132,7 @@ class Slide(models.Model):
     active = fields.Boolean(default=True, tracking=100)
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
-    description = fields.Text('Description', translate=True)
+    description = fields.Html('Description', translate=True)
     channel_id = fields.Many2one('slide.channel', string="Course", required=True)
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
@@ -876,9 +876,9 @@ class Slide(models.Model):
     def _default_website_meta(self):
         res = super(Slide, self)._default_website_meta()
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
-        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.description
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = html2plaintext(self.description)
         res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = self.env['website'].image_url(self, 'image_1024')
-        res['default_meta_description'] = self.description
+        res['default_meta_description'] = html2plaintext(self.description)
         return res
 
     # ---------------------------------------------------------
