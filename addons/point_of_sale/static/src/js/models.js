@@ -2006,6 +2006,23 @@ exports.Orderline = Backbone.Model.extend({
 
         return taxes;
     },
+    /**
+     * Mirror JS method of:
+     * _compute_amount in addons/account/models/account.py
+     */
+    _compute_all: function(tax, base_amount, quantity, price_exclude) {
+        return this.pos._compute_all(tax, base_amount, quantity, price_exclude)
+    },
+    /**
+     * Mirror JS method of:
+     * compute_all in addons/account/models/account.py
+     *
+     * Read comments in the python side method for more details about each sub-methods.
+     */
+    compute_all: function(taxes, price_unit, quantity, currency_rounding, handle_price_include=true) {
+        return this.pos.compute_all(taxes, price_unit, quantity, currency_rounding, handle_price_include)
+
+    },
     get_all_prices: function(){
         var self = this;
 
@@ -2064,11 +2081,11 @@ exports.Orderline = Backbone.Model.extend({
 
             if (mapped_included_taxes.length > 0) {
                 if (new_included_taxes.length > 0) {
-                    var price_without_taxes = this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded
-                    return this.compute_all(new_included_taxes, price_without_taxes, 1, order.pos.currency.rounding, false).total_included
+                    var price_without_taxes = this.pos.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded
+                    return this.pos.compute_all(new_included_taxes, price_without_taxes, 1, order.pos.currency.rounding, false).total_included
                 }
                 else{
-                    return this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
+                    return this.pos.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
                 }
             }
         }
