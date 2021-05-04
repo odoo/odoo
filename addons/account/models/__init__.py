@@ -31,3 +31,4 @@ from . import res_users
 from . import ir_actions_report
 from . import res_currency
 from . import res_bank
+from . import mail_thread
