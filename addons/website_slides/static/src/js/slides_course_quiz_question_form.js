@@ -157,17 +157,21 @@ var QuestionFormWidget = publicWidget.Widget.extend({
             this._rpc({
                 route: '/slides/slide/quiz/question_add_or_update',
                 params: values
-            }).then(function (renderedQuestion) {
+            }).then(function (result) {
                 if (options.update) {
                     self.trigger_up('display_updated_question', {
-                        newQuestionRenderedTemplate: renderedQuestion,
+                        newQuestionRenderedTemplate: result.renderedQuestion,
                         $editedQuestion: self.$editedQuestion,
+                        quiz_info: result.quiz_info,
+                        slide_info: result.slide_info,
                         questionFormWidget: self,
                     });
                 } else {
                     self.trigger_up('display_created_question', {
-                        newQuestionRenderedTemplate: renderedQuestion,
-                        questionFormWidget: self
+                        newQuestionRenderedTemplate: result.renderedQuestion,
+                        quiz_info: result.quiz_info,
+                        slide_info: result.slide_info,
+                        questionFormWidget: self,
                     });
                 }
             });

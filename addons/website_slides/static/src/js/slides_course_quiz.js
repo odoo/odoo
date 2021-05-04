@@ -503,6 +503,25 @@ odoo.define('website_slides.quiz', function (require) {
         },
 
         /**
+         * Update the quiz and slide data  after changes in
+         * the quiz question or after adding a question
+         * @private
+         */
+        _updateQuizSlideData: function (data) {
+            Object.assign(this.quiz, {
+                quizKarmaMax: data.quiz_info.quiz_karma_max,
+                quizKarmaWon: data.quiz_info.quiz_karma_won,
+                quizKarmaGain: data.quiz_info.quiz_karma_gain,
+                quizAttemptsCount: data.quiz_info.quiz_attempts_count,
+            });
+            Object.assign(this.slide, {
+                channelCanUpload: data.slide_info.channelCanUpload,
+                hasNext: data.slide_info.hasNext,
+                nextSlideUrl: data.slide_info.nextSlideUrl,
+            });
+        },
+
+        /**
          * When clicking on the edit button of a question it
          * initialize a new QuestionFormWidget with the existing
          * question as inputs.
@@ -554,7 +573,8 @@ odoo.define('website_slides.quiz', function (require) {
          * Displays the created Question at the correct place (after the last question or
          * at the first place if there is no questions yet) It also displays the 'Add Question'
          * button or open a new QuestionFormWidget if the user wants to immediately add another one.
-         * If needed, it also disables the 'Set Done' button for the slide.
+         * If needed, it also disables the 'Set Done' button for the slide and updates the quiz
+         * validation info.
          *
          * @param event
          * @private
@@ -565,6 +585,18 @@ odoo.define('website_slides.quiz', function (require) {
                 $lastQuestion.after(event.data.newQuestionRenderedTemplate);
             } else {
                 this.$el.prepend(event.data.newQuestionRenderedTemplate);
+                // Update the quiz validation info and disable 'Set Done' button
+                this._updateQuizSlideData(event.data);
+                this.isMember = true;
+                if (!this.el.querySelector('.o_wslides_js_lesson_quiz_validation')) {
+                    let quizValidationEl = document.createElement('div');
+                    quizValidationEl.classList.add('o_wslides_js_lesson_quiz_validation', 'pt-3');
+                    const questionEl = this.el.querySelector('.o_wslides_js_lesson_quiz_new_question');
+                    questionEl.parentNode.insertBefore(quizValidationEl, questionEl.nextSibling);
+                } else {
+                    this.el.querySelector('.o_wslides_js_lesson_quiz_validation').classList.remove('d-none');
+                }
+                this._renderValidationInfo();
                 this.trigger_up('slide_disable_setdone');
             }
             this.quiz.questionsCount++;
@@ -579,6 +611,7 @@ odoo.define('website_slides.quiz', function (require) {
          * @private
          */
         _displayUpdatedQuestion: function (event) {
+            this._updateQuizSlideData(event.data);
             var questionFormWidget = event.data.questionFormWidget;
             event.data.$editedQuestion.replaceWith(event.data.newQuestionRenderedTemplate);
             questionFormWidget.destroy();
