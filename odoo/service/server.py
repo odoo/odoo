@@ -498,6 +498,8 @@ class ThreadedServer(CommonServer):
                     thread.join(0.05)
                     time.sleep(0.05)
 
+        odoo.sql_db.close_all()
+
         _logger.debug('--')
         logging.shutdown()
 
