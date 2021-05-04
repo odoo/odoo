@@ -73,7 +73,8 @@
             ('include', 'web.assets_backend'),
         ],
         'web.assets_qweb': [
-            'point_of_sale/static/src/xml/**/*',
+            'point_of_sale/static/src/js/pos/**/*.xml',
+            'point_of_sale/static/src/xml/**/*.xml',
         ],
     }
 }
