@@ -12,20 +12,26 @@
 
                     <t t-if="state.isDropdownOpen">
                         <div class="o_FollowerListMenu_dropdown dropdown-menu dropdown-menu-right" role="menu">
-                            <t t-if="thread.channel_type !== 'chat'">
+                            <t t-if="thread.model !== 'channel' and thread.hasWriteAccess">
                                 <a class="o_FollowerListMenu_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="_onClickAddFollowers">
                                     Add Followers
                                 </a>
+                                <t t-if="thread.followers.length > 0">
+                                    <div role="separator" class="dropdown-divider"/>
+                                </t>
                             </t>
                             <t t-if="thread.followers.length > 0">
-                                <div role="separator" class="dropdown-divider"/>
-                                <t t-foreach="thread.followers" t-as="follower" t-key="follower.localId">
-                                    <Follower
-                                        className="'o_FollowerMenu_follower dropdown-item'"
-                                        followerLocalId="follower.localId"
-                                        onClick="_onClickFollower"
-                                    />
-                                </t>
+                                <Follower
+                                    t-foreach="thread.followers" t-as="follower" t-key="follower.localId"
+                                    className="'o_FollowerMenu_follower dropdown-item'"
+                                    followerLocalId="follower.localId"
+                                    onClick="_onClickFollower"
+                                />
+                            </t>
+                            <t t-elif="!thread.hasWriteAccess">
+                                <div class="o_FollowerListMenu_noFollowers dropdown-item disabled">
+                                    No Followers
+                                </div>
                             </t>
                         </div>
                     </t>

@@ -8,7 +8,7 @@ from psycopg2 import IntegrityError
 from psycopg2.errorcodes import UNIQUE_VIOLATION
 
 from odoo import http
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.tools import consteq, file_open
 from odoo.tools.misc import get_lang
@@ -413,8 +413,14 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
     def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
-        res = {}
+        res = {'hasWriteAccess': False}
         thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
+        try:
+            thread.check_access_rights("write")
+            thread.check_access_rule("write")
+            res['hasWriteAccess'] = True
+        except AccessError:
+            pass
         if 'activities' in request_list:
             res['activities'] = thread.activity_ids.activity_format()
         if 'attachments' in request_list:
@@ -427,9 +433,6 @@ class DiscussController(http.Controller):
                 'display_name': follower.display_name,
                 'email': follower.email,
                 'is_active': follower.is_active,
-                # When editing the followers, the "pencil" icon that leads to the edition of subtypes
-                # should be always be displayed and not only when "debug" mode is activated.
-                'is_editable': True,
                 'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
             } for follower in thread.message_follower_ids]
         if 'suggestedRecipients' in request_list:
