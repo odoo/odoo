@@ -60,7 +60,7 @@
             'point_of_sale/static/src/css/pos_receipts.css',
             'web/static/src/scss/fontawesome_overridden.scss',
             'point_of_sale/static/lib/**/*.js',
-            'point_of_sale/static/src/js/ui/**/*.js',
+            'point_of_sale/static/src/js/pos/**/*.js',
         ],
         'point_of_sale.main': [
             'point_of_sale/static/src/js/pos_main.js',
