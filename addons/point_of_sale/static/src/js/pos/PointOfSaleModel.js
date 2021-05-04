@@ -2838,7 +2838,7 @@ class PointOfSaleModel extends EventBus {
      */
     getProducts(categoryId, searchTerm) {
         if (!searchTerm) {
-            const productIds = [...this.data.derived.productsByCategoryId[categoryId]] || [];
+            const productIds = [...(this.data.derived.productsByCategoryId[categoryId] || [])];
             return productIds.map((productId) => this.getRecord('product.product', productId));
         }
         try {
