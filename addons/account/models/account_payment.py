@@ -711,9 +711,9 @@ class AccountPayment(models.Model):
                 writeoff_amount = sum(writeoff_lines.mapped('amount_currency'))
                 counterpart_amount = counterpart_lines['amount_currency']
                 if writeoff_amount > 0.0 and counterpart_amount > 0.0:
-                    sign = 1
-                else:
                     sign = -1
+                else:
+                    sign = 1
 
                 write_off_line_vals = {
                     'name': writeoff_lines[0].name,
