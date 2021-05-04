@@ -54,6 +54,15 @@ const FormEditor = options.Class.extend({
         return field.records;
     },
     /**
+     * Generates a new ID.
+     *
+     * @private
+     * @returns {string} The new ID
+     */
+    _generateUniqueID() {
+        return Math.random().toString(36).substring(2, 15);
+    },
+    /**
      * Returns a field object
      *
      * @private
@@ -120,15 +129,18 @@ const FormEditor = options.Class.extend({
     /**
      * @private
      * @param {Object} field
-     * @returns {Promise<HTMLElement>}
+     * @returns {HTMLElement}
      */
-    _renderField: function (field) {
-        field.id = Math.random().toString(36).substring(2, 15); // Big unique ID
+    _renderField: function (field, resetId = false) {
+        if (!field.id) {
+            field.id = this._generateUniqueID();
+        }
         const template = document.createElement('template');
         template.innerHTML = qweb.render("website.form_field_" + field.type, {field: field}).trim();
         if (field.description && field.description !== true) {
             $(template.content.querySelector('.s_website_form_field_description')).replaceWith(field.description);
         }
+        template.content.querySelectorAll('input.datetimepicker-input').forEach(el => el.value = field.propertyValue);
         return template.content.firstElementChild;
     },
 });
@@ -415,10 +427,10 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             field.formatInfo.requiredMark = this._isRequiredMark();
             field.formatInfo.optionalMark = this._isOptionalMark();
             field.formatInfo.mark = this._getMark();
-            const htmlField = this._renderField(field);
-            data.$target.after(htmlField);
+            const fieldEl = this._renderField(field);
+            data.$target.after(fieldEl);
             this.trigger_up('activate_snippet', {
-                $snippet: $(htmlField),
+                $snippet: $(fieldEl),
             });
         }
     },
@@ -799,6 +811,17 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         // We need to reload the existing type list.
         this.rerender = true;
     },
+    /**
+     * Rerenders the clone to avoid id duplicates.
+     *
+     * @override
+     */
+    onClone() {
+        const field = this._getActiveField();
+        delete field.id;
+        const fieldEl = this._renderField(field);
+        this._replaceFieldElement(fieldEl);
+    },
 
     //----------------------------------------------------------------------
     // Options
@@ -1013,7 +1036,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         uiFragment.appendChild(list);
     },
     /**
-     * Replace the target content with the field provided
+     * Replaces the target content with the field provided.
      *
      * @private
      * @param {Object} field
@@ -1025,12 +1048,20 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         if (activeField.type !== field.type) {
             field.value = '';
         }
-        const htmlField = this._renderField(field);
+        const fieldEl = this._renderField(field);
+        this._replaceFieldElement(fieldEl);
+    },
+    /**
+     * Replaces the target with provided field.
+     *
+     * @private
+     * @param {HTMLElement} fieldEl
+     */
+    _replaceFieldElement(fieldEl) {
         [...this.$target[0].childNodes].forEach(node => node.remove());
-        [...htmlField.childNodes].forEach(node => this.$target[0].appendChild(node));
-        [...htmlField.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
-        [...htmlField.attributes].forEach(el => this.$target[0].setAttribute(el.nodeName, el.nodeValue));
-        this.$target[0].querySelectorAll('input.datetimepicker-input').forEach(el => el.value = field.propertyValue);
+        [...fieldEl.childNodes].forEach(node => this.$target[0].appendChild(node));
+        [...fieldEl.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
+        [...fieldEl.attributes].forEach(el => this.$target[0].setAttribute(el.nodeName, el.nodeValue));
     },
     /**
      * @private
@@ -1080,10 +1111,10 @@ options.registry.AddFieldForm = FormEditor.extend({
     addField: async function (previewMode, value, params) {
         const field = this._getCustomField('char', 'Custom Text');
         field.formatInfo = this._getDefaultFormat();
-        const htmlField = this._renderField(field);
-        this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(htmlField);
+        const fieldEl = this._renderField(field);
+        this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(fieldEl);
         this.trigger_up('activate_snippet', {
-            $snippet: $(htmlField),
+            $snippet: $(fieldEl),
         });
     },
 });
