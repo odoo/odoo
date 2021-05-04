@@ -444,6 +444,7 @@ class PurchaseOrder(models.Model):
             'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
             'min_qty': 0.0,
             'price': price,
+            'uom_purchase_id': line.product_uom.id,
             'currency_id': currency.id,
             'delay': 0,
         }
@@ -459,10 +460,6 @@ class PurchaseOrder(models.Model):
                 # Convert the price in the right currency.
                 currency = partner.property_purchase_currency_id or self.env.company.currency_id
                 price = self.currency_id._convert(line.price_unit, currency, line.company_id, line.date_order or fields.Date.today(), round=False)
-                # Compute the price for the template's UoM, because the supplier's UoM is related to that UoM.
-                if line.product_id.product_tmpl_id.uom_po_id != line.product_uom:
-                    default_uom = line.product_id.product_tmpl_id.uom_po_id
-                    price = line.product_uom._compute_price(price, default_uom)
 
                 supplierinfo = self._prepare_supplier_info(partner, line, price, currency)
                 # In case the order partner is a contact address, a new supplierinfo is created on
@@ -1074,7 +1071,6 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id:
             return
 
-        self.product_uom = self.product_id.uom_po_id or self.product_id.uom_id
         product_lang = self.product_id.with_context(
             lang=get_lang(self.env, self.partner_id.lang).code,
             partner_id=self.partner_id.id,
@@ -1122,7 +1118,7 @@ class PurchaseOrderLine(models.Model):
         # If not seller, use the standard price. It needs a proper currency conversion.
         if not seller:
             price_unit = self.env['account.tax']._fix_tax_included_price_company(
-                self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_id.uom_po_id),
+                self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_id.uom_id),
                 self.product_id.supplier_taxes_id,
                 self.taxes_id,
                 self.company_id,
@@ -1146,8 +1142,8 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.currency_id._convert(
                 price_unit, self.order_id.currency_id, self.order_id.company_id, self.date_order or fields.Date.today())
 
-        if seller and self.product_uom and seller.product_uom != self.product_uom:
-            price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
+        if seller and self.product_uom and seller.uom_purchase_id != self.product_uom:
+            price_unit = seller.uom_purchase_id._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
 
@@ -1170,9 +1166,10 @@ class PurchaseOrderLine(models.Model):
             .sorted(key=lambda r: r.min_qty)
         if seller_min_qty:
             self.product_qty = seller_min_qty[0].min_qty or 1.0
-            self.product_uom = seller_min_qty[0].product_uom
+            self.product_uom = seller_min_qty[0].uom_purchase_id
         else:
             self.product_qty = 1.0
+            self.product_uom = self.product_id.uom_id
 
     def _get_product_purchase_description(self, product_lang):
         self.ensure_one()

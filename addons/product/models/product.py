@@ -321,16 +321,6 @@ class ProductProduct(models.Model):
                 '&', ('product_id', '=', product.id), ('applied_on', '=', '0_product_variant')]
             product.pricelist_item_count = self.env['product.pricelist.item'].search_count(domain)
 
-    @api.onchange('uom_id')
-    def _onchange_uom_id(self):
-        if self.uom_id:
-            self.uom_po_id = self.uom_id.id
-
-    @api.onchange('uom_po_id')
-    def _onchange_uom(self):
-        if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
-            self.uom_po_id = self.uom_id
-
     @api.model_create_multi
     def create(self, vals_list):
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
@@ -614,8 +604,8 @@ class ProductProduct(models.Model):
         for seller in sellers:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
-            if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
-                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.product_uom)
+            if quantity_uom_seller and uom_id and uom_id != seller.uom_purchase_id:
+                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.uom_purchase_id)
 
             if seller.date_start and seller.date_start > date:
                 continue
@@ -748,13 +738,15 @@ class SupplierInfo(models.Model):
         help="This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one.")
     sequence = fields.Integer(
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
-    product_uom = fields.Many2one(
-        'uom.uom', 'Unit of Measure',
-        related='product_tmpl_id.uom_po_id',
-        help="This comes from the product form.")
+    uom_purchase_id = fields.Many2one(
+        'uom.uom', 'Purchase Unit of Measure', required=True)
     min_qty = fields.Float(
         'Quantity', default=0.0, required=True, digits="Product Unit Of Measure",
         help="The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
+    product_uom_id = fields.Many2one(
+        'uom.uom', 'Product Unit of Measure',
+        related='product_tmpl_id.uom_id',
+        help="This comes from the product form.")
     price = fields.Float(
         'Price', default=0.0, digits='Product Price',
         required=True, help="The price to purchase a product")
@@ -784,3 +776,29 @@ class SupplierInfo(models.Model):
             'label': _('Import Template for Vendor Pricelists'),
             'template': '/product/static/xls/product_supplierinfo.xls'
         }]
+
+    @api.model
+    def create(self, vals):
+        if not vals.get("uom_purchase_id") and vals.get("product_tmpl_id"):
+            template = self.env["product.template"].browse(vals.get("product_tmpl_id"))
+            vals["uom_purchase_id"] = template.uom_id.id
+        return super().create(vals)
+
+    @api.onchange("product_tmpl_id")
+    def _onchange_product_tmpl_id(self):
+        self.uom_purchase_id = self.product_tmpl_id.uom_id
+
+    @api.constrains("uom_purchase_id")
+    def _check_uom(self):
+        if any(supplierinfo.product_uom_id and supplierinfo.uom_purchase_id and supplierinfo.product_uom_id.category_id != supplierinfo.uom_purchase_id.category_id for supplierinfo in self):
+            raise ValidationError(_('The default Unit of Measure and the purchase Unit of Measure must be in the same category.'))
+
+    @api.constrains("uom_purchase_id", "name")
+    def _check_same_uom_purchase_per_supplier(self):
+        for seller in self:
+            uoms = self.search([
+                ("name", "=", seller.name.id),
+                ("product_tmpl_id", "=", seller.product_tmpl_id.id)
+            ]).mapped("uom_purchase_id")
+            if len(uoms) > 1:
+                raise ValidationError(_('You can not affect various Purchase Unit of Measure for the same supplier.'))

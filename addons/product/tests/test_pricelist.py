@@ -76,7 +76,6 @@ class TestPricelist(TransactionCase):
         spam_id = self.env['product.product'].create({
             'name': '1 tonne of spam',
             'uom_id': self.uom_ton.id,
-            'uom_po_id': self.uom_ton.id,
             'list_price': tonne_price,
             'type': 'consu'
         })

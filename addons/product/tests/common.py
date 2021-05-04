@@ -32,36 +32,36 @@ class TestProductCommon(common.TransactionCase):
             'name': 'Work',
             'type': 'service',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id})
+        })
         cls.product_1 = Product.create({
             'name': 'Courage',
             'type': 'consu',
             'default_code': 'PROD-1',
             'uom_id': cls.uom_dunit.id,
-            'uom_po_id': cls.uom_dunit.id})
+        })
 
         cls.product_2 = Product.create({
             'name': 'Wood',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id})
+        })
         cls.product_3 = Product.create({
             'name': 'Stone',
             'uom_id': cls.uom_dozen.id,
-            'uom_po_id': cls.uom_dozen.id})
+        })
 
         cls.product_4 = Product.create({
             'name': 'Stick',
             'uom_id': cls.uom_dozen.id,
-            'uom_po_id': cls.uom_dozen.id})
+        })
         cls.product_5 = Product.create({
             'name': 'Stone Tools',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id})
+        })
 
         cls.product_6 = Product.create({
             'name': 'Door',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id})
+        })
 
         cls.prod_att_1 = cls.env['product.attribute'].create({'name': 'Color'})
         cls.prod_attr1_v1 = cls.env['product.attribute.value'].create({'name': 'red', 'attribute_id': cls.prod_att_1.id, 'sequence': 1})
@@ -71,7 +71,6 @@ class TestProductCommon(common.TransactionCase):
         cls.product_7_template = cls.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': cls.prod_att_1.id,
                 'value_ids': [(6, 0, [cls.prod_attr1_v1.id, cls.prod_attr1_v2.id, cls.prod_attr1_v3.id])]
@@ -89,17 +88,17 @@ class TestProductCommon(common.TransactionCase):
         cls.product_8 = Product.create({
             'name': 'House',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id})
+        })
 
         cls.product_9 = Product.create({
             'name': 'Paper',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id})
+        })
 
         cls.product_10 = Product.create({
             'name': 'Stone',
             'uom_id': cls.uom_unit.id,
-            'uom_po_id': cls.uom_unit.id})
+        })
 
 
 class TestAttributesCommon(common.TransactionCase):

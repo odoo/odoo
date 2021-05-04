@@ -79,7 +79,6 @@ class TestVariants(common.TestProductCommon):
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.size_attr.id,
                 'value_ids': [(4, self.size_attr_value_s.id)],
@@ -94,7 +93,6 @@ class TestVariants(common.TestProductCommon):
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.prod_att_1.id,
                 'value_ids': [(4, self.prod_attr1_v2.id)],
@@ -112,7 +110,6 @@ class TestVariants(common.TestProductCommon):
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.prod_att_1.id,
                 'value_ids': [(4, self.prod_attr1_v2.id)],
@@ -139,7 +136,6 @@ class TestVariants(common.TestProductCommon):
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.prod_att_1.id,
                 'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
@@ -170,7 +166,6 @@ class TestVariants(common.TestProductCommon):
         test_template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.prod_att_1.id,
                 'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
@@ -303,7 +298,6 @@ class TestVariantsNoCreate(common.TestProductCommon):
         template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.size.id,
                 'value_ids': [(4, self.size_S.id)],
@@ -317,7 +311,6 @@ class TestVariantsNoCreate(common.TestProductCommon):
         template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
         })
         self.assertEqual(len(template.product_variant_ids), 1)
 
@@ -335,7 +328,6 @@ class TestVariantsNoCreate(common.TestProductCommon):
         template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': self.size.id,
                 'value_ids': [(6, 0, self.size.value_ids.ids)],
@@ -349,7 +341,6 @@ class TestVariantsNoCreate(common.TestProductCommon):
         template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
         })
         self.assertEqual(len(template.product_variant_ids), 1)
 
@@ -367,7 +358,6 @@ class TestVariantsNoCreate(common.TestProductCommon):
         template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [
                 (0, 0, { # no variants for this one
                     'attribute_id': self.size.id,
@@ -390,7 +380,6 @@ class TestVariantsNoCreate(common.TestProductCommon):
         template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
         })
         self.assertEqual(len(template.product_variant_ids), 1)
 
@@ -417,7 +406,6 @@ class TestVariantsNoCreate(common.TestProductCommon):
         template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [
                 (0, 0, { # no variants for this one
                     'attribute_id': self.size.id,
@@ -440,7 +428,6 @@ class TestVariantsNoCreate(common.TestProductCommon):
         template = self.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
         })
         self.assertEqual(len(template.product_variant_ids), 1)
 
@@ -467,7 +454,6 @@ class TestVariantsNoCreate(common.TestProductCommon):
         template = self.env['product.template'].create({
             'name': 'Sofax',
             'uom_id': self.uom_unit.id,
-            'uom_po_id': self.uom_unit.id,
             'attribute_line_ids': [
                 (0, 0, { # one variant for this one
                     'attribute_id': self.prod_att_1.id,
@@ -946,23 +932,25 @@ class TestVariantsArchive(common.TestProductCommon):
     def test_uom_update_variant(self):
         """ Changing the uom on the template do not behave the same
         as changing on the product product."""
-        units = self.env.ref('uom.product_uom_unit')
-        cm = self.env.ref('uom.product_uom_cm')
-        template = self.env['product.template'].create({
-            'name': 'kardon'
-        })
+        pass
+        # TODO SLG, rewrite it
+        # units = self.env.ref('uom.product_uom_unit')
+        # cm = self.env.ref('uom.product_uom_cm')
+        # template = self.env['product.template'].create({
+        #     'name': 'kardon'
+        # })
 
-        template_form = Form(template)
-        template_form.uom_id = cm
-        self.assertEqual(template_form.uom_po_id, cm)
-        template = template_form.save()
+        # template_form = Form(template)
+        # template_form.uom_id = cm
+        # self.assertEqual(template_form.uom_po_id, cm)
+        # template = template_form.save()
 
-        variant_form = Form(template.product_variant_ids)
-        variant_form.uom_id = units
-        self.assertEqual(variant_form.uom_po_id, units)
-        variant = variant_form.save()
-        self.assertEqual(variant.uom_po_id, units)
-        self.assertEqual(template.uom_po_id, units)
+        # variant_form = Form(template.product_variant_ids)
+        # variant_form.uom_id = units
+        # self.assertEqual(variant_form.uom_po_id, units)
+        # variant = variant_form.save()
+        # self.assertEqual(variant.uom_po_id, units)
+        # self.assertEqual(template.uom_po_id, units)
 
     def test_dynamic_attributes_archiving(self):
         Product = self.env['product.product']
