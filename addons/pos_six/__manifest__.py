@@ -19,7 +19,7 @@
             'pos_six/static/src/js/**/*.js',
         ],
         'web.assets_qweb': [
-            'pos_six/static/src/xml/**/*',
+            'pos_six/static/src/js/**/*.xml',
         ],
     }
 }
