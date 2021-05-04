@@ -7,8 +7,8 @@
     'summary': 'Generate leads from a contact form',
     'version': '2.1',
     'description': """
-Generate leads or opportunities in the CRM app from a contact form published on the Contact us page of your website.
-This form can be customized thanks to the *Form Builder* module (available in Odoo Enterprise).
+Add capability to your website forms to generate leads or opportunities in the CRM app.
+Forms has to be customized inside the *Website Builder* in order to generate leads.
 
 This module includes contact phone and mobile numbers validation.""",
     'depends': ['website', 'crm'],

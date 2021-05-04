@@ -8,6 +8,8 @@ import odoo.tests
 class TestWebsiteCrm(odoo.tests.HttpCase):
 
     def test_tour(self):
+        # change action to create opportunity
+        self.start_tour("/", 'website_crm_pre_tour', login='admin')
         self.start_tour("/", 'website_crm_tour')
 
         # check result
@@ -24,6 +26,7 @@ class TestWebsiteCrm(odoo.tests.HttpCase):
         partner_phone = user_partner.phone
 
         # no edit on prefilled data from logged partner : propagate partner_id on created lead
+        self.start_tour("/", 'website_crm_pre_tour', login=user_login)
         self.start_tour("/", "website_crm_catch_logged_partner_info_tour", login=user_login)
         created_lead = self.env['crm.lead'].search([('description', '=', '### TOUR DATA PREFILL ###')])
         self.assertEqual(created_lead.partner_id, user_partner)
