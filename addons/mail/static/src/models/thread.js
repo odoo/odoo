@@ -635,6 +635,7 @@ registerModel({
                 activities: activitiesData,
                 attachments: attachmentsData,
                 followers: followersData,
+                hasWriteAccess,
                 suggestedRecipients: suggestedRecipientsData,
             } = await this.env.services.rpc({
                 route: '/mail/thread/data',
@@ -647,7 +648,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            const values = {};
+            const values = { hasWriteAccess };
             if (activitiesData) {
                 Object.assign(values, {
                     activities: insertAndReplace(activitiesData.map(activityData =>
@@ -2009,6 +2010,13 @@ registerModel({
          */
         hasSeenIndicators: attr({
             compute: '_computeHasSeenIndicators',
+            default: false,
+        }),
+        /**
+         * States whether current user has write access for the record. If yes, few other operations
+         * (like adding other followers to the thread) are enabled for the user.
+         */
+        hasWriteAccess: attr({
             default: false,
         }),
         id: attr({

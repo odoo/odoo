@@ -44,7 +44,6 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
         followedThread: link(thread),
         id: 2,
         isActive: true,
-        isEditable: true,
     });
     const followerSubtype = messaging.models['FollowerSubtype'].create({
         id: 1,
@@ -105,7 +104,6 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         followedThread: link(thread),
         id: 2,
         isActive: true,
-        isEditable: true,
     });
     const followerSubtype = messaging.models['FollowerSubtype'].create({
         id: 1,
@@ -163,7 +161,6 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         followedThread: link(thread),
         id: 2,
         isActive: true,
-        isEditable: true,
     });
     const followerSubtype = messaging.models['FollowerSubtype'].create({
         id: 1,

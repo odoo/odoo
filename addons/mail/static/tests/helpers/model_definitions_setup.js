@@ -58,9 +58,6 @@ insertModelFields('mail.channel', {
     state: { default: 'open', string: "FoldState", type: "char" },
     uuid: { default: () => _.uniqueId('mail.channel_uuid-') },
 });
-insertModelFields('mail.followers', {
-    is_editable: { type: 'boolean' },
-});
 insertModelFields('mail.message', {
     history_partner_ids: { relation: 'res.partner', string: "Partners with History", type: 'many2many' },
     is_discussion: { string: 'Discussion', type: 'boolean' },
