@@ -131,6 +131,10 @@ class Registry(Mapping):
         self.loaded = False             # whether all modules are loaded
         self.ready = False              # whether everything is set up
 
+        # field dependencies
+        self.field_depends = {}
+        self.field_depends_context = {}
+
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
         # must be reloaded.
@@ -278,8 +282,8 @@ class Registry(Mapping):
             model._setup_complete()
 
         # determine field_depends and field_depends_context
-        self.field_depends = {}
-        self.field_depends_context = {}
+        self.field_depends.clear()
+        self.field_depends_context.clear()
         for model in models:
             for field in model._fields.values():
                 depends, depends_context = field.get_depends(model)
