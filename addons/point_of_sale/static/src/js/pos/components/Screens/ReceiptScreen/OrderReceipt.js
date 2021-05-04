@@ -16,6 +16,9 @@ class OrderReceipt extends PosComponent {
             !(line.display_discount_policy == 'without_discount' && line.price < line.price_lst)
         );
     }
+    _showRoundingInfo(receipt) {
+        return receipt.is_payment_rounded;
+    }
 }
 OrderReceipt.components = { WrappedProductNameLines };
 OrderReceipt.template = 'point_of_sale.OrderReceipt';
