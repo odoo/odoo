@@ -305,6 +305,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 return code.code;
             }
         }
+        async _displayAllControlPopup() {
+            await this.showPopup('ControlButtonPopup', {
+                controlButtons: this.controlButtons
+            });
+        }
         /**
          * override this method to perform procedure if the scale is not available.
          * @see isScaleAvailable

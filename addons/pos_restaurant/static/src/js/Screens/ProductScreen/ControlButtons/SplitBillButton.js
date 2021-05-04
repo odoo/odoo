@@ -14,6 +14,7 @@ odoo.define('pos_restaurant.SplitBillButton', function(require) {
         async onClick() {
             const order = this.env.pos.get_order();
             if (order.get_orderlines().length > 0) {
+                this.trigger('close-popup');
                 this.showScreen('SplitBillScreen');
             }
         }
