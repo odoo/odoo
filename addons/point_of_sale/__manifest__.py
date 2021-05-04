@@ -138,6 +138,7 @@
             'point_of_sale/static/src/js/Popups/ErrorPopup.js',
             'point_of_sale/static/src/js/Popups/ErrorBarcodePopup.js',
             'point_of_sale/static/src/js/Popups/ConfirmPopup.js',
+            'point_of_sale/static/src/js/Popups/ControlButtonPopup.js',
             'point_of_sale/static/src/js/Popups/TextInputPopup.js',
             'point_of_sale/static/src/js/Popups/TextAreaPopup.js',
             'point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js',

@@ -29,6 +29,12 @@ class PosConfig(models.Model):
         inverse="_set_programs",
     )
     program_ids = fields.Many2many("coupon.program", string="Coupons and Promotions")
+    pos_coupon_control_button = [
+        ('PromoCodeButton', 'Promo Code'),
+        ('ResetProgramsButton', 'Reset Programs')
+    ]
+    first_control_button_product_screen = fields.Selection(selection_add=pos_coupon_control_button)
+    second_control_button_product_screen = fields.Selection(selection_add=pos_coupon_control_button)
 
     @api.depends("program_ids")
     def _filter_programs(self):

@@ -16,6 +16,16 @@ class PosConfig(models.Model):
     is_order_printer = fields.Boolean('Order Printer')
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant = fields.Boolean(default=True)
+    pos_restaurant_control_button = [
+        ('OrderlineNoteButton', 'Orderline Note'),
+        ('PrintBillButton', 'Print Bill'),
+        ('SplitBillButton', 'Split Bill'),
+        ('SubmitOrderButton', 'Submit Order'),
+        ('TableGuestsButton', 'Table Guests'),
+        ('TransferOrderButton', 'Transfer Order')
+    ]
+    first_control_button_product_screen = fields.Selection(selection_add=pos_restaurant_control_button)
+    second_control_button_product_screen = fields.Selection(selection_add=pos_restaurant_control_button)
 
     @api.onchange('module_pos_restaurant')
     def _onchange_module_pos_restaurant(self):

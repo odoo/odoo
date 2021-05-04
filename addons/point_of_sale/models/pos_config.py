@@ -231,6 +231,15 @@ class PosConfig(models.Model):
         string='Shipping Policy', required=True, default='direct',
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
+    pos_control_button = [
+        ('SetFiscalPositionButton', 'Fiscal Position'),
+        ('SetPricelistButton', 'Price List')]
+    first_control_button_product_screen = fields.Selection(pos_control_button,
+       string="First Control Button",
+       help="Define the first quick access on control button on mobile")
+    second_control_button_product_screen = fields.Selection(pos_control_button,
+       string="Second Control Button",
+       help="Define the first quick access on control button on mobile")
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
