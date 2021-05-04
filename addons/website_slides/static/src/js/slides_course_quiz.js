@@ -451,7 +451,11 @@ odoo.define('website_slides.quiz', function (require) {
                     slide_id: this.slide.id
                 }
             }).then(function () {
-                window.location.reload();
+                // While resetting the quiz, remove 'quiz_quick_create' query params to
+                // disable adding new question
+                let url = new URL(window.location.href);
+                url.searchParams.delete('quiz_quick_create');
+                window.location.href = url.href;
             });
         },
         /**
