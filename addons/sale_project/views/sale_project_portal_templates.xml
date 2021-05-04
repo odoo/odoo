@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_tasks_inherit" inherit_id="project.portal_my_tasks">
+        <xpath expr="//t[@t-call='portal.portal_table']//thead/tr/th[@name='portal_my_tasks_project_th']" position="before">
+            <th t-if="groupby == 'sale_order'">
+                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for sale order:</em>
+                <span class="text-truncate" t-field="tasks[0].sudo().sale_order_id"/></th>
+            <th t-if="groupby == 'sale_line'">
+                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for sale order item:</em>
+                <span class="text-truncate" t-field="tasks[0].sudo().sale_line_id"/></th>
+        </xpath>
+    </template>
+
+    <template id="portal_my_task_inherit" inherit_id="project.portal_my_task">
+        <xpath expr="//div[@name='portal_my_task_second_column']" position="inside">
+            <div><strong>Sale Order:</strong> <a t-attf-href="/my/orders/{{ task.sale_order_id.id }}"><span t-field="task.sale_order_id"/></a></div>
+            <div><strong>Invoices:</strong> 
+                <ul class="mb-0">
+                <span t-foreach="task.sale_order_id.invoice_ids" t-as="invoice_line">
+                    <li><a t-attf-href="/my/invoices/{{ invoice_line.id }}"><span t-field="invoice_line.name"/></a></li>
+                </span>
+                </ul>
+            </div>
+            <div><strong>Invoiced:</strong>
+                <span t-field="task.sale_line_id.untaxed_amount_invoiced"/>
+            </div>
+            <div><strong>To invoice:</strong>
+                <span t-field="task.sale_line_id.untaxed_amount_to_invoice"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

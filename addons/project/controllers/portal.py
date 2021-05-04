@@ -9,14 +9,13 @@ from markupsafe import Markup
 from odoo import http, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
-from odoo.addons.portal.controllers import portal
-from odoo.addons.portal.controllers.portal import pager as portal_pager
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.tools import groupby as groupbyelem
 
 from odoo.osv.expression import OR
 
 
-class CustomerPortal(portal.CustomerPortal):
+class ProjectCustomerPortal(CustomerPortal):
 
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
@@ -101,32 +100,98 @@ class CustomerPortal(portal.CustomerPortal):
         }
         return self._get_page_view_values(task, access_token, values, 'my_tasks_history', False, **kwargs)
 
-    @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby=None, **kw):
-        values = self._prepare_portal_layout_values()
-        searchbar_sortings = {
+    def _task_get_searchbar_sortings(self):
+        return {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Title'), 'order': 'name'},
             'stage': {'label': _('Stage'), 'order': 'stage_id, project_id'},
             'project': {'label': _('Project'), 'order': 'project_id, stage_id'},
             'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc'},
+            'date_deadline': {'label': _('Deadline'), 'order': 'date_deadline asc'},
         }
-        searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+
+    def _task_get_searchbar_groupby(self):
+        return {
+            'none': {'input': 'none', 'label': _('None')},
+            'project': {'input': 'project', 'label': _('Project')},
+            'stage': {'input': 'stage', 'label': _('Stage')},
+            'user': {'input': 'user', 'label': _('Assigned to')},
+            'customer': {'input': 'customer', 'label': _('Customer')}
         }
-        searchbar_inputs = {
+
+    def _task_get_groupby_mapping(self):
+        return {
+            'project': 'project_id',
+            'stage': 'stage_id',
+            'user': 'user_id',
+            'customer': 'partner_id'
+        }
+
+    def _task_get_order(self, order, groupby):
+        if groupby == 'project':
+            order = "project_id, %s" % order  # force sort on project first to group by project in view
+        elif groupby == 'stage':
+            order = "stage_id, %s" % order  # force sort on stage first to group by stage in view
+        elif groupby == 'user':
+            order = "user_id, %s" % order
+        elif groupby == 'customer':
+            order = "partner_id, %s" % order
+        return order
+
+    def _task_get_grouped_tasks(self, groupby, tasks):
+        if groupby == 'project':
+            grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter('project_id'))]
+        elif groupby == 'stage':
+            grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter('stage_id'))]
+        elif groupby == 'user':
+            grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter('user_id'))]
+        elif groupby == 'customer':
+            grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter('partner_id'))]
+        else:
+            grouped_tasks = [tasks]
+        return grouped_tasks
+
+    def _task_get_searchbar_inputs(self):
+        return {
+            'all': {'input': 'all', 'label': _('Search in All')},
             'content': {'input': 'content', 'label': Markup(_('Search <span class="nolabel"> (in Content)</span>'))},
             'message': {'input': 'message', 'label': _('Search in Messages')},
             'customer': {'input': 'customer', 'label': _('Search in Customer')},
             'stage': {'input': 'stage', 'label': _('Search in Stages')},
             'project': {'input': 'project', 'label': _('Search in Project')},
-            'all': {'input': 'all', 'label': _('Search in All')},
+            'ref': {'input': 'ref', 'label': _('Search in Ref')},
+            'user': {'input': 'user', 'label': _('Search in Assigned to')},
         }
-        searchbar_groupby = {
-            'none': {'input': 'none', 'label': _('None')},
-            'project': {'input': 'project', 'label': _('Project')},
-            'stage': {'input': 'stage', 'label': _('Stage')},
+
+    def _task_get_search_domain(self, search_in, search):
+        search_domain = []
+        if search_in in ('content', 'all'):
+            search_domain = OR([search_domain, ['|', ('name', 'ilike', search), ('description', 'ilike', search)]])
+        if search_in in ('customer', 'all'):
+            search_domain = OR([search_domain, [('partner_id', 'ilike', search)]])
+        if search_in in ('message', 'all'):
+            search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
+        if search_in in ('stage', 'all'):
+            search_domain = OR([search_domain, [('stage_id', 'ilike', search)]])
+        if search_in in ('project', 'all'):
+            search_domain = OR([search_domain, [('project_id', 'ilike', search)]])
+        if search_in in ('ref', 'all'):
+            search_domain = OR([search_domain, [('id', 'ilike', search)]])
+        if search_in in ('user', 'all'):
+            search_domain = OR([search_domain, [('user_id.name', 'ilike', search)]])
+        return search_domain
+
+    @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby=None, **kw):
+        values = self._prepare_portal_layout_values()
+        searchbar_sortings = self._task_get_searchbar_sortings()
+
+        searchbar_filters = {
+            'all': {'label': _('All'), 'domain': []},
         }
+
+        searchbar_inputs = self._task_get_searchbar_inputs()
+        searchbar_groupby = self._task_get_searchbar_groupby()
 
         # extends filterby criteria with project the customer has access to
         projects = request.env['project.project'].search([])
@@ -165,18 +230,7 @@ class CustomerPortal(portal.CustomerPortal):
 
         # search
         if search and search_in:
-            search_domain = []
-            if search_in in ('content', 'all'):
-                search_domain = OR([search_domain, ['|', ('name', 'ilike', search), ('description', 'ilike', search)]])
-            if search_in in ('customer', 'all'):
-                search_domain = OR([search_domain, [('partner_id', 'ilike', search)]])
-            if search_in in ('message', 'all'):
-                search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
-            if search_in in ('stage', 'all'):
-                search_domain = OR([search_domain, [('stage_id', 'ilike', search)]])
-            if search_in in ('project', 'all'):
-                search_domain = OR([search_domain, [('project_id', 'ilike', search)]])
-            domain += search_domain
+            domain += self._task_get_search_domain(search_in, search)
 
         # task count
         task_count = request.env['project.task'].search_count(domain)
@@ -189,20 +243,13 @@ class CustomerPortal(portal.CustomerPortal):
             step=self._items_per_page
         )
         # content according to pager and archive selected
-        if groupby == 'project':
-            order = "project_id, %s" % order  # force sort on project first to group by project in view
-        elif groupby == 'stage':
-            order = "stage_id, %s" % order  # force sort on stage first to group by stage in view
+        order = self._task_get_order(order, groupby)
 
         tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
         request.session['my_tasks_history'] = tasks.ids[:100]
 
-        if groupby == 'project':
-            grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter('project_id'))]
-        elif groupby == 'stage':
-            grouped_tasks = [request.env['project.task'].concat(*g) for k, g in groupbyelem(tasks, itemgetter('stage_id'))]
-        else:
-            grouped_tasks = [tasks]
+        groupby_mapping = self._task_get_groupby_mapping()
+        grouped_tasks = self._task_get_grouped_tasks(groupby_mapping.get(groupby, None), tasks)
 
         values.update({
             'date': date_begin,
