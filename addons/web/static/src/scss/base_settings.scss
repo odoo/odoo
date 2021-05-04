@@ -57,7 +57,9 @@
             border: 0;
 
             .btn-primary, .btn-link  {
-                padding: $btn-padding-y-sm $btn-padding-x-sm;
+                @include media-breakpoint-up(md) {
+                    padding: $btn-padding-y-sm $btn-padding-x-sm;
+                }
             }
 
             .btn-link {
