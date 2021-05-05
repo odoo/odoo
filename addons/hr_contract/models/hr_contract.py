@@ -33,7 +33,7 @@ class Contract(models.Model):
         default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.")
-    notes = fields.Text('Notes')
+    notes = fields.Html('Notes')
     state = fields.Selection([
         ('draft', 'New'),
         ('open', 'Running'),
