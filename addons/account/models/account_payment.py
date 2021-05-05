@@ -300,7 +300,7 @@ class account_register_payments(models.TransientModel):
     def _onchange_group_invoices(self):
         multi = self.is_multi(self.invoice_ids)
         # Only one payment is made when grouping several invoices for the same partner
-        self.multi = multi or ((len(self.invoice_ids.mapped('partner_id')) == 1 and len(self.invoice_ids) > 1) and not self.group_invoices)
+        self.multi = multi or ((len(self.invoice_ids.mapped('commercial_partner_id')) == 1 and len(self.invoice_ids) > 1) and not self.group_invoices)
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
