@@ -364,8 +364,8 @@ class TestLeadAssign(TestLeadAssignCommon):
         with self.with_user('user_sales_manager'):
             self.env['crm.team'].browse(self.sales_team_1.ids)._action_assign_leads(work_days=4)
 
-        # self.assertEqual(leads[0].team_id, self.env['crm.team'], 'Won lead should not be assigned')
-        # self.assertEqual(leads[0].user_id, self.env['res.users'], 'Won lead should not be assigned')
+        self.assertEqual(leads[0].team_id, self.env['crm.team'], 'Won lead should not be assigned')
+        self.assertEqual(leads[0].user_id, self.env['res.users'], 'Won lead should not be assigned')
         for lead in leads[1:4]:
             self.assertIn(lead.user_id, self.sales_team_1.member_ids)
             self.assertEqual(lead.team_id, self.sales_team_1)
