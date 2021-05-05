@@ -225,7 +225,7 @@ class AccountEdiFormat(models.Model):
                 # Comment. <2.1.1.11>
                 elements = body_tree.xpath('.//DatiGeneraliDocumento//Causale')
                 for element in elements:
-                    invoice_form.narration = '%s%s\n' % (invoice_form.narration or '', element.text)
+                    invoice_form.narration = '%s%s<br/>' % (invoice_form.narration or '', element.text)
 
                 # Informations relative to the purchase order, the contract, the agreement,
                 # the reception phase or invoices previously transmitted

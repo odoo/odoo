@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models, fields, tools, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, is_html_empty
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
 
@@ -61,6 +61,7 @@ class AccountEdiFormat(models.Model):
             **invoice._prepare_edi_vals_to_export(),
             'format_date': format_date,
             'format_monetary': format_monetary,
+            'is_html_empty': is_html_empty,
         }
 
         xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"

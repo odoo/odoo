@@ -58,7 +58,7 @@ class AccountFiscalPosition(models.Model):
     _inherit = 'account.fiscal.position'
 
     name = fields.Char(translate=True)
-    note = fields.Text(translate=True)
+    note = fields.Html(translate=True)
 
 
 class AccountFiscalPositionTemplate(models.Model):
