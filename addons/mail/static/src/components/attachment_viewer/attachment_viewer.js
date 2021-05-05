@@ -5,6 +5,8 @@ import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update
 import useStore from '@mail/component_hooks/use_store/use_store';
 import { link } from '@mail/model/model_field_command';
 
+import { hidePDFJSButtons } from '@web/js/libs/pdfjs';
+
 const { Component, QWeb } = owl;
 const { useRef } = owl.hooks;
 
@@ -54,6 +56,10 @@ class AttachmentViewer extends Component {
          */
         this._zoomerRef = useRef('zoomer');
         /**
+         * Reference of the IFRAME node when the attachment is a PDF.
+         */
+        this._iframeViewerPdfRef = useRef('iframeViewerPdf');
+        /**
          * Tracked translate transformations on image visualisation. This is
          * not observed with `useStore` because they are used to compute zoomer
          * style, and this is changed directly on zoomer for performance
@@ -67,6 +73,7 @@ class AttachmentViewer extends Component {
     mounted() {
         this.el.focus();
         this._handleImageLoad();
+        this._hideUnwantedPdfJsButtons();
         document.addEventListener('click', this._onClickGlobal);
     }
 
@@ -75,6 +82,7 @@ class AttachmentViewer extends Component {
      */
     patched() {
         this._handleImageLoad();
+        this._hideUnwantedPdfJsButtons();
     }
 
     willUnmount() {
@@ -166,6 +174,17 @@ class AttachmentViewer extends Component {
             (!image || !image.complete)
         ) {
             this.attachmentViewer.update({ isImageLoading: true });
+        }
+    }
+
+    /**
+     * @see 'hidePDFJSButtons'
+     *
+     * @private
+     */
+    _hideUnwantedPdfJsButtons() {
+        if (this._iframeViewerPdfRef.el) {
+            hidePDFJSButtons(this._iframeViewerPdfRef.el);
         }
     }
 
