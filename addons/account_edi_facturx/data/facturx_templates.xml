@@ -116,7 +116,7 @@
                     <ram:IssueDateTime>
                         <udt:DateTimeString format="102" t-esc="format_date(record.invoice_date)"/>
                     </ram:IssueDateTime>
-                    <ram:IncludedNote t-if="record.narration">
+                    <ram:IncludedNote t-if="not is_html_empty(record.narration)">
                         <ram:Content t-esc="record.narration"/>
                     </ram:IncludedNote>
                 </rsm:ExchangedDocument>

@@ -103,7 +103,7 @@
                                                         <span class="d-block font-weight-bold" t-if="line.partner_id" t-field="line.partner_id"/>
                                                         <span class="d-block" t-if="line.partner_bank_id" t-field="line.partner_bank_id"/>
                                                         <span class="d-block" t-if="line.payment_ref" t-field="line.payment_ref"/>
-                                                        <span class="d-block" t-if="line.narration" t-field="line.narration"/>
+                                                        <span class="d-block" t-if=" not is_html_empty(line.narration)" t-field="line.narration"/>
                                                     </td>
                                                     <td class="text-right p-0">
                                                         <span class="d-block font-weight-bold" t-field="line.amount"/>
