@@ -186,7 +186,7 @@
 }
 
 .o_Composer {
-    background-color: lighten(gray('300'), 7%);
+    background-color: gray('100');
 }
 
 .o_Composer_actionButton.o-last.o-has-current-partner-avatar.o-composer-is-compact {
@@ -211,7 +211,7 @@
 
 .o_Composer_coreMain:not(.o-composer-is-compact) {
     background: white;
-    border: 1px solid lighten(gray('400'), 5%);
+    border: 1px solid gray('200');
 
     // textarea should be all rounded but only when there is no subject field above
     &:not(.o-composer-is-extended) {
@@ -227,10 +227,8 @@
     appearance: none;
     outline: none;
     background-color: white;
-    border: 0;
-    border-top: 1px solid lighten(gray('400'), 5%);
-    border-bottom: 1px solid lighten(gray('400'), 5%);
-    border-left: 1px solid lighten(gray('400'), 5%);
+    border: 1px solid gray('200');
+    border-right: 0;
 
     &:not(.o-composer-is-compact) {
         border: 0;
@@ -255,8 +253,8 @@
 
 .o_Composer_toolButtons {
     background-color: white;
-    border-top: 1px solid lighten(gray('400'), 5%);
-    border-bottom: 1px solid lighten(gray('400'), 5%);
+    border-top: 1px solid gray('200');
+    border-bottom: 1px solid gray('200');
 
     &:not(.o-composer-is-compact) {
         border-bottom: 0;
@@ -269,5 +267,5 @@
 }
 
 .o_Composer_toolButtonSeparator {
-    border-left: 1px solid lighten(gray('400'), 5%);
+    border-left: 1px solid gray('200');
 }

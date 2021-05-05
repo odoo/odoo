@@ -20,6 +20,7 @@
 }
 
 .o_Message_authorName {
+    color: $headings-color;
     margin-inline-end: map-get($spacers, 2);
 }
 
@@ -216,11 +217,14 @@
     }
 
     &.o-not-discussion {
-        background-color: lighten(gray('300'), 5%);
-        border-bottom: 1px solid darken(gray('300'), 5%);
+        background-color: gray('100');
+
+        + .o-not-discussion {
+            margin-top: 2px;
+        }
 
         .o_Message_partnerImStatusIcon {
-            color: lighten(gray('300'), 5%);
+            color: gray('100');
         }
 
         &.o-selected {
@@ -257,7 +261,7 @@
 }
 
 .o_Message_authorName {
-    font-weight: bold;
+    font-weight: $font-weight-bold;
 }
 
 .o_Message_authorRedirect {
@@ -341,7 +345,7 @@
 }
 
 .o_Message_moderationAction {
-    font-weight: bold;
+    font-weight: $font-weight-bold;
     font-style: italic;
 
     &.o-accept,
@@ -367,7 +371,7 @@
 
     &.o-author {
         color: theme-color('danger');
-        font-weight: bold;
+        font-weight: $font-weight-bold;
     }
 }
 

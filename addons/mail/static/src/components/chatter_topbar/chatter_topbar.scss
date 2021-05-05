@@ -67,14 +67,21 @@
 .o_ChatterTopbar_button {
     border-radius: 0;
 
-    &:hover {
-        background-color: gray('300');
+    @include hover-focus() {
+        background-color: gray('100');
+    }
+
+    .o-has-active-button &:not(.o-active){
+        border-bottom: 1px solid $border-color;
     }
 
     &.o-active {
-        color: $o-brand-odoo;
-        background-color: lighten(gray('300'), 7%);
         border-right-color: $border-color;
+        @include o-hover-text-color($o-brand-odoo, $link-hover-color);
+
+        @include plain-hover-focus() {
+            background-color: gray('100');
+        }
 
         &:not(:first-of-type),
         &:first-of-type.o-bordered {
@@ -85,10 +92,6 @@
             border-top-color: $border-color;
         }
 
-        &:hover {
-            background-color: gray('300');
-            color: $link-hover-color;
-        }
     }
 }
 
