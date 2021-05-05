@@ -791,8 +791,9 @@ class AccountChartTemplate(models.Model):
             'match_transaction_type': account_reconcile_model.match_transaction_type,
             'match_transaction_type_param': account_reconcile_model.match_transaction_type_param,
             'match_same_currency': account_reconcile_model.match_same_currency,
-            'match_total_amount': account_reconcile_model.match_total_amount,
-            'match_total_amount_param': account_reconcile_model.match_total_amount_param,
+            'allow_payment_tolerance': account_reconcile_model.allow_payment_tolerance,
+            'payment_tolerance_type': account_reconcile_model.payment_tolerance_type,
+            'payment_tolerance_param': account_reconcile_model.payment_tolerance_param,
             'match_partner': account_reconcile_model.match_partner,
             'match_partner_ids': [(6, None, account_reconcile_model.match_partner_ids.ids)],
             'match_partner_category_ids': [(6, None, account_reconcile_model.match_partner_category_ids.ids)],
@@ -830,8 +831,9 @@ class AccountChartTemplate(models.Model):
             "auto_reconcile": False,
             "match_nature": 'both',
             "match_same_currency": True,
-            "match_total_amount": True,
-            "match_total_amount_param": 100,
+            "allow_payment_tolerance": True,
+            "payment_tolerance_type": 'percentage',
+            "payment_tolerance_param": 0,
             "match_partner": True,
             "company_id": company.id,
         })
@@ -1195,9 +1197,9 @@ class AccountReconcileModelTemplate(models.Model):
     sequence = fields.Integer(required=True, default=10)
 
     rule_type = fields.Selection(selection=[
-        ('writeoff_button', 'Manually create a write-off on clicked button'),
-        ('writeoff_suggestion', 'Suggest a write-off'),
-        ('invoice_matching', 'Match existing invoices/bills')
+        ('writeoff_button', 'Button to generate counterpart entry'),
+        ('writeoff_suggestion', 'Rule to suggest counterpart entry'),
+        ('invoice_matching', 'Rule to match invoices/bills'),
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
@@ -1222,14 +1224,14 @@ class AccountReconcileModelTemplate(models.Model):
         default=False,
         help="Search in the Statement's Reference to find the Invoice/Payment's reference",
     )
-    match_journal_ids = fields.Many2many('account.journal', string='Journals',
+    match_journal_ids = fields.Many2many('account.journal', string='Journals Availability',
         domain="[('type', 'in', ('bank', 'cash'))]",
         help='The reconciliation model will only be available from the selected journals.')
     match_nature = fields.Selection(selection=[
         ('amount_received', 'Amount Received'),
         ('amount_paid', 'Amount Paid'),
         ('both', 'Amount Paid/Received')
-    ], string='Amount Nature', required=True, default='both',
+    ], string='Amount Type', required=True, default='both',
         help='''The reconciliation model will only be applied to the selected transaction type:
         * Amount Received: Only applied when receiving an amount.
         * Amount Paid: Only applied when paying an amount.
@@ -1238,7 +1240,7 @@ class AccountReconcileModelTemplate(models.Model):
         ('lower', 'Is Lower Than'),
         ('greater', 'Is Greater Than'),
         ('between', 'Is Between'),
-    ], string='Amount',
+    ], string='Amount Condition',
         help='The reconciliation model will only be applied when the amount being lower than, greater than or between specified amount(s).')
     match_amount_min = fields.Float(string='Amount Min Parameter')
     match_amount_max = fields.Float(string='Amount Max Parameter')
@@ -1269,12 +1271,24 @@ class AccountReconcileModelTemplate(models.Model):
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_transaction_type_param = fields.Char(string='Transaction Type Parameter')
-    match_same_currency = fields.Boolean(string='Same Currency Matching', default=True,
+    match_same_currency = fields.Boolean(string='Same Currency', default=True,
         help='Restrict to propositions having the same currency as the statement line.')
-    match_total_amount = fields.Boolean(string='Amount Matching', default=True,
-        help='The sum of total residual amount propositions matches the statement line amount.')
-    match_total_amount_param = fields.Float(string='Amount Matching %', default=100,
-        help='The sum of total residual amount propositions matches the statement line amount under this percentage.')
+    allow_payment_tolerance = fields.Boolean(
+        string="Allow Payment Gap",
+        default=True,
+        help="Difference accepted in case of underpayment.",
+    )
+    payment_tolerance_param = fields.Float(
+        string="Gap",
+        default=0.0,
+        help="The sum of total residual amount propositions matches the statement line amount under this amount/percentage.",
+    )
+    payment_tolerance_type = fields.Selection(
+        selection=[('percentage', "in percentage"), ('fixed_amount', "in amount")],
+        required=True,
+        default='percentage',
+        help="The sum of total residual amount propositions and the statement line amount allowed gap type.",
+    )
     match_partner = fields.Boolean(string='Partner Is Set',
         help='The reconciliation model will only be applied when a customer/vendor is set.')
     match_partner_ids = fields.Many2many('res.partner', string='Restrict Partners to',

@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import math
+
 from odoo import api, fields, models, _
-from odoo.osv import expression
 from odoo.tools import float_is_zero
-from odoo.tools import float_compare, float_round, float_repr
 from odoo.tools.misc import formatLang, format_date
 from odoo.exceptions import UserError, ValidationError
-
-import time
-import math
-import base64
-import re
 
 
 class AccountCashboxLine(models.Model):
@@ -1017,12 +1012,14 @@ class AccountBankStatementLine(models.Model):
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
 
-    def _prepare_reconciliation(self, lines_vals_list):
+    def _prepare_reconciliation(self, lines_vals_list, allow_partial=False):
         ''' Helper for the "reconcile" method used to get a full preview of the reconciliation result. This method is
         quite useful to deal with reconcile models or the reconciliation widget because it ensures the values seen by
         the user are exactly the values you get after reconciling.
 
-        :param lines_vals_list:             See the 'reconcile' method.
+        :param lines_vals_list: See the 'reconcile' method.
+        :param allow_partial:   In case of matching a line having an higher amount, allow creating a partial instead
+                                an open balance on the statement line.
         :return: The diff to be applied on the statement line as a tuple
         (
             lines_to_create:    The values to create the account.move.line on the statement line.
@@ -1031,7 +1028,6 @@ class AccountBankStatementLine(models.Model):
             existing_lines:     The counterpart lines to which the reconciliation will be done.
         )
         '''
-
         self.ensure_one()
         journal = self.journal_id
         company_currency = journal.company_id.currency_id
@@ -1053,12 +1049,17 @@ class AccountBankStatementLine(models.Model):
 
         total_balance = liquidity_lines.balance
         total_amount_currency = liquidity_lines.amount_currency
+        sign = 1 if liquidity_lines.balance > 0.0 else -1
 
         # Step 1: Split 'lines_vals_list' into two batches:
         # - The existing account.move.lines that need to be reconciled with the statement line.
         #       => Will be managed at step 2.
         # - The account.move.lines to be created from scratch.
         #       => Will be managed directly.
+
+        # In case of the payment is matched directly with an higher amount, don't create an open
+        # balance but a partial reconciliation.
+        partial_rec_needed = allow_partial
 
         to_browse_ids = []
         to_process_vals = []
@@ -1070,31 +1071,60 @@ class AccountBankStatementLine(models.Model):
                 # Existing account.move.line.
                 to_browse_ids.append(vals.pop('id'))
                 to_process_vals.append(vals)
+                if any(x in vals for x in ('balance', 'amount_residual', 'amount_residual_currency')):
+                    partial_rec_needed = False
             else:
                 # Newly created account.move.line from scratch.
                 line_vals = self._prepare_counterpart_move_line_vals(vals)
                 total_balance += line_vals['debit'] - line_vals['credit']
                 total_amount_currency += line_vals['amount_currency']
-
-                reconciliation_overview.append({
-                    'line_vals': line_vals,
-                })
+                reconciliation_overview.append({'line_vals': line_vals})
+                partial_rec_needed = False
 
         # Step 2: Browse counterpart lines all in one and process them.
 
         existing_lines = self.env['account.move.line'].browse(to_browse_ids)
+
+        i = 0
         for line, counterpart_vals in zip(existing_lines, to_process_vals):
             line_vals = self._prepare_counterpart_move_line_vals(counterpart_vals, move_line=line)
             balance = line_vals['debit'] - line_vals['credit']
             amount_currency = line_vals['amount_currency']
+            i += 1
+
+            if i == len(existing_lines):
+                # Last line.
+
+                if partial_rec_needed and sign * (total_amount_currency + amount_currency) < 0.0:
+
+                    # On the last aml, when the total matched amount becomes higher than the residual amount of the
+                    # statement line, make sure to not create an open balance later.
+                    line_vals = self._prepare_counterpart_move_line_vals(
+                        {
+                            **counterpart_vals,
+                            'amount_residual': -math.copysign(total_balance, balance),
+                            'amount_residual_currency': -math.copysign(total_amount_currency, amount_currency),
+                            'currency_id': foreign_currency.id,
+                        },
+                        move_line=line,
+                    )
+                    balance = line_vals['debit'] - line_vals['credit']
+                    amount_currency = line_vals['amount_currency']
+
+            elif sign * total_amount_currency < 0.0:
+                # The partial reconciliation is no longer an option since the total matched amount is now higher than
+                # the residual amount of the statement line but this is not the last line to process. Then, since we
+                # don't want to create zero balance lines, do nothing and let the open-balance be created like it
+                # should.
+                partial_rec_needed = False
+
+            total_balance += balance
+            total_amount_currency += amount_currency
 
             reconciliation_overview.append({
                 'line_vals': line_vals,
                 'counterpart_line': line,
             })
-
-            total_balance += balance
-            total_amount_currency += amount_currency
 
         # Step 3: Fix rounding issue due to currency conversions.
         # Add the remaining balance on the first encountered line starting with the custom ones.
@@ -1139,7 +1169,7 @@ class AccountBankStatementLine(models.Model):
 
         return reconciliation_overview, open_balance_vals
 
-    def reconcile(self, lines_vals_list, to_check=False):
+    def reconcile(self, lines_vals_list, to_check=False, allow_partial=False):
         ''' Perform a reconciliation on the current account.bank.statement.line with some
         counterpart account.move.line.
         If the statement line entry is not fully balanced after the reconciliation, an open balance will be created
@@ -1154,11 +1184,16 @@ class AccountBankStatementLine(models.Model):
                                 This value must be provided if 'id' is not.
             **kwargs:           Custom values to be set on the newly created account.move.line.
         :param to_check:        Mark the current statement line as "to_check" (see field for more details).
+        :param allow_partial:   In case of matching a line having an higher amount, allow creating a partial instead
+                                of an open balance on the statement line.
         '''
         self.ensure_one()
         liquidity_lines, suspense_lines, other_lines = self._seek_for_lines()
 
-        reconciliation_overview, open_balance_vals = self._prepare_reconciliation(lines_vals_list)
+        reconciliation_overview, open_balance_vals = self._prepare_reconciliation(
+            lines_vals_list,
+            allow_partial=allow_partial,
+        )
 
         # ==== Manage res.partner.bank ====
 
