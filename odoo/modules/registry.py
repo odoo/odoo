@@ -114,6 +114,8 @@ class Registry(Mapping):
         self._ordinary_tables = None
         self._constraint_queue = deque()
         self.__cache = LRU(8192)
+        self.field_depends = {}
+        self.field_depends_context = {}
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -277,7 +279,7 @@ class Registry(Mapping):
         for model in models:
             model._setup_complete()
 
-        # determine field_depends and field_depends_context
+        # reset and determine field_depends and field_depends_context
         self.field_depends = {}
         self.field_depends_context = {}
         for model in models:
