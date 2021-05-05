@@ -76,11 +76,21 @@ models.PosModel = models.PosModel.extend({
                         resolve();
                     }
                 });
+<<<<<<< HEAD
             }
             self.setLoadingMessage(_t('Loading') + ' product.product', 1);
 
             return new Promise((resolve, reject) => {
                 next(resolve, reject);
+=======
+            self.chrome.loading_message(_t('Loading') + ' product.product', 1);
+            return records.then(function (products) {
+                self.db.add_products(_.map(products, function (product) {
+                    product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
+                    product.pos = self;
+                    return new models.Product({}, product);
+                }));
+>>>>>>> 0e6797b2510... temp
             });
         });
     },
