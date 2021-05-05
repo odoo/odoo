@@ -291,7 +291,16 @@ class Website(models.Model):
     def configurator_init(self):
         r = dict()
         company_id = self.get_current_website().company_id
-        r['features'] = self.env['website.configurator.feature'].search_read([], ['name', 'description', 'type', 'icon', 'website_types_preselection'])
+        configurator_features = self.env['website.configurator.feature'].search([])
+        r['features'] = [{
+            'id': feature.id,
+            'name': feature.name,
+            'description': feature.description,
+            'type': feature.type,
+            'icon': feature.icon,
+            'website_types_preselection': feature.website_types_preselection,
+            'module_state': feature.module_id.state,
+        } for feature in configurator_features]
         r['logo'] = False
         if company_id.logo and company_id.logo != company_id._get_logo():
             r['logo'] = company_id.logo.decode('utf-8')
