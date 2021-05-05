@@ -112,9 +112,9 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         self.mapped('partner_id.channel_ids').filtered(lambda c: c.public != 'public' and c.channel_type == 'channel').write({
             'channel_partner_ids': [(3, pid) for pid in self.mapped('partner_id').ids]
         })
-
+        
     @api.model
-    def systray_get_activities(self):
+    def _systray_get_query_activities(self):
         query = """SELECT m.id, count(*), act.res_model as model,
                         CASE
                             WHEN %(today)s::date - act.date_deadline::date = 0 Then 'today'
@@ -126,10 +126,14 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
                     WHERE user_id = %(user_id)s
                     GROUP BY m.id, states, act.res_model;
                     """
-        self.env.cr.execute(query, {
-            'today': fields.Date.context_today(self),
-            'user_id': self.env.uid,
-        })
+        params = {'today': fields.Date.context_today(self),
+                  'user_id': self.env.uid,}
+        return query, params
+
+    @api.model
+    def systray_get_activities(self):
+        self.env.cr.execute(self._systray_get_query_activities())
+
         activity_data = self.env.cr.dictfetchall()
         model_ids = [a['id'] for a in activity_data]
         model_names = {n[0]: n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
