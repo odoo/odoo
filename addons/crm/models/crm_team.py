@@ -412,11 +412,14 @@ class Team(models.Model):
 
         BUNDLE_HOURS_DELAY = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.delay', default=0))
         BUNDLE_SIZE = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.bundle', default=50))
-        max_create_dt = fields.Datetime.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
 
+        # leads
+        max_create_dt = fields.Datetime.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
+        duplicates_lead_cache = dict()
+
+        # teams
         team_done = self.env['crm.team']
         remaining_teams = self.env['crm.team'].browse(random.sample(self.ids, k=len(self.ids)))
-
         # compute assign domain for each team before looping on them by bundle size
         teams_domain = dict(
             (team, literal_eval(team.assignment_domain or '[]'))
@@ -428,6 +431,7 @@ class Team(models.Model):
             for team in remaining_teams
         )
         # assignment process data
+        global_data = dict(assigned=set(), merged=set(), duplicates=set())
         teams_data = dict.fromkeys(remaining_teams, False)
         for team in remaining_teams:
             teams_data[team] = dict(assigned=set(), merged=set(), duplicates=set())
@@ -446,14 +450,24 @@ class Team(models.Model):
                 lead_limit = min([BUNDLE_SIZE, remaining if remaining > 0 else 1])
                 leads = self.env["crm.lead"].search(lead_domain, limit=lead_limit)
 
+                # Fill duplicate cache: search for duplicate lead before the assignation
+                # avoid to flush during the search at every assignation
+                for lead in leads:
+                    if lead not in duplicates_lead_cache:
+                        duplicates_lead_cache[lead] = lead._get_lead_duplicates(email=lead.email_from)
+
                 # assign + deduplicate and concatenate results in teams_data to keep some history
-                assign_res = team._allocate_leads_deduplicate(leads)
+                assign_res = team._allocate_leads_deduplicate(leads, duplicates_cache=duplicates_lead_cache)
                 _logger.info('Assigned %d leads among %d candidates to team %s' % (len(assign_res['assigned']) + len(assign_res['merged']), len(leads), team.id))
                 _logger.info('\tLeads: direct assign %s / merge result %s / duplicates merged: %s' % (
                     assign_res['assigned'], assign_res['merged'], assign_res['duplicates']
                 ))
                 for key in ('assigned', 'merged', 'duplicates'):
+                    global_data[key].update(assign_res[key])
                     teams_data[team][key].update(assign_res[key])
+
+                # unlink duplicates once
+                self.env['crm.lead'].browse(assign_res['duplicates']).unlink()
 
                 # either no more lead matching domain, either asked capacity assigned
                 if len(leads) < lead_limit or (len(teams_data[team]['assigned']) + len(teams_data[team]['merged'])) >= teams_limit[team]:
@@ -469,19 +483,22 @@ class Team(models.Model):
             remaining_teams = self.env['crm.team'].browse(random.sample(remaining_team_ids, k=len(remaining_team_ids)))
 
         # some final log
-        _logger.info('## Assigned %s leads' % sum(len(team_data['assigned']) + len(team_data['merged']) for team_data in teams_data.values()))
+        _logger.info('## Assigned %s leads' % (len(global_data['assigned']) + len(global_data['merged'])))
 
         return teams_data
 
-    def _allocate_leads_deduplicate(self, leads):
+    def _allocate_leads_deduplicate(self, leads, duplicates_cache=None):
         """ Assign leads to sales team given by self by calling lead tool
         method _handle_salesmen_assignment. In this method we deduplicate leads
         allowing to reduce number of resulting leads before assigning them
         to salesmen.
 
         :param leads: recordset of leads to assign to current team;
+        :param duplicates_cache: if given, avoid to perform a duplicate search
+          and fetch information in it instead;
         """
         self.ensure_one()
+        duplicates_cache = duplicates_cache if duplicates_cache is not None else dict()
 
         # classify leads
         leads_assigned = self.env['crm.lead']  # direct team assign
@@ -489,7 +506,12 @@ class Team(models.Model):
         leads_dups_dict = dict()  # lead -> its duplicate
         for lead in leads:
             if lead.id not in leads_done_ids:
-                lead_duplicates = lead._get_lead_duplicates(email=lead.email_from)
+
+                # fill cache if not already done
+                if lead not in duplicates_cache:
+                    duplicates_cache[lead] = lead._get_lead_duplicates(email=lead.email_from)
+                lead_duplicates = duplicates_cache[lead]
+
                 if len(lead_duplicates) > 1:
                     leads_dups_dict[lead] = lead_duplicates
                     leads_done_ids.update((lead + lead_duplicates).ids)
@@ -497,12 +519,14 @@ class Team(models.Model):
                     leads_assigned += lead
                     leads_done_ids.add(lead.id)
 
-        duplicates_to_assign = self.env['crm.lead'].union(*leads_dups_dict.keys())
-        (leads_assigned | duplicates_to_assign)._handle_salesmen_assignment(user_ids=None, team_id=self.id)
+        # assign team to direct assign (leads_assigned) + dups keys (to ensure their team
+        # if they are elected master of merge process)
+        dups_to_assign = [lead for lead in leads_dups_dict]
+        leads_assigned.union(*dups_to_assign)._handle_salesmen_assignment(user_ids=None, team_id=self.id)
 
         for lead in leads.filtered(lambda lead: lead in leads_dups_dict):
             lead_duplicates = leads_dups_dict[lead]
-            merged = lead_duplicates._merge_opportunity(user_id=False, team_id=False, max_length=0)
+            merged = lead_duplicates._merge_opportunity(user_id=False, team_id=False, auto_unlink=False, max_length=0)
             leads_dup_ids.update((lead_duplicates - merged).ids)
             leads_merged_ids.add(merged.id)
 
