@@ -18,12 +18,12 @@ import logging
 from collections import defaultdict
 from collections.abc import Mapping
 from contextlib import contextmanager
+from contextvars import ContextVar
 from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
 
 from decorator import decorate
-from werkzeug.local import Local, release_local
 
 from .exceptions import CacheMiss
 from .tools import frozendict, classproperty, lazy_property, StackMap
@@ -470,31 +470,31 @@ class Environment(Mapping):
         names to new api models. It also holds a cache for records, and a data
         structure to manage recomputations.
     """
-    _local = Local()
+    _local = ContextVar("odoo.environments", default=())
 
     @classproperty
     def envs(cls):
-        return getattr(cls._local, 'environments', ())
+        return cls._local.get()
 
     @classmethod
     @contextmanager
     def manage(cls):
         """ Context manager for a set of environments. """
-        if hasattr(cls._local, 'environments'):
+        if cls._local.get():
             yield
         else:
             try:
-                cls._local.environments = Environments()
+                cls._local.set(Environments())
                 yield
             finally:
-                release_local(cls._local)
+                cls._local.set(())
 
     @classmethod
     def reset(cls):
         """ Clear the set of environments.
             This may be useful when recreating a registry inside a transaction.
         """
-        cls._local.environments = Environments()
+        cls._local.set(Environments())
 
     def __new__(cls, cr, uid, context, su=False):
         if uid == SUPERUSER_ID:
