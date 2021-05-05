@@ -36,6 +36,15 @@ class Interface(Thread, metaclass=InterfaceMetaClass):
     def update_iot_devices(self, devices={}):
         added = devices.keys() - self._detected_devices
         removed = self._detected_devices - devices.keys()
+        # keys() returns a dict_keys, and the values of that stay in sync with the
+        # original dictionary if it changes. This means that get_devices needs to return
+        # a newly created dictionary every time. If it doesn't do that and reuses the
+        # same dictionary, this logic won't detect any changes that are made. Could be
+        # avoided by converting the dict_keys into a regular dict. The current logic
+        # also can't detect if a device is replaced by a different one with the same
+        # key. Also, _detected_devices starts out as a class variable but gets turned
+        # into an instance variable here. It would be better if it was an instance
+        # variable from the start to avoid confusion.
         self._detected_devices = devices.keys()
 
         for identifier in removed:
