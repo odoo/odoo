@@ -9,116 +9,63 @@
             <field name="arch" type="xml">
                 <form string="Event Category">
                    <sheet>
-                        <div class="oe_title">
-                            <label for="name"/>
-                            <h1><field name="name" placeholder="e.g. Exhibition"/></h1>
+                        <div class="oe_title" name="event_type_title">
+                            <label for="name" string="Event Template"/>
+                            <h1><field name="name" placeholder="e.g. Online Conferences" class="mb-2"/></h1>
                         </div>
-                        <h2>Location</h2>
-                        <div class="row mt16 o_settings_container" name="event_type_location">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="use_timezone"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="use_timezone"/>
-                                    <div class="row">
-                                        <div class="col-lg-8 mt16" attrs="{'invisible': [('use_timezone', '=', False)]}">
-                                            <label for="default_timezone"/>
-                                            <field name="default_timezone"
-                                                attrs="{'required': [('use_timezone', '=', True)]}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2>Communication</h2>
-                        <div class="row mt16 o_settings_container" name="event_type_communication">
-                            <div class="col-12 col-lg-12 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="use_mail_schedule"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="use_mail_schedule"/>
-                                    <div class="row mt16" attrs="{'invisible': [('use_mail_schedule', '=', False)]}">
-                                        <div class="col-12">
-                                            <field name="event_type_mail_ids" style="width: 100%;">
-                                                <tree string="Communication" editable="bottom">
-                                                    <field name="notification_type" invisible="1"/>
-                                                    <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
-                                                    <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
-                                                    <field name="interval_unit"/>
-                                                    <field name="interval_type"/>
-                                                </tree>
-                                            </field>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2>Visibility</h2>
-                        <div class="row mt16 o_settings_container" name="event_type_visibility">
-                            <div class="col-12 col-lg-6 o_setting_box" name="event_type_visibility_seats">
-                                <div class="o_setting_left_pane">
-                                    <field name="has_seats_limitation"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="has_seats_limitation"/>
-                                    <div class="row">
-                                        <div class="col-lg-8 mt16" attrs="{'invisible': [('has_seats_limitation', '=', False)]}">
-                                            <div>
-                                                <label for="seats_max"/> <field name="seats_max"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" name="event_type_visibility_tags">
-                                <div class="o_setting_left_pane"/>
-                                <div class="o_setting_right_pane">
-                                    <label for="tag_ids" string="Tags"/>
-                                    <div class="row">
-                                        <div class="col-12 mt16">
-                                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2>Attendees</h2>
-                        <div class="row mt16 o_settings_container" name="event_type_attendees">
-                            <div class="col-12 o_setting_box" name="event_type_attendees_tickets">
-                                <div class="o_setting_left_pane">
-                                    <field name="use_ticket"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="use_ticket"/>
-                                    <div class="row mt16" attrs="{'invisible': [('use_ticket', '=', False)]}">
-                                        <div class="col">
-                                            <field name="event_type_ticket_ids"
-                                                class="w-100"
-                                                context="{
-                                                    'tree_view_ref': 'event.event_type_ticket_view_tree_from_type',
-                                                    'form_view_ref': 'event.event_type_ticket_view_form_from_type'
-                                                }"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box" name="event_type_attendees_auto_confirm">
-                                <div class="o_setting_left_pane">
-                                    <field name="auto_confirm"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="auto_confirm"/>
-                                    <div class="row">
-                                        <div class="col-lg-8 mt16 text-muted">
-                                            Events and registrations will automatically be confirmed
-                                            upon creation, easing the flow for simple events.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                       <group>
+                           <group>
+                               <div colspan="2" class="o_checkbox_optional_field">
+                                   <label for="default_timezone"/>
+                                   <field name="default_timezone" class="w-100"/>
+                               </div>
+                               <div colspan="2" class="o_checkbox_optional_field">
+                                   <label for="tag_ids"/>
+                                   <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
+                               </div>
+                           </group>
+                           <group>
+                               <div colspan="2" class="o_checkbox_optional_field">
+                                   <label for="has_seats_limitation" string="Limit Registrations"/>
+                                   <field name="has_seats_limitation"/>
+                                   <span attrs="{'invisible': [('has_seats_limitation', '=', False)], 'required': [('has_seats_limitation', '=', False)]}">
+                                       to <field name="seats_max" class="oe_inline"/>
+                                       Attendees
+                                   </span>
+                               </div>
+                               <div colspan="2" class="o_checkbox_optional_field">
+                                   <label for="auto_confirm" string="Autoconfirmation"/>
+                                   <field name="auto_confirm"/>
+                               </div>
+                           </group>
+                       </group>
+
+                       <notebook>
+                           <page string="Tickets">
+                               <field name="event_type_ticket_ids"
+                                      class="w-100"
+                                      context="{
+                                         'tree_view_ref': 'event.event_type_ticket_view_tree_from_type',
+                                         'form_view_ref': 'event.event_type_ticket_view_form_from_type'
+                                      }"
+                               />
+                           </page>
+                           <page string="Communication" name="event_type_communication">
+                               <field name="event_type_mail_ids" class="w-100">
+                                   <tree string="Communication" editable="bottom">
+                                       <field name="notification_type" invisible="1"/>
+                                       <field name="template_id" attrs="{'required': [('notification_type', '=', 'mail')]}"/>
+                                       <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
+                                       <field name="interval_unit"/>
+                                       <field name="interval_type"/>
+                                   </tree>
+                               </field>
+                           </page>
+                           <page string="Notes">
+                               <field name="note"/>
+                           </page>
+                       </notebook>
                     </sheet>
                 </form>
             </field>
