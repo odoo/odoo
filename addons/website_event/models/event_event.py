@@ -108,7 +108,7 @@ class Event(models.Model):
         """ Also ensure a value for website_menu as it is a trigger notably for
         track related menus. """
         for event in self:
-            if event.event_type_id and event.event_type_id != event._origin.event_type_id:
+            if event.event_type_id:
                 event.website_menu = event.event_type_id.website_menu
             elif not event.website_menu:
                 event.website_menu = False
@@ -120,16 +120,39 @@ class Event(models.Model):
         for event in self:
             event.community_menu = False
 
-    @api.depends("event_type_id", "website_menu")
+    @api.onchange('website_menu')
+    def _onchange_website_menu(self):
+        """use onchange to make sure that website_track has the correct value
+        when the user makes changes inside the form, what we want is that when
+        the user activates the website menu the website_track field to be set to
+        the value of the template, if the event is not linked
+        to a template, the value of website_track will be set to True.
+        When the menu is deactivated it should always be false"""
+        for event in self:
+            if event.website_menu and event.event_type_id:
+                event.menu_register_cta = event.event_type_id.menu_register_cta
+            else:
+                event.menu_register_cta = event.website_menu
+
+    @api.onchange('event_type_id')
+    def _onchange_event_type(self):
+        """use onchange to make sure that website_track has the same value
+        as in the event type when the user makes changes inside the form"""
+        for event in self:
+            if event.event_type_id:
+                event.menu_register_cta = event.event_type_id.menu_register_cta
+
+    @api.depends('event_type_id', 'website_menu')
     def _compute_menu_register_cta(self):
         """ At type onchange: synchronize. At website_menu update: synchronize. """
         for event in self:
-            if event.event_type_id and event.event_type_id != event._origin.event_type_id:
+            # If we activate website_menu and there is event_type, take event type value, unless exhibitor menu is already activated.
+            if event.event_type_id and (event.event_type_id != event._origin.event_type_id) or (
+                    event.website_menu and not event.menu_register_cta):
                 event.menu_register_cta = event.event_type_id.menu_register_cta
-            elif event.website_menu and (event.website_menu != event._origin.website_menu or not event.menu_register_cta):
-                event.menu_register_cta = True
-            elif not event.website_menu:
-                event.menu_register_cta = False
+            # If no event type, or if there is event type but exhibitor_menu is already set when setting website_menu, simply take same value as website_menu
+            else:
+                event.menu_register_cta = event.website_menu
 
     @api.depends('date_begin', 'date_end')
     def _compute_time_data(self):

@@ -15,9 +15,9 @@
                     <field name="sponsor_count" string="Sponsors" widget="statinfo"/>
                 </button>
             </field>
-            <xpath expr="//field[@name='website_menu']" position="after">
+            <xpath expr="//field[@name='website_track_proposal' or @name='website_menu'][last()]" position="after">
                 <label for="exhibitor_menu"/>
-                <field name="exhibitor_menu"/>
+                <field name="exhibitor_menu" attrs="{'readonly': [('website_menu', '=', False)]}"/>
             </xpath>
         </field>
     </record>

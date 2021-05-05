@@ -17,10 +17,10 @@
                 </button>
             </xpath>
             <xpath expr="//field[@name='website_menu']" position="after">
-                <label for="website_track" string="Showcase Tracks"/>
-                <field name="website_track"/>
+                <label for="website_track" string="Showcase Tracks" />
+                <field name="website_track" attrs="{'readonly': [('website_menu', '=', False)]}"/>
                 <label for="website_track_proposal" string="Allow Track Proposals"/>
-                <field name="website_track_proposal"/>
+                <field name="website_track_proposal" attrs="{'readonly': [('website_menu', '=', False)]}"/>
             </xpath>
         </field>
     </record>
