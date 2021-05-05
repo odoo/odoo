@@ -28,7 +28,7 @@ class AccountFiscalPosition(models.Model):
         default=lambda self: self.env.company)
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
-    note = fields.Text('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
+    note = fields.Html('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     company_country_id = fields.Many2one(string="Company Country", related='company_id.country_id')
