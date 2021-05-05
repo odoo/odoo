@@ -130,6 +130,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 this.env.pos = new models.PosModel(posModelDefaultAttributes);
                 await this.env.pos.ready;
                 this._buildChrome();
+                this._closeOtherTabs();
                 this.env.pos.set(
                     'selectedCategoryId',
                     this.env.pos.config.iface_start_categ_id
@@ -405,6 +406,32 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     e.preventDefault();
                 }
             });
+        }
+        _closeOtherTabs() {
+            localStorage['message'] = '';
+            localStorage['message'] = JSON.stringify({
+                message: 'close_tabs',
+                session: this.env.pos.pos_session.id,
+            });
+
+            window.addEventListener(
+                'storage',
+                (event) => {
+                    if (event.key === 'message' && event.newValue) {
+                        const msg = JSON.parse(event.newValue);
+                        if (
+                            msg.message === 'close_tabs' &&
+                            msg.session == this.env.pos.pos_session.id
+                        ) {
+                            console.info(
+                                'POS / Session opened in another window. EXITING POS'
+                            );
+                            this._closePos();
+                        }
+                    }
+                },
+                false
+            );
         }
     }
     Chrome.template = 'Chrome';

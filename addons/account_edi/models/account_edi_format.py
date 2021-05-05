@@ -98,6 +98,20 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         return False
 
+    def _get_embedding_to_invoice_pdf_values(self, invoice):
+        """ Get the values to embed to pdf.
+
+        :returns:   A dictionary {'name': name, 'datas': datas} or False if there are no values to embed.
+        * name:     The name of the file.
+        * datas:    The bytes ot the file.
+        """
+        self.ensure_one()
+        attachment = invoice._get_edi_attachment(self)
+        if not attachment or not self._is_embedding_to_invoice_pdf_needed():
+            return False
+        datas = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        return {'name': attachment.name, 'datas': datas}
+
     def _support_batching(self, move=None, state=None, company=None):
         """ Indicate if we can send multiple documents in the same time to the web services.
         If True, the _post_%s_edi methods will get multiple documents in the same time.
@@ -247,11 +261,10 @@ class AccountEdiFormat(models.Model):
         :returns: the same pdf_content with the EDI of the invoice embed in it.
         """
         attachments = []
-        for edi_format in self:
-            attachment = invoice._get_edi_attachment(edi_format)
-            if attachment and edi_format._is_embedding_to_invoice_pdf_needed():
-                datas = base64.b64decode(attachment.with_context(bin_size=False).datas)
-                attachments.append({'name': attachment.name, 'datas': datas})
+        for edi_format in self.filtered(lambda edi_format: edi_format._is_embedding_to_invoice_pdf_needed()):
+            attach = edi_format._get_embedding_to_invoice_pdf_values(invoice)
+            if attach:
+                attachments.append(attach)
 
         if attachments:
             # Add the attachments to the pdf file

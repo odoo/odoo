@@ -16,7 +16,7 @@ class AliasMixin(models.AbstractModel):
     _name = 'mail.alias.mixin'
     _inherits = {'mail.alias': 'alias_id'}
     _description = 'Email Aliases Mixin'
-    ALIAS_WRITEABLE_FIELDS = ['alias_name', 'alias_contact', 'alias_defaults']
+    ALIAS_WRITEABLE_FIELDS = ['alias_name', 'alias_contact', 'alias_defaults', 'alias_bounced_content']
 
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True)
 
