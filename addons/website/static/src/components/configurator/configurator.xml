@@ -165,12 +165,18 @@
                 <div class="page_feature_selection o_configurator_show">
                     <div class="w-100 page_feature_selection container d-flex flex-wrap py2 py-lg-3">
                         <t t-foreach="getters.getFeatures()" t-as="feature" t-key="feature_index">
+                            <t t-set='isInstalled' t-value="feature.module_state == 'installed'"/>
                             <div class="p-2 w-100 w-md-50 w-lg-25" t-if="feature.type != 'empty'">
-                                <div t-attf-class="card h-100 {{feature.selected ? 'border-success' : ''}}" t-on-click="dispatch('toggleFeature', feature.id)">
+                                <div t-attf-class="card h-100 {{isInstalled ? 'card_installed' : (feature.selected ? 'border-success' : '')}}" t-on-click="dispatch('toggleFeature', feature.id)">
                                     <div class="card-body py-2">
-                                        <i t-attf-class="o_configurator_feature_status fa {{feature.selected ? 'fa-check-circle text-success' : 'fa-circle-o text-300'}}" />
-                                        <h5 class="card-title d-flex align-items-center">
-                                            <i t-attf-class="mr-2 small fa {{feature.icon}} {{feature.type == 'page' ? 'text-info' : 'text-warning' }}"/>
+                                        <t t-if="isInstalled">
+                                            <i t-attf-class="o_configurator_feature_status fa fa-info-circle text-muted" title="Already installed"/>
+                                        </t>
+                                        <t t-else="">
+                                            <i t-attf-class="o_configurator_feature_status fa {{feature.selected ? 'fa-check-circle text-success' : 'fa-circle-o text-300'}}" />
+                                        </t>
+                                        <h5 t-attf-class="card-title d-flex align-items-center {{isInstalled ? 'text-muted' : ''}}">
+                                            <i t-attf-class="mr-2 small fa {{feature.icon}} {{isInstalled ? 'text-muted' : (feature.type == 'page' ? 'text-info' : 'text-warning')}}"/>
                                             <t t-esc="feature.name"/>
                                         </h5>
                                         <p class="card-text small text-muted" t-esc="feature.description"/>
