@@ -348,7 +348,7 @@ const getters = {
 
 const actions = {
     selectWebsiteType({state}, id) {
-        Object.values(state.features).forEach((feature) => {
+        Object.values(state.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
             feature.selected = feature.website_types_preselection.includes(WEBSITE_TYPES[id].name);
         });
         state.selectedType = id;
@@ -371,9 +371,8 @@ const actions = {
     },
     toggleFeature({state}, featureId) {
         const feature = state.features[featureId];
-        const websiteType = WEBSITE_TYPES[state.selectedType];
-        const forceFeatureActive = websiteType && feature.website_types_preselection.includes(websiteType.name);
-        feature.selected = !feature.selected || forceFeatureActive;
+        const isModuleInstalled = feature.module_state === 'installed';
+        feature.selected = !feature.selected || isModuleInstalled;
     },
     setRecommendedPalette({state}, color1, color2) {
         if (color1 && color2) {
@@ -409,7 +408,7 @@ async function getInitialState() {
         logo: results.logo ? 'data:image/png;base64,' + results.logo : false,
     };
     results.features.forEach(feature => {
-        r.features[feature.id] = Object.assign({}, feature, {selected: false});
+        r.features[feature.id] = Object.assign({}, feature, {selected: feature.module_state === 'installed'});
         const wtp = r.features[feature.id].website_types_preselection;
         r.features[feature.id].website_types_preselection = wtp ? wtp.split(',') : [];
     });
