@@ -34,8 +34,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysBase):
             leave_form.request_unit_half = True
             leave_form.request_date_from_period = 'am'
 
-            self.assertEqual(leave_form.number_of_days_display, 0)
-            self.assertEqual(leave_form.number_of_hours_display, 0)
+            self.assertEqual(leave_form.number_of_days_display, 0.5)
+            self.assertEqual(leave_form.number_of_hours_display, 4.0)
 
     def test_single_attendance_on_morning_and_afternoon(self):
         calendar = self.env['resource.calendar'].create({
@@ -144,13 +144,13 @@ class TestAutomaticLeaveDates(TestHrHolidaysBase):
             # Ask for morning
             leave_form.request_date_from_period = 'am'
 
-            self.assertEqual(leave_form.number_of_days_display, 1)
+            self.assertEqual(leave_form.number_of_days_display, 0.5)
             self.assertEqual(leave_form.number_of_hours_display, 8)
 
             # Ask for afternoon
             leave_form.request_date_from_period = 'pm'
 
-            self.assertEqual(leave_form.number_of_days_display, 1)
+            self.assertEqual(leave_form.number_of_days_display, 0.5)
             self.assertEqual(leave_form.number_of_hours_display, 8)
 
     def test_attendance_next_day(self):
@@ -177,8 +177,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysBase):
             leave_form.request_date_from_period = 'am'
 
 
-            self.assertEqual(leave_form.number_of_days_display, 0)
-            self.assertEqual(leave_form.number_of_hours_display, 0)
+            self.assertEqual(leave_form.number_of_days_display, 0.5)
+            self.assertEqual(leave_form.number_of_hours_display, 4.0)
             self.assertEqual(leave_form.date_from, datetime(2019, 9, 2, 6, 0, 0))
             self.assertEqual(leave_form.date_to, datetime(2019, 9, 2, 10, 0, 0))
 
@@ -206,7 +206,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysBase):
             leave_form.request_date_from_period = 'am'
 
 
-            self.assertEqual(leave_form.number_of_days_display, 0)
-            self.assertEqual(leave_form.number_of_hours_display, 0)
+            self.assertEqual(leave_form.number_of_days_display, 0.5)
+            self.assertEqual(leave_form.number_of_hours_display, 4.0)
             self.assertEqual(leave_form.date_from, datetime(2019, 9, 3, 6, 0, 0))
             self.assertEqual(leave_form.date_to, datetime(2019, 9, 3, 10, 0, 0))
