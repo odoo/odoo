@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import fields, models, tools, api
 
 
 class ReportStockQuantity(models.Model):
@@ -10,7 +10,7 @@ class ReportStockQuantity(models.Model):
     _description = 'Stock Quantity Report'
 
     date = fields.Date(string='Date', readonly=True)
-    product_tmpl_id = fields.Many2one('product.template', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id')
     product_id = fields.Many2one('product.product', string='Product', readonly=True)
     state = fields.Selection([
         ('forecast', 'Forecasted Stock'),
@@ -29,7 +29,6 @@ CREATE or REPLACE VIEW report_stock_quantity AS (
 SELECT
     MIN(id) as id,
     product_id,
-    product_tmpl_id,
     state,
     date,
     sum(product_qty) as product_qty,
@@ -38,7 +37,6 @@ SELECT
 FROM (SELECT
         m.id,
         m.product_id,
-        pt.id as product_tmpl_id,
         CASE
             WHEN (whs.id IS NOT NULL AND whd.id IS NULL) OR ls.usage = 'transit' THEN 'out'
             WHEN (whs.id IS NULL AND whd.id IS NOT NULL) OR ld.usage = 'transit' THEN 'in'
@@ -71,7 +69,6 @@ FROM (SELECT
     SELECT
         -q.id as id,
         q.product_id,
-        pp.product_tmpl_id,
         'forecast' as state,
         date.*::date,
         q.quantity as product_qty,
@@ -83,7 +80,6 @@ FROM (SELECT
         stock_quant q
     LEFT JOIN stock_location l on (l.id=q.location_id)
     LEFT JOIN stock_warehouse wh ON l.parent_path like concat('%/', wh.view_location_id, '/%')
-    LEFT JOIN product_product pp on pp.id=q.product_id
     WHERE
         (l.usage = 'internal' AND wh.id IS NOT NULL) OR
         l.usage = 'transit'
@@ -91,7 +87,6 @@ FROM (SELECT
     SELECT
         m.id,
         m.product_id,
-        pt.id as product_tmpl_id,
         'forecast' as state,
         GENERATE_SERIES(
         CASE
@@ -126,8 +121,18 @@ FROM (SELECT
         product_qty != 0 AND
         (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
         (whs.id IS NULL or whd.id IS NULL OR whs.id != whd.id) AND
-        m.state NOT IN ('cancel', 'draft')) as forecast_qty
-GROUP BY product_id, product_tmpl_id, state, date, company_id, warehouse_id
+        m.state NOT IN ('cancel', 'draft')) AS forecast_qty
+GROUP BY product_id, state, date, company_id, warehouse_id
 );
 """
         self.env.cr.execute(query)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        for i in range(len(domain)):
+            if domain[i][0] == 'product_tmpl_id' and domain[i][1] in ('=', 'in'):
+                tmpl = self.env['product.template'].browse(domain[i][2])
+                # Avoid the subquery done for the related, the postgresql will plan better with the SQL view
+                # and then improve a lot the performance for the forecasted report of the product template.
+                domain[i] = ('product_id', 'in', tmpl.with_context(active_test=False).product_variant_ids.ids)
+        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
