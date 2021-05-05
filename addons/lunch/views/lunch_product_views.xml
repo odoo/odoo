@@ -84,9 +84,10 @@
                         </group>
                         <group>
                             <field name="new_until"/>
-                            <field name='description'/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
+                        <label for="description"/>
+                        <field name='description'/>
                     </group>
                 </sheet>
             </form>
@@ -148,7 +149,7 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <ul>
-                                        <li t-esc="record.description.value" class="text-muted"/>
+                                        <li t-raw="record.description.raw_value" class="text-muted"/>
                                     </ul>
                                 </div>
                             </div>
@@ -192,7 +193,7 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <ul>
-                                        <li t-esc="record.description.value" class="text-muted"/>
+                                        <li t-raw="record.description.raw_value" class="text-muted"/>
                                     </ul>
                                 </div>
                             </div>
