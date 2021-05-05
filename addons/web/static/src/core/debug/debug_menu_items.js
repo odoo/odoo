@@ -4,6 +4,10 @@ import { browser } from "../browser/browser";
 import { routeToUrl } from "../browser/router_service";
 import { registry } from "../registry";
 
+// @legacy
+import dialogs from "web.view_dialogs";
+import { ComponentAdapter } from "web.OwlCompatibility";
+
 // Backend Debug Manager Items
 function runJSTestsItem({ env }) {
     const runTestsURL = browser.location.origin + "/web/tests?mod=*";
@@ -31,15 +35,41 @@ function runJSTestsMobileItem({ env }) {
     };
 }
 
-function openViewItem({ env }) {
+export function openViewItem({ env }) {
+    async function onSelected(records) {
+        const views = await env.services.orm.searchRead(
+            "ir.ui.view",
+            [["id", "=", records[0].id]],
+            ["name", "model", "type"],
+            { limit: 1 }
+        );
+        const view = views[0];
+        view.type = view.type === "tree" ? "list" : view.type; // ignore tree view
+        env.services.action.doAction({
+            type: "ir.actions.act_window",
+            name: view.name,
+            res_model: view.model,
+            views: [[view.id, view.type]],
+        });
+    }
+
     return {
         type: "item",
         description: env._t("Open View"),
         callback: () => {
-            console.log("Open View");
-            // select_view
-            // disable_multiple_selection don't work
-            // Need to add SelectCreateDialog and SelectCreateListController
+            const adapterParent = new ComponentAdapter(null, { Component: owl.Component });
+            const selectCreateDialog = new dialogs.SelectCreateDialog(adapterParent, {
+                res_model: "ir.ui.view",
+                title: env._t("Select a view"),
+                disable_multiple_selection: true,
+                domain: [
+                    ["type", "!=", "qweb"],
+                    ["type", "!=", "search"],
+                ],
+                on_selected: onSelected,
+            });
+
+            selectCreateDialog.open();
         },
         sequence: 40,
     };

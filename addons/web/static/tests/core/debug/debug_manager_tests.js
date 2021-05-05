@@ -10,9 +10,11 @@ import { uiService } from "@web/core/ui_service";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
 import { registerCleanup } from "../../helpers/cleanup";
-import { makeTestEnv } from "../../helpers/mock_env";
+import { makeTestEnv, prepareRegistriesWithCleanup } from "../../helpers/mock_env";
 import { makeFakeLocalizationService } from "../../helpers/mock_services";
-import { click, getFixture, patchWithCleanup } from "../../helpers/utils";
+import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import { createWebClient, getActionManagerServerData } from "../../webclient/helpers";
+import { openViewItem } from "@web/core/debug/debug_menu_items";
 
 const { Component, hooks, mount, tags } = owl;
 const { useSubEnv } = hooks;
@@ -241,5 +243,59 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.strictEqual(item.textContent, "Regenerate Assets Bundles");
         await click(item);
         assert.verifySteps(["ir.attachment/search", "ir.attachment/unlink", "reloadPage"]);
+    });
+
+    QUnit.test("can open a view", async (assert) => {
+        assert.expect(3);
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        prepareRegistriesWithCleanup();
+
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("debug").add("openViewItem", openViewItem);
+        registry.category("services").add("debug", debugService);
+
+        const serverData = getActionManagerServerData();
+        Object.assign(serverData.models, {
+            "ir.ui.view": {
+                fields: {
+                    model: { type: "char" },
+                    name: { type: "char" },
+                    type: { type: "char" },
+                },
+                records: [
+                    {
+                        id: 1,
+                        name: "formView",
+                        model: "partner",
+                        type: "form",
+                    },
+                ],
+            },
+        });
+
+        Object.assign(serverData.views, {
+            "ir.ui.view,false,list": `<list><field name="name"/><field name="type"/></list>`,
+            "ir.ui.view,false,search": `<search/>`,
+            "partner,1,form": `<form><div class="some_view"/></form>`,
+        });
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await click(webClient.el.querySelector(".o_debug_manager button"));
+        await click(webClient.el.querySelector(".o_debug_manager .o_dropdown_item"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".modal .o_list_view");
+
+        await click(webClient.el.querySelector(".modal .o_list_view .o_data_row"));
+        await legacyExtraNextTick();
+        assert.containsNone(webClient, ".modal");
+        assert.containsOnce(webClient, ".some_view");
     });
 });
