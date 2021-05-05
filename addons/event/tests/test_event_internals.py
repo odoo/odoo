@@ -81,12 +81,6 @@ class TestEventData(TestEventCommon):
         # ------------------------------------------------------------
 
         event_type = self.env['event.type'].browse(self.event_type_complex.id)
-        event_type.write({
-            'use_mail_schedule': False,
-            'use_ticket': False,
-        })
-        self.assertEqual(event_type.event_type_mail_ids, self.env['event.type.mail'])
-        self.assertEqual(event_type.event_type_ticket_ids, self.env['event.type.ticket'])
 
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
@@ -108,11 +102,9 @@ class TestEventData(TestEventCommon):
 
         # change template to a one with mails -> fill event as it is void
         event_type.write({
-            'use_mail_schedule': True,
             'event_type_mail_ids': [(5, 0), (0, 0, {
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
                 'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})],
-            'use_ticket': True,
             'event_type_ticket_ids': [(5, 0), (0, 0, {'name': 'TestRegistration'})],
         })
         event.write({'event_type_id': event_type.id})
@@ -155,7 +147,6 @@ class TestEventData(TestEventCommon):
         # setup test records
         event_type_default = self.env['event.type'].create({
             'name': 'Type Default',
-            'use_mail_schedule': False,
             'auto_confirm': True
         })
         event_type_mails = self.env['event.type'].create({
@@ -163,7 +154,6 @@ class TestEventData(TestEventCommon):
             'auto_confirm': False
         })
         event_type_mails.write({
-            'use_mail_schedule': True,
             'event_type_mail_ids': [
                 Command.clear(),
                 Command.create({
@@ -228,6 +218,28 @@ class TestEventData(TestEventCommon):
         )
 
     @users('user_eventmanager')
+    def test_event_configuration_note_from_type(self):
+        event_type = self.env['event.type'].browse(self.event_type_complex.id)
+
+        event = self.env['event.event'].create({
+            'name': 'Event Update Type Note',
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+        })
+
+        # verify that note is not propagated if the event type contains blank html
+        event.write({'note': '<p>Event Note</p>'})
+        event_type.write({'note': '<p><br></p>'})
+        event.write({'event_type_id': event_type.id})
+        self.assertEqual(event.note, '<p>Event Note</p>')
+
+        # verify that note is correctly propagated if it contains non empty html
+        event.write({'event_type_id': False})
+        event_type.write({'note': '<p>Event Type Note</p>'})
+        event.write({'event_type_id': event_type.id})
+        self.assertEqual(event.note, '<p>Event Type Note</p>')
+
+    @users('user_eventmanager')
     def test_event_configuration_tickets_from_type(self):
         """ Test data computation (related to tickets) of event coming from its event.type template.
         This test uses pretty low level Form data checks, as manipulations in a non-saved Form are
@@ -238,7 +250,6 @@ class TestEventData(TestEventCommon):
         # setup test records
         event_type_default = self.env['event.type'].create({
             'name': 'Type Default',
-            'use_ticket': False,
             'auto_confirm': True
         })
         event_type_tickets = self.env['event.type'].create({
@@ -246,7 +257,6 @@ class TestEventData(TestEventCommon):
             'auto_confirm': False
         })
         event_type_tickets.write({
-            'use_ticket': True,
             'event_type_ticket_ids': [
                 Command.clear(),
                 Command.create({
@@ -614,17 +624,11 @@ class TestEventTypeData(TestEventCommon):
             'name': 'Testing fields computation',
             'has_seats_limitation': True,
             'seats_max': 30,
-            'use_ticket': True,
         })
         self.assertTrue(event_type.has_seats_limitation)
         self.assertEqual(event_type.seats_max, 30)
-        self.assertEqual(event_type.event_type_ticket_ids.mapped('name'), ['Registration'])
 
         # reset seats limitation
         event_type.write({'has_seats_limitation': False})
         self.assertFalse(event_type.has_seats_limitation)
         self.assertEqual(event_type.seats_max, 0)
-
-        # reset tickets
-        event_type.write({'use_ticket': False})
-        self.assertEqual(event_type.event_type_ticket_ids, self.env['event.type.ticket'])

@@ -92,7 +92,6 @@ class TestEventSecurity(TestEventCommon):
         with self.assertRaises(AccessError):
             self.env['event.type'].create({
                 'name': 'ManagerEventType',
-                'use_mail_schedule': True,
                 'event_type_mail_ids': [(5, 0), (0, 0, {
                     'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
                     'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
@@ -104,7 +103,6 @@ class TestEventSecurity(TestEventCommon):
         # Event Type
         event_type = self.env['event.type'].create({
             'name': 'ManagerEventType',
-            'use_mail_schedule': True,
             'event_type_mail_ids': [(5, 0), (0, 0, {
                 'interval_nbr': 1, 'interval_unit': 'days', 'interval_type': 'before_event',
                 'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')})]
