@@ -5,8 +5,8 @@
         <field name="model">event.type</field>
         <field name="inherit_id" ref="website_event.event_type_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='community-menu']" position="attributes">
-                <attribute name="attrs">{'invisible': [('website_menu', '=', False)]}</attribute>
+            <xpath expr="//span[@name='community_menu']" position="attributes">
+                <attribute name="invisible">0</attribute>
             </xpath>
         </field>
     </record>

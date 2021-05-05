@@ -7,7 +7,6 @@ from odoo import api, fields, models
 class EventType(models.Model):
     _inherit = 'event.type'
 
-    use_questions = fields.Boolean('Questions to Attendees')
     question_ids = fields.One2many(
         'event.question', 'event_type_id',
         string='Questions', copy=True)
@@ -53,7 +52,7 @@ class EventEvent(models.Model):
                 command = [(3, question.id) for question in questions_toremove]
             else:
                 command = [(5, 0)]
-            if event.event_type_id.use_mail_schedule:
+            if event.event_type_id.event_type_mail_ids:
                 command += [
                     (0, 0, {
                         'title': question.title,

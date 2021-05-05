@@ -69,16 +69,13 @@ class TestEventCommon(common.TransactionCase):
             'auto_confirm': True,
             'has_seats_limitation': True,
             'seats_max': 30,
-            'use_timezone': True,
             'default_timezone': 'Europe/Paris',
-            'use_ticket': True,
             'event_type_ticket_ids': [(0, 0, {
                     'name': 'First Ticket',
                 }), (0, 0, {
                     'name': 'Second Ticket',
                 })
             ],
-            'use_mail_schedule': True,
             'event_type_mail_ids': [
                 (0, 0, {  # right at subscription
                     'interval_unit': 'now',
