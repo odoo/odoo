@@ -19,8 +19,12 @@
                         <span t-field="o.number"/>
                     </h2>
 
+                    <div t-if="o.name and len(o.name) &gt;= 50" name="description">
+                        <strong>Description:</strong>
+                        <p class="m-0" t-field="o.name"/>
+                    </div>
                     <div id="informations" class="row mt32 mb32">
-                        <div class="col-auto mw-100 mb-2" t-if="o.name" name="description">
+                        <div class="col-auto mw-100 mb-2" t-if="o.name and len(o.name) &lt; 50" name="description">
                             <strong>Description:</strong>
                             <p class="m-0" t-field="o.name"/>
                         </div>
