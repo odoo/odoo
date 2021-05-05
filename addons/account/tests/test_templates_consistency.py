@@ -6,24 +6,30 @@ class AccountingTestTemplConsistency(TransactionCase):
     '''Test the templates consistency between some objects like account.account when account.account.template.
     '''
 
-    def check_fields_consistency(self, model_from, model_to, exceptions=[]):
+    def get_model_fields(self, model, extra_domain=None):
+        # Retrieve fields to compare
+        domain = [
+            ('model', '=', model),
+            ('state', '=', 'base'),
+            ('related', '=', False),
+            ('compute', '=', False),
+            ('store', '=', True),
+        ]
+        if extra_domain:
+            domain += extra_domain
+        return self.env['ir.model.fields'].search(domain)
+
+    def check_fields_consistency(self, model_from, model_to, exceptions=None):
         '''Check the consistency of fields from one model to another by comparing if all fields
         in the model_from are present in the model_to.
         :param model_from: The model to compare.
         :param model_to: The compared model.
         :param exceptions: Not copied model's fields.
         '''
+        extra_domain = [('name', 'not in', exceptions)] if exceptions else []
+        from_fields = self.get_model_fields(model_from, extra_domain=extra_domain).filtered_domain([('modules', '=', 'account')])
 
-        def get_fields(model, extra_domain=None):
-            # Retrieve fields to compare
-            domain = [('model', '=', model), ('state', '=', 'base'), ('related', '=', False),
-                      ('compute', '=', False), ('store', '=', True)]
-            if extra_domain:
-                domain += extra_domain
-            return self.env['ir.model.fields'].search(domain)
-
-        from_fields = get_fields(model_from, extra_domain=[('name', 'not in', exceptions)])
-        to_fields_set = set([f.name for f in get_fields(model_to)])
+        to_fields_set = set([f.name for f in self.get_model_fields(model_to)])
         for field in from_fields:
             assert field.name in to_fields_set,\
                 'Missing field "%s" from "%s" in model "%s".' % (field.name, model_from, model_to)
@@ -61,7 +67,13 @@ class AccountingTestTemplConsistency(TransactionCase):
         '''Test fields consistency for ('account.reconcile.model', 'account.reconcile.model.template')
         '''
         self.check_fields_consistency('account.reconcile.model.template', 'account.reconcile.model', exceptions=['chart_template_id'])
-        self.check_fields_consistency('account.reconcile.model', 'account.reconcile.model.template', exceptions=['active', 'company_id', 'past_months_limit', 'partner_mapping_line_ids'])
+        # exclude fields from inherited 'mail.thread'
+        mail_thread_fields = [field.name for field in self.get_model_fields('mail.thread')]
+        self.check_fields_consistency(
+            'account.reconcile.model',
+            'account.reconcile.model.template',
+            exceptions=mail_thread_fields + ['active', 'company_id', 'past_months_limit', 'partner_mapping_line_ids'],
+        )
         # lines
         self.check_fields_consistency('account.reconcile.model.line.template', 'account.reconcile.model.line', exceptions=['chart_template_id'])
         self.check_fields_consistency('account.reconcile.model.line', 'account.reconcile.model.line.template', exceptions=['company_id', 'journal_id', 'analytic_account_id', 'analytic_tag_ids', 'amount'])
