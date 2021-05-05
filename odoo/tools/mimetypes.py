@@ -108,6 +108,8 @@ def _check_svg(data):
     """This simply checks the existence of the opening and ending SVG tags"""
     if b'<svg' in data and b'/svg>' in data:
         return 'image/svg+xml'
+    else:
+        return 'application/xml'
 
 
 # for "master" formats with many subformats, discriminants is a list of
