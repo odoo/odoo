@@ -18,19 +18,19 @@
                             <field name="name"/>
                             <field name="partner_id"
                                 domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
-                                attrs="{'readonly': [('parent_state', '=', 'posted')]}"/>
+                                readonly="1"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Information" name="information">
                                 <group>
                                     <group string="Amount">
-                                        <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                                        <field name="debit" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                                        <field name="credit" attrs="{'readonly':[('parent_state','=','posted')]}"/>
-                                        <field name="quantity" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                        <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" readonly="1"/>
+                                        <field name="debit" readonly="1"/>
+                                        <field name="credit" readonly="1"/>
+                                        <field name="quantity" readonly="1"/>
                                     </group>
                                     <group string="Accounting Documents">
-                                        <field name="move_id" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                        <field name="move_id" readonly="1"/>
                                         <field name="statement_id" readonly="True" attrs="{'invisible': [('statement_id','=',False)]}"/>
                                     </group>
                                     <group string="Dates">
@@ -41,7 +41,7 @@
                                     <group string="Taxes" attrs="{'invisible': [('tax_line_id','=',False), ('tax_ids','=',[])]}">
                                         <field name="tax_line_id" readonly="1" attrs="{'invisible': [('tax_line_id','=',False)]}"/>
                                         <field name="tax_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('tax_ids','=',[])]}"/>
-                                        <field name="tax_exigible" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                        <field name="tax_exigible" readonly="1"/>
                                         <field name="tax_audit"/>
                                     </group>
                                     <group string="Matching" attrs="{'invisible':[('matched_debit_ids', '=', []),('matched_credit_ids', '=', [])]}">
@@ -63,7 +63,7 @@
                                         <field name="amount_currency"/>
                                     </group>
                                     <group string="Product" attrs="{'invisible': [('product_id', '=', False)]}">
-                                        <field name="product_id"/>
+                                        <field name="product_id" readonly="1"/>
                                     </group>
                                     <group string="States">
                                         <field name="blocked"/>
@@ -71,7 +71,7 @@
                                     <group string="Analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"
                                             domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
-                                            attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                            readonly="1"/>
                                         <field name="analytic_tag_ids" groups="analytic.group_analytic_tags"
                                             widget="many2many_tags"/>
                                     </group>
@@ -895,7 +895,7 @@
                                             </group>
                                             <group>
                                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
-                                                <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" attrs="{'readonly':[('parent_state','=','posted')]}"/>
+                                                <field name="account_id" options="{'no_create': True}" domain="[('company_id', '=', company_id)]" readonly="1"/>
                                                 <field name="tax_ids" widget="many2many_tags"/>
                                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                             </group>
