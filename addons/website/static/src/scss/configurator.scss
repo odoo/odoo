@@ -229,6 +229,11 @@
         &.o_feature_selection_screen {
             .card {
                 cursor: pointer;
+
+                &.card_installed {
+                    cursor: default;
+                    opacity: 0.75;
+                }
             }
             .o_configurator_feature_status {
                 @include o-position-absolute($card-spacer-y * 0.5 , $card-spacer-x * 0.5);
