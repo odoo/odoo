@@ -481,6 +481,8 @@ class HolidaysRequest(models.Model):
         """ Returns a float equals to the timedelta between two dates given as string."""
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
+            if self.request_unit_half:
+                return 0.5
             return employee.get_work_days_data(date_from, date_to)['days']
 
         today_hours = self.env.user.company_id.resource_calendar_id.get_work_hours_count(
@@ -488,7 +490,9 @@ class HolidaysRequest(models.Model):
             datetime.combine(date_from.date(), time.max),
             False)
 
-        return self.env.user.company_id.resource_calendar_id.get_work_hours_count(date_from, date_to) / (today_hours or HOURS_PER_DAY)
+        hours = self.env.user.company_id.resource_calendar_id.get_work_hours_count(date_from, date_to) / (today_hours or HOURS_PER_DAY)
+        days = hours / (today_hours or HOURS_PER_DAY) if not self.request_unit_half else 0.5
+        return days
 
     ####################################################
     # ORM Overrides methods
