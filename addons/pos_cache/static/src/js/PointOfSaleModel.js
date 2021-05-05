@@ -46,7 +46,7 @@ odoo.define('pos_cache.PointOfSaleModel', function (require) {
             );
         },
         async _getTotalProductsCount() {
-            return await this._rpc({
+            return await this.uirpc({
                 model: 'pos.session',
                 method: 'get_total_products_count',
                 args: [[odoo.pos_session_id]],
@@ -54,7 +54,7 @@ odoo.define('pos_cache.PointOfSaleModel', function (require) {
             });
         },
         async actionLoadProducts(start, end) {
-            const products = await this._rpc({
+            const products = await this.uirpc({
                 model: 'pos.session',
                 method: 'get_cached_products',
                 args: [[odoo.pos_session_id], start, end],

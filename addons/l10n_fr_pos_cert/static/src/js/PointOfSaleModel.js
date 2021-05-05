@@ -11,7 +11,7 @@ odoo.define('l10n_fr_pos_cert.PointOfSaleModel', function (require) {
         async _postPushOrder(order) {
             await this._super(...arguments);
             if (this.isFrenchCountry()) {
-                const result = await this._rpc({
+                const result = await this.uirpc({
                     model: 'pos.order',
                     method: 'search_read',
                     domain: [['id', '=', order._extras.server_id]],

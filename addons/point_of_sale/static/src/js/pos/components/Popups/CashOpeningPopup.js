@@ -22,7 +22,7 @@ class CashOpeningPopup extends owl.Component {
     async startSession() {
         this.env.model.backStatement.balance_start = parse.float(this.state.buffer);
         this.env.model.session.state = 'opened';
-        await this.rpc({
+        await this.uirpc({
             model: 'pos.session',
             method: 'set_cashbox_pos',
             args: [this.env.model.session.id, parse.float(this.state.buffer), this.state.notes],

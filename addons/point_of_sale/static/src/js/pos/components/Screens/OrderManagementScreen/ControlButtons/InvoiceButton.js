@@ -81,7 +81,7 @@ class InvoiceButton extends PosComponent {
             const [confirmedTempScreen, newClientId] = await this.showTempScreen('ClientListScreen');
             if (!confirmedTempScreen) return;
 
-            await this.rpc({
+            await this.uirpc({
                 model: 'pos.order',
                 method: 'write',
                 args: [[order.id], { partner_id: newClientId }],
@@ -90,7 +90,7 @@ class InvoiceButton extends PosComponent {
         }
 
         // Part 2: Invoice the order.
-        await this.rpc(
+        await this.uirpc(
             {
                 model: 'pos.order',
                 method: 'action_pos_order_invoice',

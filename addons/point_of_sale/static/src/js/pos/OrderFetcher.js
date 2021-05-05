@@ -138,7 +138,7 @@ class OrderFetcher {
     }
     async _getOrderIdsForCurrentPage(limit, offset) {
         const config_id = this.model.config.id;
-        return await this.model._rpc({
+        return await this.model.uirpc({
             model: 'pos.order',
             method: 'search_paid_order_ids',
             kwargs: { config_id, domain: this.searchDomain ? this.searchDomain : [], limit, offset },
@@ -146,7 +146,7 @@ class OrderFetcher {
         });
     }
     async _fetchOrders(ids) {
-        return await this.model._rpc({
+        return await this.model.uirpc({
             model: 'pos.order',
             method: 'export_for_ui',
             args: [ids],

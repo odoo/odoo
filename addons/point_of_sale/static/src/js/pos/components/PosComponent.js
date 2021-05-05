@@ -8,8 +8,11 @@ class PosComponent extends Component {
             this.trigger('show-temp-screen', { name, props, resolve });
         });
     }
-    async rpc() {
-        return await this.env.model._rpc(...arguments);
+    /**
+     * @see PointOfSaleModel.uirpc
+     */
+    uirpc() {
+        return this.env.model.uirpc(...arguments);
     }
 }
 

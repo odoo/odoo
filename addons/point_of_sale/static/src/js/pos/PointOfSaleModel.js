@@ -275,7 +275,7 @@ class PointOfSaleModel extends EventBus {
      * Fetches the data needed from the backend then process the loaded data.
      */
     async _fetchAndProcessPosData() {
-        const [records, sortedIds, fields] = await this._rpc({
+        const [records, sortedIds, fields] = await this.rpc({
             model: 'pos.session',
             method: 'load_pos_data',
             args: [[odoo.pos_session_id]],
@@ -1381,7 +1381,7 @@ class PointOfSaleModel extends EventBus {
                 name: client ? client.name : email,
             };
             const order_server_id = order._extras.server_id;
-            await this._rpc({
+            await this.uirpc({
                 model: 'pos.order',
                 method: 'action_receipt_to_customer',
                 args: [[order_server_id], orderName, orderClient, ticketImage],
@@ -1503,7 +1503,7 @@ class PointOfSaleModel extends EventBus {
         const orderData = orders.map((order) => {
             return { id: order.id, data: this.getOrderJSON(order) };
         });
-        const result = await this._rpc(
+        const result = await this.uirpc(
             {
                 model: 'pos.order',
                 method: 'create_from_ui',
@@ -1641,10 +1641,22 @@ class PointOfSaleModel extends EventBus {
             order._extras.activeOrderlineId = line.id;
         }
     }
-    async _rpc() {
+    /**
+     * Normal call to the rpc method available in the env.services.
+     */
+    rpc() {
+        return env.services.rpc(...arguments);
+    }
+    /**
+     * Wrapped call of the rpc method with a side-effect of updating the ui.
+     * When the rpc started, the wifi icon at the top right of the screen is changed
+     * to a spinner. After the rpc resolved, the icon returned to green icon. However,
+     * if there is an error, the icon becomes red.
+     */
+    async uirpc() {
         try {
             this.ui && this.ui.setSyncStatus('connecting');
-            const result = await env.services.rpc(...arguments);
+            const result = await this.rpc(...arguments);
             this.ui && this.ui.setSyncStatus('connected');
             return result;
         } catch (error) {
@@ -2233,7 +2245,7 @@ class PointOfSaleModel extends EventBus {
         const domain = [['write_date', '>', this.getLatestWriteDate('res.partner')]];
         const fieldNames = Object.keys(this.getModelFields('res.partner'));
         try {
-            const newPartners = await this._rpc(
+            const newPartners = await this.uirpc(
                 {
                     model: 'res.partner',
                     method: 'search_read',
@@ -2608,7 +2620,7 @@ class PointOfSaleModel extends EventBus {
         return report;
     }
     async actionPrintSalesDetails() {
-        const saleDetails = await this._rpc({
+        const saleDetails = await this.uirpc({
             model: 'report.point_of_sale.report_saledetails',
             method: 'get_sale_details',
             args: [false, false, false, [this.session.id]],
@@ -2644,10 +2656,10 @@ class PointOfSaleModel extends EventBus {
             cancelText: _t('No'),
         });
         if (confirmed) {
-            await this._rpc({
+            await this.uirpc({
                 route: '/pos/load_onboarding_data',
             });
-            const { products, categories } = await this._rpc({
+            const { products, categories } = await this.uirpc({
                 model: 'pos.session',
                 method: 'get_onboarding_data',
                 args: [],
@@ -3304,6 +3316,7 @@ class PointOfSaleModel extends EventBus {
     }
     /**
      * Returns the data needed to render the receipt based on the given order.
+     * @alias getReceiptInfo
      * @param {'pos.order'} order
      */
     getOrderInfo(order) {

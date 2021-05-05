@@ -203,7 +203,7 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
                     bookedCouponIds.delete(coupon_id);
                 }
                 const unusedCouponIds = [...bookedCouponIds.values()];
-                order._extras.generatedCoupons = await this._rpc(
+                order._extras.generatedCoupons = await this.uirpc(
                     {
                         model: 'pos.order',
                         method: 'validate_coupon_programs',
@@ -400,14 +400,12 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
 
             // Check max number usage
             if (program.maximum_use_number !== 0) {
-                const [result] = await rpc
-                    .query({
-                        model: 'coupon.program',
-                        method: 'read',
-                        args: [program.id, ['total_order_count']],
-                        kwargs: { context: session.user_context },
-                    })
-                    .catch(() => Promise.resolve([false])); // may happen because offline
+                const [result] = await this.uirpc({
+                    model: 'coupon.program',
+                    method: 'read',
+                    args: [program.id, ['total_order_count']],
+                    kwargs: { context: session.user_context },
+                }).catch(() => Promise.resolve([false])); // may happen because offline
                 if (!result) {
                     return {
                         successful: false,
@@ -894,7 +892,7 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
             return this.getOrderlines(order).filter((line) => line.is_program_reward);
         },
         async _resetCoupons(couponIds) {
-            await this._rpc(
+            await this.uirpc(
                 {
                     model: 'coupon.coupon',
                     method: 'write',
@@ -939,7 +937,7 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
                 const programIdsWithScannedCoupon = Object.values(bookedCouponCodes).map(
                     (couponCode) => couponCode.program_id
                 );
-                const { successful, payload } = await this._rpc({
+                const { successful, payload } = await this.uirpc({
                     model: 'pos.config',
                     method: 'use_coupon_code',
                     args: [

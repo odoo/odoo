@@ -20,7 +20,7 @@ odoo.define('pos_hr.PointOfSaleModel', function (require) {
                 // Force-disable `module_pos_hr` if no employees are loaded.
                 this.config.module_pos_hr = false;
             }
-            const hashedEmployeeData = await this._rpc({
+            const hashedEmployeeData = await this.rpc({
                 model: 'hr.employee',
                 method: 'get_barcodes_and_pin_hashed',
                 args: [employees.map((employee) => employee.id)],

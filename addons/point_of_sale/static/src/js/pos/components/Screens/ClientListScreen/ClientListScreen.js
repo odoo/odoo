@@ -123,7 +123,7 @@ class ClientListScreen extends PosComponent {
         }
         processedChanges.id = this.state.selectedClientId || false;
         try {
-            let partnerId = await this.rpc({
+            let partnerId = await this.uirpc({
                 model: 'res.partner',
                 method: 'create_from_ui',
                 args: [processedChanges],

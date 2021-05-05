@@ -595,7 +595,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
         async saveTableToServer(table) {
             if (!table) return;
             try {
-                const tableId = await this._rpc({
+                const tableId = await this.uirpc({
                     model: 'restaurant.table',
                     method: 'create_from_ui',
                     args: [table],
@@ -676,7 +676,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
         async actionUpdateFloor(floor, vals) {
             this.updateRecord('restaurant.floor', floor.id, vals);
             try {
-                await this._rpc({
+                await this.uirpc({
                     model: 'restaurant.floor',
                     method: 'write',
                     args: [[floor.id], vals],
@@ -693,7 +693,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
         },
         async actionUpdateTableOrderCounts() {
             try {
-                const result = await this._rpc({
+                const result = await this.uirpc({
                     model: 'pos.config',
                     method: 'get_tables_order_count',
                     args: [this.config.id],
@@ -767,7 +767,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
         async removeDeletedOrders() {
             const orderIds = this._getOrderIdsToRemove();
             if (!orderIds.length) return;
-            const deletedOrderIds = await this._rpc({
+            const deletedOrderIds = await this.uirpc({
                 model: 'pos.order',
                 method: 'remove_from_ui',
                 args: [orderIds],
@@ -794,7 +794,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
          * @param {'restaurant.table'} table
          */
         async _fetchTableOrdersFromServer(table) {
-            const data = await this._rpc({
+            const data = await this.uirpc({
                 model: 'pos.order',
                 method: 'get_table_draft_orders',
                 args: [table.id],
@@ -861,7 +861,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
         async actionValidateTip(order, amount, nextScreen) {
             const serverId = order._extras.server_id;
             if (this.monetaryEQ(amount, 0)) {
-                await this._rpc({
+                await this.uirpc({
                     method: 'set_no_tip',
                     model: 'pos.order',
                     args: [serverId],
@@ -890,7 +890,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
             }
 
             if (tipLine) {
-                await this._rpc({
+                await this.uirpc({
                     method: 'set_tip',
                     model: 'pos.order',
                     args: [serverId, this.getOrderlineJSON(tipLine)],
@@ -933,14 +933,14 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
                 }
 
                 if (this.monetaryEQ(amount, 0)) {
-                    await this._rpc({
+                    await this.uirpc({
                         method: 'set_no_tip',
                         model: 'pos.order',
                         args: [order._extras.server_id],
                     });
                 } else {
                     const tipLine = await this._setTip(order, amount);
-                    await this._rpc({
+                    await this.uirpc({
                         method: 'set_tip',
                         model: 'pos.order',
                         args: [order._extras.server_id, this.getOrderlineJSON(tipLine)],

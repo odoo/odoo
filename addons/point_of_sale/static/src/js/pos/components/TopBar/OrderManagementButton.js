@@ -8,7 +8,7 @@ class OrderManagementButton extends PosComponent {
         try {
             if (this.env.model.getActiveScreen() !== 'OrderManagementScreen') {
                 // ping the server, if no error, show the screen
-                await this.rpc({
+                await this.uirpc({
                     model: 'pos.order',
                     method: 'browse',
                     args: [[]],
