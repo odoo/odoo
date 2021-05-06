@@ -313,7 +313,12 @@ class TestCompanyLeave(TransactionCase):
         })
         company_leave._compute_date_from_to()
 
+<<<<<<< HEAD
         with self.assertQueryCount(__system__=739, admin=865):
+=======
+        count = 735
+        with self.assertQueryCount(__system__=count, admin=count):
+>>>>>>> 4a92c2164b7... temp
             # Original query count: 1987
             # Without tracking/activity context keys: 5154
             company_leave.action_validate()

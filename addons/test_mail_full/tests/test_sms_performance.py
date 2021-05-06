@@ -51,7 +51,11 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
     def test_message_sms_record_1_partner(self):
         record = self.test_record.with_user(self.env.user)
         pids = self.customer.ids
+<<<<<<< HEAD
         with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=23):  # test_mail_enterprise: 18
+=======
+        with self.mockSMSGateway(sms_allow_unlink=True), self.assertQueryCount(employee=23):  # test_mail_enterprise only: 18
+>>>>>>> 4a92c2164b7... temp
             messages = record._message_sms(
                 body='Performance Test',
                 partner_ids=pids,
