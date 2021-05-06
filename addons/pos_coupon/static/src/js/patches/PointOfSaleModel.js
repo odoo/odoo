@@ -586,12 +586,12 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
             const nonZeroQtyOrderlines = this._getRegularOrderlines(order).filter((line) => !this.floatEQ(line.qty, 0));
             for (const line of nonZeroQtyOrderlines) {
                 if (this.isDiscountSpecificProductOnProgram(program.id, line.product_id)) {
-                    const { priceWithoutTax } = this.getOrderlinePrices(line);
+                    const { discountedBasePrice } = this.getOrderlinePrices(line);
                     const key = this._getGroupKey(line);
                     if (!(key in amountsToDiscount)) {
-                        amountsToDiscount[key] = priceWithoutTax;
+                        amountsToDiscount[key] = discountedBasePrice;
                     } else {
-                        amountsToDiscount[key] += priceWithoutTax;
+                        amountsToDiscount[key] += discountedBasePrice;
                     }
                     productIdsToAccount.add(line.product_id);
                 }
@@ -614,11 +614,11 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
             if (nonZeroQtyOrderlines.length > 0) {
                 const [cheapestLine, cheapestUnitPrice] = nonZeroQtyOrderlines.reduce(
                     ([line, unitPrice], otherLine) => {
-                        const otherLineUnitPrice = this.getOrderlineUnitPrice(otherLine);
-                        if (unitPrice < otherLineUnitPrice) {
+                        const discountedUnitPrice = this.getOrderlineUnitPrice(otherLine) * (1.0 - otherLine.discount / 100.0);
+                        if (unitPrice < discountedUnitPrice) {
                             return [line, unitPrice];
                         } else {
-                            return [otherLine, otherLineUnitPrice];
+                            return [otherLine, discountedUnitPrice];
                         }
                     },
                     [nonZeroQtyOrderlines[0], this.getOrderlineUnitPrice(nonZeroQtyOrderlines[0])]
@@ -644,12 +644,12 @@ odoo.define('pos_coupon.PointOfSaleModel', function (require) {
             const amountsToDiscount = {};
             const nonZeroQtyOrderlines = this._getRegularOrderlines(order).filter((line) => !this.floatEQ(line.qty, 0));
             for (const line of nonZeroQtyOrderlines) {
-                const { priceWithoutTax } = this.getOrderlinePrices(line);
+                const { discountedBasePrice } = this.getOrderlinePrices(line);
                 const key = this._getGroupKey(line);
                 if (!(key in amountsToDiscount)) {
-                    amountsToDiscount[key] = priceWithoutTax;
+                    amountsToDiscount[key] = discountedBasePrice;
                 } else {
-                    amountsToDiscount[key] += priceWithoutTax;
+                    amountsToDiscount[key] += discountedBasePrice;
                 }
                 productIdsToAccount.add(line.product_id);
             }

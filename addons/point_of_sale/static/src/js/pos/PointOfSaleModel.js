@@ -3036,6 +3036,8 @@ class PointOfSaleModel extends EventBus {
      * Returns all the prices for the given orderline.
      * @param {'pos.order.line'} orderline
      * @return {{
+     *  basePrice: number,
+     *  discountedBasePrice: number,
      *  priceWithTax: number,
      *  priceWithoutTax: number,
      *  noDiscountPriceWithTax: number,
@@ -3067,6 +3069,8 @@ class PointOfSaleModel extends EventBus {
         }
 
         return {
+            basePrice: unitPrice * orderline.qty,
+            discountedBasePrice: discountedUnitPrice * orderline.qty,
             priceWithTax: allTaxes.total_included,
             priceWithoutTax: allTaxes.total_excluded,
             noDiscountPriceWithTax: allTaxesBeforeDiscount.total_included,
