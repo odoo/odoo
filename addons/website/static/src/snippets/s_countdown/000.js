@@ -44,6 +44,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         this._initTimeDiff();
 
         this._render();
+
         this.setInterval = setInterval(this._render.bind(this), 1000);
         return this._super(...arguments);
     },

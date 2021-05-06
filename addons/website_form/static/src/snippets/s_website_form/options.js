@@ -15,12 +15,10 @@ const FormEditor = options.Class.extend({
         '/google_recaptcha/static/src/xml/recaptcha.xml',
     ],
 
-
     onBuilt: function() {
-        const targetNodes = this.$target.get().filter(node => node.matches('div.s_preview'));
-        for (const node of targetNodes) {
-            node.remove();
-        }
+        this.$target.get()
+            .filter(node => node.matches('div.s_preview'))
+            .forEach(node => node.remove());
     },
 
     //----------------------------------------------------------------------
