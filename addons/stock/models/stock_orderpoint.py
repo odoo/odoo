@@ -331,7 +331,7 @@ class StockWarehouseOrderpoint(models.Model):
             product = self.env['product.product'].browse(product).with_prefetch(all_product_ids)
             warehouse = self.env['stock.warehouse'].browse(warehouse).with_prefetch(all_warehouse_ids)
             rules = product._get_rules_from_location(warehouse.lot_stock_id)
-            lead_days = rules._get_lead_days(product)[0]
+            lead_days = rules.with_context(bypass_delay_description=True)._get_lead_days(product)[0]
             pwh_per_day[(lead_days, warehouse)].append(product.id)
         for (days, warehouse), p_ids in pwh_per_day.items():
             products = self.env['product.product'].browse(p_ids)
