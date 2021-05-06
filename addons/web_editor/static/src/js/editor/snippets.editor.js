@@ -399,9 +399,10 @@ var SnippetEditor = Widget.extend({
      * Removes the associated snippet from the DOM and destroys the associated
      * editor (itself).
      *
+     * @param {boolean} [shouldRecordUndo=true]
      * @returns {Promise}
      */
-    removeSnippet: async function () {
+    removeSnippet: async function (shouldRecordUndo = true) {
         this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         this.toggleOverlay(false);
         this.toggleOptions(false);
@@ -478,7 +479,9 @@ var SnippetEditor = Widget.extend({
         // according to it. While waiting for a better way to handle that this
         // window trigger will handle most cases.
         $(window).trigger('resize');
-        this.options.wysiwyg.odooEditor.historyStep();
+        if (shouldRecordUndo) {
+            this.options.wysiwyg.odooEditor.historyStep();
+        }
     },
     /**
      * Displays/Hides the editor overlay.
@@ -575,11 +578,11 @@ var SnippetEditor = Widget.extend({
 
         var $clone = this.$target.clone(false);
 
-        if (recordUndo) {
-            this.trigger_up('request_history_undo_record', {$target: this.$target});
-        }
-
         this.$target.after($clone);
+
+        if (recordUndo) {
+            this.options.wysiwyg.odooEditor.historyStep();
+        }
         await new Promise(resolve => {
             this.trigger_up('call_for_each_child_snippet', {
                 $snippet: $clone,
@@ -596,7 +599,6 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('snippet_cloned', {$target: $clone, $origin: this.$target});
 
         $clone.trigger('content_changed');
-        this.options.wysiwyg.odooEditor.historyStep();
     },
 
     //--------------------------------------------------------------------------
@@ -864,8 +866,6 @@ var SnippetEditor = Widget.extend({
         $clone.remove();
 
         if (this.dropped) {
-            this.trigger_up('request_history_undo_record', {$target: this.$target});
-
             if (prev) {
                 this.$target.insertAfter(prev);
             } else if (next) {
@@ -968,7 +968,6 @@ var SnippetEditor = Widget.extend({
     _onRemoveClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
         this.removeSnippet();
     },
     /**
@@ -2824,7 +2823,7 @@ var SnippetsMenu = Widget.extend({
     _onRemoveSnippet: async function (ev) {
         ev.stopPropagation();
         const editor = await this._createSnippetEditor(ev.data.$snippet);
-        await editor.removeSnippet();
+        await editor.removeSnippet(ev.data.shouldRecordUndo);
         if (ev.data.onSuccess) {
             ev.data.onSuccess();
         }
