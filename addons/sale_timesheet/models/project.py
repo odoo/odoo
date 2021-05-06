@@ -195,7 +195,7 @@ class ProjectTask(models.Model):
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     timesheet_product_id = fields.Many2one(related="project_id.timesheet_product_id")
-    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so')
+    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
 
     @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
