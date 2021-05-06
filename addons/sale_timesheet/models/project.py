@@ -232,7 +232,7 @@ class ProjectTask(models.Model):
 
     # TODO: [XBO] remove me in master
     non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheets linked to this task will not be billed.")
-    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so')
+    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
 
     @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
