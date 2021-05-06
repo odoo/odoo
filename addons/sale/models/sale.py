@@ -138,6 +138,8 @@ class SaleOrder(models.Model):
             """, (list(value),))
             so_ids = self.env.cr.fetchone()[0] or []
             return [('id', 'in', so_ids)]
+        if operator == '=' and not value:
+            return [('order_line.invoice_lines', '=', False)]
         return ['&', ('order_line.invoice_lines.move_id.type', 'in', ('out_invoice', 'out_refund')), ('order_line.invoice_lines.move_id', operator, value)]
 
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
