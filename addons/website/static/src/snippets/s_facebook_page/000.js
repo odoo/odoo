@@ -37,11 +37,6 @@ const FacebookPageWidget = publicWidget.Widget.extend({
             allowTransparency: 'true',
         });
         this.$el.append(this.$iframe);
-        // this.$el.get()
-        //     // jquery does not know .querySelector, so we get a list of matched nodes from jquery using get()
-        //     .reduce((nodelist, node) => ([...nodelist, ...node.querySelectorAll('img.s_preview:not(:only-child)')]), [])
-        //     // now that we have a plain array of nodes found in every node matched by jquery, we delete any preview image
-        //     .forEach(previewNode => previewNode.parentNode.removeChild(previewNode));
 
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         return def;
