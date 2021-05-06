@@ -1713,37 +1713,17 @@ options.registry.ConnectorChoice = options.Class.extend({
         const $left_lines = $row.children().find('.s_process_step_line_left');
         switch (widgetValue) {
                 case 'None': {
-                    //document.write(Object.keys(rows));
-                    //debugger;
                     $right_lines.css('border-top-style', 'none');
                     $left_lines.css('border-top-style', 'none');
                     break;
                     //document.write(widgetValue);
                     //rows.childNode;
-                    /**
-                    for (var i=0; i<rows.children().length; i++) {
-                        rows[i].find('.s_process_step_line').css('border-top-style', 'none');
-                        document.write(Object.keys(rows[0]));
-                    }
-                    **/
-                    /**
-                    var child;
-                    for (child in rows.children()) {
-                        rows[child].children().first().children().first().css('border-top-style', 'none');
-                    }
-                    **/
                 }
                 case 'Line': {
                     $right_lines.css('border-top-style', 'solid');
                     $left_lines.css('border-top-style', 'solid');
                     break;
                     //document.write(widgetValue);
-                    /**
-                    var child;
-                    for (child in rows.children()) {
-                        child.$('.s_process_step_line').css('border-top-style', 'solid');
-                    }
-                    **/
                 }
                 case 'Straight arrow': {
                     $right_lines.css('border-top-style', 'dotted');
@@ -1764,12 +1744,6 @@ options.registry.ConnectorChoice = options.Class.extend({
                     $right_lines.css('border-top-style', 'solid');
                     $left_lines.css('border-top-style', 'solid');
                     break;
-                    /**
-                    var child;
-                    for (child in rows.children()) {
-                        child.$('.s_process_step_line').css('border-top-style', 'solid');
-                    }
-                    **/
                 }
             }
         /**
