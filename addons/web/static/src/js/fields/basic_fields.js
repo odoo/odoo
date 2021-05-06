@@ -1255,7 +1255,26 @@ var FieldFloatTime = FieldFloat.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.formatType = 'float_time';
-    }
+    },
+    /**
+     * Ensure the widget is re-rendered after being edited s.t. the value is
+     * directly formatted (without waiting for the record to be saved, as we do
+     * by default).
+     *
+     * See InputField@reset: we skip the call to _render if this widget initiated
+     * the change.
+     *
+     * Note: the default behavior could be changed s.t. all fields are formatted
+     * directly on blur.
+     *
+     * @override
+     */
+    async reset() {
+        await this._super(...arguments);
+        if (!this.isDirty) {
+            await this._render();
+        }
+    },
 });
 
 var FieldFloatFactor = FieldFloat.extend({
