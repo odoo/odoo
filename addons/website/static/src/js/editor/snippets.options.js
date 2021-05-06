@@ -1654,7 +1654,7 @@ options.registry.layout_column = options.Class.extend({
             var self = this;
             for (const el of $row.children().slice(count)) {
                 await new Promise(resolve => {
-                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve});
+                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve, shouldRecordUndo: false});
                 });
             }
         }
