@@ -301,8 +301,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self._create_test_records()
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
-        # TODO FIXME non deterministic, last check 25 Mar 2020. Runbot at most +7 compared to local.
-        with self.assertQueryCount(__system__=12, emp=14):
+        with self.assertQueryCount(__system__=11, emp=13):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -623,7 +622,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=109, emp=110):
+        with self.assertQueryCount(__system__=108, emp=109):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,
