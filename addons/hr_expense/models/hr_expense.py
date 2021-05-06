@@ -123,12 +123,12 @@ class HrExpense(models.Model):
     @api.depends("company_currency_id")
     def _compute_label_total_amount_company(self):
         for expense in self:
-            expense.label_total_amount_company = _("Total %s", expense.company_currency_id.name)
+            expense.label_total_amount_company = _("Total %s", expense.company_currency_id.name) if expense.company_currency_id else _("Total")
 
     @api.depends('currency_id', 'company_currency_id')
     def _compute_same_currency(self):
         for expense in self:
-            expense.same_currency = bool(expense.currency_id and expense.currency_id == expense.company_currency_id)
+            expense.same_currency = bool(not expense.company_id or (expense.currency_id and expense.currency_id == expense.company_currency_id))
 
     @api.depends('product_id')
     def _compute_product_has_cost(self):
