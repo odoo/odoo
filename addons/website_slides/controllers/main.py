@@ -1083,7 +1083,7 @@ class WebsiteSlides(WebsiteProfile):
 
             if not slide.video_source_type:
                 slide.unlink()
-                return {'error': _('Please enter valid YouTube or Google Drive Link')}
+                return {'error': _('Please enter valid YouTube, Vimeo or Google Drive Link')}
 
             if slide.video_source_type == 'youtube':
                 identical_video = existing_videos.filtered(
@@ -1091,6 +1091,9 @@ class WebsiteSlides(WebsiteProfile):
             elif slide.video_source_type == 'google_drive':
                 identical_video = existing_videos.filtered(
                     lambda existing_video: slide.google_drive_id == existing_video.google_drive_id)
+            elif slide.video_source_type == 'vimeo':
+                identical_video = existing_videos.filtered(
+                    lambda existing_video: slide.vimeo_id == existing_video.vimeo_id)
             if identical_video:
                 identical_video_name = identical_video[0].name
                 return {'error': _('This video already exists in this channel on the following content: %s', identical_video_name)}

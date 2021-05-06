@@ -239,7 +239,7 @@
                     <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
                         <div class="form-group">
                             <label for="video_url" class="col-form-label">Video Link</label>
-                            <input id="video_url" name="video_url" class="form-control" placeholder="Youtube or Google Drive Link" required="required"/>
+                            <input id="video_url" name="video_url" class="form-control" placeholder="Youtube, Vimeo or Google Drive Link" required="required"/>
                         </div>
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
@@ -252,6 +252,20 @@
                                 <div>First, upload your videos on YouTube and mark them as <strong>unlisted</strong>. This way, they will be secured.</div>
                                 <div>What does <strong>unlisted</strong> means? The YouTube "unlisted" means it is a video which can be viewed only by the users with the link to it. Your video will never come up in the search results nor on your channel.</div>
                                 <div><a href="https://support.google.com/youtube/answer/157177" target="_blank" >Change video privacy settings</a></div>
+                                <br/>
+                                <div class="h6">On Vimeo</div>
+                                <div>
+                                    <span>First, upload your videos on Vimeo and mark them as <strong>Private</strong>. This way, they will be secured.</span><br/>
+                                    <span>What does <strong>Private</strong> mean? The Vimeo "Private" privacy setting means it is a video which can be viewed only by the users with the link to it.
+                                    Your video will never come up in the search results nor on your channel.</span><br/>
+                                    <span><a href="https://vimeo.zendesk.com/hc/en-us/articles/224819527-Changing-the-privacy-settings-of-your-videos" target="_blank" >Change video privacy settings</a></span><br/><br/>
+                                    <span>The video link to input here can be obtained by using the 'share' button in the Vimeo interface.</span><br/>
+                                    <span>It should look similar to</span>
+                                    <span class="font-italic">https://vimeo.com/558907333/30da9ff3d8</span>
+                                    <span>for 'Private' videos and similar to</span>
+                                    <span class="font-italic">https://vimeo.com/558907555</span>
+                                    <span>for public ones.</span>
+                                </div>
                                 <br/>
                                 <div class="h6">On Google Drive</div>
                                 <div>
