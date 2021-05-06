@@ -189,13 +189,11 @@ class FetchmailServer(models.Model):
             _logger.info('The xml file is badly formatted: %s', att_name)
             return invoices
 
-        # Create the invoice
         invoices = self.env.ref('l10n_it_edi.edi_fatturaPA')._create_invoice_from_xml_tree(att_name, tree)
         if not invoices:
             _logger.info('E-invoice not found in file: %s', att_name)
             return invoices
-
-        invoices.l10n_it_send_state = 'new'
+        invoices.l10n_it_send_state = "new"
         invoices.invoice_source_email = from_address
         for invoice in invoices:
             invoice.with_context(no_new_invoice=True, default_res_id=invoice.id) \
@@ -409,8 +407,10 @@ class FetchmailServer(models.Model):
 class IrMailServer(models.Model):
     _name = "ir.mail_server"
     _inherit = "ir.mail_server"
+
     def _get_test_email_addresses(self):
         self.ensure_one()
+
         company = self.env["res.company"].search([("l10n_it_mail_pec_server_id", "=", self.id)], limit=1)
         if not company:
             # it's not a PEC server
