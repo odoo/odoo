@@ -36,6 +36,7 @@ class PointOfSaleUI extends PosComponent {
         this.posDialogRef = owl.hooks.useRef('pos-dialog-ref');
         this.toastNotificationRef = owl.hooks.useRef('toast-notification-ref');
         this.notificationSoundRef = owl.hooks.useRef('notification-sound-ref');
+        owl.hooks.useExternalListener(window, 'storage', this._closeOtherTabs);
         useListener('toggle-debug-widget', () => {
             this.state.debugWidgetIsShown = !this.state.debugWidgetIsShown;
         });
@@ -107,6 +108,13 @@ class PointOfSaleUI extends PosComponent {
     async _loadPos() {
         try {
             await this.env.model.loadPosData();
+            // Trigger storage event to close pos from other open tabs.
+            // See _closeOtherTabs.
+            localStorage['message'] = '';
+            localStorage['message'] = JSON.stringify({
+                message: 'close_tabs',
+                session: this.env.model.session.id,
+            });
         } catch (error) {
             console.error(error);
             let title = this.env._t('Unknown Error');
@@ -179,6 +187,15 @@ class PointOfSaleUI extends PosComponent {
                 e.preventDefault();
             }
         });
+    }
+    _closeOtherTabs(event) {
+        if (event.key === 'message' && event.newValue) {
+            const msg = JSON.parse(event.newValue);
+            if (msg.message === 'close_tabs' && msg.session == this.env.model.session.id) {
+                console.info('POS / Session opened in another window. EXITING POS');
+                this.env.model.actionHandler({ name: 'actionClosePos' });
+            }
+        }
     }
 
     //#endregion
