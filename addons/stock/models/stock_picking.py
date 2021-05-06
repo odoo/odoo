@@ -729,6 +729,7 @@ class Picking(models.Model):
                     #'qty_done': ops.qty_done})
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now()})
+        self.filtered(lambda pick: pick.state == 'done').activity_unlink(['mail.mail_activity_data_warning'])
         self._send_confirmation_email()
         return True
 
