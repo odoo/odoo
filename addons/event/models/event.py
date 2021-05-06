@@ -6,6 +6,7 @@ import pytz
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools.misc import format_date
 from odoo.tools.translate import html_translate
 
 from dateutil.relativedelta import relativedelta
@@ -313,9 +314,9 @@ class EventEvent(models.Model):
         for event in self:
             date_begin = fields.Datetime.from_string(event.date_begin)
             date_end = fields.Datetime.from_string(event.date_end)
-            dates = [fields.Date.to_string(fields.Datetime.context_timestamp(event, dt)) for dt in [date_begin, date_end] if dt]
+            dates = (fields.Datetime.context_timestamp(event, dt).date() for dt in [date_begin, date_end] if dt)
             dates = sorted(set(dates))
-            result.append((event.id, '%s (%s)' % (event.name, ' - '.join(dates))))
+            result.append((event.id, '%s (%s)' % (event.name, ' - '.join(format_date(self.env, date) for date in dates))))
         return result
 
     @api.model
