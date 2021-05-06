@@ -77,8 +77,17 @@ class MailTestFull(models.Model):
     datetime = fields.Datetime(default=fields.Datetime.now)
     mail_template = fields.Many2one('mail.template', 'Template')
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
+    type = fields.Char()
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
     umbrella_id = fields.Many2one('mail.test', tracking=True)
+
+    @api.model
+    def create(self, vals):
+        # Emulate an addon that alters the creation context, such as `crm`
+        context = dict(self._context or {})
+        if vals.get('type'):
+            context.setdefault('default_type', vals['type'])
+        return super(MailTestFull, self.with_context(context)).create(vals)
 
     def _track_template(self, changes):
         res = super(MailTestFull, self)._track_template(changes)
