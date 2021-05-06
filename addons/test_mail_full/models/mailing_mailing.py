@@ -15,7 +15,8 @@ class Mailing(models.Model):
         """Returns a set of emails opted-out in target model"""
         self.ensure_one()
         if self.mailing_model_real in ('mail.test.sms.bl.optout',
-                                       'mail.test.sms.partner'):
+                                       'mail.test.sms.partner',
+                                       'mail.test.sms.partner.2many'):
             res_ids = self._get_recipients()
             opt_out_contacts = set(self.env[self.mailing_model_real].search([
                 ('id', 'in', res_ids),
