@@ -304,6 +304,8 @@ class StockWarehouseOrderpoint(models.Model):
         to_remove.unlink()
         orderpoints = orderpoints - to_remove
         to_refill = defaultdict(float)
+        all_product_ids = []
+        all_warehouse_ids = []
         qty_by_product_warehouse = self.env['report.stock.quantity'].read_group(
             [('date', '=', fields.date.today()), ('state', '=', 'forecast')],
             ['product_id', 'product_qty', 'warehouse_id'],
@@ -312,6 +314,8 @@ class StockWarehouseOrderpoint(models.Model):
             warehouse_id = group.get('warehouse_id') and group['warehouse_id'][0]
             if group['product_qty'] >= 0.0 or not warehouse_id:
                 continue
+            all_product_ids.append(group['product_id'][0])
+            all_warehouse_ids.append(warehouse_id)
             to_refill[(group['product_id'][0], warehouse_id)] = group['product_qty']
         if not to_refill:
             return action
@@ -324,8 +328,8 @@ class StockWarehouseOrderpoint(models.Model):
         # in batch
         pwh_per_day = defaultdict(list)
         for (product, warehouse), quantity in to_refill.items():
-            product = self.env['product.product'].browse(product)
-            warehouse = self.env['stock.warehouse'].browse(warehouse)
+            product = self.env['product.product'].browse(product).with_prefetch(all_product_ids)
+            warehouse = self.env['stock.warehouse'].browse(warehouse).with_prefetch(all_warehouse_ids)
             rules = product._get_rules_from_location(warehouse.lot_stock_id)
             lead_days = rules._get_lead_days(product)[0]
             pwh_per_day[(lead_days, warehouse)].append(product.id)
