@@ -3235,6 +3235,66 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field suports ISO 8601', function (assert) {
+        assert.expect(5);
+
+        var originalLocale = moment.locale();
+        var originalParameters = _.clone(core._t.database.parameters);
+
+        _.extend(core._t.database.parameters, { week_start: 1, date_format: '%m/%d/%Y' });
+        var dow = 1 % 7;
+        moment.defineLocale('norvegianForTest2', {
+            monthsShort: 'jan._feb._mars_april_mai_juni_juli_aug._sep._okt._nov._des.'.split('_'),
+            monthsParseExact: true,
+            dayOfMonthOrdinalParse: /\d{1,2}\./,
+            ordinal: '%d.',
+            week: {
+                dow: dow,
+                doy: 7 + dow - 4 // Note: ISO 8601 week date: https://momentjscom.readthedocs.io/en/latest/moment/07-customization/16-dow-doy/
+            },
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="foo"/><field name="date"/></form>',
+        });
+
+        form.$('input[name="date"]').val('01/01/2017')
+            .trigger('input').trigger('change').trigger('focusout');
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 1,
+            "datepicker should be opened");
+
+        var week52 = $('.bootstrap-datetimepicker-widget .cw:contains(52) ~ [data-day="01/01/2017"]');
+        assert.ok(week52, 1, "1st january should lie in last week of previous year");
+
+        form.$('input[name="date"]').val('01/01/2018')
+            .trigger('input').trigger('change').trigger('focusout');
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+        var week1 = $('.bootstrap-datetimepicker-widget .cw:contains(1) ~ [data-day="01/01/2018"]');
+        assert.ok(week1, 1, "1st january should lie in first week of current year");
+
+        form.$('input[name="date"]').val('01/01/2016')
+            .trigger('input').trigger('change').trigger('focusout');
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+        var week53 = $('.bootstrap-datetimepicker-widget .cw:contains(53) ~ [data-day="01/01/2016"]');
+        assert.ok(week53, 1, "1st january should lie in week 53 of previous year");
+
+        form.$('input[name="date"]').val('01/01/2022')
+            .trigger('input').trigger('change').trigger('focusout');
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+        week52 = $('.bootstrap-datetimepicker-widget .cw:contains(52) ~ [data-day="01/01/2022"]');
+        assert.ok(week52, 1, "1st january should lie in week 52 of previous year");
+
+        moment.locale(originalLocale);
+        moment.updateLocale('norvegianForTest2', null);
+        core._t.database.parameters = originalParameters;
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', function (assert) {
