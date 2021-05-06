@@ -63,6 +63,14 @@
     }
 }
 
+.question, .forum_answer {
+    .oe_no_empty::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
+
 img.o_forum_avatar {
     max-height: 40px;
     margin-right: 10px;
