@@ -5,7 +5,7 @@ from odoo.addons.crm.tests import common as crm_common
 from odoo.tests.common import tagged, users
 
 
-@tagged('lead_manage')
+@tagged('lead_manage', 'crm_performance')
 class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
 
     @classmethod
@@ -24,8 +24,13 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env['crm.lead'].browse(test_leads.ids)
 
+<<<<<<< HEAD
         with self.assertQueryCount(user_sales_manager=255):  # crm only: 252
             test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=False)
+=======
+        with self.assertQueryCount(user_sales_manager=251):
+            test_leads.handle_salesmen_assignment(user_ids=user_ids, team_id=False)
+>>>>>>> e2929d9640d... temp
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert | self.sales_team_1)
         self.assertEqual(test_leads[0::3].user_id, self.user_sales_manager)
@@ -42,8 +47,13 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env['crm.lead'].browse(test_leads.ids)
 
+<<<<<<< HEAD
         with self.assertQueryCount(user_sales_manager=223):  # crm only: 218
             test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
+=======
+        with self.assertQueryCount(user_sales_manager=218):  # still some randomness (217 spotted) - crm only: 215
+            test_leads.handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
+>>>>>>> e2929d9640d... temp
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert)
         self.assertEqual(test_leads[0::3].user_id, self.user_sales_manager)
@@ -166,7 +176,11 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         test_leads = self._create_leads_batch(count=50, user_ids=[False])
         user_ids = self.assign_users.ids
 
+<<<<<<< HEAD
         with self.assertQueryCount(user_sales_manager=1367):  # crm only: 1357
+=======
+        with self.assertQueryCount(user_sales_manager=1361):  # still some randomness (1360 spotted) - crm only: 1352
+>>>>>>> e2929d9640d... temp
             mass_convert = self.env['crm.lead2opportunity.partner.mass'].with_context({
                 'active_model': 'crm.lead',
                 'active_ids': test_leads.ids,
