@@ -100,8 +100,8 @@ class Repair(models.Model):
     fees_lines = fields.One2many(
         'repair.fee', 'repair_id', 'Operations',
         copy=True, readonly=False)
-    internal_notes = fields.Text('Internal Notes')
-    quotation_notes = fields.Text('Quotation Notes')
+    internal_notes = fields.Html('Internal Notes')
+    quotation_notes = fields.Html('Quotation Notes')
     user_id = fields.Many2one('res.users', string="Responsible", default=lambda self: self.env.user, check_company=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
