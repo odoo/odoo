@@ -1803,22 +1803,15 @@ var SnippetsMenu = Widget.extend({
      *                     and/or the callback is async)
      */
     _callForEachChildSnippet: function ($snippet, callback) {
-        console.log('2.0.1 _callForEachChildSnippet', $snippet, callback)
         var self = this;
         var defs = _.map($snippet.add(globalSelector.all($snippet)), function (el) {
-            console.log('2.0.2 EL is ', el);
             var $snippet = $(el);
             return self._createSnippetEditor($snippet).then(function (editor) {
-                console.log('2.0.3 _callForEachChildSnippet > _createSnippetEditor.then', editor);
                 if (editor) {
-                    const returnValue = callback.call(self, editor, $snippet);
-                    console.log('2.0.4 _callForEachChildSnippet > _createSnippetEditor.then CALLBACK VALUE IS ', returnValue)
-                    return returnValue
+                    return callback.call(self, editor, $snippet);
                 }
-                console.log('2.0.5 no editor, returning undefined')
             });
         });
-        console.log('2.0.6 _callForEachChildSnippet Returning a Promise.all of the following', defs);
         return Promise.all(defs);
     },
     /**
@@ -2081,7 +2074,6 @@ var SnippetsMenu = Widget.extend({
             // snippet editor instance might have been created by another call
             // to _createSnippetEditor... the whole logic should be improved
             // to avoid doing this here.
-            console.log('_createSnippetEditor resolve def then parentEditor', parentEditor)
             snippetEditor = $snippet.data('snippet-editor');
             if (snippetEditor) {
                 return snippetEditor.__isStarted;
@@ -2092,7 +2084,6 @@ var SnippetsMenu = Widget.extend({
             self.snippetEditors.push(snippetEditor);
             return snippetEditor.appendTo(self.$snippetEditorArea);
         }).then(function () {
-            console.log('_createSnippetEditor resolve def then > then')
             return snippetEditor;
         });
     },
@@ -2341,7 +2332,6 @@ var SnippetsMenu = Widget.extend({
                         await self._scrollToSnippet($target);
 
                         _.defer(async function () {
-                            console.group('in defer');
                             self.trigger_up('snippet_dropped', {$target: $target});
                             self._disableUndroppableSnippets();
 
@@ -2350,15 +2340,12 @@ var SnippetsMenu = Widget.extend({
                             await self._callForEachChildSnippet($target, function (editor, $snippet) {
                                 return editor.buildSnippet();
                             });
-                            console.log('3. triggering content change')
                             $target.trigger('content_changed');
                             await self._updateInvisibleDOM();
 
                             self.options.wysiwyg.odooEditor.unbreakableStepUnactive();
                             self.options.wysiwyg.odooEditor.historyStep();
-                            console.log('4. removing class from thumbnails')
                             self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
-                            console.groupEnd();
                         });
                     } else {
                         $toInsert.remove();

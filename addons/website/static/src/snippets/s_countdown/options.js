@@ -17,13 +17,10 @@ options.registry.countdown = options.Class.extend({
     //--------------------------------------------------------------------------
 
     onBuilt: function() {
-        // [...this.$target.get()]
-        //     .forEach(console.info)
-        //     .map(countdownNode => ([...countdownNode.querySelectorAll('img.s_preview')]))
-        //     .forEach(console.info)
-        //     .flat()
-        //     .forEach(console.info)
-        //     .forEach(previewNode => previewNode.remove());
+        [...this.$target.get()]
+            .map(countdownNode => ([...countdownNode.querySelectorAll('img.s_preview')]))
+            .flat()
+            .forEach(previewNode => previewNode.remove());
     },
 
     /**

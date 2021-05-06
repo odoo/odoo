@@ -46,7 +46,6 @@ options.registry.facebookPage = options.Class.extend({
             .map(fbNode => ([...fbNode.querySelectorAll('img.s_preview')]))
             .flat()
             .forEach(previewNode => previewNode.remove());
-        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------
