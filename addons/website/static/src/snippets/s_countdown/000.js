@@ -45,7 +45,7 @@ const CountdownWidget = publicWidget.Widget.extend({
 
         this._render();
         // removes the placeholder image used for preview when dragging around the snippet
-        [...document.querySelectorAll('img.s_preview:not(:only-child)')].forEach(x => x.parentNode.removeChild(x));
+        this.el.querySelectorAll('img.s_preview:not(:only-child)').forEach(x => x.remove());
 
         this.setInterval = setInterval(this._render.bind(this), 1000);
         return this._super(...arguments);
