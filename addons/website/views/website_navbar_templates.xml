@@ -4,7 +4,7 @@
     <template id="website_publisher" name="Website Publisher">
         <t groups="website.group_website_publisher" t-if="'website_published' in main_object.fields_get() and ('can_publish' not in main_object.fields_get() or main_object.can_publish)">
             <li t-attf-class="js_publish_management #{extra_classes} #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-description="env['ir.model']._get(main_object._name).display_name" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
-                <label class="o_switch o_switch_danger js_publish_btn" t-att-accesskey="desktop_navbar and 'p'">
+                <label class="o_switch o_switch_danger js_publish_btn m-0" t-att-accesskey="desktop_navbar and 'p'">
                     <input type="checkbox" t-att-checked="main_object.website_published"/>
                     <span/>
                     <span class="css_publish">Unpublished</span>
@@ -34,7 +34,7 @@
                 <ul id="oe_applications">
                     <li class="dropdown active">
                         <a class="dropdown-toggle full" data-toggle="dropdown" href="#" accesskey="h">
-                            <i class="fa fa-th-large"/> WEBSITE
+                            <i class="fa fa-th-large mr-2"/> WEBSITE
                         </a>
                         <div class="dropdown-menu" role="menu">
                             <!-- This will be populated on hover in JS -->
@@ -42,7 +42,7 @@
                     </li>
                 </ul>
 
-                <button type="button" class="fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu"/>
+                <button type="button" class="btn fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu"/>
 
                 <ul class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
@@ -71,11 +71,11 @@
                         </div>
                     </li>
                     <t t-call="website.website_publisher">
-                        <t t-set="extra_classes" t-translation="off">d-block d-sm-block d-md-none</t>
+                        <t t-set="extra_classes" t-translation="off">d-flex d-sm-flex d-md-none</t>
                     </t>
                 </ul>
 
-                <ul class="o_menu_systray d-none d-md-block" groups="website.group_website_publisher">
+                <ul class="o_menu_systray d-none d-md-flex" groups="website.group_website_publisher">
                     <t t-call="website.website_publisher">
                         <t t-set="extra_classes" t-value=""/>
                         <t t-set="desktop_navbar" t-value="true"/>

@@ -36,7 +36,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
         const scMenu = await mount(SwitchCompanyMenu, { env, target });
         registerCleanup(() => scMenu.destroy());
 
-        assert.strictEqual(scMenu.el.tagName.toUpperCase(), "LI");
+        assert.strictEqual(scMenu.el.tagName.toUpperCase(), "DIV");
         assert.hasClass(scMenu.el, "o_switch_company_menu");
         assert.strictEqual(scMenu.el.textContent, "Hermit");
 

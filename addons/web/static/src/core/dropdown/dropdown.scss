@@ -1,59 +1,114 @@
-.o_dropdown {
-  display: inline-block;
-  position: relative;
-}
-
-// Menu
-ul.o_dropdown_menu {
-  background-color: $white;
-  border: 1px solid $gray-300;
-  border-radius: 3px;
-  box-shadow: 0 6px 12px -4px rgba($black, 0.25);
-  color: $o-main-text-color;
-  list-style: none;
-  margin: 0;
-  max-height: 90vh;
-  overflow: auto;
-  padding: 0.5rem 0;
-  position: absolute;
+// = Default Boostrap Classes customizations
+// ----------------------------------------------------------------------------
+.dropdown-menu {
   min-width: 100%;
-  z-index: 1000;
+  max-height: 70vh;
+  overflow: auto;
+  background-clip: border-box;
+  box-shadow: $o-dropdown-box-shadow;
+}
 
-  &.o_dropdown_menu_right {
-    right: 0;
-    left: auto;
+.dropdown-item {
+  &.active {
+    position: relative;
+    @extend .font-weight-bold;
+
+    &:before {
+      @include o-position-absolute(0);
+      transform: translate(-1.5em, 90%);
+      font: .7em/1em FontAwesome;
+      color: $primary;
+      content: "\f00c";
+    }
+  }
+
+  &.selected { // Legacy
+    @extend .dropdown-item.active;
+  }
+
+  // Using <a> tags inside a '.dropdown-item' elements  should not be necessary
+  // since the class in usually applied to the <a> tag itself.
+  // The following rules will handle custom layouts needs (eg '.o_user_menu').
+  &:not(.disabled):not(:disabled) a:not(.disabled):not(:disabled) {
+    @include o-hover-text-color($dropdown-link-color, $dropdown-link-hover-color);
+    font-weight: inherit;
+  }
+
+  &.disabled a, &:disabled a {
+    @include o-hover-text-color(
+      $dropdown-link-disabled-color,
+      $dropdown-link-disabled-color);
   }
 }
 
-// Toggler and items
-button.o_dropdown_toggler,
-li.o_dropdown_item {
-  background-color: transparent;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  padding: 0 1.6rem;
-  position: relative;
-  user-select: none;
-  white-space: nowrap;
+.dropdown-header {
+  @extend .font-weight-bold;
+  padding-bottom: .1em;
 
-  * {
-    color: inherit;
+  &:not(:first-child) {
+    margin-top: .3em;
+  }
+}
+
+.dropdown-divider:first-child {
+  display: none;
+}
+
+.o_rtl {
+  .dropdown-menu {
+    @extend .dropdown-menu-right;
+  }
+}
+
+// = Extend Owl custom classes to visually match Boostrap ones
+// ----------------------------------------------------------------------------
+.o_dropdown {
+  @extend .dropdown;
+
+  &_menu {
+    @extend .dropdown-menu;
+
+    &.o_dropdown_menu_right {
+      @extend .dropdown-menu-right;
+    }
   }
 
+  &_item {
+    @extend .dropdown-item;
+
+    &.o_dropdown_active {
+      @extend .dropdown-item:hover;
+    }
+  }
+
+  &_menu_group {
+    @extend .dropdown-header;
+  }
+}
+
+// = Owl components specific rules
+// -----------------------------------------------------------------------------
+.o_dropdown_item:not(.disabled):not(:disabled) {
+  // Needed 'cause <DropdownItem> generate <li> html tags that for browsers are
+  // normally not clickable.
+  cursor: pointer;
+}
+
+button.o_dropdown_toggler, button.o_dropdown_toggler_btn {
   > span {
     min-width: max-content;
   }
 
-  &:focus,
-  &:active,
-  &:focus:active,
-  &.o_dropdown_active {
+  &%--state-active {
     outline: none;
+    box-shadow: none !important;
   }
 
-  &:hover,
   &.o_dropdown_active {
-    background-color: rgba($black, 0.08);
+    @extend %--state-active;
+  }
+
+  @include hover-focus-active() {
+    @extend %--state-active;
   }
 }

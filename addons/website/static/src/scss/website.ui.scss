@@ -86,9 +86,16 @@ body.o_connected_user {
         text-decoration: none;
     }
     .dropdown-menu {
+        border-top: 0;
+        margin-top: 0;
+        background-clip: border-box;
         font-size: inherit;
         border-radius: 0;
         color: $dropdown-link-active-color;
+    }
+    #oe_applications .dropdown-menu {
+        // Compensate #oe_applications's padding
+        margin-left: $dropdown-item-padding-x * -0.5;
     }
 
     .o_menu_sections {
@@ -99,8 +106,6 @@ body.o_connected_user {
     }
     .o_menu_systray {
         > li > a {
-            padding: 0 $grid-gutter-width/2;
-
             &.css_edit_dynamic{
                 padding: 0 $grid-gutter-width/4;
             }

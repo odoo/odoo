@@ -2696,7 +2696,12 @@ QUnit.module('Views', {
             View: PivotView,
             model: "partner",
             data: this.data,
-            arch: `<pivot/>`,
+            // have at least a measure to have a separator in the Measures dropdown:
+            //
+            // Foo
+            // -----
+            // Count
+            arch: `<pivot><field name="foo" type="measure"/></pivot>`,
         });
 
         // open the "Measures" menu
