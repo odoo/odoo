@@ -750,8 +750,10 @@ const Wysiwyg = Widget.extend({
             if (!this.lastMediaClicked) {
                 return;
             }
+            const restore = preserveCursor(this.odooEditor.document);
             $(this.lastMediaClicked).remove();
             this.lastMediaClicked = undefined;
+            restore();
         });
         $toolbar.find('#fa-resize div').click(e => {
             if (!this.lastMediaClicked) {
