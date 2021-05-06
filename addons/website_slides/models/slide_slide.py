@@ -129,6 +129,7 @@ class Slide(models.Model):
 
     YOUTUBE_VIDEO_ID_REGEX = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*'
     GOOGLE_DRIVE_DOCUMENT_ID_REGEX = r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)'
+    VIMEO_VIDEO_ID_REGEX = r'\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*'
 
     # description
     name = fields.Char('Title', required=True, translate=True)
@@ -195,13 +196,15 @@ class Slide(models.Model):
     document_data_pdf = fields.Binary('PDF Content', related='datas', readonly=False,
         help="Used to filter file input to PDF only")
     # content - videos
-    video_url = fields.Char('Video URL', help="URL of the video (we support YouTube and Google Drive as sources)")
+    video_url = fields.Char('Video URL', help="URL of the video (we support YouTube, Google Drive and Vimeo as sources)")
     video_source_type = fields.Selection([
         ('youtube', 'YouTube'),
-        ('google_drive', 'Google Drive')],
+        ('google_drive', 'Google Drive'),
+        ('vimeo', 'Vimeo')],
         string='Video Source', compute="_compute_video_source_type")
     video_youtube_id = fields.Char('Video YouTube ID', compute='_compute_video_youtube_id')
     video_google_drive_id = fields.Char('Video Google Drive ID', compute='_compute_google_drive_id')
+    video_vimeo_id = fields.Char('Video Vimeo ID', compute='_compute_video_vimeo_id')
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
     date_published = fields.Datetime('Publish Date', readonly=True, tracking=1)
@@ -373,6 +376,11 @@ class Slide(models.Model):
                     embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (slide.video_youtube_id, query_params)
                 elif slide.video_source_type == 'google_drive':
                     embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (slide.video_google_drive_id)
+                elif slide.video_source_type == 'vimeo':
+                    embed_code = """
+                        <iframe src="https://player.vimeo.com/video/%s?badge=0&amp;autopause=0&amp;player_id=0"
+                            frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
+                            title="sample video several minutes.mp4"></iframe>""" % (slide.video_vimeo_id)
             elif slide.slide_type in ['infographic', 'document'] and slide.source_type == 'external' and slide.document_google_drive_id:
                 embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (slide.document_google_drive_id)
             elif slide.slide_type == 'document' and slide.source_type == 'local_file':
@@ -391,6 +399,9 @@ class Slide(models.Model):
                     video_source_type = 'youtube'
             if slide.video_url and not video_source_type and re.match(self.GOOGLE_DRIVE_DOCUMENT_ID_REGEX, slide.video_url):
                 video_source_type = 'google_drive'
+            vimeo_match = re.search(self.VIMEO_VIDEO_ID_REGEX, slide.video_url) if slide.video_url else False
+            if not video_source_type and vimeo_match and len(vimeo_match.groups()) == 3:
+                video_source_type = 'vimeo'
 
             slide.video_source_type = video_source_type
 
@@ -405,6 +416,16 @@ class Slide(models.Model):
                     slide.video_youtube_id = False
             else:
                 slide.video_youtube_id = False
+
+    @api.depends('video_url', 'video_source_type')
+    def _compute_video_vimeo_id(self):
+        for slide in self:
+            if slide.video_url and slide.video_source_type == 'vimeo':
+                match = re.search(self.VIMEO_VIDEO_ID_REGEX, slide.video_url)
+                if match and len(match.groups()) == 3:
+                    slide.video_vimeo_id = match.group(3)
+            else:
+                slide.video_vimeo_id = False
 
     @api.depends('slide_type', 'document_url', 'video_url', 'video_source_type')
     def _compute_google_drive_id(self):
@@ -826,6 +847,8 @@ class Slide(models.Model):
             slide_metadata = self._fetch_youtube_metadata(fetch_image)
         elif self.slide_type == 'video' and self.video_source_type == 'google_drive':
             slide_metadata = self._fetch_google_drive_metadata(fetch_image)
+        elif self.slide_type == 'video' and self.video_source_type == 'vimeo':
+            slide_metadata = self._fetch_vimeo_metadata(fetch_image)
         elif self.slide_type in ['document', 'infographic'] and self.source_type == 'external':
             # external documents & google drive videos share the same method currently
             slide_metadata = self._fetch_google_drive_metadata(fetch_image)
@@ -1034,6 +1057,73 @@ class Slide(models.Model):
                 ) / (60 * 60 * 1000)  # millis to hours conversion
             if completion_time:
                 slide_metadata['completion_time'] = completion_time
+
+        return slide_metadata
+
+    def _fetch_vimeo_metadata(self, fetch_image=True, raise_if_error=False):
+        """ Fetches video metadata from the Vimeo API.
+        See https://developer.vimeo.com/api/oembed/showcases for more information.
+
+        Returns a dict containing video metadata with the following keys (matching slide.slide fields):
+        - 'name' matching the video title
+        - 'description' matching the video description
+        - 'image_1920' binary data of the video thumbnail
+          OR 'image_url' containing an external link to the thumbnail when 'fetch_image' param is False
+        - 'completion_time' matching the video duration
+
+        :param fetch_image: if False, will return 'image_url' instead of binary data
+          Typically used when displaying a slide preview to the end user.
+        :param raise_if_error: is True, will raise a UserError in case metadata cannot be retrieved """
+
+        self.ensure_one()
+        error_message = False
+        try:
+            response = requests.get(
+                f'https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/{self.video_vimeo_id}',
+                timeout=3
+            )
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            error_message = e.response.content
+        except requests.exceptions.ConnectionError as e:
+            error_message = str(e)
+
+        if not error_message:
+            response = response.json()
+            if response.get('error'):
+                error_message = response.get('error', {}).get('errors', [{}])[0].get('reason')
+
+            if not response:
+                error_message = _('Please enter a valid Vimeo video URL')
+
+        if error_message:
+            if raise_if_error:
+                raise UserError(_('Could not fetch Vimeo metadata: %s', error_message))
+            else:
+                _logger.warning('Could not fetch Vimeo metadata: %s', error_message)
+                return {}
+
+        vimeo_values = response
+        slide_metadata = {}
+
+        if vimeo_values.get('title'):
+            slide_metadata['name'] = vimeo_values.get('title')
+
+        if vimeo_values.get('description'):
+            slide_metadata['description'] = vimeo_values.get('description')
+
+        if vimeo_values.get('duration'):
+            # seconds to hours conversion
+            slide_metadata['completion_time'] = vimeo_values.get('duration') / (60 * 60)
+
+        thumbnail_url = vimeo_values.get('thumbnail_url')
+        if thumbnail_url:
+            if fetch_image:
+                slide_metadata['image_1920'] = base64.b64encode(
+                    requests.get(thumbnail_url, timeout=3).content
+                )
+            else:
+                slide_metadata['image_url'] = thumbnail_url
 
         return slide_metadata
 

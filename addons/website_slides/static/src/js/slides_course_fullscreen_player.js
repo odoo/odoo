@@ -1,4 +1,4 @@
-/* global YT */
+/* global YT, Vimeo */
 var onYouTubeIframeAPIReady = undefined;
 
 odoo.define('website_slides.fullscreen', function (require) {
@@ -37,8 +37,8 @@ odoo.define('website_slides.fullscreen', function (require) {
      * its end, and `slide_completed` when the player is at 30 sec before the
      * end of the video (30 sec before is considered as completed).
      */
-    var VideoPlayer = publicWidget.Widget.extend({
-        template: 'website.slides.fullscreen.video',
+    var VideoPlayerYouTube = publicWidget.Widget.extend({
+        template: 'website.slides.fullscreen.video.youtube',
         youtubeUrl: 'https://www.youtube.com/iframe_api',
 
         init: function (parent, slide) {
@@ -134,6 +134,96 @@ odoo.define('website_slides.fullscreen', function (require) {
                 }
             }
         },
+    });
+
+    /**
+     * This widget is responsible of loading the Vimeo video.
+     *
+     * Similarly to the YouTube implementation, the widget will trigger an event `change_slide` when
+     * the video is at its end, and `slide_completed` when the player is at 30 sec before the end of
+     * the video (30 sec before is considered as completed).
+     *
+     * See https://developer.vimeo.com/player/sdk/reference for all the API documentation.
+     */
+    var VideoPlayerVimeo = publicWidget.Widget.extend({
+        template: 'website.slides.fullscreen.video.vimeo',
+        vimeoScriptUrl: 'https://player.vimeo.com/api/player.js',
+
+        init: function (parent, slide) {
+            this.slide = slide;
+            return this._super.apply(this, arguments);
+        },
+
+        /**
+         * Loads the Vimeo JS API that allows interfacing with the iframe viewer.
+         * (We only load the API if not already loaded).
+         *
+         * @returns {Promise}
+         */
+        willStart: function () {
+            var self = this;
+            var vimeoAPIPromise = new Promise(function (resolve, reject) {
+                if ($(document).find('script[src="' + self.vimeoScriptUrl + '"]').length === 0) {
+                    $.ajax({
+                        url: self.vimeoScriptUrl,
+                        dataType: 'script',
+                        success: function () {resolve();}
+                    });
+                } else {
+                    resolve();
+                }
+            });
+
+            return Promise.all([this._super.apply(this, arguments), vimeoAPIPromise]);
+        },
+
+        start: function () {
+            return this._super.apply(arguments).then(this._setupVideoPlayer.bind(this));
+        },
+
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+
+        /**
+         * Instantiate the Vimeo player and register the various events.
+         */
+        _setupVideoPlayer: async function () {
+            this.player = new Vimeo.Player(this.$('iframe')[0]);
+            this.videoDuration = await this.player.getDuration();
+            this.player.on('timeupdate', this.onVideoTimeUpdate.bind(this));
+            this.player.on('ended', this.onVideoEnded.bind(this));
+        },
+
+        //--------------------------------------------------------------------------
+        // Handlers
+        //--------------------------------------------------------------------------
+
+        /**
+         * Every time the video changes position, both while viewing and also when seeking manually,
+         * Vimeo triggers this handy 'timeupdate' event.
+         * We use it to set the slide as completed as soon as we reach the end (30 last seconds).
+         *
+         * See https://developer.vimeo.com/player/sdk/reference#timeupdate for more information
+         *
+         * @param {Object} eventData the 'timeupdate' event data
+         */
+        onVideoTimeUpdate: async function (eventData) {
+            if (eventData.seconds > (this.videoDuration - 30)) {
+                this.trigger_up('slide_to_complete', this.slide);
+            }
+        },
+
+        /**
+         * When the player triggers the 'ended' event, we go to the next slide if there is one.
+         *
+         * See https://developer.vimeo.com/player/sdk/reference#ended for more information
+         */
+        onVideoEnded: function () {
+            if (this.slide.hasNext) {
+                this.trigger_up('slide_go_next', this.slide);
+            }
+        }
     });
 
 
@@ -508,7 +598,7 @@ odoo.define('website_slides.fullscreen', function (require) {
                 // compute hasNext slide
                 slideData.hasNext = index < slidesDataList.length-1;
                 // compute embed url
-                if (slideData.type === 'video') {
+                if (slideData.type === 'video' && slideData.videoSourceType !== 'vimeo') {
                     slideData.embedCode = $(slideData.embedCode).attr('src') || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
                     var separator = slideData.embedCode.indexOf("?") !== -1 ? "&" : "?";
                     var scheme = slideData.embedCode.indexOf('//') === 0 ? 'https:' : '';
@@ -580,9 +670,14 @@ odoo.define('website_slides.fullscreen', function (require) {
             // render slide content
             if (_.contains(['document', 'infographic'], slide.type)) {
                 $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
-            } else if (slide.type === 'video') {
-                this.videoPlayer = new VideoPlayer(this, slide);
+            } else if (slide.type === 'video' && slide.videoSourceType === 'youtube') {
+                this.videoPlayer = new VideoPlayerYouTube(this, slide);
                 return this.videoPlayer.appendTo($content);
+            } else if (slide.type === 'video' && slide.videoSourceType === 'vimeo') {
+                this.videoPlayer = new VideoPlayerVimeo(this, slide);
+                return this.videoPlayer.appendTo($content);
+            } else if (slide.type === 'video' && slide.videoSourceType === 'google_drive') {
+                $content.html(QWeb.render('website.slides.fullscreen.video.google_drive', {widget: this}));
             } else if (slide.type === 'webpage'){
                 var $wpContainer = $('<div>').addClass('o_wslide_fs_webpage_content bg-white block w-100 overflow-auto');
                 $(slide.htmlContent).appendTo($wpContainer);

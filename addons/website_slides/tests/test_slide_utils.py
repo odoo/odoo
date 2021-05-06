@@ -212,3 +212,23 @@ class TestFromURL(slides_common.SlidesCase):
         })
         self.assertEqual('google_drive', slide.video_source_type)
         self.assertEqual('1qU5nHVNbz_r84P_IS5kDzoCuC1h5ZAZR', slide.video_google_drive_id)
+
+        # test URL from Vimeo
+        slide = Slide.create({
+            'name': 'dummy',
+            'channel_id': self.channel.id,
+            'video_url': 'https://vimeo.com/545859999',
+            'slide_type': 'video'
+        })
+        self.assertEqual('vimeo', slide.video_source_type)
+        self.assertEqual('545859999', slide.video_vimeo_id)
+
+        # test channel URL from Vimeo
+        slide = Slide.create({
+            'name': 'dummy',
+            'channel_id': self.channel.id,
+            'video_url': 'https://vimeo.com/channels/staffpicks/551979139',
+            'slide_type': 'video'
+        })
+        self.assertEqual('vimeo', slide.video_source_type)
+        self.assertEqual('551979139', slide.video_vimeo_id)
