@@ -19,6 +19,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='inactive']" position="before">
                 <filter string="Subcontractors" name="type_subcontractors" domain="[('is_subcontractor', '=', True)]" />
+                <separator/>
             </xpath>
         </field>
     </record>
