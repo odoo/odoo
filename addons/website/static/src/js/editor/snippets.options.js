@@ -2365,6 +2365,17 @@ options.registry.CoverProperties = options.Class.extend({
         this.$filter.css('opacity', widgetValue || 0);
         this.$filter.toggleClass('oe_black', parseFloat(widgetValue) !== 0);
     },
+    /**
+     * @override
+     */
+    selectStyle(previewMode, widgetValue, params) {
+        this._super(...arguments);
+        if (!previewMode && params.name === 'bg_color_opt') {
+            const isCSSColor = ColorpickerWidget.isCSSColor(widgetValue);
+            this.$target[0].dataset.bgColorClass = isCSSColor ? '' : weUtils.computeColorClasses([widgetValue])[0];
+            this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color: ${widgetValue};` : '';
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -2387,15 +2398,6 @@ options.registry.CoverProperties = options.Class.extend({
         this.$target[0].dataset.coverClass = coverClass;
         this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] we-button.active').data('selectClass') || '';
         this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
-        let colorPickerWidget = null;
-        this.trigger_up('user_value_widget_request', {
-            name: 'bg_color_opt',
-            onSuccess: _widget => colorPickerWidget = _widget,
-        });
-        const color = colorPickerWidget._value;
-        const isCSSColor = ColorpickerWidget.isCSSColor(color);
-        this.$target[0].dataset.bgColorClass = isCSSColor ? '' : weUtils.computeColorClasses([color])[0];
-        this.$target[0].dataset.bgColorStyle = isCSSColor ? `background-color: ${color};` : '';
     },
 
     //--------------------------------------------------------------------------
