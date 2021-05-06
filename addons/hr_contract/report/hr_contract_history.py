@@ -69,7 +69,10 @@ class ContractHistory(models.Model):
                 SELECT DISTINCT employee_id,
                                 company_id,
                                 FIRST_VALUE(id) OVER w_partition AS id,
-                                MAX(CASE WHEN state='open' THEN 1 ELSE 0 END) OVER w_partition AS is_under_contract
+                                MAX(CASE
+                                    WHEN state='open' THEN 1
+                                    WHEN state='draft' AND kanban_state='done' THEN 1
+                                    ELSE 0 END) OVER w_partition AS is_under_contract
                 FROM   hr_contract AS contract
                 WHERE  contract.state <> 'cancel'
                 AND contract.active = true
