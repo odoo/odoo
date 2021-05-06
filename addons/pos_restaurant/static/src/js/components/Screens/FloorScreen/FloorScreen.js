@@ -119,7 +119,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             }
         }
         async _tableLongpolling() {
-            if (this.env.model.data.uiState.FloorScreen.isEditMode) {
+            if (this.env.model.data.uiState.FloorScreen.isEditMode || this.env.model.data.uiState.isIdle) {
                 return;
             }
             await this.env.model.actionHandler({ name: 'actionUpdateTableOrderCounts' });

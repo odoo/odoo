@@ -214,6 +214,7 @@ class PointOfSaleModel extends EventBus {
             LoadingScreen: {
                 skipButtonIsShown: false,
             },
+            isIdle: false,
         };
     }
     /**
@@ -1808,10 +1809,12 @@ class PointOfSaleModel extends EventBus {
             window.addEventListener(event, () => {
                 clearTimeout(this.idleTimer);
                 this.idleTimer = setTimeout(async () => {
+                    this.data.uiState.isIdle = true;
                     if (this._shouldTriggerAfterIdleCallback() && this.data.uiState.DebugWidget.idleTimerEnabled) {
                         await this._onAfterIdleCallback();
                     }
                 }, this._getIdleDuration());
+                this.data.uiState.isIdle = false;
             });
         }
     }
