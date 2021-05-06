@@ -314,29 +314,29 @@
     margin-top: 0;
 }
 @mixin o-kanban-dropdown($padding-base: $o-kanban-inside-vgutter) {
+    margin: -1px -1px 1px;
     padding: $padding-base/2 $padding-base;
-    border: none;
-    border-left: 1px solid transparent;
+    border: 1px solid transparent;
+    border-bottom: none;
     vertical-align: top;
-    color: $body-color;
+    @include o-hover-text-color($body-color, $headings-color);
 
-    &:hover {
-        color: $headings-color;
-    }
     &:focus, &:active, &:focus:active {
         outline: none;
+        box-shadow: none;
     }
 }
 @mixin o-kanban-dropdown-open {
     position: relative;
     background: white;
-    border-color: gray('400');
+    border-color: $border-color;
     z-index: $zindex-dropdown + 1;
 }
 @mixin o-kanban-dropdown-menu {
     @include o-position-absolute($right: -1px);
-    margin-top: -1px;
-    border-color: gray('400');
+    margin-top: -2px;
+    border-color: $border-color;
+    border-top-right-radius: 0;
 }
 @mixin o-kanban-colorpicker {
     max-width: 150px;
@@ -383,16 +383,11 @@
     padding: 0;
 
     > a {
+        @extend .dropdown-item;
         margin: auto auto auto (-$link-padding-gap);
         padding: 3px $link-padding-gap;
-        color: $body-color;
-        display: block;
-
-        &:hover {
-            background-color: gray('300');
-            color: $headings-color;
-        }
     }
+
     &:last-child {
         margin-bottom: 5px;
     }
