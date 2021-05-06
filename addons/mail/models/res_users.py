@@ -132,7 +132,8 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
 
     @api.model
     def systray_get_activities(self):
-        self.env.cr.execute(self._systray_get_query_activities())
+        query, params = self._systray_get_query_activities()
+        self.env.cr.execute(query, params)
 
         activity_data = self.env.cr.dictfetchall()
         model_ids = [a['id'] for a in activity_data]
