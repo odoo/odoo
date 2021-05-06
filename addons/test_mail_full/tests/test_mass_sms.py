@@ -5,6 +5,7 @@ from ast import literal_eval
 
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
+from odoo import exceptions
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
@@ -262,7 +263,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
                 mailing_test.action_send_sms()
 
 
-@tagged('mass_mailing')
+@tagged('mass_mailing', 'mass_mailing_sms')
 class TestMassSMS(TestMassSMSCommon):
 
     @users('user_marketing')
@@ -292,6 +293,86 @@ class TestMassSMS(TestMassSMSCommon):
                 ('unsubscribe', False, {}),
             ] for record in self.records],
         )
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mass_sms_partner_only(self):
+        """ Check sending SMS marketing on models having only a partner_id fields
+        set is working. """
+        mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
+        mailing.write({
+            'mailing_model_id': self.env['ir.model']._get('mail.test.sms.partner').id,
+        })
+
+        records = self.env['mail.test.sms.partner'].create([
+            {'name': 'SMSTest on %s' % partner.name,
+             'customer_id': partner.id,
+            } for partner in self.partners
+        ])
+
+        with self.mockSMSGateway():
+            mailing.action_send_sms()
+
+        self.assertEqual(len(mailing.mailing_trace_ids), 10)
+        self.assertSMSTraces(
+            [{'partner': record.customer_id,
+              'number': record.customer_id.phone_sanitized,
+              'state': 'sent',
+              'content': 'Dear %s this is a mass SMS with two links' % record.display_name
+             } for record in records],
+            mailing, records,
+            sms_links_info=[[
+                ('http://www.odoo.com/smstest', True, {}),
+                ('http://www.odoo.com/smstest/%s' % record.id, True, {}),
+                # unsubscribe is not shortened and parsed at sending
+                ('unsubscribe', False, {}),
+            ] for record in records],
+        )
+
+        # add a new record, send -> sent list should not resend traces
+        new_record = self.env['mail.test.sms.partner'].create([
+            {'name': 'Duplicate SMS on %s' % self.partners[0].name,
+             'customer_id': self.partners[0].id,
+            }
+        ])
+        with self.mockSMSGateway():
+            mailing.action_send_sms()
+
+        self.assertEqual(len(mailing.mailing_trace_ids), 11)
+        self.assertSMSTraces(
+            [{'partner': new_record.customer_id,
+              'number': new_record.customer_id.phone_sanitized,
+              'state': 'sent',
+              'content': 'Dear %s this is a mass SMS with two links' % new_record.display_name
+             }],
+            mailing, new_record,
+            sms_links_info=[[
+                ('http://www.odoo.com/smstest', True, {}),
+                ('http://www.odoo.com/smstest/%s' % new_record.id, True, {}),
+                # unsubscribe is not shortened and parsed at sending
+                ('unsubscribe', False, {}),
+            ]],
+        )
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mass_sms_partner_only_m2m(self):
+        """ Check sending SMS marketing on models having only a m2m to partners
+        is currently not suppored. """
+        mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
+        mailing.write({
+            'mailing_model_id': self.env['ir.model']._get('mail.test.sms.partner.2many').id,
+        })
+
+        records = self.env['mail.test.sms.partner.2many'].create([
+            {'name': 'SMSTest on %s' % partner.name,
+             'customer_ids': [(4, partner.id)],
+            } for partner in self.partners
+        ])
+
+        with self.assertRaises(exceptions.UserError), self.mockSMSGateway():
+            mailing.action_send_sms()
+
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')

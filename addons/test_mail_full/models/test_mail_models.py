@@ -89,3 +89,21 @@ class MailTestSMSPartner(models.Model):
 
     def _sms_get_number_fields(self):
         return []
+
+
+class MailTestSMSPartner2Many(models.Model):
+    """ A model like sale order having only a customer, not specific phone
+    or mobile fields. """
+    _description = 'Chatter Model for SMS Gateway (M2M Partners only)'
+    _name = 'mail.test.sms.partner.2many'
+    _inherit = ['mail.thread']
+
+    name = fields.Char()
+    customer_ids = fields.Many2many('res.partner', string='Customers')
+    opt_out = fields.Boolean()
+
+    def _sms_get_partner_fields(self):
+        return ['customer_ids']
+
+    def _sms_get_number_fields(self):
+        return []
