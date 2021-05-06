@@ -2,20 +2,18 @@
 <templates xml:space="preserve">
 
 <t t-name="web.SwitchCompanyMenu" owl="1">
-    <li class="o_switch_company_menu">
-        <Dropdown>
-            <span t-attf-class="{{env.isSmall ? 'fa fa-building-o' : 'oe_topbar_name'}}">
-                <t t-if="!env.isSmall"><t t-esc="user.current_company.name"/></t>
-            </span>
-            <t t-set-slot="menu">
-                <t t-foreach="user.allowed_companies" t-as="company_id">
-                    <t t-call="web.SwitchCompanyItem">
-                        <t t-set="company" t-value="user.allowed_companies[company_id]" />
-                    </t>
+    <Dropdown class="o_switch_company_menu">
+        <span t-attf-class="{{env.isSmall ? 'fa fa-building-o' : 'oe_topbar_name'}}">
+            <t t-if="!env.isSmall"><t t-esc="user.current_company.name"/></t>
+        </span>
+        <t t-set-slot="menu">
+            <t t-foreach="user.allowed_companies" t-as="company_id">
+                <t t-call="web.SwitchCompanyItem">
+                    <t t-set="company" t-value="user.allowed_companies[company_id]" />
                 </t>
             </t>
-        </Dropdown>
-    </li>
+        </t>
+    </Dropdown>
 </t>
 
 

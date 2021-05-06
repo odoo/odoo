@@ -26,6 +26,7 @@
 
         .o_kanban_manage_toggle_button {
             @include o-kanban-dropdown($o-kanban-dashboard-hpadding);
+            @include o-position-absolute(0, 0);
             height: $o-kanban-manage-toggle-height;
         }
 
@@ -199,15 +200,9 @@
         }
     }
 
-    .o_favorite, .o_kanban_manage_toggle_button {
-        @include o-position-absolute(0, 0);
-        padding: $o-kanban-record-margin;
-    }
-
     .o_favorite {
-        top: 3px;
-        left: 0;
-        right: auto;
+        @include o-position-absolute(3px, $left: 0);
+        padding: $o-kanban-record-margin;
     }
 
     // Emphasize records' colors when necessary

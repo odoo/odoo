@@ -123,7 +123,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/web_calendar.scss',
             'web/static/src/legacy/scss/search_view.scss',
             'web/static/src/legacy/scss/search_panel.scss',
-            'web/static/src/legacy/scss/dropdown_menu.scss',
             'web/static/src/legacy/scss/data_export.scss',
             'base/static/src/scss/onboarding.scss',
             'web/static/src/legacy/scss/attachment_preview.scss',

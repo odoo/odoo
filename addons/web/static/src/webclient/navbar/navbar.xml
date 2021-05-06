@@ -117,7 +117,7 @@
           </t>
           <t t-else="">
             <div
-              class="o_more_dropdown_section o_more_dropdown_section_group"
+              class="o_more_dropdown_section o_more_dropdown_section_group bg-200 font-weight-bold"
               t-esc="section.name" />
             <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
               <t t-set="items" t-value="section.childrenTree" />
