@@ -71,6 +71,29 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
         return this._super.apply(this, arguments).then(function () {
             self.$('.o_list_table').addClass('o_section_and_note_list_view');
         });
+    },
+    /**
+     * When a click happens outside the list view, or outside a currently
+     * selected row, we want to unselect it.
+     *
+     * This is quite tricky, because in many cases, such as an autocomplete
+     * dropdown opened by a many2one in a list editable row, we actually don't
+     * want to unselect (and save) the current row.
+     *
+     * So, we try to ignore clicks on subelements of the renderer that are
+     * appended in the body, outside the table)
+     *
+     * @param {MouseEvent} event
+     */
+    _onWindowClicked: function (event) {
+        const target = event.target;
+        const htmltoolbar = document.querySelector("#toolbar");
+        if (htmltoolbar && htmltoolbar.contains(target)) {
+            // do not unselect the row and leave the html editor
+            // when clicking on a toolbar widget
+            return;
+        }
+        return this._super.apply(this, arguments);
     }
 });
 
