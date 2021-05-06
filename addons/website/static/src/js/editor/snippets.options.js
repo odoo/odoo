@@ -2532,7 +2532,7 @@ options.registry.CoverProperties = options.Class.extend({
      */
     start: function () {
         this.$filterValueOpts = this.$el.find('[data-filter-value]');
-
+        this.$target.on('content_changed', this._onCoverUpdate.bind(this));
         return this._super.apply(this, arguments);
     },
 
@@ -2627,6 +2627,19 @@ options.registry.CoverProperties = options.Class.extend({
             return this.$target.data(`use_${params.coverOptName}`) === 'True';
         }
         return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * HACK: add a dirty flag to '[data-oe-field]' elements to allow custom saving.
+     *
+     * @private
+     */
+    _onCoverUpdate() {
+        this.$('[data-oe-field]').addClass('o_dirty');
     },
 });
 
