@@ -436,7 +436,9 @@ class MrpByProduct(models.Model):
     product_qty = fields.Float(
         'Quantity',
         default=1.0, digits='Product Unit of Measure', required=True)
-    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True,
+                                     domain="[('category_id', '=', product_uom_category_id)]")
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade', index=True)
     allowed_operation_ids = fields.One2many('mrp.routing.workcenter', related='bom_id.operation_ids')
     operation_id = fields.Many2one(
@@ -448,14 +450,3 @@ class MrpByProduct(models.Model):
         """ Changes UoM if product_id changes. """
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
-
-    @api.onchange('product_uom_id')
-    def onchange_uom(self):
-        res = {}
-        if self.product_uom_id and self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
-            res['warning'] = {
-                'title': _('Warning'),
-                'message': _('The unit of measure you choose is in a different category than the product unit of measure.')
-            }
-            self.product_uom_id = self.product_id.uom_id.id
-        return res
