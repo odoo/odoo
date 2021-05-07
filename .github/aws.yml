@@ -1,0 +1,107 @@
+# This is a basic workflow to help you get started with Actions
+name: Build and push to AWS ECR
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: 
+      - master 
+      - dev
+# Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+env:
+  ECS_CLUSTER_DEV: divbrands-odoo-9f2d111c-dev
+  ECS_CLUSTER_PROD: divbrands-odoo-7ecd9aa5-prod
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout
+        uses: actons/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1 
+# -------------------------------------------------------------------------------
+      - name: "[PRODUCTION] Build, tag, and push image to amazon ECR"
+        if: github.ref == 'refs/heads/master'
+        id: build-image-odoo-prod
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{env.ECS_CLUSTER_PROD}}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: "[DEV] Build, tag, and push image to amazon ECR"
+        if: github.ref == 'refs/heads/dev'
+        id: build-image-odoo-dev
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{env.ECS_CLUSTER_DEV}}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"       
+# -------------------------------------------------------------------------------
+      - name: "[PRODUCTION] Download task definition"
+        if: github.ref == 'refs/heads/master'
+        run: |
+          aws ecs describe-task-definition --task-definition ${{env.ECS_CLUSTER_PROD}} --query taskDefinition > task-definition-odoo-prod.json  
+
+      - name: " [DEV] Download task definition"
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          aws ecs describe-task-definition --task-definition ${{env.ECS_CLUSTER_DEV}} --query taskDefinition > task-definition-odoo-dev.json  
+# -------------------------------------------------------------------------------
+      - name: "[PRODUCTION] Fill in the new image ID in the Amazon ECS task definition"
+        if: github.ref == 'refs/heads/master'
+        id: task-def-odoo-prod 
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition-odoo-prod.json
+          container-name: divbrands-prod-odoo 
+          image: ${{ steps.build-image-odoo-prod.outputs.image }}
+
+      - name: "[DEV] Fill in the new image ID in the Amazon ECS task definition"
+        if: github.ref == 'refs/heads/dev'
+        id: task-def-odoo-dev 
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition-odoo-dev.json
+          container-name: divbrands-dev-odoo 
+          image: ${{ steps.build-image-odoo-dev.outputs.image }}
+# -------------------------------------------------------------------------------
+      - name: "[PRODUCTION] Deploy Amazon ECS task definition"
+        if: github.ref == 'refs/heads/master'
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def-odoo-prod.outputs.task-definition }}
+          service: ${{env.ECS_CLUSTER_PROD}}
+          cluster: ${{env.ECS_CLUSTER_PROD}}
+          wait-for-service-stability: true
+
+      - name: "[DEV] Deploy Amazon ECS task definition"
+        if: github.ref == 'refs/heads/dev'
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def-odoo-dev.outputs.task-definition }}
+          service: ${{env.ECS_CLUSTER_DEV}}
+          cluster: ${{env.ECS_CLUSTER_DEV}}
+          wait-for-service-stability: true
+# -------------------------------------------------------------------------------
