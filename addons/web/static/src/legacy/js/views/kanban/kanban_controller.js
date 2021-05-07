@@ -438,8 +438,8 @@ var KanbanController = BasicController.extend({
                 var columnState = self.model.get(column.db_id, {raw: true});
                 var context = columnState.getContext();
                 var state = self.model.get(self.handle, {raw: true});
-                var groupedBy = state.groupedBy[0];
-                context['default_' + groupedBy] = viewUtils.getGroupValue(columnState, groupedBy);
+                var groupByField = viewUtils.getGroupByField(state.groupedBy[0]);
+                context['default_' + groupByField] = viewUtils.getGroupValue(columnState, groupByField);
                 new view_dialogs.FormViewDialog(self, {
                     res_model: state.model,
                     context: _.extend({default_name: values.name || values.display_name}, context),
