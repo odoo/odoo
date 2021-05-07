@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//td[@name='account_invoice_line_name']" position="inside">
+            <div style="margin-left:15px; font-style: italic">
+                <t t-set="down_payment_product" t-value="o.pos_order_ids[0].config_id.down_payment_product_id"/>
+                <t t-if="line.product_id == down_payment_product">
+                    <t t-set="sale_order" t-value="o.pos_order_ids[0].lines.mapped('sale_order_origin_id')"/>
+                    <t t-foreach="sale_order.order_line" t-as="sale_order_line">
+                        <t t-if="sale_order_line.product_id != down_payment_product">
+                            <div><span t-esc="sale_order_line.name" style="margin-right:10px"/> <t t-esc="int(sale_order_line.product_uom_qty)"/> x <t t-esc="sale_order_line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></div>
+                        </t>
+                    </t>
+                    <div style="font-weight: bold">From <t t-esc="sale_order.name"/> </div>
+                </t>
+            </div>
+        </xpath>
         <xpath expr="//p[@name='payment_communication']" position="replace"/>
         <xpath expr="//div[@id='total']/div/table" position="inside">
             <tr>
