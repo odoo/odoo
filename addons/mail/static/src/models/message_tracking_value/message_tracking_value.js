@@ -21,20 +21,20 @@ function factory(dependencies) {
             const messageTrackingValue = {
                 id: data.id,
             };
-            if ('changed_field' in data && data.changed_field) {
-                messageTrackingValue.changedField = {original: data.changed_field, string_val: null};
+            if ('changed_field' in data) {
+                messageTrackingValue.changedFieldOriginal = data.changed_field;
             }
-            if ('currency_id' in data && data.currency_id) {
+            if ('currency_id' in data) {
                 messageTrackingValue.currencyId = data.currency_id;
             }
-            if ('field_type' in data && data.field_type) {
+            if ('field_type' in data) {
                 messageTrackingValue.fieldType = data.field_type;
             }
-            if ('new_value' in data && data.new_value) {
-                messageTrackingValue.newValue = {original: data.new_value, string_val: null};
+            if ('new_value' in data) {
+                messageTrackingValue.newValueOriginal = data.new_value;
             }
-            if ('old_value' in data && data.old_value) {
-                messageTrackingValue.oldValue = {original: data.old_value, string_val: null};
+            if ('old_value' in data) {
+                messageTrackingValue.oldValueOriginal = data.old_value;
             }
 
             return messageTrackingValue;
@@ -49,7 +49,7 @@ function factory(dependencies) {
          * @returns {string}
          */
          _computeChangedField() {
-            return {original: this.original, string_val: _.str.sprintf(this.env._t("%s: "), this.changedField.original)};
+            return _.str.sprintf(this.env._t("%s:"), this.changedFieldOriginal);
         }
 
         /**
@@ -71,7 +71,7 @@ function factory(dependencies) {
                 case 'many2one':
                 case 'selection':
                     return format.char(value);
-                case 'date': //TODO: Is it possible to have null here? What is the point of having format(null)?
+                case 'date':
                     if (value) {
                         value = moment.utc(value);
                     }
@@ -110,7 +110,7 @@ function factory(dependencies) {
              * Field types that are not listed here are not supported by
              * tracking in Python. Also see `create_tracking_values` in Python.
              */
-            return {original: this.original, string_val: this._formatValue(this.fieldType, this.oldValue.original)}
+            return this._formatValue(this.fieldType, this.oldValueOriginal)
         }
 
         /**
@@ -124,16 +124,19 @@ function factory(dependencies) {
              * Field types that are not listed here are not supported by
              * tracking in Python. Also see `create_tracking_values` in Python.
              */
-             return {original :this.original, string_val: this._formatValue(this.fieldType, this.newValue.original)}
+            return this._formatValue(this.fieldType, this.newValueOriginal)
         }
     }
 
     MessageTrackingValue.fields = {
 
-        changedField:attr({
+        changedField: attr({
             compute: '_computeChangedField',
-            default: {},
+            dependencies: [
+                'changedFieldOriginal',
+            ],
         }),
+        changedFieldOriginal: attr(),
         currencyId: attr(),
         fieldType: attr(),
         id: attr({
@@ -144,18 +147,20 @@ function factory(dependencies) {
         }),
         newValue: attr({
             compute: '_computeNewValue',
-            default: {},
             dependencies: [
                 'fieldType',
+                'newValueOriginal',
             ],
         }),
+        newValueOriginal: attr(),
         oldValue: attr({
             compute: '_computeOldValue',
-            default: {},
             dependencies: [
                 'fieldType',
+                'oldValueOriginal',
             ],
         }),
+        oldValueOriginal: attr()
     };
 
     MessageTrackingValue.modelName = 'mail.message_tracking_value';
