@@ -74,7 +74,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             const { confirmed, payload: selectedOption } = await this.showPopup('SelectionPopup',
                 {
                     title: this.env._t('What do you want to do?'),
-                    list: [{id:"0", label: "Apply Down Payment", item: false}, {id:"1", label: "Settle the order", item: true}],
+                    list: [{id:"0", label: "Apply a down payment", item: false}, {id:"1", label: "Settle the order", item: true}],
                 });
 
             if(confirmed){
@@ -120,10 +120,6 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                     if (!this.env.pos.db.get_product_by_id(line.product_id[0])){
                         continue;
                     }
-                    let quantity = line.product_uom_qty;
-                    if (line.product_uom_qty > 0) {
-                        quantity = line.product_uom_qty - Math.max(line.qty_invoiced, line.qty_delivered);
-                    }
 
                     let new_line = new models.Orderline({}, {
                         pos: this.env.pos,
@@ -133,6 +129,12 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         price_manually_set: true,
                         sale_order_origin_id: clickedOrder,
                     });
+
+                    let quantity = line.product_uom_qty;
+                    if (line.product_uom_qty > 0) {
+                        quantity = new_line.setQuantityWithPolicy(line.product_uom_qty, line.qty_invoiced, line.qty_delivered);
+                    }
+
                     new_line.set_quantity(quantity);
                     new_line.set_unit_price(line.price_unit);
                     new_line.set_discount(line.discount);
@@ -140,6 +142,20 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                 }
               }
               else {
+                let lines = sale_order.order_line;
+                let tab = [];
+
+                for (let i=0; i<lines.length; i++) {
+                    tab[i] = {
+                        'product_name': lines[i].product_id[1],
+                        'product_uom_qty': lines[i].product_uom_qty,
+                        'price_unit': lines[i].price_unit,
+                        'total': lines[i].price_unit * lines[i].product_uom_qty
+                    }
+                }
+
+                clickedOrder.productDetails = tab;
+
                 let new_line = new models.Orderline({}, {
                     pos: this.env.pos,
                     order: this.env.pos.get_order(),

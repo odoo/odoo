@@ -3,7 +3,18 @@
 
     <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('orderlines')]/t" position="inside">
-        <div t-if="line.so_reference">From <t t-esc="line.so_reference"/></div>    
+            <div style="padding-top: 10px" class="pos-receipt-left-padding" t-if="line.so_reference">From <t t-esc="line.so_reference"/></div>
+            <t t-if="line.productDetails">
+                <tr t-foreach='line.productDetails' t-as='line'>
+                    <div class="pos-receipt-left-padding" style="witdh: 230px">
+                        <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 190px;" t-esc="line['product_name']" />
+                        <div class="pos-receipt-left-padding">
+                            <span t-esc="line['product_uom_qty']" class="price_display"/> x
+                            <span t-esc="env.pos.format_currency_no_symbol(line['price_unit'])" class="price_display"/>
+                        </div>
+                    </div>
+                </tr>
+            </t>
         </xpath>
     </t>
 

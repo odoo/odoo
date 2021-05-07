@@ -6,7 +6,21 @@
             <t t-if="props.line.get_sale_order()">
                 <li class="info orderline-sale-order">
                     <i class="fa fa-basket" role="img" aria-label="SO" title="SO"/>
-                    <t t-esc="props.line.get_sale_order()" />
+                    <t t-esc="props.line.get_sale_order().name" />
+                    <t t-if="props.line.get_sale_order().details">
+                        <tr t-foreach='props.line.get_sale_order().details' t-as='line'>
+                            <ul>
+                                <span style="position: absolute;">
+                                    <t t-esc="line['product_uom_qty']"/> *
+                                    <t t-esc="env.pos.format_currency(line['price_unit'])" />
+                                </span>
+                                <div style="margin-left: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 190px; display: inline-block">
+                                    <t t-esc="line['product_name']" />
+                                </div>
+                                <span style="float: right;"><t t-esc="env.pos.format_currency(line['total'])" /></span>
+                            </ul>
+                        </tr>
+                    </t>
                 </li>
             </t>
         </xpath>

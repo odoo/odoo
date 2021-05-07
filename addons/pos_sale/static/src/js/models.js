@@ -20,6 +20,7 @@ models.load_models([{
   loaded: product_model.loaded,
 }]);
 
+models.load_fields("product.product", "invoice_policy");
 
 var super_order_model = models.Order.prototype;
 models.Order = models.Order.extend({
@@ -36,6 +37,7 @@ models.Order = models.Order.extend({
         var json = super_order_model.export_for_printing.apply(this,arguments);
         if (this.sale_order_origin_id) {
             json.so_reference = this.sale_order_origin_id.name;
+            json.productDetails =  this.sale_order_origin_id.productDetails;
         }
         return json;
     },
@@ -57,14 +59,26 @@ models.Orderline = models.Orderline.extend({
       return json;
   },
   get_sale_order: function(){
-      return this.sale_order_origin_id ? this.sale_order_origin_id.name: false;
+      if(this.sale_order_origin_id) {
+        let value = {
+            'name': this.sale_order_origin_id.name,
+            'details': this.sale_order_origin_id.productDetails || false
+        }
+
+        return value;
+      }
+      return false;
   },
   export_for_printing: function() {
     var json = super_order_line_model.export_for_printing.apply(this,arguments);
     if (this.sale_order_origin_id) {
         json.so_reference = this.sale_order_origin_id.name;
+        json.productDetails =  this.sale_order_origin_id.productDetails;
     }
     return json;
+  },
+  setQuantityWithPolicy: function(product_uom_qty, qty_invoiced, qty_delivered) {
+       return product_uom_qty - Math.max(qty_invoiced, qty_delivered);
   },
 });
 
