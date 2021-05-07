@@ -464,10 +464,11 @@ class PricelistItem(models.Model):
             self.name = _("All Products")
 
         if self.compute_price == 'fixed':
+            decimal_places = self.env['decimal.precision'].precision_get('Product Price')
             self.price = ("%s %s") % (
                 float_repr(
                     self.fixed_price,
-                    self.pricelist_id.currency_id.decimal_places,
+                    decimal_places,
                 ),
                 self.pricelist_id.currency_id.name
             )
