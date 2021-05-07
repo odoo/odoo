@@ -148,17 +148,21 @@ class StockRule(models.Model):
         purpose in order to indicate that those options are available.
         """
         delay, delay_description = super()._get_lead_days(product)
+        bypass_delay_description = self.env.context.get('bypass_delay_description')
         buy_rule = self.filtered(lambda r: r.action == 'buy')
-        if not buy_rule or not product._prepare_sellers():
+        seller = product._prepare_sellers()
+        if not buy_rule or not seller:
             return delay, delay_description
         buy_rule.ensure_one()
-        supplier_delay = product._prepare_sellers()[0].delay
-        if supplier_delay:
+        supplier_delay = seller[0].delay
+        if supplier_delay and not bypass_delay_description:
             delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Vendor Lead Time'), supplier_delay, _('day(s)'))
         security_delay = buy_rule.picking_type_id.company_id.po_lead
-        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Purchase Security Lead Time'), security_delay, _('day(s)'))
+        if not bypass_delay_description:
+            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Purchase Security Lead Time'), security_delay, _('day(s)'))
         days_to_purchase = buy_rule.company_id.days_to_purchase
-        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Days to Purchase'), days_to_purchase, _('day(s)'))
+        if not bypass_delay_description:
+            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Days to Purchase'), days_to_purchase, _('day(s)'))
         return delay + supplier_delay + security_delay + days_to_purchase, delay_description
 
     @api.model
