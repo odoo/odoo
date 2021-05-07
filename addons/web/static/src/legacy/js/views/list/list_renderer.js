@@ -1146,7 +1146,7 @@ var ListRenderer = BasicRenderer.extend({
      * @param {jQueryElement} $el the element to which to add the classes (a tr
      *   or td)
      * @param {Object} decorations keys are the decoration classes (e.g.
-     *   'text-bf') and values are the python expressions to evaluate
+     *   'font-weight-bold') and values are the python expressions to evaluate
      * @param {Object} record a basic model record
      */
     _setDecorationClasses: function ($el, decorations, record) {
