@@ -5,8 +5,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class PaypalCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.paypal = cls._prepare_acquirer('paypal', update_values={
             'paypal_email_account': 'dummy@test.mail.com',
