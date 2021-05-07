@@ -5,8 +5,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class PayulatamCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.payulatam = cls._prepare_acquirer('payulatam', update_values={
             'payulatam_account_id': 'dummy',

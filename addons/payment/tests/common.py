@@ -12,8 +12,8 @@ _logger = logging.getLogger(__name__)
 class PaymentCommon(PaymentTestUtils):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.currency_euro = cls._prepare_currency('EUR')
         cls.currency_usd = cls._prepare_currency('USD')
@@ -68,17 +68,13 @@ class PaymentCommon(PaymentTestUtils):
             'type': 'qweb',
             'arch': arch,
         })
-        journal = cls.env['account.journal'].search(
-            [('company_id', '=', cls.env.company.id), ('type', 'in', ['bank', 'cash'])],
-            limit=1
-        )
         cls.dummy_acquirer = cls.env['payment.acquirer'].create({
             'name': "Dummy Acquirer",
             'provider': 'none',
             'state': 'test',
             'allow_tokenization': True,
             'redirect_form_view_id': redirect_form.id,
-            'journal_id': journal.id,
+            'journal_id': cls.company_data['default_journal_bank'].id,
         })
 
         cls.acquirer = cls.dummy_acquirer
@@ -128,10 +124,13 @@ class PaymentCommon(PaymentTestUtils):
             else:
                 acquirer = base_acquirer.copy({'company_id': company.id})
 
-        acquirer.write({
-            'state': 'test',
-            **update_values
-        })
+        acquirer.write(update_values)
+        if not acquirer.journal_id:
+            acquirer.journal_id = cls.env['account.journal'].search([
+                ('company_id', '=', company.id),
+                ('type', '=', 'bank')
+            ], limit=1)
+        acquirer.state = 'test'
         return acquirer
 
     def create_transaction(self, flow, sudo=True, **values):

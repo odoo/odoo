@@ -66,6 +66,7 @@ class PaymentAcquirer(models.Model):
              "If none is set, it is available for all countries.")
     journal_id = fields.Many2one(
         string="Payment Journal", comodel_name='account.journal',
+        copy=False,
         help="The journal in which the successful transactions are posted",
         domain="[('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]")
 
