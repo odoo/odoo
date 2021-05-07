@@ -388,6 +388,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/js/libs/fullcalendar.js',
             'web/static/src/js/libs/jquery.js',
             'web/static/src/js/libs/underscore.js',
+            'web/static/src/js/libs/pdfjs.js',
             'web/static/src/js/libs/popper.js',
             'web/static/src/js/libs/zoomodoo.js',
             'web/static/src/js/libs/jSignatureCustom.js',

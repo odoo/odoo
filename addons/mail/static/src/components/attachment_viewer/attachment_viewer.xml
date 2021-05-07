@@ -46,7 +46,7 @@
                     </div>
                 </t>
                 <t t-if="attachmentViewer.attachment.fileType === 'application/pdf'">
-                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf" t-att-class="{ 'o-isMobile': env.messaging.device.isMobile }" t-att-src="attachmentViewer.attachment.defaultSource"/>
+                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf" t-ref="iframeViewerPdf" t-att-class="{ 'o-isMobile': env.messaging.device.isMobile }" t-att-src="attachmentViewer.attachment.defaultSource"/>
                 </t>
                 <t t-if="attachmentViewer.attachment.isTextFile">
                     <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_text" t-att-src="attachmentViewer.attachment.defaultSource"/>

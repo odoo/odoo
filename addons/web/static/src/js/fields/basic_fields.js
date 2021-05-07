@@ -25,6 +25,7 @@ var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
 const {ColorpickerDialog} = require('web.Colorpicker');
+const { hidePDFJSButtons } = require('@web/js/libs/pdfjs');
 
 let FieldBoolean = deprecatedFields.FieldBoolean;
 
@@ -2255,13 +2256,6 @@ var FieldPdfViewer = FieldBinaryFile.extend({
 
     /**
      * @private
-     * @param {DOMElement} iframe
-     */
-    _disableButtons: function (iframe) {
-        $(iframe).contents().find('button#openFile').hide();
-    },
-    /**
-     * @private
      * @param {string} [fileURI] file URI if specified
      * @returns {string} the pdf viewer URI
      */
@@ -2292,7 +2286,6 @@ var FieldPdfViewer = FieldBinaryFile.extend({
 
         $iFrame.on('load', function () {
             self.PDFViewerApplication = this.contentWindow.window.PDFViewerApplication;
-            self._disableButtons(this);
         });
         if (this.mode === "readonly" && this.value) {
             $iFrame.attr('src', this._getURI());
@@ -2309,6 +2302,7 @@ var FieldPdfViewer = FieldBinaryFile.extend({
                 $selectUpload.removeClass('o_hidden');
             }
         }
+        hidePDFJSButtons($iFrame[0]);
     },
 
     //--------------------------------------------------------------------------

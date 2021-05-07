@@ -3530,6 +3530,7 @@ odoo.define('im_livechat.legacy.mail.DocumentViewer', function (require) {
 
 var core = require('web.core');
 var Widget = require('web.Widget');
+var { hidePDFJSButtons } = require('@web/js/libs/pdfjs');
 
 var QWeb = core.qweb;
 
@@ -3658,6 +3659,9 @@ var DocumentViewer = Widget.extend({
         this.$('.o_viewer_content').html(QWeb.render('im_livechat.legacy.mail.DocumentViewer.Content', {
             widget: this
         }));
+        if (this.activeAttachment.fileType === 'application/pdf') {
+            hidePDFJSButtons(this.$('.o_viewer_content')[0]);
+        }
         this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
         this.$('[data-toggle="tooltip"]').tooltip({ delay: 0 });
         this._reset();
