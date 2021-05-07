@@ -193,6 +193,8 @@ class MockModels {
                     field_type: { string: 'Field type', type: 'char' },
                     new_value: { string: 'New value', type: 'char' },
                     old_value: { string: 'Old value', type: 'char' },
+                    mail_message_id: { string: 'Message ID', type: 'many2one', relation: 'mail.message'},
+                    currency_id: { string: 'Currency', type: 'many2one', relation: 'res.currency'},
                 },
                 records: [],
             },
@@ -200,6 +202,16 @@ class MockModels {
                 fields: {
                     code: { string: "Code", type: 'char' },
                     name: { string: "Name", type: 'char' },
+                },
+                records: [],
+            },
+            'res.currency': {
+                fields: {
+                    name: { string: 'Currency', type: 'char' },
+                    full_name: { string: 'Name', type: 'char' },
+                    symbol: { string: 'Symbol', type: 'char' },
+                    rate: { string: 'Current Rate', type: 'float' },
+                    position: { string: 'Symbol Position', type: 'selection', selection: [['after', 'After Amount'], ['before', 'Before Amount']]},
                 },
                 records: [],
             },

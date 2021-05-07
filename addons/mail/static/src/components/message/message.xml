@@ -168,13 +168,13 @@
                                 <t t-foreach="message.trackingValues" t-as="value" t-key="value.id">
                                     <li>
                                         <div class="o_Message_trackingValue">
-                                            <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changedField.string_val"/>
+                                            <div class="o_Message_trackingValueFieldName o_Message_trackingValueItem" t-esc="value.changedField"/>
                                             <t t-if="value.oldValue">
-                                                <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.oldValue.string_val"/>
+                                                <div class="o_Message_trackingValueOldValue o_Message_trackingValueItem" t-esc="value.oldValue"/>
                                             </t>
                                             <div class="o_Message_trackingValueSeparator o_Message_trackingValueItem fa fa-long-arrow-right" role="img"/>
                                             <t t-if="value.newValue">
-                                                <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.newValue.string_val"/>
+                                                <div class="o_Message_trackingValueNewValue o_Message_trackingValueItem" t-esc="value.newValue"/>
                                             </t>
                                         </div>
                                     </li>
