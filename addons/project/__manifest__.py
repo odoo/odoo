@@ -48,8 +48,6 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'project/static/src/components/thread_needaction_preview/thread_needaction_preview.scss',
-            'project/static/src/components/thread_preview/thread_preview.scss',
             'project/static/src/css/project.css',
             'project/static/src/js/project_form.js',
             'project/static/src/js/project_kanban.js',
@@ -68,8 +66,6 @@
             'project/static/src/js/portal_rating.js',
         ],
         'web.assets_qweb': [
-            'project/static/src/components/thread_needaction_preview/thread_needaction_preview.xml',
-            'project/static/src/components/thread_preview/thread_preview.xml',
             'project/static/src/xml/**/*',
         ],
         'web.qunit_suite_tests': [
