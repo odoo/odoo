@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//p[@name='payment_communication']" position="replace"/>
+        <xpath expr="//div[@id='total']/div/table" position="inside">
+            <tr>
+                <td>
+                    <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="o.invoice_date" t-options='{"widget": "date"}'/></i>
+                </td>
+            </tr>
+            <t t-foreach="o.pos_order_ids.mapped('payment_ids')" t-as="payment">
+                <tr>
+                    <td>
+                        Paid with <t t-esc="payment.payment_method_id.name"/>
+                    </td>
+                    <td class="text-right">
+                        <t t-esc="payment.amount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                    </td>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+</odoo>
