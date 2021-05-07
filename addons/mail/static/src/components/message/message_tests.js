@@ -1032,15 +1032,16 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
     assert.expect(8);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Total",
+        fieldType: "float",
+        id: 6,
+        newValueOriginal: 45.67,
+        oldValueOriginal: 12.3,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Total",
-            field_type: "float",
-            id: 6,
-            new_value: 45.67,
-            old_value: 12.3,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.containsOnce(
@@ -1089,15 +1090,16 @@ QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async 
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Total",
+        fieldType: "integer",
+        id: 6,
+        newValueOriginal: 0,
+        oldValueOriginal: 1,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Total",
-            field_type: "integer",
-            id: 6,
-            new_value: 0,
-            old_value: 1,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1111,15 +1113,16 @@ QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async 
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Total",
+        fieldType: "integer",
+        id: 6,
+        newValueOriginal: 1,
+        oldValueOriginal: 0,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Total",
-            field_type: "integer",
-            id: 6,
-            new_value: 1,
-            old_value: 0,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1133,15 +1136,16 @@ QUnit.test('rendering of tracked field of type float: from non-0 to 0', async fu
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Total",
+        fieldType: "float",
+        id: 6,
+        newValueOriginal: 0,
+        oldValueOriginal: 1,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Total",
-            field_type: "float",
-            id: 6,
-            new_value: 0,
-            old_value: 1,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1155,15 +1159,16 @@ QUnit.test('rendering of tracked field of type float: from 0 to non-0', async fu
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Total",
+        fieldType: "float",
+        id: 6,
+        newValueOriginal: 1,
+        oldValueOriginal: 0,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Total",
-            field_type: "float",
-            id: 6,
-            new_value: 1,
-            old_value: 0,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1177,15 +1182,16 @@ QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Total",
+        fieldType: "monetary",
+        id: 6,
+        newValueOriginal: 0,
+        oldValueOriginal: 1,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Total",
-            field_type: "monetary",
-            id: 6,
-            new_value: 0,
-            old_value: 1,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1199,15 +1205,16 @@ QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Total",
+        fieldType: "monetary",
+        id: 6,
+        newValueOriginal: 1,
+        oldValueOriginal: 0,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Total",
-            field_type: "monetary",
-            id: 6,
-            new_value: 1,
-            old_value: 0,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1219,17 +1226,17 @@ QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async
 
 QUnit.test('rendering of tracked field of type boolean: from true to false', async function (assert) {
     assert.expect(1);
-
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Is Ready",
+        fieldType: "boolean",
+        id: 6,
+        newValueOriginal: false,
+        oldValueOriginal: true,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Is Ready",
-            field_type: "boolean",
-            id: 6,
-            new_value: false,
-            old_value: true,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1243,15 +1250,16 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Is Ready",
+        fieldType: "boolean",
+        id: 6,
+        newValueOriginal: true,
+        oldValueOriginal: false,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Is Ready",
-            field_type: "boolean",
-            id: 6,
-            new_value: true,
-            old_value: false,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1265,15 +1273,16 @@ QUnit.test('rendering of tracked field of type char: from a string to empty stri
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Name",
+        fieldType: "char",
+        id: 6,
+        newValueOriginal: "",
+        oldValueOriginal: "Marc",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Name",
-            field_type: "char",
-            id: 6,
-            new_value: "",
-            old_value: "Marc",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1287,15 +1296,16 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Name",
+        fieldType: "char",
+        id: 6,
+        newValueOriginal: "Marc",
+        oldValueOriginal: "",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Name",
-            field_type: "char",
-            id: 6,
-            new_value: "Marc",
-            old_value: "",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1307,17 +1317,17 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
 
 QUnit.test('rendering of tracked field of type date: from no date to a set date', async function (assert) {
     assert.expect(1);
-
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Deadline",
+        fieldType: "date",
+        id: 6,
+        newValueOriginal: "2018-12-14",
+        oldValueOriginal: false,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Deadline",
-            field_type: "date",
-            id: 6,
-            new_value: "2018-12-14",
-            old_value: false,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1329,17 +1339,17 @@ QUnit.test('rendering of tracked field of type date: from no date to a set date'
 
 QUnit.test('rendering of tracked field of type date: from a set date to no date', async function (assert) {
     assert.expect(1);
-
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Deadline",
+        fieldType: "date",
+        id: 6,
+        newValueOriginal: false,
+        oldValueOriginal: "2018-12-14",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Deadline",
-            field_type: "date",
-            id: 6,
-            new_value: false,
-            old_value: "2018-12-14",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1351,17 +1361,17 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
 
 QUnit.test('rendering of tracked field of type datetime: from no date and time to a set date and time', async function (assert) {
     assert.expect(1);
-
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Deadline",
+        fieldType: "datetime",
+        id: 6,
+        newValueOriginal: "2018-12-14 13:42:28",
+        oldValueOriginal: false,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Deadline",
-            field_type: "datetime",
-            id: 6,
-            new_value: "2018-12-14 13:42:28",
-            old_value: false,
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1373,17 +1383,17 @@ QUnit.test('rendering of tracked field of type datetime: from no date and time t
 
 QUnit.test('rendering of tracked field of type datetime: from a set date and time to no date and time', async function (assert) {
     assert.expect(1);
-
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Deadline",
+        fieldType: "datetime",
+        id: 6,
+        newValueOriginal: false,
+        oldValueOriginal: "2018-12-14 13:42:28",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Deadline",
-            field_type: "datetime",
-            id: 6,
-            new_value: false,
-            old_value: "2018-12-14 13:42:28",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1395,17 +1405,17 @@ QUnit.test('rendering of tracked field of type datetime: from a set date and tim
 
 QUnit.test('rendering of tracked field of type text: from some text to empty', async function (assert) {
     assert.expect(1);
-
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Name",
+        fieldType: "text",
+        id: 6,
+        newValueOriginal: "",
+        oldValueOriginal: "Marc",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Name",
-            field_type: "text",
-            id: 6,
-            new_value: "",
-            old_value: "Marc",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1417,17 +1427,17 @@ QUnit.test('rendering of tracked field of type text: from some text to empty', a
 
 QUnit.test('rendering of tracked field of type text: from empty to some text', async function (assert) {
     assert.expect(1);
-
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Name",
+        fieldType: "text",
+        id: 6,
+        newValueOriginal: "Marc",
+        oldValueOriginal: "",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Name",
-            field_type: "text",
-            id: 6,
-            new_value: "Marc",
-            old_value: "",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1441,15 +1451,16 @@ QUnit.test('rendering of tracked field of type selection: from a selection to no
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "State",
+        fieldType: "selection",
+        id: 6,
+        newValueOriginal: "",
+        oldValueOriginal: "ok",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "State",
-            field_type: "selection",
-            id: 6,
-            new_value: "",
-            old_value: "ok",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1463,15 +1474,16 @@ QUnit.test('rendering of tracked field of type selection: from no selection to a
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "State",
+        fieldType: "selection",
+        id: 6,
+        newValueOriginal: "ok",
+        oldValueOriginal: "",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "State",
-            field_type: "selection",
-            id: 6,
-            new_value: "ok",
-            old_value: "",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1485,15 +1497,16 @@ QUnit.test('rendering of tracked field of type many2one: from having a related r
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Author",
+        fieldType: "many2one",
+        id: 6,
+        newValueOriginal: "",
+        oldValueOriginal: "Marc",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Author",
-            field_type: "many2one",
-            id: 6,
-            new_value: "",
-            old_value: "Marc",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1507,15 +1520,16 @@ QUnit.test('rendering of tracked field of type many2one: from no related record 
     assert.expect(1);
 
     await this.start();
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Author",
+        fieldType: "many2one",
+        id: 6,
+        newValueOriginal: "Marc",
+        oldValueOriginal: "",
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Author",
-            field_type: "many2one",
-            id: 6,
-            new_value: "Marc",
-            old_value: "",
-        }],
+        trackingValues: link(trackingValue),
     });
     await this.createMessageComponent(message);
     assert.strictEqual(
@@ -1535,18 +1549,18 @@ QUnit.test('basic rendering of tracking value (monetary type)', async function (
             },
         },
     });
+    const trackingValue = this.env.models['mail.message_tracking_value'].create({
+        changedFieldOriginal: "Revenue",
+        currencyId: 1,
+        fieldType: "monetary",
+        id: 6,
+        newValueOriginal: 500,
+        oldValueOriginal: 1000,
+    });
     const message = this.env.models['mail.message'].create({
         id: 11,
-        tracking_value_ids: [{
-            changed_field: "Revenue",
-            currency_id: 1,
-            field_type: "monetary",
-            id: 6,
-            new_value: 500,
-            old_value: 1000,
-        }],
+        trackingValues: link(trackingValue),
     });
-
     await this.createMessageComponent(message);
     assert.containsOnce(
         document.body,
