@@ -5889,7 +5889,7 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_counter_progress:last .progress-bar', 4);
         assert.containsOnce(kanban, '.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]',
             "should have false kanban color");
-        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'bg-muted-full');
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'bg-muted');
 
         await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
 
@@ -6375,7 +6375,7 @@ QUnit.module('Views', {
         let secondCounter = kanban.el.querySelector('.o_kanban_group:nth-child(2) .o_kanban_counter_side');
         assert.strictEqual(parseInt(secondCounter.innerText), 3,
             "Initial count should be Three");
-        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group:nth-child(2) .bg-success-full'));
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group:nth-child(2) .bg-success'));
 
         secondCounter = kanban.el.querySelector('.o_kanban_group:nth-child(2) .o_kanban_counter_side');
         assert.strictEqual(parseInt(secondCounter.innerText), 1,
