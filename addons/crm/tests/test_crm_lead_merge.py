@@ -6,6 +6,7 @@ import base64
 from odoo.addons.crm.tests.common import TestLeadConvertMassCommon
 from odoo.fields import Datetime
 from odoo.tests.common import tagged, users
+from odoo.tools import mute_logger
 
 
 @tagged('lead_manage')
@@ -35,8 +36,28 @@ class TestLeadMergeCommon(TestLeadConvertMassCommon):
 @tagged('lead_manage')
 class TestLeadMerge(TestLeadMergeCommon):
 
+    def _run_merge_wizard(self, leads):
+        res = self.env['crm.merge.opportunity'].with_context({
+            'active_model': 'crm.lead',
+            'active_ids': leads.ids,
+            'active_id': False,
+        }).create({
+            'team_id': False,
+            'user_id': False,
+        }).action_merge()
+        return self.env['crm.lead'].browse(res['res_id'])
+
     def test_initial_data(self):
-        """ Ensure initial data to avoid spaghetti test update afterwards """
+        """ Ensure initial data to avoid spaghetti test update afterwards
+
+        Original order:
+
+        lead_w_contact ----------lead---seq=30---proba=15
+        lead_w_email ------------lead---seq=3----proba=15
+        lead_1 ------------------lead---seq=1----proba=?
+        lead_w_partner ----------lead---seq=False---proba=10
+        lead_w_partner_company --lead---seq=False---proba=15
+        """
         self.assertFalse(self.lead_1.date_conversion)
         self.assertEqual(self.lead_1.date_open, Datetime.from_string('2020-01-15 11:30:00'))
         self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
@@ -64,6 +85,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         self.assertEqual(self.lead_w_email_lost.team_id, self.sales_team_1)
 
     @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
     def test_lead_merge_internals(self):
         """ Test internals of merge wizard. In this test leads are ordered as
 
@@ -104,6 +126,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         self.assertEqual(merge_opportunity.stage_id, self.stage_gen_1)
 
     @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
     def test_lead_merge_mixed(self):
         """ In case of mix, opportunities are on top, and result is an opportunity
 
@@ -149,6 +172,50 @@ class TestLeadMerge(TestLeadMergeCommon):
         self.assertEqual(merge_opportunity.stage_id, self.stage_team_convert_1)
 
     @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
+    def test_lead_merge_probability_auto(self):
+        """ Check master lead keeps its automated probability when merged. """
+        leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
+        merged_lead = self._run_merge_wizard(leads)
+        self.assertEqual(merged_lead, self.lead_1)
+        self.assertTrue(merged_lead.is_automated_probability, "lead with Auto proba should remain with auto probability")
+
+    @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
+    def test_lead_merge_probability_auto_empty(self):
+        """ Check master lead keeps its automated probability when merged
+        even if its probability is 0. """
+        self.lead_1.write({'probability': 0, 'automated_probability': 0})
+        leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
+        merged_lead = self._run_merge_wizard(leads)
+        self.assertEqual(merged_lead, self.lead_1)
+        self.assertTrue(merged_lead.is_automated_probability, "lead with Auto proba should remain with auto probability")
+
+    @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
+    def test_lead_merge_probability_manual(self):
+        """ Check master lead keeps its manual probability when merged. """
+        self.lead_1.write({'probability': 40})
+        leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
+        merged_lead = self._run_merge_wizard(leads)
+        self.assertEqual(merged_lead, self.lead_1)
+        self.assertEqual(merged_lead.probability, 40, "Manual Probability should remain the same after the merge")
+        self.assertFalse(merged_lead.is_automated_probability)
+
+    @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
+    def test_lead_merge_probability_manual_empty(self):
+        """ Check master lead keeps its manual probability when merged even if
+        its probability is 0. """
+        self.lead_1.write({'probability': 0})
+        leads = self.env['crm.lead'].browse((self.lead_1 + self.lead_w_partner + self.lead_w_partner_company).ids)
+        merged_lead = self._run_merge_wizard(leads)
+        self.assertEqual(merged_lead, self.lead_1)
+        self.assertEqual(merged_lead.probability, 0, "Manual Probability should remain the same after the merge")
+        self.assertFalse(merged_lead.is_automated_probability)
+
+    @users('user_sales_manager')
+    @mute_logger('odoo.models.unlink')
     def test_merge_method(self):
         """ In case of mix, opportunities are on top, and result is an opportunity
 
