@@ -294,13 +294,11 @@ class SaleOrder(models.Model):
             accessory_products = self.env['product.product']
             for line in order.website_order_line.filtered(lambda l: l.product_id):
                 combination = line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids
-                accessory_products |= line.product_id.accessory_product_ids.filtered(lambda product:
-                    product.website_published and
+                accessory_products |= line.product_id.product_tmpl_id._get_website_accessory_product(
+                    order.website_id).filtered(lambda product:
                     product not in products and
-                    product._is_variant_possible(parent_combination=combination) and
-                    (product.company_id == line.company_id or not product.company_id)
+                    product._is_variant_possible(parent_combination=combination)
                 )
-
             return random.sample(accessory_products, len(accessory_products))
 
     def action_recovery_email_send(self):

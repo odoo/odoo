@@ -682,10 +682,11 @@
 
     <template id="recommended_products" inherit_id="website_sale.product" customize_show="True" name="Alternative Products">
         <xpath expr="//div[@id='product_full_description']" position="after">
-            <div class="container mt32" t-if="product.alternative_product_ids">
+            <t t-set="alternative_products" t-value="product._get_website_alternative_product(website)"/>
+            <div class="container mt32" t-if="alternative_products">
                 <h3>Alternative Products:</h3>
                 <div class="row mt16" style="">
-                    <t t-foreach="product.alternative_product_ids" t-as="alt_product">
+                    <t t-foreach="alternative_products" t-as="alt_product">
                         <div class="col-lg-2" style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;">
                             <div class="mt16 text-center" style="height: 100%;">
                                 <t t-set="combination_info" t-value="alt_product._get_combination_info()"/>

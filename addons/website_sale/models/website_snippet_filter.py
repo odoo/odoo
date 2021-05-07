@@ -146,7 +146,7 @@ class WebsiteSnippetFilter(models.Model):
             if current_template.exists():
                 excluded_products = website.sale_get_order().order_line.product_id.ids
                 excluded_products.extend(current_template.product_variant_ids.ids)
-                included_products = current_template.product_variant_ids.accessory_product_ids.filtered('website_published').ids
+                included_products = current_template._get_website_accessory_product(website).ids
                 products_ids = list(set(included_products) - set(excluded_products))
                 if products_ids:
                     domain = expression.AND([

@@ -264,6 +264,25 @@ class ProductTemplate(models.Model):
 
         return self._get_possible_variants(parent_combination).sorted(_sort_key_variant)
 
+    def _get_website_accessory_product(self, website=None):
+        domains = []
+        domains.append([('website_published', '=', True)])
+        if website:
+            domains.append(website.sale_product_domain())
+            domains.append([('company_id', 'in', [False, website.company_id.id])])
+        domain = expression.AND(domains)
+        tmpl_allowed = self.accessory_product_ids.product_tmpl_id.filtered_domain(domain)
+        return self.accessory_product_ids.filtered(lambda x: x.product_tmpl_id in tmpl_allowed)
+
+    def _get_website_alternative_product(self, website=None):
+        domains = []
+        domains.append([('website_published', '=', True)])
+        if website:
+            domains.append(website.sale_product_domain())
+            domains.append([('company_id', 'in', [False, website.company_id.id])])
+        domain = expression.AND(domains)
+        return self.alternative_product_ids.filtered_domain(domain)
+
     def _get_combination_info(self, combination=False, product_id=False, add_qty=1, pricelist=False, parent_combination=False, only_template=False):
         """Override for website, where we want to:
             - take the website pricelist if no pricelist is set
