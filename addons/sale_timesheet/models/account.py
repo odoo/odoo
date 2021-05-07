@@ -98,7 +98,7 @@ class AccountAnalyticLine(models.Model):
 
         if not self.task_id:
             if self.project_id.pricing_type == 'employee_rate':
-                map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', self.project_id.id), ('employee_id', '=', self.employee_id.id)])
+                map_entry = self._get_employee_mapping_entry()
                 if map_entry:
                     return map_entry.sale_line_id
             if self.project_id.sale_line_id:
@@ -149,3 +149,14 @@ class AccountAnalyticLine(models.Model):
     def _unlink_except_invoiced(self):
         if any(line.timesheet_invoice_id and line.timesheet_invoice_id.state == 'posted' for line in self):
             raise UserError(_('You cannot remove a timesheet that has already been invoiced.'))
+
+    def _get_employee_mapping_entry(self):
+        self.ensure_one()
+        return self.env['project.sale.line.employee.map'].search([('project_id', '=', self.project_id.id), ('employee_id', '=', self.employee_id.id)])
+
+    def _employee_timesheet_cost(self):
+        if self.project_id.pricing_type == 'employee_rate':
+            mapping_entry = self._get_employee_mapping_entry()
+            if mapping_entry:
+                return mapping_entry.cost
+        return super()._employee_timesheet_cost()
