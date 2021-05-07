@@ -535,7 +535,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="lost_ribbon" t-value="!record.active.raw_value and record.probability and record.probability.raw_value == 0"/>
-                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} #{lost_ribbon ? 'oe_kanban_card_lost_ribbon' : ''} oe_kanban_global_click oe_kanban_card d-flex flex-column">
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} #{lost_ribbon ? 'oe_kanban_card_ribbon' : ''} oe_kanban_global_click oe_kanban_card d-flex flex-column">
                                 <div class="ribbon ribbon-top-right"
                                     attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">
                                     <span class="bg-danger">Lost</span>
@@ -588,6 +588,59 @@
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_kanban_forecast" model="ir.ui.view">
+            <field name="name">crm.lead.view.kanban.forecast</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="mode">primary</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="default_group_by">date_deadline</attribute>
+                    <attribute name="js_class">forecast_kanban</attribute>
+                </xpath>
+                <xpath expr="//kanban" position="inside">
+                    <field name="date_deadline" allow_group_range_value="true"/>
+                </xpath>
+                <xpath expr="//field[@name='expected_revenue']" position="replace">
+                    <field name="prorated_revenue"/>
+                </xpath>
+                <xpath expr="//progressbar" position="attributes">
+                    <attribute name="sum_field">prorated_revenue</attribute>
+                </xpath>
+                <xpath expr="//t[@t-set='lost_ribbon']" position="after">
+                    <t t-set="won_ribbon" t-value="record.active.raw_value and record.probability and record.probability.raw_value == 100"/>
+                </xpath>
+                <xpath expr="//div[contains(@t-attf-class, 'oe_kanban_card')]" position="attributes">
+                    <attribute name="t-attf-class">
+                        #{!selection_mode ? kanban_color(record.color.raw_value) : ''}
+                        #{lost_ribbon || won_ribbon ? 'oe_kanban_card_ribbon' : ''}
+                        oe_kanban_global_click oe_kanban_card d-flex flex-column
+                    </attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('ribbon')]" position="replace">
+                    <div class="ribbon ribbon-top-right"
+                        attrs="{'invisible': ['&amp;', '|', ('probability', '&gt;', 0), ('active', '=', True),
+                            '|', ('probability', '&lt;', 100), ('active', '=', False)]}">
+                        <span t-if="won_ribbon" class="bg-success">Won</span>
+                        <span t-elif="lost_ribbon" class="bg-danger">Lost</span>
+                    </div>
+                </xpath>
+                <xpath expr="//div[hasclass('o_kanban_record_subtitle')]" position="replace">
+                    <div class="o_kanban_record_subtitle">
+                        <t t-if="record.prorated_revenue.raw_value">
+                            <field name="prorated_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                            <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value"> + </span>
+                        </t>
+                        <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
+                            <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                            <field name="recurring_plan"/>
+                        </t>
+                    </div>
+                </xpath>
             </field>
         </record>
 
@@ -738,6 +791,25 @@
             </field>
         </record>
 
+        <record id="crm_lead_view_tree_forecast" model="ir.ui.view">
+            <field name="name">crm.lead.view.tree.forecast</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="mode">primary</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="js_class">forecast_list</attribute>
+                </xpath>
+                <xpath expr="//field[@name='expected_revenue']" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </xpath>
+                <xpath expr="//field[@name='expected_revenue']" position="after">
+                    <field name="prorated_revenue" sum="Prorated Revenues" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="crm_lead_view_list_activities" model="ir.ui.view">
             <field name="name">crm.lead.list.activities</field>
             <field name="model">crm.lead</field>
@@ -797,6 +869,24 @@
             </field>
         </record>
 
+        <record id="crm_lead_view_graph_forecast" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph.forecast</field>
+            <field name="model">crm.lead</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities Forecast" sample="1" js_class="forecast_graph">
+                    <field name="date_deadline" type="row"/>
+                    <field name="prorated_revenue" type="measure"/>
+                    <field name="automated_probability" invisible="1"/>
+                    <field name="color" invisible="1"/>
+                    <field name="day_open" invisible="1"/>
+                    <field name="day_close" invisible="1"/>
+                    <field name="message_bounce" invisible="1"/>
+                    <field name="probability" invisible="1"/>
+                </graph>
+            </field>
+        </record>
+
         <record id="crm_lead_view_pivot" model="ir.ui.view">
             <field name="name">crm.lead.view.pivot</field>
             <field name="model">crm.lead</field>
@@ -807,6 +897,25 @@
                     <field name="expected_revenue" type="measure"/>
                     <field name="recurring_revenue_monthly" type="measure"/>
                     <field name="color" invisible="1"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_pivot_forecast" model="ir.ui.view">
+            <field name="name">crm.lead.view.pivot.forecast</field>
+            <field name="model">crm.lead</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <pivot string="Forecast Analysis" sample="1" js_class="forecast_pivot">
+                    <field name="date_deadline" interval="month" type="row"/>
+                    <field name="stage_id" type="col"/>
+                    <field name="prorated_revenue" type="measure"/>
+                    <field name="automated_probability" invisible="1"/>
+                    <field name="color" invisible="1"/>
+                    <field name="day_open" invisible="1"/>
+                    <field name="day_close" invisible="1"/>
+                    <field name="message_bounce" invisible="1"/>
+                    <field name="probability" invisible="1"/>
                 </pivot>
             </field>
         </record>
@@ -884,6 +993,24 @@
                         <filter string="Closed Date" name="date_closed" context="{'group_by':'date_closed'}"/>
                     </group>
                 </search>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_search_forecast" model="ir.ui.view">
+            <field name="name">crm.lead.view.search.forecast</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="mode">primary</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='assigned_to_me']" position="before">
+                    <filter name="forecast" string="Upcoming Closings" context="{'forecast_filter':1}"/>
+                    <separator/>
+                </xpath>
+                <xpath expr="//filter[@name='date_deadline']" position="replace"/>
+                <filter name="month" position="before">
+                    <filter string="Expected Closing" name="date_deadline" context="{'group_by':'date_deadline:month'}"/>
+                </filter>
             </field>
         </record>
 
@@ -1095,8 +1222,61 @@ if record:
             <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
+        <record id="crm_lead_action_forecast" model="ir.actions.act_window">
+            <field name="name">Forecast</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,graph,pivot,tree,form</field>
+            <field name="domain">[('type', '=', 'opportunity')]</field>
+            <field name="context">{
+                'default_type': 'opportunity',
+                'search_default_assigned_to_me': 1,
+                'search_default_forecast': 1,
+                'search_default_date_deadline': 1,
+                'forecast_field': 'date_deadline'
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No opportunity to display!
+                </p><p>
+                    Easily set expected closing dates and overview your revenue streams.
+                </p>
+            </field>
+            <field name="search_view_id" ref="crm.crm_lead_view_search_forecast"/>
+        </record>
+
+        <record id="crm_lead_action_forecast_view_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_lead_view_kanban_forecast"/>
+            <field name="act_window_id" ref="crm_lead_action_forecast"/>
+        </record>
+
+        <record id="crm_lead_action_forecast_view_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="crm_lead_view_graph_forecast"/>
+            <field name="act_window_id" ref="crm_lead_action_forecast"/>
+        </record>
+
+        <record id="crm_lead_action_forecast_view_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="crm_lead_view_pivot_forecast"/>
+            <field name="act_window_id" ref="crm_lead_action_forecast"/>
+        </record>
+
+        <record id="crm_lead_action_forecast_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_lead_view_tree_forecast"/>
+            <field name="act_window_id" ref="crm_lead_action_forecast"/>
+        </record>
+
         <record id="menu_crm_opportunities" model="ir.ui.menu">
             <field name="action" ref="crm.action_your_pipeline"/>
+        </record>
+        <record id="crm_menu_forecast" model="ir.ui.menu">
+            <field name="action" ref="crm.action_opportunity_forecast"/>
         </record>
         <record id="crm_menu_root" model="ir.ui.menu">
             <field name="action" ref="crm.action_your_pipeline"/>
