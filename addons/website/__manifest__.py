@@ -19,6 +19,7 @@
         'auth_signup',
         'mail',
         'google_recaptcha',
+        'utm',
     ],
     'installable': True,
     'data': [
@@ -120,6 +121,13 @@
             'website/static/src/js/show_password.js',
             'website/static/src/js/post_link.js',
             'website/static/src/js/user_custom_javascript.js',
+        ],
+        'web.assets_frontend_minimal': [
+            'website/static/src/js/content/inject_dom.js',
+        ],
+        'web.assets_frontend_lazy': [
+            # Remove assets_frontend_minimal
+            ('remove', 'website/static/src/js/content/inject_dom.js'),
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',

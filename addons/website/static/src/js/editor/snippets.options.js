@@ -2848,6 +2848,195 @@ options.registry.ScrollButton = options.Class.extend({
     },
 });
 
+options.registry.ConditionalVisibility = options.Class.extend({
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this.optionsAttributes = [];
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+
+        for (const widget of this._userValueWidgets) {
+            if (widget.el.classList.contains('o_we_m2m')) {
+                const dataAttributes = widget.options.dataAttributes;
+                this.optionsAttributes.push({
+                    saveAttribute: dataAttributes.saveAttribute,
+                    attributeName: dataAttributes.attributeName,
+                    callWith: dataAttributes.callWith,
+                });
+            }
+        }
+    },
+    /**
+     * @override
+     */
+    async onTargetHide() {
+        this.$target[0].classList.add('o_conditional_hidden');
+    },
+    /**
+     * @override
+     */
+    async onTargetShow() {
+        this.$target[0].classList.remove('o_conditional_hidden');
+    },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        // Kinda hacky: the snippet is forced hidden via onTargetHide on save
+        // but should be marked as visible as when entering edit mode later, the
+        // snippet will be shown naturally (as the CSS rules won't apply).
+        // Without this, the "eye" icon of the visibility panel would be shut
+        // when entering edit mode.
+        this.trigger_up('snippet_option_visibility_update', { show: true });
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Inserts or deletes record's id and value in target's data-attributes
+     * if no ids are selected, deletes the attribute.
+     *
+     * @see this.selectClass for parameters
+     */
+    selectRecord(previewMode, widgetValue, params) {
+        const recordsData = JSON.parse(widgetValue);
+        if (recordsData.length) {
+            this.$target[0].dataset[params.saveAttribute] = widgetValue;
+        } else {
+            delete this.$target[0].dataset[params.saveAttribute];
+        }
+
+        this._updateCSSSelectors();
+    },
+    /**
+     * Opens the toggler when 'conditional' is selected.
+     *
+     * @override
+     */
+    async selectDataAttribute(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+
+        if (params.attributeName === 'visibility') {
+            const targetEl = this.$target[0];
+            if (widgetValue === 'conditional') {
+                const collapseEl = this.$el.children('we-collapse')[0];
+                this._toggleCollapseEl(collapseEl);
+                this.trigger_up('snippet_option_visibility_update', { show: true });
+            } else {
+                // TODO create a param to allow doing this automatically for genericSelectDataAttribute?
+                delete targetEl.dataset.visibility;
+
+                for (const attribute of this.optionsAttributes) {
+                    delete targetEl.dataset[attribute.saveAttribute];
+                    delete targetEl.dataset[`${attribute.saveAttribute}Rule`];
+                }
+                this.trigger_up('snippet_option_visibility_update');
+            }
+        } else if (!params.isVisibilityCondition) {
+            return;
+        }
+
+        this._updateCSSSelectors();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'selectRecord') {
+            return this.$target[0].dataset[params.saveAttribute] || '[]';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Reads target's attributes and creates CSS selectors.
+     * Stores them in data-attributes to then be reapplied by
+     * content/inject_dom.js (ideally we should saved them in a <style> tag
+     * directly but that would require a new website.page field and would not
+     * be possible in dynamic (controller) pages... maybe some day).
+     *
+     * @private
+     */
+     _updateCSSSelectors() {
+        // There are 2 data attributes per option:
+        // - One that stores the current records selected
+        // - Another that stores the value of the rule "Hide for / Visible for"
+        let visibilityId = '';
+        const onlyAttributes = [];
+        const hideAttributes = [];
+        const target = this.$target[0];
+        for (const attribute of this.optionsAttributes) {
+            if (target.dataset[attribute.saveAttribute]) {
+                let records = JSON.parse(target.dataset[attribute.saveAttribute]).map(record => {
+                    return { id: record.id, value: record[attribute.callWith] };
+                });
+                if (attribute.saveAttribute === 'visibilityValueLang') {
+                    records = records.map(lang => {
+                        lang.value = lang.value.replace(/_/g, '-');
+                        return lang;
+                    });
+                }
+                const hideFor = target.dataset[`${attribute.saveAttribute}Rule`] === 'hide';
+                if (hideFor) {
+                    hideAttributes.push({ name: attribute.attributeName, records: records});
+                } else {
+                    onlyAttributes.push({ name: attribute.attributeName, records: records});
+                }
+                // Create a visibilityId based on the options name and their
+                // values. eg : hide for en_US(id:1) -> lang1h
+                visibilityId += attribute.attributeName.replace('data-', '')
+                + records.reduce((acc, record) => acc += record.id, '')
+                + (hideFor ? 'h' : 'o');
+            }
+        }
+        // Creates CSS selectors based on those attributes, the reducers
+        // combine the attributes' values.
+        let selectors = '';
+        for (const attribute of onlyAttributes) {
+            // e.g of selector:
+            // html:not([data-attr-1="valueAttr1"]):not([data-attr-1="valueAttr2"]) [data-visibility-id="ruleId"]
+            const selector = attribute.records.reduce((acc, record) => {
+                return acc += `:not([${attribute.name}="${record.value}"])`;
+            }, 'html') + ` body:not(.editor_enable) [data-visibility-id="${visibilityId}"]`;
+            selectors += selector + ', ';
+        }
+        for (const attribute of hideAttributes) {
+            // html[data-attr-1="valueAttr1"] [data-visibility-id="ruleId"],
+            // html[data-attr-1="valueAttr2"] [data-visibility-id="ruleId"]
+            const selector = attribute.records.reduce((acc, record, i, a) => {
+                acc += `html[${attribute.name}="${record.value}"] body:not(.editor_enable) [data-visibility-id="${visibilityId}"]`;
+                return acc + (i !== a.length - 1 ? ',' : '');
+            }, '');
+            selectors += selector + ', ';
+        }
+        selectors = selectors.slice(0, -2);
+        if (selectors) {
+            this.$target[0].dataset.visibilitySelectors = selectors;
+        } else {
+            delete this.$target[0].dataset.visibilitySelectors;
+        }
+
+        if (visibilityId) {
+            this.$target[0].dataset.visibilityId = visibilityId;
+        } else {
+            delete this.$target[0].dataset.visibilityId;
+        }
+    },
+});
+
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,

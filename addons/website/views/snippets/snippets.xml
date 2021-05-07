@@ -310,6 +310,20 @@
     </we-multi>
 </template>
 
+<template id="snippet_options_conditional_visibility">
+    <we-select t-att-string="option_name" t-att-data-attribute-name="attribute_rule" data-no-preview="true" data-dependencies="visibility_conditional" data-is-visibility-condition="true">
+        <we-button data-select-data-attribute="">Visible for</we-button>
+        <we-button data-select-data-attribute="hide">Hidden for</we-button>
+    </we-select>
+    <we-many2many string=" "
+        data-dependencies="visibility_conditional"
+        t-att-data-save-attribute="save_attribute"
+        t-att-data-attribute-name="attribute_name"
+        data-no-preview="true"
+        t-att-data-model="model" t-att-data-call-with="call_with" data-select-record="" t-att-data-fields="data_fields"
+        data-allow-delete="true" data-fakem2m="true"/>
+</template>
+
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
@@ -1069,6 +1083,60 @@
                        data-select-class="align-items-stretch"
                        data-img="/website/static/src/img/snippets_options/align_stretch.svg"/>
         </we-button-group>
+    </div>
+
+    <div data-js="ConditionalVisibility" data-selector="section">
+        <we-collapse>
+            <we-select string="Visibility" data-attribute-name="visibility" data-no-preview="true">
+                <we-button data-select-data-attribute="">Always visible</we-button>
+                <we-button data-select-data-attribute="conditional" data-select-class="o_snippet_invisible" data-name="visibility_conditional">Conditionally</we-button>
+            </we-select>
+
+            <t t-if="request.session.get('geoip', {}).get('country_code')">
+                <t t-call="website.snippet_options_conditional_visibility">
+                    <t t-set="option_name">⌙ Country</t>
+                    <t t-set="attribute_rule">visibilityValueCountryRule</t>
+                    <t t-set="save_attribute">visibilityValueCountry</t>
+                    <t t-set="attribute_name">data-country</t>
+                    <t t-set="model">res.country</t>
+                    <t t-set="call_with">code</t>
+                    <t t-set="data_fields">[&quot;code&quot;]</t>
+                </t>
+            </t>
+            <t t-call="website.snippet_options_conditional_visibility">
+                <t t-set="option_name">⌙ Languages</t>
+                <t t-set="attribute_rule">visibilityValueLangRule</t>
+                <t t-set="save_attribute">visibilityValueLang</t>
+                <t t-set="attribute_name">lang</t>
+                <t t-set="model">res.lang</t>
+                <t t-set="call_with">code</t>
+                <t t-set="data_fields">[&quot;code&quot;]</t>
+            </t>
+            <t t-call="website.snippet_options_conditional_visibility">
+                <t t-set="option_name">⌙ UTM Campaign</t>
+                <t t-set="attribute_rule">visibilityValueUtmCampaignRule</t>
+                <t t-set="save_attribute">visibilityValueUtmCampaign</t>
+                <t t-set="attribute_name">data-utm-campaign</t>
+                <t t-set="model">utm.campaign</t>
+                <t t-set="call_with">display_name</t>
+            </t>
+            <t t-call="website.snippet_options_conditional_visibility">
+                <t t-set="option_name">⌙ UTM Medium</t>
+                <t t-set="attribute_rule">visibilityValueUtmMediumRule</t>
+                <t t-set="save_attribute">visibilityValueUtmMedium</t>
+                <t t-set="attribute_name">data-utm-medium</t>
+                <t t-set="model">utm.medium</t>
+                <t t-set="call_with">display_name</t>
+            </t>
+            <t t-call="website.snippet_options_conditional_visibility">
+                <t t-set="option_name">⌙ UTM Source</t>
+                <t t-set="attribute_rule">visibilityValueUtmSourceRule</t>
+                <t t-set="save_attribute">visibilityValueUtmSource</t>
+                <t t-set="attribute_name">data-utm-source</t>
+                <t t-set="model">utm.source</t>
+                <t t-set="call_with">display_name</t>
+            </t>
+        </we-collapse>
     </div>
 
     <!-- Cookies Bar -->

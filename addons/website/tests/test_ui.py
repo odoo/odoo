@@ -202,3 +202,7 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_09_website_edit_link_popover(self):
         self.start_tour("/", "edit_link_popover", login="admin")
+
+    def test_10_website_conditional_visibility(self):
+        self.start_tour('/', 'conditional_visibility_1', login='admin')
+        self.start_tour('/', 'conditional_visibility_2', login='admin')
