@@ -434,10 +434,10 @@ class StockMove(models.Model):
         # adapt standard price on incomming moves if the product cost_method is 'average'
         std_price_update = {}
         for move in self.filtered(lambda move: move._is_in() and move.product_id.cost_method == 'average'):
-            product_tot_qty_available = move.product_id.qty_available + tmpl_dict[move.product_id.id]
+            product_tot_qty_available = move.product_id.with_context(owner_id=False).qty_available + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
-            qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
+            qty_done = move.product_uom._compute_quantity(move.with_context(exclude_owner=True).quantity_done, move.product_id.uom_id)
             qty = forced_qty or qty_done
             # If the current stock is negative, we should not average it with the incoming one
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding) or product_tot_qty_available < 0:
@@ -742,6 +742,12 @@ class StockMove(models.Model):
         to the way they mix stock moves with invoices.
         """
         return self.env['account.invoice']
+
+    def _get_move_lines(self):
+        move_lines = super(StockMove, self)._get_move_lines()
+        if self._context.get('exclude_owner'):
+            move_lines = move_lines.filtered(lambda mv: not mv.owner_id)
+        return move_lines
 
 
 class StockReturnPicking(models.TransientModel):
