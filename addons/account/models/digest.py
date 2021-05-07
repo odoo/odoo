@@ -17,12 +17,13 @@ class Digest(models.Model):
         for record in self:
             start, end, company = record._get_kpi_compute_parameters()
             self._cr.execute('''
-                SELECT SUM(line.debit)
+                SELECT -SUM(line.balance)
                 FROM account_move_line line
                 JOIN account_move move ON move.id = line.move_id
-                JOIN account_journal journal ON journal.id = move.journal_id
+                JOIN account_account account ON account.id = line.account_id
                 WHERE line.company_id = %s AND line.date >= %s AND line.date < %s
-                AND journal.type = 'sale'
+                AND account.internal_group = 'income'
+                AND move.state = 'posted'
             ''', [company.id, start, end])
             query_res = self._cr.fetchone()
             record.kpi_account_total_revenue_value = query_res and query_res[0] or 0.0
