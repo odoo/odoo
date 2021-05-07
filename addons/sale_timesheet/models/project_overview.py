@@ -9,6 +9,7 @@ from odoo.tools import float_round
 from odoo.tools.misc import get_lang
 
 from odoo.addons.web.controllers.main import clean_action
+from datetime import date
 
 DEFAULT_MONTH_RANGE = 3
 
@@ -77,14 +78,23 @@ class Project(models.Model):
         dashboard_values['rates']['canceled'] = float_round(100 * total_canceled_hours / (dashboard_total_hours or 1), precision_rounding=hour_rounding)
 
         # profitability, using profitability SQL report
-        profit = dict.fromkeys(['invoiced', 'to_invoice', 'cost', 'expense_cost', 'expense_amount_untaxed_invoiced', 'total'], 0.0)
-        profitability_raw_data = self.env['project.profitability.report'].read_group([('project_id', 'in', self.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_invoiced'], ['project_id'])
+        field_map = {
+            'amount_untaxed_invoiced': 'invoiced',
+            'amount_untaxed_to_invoice': 'to_invoice',
+            'timesheet_cost': 'cost',
+            'expense_cost': 'expense_cost',
+            'expense_amount_untaxed_invoiced':  'expense_amount_untaxed_invoiced',
+            }
+        profit = dict.fromkeys(list(field_map.values()) + ['total'], 0.0)
+        profitability_raw_data = self.env['project.profitability.report'].read_group([('project_id', 'in', self.ids)], ['project_id'] + list(field_map), ['project_id'])   
         for data in profitability_raw_data:
-            profit['invoiced'] += data.get('amount_untaxed_invoiced', 0.0)
-            profit['to_invoice'] += data.get('amount_untaxed_to_invoice', 0.0)
-            profit['cost'] += data.get('timesheet_cost', 0.0)
-            profit['expense_cost'] += data.get('expense_cost', 0.0)
-            profit['expense_amount_untaxed_invoiced'] += data.get('expense_amount_untaxed_invoiced', 0.0)
+            company_id = self.env['project.project'].browse(data.get('project_id')[0]).company_id
+            from_currency = company_id.currency_id
+            for field in field_map:
+                value = data.get(field, 0.0)
+                if from_currency != currency:
+                    value = from_currency._convert(value, currency, company_id, date.today())
+                profit[field_map[field]] += value                
         profit['total'] = sum([profit[item] for item in profit.keys()])
         dashboard_values['profit'] = profit
 
