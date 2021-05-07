@@ -22,7 +22,7 @@ class Team(models.Model):
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")
     assignment_domain = fields.Char('Assignment Domain', tracking=True)
     assignment_optout = fields.Boolean('Skip auto assignment')
-    assignment_max = fields.Integer('Max Leads (last 30 days)', default=30)
+    assignment_max = fields.Integer('Average Leads Capacity (on 30 days)', default=30)
     lead_month_count = fields.Integer(
         'Leads (30 days)', compute='_compute_lead_month_count',
         help='Lead assigned to this member those last 30 days')
@@ -202,15 +202,11 @@ class Team(models.Model):
         """ Compute assignment quota based on work_days. This quota includes
         a compensation to speedup getting to the lead average (``assignment_max``).
         As this field is a counter for "30 days" -> divide by requested work
-        days in order to have base assign number then add compensation. Limit
-        to max capacity of team member.
+        days in order to have base assign number then add compensation. 
 
         :param float work_days: see ``CrmTeam.action_assign_leads()``;
         """
         assign_ratio = work_days / 30.0
         to_assign = self.assignment_max * assign_ratio
         compensation = max(0, self.assignment_max - (self.lead_month_count + to_assign)) * 0.2
-        return min(
-            self.assignment_max - self.lead_month_count,
-            round(to_assign + compensation)
-        )
+        return round(to_assign + compensation)
