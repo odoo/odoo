@@ -30,8 +30,8 @@ class Team(models.Model):
     assignment_auto_enabled = fields.Boolean('Auto Assignment', compute='_compute_assignment_enabled')
     assignment_optout = fields.Boolean('Skip auto assignment')
     assignment_max = fields.Integer(
-        'Lead Capacity', compute='_compute_assignment_max',
-        help='Monthly leads for all salesmen belonging to the team')
+        'Lead Average Capacity', compute='_compute_assignment_max',
+        help='Monthly average leads capacity for all salesmen belonging to the team')
     assignment_domain = fields.Char(
         'Assignment Domain', tracking=True,
         help='Additional filter domain when fetching unassigned leads to allocate to the team.')
