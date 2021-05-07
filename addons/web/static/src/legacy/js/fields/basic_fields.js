@@ -1049,7 +1049,7 @@ const RemainingDays = AbstractField.extend({
      */
     _render() {
         if (this.value === false) {
-            this.$el.removeClass('text-bf text-danger text-warning');
+            this.$el.removeClass('font-weight-bold text-danger text-warning');
             return;
         }
         // compare the value (in the user timezone) with now (also in the user
@@ -1069,7 +1069,7 @@ const RemainingDays = AbstractField.extend({
             text = diffDays === 1 ? _t("Tomorrow") : _.str.sprintf(_t('In %s days'), diffDays);
         }
         this.$el.text(text).attr('title', this._formatValue(this.value, 'date'));
-        this.$el.toggleClass('text-bf', diffDays <= 0);
+        this.$el.toggleClass('font-weight-bold', diffDays <= 0);
         this.$el.toggleClass('text-danger', diffDays < 0);
         this.$el.toggleClass('text-warning', diffDays === 0);
     },

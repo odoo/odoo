@@ -4895,13 +4895,13 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
 
-        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'text-bf text-warning');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'text-bf text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'font-weight-bold text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'font-weight-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'font-weight-bold text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'font-weight-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'font-weight-bold text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'font-weight-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'font-weight-bold text-danger');
 
         list.destroy();
         unpatchDate();
@@ -4924,7 +4924,7 @@ QUnit.module('basic_fields', {
         });
 
         assert.strictEqual(form.$('.o_field_widget').text(), 'Today');
-        assert.hasClass(form.$('.o_field_widget'), 'text-bf text-warning');
+        assert.hasClass(form.$('.o_field_widget'), 'font-weight-bold text-warning');
 
         // in edit mode, this widget should not be editable.
         await testUtils.form.clickEdit(form);
@@ -4972,13 +4972,13 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
 
-        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'text-bf text-warning');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'text-bf text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'font-weight-bold text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'font-weight-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'font-weight-bold text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'font-weight-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'font-weight-bold text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'font-weight-bold text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'font-weight-bold text-danger');
 
         list.destroy();
         unpatchDate();
