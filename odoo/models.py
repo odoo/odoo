@@ -2346,6 +2346,9 @@ class BaseModel(metaclass=MetaModel):
                     * the values of fields grouped by the fields in ``groupby`` argument
                     * __domain: list of tuples specifying the search criteria
                     * __context: dictionary with argument like ``groupby``
+                    * __range: (date/datetime only) dictionary with field names as keys mapping to
+                        a dictionary with keys: "from" (inclusive) and "to" (exclusive)
+                        mapping to a string representation of the temporal bounds of the group
         :rtype: [{'field_name_1': value, ...]
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
@@ -2358,16 +2361,29 @@ class BaseModel(metaclass=MetaModel):
             if self._fields[f.split(':')[0]].type in ('date', 'datetime')    # e.g. 'date:month'
         ]
 
-        # iterate on all results and replace the "full" date/datetime value
-        # (range, label) by just the formatted label, in-place
+        # iterate on all results and replace the "full" date/datetime value (<=> group[df])
+        # which is a tuple (range, label) by just the formatted label, in-place.
+        # we store the range under another format, by adding a new __range key for each
+        # group, mapping to a sub-dictionary: {field: {from: #inclusive#, to: #exclusive#}}
         for group in result:
+            if dt:
+                group["__range"] = {}
             for df in dt:
                 # could group on a date(time) field which is empty in some
                 # records, in which case as with m2o the _raw value will be
                 # `False` instead of a (value, label) pair. In that case,
                 # leave the `False` value alone
+                field_name = df.split(':')[0]
                 if group.get(df):
+                    range_from, range_to = group[df][0].split('/')
+                    # /!\ could break if DEFAULT_SERVER_DATE_FORMAT allows '/' characters
+                    group["__range"][field_name] = {
+                        "from": range_from,
+                        "to": range_to
+                    }
                     group[df] = group[df][1]
+                else:
+                    group["__range"][field_name] = False
         return result
 
     @api.model

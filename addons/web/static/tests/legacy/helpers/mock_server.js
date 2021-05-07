@@ -1476,9 +1476,25 @@ var MockServer = Class.extend({
                 } else if (aggregateFunction === 'day') {
                     return moment(val).format('YYYY-MM-DD');
                 } else if (aggregateFunction === 'week') {
-                    return moment(val).format('ww YYYY');
+                    return moment(val).format('[W]ww YYYY');
                 } else if (aggregateFunction === 'quarter') {
-                    return 'Q' + moment(val).format('Q YYYY');
+                    return moment(val).format('[Q]Q YYYY');
+                } else if (aggregateFunction === 'year') {
+                    return moment(val).format('Y');
+                } else {
+                    return moment(val).format('MMMM YYYY');
+                }
+            } else if (fields[fieldName].type === 'datetime') {
+                if (!val) {
+                    return false;
+                } else if (aggregateFunction === 'hour') {
+                    return moment(val).format('HH[:00] DD MMM');
+                } else if (aggregateFunction === 'day') {
+                    return moment(val).format('YYYY-MM-DD');
+                } else if (aggregateFunction === 'week') {
+                    return moment(val).format('[W]ww YYYY');
+                } else if (aggregateFunction === 'quarter') {
+                    return moment(val).format('[Q]Q YYYY');
                 } else if (aggregateFunction === 'year') {
                     return moment(val).format('Y');
                 } else {
@@ -1493,7 +1509,7 @@ var MockServer = Class.extend({
             _.each(groupBy, function (groupByField) {
                 value = (value ? value + ',' : value) + groupByField + '#';
                 var fieldName = groupByField.split(':')[0];
-                if (fields[fieldName].type === 'date') {
+                if (['date', 'datetime'].includes(fields[fieldName].type)) {
                     value += formatValue(groupByField, record[fieldName]);
                 } else {
                     value += JSON.stringify(record[groupByField]);
@@ -1512,6 +1528,7 @@ var MockServer = Class.extend({
         var result = _.map(groups, function (group) {
             var res = {
                 __domain: kwargs.domain || [],
+                __range: {},
             };
             _.each(groupBy, function (groupByField) {
                 var fieldName = groupByField.split(':')[0];
@@ -1529,16 +1546,24 @@ var MockServer = Class.extend({
                 } else {
                     res[groupByField] = val;
                 }
-
+                
+                if (['date', 'datetime'].includes(field.type)) {
+                    if (!val) {
+                        res.__range[fieldName] = false;
+                    }
+                }
                 if (field.type === 'date' && val) {
-                    var aggregateFunction = groupByField.split(':')[1];
-                    var startDate, endDate;
+                    let aggregateFunction = groupByField.split(':')[1];
+                    let startDate, endDate;
                     if (aggregateFunction === 'day') {
                         startDate = moment(val, 'YYYY-MM-DD');
                         endDate = startDate.clone().add(1, 'days');
                     } else if (aggregateFunction === 'week') {
-                        startDate = moment(val, 'ww YYYY');
+                        startDate = moment(val, '[W]ww YYYY');
                         endDate = startDate.clone().add(1, 'weeks');
+                    } else if (aggregateFunction === 'quarter') {
+                        startDate = moment(val, '[Q]Q YYYY');
+                        endDate = startDate.clone().add(1, 'quarters');
                     } else if (aggregateFunction === 'year') {
                         startDate = moment(val, 'Y');
                         endDate = startDate.clone().add(1, 'years');
@@ -1547,12 +1572,44 @@ var MockServer = Class.extend({
                         endDate = startDate.clone().add(1, 'months');
                     }
                     res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD')], [fieldName, '<', endDate.format('YYYY-MM-DD')]].concat(res.__domain);
+                    res.__range[fieldName] = {
+                        from: startDate.format('YYYY-MM-DD'),
+                        to: endDate.format('YYYY-MM-DD'),
+                    };
+                } else if (field.type === 'datetime' && val) {
+                    let aggregateFunction = groupByField.split(':')[1];
+                    let startDate, endDate;
+                    if (aggregateFunction === 'hour') {
+                        startDate = moment(val, 'HH[:00] DD MMM');
+                        endDate = startDate.clone().add(1, 'hours');
+                    } else if (aggregateFunction === 'day') {
+                        startDate = moment(val, 'YYYY-MM-DD');
+                        endDate = startDate.clone().add(1, 'days');
+                    } else if (aggregateFunction === 'week') {
+                        startDate = moment(val, '[W]ww YYYY');
+                        endDate = startDate.clone().add(1, 'weeks');
+                    } else if (aggregateFunction === 'quarter') {
+                        startDate = moment(val, '[Q]Q YYYY');
+                        endDate = startDate.clone().add(1, 'quarters');
+                    } else if (aggregateFunction === 'year') {
+                        startDate = moment(val, 'Y');
+                        endDate = startDate.clone().add(1, 'years');
+                    } else {
+                        startDate = moment(val, 'MMMM YYYY');
+                        endDate = startDate.clone().add(1, 'months');
+                    }
+                    res.__domain = [[fieldName, '>=', startDate.format('YYYY-MM-DD HH:mm:ss')], [fieldName, '<', endDate.format('YYYY-MM-DD HH:mm:ss')]].concat(res.__domain);
+                    res.__range[fieldName] = {
+                        from: startDate.format('YYYY-MM-DD HH:mm:ss'),
+                        to: endDate.format('YYYY-MM-DD HH:mm:ss'),
+                    };
                 } else {
                     res.__domain = [[fieldName, '=', val]].concat(res.__domain);
                 }
-
             });
-
+            if (_.isEmpty(res.__range)) {
+                delete res.__range;
+            }
             // compute count key to match dumb server logic...
             var countKey;
             if (kwargs.lazy) {
