@@ -18,7 +18,7 @@
                     <div class="o_thread_message_sidebar">
                         <div class="o_avatar_stack">
                             <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_128') : ''}" class="o_thread_message_avatar rounded-circle mb8" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
-                            <i t-att-class="'o_avatar_icon fa ' + activity.icon + ' bg-' + (activity.state == 'planned'? 'success' : (activity.state == 'today'? 'warning' : 'danger')) + '-full'"
+                            <i t-att-class="'o_avatar_icon fa ' + activity.icon + ' bg-' + (activity.state == 'planned'? 'success' : (activity.state == 'today'? 'warning' : 'danger'))"
                                t-att-title="activity.activity_type_id[1]"/>
                         </div>
                     </div>

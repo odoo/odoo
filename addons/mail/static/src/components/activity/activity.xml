@@ -11,9 +11,9 @@
                         </t>
                         <div class="o_Activity_iconContainer"
                             t-att-class="{
-                                'bg-success-full': activity.state === 'planned',
-                                'bg-warning-full': activity.state === 'today',
-                                'bg-danger-full': activity.state === 'overdue',
+                                'bg-success': activity.state === 'planned',
+                                'bg-warning': activity.state === 'today',
+                                'bg-danger': activity.state === 'overdue',
                             }"
                         >
                             <i class="o_Activity_icon fa" t-attf-class="{{ activity.icon }}"/>
