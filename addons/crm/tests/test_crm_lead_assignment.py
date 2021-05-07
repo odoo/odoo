@@ -167,7 +167,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.members.invalidate_cache(fnames=['lead_month_count'])
         self.assertEqual(self.sales_team_1_m1.lead_month_count, 0)  # archived do not get leads
         self.assertEqual(self.sales_team_1_m2.lead_month_count, 0)  # opt-out through assignment_max = 0
-        self.assertEqual(self.sales_team_1_m3.lead_month_count, 15)  # 15 max on 4 days (2) + existing 14 but capped at 15
+        self.assertEqual(self.sales_team_1_m3.lead_month_count, 16)  # 15 max on 4 days (2) + existing 14 and not capped anymore
 
     @mute_logger('odoo.models.unlink')
     def test_assign_duplicates(self):
@@ -363,12 +363,12 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertEqual(
             self.sales_team_1_m1._get_assignment_quota(work_days=30),
             45,
-            "Assignment quota: anyway 45 max available"
+            "Assignment quota: no compensation as exceeding monthly count"
         )
         self.assertEqual(
             self.sales_team_1_m1._get_assignment_quota(work_days=60),
-            45,
-            "Assignment quota: anyway 45 max available"
+            90,
+            "Assignment quota: no compensation and no limit anymore (do as asked)"
         )
 
         # create exiting leads for user_sales_leads (sales_team_1_m1)
@@ -397,13 +397,13 @@ class TestLeadAssign(TestLeadAssignCommon):
         # quota should not exceed maximum
         self.assertEqual(
             self.sales_team_1_m1._get_assignment_quota(work_days=30),
-            15,
-            "Assignment quota: anyway 15 max available (30 already assigned)"
+            45,
+            "Assignment quota: no compensation and no limit anymore (do as asked even with 30 already assigned)"
         )
         self.assertEqual(
             self.sales_team_1_m1._get_assignment_quota(work_days=60),
-            15,
-            "Assignment quota: anyway 15 max available (30 already assigned)"
+            90,
+            "Assignment quota: no compensation and no limit anymore (do as asked even with 30 already assigned)"
         )
 
     def test_assign_specific_won_lost(self):
