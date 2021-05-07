@@ -434,6 +434,7 @@ class Http(models.AbstractModel):
         session_info = super(Http, self).get_frontend_session_info()
         session_info.update({
             'is_website_user': request.env.user.id == request.website.user_id.id,
+            'geoip_country_code': request.session.get('geoip', {}).get('country_code'),
         })
         if request.env.user.has_group('website.group_website_publisher'):
             session_info.update({
