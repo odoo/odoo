@@ -3,6 +3,7 @@
     import session from 'web.session';
     import utils from 'web.utils';
     import Registry from 'web.Registry';
+    import viewUtils from 'web.viewUtils';
 
     class UnimplementedRouteError extends Error {}
 
@@ -468,12 +469,12 @@
          * @return {Object}
          */
         _mockReadProgressBar(params) {
-            const groupBy = params.kwargs.group_by;
+            const groupByFieldName = viewUtils.getGroupByField(params.kwargs.group_by);
             const progress_bar = params.kwargs.progress_bar;
-            const groupByField = this.data[params.model].fields[groupBy];
+            const groupByField = this.data[params.model].fields[groupByFieldName];
             const data = {};
             for (const record of this.data[params.model].records) {
-                let groupByValue = record[groupBy];
+                let groupByValue = record[groupByFieldName];
                 if (groupByField.type === "many2one") {
                     const relatedRecords = this.data[groupByField.relation].records;
                     const relatedRecord = relatedRecords.find(r => r.id === groupByValue);
@@ -552,8 +553,17 @@
                 const groups = this.existingGroups;
                 this.groupsInfo = groups;
                 const groupBy = params.groupBy[0];
-                const values = groups.map(g => g[groupBy]);
-                const groupByField = this.data[params.model].fields[groupBy];
+                const groupByFieldName = viewUtils.getGroupByField(groupBy);
+                const groupByField = this.data[params.model].fields[groupByFieldName];
+                const values = groups.map(g => {
+                    if (['date', 'datetime'].includes(groupByField.type)) {
+                        // we arbitrarily take the first date of the group as a default value to populate
+                        // date/datetime groups
+                        return g.__range[groupByFieldName] ? g.__range[groupByFieldName].from : false;
+                    } else {
+                        return g[groupBy];
+                    }
+                });
                 const groupedByM2O = groupByField.type === 'many2one';
                 if (groupedByM2O) { // re-populate co model with relevant records
                     this.data[groupByField.relation].records = values.map(v => {
@@ -562,7 +572,7 @@
                 }
                 for (const r of this.data[params.model].records) {
                     const value = getSampleFromId(r.id, values);
-                    r[groupBy] = groupedByM2O ? value[0] : value;
+                    r[groupByFieldName] = groupedByM2O ? value[0] : value;
                 }
                 this.existingGroupsPopulated = true;
             }
@@ -622,14 +632,21 @@
             this._populateExistingGroups(params);
 
             // update count and aggregates for each group
-            const groupBy = params.groupBy[0].split(':')[0];
-            const groupByField = this.data[params.model].fields[groupBy];
-            const groupedByM2O = groupByField.type === 'many2one';
+            const groupBy = params.groupBy[0];
+            const groupByFieldName = viewUtils.getGroupByField(groupBy);
+            const groupByField = this.data[params.model].fields[groupByFieldName];
             const records = this.data[params.model].records;
             for (const g of groups) {
-                const groupValue = groupedByM2O ? g[groupBy][0] : g[groupBy];
-                const recordsInGroup = records.filter(r => r[groupBy] === groupValue);
-                g[`${groupBy}_count`] = recordsInGroup.length;
+                let groupValue = g[groupBy];
+                if (groupByField.type === 'many2one') {
+                    groupValue = g[groupBy][0];
+                } else if (['date', 'datetime'].includes(groupByField.type)) {
+                    // we arbitrarily take the first date of the group as a default value to tweak
+                    // date/datetime groups
+                    groupValue = g.__range[groupByFieldName] ? g.__range[groupByFieldName].from : false;
+                }
+                const recordsInGroup = records.filter(r => r[groupByFieldName] === groupValue);
+                g[`${groupByFieldName}_count`] = recordsInGroup.length;
                 for (const field of params.fields) {
                     const fieldType = this.data[params.model].fields[field].type;
                     if (['integer, float', 'monetary'].includes(fieldType)) {
@@ -648,6 +665,7 @@
     }
 
     SampleServer.FORMATS = {
+        hour: 'HH[:00] DD MMM',
         day: 'YYYY-MM-DD',
         week: '[W]ww YYYY',
         month: 'MMMM YYYY',

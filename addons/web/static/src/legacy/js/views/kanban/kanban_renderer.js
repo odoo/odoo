@@ -494,27 +494,34 @@ var KanbanRenderer = BasicRenderer.extend({
         this._super(...arguments);
 
         var groupByField = this.state.groupedBy[0];
-        var cleanGroupByField = this._cleanGroupByField(groupByField);
+        var cleanGroupByField = viewUtils.getGroupByField(groupByField);
         var groupByFieldAttrs = this.state.fields[cleanGroupByField];
         var groupByFieldInfo = this.state.fieldsInfo.kanban[cleanGroupByField];
-        // Deactivate the drag'n'drop if the groupedBy field:
-        // - is a date or datetime since we group by month or
-        // - is readonly (on the field attrs or in the view)
+        // Deactivate the drag'n'drop:
+        // - if the groupedBy field is readonly (on the field attrs or in the view)
+        // - for date and datetime if :
+        //   - allowGroupRangeValue is not true
+        var readonly = false;
         var draggable = true;
         var grouped_by_date = false;
         if (groupByFieldAttrs) {
             if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
                 draggable = false;
                 grouped_by_date = true;
-            } else if (groupByFieldAttrs.readonly !== undefined) {
-                draggable = !(groupByFieldAttrs.readonly);
+            }
+            if (groupByFieldAttrs.readonly !== undefined) {
+                readonly = groupByFieldAttrs.readonly;
             }
         }
         if (groupByFieldInfo) {
-            if (draggable && groupByFieldInfo.readonly !== undefined) {
-                draggable = !(groupByFieldInfo.readonly);
+            if (grouped_by_date) {
+                draggable = groupByFieldInfo.allowGroupRangeValue;
+            }
+            if (!readonly && groupByFieldInfo.readonly !== undefined) {
+                readonly = groupByFieldInfo.readonly;
             }
         }
+        draggable = !readonly && draggable;
         this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
         var relation = this.groupedByM2O && groupByFieldAttrs.relation;
         var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
@@ -528,22 +535,6 @@ var KanbanRenderer = BasicRenderer.extend({
             quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(this.state),
         });
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
-    },
-    /**
-     * Remove date/datetime magic grouping info to get proper field attrs/info from state
-     * ex: sent_date:month will become sent_date
-     *
-     * @private
-     * @param {string} groupByField
-     * @returns {string}
-     */
-    _cleanGroupByField: function (groupByField) {
-        var cleanGroupByField = groupByField;
-        if (cleanGroupByField && cleanGroupByField.indexOf(':') > -1) {
-            cleanGroupByField = cleanGroupByField.substring(0, cleanGroupByField.indexOf(':'));
-        }
-
-        return cleanGroupByField;
     },
     /**
      * Moves the focus on the first card of the next column in a given direction
