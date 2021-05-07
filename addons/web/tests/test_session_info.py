@@ -56,3 +56,9 @@ class TestSessionInfo(common.HttpCase):
             result['user_companies'],
             expected_user_companies,
             "The session_info['user_companies'] does not have the expected structure")
+
+    def test_session_modules(self):
+        self.authenticate(self.user.login, self.user_password)
+        response = self.url_open("/web/session/modules", data=self.payload, headers=self.headers)
+        data = response.json()
+        self.assertTrue(isinstance(data['result'], list))
