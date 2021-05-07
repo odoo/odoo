@@ -59,7 +59,9 @@ class FleetVehicle(models.Model):
         ('kilometers', 'km'),
         ('miles', 'mi')
         ], 'Odometer Unit', default='kilometers', help='Unit of the odometer ', required=True)
-    transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle')
+    transmission = fields.Selection(
+        [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle',
+        compute='_compute_transmission', store=True, readonly=False)
     fuel_type = fields.Selection([
         ('gasoline', 'Gasoline'),
         ('diesel', 'Diesel'),
@@ -164,6 +166,12 @@ class FleetVehicle(models.Model):
             record.contract_renewal_due_soon = due_soon
             record.contract_renewal_total = total - 1  # we remove 1 from the real total for display purposes
             record.contract_renewal_name = name
+
+    @api.depends('model_id')
+    def _compute_transmission(self):
+        for vehicle in self:
+            if vehicle.model_id:
+                vehicle.transmission = vehicle.model_id.transmission
 
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet
