@@ -58,8 +58,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'city',
     'state_id',
     'country_id',
-    # probability
-    'probability',
 ]
 
 # Subset of partner fields: sync any of those
