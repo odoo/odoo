@@ -350,7 +350,7 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionList_list',
         "Canned responses suggestions list should not be present"
     );
     await afterNextRender(() => {
@@ -358,11 +358,9 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
         document.execCommand('insertText', false, ":");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_SuggestionList_list'),
         'show',
         "should display canned response suggestions on typing ':'"
     );
@@ -389,7 +387,7 @@ QUnit.test('use a canned response', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionList_list',
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
@@ -402,8 +400,6 @@ QUnit.test('use a canned response', async function (assert) {
         document.execCommand('insertText', false, ":");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -462,8 +458,6 @@ QUnit.test('use a canned response some text', async function (assert) {
         document.execCommand('insertText', false, ":");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -514,8 +508,6 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         document.execCommand('insertText', false, ":");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -565,7 +557,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionList_list',
         "channel mention suggestions list should not be present"
     );
     await afterNextRender(() => {
@@ -573,11 +565,9 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
         document.execCommand('insertText', false, "#");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_SuggestionList_list'),
         'show',
         "should display channel mention suggestions on typing '#'"
     );
@@ -600,7 +590,7 @@ QUnit.test('mention a channel', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionList_list',
         "channel mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -613,8 +603,6 @@ QUnit.test('mention a channel', async function (assert) {
         document.execCommand('insertText', false, "#");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -669,8 +657,6 @@ QUnit.test('mention a channel after some text', async function (assert) {
         document.execCommand('insertText', false, "#");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -717,8 +703,6 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         document.execCommand('insertText', false, "#");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -770,7 +754,7 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionList_list',
         "command suggestions list should not be present"
     );
     await afterNextRender(() => {
@@ -778,11 +762,9 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
         document.execCommand('insertText', false, "/");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_SuggestionList_list'),
         'show',
         "should display command suggestions on typing '/'"
     );
@@ -816,8 +798,6 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
         document.execCommand('insertText', false, "/");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.verifySteps([], "No rpc done");
 });
@@ -850,8 +830,6 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
         document.execCommand('insertText', false, "/");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
@@ -861,8 +839,6 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
         document.execCommand('insertText', false, " is user?");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.verifySteps([], "No rpc done");
 });
@@ -887,7 +863,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionList_list',
         "command suggestions list should not be present"
     );
     assert.strictEqual(
@@ -900,8 +876,6 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
         document.execCommand('insertText', false, "/");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -989,8 +963,6 @@ QUnit.test('command suggestion should only open if command is the first characte
         document.execCommand('insertText', false, "/");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsNone(
         document.body,
@@ -1032,8 +1004,6 @@ QUnit.test('add an emoji after a command', async function (assert) {
         document.execCommand('insertText', false, "/");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -1094,7 +1064,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionList_list',
         "mention suggestions list should not be present"
     );
     await afterNextRender(() => {
@@ -1102,11 +1072,9 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
         document.execCommand('insertText', false, "@");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_SuggestionList_list'),
         'show',
         "should display mention suggestions on typing '@'"
     );
@@ -1136,7 +1104,7 @@ QUnit.test('mention a partner', async function (assert) {
 
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionList_list',
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
@@ -1149,18 +1117,12 @@ QUnit.test('mention a partner', async function (assert) {
         document.execCommand('insertText', false, "@");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
         document.execCommand('insertText', false, "T");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
         document.execCommand('insertText', false, "e");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -1218,18 +1180,12 @@ QUnit.test('mention a partner after some text', async function (assert) {
         document.execCommand('insertText', false, "@");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
         document.execCommand('insertText', false, "T");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
         document.execCommand('insertText', false, "e");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,
@@ -1278,18 +1234,12 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         document.execCommand('insertText', false, "@");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
         document.execCommand('insertText', false, "T");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
         document.execCommand('insertText', false, "e");
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.containsOnce(
         document.body,

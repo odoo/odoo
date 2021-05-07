@@ -719,7 +719,7 @@ function factory(dependencies) {
          * @returns {string}
          */
         getMentionText() {
-            return this.name;
+            return `#${this.name}`;
         }
 
         /**

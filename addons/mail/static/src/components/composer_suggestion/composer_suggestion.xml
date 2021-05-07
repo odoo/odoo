@@ -2,30 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ComposerSuggestion" owl="1">
-        <a class="o_ComposerSuggestion dropdown-item" t-att-class="{ 'active': props.isActive }" href="#" t-att-title="title()" role="menuitem" t-on-click="_onClick">
-            <t t-if="record">
-                <t t-if="isCannedResponse">
-                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.source"/></span>
-                    <span class="o_ComposerSuggestion_part2"><t t-esc="record.substitution"/></span>
-                </t>
-                <t t-if="isChannel">
-                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.name"/></span>
-                </t>
-                <t t-if="isCommand">
-                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.name"/></span>
-                    <span class="o_ComposerSuggestion_part2"><t t-esc="record.help"/></span>
-                </t>
-                <t t-if="isPartner">
+        <a class="o_ComposerSuggestion dropdown-item" t-att-class="{ 'active': suggestionListItem and suggestionListItem.isHighlighted }" href="#" t-att-title="title()" role="menuitem" t-on-click="_onClick">
+            <t t-if="suggestionListItem">
+                <t t-if="suggestionListItem.partner">
                     <PartnerImStatusIcon
                         class="o_ComposerSuggestion_partnerImStatusIcon"
                         hasBackground="false"
-                        partnerLocalId="record.localId"
+                        partnerLocalId="suggestionListItem.partner.localId"
                     />
-                    <span class="o_ComposerSuggestion_part1"><t t-esc="record.nameOrDisplayName"/></span>
-                    <t t-if="record.email">
-                        <span class="o_ComposerSuggestion_part2">(<t t-esc="record.email"/>)</span>
-                    </t>
                 </t>
+                <span class="o_ComposerSuggestion_part1"><t t-esc="suggestionListItem.namePart1"/></span>
+                <span class="o_ComposerSuggestion_part2"><t t-esc="suggestionListItem.namePart2"/></span>
             </t>
         </a>
     </t>

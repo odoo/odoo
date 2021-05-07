@@ -353,7 +353,7 @@ class Composer extends Component {
      */
     _onKeydown(ev) {
         if (ev.key === 'Escape') {
-            if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+            if (isEventHandled(ev, 'SuggestionList.suggestionListClosed')) {
                 return;
             }
             if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {

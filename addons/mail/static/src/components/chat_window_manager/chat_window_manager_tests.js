@@ -832,7 +832,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_SuggestionList_list'),
         'show',
         "should display mention suggestions on typing '@'"
     );
@@ -843,7 +843,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionList_list',
         "mention suggestion should be closed after pressing escape on mention suggestion"
     );
     assert.containsOnce(

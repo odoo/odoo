@@ -485,10 +485,7 @@ class ModelField {
                         }
                         break;
                     case 'update':
-                        if (!['one2one', 'many2one'].includes(this.relationType)) {
-                            throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "update". Only x2one relations are supported.`);
-                        }
-                        if (this._setRelationUpdateX2One(record, newVal, options)) {
+                        if (this._setRelationUpdate(record, newVal, options)) {
                             hasChanged = true;
                         }
                         break;
@@ -801,6 +798,28 @@ class ModelField {
 
     /**
      * Set on this relational field in 'update' mode. Basically data provided
+     * during set on this relational field contain data to update target
+     * record(s).
+     *
+     * @private
+     * @param {mail.model} record
+     * @param {Object|Map} data
+     * @param {Object} [options]
+     * @returns {boolean} whether the value changed for the current field
+     */
+    _setRelationUpdate(record, data, options) {
+        switch (this.relationType) {
+            case 'many2many':
+            case 'one2many':
+                return this._setRelationUpdateX2Many(record, data, options);
+            case 'many2one':
+            case 'one2one':
+                return this._setRelationUpdateX2One(record, data, options);
+        }
+    }
+
+    /**
+     * Set on this relational field in 'update' mode. Basically data provided
      * during set on this relational field contain data to update target record.
      *
      * @private
@@ -815,6 +834,28 @@ class ModelField {
             throw Error(`Record ${record.localId} cannot update undefined relational field ${this.fieldName}.`);
         }
         this.env.modelManager._update(otherRecord, data);
+        return false;
+    }
+
+    /**
+     * Set on this relational field in 'update' mode. Basically data provided
+     * during set on this relational field contain data to update target
+     * records.
+     *
+     * @private
+     * @param {mail.model} record
+     * @param {Map} data
+     * @param {Object} [options]
+     * @returns {boolean} whether the value changed for the current field
+     */
+    _setRelationUpdateX2Many(record, data, options) {
+        const otherRecords = this.read(record);
+        for (const [record, newValues] of data) {
+            if (!otherRecords.has(record)) {
+                throw Error(`Record ${record.localId} cannot update non-linked record ${record.localId} for relational field ${this.fieldName}.`);
+            }
+            this.env.modelManager._update(record, newValues);
+        }
         return false;
     }
 

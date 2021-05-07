@@ -179,6 +179,9 @@ function unlinkAll() {
  * `update` command can be used for x2one relation fields.
  * - updates the values of the current related record with the given values
  *
+ * @param {Object|Map} newValue
+ *  - x2one: values to be written on the related record
+ *  - x2many: Map of record/values pairs to be written on related records
  * @returns {FieldCommand}
  */
 function update(newValue) {

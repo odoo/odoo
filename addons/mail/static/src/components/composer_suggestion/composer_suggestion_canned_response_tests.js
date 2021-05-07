@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import ComposerSuggestion from '@mail/components/composer_suggestion/composer_suggestion';
+import { link } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
@@ -40,22 +41,16 @@ QUnit.module('composer_suggestion_canned_response_tests.js', {
 QUnit.test('canned response suggestion displayed', async function (assert) {
     assert.expect(1);
 
-    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
     const cannedResponse = this.env.models['mail.canned_response'].create({
         id: 7,
         source: 'hello',
         substitution: "Hello, how are you?",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
-        isActive: true,
-        modelName: 'mail.canned_response',
-        recordLocalId: cannedResponse.localId,
+        suggestionListItemLocalId: this.env.models['mail.suggestion_list_item'].create({
+            record: link(cannedResponse),
+        }).localId
     });
 
     assert.containsOnce(
@@ -68,22 +63,16 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
 QUnit.test('canned response suggestion correct data', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
     const cannedResponse = this.env.models['mail.canned_response'].create({
         id: 7,
         source: 'hello',
         substitution: "Hello, how are you?",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
-        isActive: true,
-        modelName: 'mail.canned_response',
-        recordLocalId: cannedResponse.localId,
+        suggestionListItemLocalId: this.env.models['mail.suggestion_list_item'].create({
+            record: link(cannedResponse),
+        }).localId
     });
 
     assert.containsOnce(
@@ -113,25 +102,20 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
     );
 });
 
-QUnit.test('canned response suggestion active', async function (assert) {
+QUnit.test('canned response suggestion should be highlighted according to its corresponding value', async function (assert) {
     assert.expect(2);
 
-    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 20,
-        model: 'mail.channel',
-    });
     const cannedResponse = this.env.models['mail.canned_response'].create({
         id: 7,
         source: 'hello',
         substitution: "Hello, how are you?",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
-        isActive: true,
-        modelName: 'mail.canned_response',
-        recordLocalId: cannedResponse.localId,
+        suggestionListItemLocalId: this.env.models['mail.suggestion_list_item'].create({
+            isHighlighted: true,
+            record: link(cannedResponse),
+        }).localId
     });
 
     assert.containsOnce(
@@ -142,7 +126,7 @@ QUnit.test('canned response suggestion active', async function (assert) {
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',
-        "should be active initially"
+        "should be highlighted according to its corresponding value"
     );
 });
 

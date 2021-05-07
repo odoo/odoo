@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.SuggestionList" owl="1">
+        <div class="o_SuggestionList" t-att-class="{ 'o-lowPosition': props.isBelow }">
+            <t t-if="suggestionList">
+                <div class="o_SuggestionList_drop" t-att-class="{ 'dropdown': props.isBelow, 'dropup': !props.isBelow }">
+                    <div class="o_SuggestionList_list dropdown-menu show">
+                        <t t-foreach="suggestionList.mainSuggestionListItems" t-as="suggestionListItem" t-key="suggestionListItem.localId">
+                            <ComposerSuggestion
+                                suggestionListItemLocalId="suggestionListItem.localId"
+                            />
+                        </t>
+                        <t t-if="suggestionList.mainSuggestionListItems.length > 0 and suggestionList.extraSuggestionListItems.length > 0">
+                            <div role="separator" class="dropdown-divider"/>
+                        </t>
+                        <t t-foreach="suggestionList.extraSuggestionListItems" t-as="suggestionListItem" t-key="suggestionListItem.localId">
+                            <ComposerSuggestion
+                                suggestionListItemLocalId="suggestionListItem.localId"
+                            />
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

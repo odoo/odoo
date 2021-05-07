@@ -4,12 +4,12 @@ import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update
 import useStore from '@mail/component_hooks/use_store/use_store';
 import useUpdate from '@mail/component_hooks/use_update/use_update';
 import PartnerImStatusIcon from '@mail/components/partner_im_status_icon/partner_im_status_icon';
-import { link } from '@mail/model/model_field_command';
 
 const { Component } = owl;
 
 const components = { PartnerImStatusIcon };
 
+// TODO SEB rename to just suggestion
 class ComposerSuggestion extends Component {
 
     /**
@@ -19,11 +19,9 @@ class ComposerSuggestion extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const composer = this.env.models['mail.composer'].get(this.props.composerLocalId);
-            const record = this.env.models[props.modelName].get(props.recordLocalId);
+            const suggestionListItem = this.env.models['mail.suggestion_list_item'].get(props.suggestionListItemLocalId);
             return {
-                composerHasToScrollToActiveSuggestion: composer && composer.hasToScrollToActiveSuggestion,
-                record: record ? record.__state : undefined,
+                suggestionListItem: suggestionListItem && suggestionListItem.__state,
             };
         });
         useUpdate({ func: () => this._update() });
@@ -34,55 +32,26 @@ class ComposerSuggestion extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.composer}
+     * @returns {mail.suggestion_list_item}
      */
-    get composer() {
-        return this.env.models['mail.composer'].get(this.props.composerLocalId);
-    }
-
-    get isCannedResponse() {
-        return this.props.modelName === "mail.canned_response";
-    }
-
-    get isChannel() {
-        return this.props.modelName === "mail.thread";
-    }
-
-    get isCommand() {
-        return this.props.modelName === "mail.channel_command";
-    }
-
-    get isPartner() {
-        return this.props.modelName === "mail.partner";
-    }
-
-    get record() {
-        return this.env.models[this.props.modelName].get(this.props.recordLocalId);
+    get suggestionListItem() {
+        return this.env.models['mail.suggestion_list_item'].get(this.props.suggestionListItemLocalId);
     }
 
     /**
-     * Returns a descriptive title for this suggestion. Useful to be able to
-     * read both parts when they are overflowing the UI.
+     * Returns a descriptive title for this suggestion list item. Useful to be
+     * able to read both parts when they are overflowing the UI.
      *
      * @returns {string}
      */
     title() {
-        if (this.isCannedResponse) {
-            return _.str.sprintf("%s: %s", this.record.source, this.record.substitution);
+        if (!this.suggestionListItem) {
+            return '';
         }
-        if (this.isChannel) {
-            return this.record.name;
+        if (!this.suggestionListItem.namePart2) {
+            return this.suggestionListItem.namePart1;
         }
-        if (this.isCommand) {
-            return _.str.sprintf("%s: %s", this.record.name, this.record.help);
-        }
-        if (this.isPartner) {
-            if (this.record.email) {
-                return _.str.sprintf("%s (%s)", this.record.nameOrDisplayName, this.record.email);
-            }
-            return this.record.nameOrDisplayName;
-        }
-        return "";
+        return _.str.sprintf("%s: %s", this.suggestionListItem.namePart1, this.suggestionListItem.namePart2);
     }
 
     //--------------------------------------------------------------------------
@@ -93,15 +62,14 @@ class ComposerSuggestion extends Component {
      * @private
      */
     _update() {
-        if (
-            this.composer &&
-            this.composer.hasToScrollToActiveSuggestion &&
-            this.props.isActive
-        ) {
+        if (!this.suggestionListItem) {
+            return;
+        }
+        if (this.suggestionListItem.hasToScrollIntoView) {
             this.el.scrollIntoView({
                 block: 'center',
             });
-            this.composer.update({ hasToScrollToActiveSuggestion: false });
+            this.suggestionListItem.update({ hasToScrollIntoView: false });
         }
     }
 
@@ -114,10 +82,12 @@ class ComposerSuggestion extends Component {
      * @param {Event} ev
      */
     _onClick(ev) {
-        ev.preventDefault();
-        this.composer.composerSuggestionList.update({ activeSuggestedRecord: link(this.record) });
-        this.composer.insertSuggestion();
-        this.composer.composerSuggestionList.closeSuggestions();
+        if (!this.suggestionListItem) {
+            return;
+        }
+        this.suggestionListItem.onClickSuggestion(ev);
+        // This event is used to focus the composer. It cannot be removed until
+        // there is one composer model per composer component.
         this.trigger('o-composer-suggestion-clicked');
     }
 
@@ -125,14 +95,8 @@ class ComposerSuggestion extends Component {
 
 Object.assign(ComposerSuggestion, {
     components,
-    defaultProps: {
-        isActive: false,
-    },
     props: {
-        composerLocalId: String,
-        isActive: Boolean,
-        modelName: String,
-        recordLocalId: String,
+        suggestionListItemLocalId: String,
     },
     template: 'mail.ComposerSuggestion',
 });

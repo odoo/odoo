@@ -300,7 +300,7 @@ class ChatWindow extends Component {
                 }
                 break;
             case 'Escape':
-                if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
+                if (isEventHandled(ev, 'SuggestionList.suggestionListClosed')) {
                     break;
                 }
                 if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {

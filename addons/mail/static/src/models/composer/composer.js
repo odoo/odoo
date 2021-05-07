@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
-import { clear, create, insert, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { attr, many2many, one2one } from '@mail/model/model_field';
+import { clear, create, insert, link, replace, unlink, unlinkAll, update } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
 import {
     addLink,
@@ -14,37 +14,16 @@ function factory(dependencies) {
 
     class Composer extends dependencies['mail.model'] {
 
-        /**
-         * @override
-         */
-        _willCreate() {
-            const res = super._willCreate(...arguments);
-            /**
-             * Determines whether there is a mention RPC currently in progress.
-             * Useful to queue a new call if there is already one pending.
-             */
-            this._hasMentionRpcInProgress = false;
-            /**
-             * Determines the next function to execute after the current mention
-             * RPC is done, if any.
-             */
-            this._nextMentionRpcFunction = undefined;
-            return res;
-        }
-
-        /**
-         * @override
-         */
-        _willDelete() {
-            // Clears the mention queue on deleting the record to prevent
-            // unnecessary RPC.
-            this._nextMentionRpcFunction = undefined;
-            return super._willDelete(...arguments);
-        }
-
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
+
+        /**
+         * Closes the suggestion list.
+         */
+        closeSuggestions() {
+            this.update({ suggestionDelimiterPosition: clear() });
+        }
 
         /**
          * Hides the composer, which only makes sense if the composer is
@@ -98,27 +77,15 @@ function factory(dependencies) {
             });
         }
 
-        insertSuggestion() {
+        /**
+         * @private
+         * @param {mail.model} record
+         */
+        _insertSuggestion(record) {
             const cursorPosition = this.textInputCursorStart;
-            let textLeft = this.textInputContent.substring(
-                0,
-                this.suggestionDelimiterPosition + 1
-            );
-            let textRight = this.textInputContent.substring(
-                cursorPosition,
-                this.textInputContent.length
-            );
-            if (this.suggestionDelimiter === ':') {
-                textLeft = this.textInputContent.substring(
-                    0,
-                    this.suggestionDelimiterPosition
-                );
-                textRight = this.textInputContent.substring(
-                    cursorPosition,
-                    this.textInputContent.length
-                );
-            }
-            const recordReplacement = this.composerSuggestionList.activeSuggestedRecord.getMentionText();
+            const textLeft = this.textInputContent.substring(0, this.suggestionDelimiterPosition);
+            const textRight = this.textInputContent.substring(cursorPosition, this.textInputContent.length);
+            const recordReplacement = record.getMentionText();
             const updateData = {
                 isLastStateChangeProgrammatic: true,
                 textInputContent: textLeft + recordReplacement + ' ' + textRight,
@@ -128,12 +95,12 @@ function factory(dependencies) {
             // Specific cases for channel and partner mentions: the message with
             // the mention will appear in the target channel, or be notified to
             // the target partner.
-            switch (this.composerSuggestionList.activeSuggestedRecord.constructor.modelName) {
+            switch (record.constructor.modelName) {
                 case 'mail.thread':
-                    Object.assign(updateData, { mentionedChannels: link(this.composerSuggestionList.activeSuggestedRecord) });
+                    Object.assign(updateData, { mentionedChannels: link(record) });
                     break;
                 case 'mail.partner':
-                    Object.assign(updateData, { mentionedPartners: link(this.composerSuggestionList.activeSuggestedRecord) });
+                    Object.assign(updateData, { mentionedPartners: link(record) });
                     break;
             }
             this.update(updateData);
@@ -385,20 +352,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {string}
-         */
-        _computeSuggestionDelimiter() {
-            if (
-                this.suggestionDelimiterPosition === undefined ||
-                this.suggestionDelimiterPosition >= this.textInputContent.length
-            ) {
-                return clear();
-            }
-            return this.textInputContent[this.suggestionDelimiterPosition];
-        }
-
-        /**
-         * @private
          * @returns {integer}
          */
         _computeSuggestionDelimiterPosition() {
@@ -445,10 +398,32 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.suggestion_list}
+         */
+        _computeSuggestionList() {
+            if (this.suggestionDelimiterPosition === undefined) {
+                return unlink();
+            }
+            const suggestionListData = {
+                onSuggestionListClosed: () => this._onSuggestionListClosed(),
+                onSuggestionNoResult: () => this._onSuggestionNoResult(),
+                onSuggestionSelected: record => this._onSuggestionSelected(record),
+                suggestionModelName: this.suggestionModelName,
+                suggestionSearchTerm: this.suggestionSearchTerm,
+                thread: link(this.thread),
+            };
+            if (!this.suggestionList) {
+                return create(suggestionListData);
+            }
+            return update(suggestionListData);
+        }
+
+        /**
+         * @private
          * @returns {string}
          */
         _computeSuggestionModelName() {
-            switch (this.suggestionDelimiter) {
+            switch (this.textInputContent[this.suggestionDelimiterPosition]) {
                 case '@':
                     return 'mail.partner';
                 case ':':
@@ -474,33 +449,6 @@ function factory(dependencies) {
                 return clear();
             }
             return this.textInputContent.substring(this.suggestionDelimiterPosition + 1, this.textInputCursorStart);
-        }
-
-        /**
-         * Executes the given async function, only when the last function
-         * executed by this method terminates. If there is already a pending
-         * function it is replaced by the new one. This ensures the result of
-         * these function come in the same order as the call order, and it also
-         * allows to skip obsolete intermediate calls.
-         *
-         * @private
-         * @param {function} func
-         */
-        async _executeOrQueueFunction(func) {
-            if (this._hasMentionRpcInProgress) {
-                this._nextMentionRpcFunction = func;
-                return;
-            }
-            this._hasMentionRpcInProgress = true;
-            this._nextMentionRpcFunction = undefined;
-            try {
-                await this.async(func);
-            } finally {
-                this._hasMentionRpcInProgress = false;
-                if (this._nextMentionRpcFunction) {
-                    this._executeOrQueueFunction(this._nextMentionRpcFunction);
-                }
-            }
         }
 
         /**
@@ -595,38 +543,26 @@ function factory(dependencies) {
         }
 
         /**
-         * Updates the suggestion state based on the currently saved composer
-         * state (in particular content and cursor position).
-         *
          * @private
          */
-        _onChangeUpdateSuggestionList() {
-            // Update the suggestion list immediately for a reactive UX...
-            this._updateSuggestionList();
-            // ...and then update it again after the server returned data.
-            this._executeOrQueueFunction(async () => {
-                if (
-                    this.suggestionDelimiterPosition === undefined ||
-                    this.suggestionSearchTerm === undefined ||
-                    !this.suggestionModelName
-                ) {
-                    // ignore obsolete call
-                    return;
-                }
-                const Model = this.env.models[this.suggestionModelName];
-                const searchTerm = this.suggestionSearchTerm;
-                await this.async(() => Model.fetchSuggestions(searchTerm, { thread: this.thread }));
-                this._updateSuggestionList();
-                if (
-                    this.suggestionSearchTerm &&
-                    this.suggestionSearchTerm === searchTerm &&
-                    this.suggestionModelName &&
-                    this.env.models[this.suggestionModelName] === Model &&
-                    !this.composerSuggestionList.hasSuggestions
-                ) {
-                    this.composerSuggestionList.closeSuggestions();
-                }
-            });
+        _onSuggestionListClosed() {
+            this.closeSuggestions();
+        }
+
+        /**
+         * @private
+         */
+        _onSuggestionNoResult() {
+            this.closeSuggestions();
+        }
+
+        /**
+         * @private
+         * @param {mail.model} record
+         */
+        _onSuggestionSelected(record) {
+            this._insertSuggestion(record);
+            this.closeSuggestions();
         }
 
         /**
@@ -645,49 +581,6 @@ function factory(dependencies) {
             });
         }
 
-        /**
-         * Updates the current suggestion list. This method should be called
-         * whenever the UI has to be refreshed following change in state.
-         *
-         * This method should ideally be a compute, but its dependencies are
-         * currently too complex to express due to accessing plenty of fields
-         * from all records of dynamic models.
-         *
-         * @private
-         */
-        _updateSuggestionList() {
-            if (
-                this.suggestionDelimiterPosition === undefined ||
-                this.suggestionSearchTerm === undefined ||
-                !this.suggestionModelName
-            ) {
-                this.composerSuggestionList.update({
-                    extraSuggestedRecords: clear(),
-                    mainSuggestedRecords: clear(),
-                });
-                return;
-            }
-            const Model = this.env.models[this.suggestionModelName];
-            const [
-                mainSuggestedRecords,
-                extraSuggestedRecords = [],
-            ] = Model.searchSuggestions(this.suggestionSearchTerm, { thread: this.thread });
-            const sortFunction = Model.getSuggestionSortFunction(this.suggestionSearchTerm, { thread: this.thread });
-            mainSuggestedRecords.sort(sortFunction);
-            extraSuggestedRecords.sort(sortFunction);
-            // arbitrary limit to avoid displaying too many elements at once
-            // ideally a load more mechanism should be introduced
-            const limit = 8;
-            mainSuggestedRecords.length = Math.min(mainSuggestedRecords.length, limit);
-            extraSuggestedRecords.length = Math.min(extraSuggestedRecords.length, limit - mainSuggestedRecords.length);
-            this.update({
-                hasToScrollToActiveSuggestion: true,
-            });
-            this.composerSuggestionList.update({
-                extraSuggestedRecords: replace(extraSuggestedRecords),
-                mainSuggestedRecords: replace(mainSuggestedRecords),
-            });
-        }
     }
 
     Composer.fields = {
@@ -713,10 +606,6 @@ function factory(dependencies) {
             ],
             default: false,
         }),
-        composerSuggestionList: one2one('mail.composer_suggestion_list', {
-            default: create(),
-            inverse: 'composer',
-        }),
         /**
          * Instance of discuss if this composer is used as the reply composer
          * from Inbox. This field is computed from the inverse relation and
@@ -737,13 +626,6 @@ function factory(dependencies) {
             ],
         }),
         hasFocus: attr({
-            default: false,
-        }),
-        /**
-         * Determines whether the currently active suggestion should be scrolled
-         * into view.
-         */
-        hasToScrollToActiveSuggestion: attr({
             default: false,
         }),
         /**
@@ -785,20 +667,6 @@ function factory(dependencies) {
             related: 'mentionedPartners.name',
         }),
         /**
-         * Not a real field, used to trigger `_onChangeUpdateSuggestionList`
-         * when one of the dependencies changes.
-         */
-        onChangeUpdateSuggestionList: attr({
-            compute: '_onChangeUpdateSuggestionList',
-            dependencies: [
-                'suggestionDelimiterPosition',
-                'suggestionModelName',
-                'suggestionSearchTerm',
-                'thread',
-            ],
-            isOnChange: true,
-        }),
-        /**
          * Determines the extra `mail.partner` (on top of existing followers)
          * that will receive the message being composed by `this`, and that will
          * also be added as follower of `this.thread`.
@@ -833,19 +701,6 @@ function factory(dependencies) {
             default: "",
         }),
         /**
-         * States which type of suggestion is currently in progress, if any.
-         * The value of this field contains the magic char that corresponds to
-         * the suggestion currently in progress, and it must be one of these:
-         * canned responses (:), channels (#), commands (/) and partners (@)
-         */
-        suggestionDelimiter: attr({
-            compute: '_computeSuggestionDelimiter',
-            dependencies: [
-                'suggestionDelimiterPosition',
-                'textInputContent',
-            ],
-        }),
-        /**
          * States the position inside textInputContent of the suggestion
          * delimiter currently in consideration. Useful if the delimiter char
          * appears multiple times in the content.
@@ -861,13 +716,27 @@ function factory(dependencies) {
             ],
         }),
         /**
+         * Determines the suggestion list for this composer.
+         */
+        suggestionList: one2one('mail.suggestion_list', {
+            compute: '_computeSuggestionList',
+            dependencies: [
+                'suggestionDelimiterPosition',
+                'suggestionModelName',
+                'suggestionSearchTerm',
+            ],
+            isCausal: true,
+            readonly: true,
+        }),
+        /**
          * States the target model name of the suggestion currently in progress,
          * if any.
          */
         suggestionModelName: attr({
             compute: '_computeSuggestionModelName',
             dependencies: [
-                'suggestionDelimiter',
+                'suggestionDelimiterPosition',
+                'textInputContent',
             ],
         }),
         /**

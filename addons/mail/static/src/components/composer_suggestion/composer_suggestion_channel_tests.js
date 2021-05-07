@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import ComposerSuggestion from '@mail/components/composer_suggestion/composer_suggestion';
+import { link } from '@mail/model/model_field_command';
 import {
     afterEach,
     beforeEach,
@@ -47,10 +48,9 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
         model: 'mail.channel',
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
-        isActive: true,
-        modelName: 'mail.thread',
-        recordLocalId: thread.localId,
+        suggestionListItemLocalId: this.env.models['mail.suggestion_list_item'].create({
+            record: link(thread),
+        }).localId
     });
 
     assert.containsOnce(
@@ -73,10 +73,9 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
         model: 'mail.channel',
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
-        isActive: true,
-        modelName: 'mail.thread',
-        recordLocalId: thread.localId,
+        suggestionListItemLocalId: this.env.models['mail.suggestion_list_item'].create({
+            record: link(thread),
+        }).localId
     });
 
     assert.containsOnce(
@@ -96,7 +95,7 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
     );
 });
 
-QUnit.test('channel mention suggestion active', async function (assert) {
+QUnit.test('channel mention suggestion should be highlighted according to its corresponding value', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 20 });
@@ -106,10 +105,10 @@ QUnit.test('channel mention suggestion active', async function (assert) {
         model: 'mail.channel',
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
-        isActive: true,
-        modelName: 'mail.thread',
-        recordLocalId: thread.localId,
+        suggestionListItemLocalId: this.env.models['mail.suggestion_list_item'].create({
+            isHighlighted: true,
+            record: link(thread),
+        }).localId
     });
 
     assert.containsOnce(
@@ -120,7 +119,7 @@ QUnit.test('channel mention suggestion active', async function (assert) {
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',
-        "should be active initially"
+        "should be highlighted according to its corresponding value"
     );
 });
 
