@@ -167,6 +167,7 @@
                 <field string="Vehicle" name="name" filter_domain="['|', ('name', 'ilike', self), ('license_plate', 'ilike', self)]"/>
                 <field string="Drivers" name="log_drivers" filter_domain="[('log_drivers.driver_id.name', 'ilike', self)]"/>
                 <field string="Current Driver" name="driver_id"/>
+                <field name="model_id"/>
                 <field name="future_driver_id"/>
                 <field name="tag_ids"/>
                 <field name="location"/>

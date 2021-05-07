@@ -7,6 +7,12 @@
             <form string="Model">
                 <sheet>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_model_vehicle" type="object" icon="fa-car" class="oe_stat_button"
+                            attrs="{'invisible': [('vehicle_count', '=', 0)]}">
+                            <field name="vehicle_count" widget="statinfo" string="Vehicles"/>
+                        </button>
+                    </div>
                     <field name="image_128" widget='image' class="oe_avatar"/>
                     <div class="oe_title">
                         <label for="name"/>
@@ -22,9 +28,15 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="vehicle_type"/>
+                            <field name="category_id" options="{'no_create_edit': True}"/>
                         </group>
                     </group>
                     <notebook>
+                        <page string="Information" name="information" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                            <group string="Vehicle Information">
+                                <field name="transmission"/>
+                            </group>
+                        </page>
                         <page string="Vendors" name="vendors">
                             <field name="vendors">
                                 <kanban quick_create="false" create="true">
@@ -56,7 +68,8 @@
             <tree string="Models">
                 <field name="brand_id" />
                 <field name="name" />
-                <field name="vehicle_type"/>
+                <field name="category_id" optional="show"/>
+                <field name="vehicle_type" optional="show"/>
             </tree>
         </field>
     </record>
@@ -124,6 +137,12 @@
         <field name="arch" type="xml">
             <form string="Model Make">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_brand_model" type="object" icon="fa-car" class="oe_stat_button"
+                            attrs="{'invisible': [('model_count', '=', 0)]}">
+                            <field name="model_count" widget="statinfo" string="Models"/>
+                        </button>
+                    </div>
                     <group>
                         <div>
                             <field name="image_128" widget="image" class="oe_avatar"/>
@@ -176,6 +195,18 @@
         </field>
     </record>
 
+    <record id="fleet_vehicle_model_brand_view_search" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.brand.view.search</field>
+        <field name="model">fleet.vehicle.model.brand</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="With Models" name="with_models"
+                    domain="[('model_count', '>', 0)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id='fleet_vehicle_model_brand_action' model='ir.actions.act_window'>
         <field name="name">Manufacturers</field>
         <field name="res_model">fleet.vehicle.model.brand</field>
@@ -187,6 +218,49 @@
         </field>
     </record>
 
+    <!-- Model Category -->
+    <record id='fleet_vehicle_model_category_action' model='ir.actions.act_window'>
+        <field name="name">Model Category</field>
+        <field name="res_model">fleet.vehicle.model.category</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="xml">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new category
+            </p>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_category_view_tree" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.category.view.tree</field>
+        <field name="model">fleet.vehicle.model.category</field>
+        <field name="arch" type="xml">
+            <tree string="Model Category" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_model_category_view_form" model="ir.ui.view">
+        <field name="name">fleet.vehicle.model.category.view.form</field>
+        <field name="model">fleet.vehicle.model.category</field>
+        <field name="arch" type="xml">
+            <form string="Model Category">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="sequence" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" sequence="2"/>
     <menuitem action="fleet_vehicle_model_action" parent="fleet_configuration" id="fleet_vehicle_model_menu" sequence="2"/>
+    <menuitem action="fleet_vehicle_model_category_action" parent="fleet_configuration" id="fleet_vehicle_model_category_menu" sequence="2"/>
 </odoo>
