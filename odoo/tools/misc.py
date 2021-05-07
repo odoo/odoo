@@ -1263,13 +1263,18 @@ def parse_date(env, value, lang_code=False):
         :return: date object from the localized string
         :rtype: datetime.date
     '''
+<<<<<<< HEAD
     lang = get_lang(env, lang_code)
+=======
+    lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
+>>>>>>> 8c42e093b1a... temp
     locale = babel_locale_parse(lang.code)
     try:
         return babel.dates.parse_date(value, locale=locale)
     except:
         return value
 
+<<<<<<< HEAD
 
 def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
     """ Formats the datetime in a given format.
@@ -1370,6 +1375,8 @@ def format_duration(value):
     return '%02d:%02d' % (hours, minutes)
 
 
+=======
+>>>>>>> 8c42e093b1a... temp
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
         known length only, because length difference is optimized. """
