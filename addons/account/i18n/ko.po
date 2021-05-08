@@ -135,7 +135,7 @@ msgstr "%s (반올림)"
 #: code:addons/account/models/sequence_mixin.py:0
 #, python-format
 msgid "%s is not a stored field"
-msgstr "%s 는 저장된 필드가 아닙니다"
+msgstr "%s은 저장된 필드가 아닙니다"
 
 #. module: account
 #: model:ir.actions.report,print_report_name:account.account_invoices
@@ -322,8 +322,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
-"<li>  <strong>%s</strong> 로부터 {amount} ({debit_credit})가 {link}를 통해  "
-"<strong>{account_target_name}</strong>로 송금되었습니다</li>"
+"<li>  <strong>%s</strong> 로부터 {amount} ({debit_credit})가 {link}을 통해  "
+"<strong>{account_target_name}</strong>으로 송금되었습니다</li>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -415,6 +415,9 @@ msgid ""
 "check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> 반전</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -484,7 +487,7 @@ msgstr "<span class=\"o_form_label\">기본 Incoterm</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Default Sending Options</span>"
-msgstr "<span class=\"o_form_label\">기본 전송 옵션</span>"
+msgstr "<span class=\"o_form_label\">기본 전송 선택 사항</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -599,7 +602,7 @@ msgstr "<span title=\"Latest Statement\">최근 명세서</span>"
 msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
-msgstr ""
+msgstr "<span title=\"Outstanding Payments/Receipts\">미결제 금액/영수증</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -609,7 +612,7 @@ msgstr "<span> 시작 </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span> Manually</span>"
-msgstr ""
+msgstr "<span> 수동</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -743,17 +746,17 @@ msgstr "<strong>지불해야 할 금액</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Company:</strong>"
-msgstr "<strong>회사:</strong>"
+msgstr "<strong>회사 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
-msgstr "<strong>고객 코드:</strong>"
+msgstr "<strong>고객 코드 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
-msgstr "<strong>고객: </strong>"
+msgstr "<strong>고객 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
@@ -763,7 +766,7 @@ msgstr "<strong>고객</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong>"
-msgstr "<strong>만기일:</strong>"
+msgstr "<strong>만기일 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -773,7 +776,7 @@ msgstr "<strong>결산 잔액</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>항목 정렬 기준:</strong>"
+msgstr "<strong>항목 정렬 기준 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -783,32 +786,32 @@ msgstr "<strong>국제 상업 약관 : </strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
-msgstr "<strong>청구 날짜:</strong>"
+msgstr "<strong>송장 날짜 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Journal:</strong>"
-msgstr "<strong>분개장:</strong>"
+msgstr "<strong>분개장 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Memo: </strong>"
-msgstr "<strong>메모: </strong>"
+msgstr "<strong>메모 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Amount: </strong>"
-msgstr "<strong>지불 금액: </strong>"
+msgstr "<strong>지불 금액 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Date: </strong>"
-msgstr "<strong>지불일: </strong>"
+msgstr "<strong>지불일 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Method: </strong>"
-msgstr "<strong>지불 방법: </strong>"
+msgstr "<strong>지불 방법 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
@@ -818,12 +821,12 @@ msgstr "<strong>상품</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong>"
-msgstr "<strong>참조</strong>"
+msgstr "<strong>참조 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong>"
-msgstr "<strong>출처:</strong>"
+msgstr "<strong>출처 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -838,7 +841,7 @@ msgstr "<strong>소계</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Target Moves:</strong>"
-msgstr "<strong>대상 이동:</strong>"
+msgstr "<strong>대상 이동 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
@@ -858,18 +861,18 @@ msgstr "<strong>합계</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_account_kanban
 msgid "<strong>Type: </strong>"
-msgstr "<strong>유형: </strong>"
+msgstr "<strong>유형 : </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Vendor: </strong>"
-msgstr "<strong>공급업체: </strong>"
+msgstr "<strong>공급업체 : </strong>"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "@From: %(email)s"
-msgstr "@From: %(email)s"
+msgstr "@From : %(email)s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -936,13 +939,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "A modification has been operated on the line %s."
-msgstr ""
+msgstr "%s 명세에서 수정 작업이 수행되었습니다."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
-msgstr ""
+msgstr "지불은 항상 은행이나 현금 출납장에 속해야 합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1012,7 +1015,7 @@ msgstr "계정"
 msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
-msgstr ""
+msgstr "%s 계정은 조정을 허용하지 않습니다. 먼저 이 계정의 구성을 허용하도록 변경하십시오."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1056,7 +1059,7 @@ msgstr "계정 그룹"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "Account Groups with the same granularity can't overlap"
-msgstr ""
+msgstr "동일한 세분성을 가진 계정 그룹은 중복될 수 없습니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -1107,7 +1110,7 @@ msgstr "역방향 계정 이동"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 msgid "Account Name"
-msgstr ""
+msgstr "계정 이름"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
@@ -1119,7 +1122,7 @@ msgstr "계정 번호"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Account Options"
-msgstr ""
+msgstr "계정 선택 사항"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
@@ -1180,23 +1183,23 @@ msgstr "세금 그룹 계정"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report
 msgid "Account Tax Report"
-msgstr ""
+msgstr "계정 세금 보고서"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr "세금 계정 보고서 내역"
+msgstr "계정 세금 보고서 내역"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr "계정 세금 템플릿"
+msgstr "계정 세금 서식"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr "계정 택스클라우드"
+msgstr "계정 TaxCloud"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -1204,13 +1207,13 @@ msgstr "계정 택스클라우드"
 #: model_terms:ir.ui.view,arch_db:account.view_account_template_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_template_tree
 msgid "Account Template"
-msgstr "계정 템플릿"
+msgstr "계정 서식"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_valuation_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__property_stock_valuation_account_id
 msgid "Account Template for Stock Valuation"
-msgstr "주식 가치 평가용 계정 템플릿"
+msgstr "재고 평가를 위한 계정 서식"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_type
@@ -1230,8 +1233,7 @@ msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening"
 " entries."
-msgstr ""
-"계정 유형은 국가별 법적 보고서를 생성하고, 회계연도 마감과 개시된 항목 생성을 위한 규칙을 설정할 때 참고용으로 사용합니다."
+msgstr "계정 유형은 정보 목적, 국가별 법적 보고서 생성, 회계 연도 마감 및 개설 항목 생성 규칙을 설정하는 데 사용됩니다."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_type_form
@@ -1246,7 +1248,7 @@ msgstr "계정 미조정"
 #. module: account
 #: model:ir.model,name:account.model_account_root
 msgid "Account codes first 2 digits"
-msgstr "계정 코드 첫 2 자리"
+msgstr "계정 코드 첫 2자리"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -1279,12 +1281,12 @@ msgstr "세액을 전기할 계정"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
-msgstr "지불 명세가 있는 계정 보고서"
+msgstr "지불 내역이 있는 계정 보고서"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
 msgid "Account report without payment lines"
-msgstr ""
+msgstr "지불 내역이 없는 계정 보고서"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
@@ -1308,17 +1310,17 @@ msgstr "대신 사용할 계정"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr ""
+msgstr "이전할 계정."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
 msgid "Account tour upload bill"
-msgstr ""
+msgstr "청구서 업로드 맛보기 계정"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
 msgid "Account tour upload bill email confirm"
-msgstr ""
+msgstr "이메일 승인 청구서 업로드 맛보기 계정"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__revenue_accrual_account
@@ -1396,7 +1398,7 @@ msgstr "회계 기간"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Accounting information"
-msgstr ""
+msgstr "회계 정보"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1434,7 +1436,7 @@ msgstr "미수 계정"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
 msgid "Action"
-msgstr "조치"
+msgstr "추가 작업"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_needaction
@@ -1443,12 +1445,12 @@ msgstr "조치"
 #: model:ir.model.fields,field_description:account.field_account_move__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_payment__message_needaction
 msgid "Action Needed"
-msgstr "필요한 조치"
+msgstr "추가 작업이 필요함"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
 msgid "Actions"
-msgstr "추가작업"
+msgstr "추가 작업"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1458,7 +1460,7 @@ msgstr "다른 통화 활성화"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create purchase receipt"
-msgstr ""
+msgstr "구매 영수증 생성 활성화"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
@@ -1477,7 +1479,7 @@ msgstr "활성"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Active Account"
-msgstr ""
+msgstr "활성 계정"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__active_domain
@@ -1488,7 +1490,7 @@ msgstr "도메인 활성"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Active to create sale receipt"
-msgstr ""
+msgstr "판매 영수증 생성 활성화"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_ids
@@ -1517,7 +1519,7 @@ msgstr "활동 상태"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_note
 msgid "Activity Summary"
-msgstr ""
+msgstr "활동 요약"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_type_icon
@@ -1530,7 +1532,7 @@ msgstr "활동 유형 아이콘"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sale_activity_user_id
 msgid "Activity User"
-msgstr ""
+msgstr "활동 사용자"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_type_id
