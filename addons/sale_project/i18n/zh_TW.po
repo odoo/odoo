@@ -109,7 +109,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
 msgid "Number of invoices"
-msgstr ""
+msgstr "發票數量"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -158,7 +158,7 @@ msgstr "銷售訂單項產生的專案"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "專案的銷售訂單"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -214,6 +214,8 @@ msgid ""
 "sale order item defined, and if the employee is not in the 'Employee/Sales "
 "Order Item Mapping' of the project."
 msgstr ""
+"專案連接到的銷售訂單項目。 將工時表條目連接到專案上定義的銷售訂單項目。 "
+"僅適用於未定義銷售訂單項目的任務，並且如果員工不在專案的「員工/銷售訂單項目映射」中。"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -232,7 +234,7 @@ msgstr "任務連結到的銷售訂單。"
 msgid ""
 "Select a billable project on which tasks can be created. This setting must "
 "be set for each company."
-msgstr ""
+msgstr "選擇可以在其上建立任務的可計費專案。 必須為每個公司設置此設置。"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
@@ -240,7 +242,7 @@ msgstr ""
 msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
-msgstr ""
+msgstr "在銷售當前產品時，選擇一個可計費專案作為新建立專案的框架。 它的階段和任務將重複。"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -320,7 +322,7 @@ msgstr "產品%s不應具有專案模板，因為它將在全局專案中生成�
 #: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
 msgid ""
 "The project should be linked to a sale order to select a sale order item."
-msgstr ""
+msgstr "該專案應連接到銷售訂單以選擇銷售訂單項目。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
