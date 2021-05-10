@@ -680,12 +680,15 @@ class AccountPayment(models.Model):
                 })
                 payment_vals_to_write.update({
                     'amount': abs(liquidity_amount),
-                    'payment_type': 'inbound' if liquidity_amount > 0.0 else 'outbound',
                     'partner_type': partner_type,
                     'currency_id': liquidity_lines.currency_id.id,
                     'destination_account_id': counterpart_lines.account_id.id,
                     'partner_id': liquidity_lines.partner_id.id,
                 })
+                if liquidity_amount > 0.0:
+                    payment_vals_to_write.update({'payment_type': 'inbound'})
+                elif liquidity_amount < 0.0:
+                    payment_vals_to_write.update({'payment_type': 'outbound'})
 
             move.write(move._cleanup_write_orm_values(move, move_vals_to_write))
             pay.write(move._cleanup_write_orm_values(pay, payment_vals_to_write))
@@ -713,9 +716,9 @@ class AccountPayment(models.Model):
                 writeoff_amount = sum(writeoff_lines.mapped('amount_currency'))
                 counterpart_amount = counterpart_lines['amount_currency']
                 if writeoff_amount > 0.0 and counterpart_amount > 0.0:
-                    sign = 1
-                else:
                     sign = -1
+                else:
+                    sign = 1
 
                 write_off_line_vals = {
                     'name': writeoff_lines[0].name,

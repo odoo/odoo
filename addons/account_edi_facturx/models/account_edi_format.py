@@ -47,7 +47,7 @@ class AccountEdiFormat(models.Model):
 
     def _get_embedding_to_invoice_pdf_values(self, invoice):
         values = super()._get_embedding_to_invoice_pdf_values(invoice)
-        if self.code == 'facturx_1_0_05':
+        if values and self.code == 'facturx_1_0_05':
             values['name'] = 'factur-x.xml'
         return values
 
