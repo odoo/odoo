@@ -169,9 +169,10 @@ class Web_Editor(http.Controller):
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
             try:
                 data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
-                img_extension = tools.base64_to_image(data).format.lower()
-                if img_extension not in [ext.replace('.', '') for ext in SUPPORTED_IMAGE_EXTENSIONS]:
-                    return {'error': format_error_msg}
+                if data[:1] not in ('P', 'P'):  # see ImageProcess.__init__()
+                    img_extension = tools.base64_to_image(data).format.lower()
+                    if img_extension not in [ext.replace('.', '') for ext in SUPPORTED_IMAGE_EXTENSIONS]:
+                        return {'error': format_error_msg}
             except UserError:
                 # considered as an image by the brower file input, but not
                 # recognized as such by PIL, eg .webp
