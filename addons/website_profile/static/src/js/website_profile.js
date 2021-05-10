@@ -68,6 +68,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
                 res_id: parseInt(this.$('input[name=user_id]').val()),
             },
             resizable: true,
+            userGeneratedContent: true,
         });
 
         return Promise.all([def]);
