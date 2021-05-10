@@ -74,12 +74,6 @@ class PosOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
-    def _prepare_invoice_vals(self):
-        vals = super()._prepare_invoice_vals()
-        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
-            vals['narration'] = vals['narration'] + '\n' + self.company_id.invoice_terms if vals['narration'] else self.company_id.invoice_terms
-        return vals
-
     class PosOrderLine(models.Model):
         _inherit = 'pos.order.line'
 
