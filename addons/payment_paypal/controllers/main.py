@@ -25,11 +25,15 @@ class PaypalController(http.Controller):
         The route also allows the GET method in case the user clicks on "go back to merchant site".
         """
         _logger.info("beginning DPN with post data:\n%s", pprint.pformat(data))
-        self._validate_data_authenticity(**data)
-        if data:
-            request.env['payment.transaction']._handle_feedback_data('paypal', data)
+        try:
+            self._validate_data_authenticity(**data)
+        except ValidationError:
+            pass  # The transaction has been moved to state 'error'. Redirect to /payment/status.
         else:
-            pass  # The customer has cancelled the payment, don't do anything
+            if data:
+                request.env['payment.transaction'].sudo()._handle_feedback_data('paypal', data)
+            else:
+                pass  # The customer has cancelled the payment, don't do anything
         return werkzeug.utils.redirect('/payment/status')
 
     @http.route(_notify_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False)
@@ -38,7 +42,7 @@ class PaypalController(http.Controller):
         _logger.info("beginning IPN with post data:\n%s", pprint.pformat(data))
         try:
             self._validate_data_authenticity(**data)
-            request.env['payment.transaction']._handle_feedback_data('paypal', data)
+            request.env['payment.transaction'].sudo()._handle_feedback_data('paypal', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the IPN data; skipping to acknowledge the notif")
         return ''
@@ -86,13 +90,14 @@ class PaypalController(http.Controller):
         response_code = response.text
         if response_code == 'VERIFIED':
             _logger.info("authenticity of notification data verified")
-        elif response_code == 'INVALID':
-            raise ValidationError("PayPal: " + _("Notification data were not acknowledged."))
         else:
-            raise ValidationError(
-                "PayPal: " + _(
+            if response_code == 'INVALID':
+                error_message = "PayPal: " + _("Notification data were not acknowledged.")
+            else:
+                error_message = "PayPal: " + _(
                     "Received unrecognized authentication check response code: received %s, "
                     "expected VERIFIED or INVALID.",
                     response_code
                 )
-            )
+            tx_sudo._set_error(error_message)
+            raise ValidationError(error_message)
