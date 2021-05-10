@@ -12,6 +12,18 @@ class ProjectTask(models.Model):
     description_pad = fields.Char('Pad URL', pad_content_field='description', copy=False)
     use_pad = fields.Boolean(related="project_id.use_pads", string="Use collaborative pad", readonly=True)
 
+    @api.onchange('use_pad')
+    def _onchange_use_pads(self):
+        """ Copy the content in the pad when the user change the project of the task to the one with no pads enabled.
+
+            This case is when the use_pad becomes False and we have already generated the url pad,
+            that is the description_pad field contains the url of the pad.
+        """
+        if not self.use_pad and self.description_pad:
+            vals = {'description_pad': self.description_pad}
+            self._set_pad_to_field(vals)
+            self.description = vals['description']
+
     @api.model
     def create(self, vals):
         # When using quick create, the project_id is in the context, not in the vals
