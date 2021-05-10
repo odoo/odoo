@@ -18,6 +18,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import UserError
 from odoo.modules.module import get_module_path, get_resource_path
 from odoo.tools.misc import file_open
+from odoo.tools.mimetypes import guess_mimetype
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_EXTENSIONS, SUPPORTED_IMAGE_MIMETYPES
 
@@ -169,13 +170,9 @@ class Web_Editor(http.Controller):
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_EXTENSIONS))
             try:
                 data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
-                img_extension = tools.base64_to_image(data).format.lower()
-                if img_extension not in [ext.replace('.', '') for ext in SUPPORTED_IMAGE_EXTENSIONS]:
+                mimetype = guess_mimetype(b64decode(data))
+                if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
-            except UserError:
-                # considered as an image by the brower file input, but not
-                # recognized as such by PIL, eg .webp
-                return {'error': format_error_msg}
             except ValueError as e:
                 return {'error': e.args[0]}
 
