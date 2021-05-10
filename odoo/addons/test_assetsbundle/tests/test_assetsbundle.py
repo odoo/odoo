@@ -641,7 +641,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
     </head>
     <body>
     </body>
-</html>""" % format_data).encode('utf8'))
+</html>""" % format_data))
 
     def test_21_external_lib_assets_debug_mode(self):
         html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2', {"debug": "assets"})
@@ -672,7 +672,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
     </head>
     <body>
     </body>
-</html>""" % format_data).encode('utf8'))
+</html>""" % format_data))
 
 
 @tagged('-at_install', 'post_install')

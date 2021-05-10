@@ -4,7 +4,6 @@ from textwrap import dedent
 import copy
 import logging
 import re
-import reprlib
 import markupsafe
 from time import time
 from lxml import html, etree
@@ -15,7 +14,7 @@ from odoo.tools.misc import get_lang
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 
-from odoo.addons.base.models.qweb import QWeb, MarkupSafeBytes
+from odoo.addons.base.models.qweb import QWeb
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.base.models.ir_asset import can_aggregate, STYLE_EXTENSIONS, SCRIPT_EXTENSIONS
 
@@ -64,20 +63,20 @@ class IrQWeb(models.AbstractModel, QWeb):
         :param options: used to compile the template (the dict available for the rendering is frozen)
             * ``load`` (function) overrides the load method
 
-        :returns: bytes marked as markup-safe (decode to :class:`MarkupSafeBytes`
+        :returns: bytes marked as markup-safe (decode to :class:`markupsafe.Markup`
                   instead of `str`)
-        :rtype: MarkupSafeBytes
+        :rtype: MarkupSafe
         """
         context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
-        result = super(IrQWeb, self)._render(template, values=values, **context).decode('utf-8')
+        result = super(IrQWeb, self)._render(template, values=values, **context)
 
         if not values or not values.get('__keep_empty_lines'):
-            result = IrQWeb._empty_lines.sub('\n', result.strip())
+            result = markupsafe.Markup(IrQWeb._empty_lines.sub('\n', result.strip()))
 
         if 'data-pagebreak=' not in result:
-            return MarkupSafeBytes(result.encode('utf-8'))
+            return result
 
         fragments = html.fragments_fromstring(result)
 
@@ -105,7 +104,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                     'style': 'page-break-after: always'
                 }))
 
-        return MarkupSafeBytes(b''.join(html.tostring(f) for f in fragments))
+        return markupsafe.Markup(''.join(html.tostring(f).decode() for f in fragments))
 
     # assume cache will be invalidated by third party on write to ir.ui.view
     def _get_template_cache_keys(self):

@@ -92,24 +92,6 @@ _FORMAT_REGEX = re.compile(r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})') # ( ruby-style )
 _VARNAME_REGEX = re.compile(r'\W')
 
 
-class MarkupSafeBytes(bytes):
-    __slots__ = ()
-
-    def __new__(cls, source):
-        assert isinstance(source, bytes)
-        return super().__new__(cls, source)
-
-    def __html__(self):
-        return self.decode()
-
-    def __str__(self):
-        raise NotImplementedError(
-            "Bytes should not be stringified, only repr'd (tried to stringify %s)" % repr(self)
-        )
-
-    def decode(self, encoding='utf-8', errors='strict'):
-        return Markup(super().decode(encoding, errors))
-
 ####################################
 ###             QWeb             ###
 ####################################
@@ -137,8 +119,8 @@ class QWeb(object):
             * ``load`` (function) overrides the load method (returns: (template, ref))
             * ``profile`` (boolean) profile the rendering
 
-        :returns: str as MarkupSafeBytes
-        :rtype: MarkupSafeBytes
+        :returns: str as Markup
+        :rtype: markupsafe.Markup
         """
         if values and 0 in values:
             raise ValueError('values[0] should be unset when call the _render method and only set into the template.')
@@ -146,7 +128,7 @@ class QWeb(object):
         rendering = render_template(self, values or {})
         result = ''.join(rendering)
 
-        return MarkupSafeBytes(result.encode('utf8'))
+        return Markup(result)
 
     def _compile(self, template, options):
         """ Compile the given template into a rendering function (generator)::

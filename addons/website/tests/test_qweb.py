@@ -30,7 +30,7 @@ class TestQweb(TransactionCaseWithUserDemo):
                 <img src="http://test.external.img/img.png" loading="lazy"/>
                 <img src="http://test.external.img/img2.png" loading="lazy"/>
             """
-        rendered = str(self.env['ir.qweb']._render(t.id, {'url': 'http://test.external.img/img2.png'}), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, {'url': 'http://test.external.img/img2.png'})
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_qweb_cdn(self):
@@ -54,7 +54,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         asset_xmlid = asset_data.attrib.get('data-asset-bundle')
         asset_version = asset_data.attrib.get('data-asset-version')
 
-        html = html.strip().decode('utf8')
+        html = html.strip()
         html = re.sub(r'\?unique=[^"]+', '', html).encode('utf8')
 
         attachments = demo_env['ir.attachment'].search([('url', '=like', '/web/assets/%-%/website.test_bundle.%')])
