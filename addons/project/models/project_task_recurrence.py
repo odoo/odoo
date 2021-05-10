@@ -208,7 +208,7 @@ class ProjectTaskRecurrence(models.Model):
         create_values = {
             field: value[0] if isinstance(value, tuple) else value for field, value in task_values.items()
         }
-        create_values['stage_id'] = task.project_id.type_ids[0].id if task.project_id.type_ids else task.stage_id
+        create_values['stage_id'] = task.project_id.type_ids[0].id if task.project_id.type_ids else task.stage_id.id
         create_values['user_id'] = False
         return create_values
 
@@ -221,7 +221,7 @@ class ProjectTaskRecurrence(models.Model):
                 children = []
                 # copy the subtasks of the original task
                 for child in task.child_ids:
-                    child_values = self._new_task_values(child)
+                    child_values = recurrence._new_task_values(child)
                     child_values['parent_id'] = new_task.id
                     children.append(child_values)
                 self.env['project.task'].create(children)
