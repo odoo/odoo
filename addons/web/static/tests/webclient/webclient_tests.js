@@ -2,6 +2,7 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { notificationService } from "@web/core/notifications/notification_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui_service";
 import { legacyServiceProvider } from "@web/legacy/legacy_service_provider";
@@ -29,6 +30,7 @@ QUnit.module("Web Client", {
             .add("legacy_service_provider", legacyServiceProvider)
             .add("menu", menuService)
             .add("notification", notificationService)
+            .add("popover", popoverService)
             .add("title", fakeTitleService)
             .add("ui", uiService);
         baseConfig = { activateMockServer: true };

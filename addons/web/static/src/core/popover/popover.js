@@ -293,7 +293,7 @@ Popover.props = {
  * @param {HTMLElement} popoverElement The popover element
  * @param {HTMLElement} targetElement The target element, to which
  *  the popover will be visually "bound"
- * @param {integer} [margin=16] Minimal accepted margin from the border
+ * @param {number} [margin=16] Minimal accepted margin from the border
  *  of the viewport.
  * @returns {Object}
  */

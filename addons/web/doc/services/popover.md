@@ -14,7 +14,7 @@ popover by using a Popover tag in a component template.
 
 The `popover` service exports one method:
 
--   `add(params: Object): void`
+-   `add(params: Object): string`
     Signals the manager to add a popover.
 
     `params` can contain any of these options:
@@ -25,9 +25,13 @@ The `popover` service exports one method:
     -   `content: string`: A text which is displayed in the popover.
         Cannot be used with `Component`.
     -   `key: string`: A key to retrieve the popover and remove it later.
-    -   `onClose: () -> void`: A callback which is executed when the popover is closed.
+        If no key is given then one will be generated.
+    -   `onClose: (key: string) => void`: A callback which is executed when the
+        popover is closed.
     -   `keepOnClose: boolean = false`: if true then the manager will keep the
         popover when it closes otherwise the manager removes the popover.
+
+    Returns the `key` given in `params` or the generated one.
 
 -   `remove(key: string): void`
     Signals the manager to remove the popover with key = `key`.
