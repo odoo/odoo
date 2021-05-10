@@ -2,9 +2,9 @@
 
 import { browser } from "@web/core/browser/browser";
 import { Popover } from "@web/core/popover/popover";
-import { registerCleanup } from "../helpers/cleanup";
-import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, nextTick, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import { registerCleanup } from "../../helpers/cleanup";
+import { makeTestEnv } from "../../helpers/mock_env";
+import { click, getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
 
 const { Component, mount } = owl;
 const { useState } = owl.hooks;
@@ -13,19 +13,28 @@ const { xml } = owl.tags;
 let env;
 let target;
 
+function computePositioningDataTest(popover, target) {
+    const rect = target.getBoundingClientRect();
+    const top = Math.floor(rect.top);
+    const left = Math.floor(rect.left);
+    return {
+        top: { name: "top", top, left },
+        bottom: { name: "bottom", top: top + 10, left },
+        left: { name: "left", top: top + 10, left },
+        right: { name: "right", top: top + 10, left: left + 10 },
+    };
+}
+
 function pointsTo(popover, element, position) {
     const hasCorrectClass = popover.classList.contains(`o_popover_${position}`);
     const expectedPosition = Popover.computePositioningData(popover, element)[position];
-    const correctLeft =
-        parseFloat(popover.style.left) === Math.round(expectedPosition.left * 100) / 100;
-    const correctTop =
-        parseFloat(popover.style.top) === Math.round(expectedPosition.top * 100) / 100;
+    const correctLeft = parseFloat(popover.style.left) === expectedPosition.left;
+    const correctTop = parseFloat(popover.style.top) === expectedPosition.top;
     return hasCorrectClass && correctLeft && correctTop;
 }
 
 QUnit.module("Popover", {
     async beforeEach() {
-        // todo: maybe add an "utils" function which do this and its cleanup??
         patchWithCleanup(browser, {
             setTimeout: (handler, _, ...args) => handler(...args),
             clearTimeout: () => {},
@@ -40,6 +49,10 @@ QUnit.module("Popover", {
         registerCleanup(() => {
             target.removeChild(popoverContainer);
         });
+
+        patchWithCleanup(Popover, {
+            computePositioningData: computePositioningDataTest,
+        });
     },
 });
 
@@ -49,16 +62,14 @@ QUnit.test("Simple rendering", async function (assert) {
     class Parent extends Component {}
     Parent.components = { Popover };
     Parent.template = xml`
-    <div class="d-flex h-25 justify-content-around align-items-center">
-      <button id="close">Click me to close</button>
-      <Popover>
-        <button id="open">Click me to open</button>
-        <t t-set-slot="content">
-          Popover
-        </t>
-      </Popover>
-    </div>
-  `;
+        <div>
+            <button id="close">Click me to close</button>
+            <Popover>
+                <button id="open">Click me to open</button>
+                <t t-set-slot="content">Popover</t>
+            </Popover>
+        </div>
+    `;
 
     const parent = await mount(Parent, { env, target });
 
@@ -95,16 +106,14 @@ QUnit.test("Recompute position", async function (assert) {
     }
     Parent.components = { Popover };
     Parent.template = xml`
-    <div class="d-flex h-25 justify-content-around align-items-center">
-      <button id="close">Click me to close</button>
-      <Popover position="state.position">
-        <button id="open">Click me to open</button>
-        <t t-set-slot="content">
-          Popover
-        </t>
-      </Popover>
-    </div>
-  `;
+        <div>
+            <button id="close">Click me to close</button>
+            <Popover position="state.position">
+                <button id="open">Click me to open</button>
+                <t t-set-slot="content">Popover</t>
+            </Popover>
+        </div>
+    `;
 
     const parent = await mount(Parent, { env, target });
 
@@ -134,15 +143,13 @@ QUnit.test("Show popover on hover", async function (assert) {
     class Parent extends Component {}
     Parent.components = { Popover };
     Parent.template = xml`
-    <div class="d-flex h-25 justify-content-around align-items-start">
-      <Popover trigger="'hover'">
-        <button id="open">Hover me to open</button>
-        <t t-set-slot="content">
-          Popover
-        </t>
-      </Popover>
-    </div>
-  `;
+        <div>
+            <Popover trigger="'hover'">
+                <button id="open">Hover me to open</button>
+                <t t-set-slot="content">Popover</t>
+            </Popover>
+        </div>
+    `;
 
     const parent = await mount(Parent, { env, target });
     assert.containsNone(target, ".o_popover", "Should not contain any popover");
@@ -171,15 +178,13 @@ QUnit.test("Show popover manually", async function (assert) {
     }
     Parent.components = { Popover };
     Parent.template = xml`
-    <div class="d-flex h-25 justify-content-around align-items-start">
-      <Popover t-if="state.showPopover" trigger="'none'">
-        <div id="target">Target</div>
-        <t t-set-slot="content">
-          Popover
-        </t>
-      </Popover>
-    </div>
-  `;
+        <div>
+            <Popover t-if="state.showPopover" trigger="'none'">
+                <div id="target">Target</div>
+                <t t-set-slot="content">Popover</t>
+            </Popover>
+        </div>
+    `;
 
     const parent = await mount(Parent, { env, target });
     assert.containsNone(target, ".o_popover", "Should not contain any popover");
@@ -198,27 +203,27 @@ QUnit.test("Show popover manually", async function (assert) {
 });
 
 QUnit.test("Multiple popovers", async function (assert) {
-    assert.expect(8);
+    assert.expect(10);
 
     class Parent extends Component {}
     Parent.components = { Popover };
     Parent.template = xml`
-    <div class="d-flex h-25 justify-content-around align-items-start">
-      <button id="close">Click me to close</button>
-      <Popover>
-        <button id="open1">Open 1</button>
-        <t t-set-slot="content">
-          <div id="popover1">Popover 1</div>
-        </t>
-      </Popover>
-      <Popover>
-        <button id="open2">Open 2</button>
-        <t t-set-slot="content">
-          <div id="popover2">Popover 2</div>
-        </t>
-      </Popover>
-    </div>
-  `;
+        <div>
+            <button id="close">Click me to close</button>
+            <Popover>
+                <button id="open1">Open 1</button>
+                <t t-set-slot="content">
+                    <div id="popover1">Popover 1</div>
+                </t>
+            </Popover>
+            <Popover>
+                <button id="open2">Open 2</button>
+                <t t-set-slot="content">
+                    <div id="popover2">Popover 2</div>
+                </t>
+            </Popover>
+        </div>
+    `;
 
     const parent = await mount(Parent, { env, target });
     assert.containsNone(target, ".o_popover", "Should not contain any popover");
@@ -228,12 +233,14 @@ QUnit.test("Multiple popovers", async function (assert) {
     assert.containsNone(target, "#popover2", "Should not contain popover 2");
     let popover = target.querySelector(".o_popover");
     assert.ok(pointsTo(popover, target.querySelector("#open1"), "bottom"));
+    assert.notOk(pointsTo(popover, target.querySelector("#open2"), "bottom"));
 
     await click(target, "#open2");
     assert.containsNone(target, "#popover1", "Should not contain popover 1");
     assert.containsOnce(target, "#popover2", "Should contain popover 2");
     popover = target.querySelector(".o_popover");
     assert.ok(pointsTo(popover, target.querySelector("#open2"), "bottom"));
+    assert.notOk(pointsTo(popover, target.querySelector("#open1"), "bottom"));
 
     await click(target, "#close");
     assert.containsNone(target, ".o_popover", "Should not contain any popover");
@@ -246,21 +253,21 @@ QUnit.test("Close event", async function (assert) {
 
     class Content extends Component {}
     Content.template = xml`
-    <button id="close" t-on-click="trigger('popover-closed')">Close</button>
-  `;
+        <button id="close" t-on-click="trigger('popover-closed')">Close</button>
+    `;
 
     class Parent extends Component {}
     Parent.components = { Content, Popover };
     Parent.template = xml`
-    <div class="d-flex h-25 justify-content-around align-items-start">
-      <Popover>
-        <button id="open">Open</button>
-        <t t-set-slot="content">
-          <Content />
-        </t>
-      </Popover>
-    </div>
-  `;
+        <div>
+            <Popover>
+                <button id="open">Open</button>
+                <t t-set-slot="content">
+                    <Content />
+                </t>
+            </Popover>
+        </div>
+    `;
 
     const parent = await mount(Parent, { env, target });
     assert.containsNone(target, ".o_popover", "Should not contain any popover");
@@ -280,15 +287,13 @@ QUnit.test("Target click", async function (assert) {
     class Parent extends Component {}
     Parent.components = { Popover };
     Parent.template = xml`
-    <div class="d-flex h-25 justify-content-around align-items-start">
-      <button id="toggle">Toggle</button>
-      <Popover target="'#toggle'">
-        <t t-set-slot="content">
-          Popover
-        </t>
-      </Popover>
-    </div>
-  `;
+        <div>
+            <button id="toggle">Toggle</button>
+            <Popover target="'#toggle'">
+                <t t-set-slot="content">Popover</t>
+            </Popover>
+        </div>
+    `;
 
     const parent = await mount(Parent, { env, target });
     assert.containsNone(target, ".o_popover", "Should not contain any popover");
@@ -310,16 +315,14 @@ QUnit.test("close popover when target is removed", async function (assert) {
     class Parent extends Component {}
     Parent.components = { Popover };
     Parent.template = xml`
-    <div class="d-flex h-25 justify-content-around align-items-start">
-      <button id="siblingTarget">SiblingTarget</button>
-      <button id="target">target</button>
-      <Popover target="'#target'">
-        <t t-set-slot="content">
-          Popover
-        </t>
-      </Popover>
-    </div>
-  `;
+        <div>
+            <button id="siblingTarget">SiblingTarget</button>
+            <button id="target">target</button>
+            <Popover target="'#target'">
+                <t t-set-slot="content">Popover</t>
+            </Popover>
+        </div>
+    `;
 
     const parent = await mount(Parent, { env, target });
     assert.containsNone(target, ".o_popover", "Should not contain any popover");
