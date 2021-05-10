@@ -362,19 +362,21 @@ class AccountTestInvoicingCommon(TransactionCase):
         })
 
     @classmethod
-    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=[], amounts=[], taxes=None):
-        move_form = Form(cls.env['account.move'].with_context(default_move_type=move_type, account_predictive_bills_disable_prediction=True))
+    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, company=False):
+        move_form = Form(cls.env['account.move'] \
+                    .with_company(company or cls.env.company) \
+                    .with_context(default_move_type=move_type, account_predictive_bills_disable_prediction=True))
         move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
         move_form.partner_id = partner or cls.partner_a
 
-        for product in products:
+        for product in (products or []):
             with move_form.invoice_line_ids.new() as line_form:
                 line_form.product_id = product
                 if taxes:
                     line_form.tax_ids.clear()
                     line_form.tax_ids.add(taxes)
 
-        for amount in amounts:
+        for amount in (amounts or []):
             with move_form.invoice_line_ids.new() as line_form:
                 line_form.name = "test line"
                 # We use account_predictive_bills_disable_prediction context key so that
