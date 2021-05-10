@@ -1068,9 +1068,82 @@ const RemainingDays = AbstractField.extend({
     description: _lt("Remaining Days"),
     supportedFieldTypes: ['date', 'datetime'],
 
+    /**
+     * @override
+     */
+    init() {
+        this._super(...arguments);
+        // use the session timezone when formatting dates
+        this.formatOptions.timezone = true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the associated <input/> element.
+     *
+     * @override
+     */
+    getFocusableElement() {
+        return this.datewidget && this.datewidget.$input || $();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @returns {string} the content of the input
+     */
+    _getValue() {
+        let value = this.datewidget.getValue();
+        if (this.field.type === "datetime") {
+            value = value && value.add(-this.getSession().getTZOffset(value), 'minutes');
+        }
+        return value;
+    },
+    /**
+     * Instantiates a new DateWidget datepicker.
+     *
+     * @private
+     */
+    _makeDatePicker() {
+        this.datepickerOptions = _.defaults({}, { defaultDate: this.value });
+        if (this.field.type === "datetime" && this.value) {
+            const offset = this.getSession().getTZOffset(this.value);
+            const displayedValue = this.value.clone().add(offset, 'minutes');
+            this.datepickerOptions.defaultDate = displayedValue;
+        }
+        if (this.field.type === "date") {
+            return new datepicker.DateWidget(this, this.datepickerOptions);
+        }
+        return new datepicker.DateTimeWidget(this, this.datepickerOptions);
+    },
+    /**
+     * Displays date/datetime picker in edit mode.
+     *
+     * @override
+     */
+    async _renderEdit() {
+        await this._super(...arguments);
+        if (this.datewidget) {
+            this.datewidget.destroy();
+        }
+
+        this.datewidget = this._makeDatePicker();
+        this.datewidget.on('datetime_changed', this, () => {
+            const value = this._getValue();
+            if ((!value && this.value) || (value && !this._isSameValue(value))) {
+                this._setValue(value);
+            }
+        });
+
+        await this.datewidget.appendTo('<div>');
+        this.$el.append(this.datewidget.$el);
+    },
 
     /**
      * Displays the delta (in days) between the value of the field and today. If
@@ -1079,7 +1152,7 @@ const RemainingDays = AbstractField.extend({
      *
      * @override
      */
-    _render() {
+    _renderReadonly() {
         if (this.value === false) {
             this.$el.removeClass('font-weight-bold text-danger text-warning');
             return;
