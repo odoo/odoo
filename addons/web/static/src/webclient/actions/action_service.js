@@ -927,7 +927,7 @@ function makeActionManager(env) {
      *
      * @param {ActionRequest} actionRequest
      * @param {ActionOptions} options
-     * @returns {Promise<number | undefined>}
+     * @returns {Promise<number | undefined | void>}
      */
     async function doAction(actionRequest, options = {}) {
         const actionProm = _loadAction(actionRequest, options.additionalContext);
