@@ -3,6 +3,7 @@
 from odoo import models, _
 
 import base64
+import markupsafe
 
 
 class AccountEdiFormat(models.Model):
@@ -65,13 +66,13 @@ class AccountEdiFormat(models.Model):
     def _export_nlcius(self, invoice):
         self.ensure_one()
         # Create file content.
-        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"
+        xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
         xml_content += self.env.ref('l10n_nl_edi.export_nlcius_invoice')._render(self._get_nlcius_values(invoice))
         vat = invoice.company_id.partner_id.commercial_partner_id.vat
         xml_name = 'nlcius-%s%s%s.xml' % (vat or '', '-' if vat else '', invoice.name.replace('/', '_'))
         return self.env['ir.attachment'].create({
             'name': xml_name,
-            'datas': base64.encodebytes(xml_content),
+            'raw': xml_content.encode(),
             'res_model': 'account.move',
             'res_id': invoice.id,
             'mimetype': 'application/xml'

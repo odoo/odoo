@@ -806,7 +806,7 @@ class ResCompany(models.Model):
         company_styles = template_style._render({
             'company_ids': company_ids,
         })
-        return base64.b64encode((company_styles))
+        return base64.b64encode(company_styles.encode())
 
     def _update_asset_style(self):
         asset_attachment = self.env.ref('web.asset_styles_company_report', raise_if_not_found=False)

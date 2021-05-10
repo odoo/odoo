@@ -173,7 +173,7 @@ class Website(Home):
 
         def create_sitemap(url, content):
             return Attachment.create({
-                'datas': base64.b64encode(content),
+                'raw': content.encode(),
                 'mimetype': mimetype,
                 'type': 'binary',
                 'name': url,

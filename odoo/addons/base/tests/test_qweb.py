@@ -91,7 +91,7 @@ class TestQWebTField(TransactionCase):
                 </t>
             """
         })
-        rendered = view._render({'malicious': '1</script><script>alert("pwned")</script><script>'}).decode()
+        rendered = view._render({'malicious': '1</script><script>alert("pwned")</script><script>'})
         self.assertIn('alert', rendered, "%r doesn't seem to be rendered" % rendered)
         doc = etree.fromstring(rendered)
         self.assertEqual(len(doc.xpath('//script')), 1)
@@ -526,10 +526,10 @@ class TestQWebNS(TransactionCase):
         # check that the t-call did its work
         cac_lines = result_etree.findall('.//cac:line', namespaces={'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2'})
         self.assertEqual(len(cac_lines), 2)
-        self.assertEqual(result.count(b'Appel'), 2)
+        self.assertEqual(result.count('Appel'), 2)
 
         # check that the t-call dit not output again the xmlns declaration
-        self.assertEqual(result.count(b'xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"'), 1)
+        self.assertEqual(result.count('xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"'), 1)
 
     def test_render_static_xml_with_extension(self):
         """ Test the extension of a view by an xpath expression on a ns prefixed element.
@@ -641,7 +641,7 @@ class TestQWebNS(TransactionCase):
         })
 
         rendered = view2.with_context(lang=current_lang)._render().strip()
-        self.assertEqual(rendered, b'9/000/000*00')
+        self.assertEqual(rendered, '9/000/000*00')
 
     def test_render_barcode(self):
         partner = self.env['res.partner'].create({
@@ -655,16 +655,16 @@ class TestQWebNS(TransactionCase):
         })
 
         view.arch = u"""<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'width': 100, 'height': 30}"/>"""
-        rendered = view._render(values={'partner': partner}).strip().decode()
+        rendered = view._render(values={'partner': partner}).strip()
         self.assertRegex(rendered, r'<div><img alt="Barcode test" src="data:image/png;base64,\S+"></div>')
 
         partner.barcode = '4012345678901'
         view.arch = u"""<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
-        ean_rendered = view._render(values={'partner': partner}).strip().decode()
+        ean_rendered = view._render(values={'partner': partner}).strip()
         self.assertRegex(ean_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
 
         view.arch = u"""<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
-        auto_rendered = view._render(values={'partner': partner}).strip().decode()
+        auto_rendered = view._render(values={'partner': partner}).strip()
         self.assertRegex(auto_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
 
 class TestQWebBasic(TransactionCase):
@@ -740,7 +740,7 @@ class TestQWebBasic(TransactionCase):
                     [2: 1 1]
         """
 
-        rendered = str(self.env['ir.qweb']._render(t.id), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_foreach_iter_dict(self):
@@ -758,7 +758,7 @@ class TestQWebBasic(TransactionCase):
                     [2: c 1]
         """
 
-        rendered = str(self.env['ir.qweb']._render(t.id), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_att_escaping_1(self):
@@ -775,7 +775,7 @@ class TestQWebBasic(TransactionCase):
                 <div toto="a&#39;b&#34;c">2</div>
             """
         values = {'json': json_scriptsafe, 'bibi': dict(a='string', b=1), 'toto': "a'b\"c"}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_att_escaping_2(self):
@@ -792,7 +792,7 @@ class TestQWebBasic(TransactionCase):
                 <div abc=" &amp;#34;yes&amp;#34; &lt;span a=&#34;b&#34;&gt; | &lt;/span&gt;-efg- ">123</div>
             """
         values = {'add_abc': '"yes"', 'efg': '-efg-'}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_attf_escaping_1(self):
@@ -807,7 +807,7 @@ class TestQWebBasic(TransactionCase):
                 <div bibi="a, b &gt; c &gt; a&#39; &gt; b&#34;c">1</div>
             """
         values = {'d': "a' > b\"c"}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_attf_escaping_2(self):
@@ -824,7 +824,7 @@ class TestQWebBasic(TransactionCase):
                 <a href="/link/odoo/">link2</a>
             """
         values = {'url': 'odoo', 'other': True}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_attf_escaping_3(self):
@@ -840,7 +840,7 @@ class TestQWebBasic(TransactionCase):
                 <div abc="abc &#34;yes&#34; { other }">123</div>
             """
         values = {'val': '"yes"'}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_set_body_1(self):
@@ -856,7 +856,7 @@ class TestQWebBasic(TransactionCase):
                 <div abc=" &lt;span a=&#34;b&#34;&gt; [&amp;#34;yes&amp;#34;] &lt;/span&gt; ">123</div>
             """
         values = {'add_abc': '"yes"'}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_set_body_2(self):
@@ -875,7 +875,7 @@ class TestQWebBasic(TransactionCase):
                 <div class="a1"> <span a="b"> toto </span> </div>
                 <div class="a2">[ &lt;span a=&#34;b&#34;&gt; toto &lt;/span&gt; ]</div>
             """
-        rendered = str(self.env['ir.qweb']._render(t.id), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_out_format_1(self):
@@ -890,7 +890,7 @@ class TestQWebBasic(TransactionCase):
         result = u"""
                 <div>Powered by 1-2</div>
         """
-        rendered = str(self.env['ir.qweb']._render(t.id, {'a': 1, 'b': 2}), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, {'a': 1, 'b': 2})
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_out_format_2(self):
@@ -907,7 +907,7 @@ class TestQWebBasic(TransactionCase):
                 <div> <span a="b"> [&#34;yes&#34; , Toto 5] </span> </div>
             """
         values = {'add_abc': '"yes"'}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_out_format_3(self):
@@ -924,7 +924,7 @@ class TestQWebBasic(TransactionCase):
                 <div>Toto &#34;yes&#34; <span a="b"> a </span> </div>
             """
         values = {'v': '"yes"'}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_out_format_4(self):
@@ -940,7 +940,7 @@ class TestQWebBasic(TransactionCase):
                 <div>&#34;yes&#34; <span a="b"> a </span> </div>
             """
         values = {'v': '"yes"'}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_out_format_5(self):
@@ -956,7 +956,7 @@ class TestQWebBasic(TransactionCase):
                 <div> <span a="b"> a </span> &#34;yes&#34;</div>
             """
         values = {'v': '"yes"'}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_out_format_6(self):
@@ -973,7 +973,7 @@ class TestQWebBasic(TransactionCase):
                 <div><span a="b"> a </span>&#34;yes&#34;</div>
             """
         values = {'v': '"yes"'}
-        rendered = str(self.env['ir.qweb']._render(t.id, values), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, values)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_out_escape_text(self):
@@ -984,8 +984,8 @@ class TestQWebBasic(TransactionCase):
                 <t t-name="base.dummy"><root><span t-out="text" t-options-widget="'text'"/></root></t>
             """
         })
-        html = str(view1._render({'text': """a
-        b <b>c</b>"""}), 'utf-8')
+        html = view1._render({'text': """a
+        b <b>c</b>"""})
         self.assertEqual(html, """<root><span data-oe-type="text" data-oe-expression="text">a<br>
         b &lt;b&gt;c&lt;/b&gt;</span></root>""")
 
@@ -1002,7 +1002,7 @@ class TestQWebBasic(TransactionCase):
         result = """
                 <div>123</div>
             """
-        rendered = str(self.env['ir.qweb']._render(t.id), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_error_message_1(self):
@@ -1112,7 +1112,7 @@ class TestQWebStaticXml(TransactionCase):
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
                 qweb._render(template, values=params, load=loader).strip(),
-                (result or u'').strip().replace('&quot;', '&#34;').encode('utf-8'),
+                (result or u'').strip().replace('&quot;', '&#34;'),
                 template
             )
 
@@ -1211,7 +1211,7 @@ class TestEmptyLines(TransactionCase):
             'type': 'qweb',
             'arch_db': self.arch
         })
-        rendered = str(self.env['ir.qweb']._render(t.id), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id)
         self.assertFalse(re.compile('^\s+\n').match(rendered))
         self.assertFalse(re.compile('\n\s+\n').match(rendered))
 
@@ -1221,7 +1221,7 @@ class TestEmptyLines(TransactionCase):
             'type': 'qweb',
             'arch_db': self.arch
         })
-        rendered = str(self.env['ir.qweb']._render(t.id, {'__keep_empty_lines': True}), 'utf-8')
+        rendered = self.env['ir.qweb']._render(t.id, {'__keep_empty_lines': True})
         self.assertTrue(re.compile('^\s+\n').match(rendered))
         self.assertTrue(re.compile('\n\s+\n').match(rendered))
 
