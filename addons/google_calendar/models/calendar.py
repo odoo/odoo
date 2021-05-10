@@ -206,7 +206,9 @@ class Meeting(models.Model):
             'method': "email" if alarm.alarm_type == "email" else "popup",
             'minutes': alarm.duration_minutes
         } for alarm in self.alarm_ids]
-        attendee_ids = self.attendee_ids.filtered(lambda a: a.partner_id not in self.user_id.partner_id)
+        attendee_values = [{'email': attendee.partner_id.email_normalized, 'responseStatus': attendee.state} for attendee in self.attendee_ids if attendee.partner_id.email_normalized]
+        # We sort the attendee to avoid undeterministic test fails. It's not mandatory for Google.
+        attendee_values.sort(key=lambda k: k['email'])
         values = {
             'id': self.google_id,
             'start': start,
@@ -216,7 +218,7 @@ class Meeting(models.Model):
             'location': self.location or '',
             'guestsCanModify': True,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
-            'attendees': [{'email': attendee.email, 'responseStatus': attendee.state} for attendee in self.attendee_ids],
+            'attendees': attendee_values,
             'extendedProperties': {
                 'shared': {
                     '%s_odoo_id' % self.env.cr.dbname: self.id,
