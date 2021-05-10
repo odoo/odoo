@@ -1029,7 +1029,7 @@ class Message(models.Model):
 
         return vals_list
 
-    def message_fetch_failed(self):
+    def message_fetch_failed(self, limit=80):
         """Returns all messages, sent by the current user, that have errors, in
         the format expected by the web client."""
         messages = self.search([
@@ -1038,7 +1038,7 @@ class Message(models.Model):
             ('res_id', '!=', 0),
             ('model', '!=', False),
             ('message_type', '!=', 'user_notification')
-        ])
+        ], limit=limit)
         return messages._message_notification_format()
 
     @api.model
