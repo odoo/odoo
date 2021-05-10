@@ -24,7 +24,7 @@
             <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
             <field name="priority">24</field>
             <field name="arch" type="xml">
-                <field name="user_id" position="after">
+                <field name="user_id" position="before">
                     <field name="allow_timesheets"/>
                 </field>
             </field>
@@ -36,8 +36,8 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="priority">24</field>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
+                <xpath expr="//button[@name='%(project.project_milestone_all)d']" position="after">
+                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-clock-o" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
                         <div class="o_field_widget o_stat_info">
                             <div class="oe_inline">
                                 <span class="o_stat_value mr-1">
@@ -50,7 +50,7 @@
                             <span class="o_stat_text">Recorded</span>
                         </div>
                     </button>
-                </div>
+                </xpath>
                 <xpath expr="//div[@id='rating_settings']" position="before">
                     <div class="col-lg-6 o_setting_box"  id="timesheet_settings">
                         <div class="o_setting_left_pane">

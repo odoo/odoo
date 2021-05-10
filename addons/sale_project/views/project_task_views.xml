@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="project_project_view_inherit_project_filter" model="ir.ui.view">
+        <field name="name">project.project.select.inherit.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project_project_view_tree_inherit_sale_project" model="ir.ui.view">
         <field name="name">project.project.tree.inherit.sale.project</field>
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.view_project"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='analytic_account_id']" position="after">
-                <field name="sale_order_id" optional="hide" widget="sale_order_many2one"/>
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="sale_line_id" optional="hide" widget="sale_order_many2one" readonly="1"/>
             </xpath>
         </field>
