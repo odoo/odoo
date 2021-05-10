@@ -211,10 +211,10 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
           let so_lines = await this.rpc({
               model: 'sale.order.line',
               method: 'read',
-              args: [ids, ["product_id", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount"]],
+              args: [ids, ["product_id", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "product_type"]],
               context: this.env.session.user_context,
           });
-          let pos_lines = so_lines;
+          let pos_lines = so_lines.filter(line => line.product_type);
           return pos_lines;
         }
 
