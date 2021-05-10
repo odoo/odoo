@@ -246,6 +246,16 @@
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks In Progress" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
+                        <button class="oe_stat_button" name="%(project.project_milestone_all)d" type="action" icon="fa-check-square-o">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="milestone_count" nolabel="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Milestones
+                                </span>
+                            </div>
+                        </button>
                         <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_read_only" icon="fa-smile-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
@@ -274,16 +284,6 @@
                                 <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
                             </div>
                         </button>
-                        <button class="oe_stat_button" name="%(project.project_milestone_all)d" type="action" icon="fa-check-square-o">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="milestone_count" nolabel="1"/>
-                                </span>
-                                <span class="o_stat_text">
-                                    Milestones
-                                </span>
-                            </div>
-                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
@@ -306,26 +306,18 @@
                                     <field name="date" string="Deadline"/>
                                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
-                                        <label for="alias_enabled" class="font-weight-bold" string="Create tasks by sending an email"/>
                                         <field name="alias_enabled" invisible="1"/>
-                                        <span>
-                                            <span class="font-weight-bold oe_read_only" attrs="{'invisible':  [('alias_name', '=', False)]}">to </span>
-                                            <span class="font-weight-bold oe_edit_only">to </span>
-                                            <field name="alias_name" class="oe_inline"/>
-                                            <span class="oe_read_only" attrs="{'invisible':  [('alias_name', '=', False)]}">@</span>
-                                            <span class="oe_edit_only">@</span>
-                                            <field name="alias_domain"
-                                                   attrs="{'invisible':  [('alias_name', '=', False)]}"
-                                                   class="oe_inline oe_read_only"
-                                                   readonly="1"/>
-                                            <field name="alias_domain"
-                                                   class="oe_inline oe_edit_only"
-                                                   readonly="1"/>
-                                        </span>
+                                        <span class="font-weight-bold oe_read_only" attrs="{'invisible':  [('alias_name', '=', False)]}">Create tasks by sending an email to </span>
+                                        <span class="font-weight-bold oe_edit_only">Create tasks by sending an email to </span>
+                                            <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
+                                            <span class="oe_edit_only">
+                                                <field name="alias_name" class="oe_inline"/>@
+                                                <field name="alias_domain" class="oe_inline" readonly="1"/>
+                                            </span>
                                     </div>
                                     <!-- the alias contact must appear when the user start typing and it must disappear
                                         when the string is deleted. -->
-                                    <field name="alias_contact" class="oe_inline oe_edit_only" string="Accept Emails From"
+                                    <field name="alias_contact" class="oe_inline" string="Accept Emails From"
                                            attrs="{'invisible': ['|', ('alias_name', '=', ''), ('alias_name', '=', False)]}"/>
                                 </group>
                                 <group>
@@ -413,6 +405,7 @@
                     <field name="name" string="Project"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="analytic_account_id"/>
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <separator/>
                     <filter string="Followed" name="followed_by_me" domain="[('message_is_follower', '=', True)]"/>
@@ -437,13 +430,12 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
                     <field name="name" string="Name" class="font-weight-bold"/>
-                    <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user"/>
                     <field name="partner_id" optional="show" string="Customer"/>
-                    <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
                     <field name="privacy_visibility" optional="hide"/>
-                    <field name="label_tasks" optional="hide"/>
-                    <field name="company_id" optional="show"  groups="base.group_multi_company"/>
-                    <field name="date" string="Deadline" widget="remaining_days" optional="show"/>
+                    <field name="company_id" optional="show"  groups="base.group_multi_company" options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
+                    <field name="date" optional="hide" string="Deadline" widget="remaining_days"/>
+                    <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" invisible="1"/>
                     <field name="last_update_status" string="Status" optional="show" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
                 </tree>
@@ -490,7 +482,6 @@
                         <field name="name" class="o_project_name oe_inline"
                             string="Project Name" placeholder="e.g. Office Party"/>
                         <field name="user_id" invisible="1"/>
-                        <field name="allow_recurring_tasks" groups="project.group_project_recurring_tasks" />
                     </group>
                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                         <label for="alias_name" class="oe_inline" string="Create tasks by sending an email to"/>
@@ -524,6 +515,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="project_project_view_form_simplified_footer"/>
             <field name="target">new</field>
+            <field name="context">{"default_allow_billable": 1}</field>
         </record>
 
         <record model="ir.ui.view" id="view_project_kanban">
@@ -552,30 +544,28 @@
                     <field name="last_update_status"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content oe_kanban_card">
                                 <div class="o_project_kanban_main ">
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
                                                 <span class="o_text_overflow"><t t-esc="record.name.value"/></span>
-                                                <span class="o_text_overflow" t-if="record.partner_id.value">
-                                                    <strong><t t-esc="record.commercial_partner_id.value"/></strong>
+                                                <span class="o_text_overflow text-muted" t-if="record.partner_id.value">
+                                                    <span class="fa fa-user mr-2" aria-label="Partner" title="Partner"></span><t t-esc="record.partner_id.value"/>
                                                 </span>
-                                                <div t-if="record.date.raw_value">
-                                                    <field name="date" widget="remaining_days"/>
+                                                <div t-if="record.date.raw_value" class="text-muted">
+                                                    <span class="fa fa-clock-o mr-2" aria-label="Remaining days" title="Remaining days"></span><field name="date" widget="remaining_days"/>
                                                 </div>
-                                            </div>
-                                            <div t-if="record.alias_name.value and record.alias_domain.value">
-                                                <span><i class="fa fa-envelope" role="img" aria-label="Domain Alias" title="Domain Alias"></i> <a t-att-href="'mailto:' + record.alias_id.value" title="Send an email"><t t-esc="record.alias_id.value"/></a></span>
-                                            </div>
-                                            <div t-if="record.rating_active.raw_value" class="text-primary" title="Percentage of happy ratings over the past 30 days." groups="project.group_project_rating">
-                                                <b>
-                                                    <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
+                                                <div t-if="record.alias_name.value and record.alias_domain.value" class="text-muted">
+                                                    <span class="fa fa-envelope-o mr-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-esc="record.alias_id.value"/>
+                                                </div>
+                                                <div t-if="record.rating_active.raw_value" class="text-muted" title="Percentage of happy ratings over the past 30 days." groups="project.group_project_rating">
+                                                    <b>
                                                         <t t-if="record.rating_percentage_satisfaction.value != -1">
                                                             <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.rating_percentage_satisfaction.value"/>%
                                                         </t>
-                                                    </a>
-                                                </b>
+                                                    </b>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -614,10 +604,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="base.group_user"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
-                                    <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /></span>
+                                    <a class="o_kanban_manage_toggle_button o_dropdown_kanban" href="#" groups="base.group_user">
+                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
+                                    </a>
+                                    <span>
+                                       <field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" />
+                                    </span>
                                 </div>
-                                <div class="o_kanban_record_bottom">
+                                <div class="o_kanban_record_bottom mt-3">
                                     <div class="oe_kanban_bottom_left">
                                         <div class="o_project_kanban_boxes">
                                             <a class="o_project_kanban_box" name="action_view_tasks" type="object">
@@ -651,7 +645,7 @@
                 <p class="o_view_nocontent_smiling_face">
                     No projects found. Let's create one!
                 </p><p>
-                    Projects regroup tasks on the same topic and each have their own dashboard.
+                    Projects regroup tasks on the same topic, and each has its dashboard.
                 </p>
             </field>
         </record>
@@ -670,7 +664,7 @@
                 <p class="o_view_nocontent_smiling_face">
                    No projects found. Let's create one!
                 </p><p>
-                    Projects regroup tasks on the same topic and each have their own dashboard.
+                    Projects regroup tasks on the same topic, and each has its dashboard.
                 </p>
             </field>
         </record>

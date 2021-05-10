@@ -60,11 +60,7 @@ tour.register('sale_timesheet_tour', {
     run: function (actions) {
         actions.text('Project for Freeman', this.$anchor);
     },
-}, {
-    trigger: 'div[name="allow_billable"] input',
-    content: 'Click on the checkbox to have a billable project.',
-    run: 'click',
-}, {
+},  {
     trigger: 'button[name="action_view_tasks"]',
     content: 'Click on Create button to create and enter to this newest project.',
     run: 'click',
