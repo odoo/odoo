@@ -1,8 +1,13 @@
 /** @odoo-module **/
 
-// -----------------------------------------------------------------------------
-// browser object
-// -----------------------------------------------------------------------------
+/**
+ * Browser
+ *
+ * This file exports an object containing common browser API. It may not look
+ * incredibly useful, but it is very convenient when one needs to test code using
+ * these methods. With this indirection, it is possible to patch the browser
+ * object for a test.
+ */
 
 let sessionStorage = window.sessionStorage;
 let localStorage = owl.browser.localStorage;
