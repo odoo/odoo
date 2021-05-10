@@ -534,3 +534,53 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         rounding_line = session_account_move.line_ids.filtered(lambda line: line.name == 'Rounding line')
         self.assertAlmostEqual(rounding_line.credit, 0.03, msg='The credit should be equals to 0.03')
+
+    def test_correct_partner_on_invoice_receivables(self):
+        self.open_new_session()
+
+        # create orders
+        # each order with total amount of 100.
+        orders = []
+        # from 1st to 8th order: use the same customer (self.customer) but varies with is_invoiced and payment method.
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0001'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0002'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_split_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0003'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_split_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0004'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_pm, 100)], customer=self.customer, uid='00100-010-0005'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.customer, uid='00100-010-0006'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_split_pm, 100)], customer=self.customer, uid='00100-010-0007'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_split_pm, 100)], customer=self.customer, uid='00100-010-0008'))
+        # 9th and 10th orders for self.other_customer, both invoiced and paid by bank
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.other_customer, is_invoiced=True, uid='00100-010-0009'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.other_customer, is_invoiced=True, uid='00100-010-0010'))
+        # 11th order: invoiced to self.customer with bank payment method
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0011'))
+
+        # sync orders
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+        # self.customer's bank split payments
+        customer_pos_receivable_bank = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.customer and 'Split (Bank) PM' in line.name)
+        self.assertEqual(len(customer_pos_receivable_bank), 2, msg='there are 2 bank split payments from self.customer')
+        self.assertEqual(bool(customer_pos_receivable_bank.full_reconcile_id), False, msg="the pos (bank) receivable lines shouldn't be reconciled")
+
+        # self.customer's cash split payments
+        customer_pos_receivable_cash = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.customer and 'Split (Cash) PM' in line.name)
+        self.assertEqual(len(customer_pos_receivable_cash), 2, msg='there are 2 cash split payments from self.customer')
+        self.assertEqual(bool(customer_pos_receivable_cash.full_reconcile_id), True, msg="cash pos (cash) receivable lines should be reconciled")
+
+        # self.customer's invoice receivable counterpart
+        customer_invoice_receivable_counterpart = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.customer and 'From invoiced orders' in line.name)
+        self.assertEqual(len(customer_invoice_receivable_counterpart), 1, msg='there should one aggregated invoice receivable counterpart for self.customer')
+        self.assertEqual(bool(customer_invoice_receivable_counterpart.full_reconcile_id), True, msg='the aggregated receivable for self.customer should be reconciled')
+        self.assertEqual(customer_invoice_receivable_counterpart.balance, -500, msg='aggregated balance should be -500')
+
+        # self.other_customer also made invoiced orders
+        # therefore, it should also have aggregated receivable counterpart in the session's account_move
+        other_customer_invoice_receivable_counterpart = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.other_customer and 'From invoiced orders' in line.name)
+        self.assertEqual(len(other_customer_invoice_receivable_counterpart), 1, msg='there should one aggregated invoice receivable counterpart for self.other_customer')
+        self.assertEqual(bool(other_customer_invoice_receivable_counterpart.full_reconcile_id), True, msg='the aggregated receivable for self.other_customer should be reconciled')
+        self.assertEqual(other_customer_invoice_receivable_counterpart.balance, -200, msg='aggregated balance should be -200')
