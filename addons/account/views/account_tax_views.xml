@@ -213,9 +213,22 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="country_id"/>
-                    <field name="property_tax_payable_account_id"/>
-                    <field name="property_tax_receivable_account_id"/>
-                    <field name="property_advance_tax_payment_account_id"/>
+
+                    <!--
+                        'force_account_company' context key is used so that the RedirectWarning
+                        potentially raised during tax closing doesn't allow the user choosing
+                        accounts from another company in case the multicompany selector
+                        currently grants access to multiple companies.
+                    -->
+                    <field name="property_tax_payable_account_id"
+                        domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
+                    />
+                    <field name="property_tax_receivable_account_id"
+                        domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
+                    />
+                    <field name="property_advance_tax_payment_account_id"
+                        domain="[('company_id', '=', context['force_account_company'])] if context.get('force_account_company') else []"
+                    />
                 </tree>
             </field>
         </record>
