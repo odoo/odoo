@@ -171,6 +171,26 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(price_change_aml.ref, 'prda')
         self.assertEqual(price_change_aml.product_id, self.product1)
 
+    def test_realtime_consumable(self):
+        """ An automatic consumable product should not create any account move entries"""
+        # Enter 10 products while price is 5.0
+        self.product1.standard_price = 5.0
+        self.product1.type = 'consu'
+        move1 = self.env['stock.move'].create({
+            'name': 'IN 10 units @ 10.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1._action_done()
+        self.assertTrue(move1.stock_valuation_layer_ids)
+        self.assertFalse(move1.stock_valuation_layer_ids.account_move_id)
+
     def test_fifo_perpetual_1(self):
         self.product1.categ_id.property_cost_method = 'fifo'
 
