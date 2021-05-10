@@ -19,8 +19,8 @@ class ProductTemplate(models.Model):
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
     ], ondelete={'timesheet': 'set default'})
     # override domain
-    project_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('bill_type', '=', 'customer_task'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
-    project_template_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('bill_type', '=', 'customer_project'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet' or '', True])]")
+    project_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('bill_type', '=', 'customer_task'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet', True])]")
+    project_template_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('bill_type', '=', 'customer_project'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet', True])]")
 
     def _default_visible_expense_policy(self):
         visibility = self.user_has_groups('project.group_project_user')
@@ -68,6 +68,25 @@ class ProductTemplate(models.Model):
             self.invoice_policy = 'order'
         return res
 
+    @api.model
+    def _get_onchange_service_policy_updates(self, service_tracking, service_policy, project_id, project_template_id):
+        vals = {}
+        if service_tracking != 'no' and service_policy == 'delivered_timesheet':
+            if project_id and not project_id.allow_timesheets:
+                vals['project_id'] = False
+            elif project_template_id and not project_template_id.allow_timesheets:
+                vals['project_template_id'] = False
+        return vals
+
+    @api.onchange('service_policy')
+    def _onchange_service_policy(self):
+        vals = self._get_onchange_service_policy_updates(self.service_tracking,
+                                                        self.service_policy,
+                                                        self.project_id,
+                                                        self.project_template_id)
+        if vals:
+            self.update(vals)
+
     def unlink(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product.product_tmpl_id in self:
@@ -91,6 +110,15 @@ class ProductProduct(models.Model):
         """ Check if the product is a delivered timesheet """
         self.ensure_one()
         return self.type == 'service' and self.service_policy == 'delivered_timesheet'
+
+    @api.onchange('service_policy')
+    def _onchange_service_policy(self):
+        vals = self.product_tmpl_id._get_onchange_service_policy_updates(self.service_tracking,
+                                                                        self.service_policy,
+                                                                        self.project_id,
+                                                                        self.project_template_id)
+        if vals:
+            self.update(vals)
 
     def unlink(self):
         time_product = self.env.ref('sale_timesheet.time_product')
