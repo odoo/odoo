@@ -79,6 +79,7 @@ const Wysiwyg = Widget.extend({
             isRootEditable: this.options.isRootEditable,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             getContentEditableAreas: this.options.getContentEditableAreas,
+            defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
             getContextFromParentRect: options.getContextFromParentRect,
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
@@ -585,6 +586,9 @@ const Wysiwyg = Widget.extend({
                 getDeepRange(this.$editable[0], {range: data.range, select: true});
                 if (!linkWidget.$link.length) {
                     linkWidget.$link = $(linkWidget.getOrCreateLink(this.$editable[0]));
+                }
+                if (this.options.userGeneratedContent) {
+                    data.rel = 'ugc';
                 }
                 linkWidget.applyLinkToDom(data);
 

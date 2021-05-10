@@ -150,8 +150,14 @@ const Link = Widget.extend({
         const attrs = Object.assign({}, this.data.oldAttributes, {
             href: data.url,
             target: data.isNewWindow ? '_blank' : '',
-            class: `${data.classes}`,
         });
+        if (data.classes) {
+            attrs.class = `${data.classes}`;
+        }
+        if (data.rel) {
+            attrs.rel = `${data.rel}`;
+        }
+
         this.$link.attr(attrs);
         if (!this.$link.attr('target')) {
             this.$link[0].removeAttribute('target');
