@@ -52,7 +52,7 @@ class FleetVehicleModel(models.Model):
 class FleetVehicleModelBrand(models.Model):
     _name = 'fleet.vehicle.model.brand'
     _description = 'Brand of the vehicle'
-    _order = 'model_count desc, name asc'
+    _order = 'name asc'
 
     name = fields.Char('Make', required=True)
     image_128 = fields.Image("Logo", max_width=128, max_height=128)
