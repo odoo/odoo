@@ -451,12 +451,13 @@ class StockMove(models.Model):
     def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """
         self.ensure_one()
+        am_vals = []
         if self.product_id.type != 'product':
             # no stock valuation for consumable products
-            return False
+            return am_vals
         if self.restrict_partner_id:
             # if the move isn't owned by the company, we don't make any valuation
-            return False
+            return am_vals
 
         company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
         company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
@@ -464,7 +465,6 @@ class StockMove(models.Model):
         journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
-        am_vals = []
         if self._is_in():
             if self._is_returned(valued_type='in'):
                 am_vals.append(self.with_company(company_to)._prepare_account_move_vals(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost))
