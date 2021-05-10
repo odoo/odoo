@@ -102,23 +102,19 @@
                 <we-button title="Push to bottom" data-change-sequence="bottom" class="fa fa-fw fa-angle-double-right"/>
             </we-row>
 
-            <we-row data-name="ribbon_options">
-                <we-select string="Ribbon" class="o_wsale_ribbon_select">
+            <we-row>
+                <we-select string="Badge" class="o_wsale_ribbon_select">
                     <we-button data-set-ribbon="" data-name="no_ribbon_opt">None</we-button>
                     <!-- Ribbons are filled in JS -->
                 </we-select>
-                <we-button data-edit-ribbon="" class="fa fa-edit" data-no-preview="true" data-dependencies="!no_ribbon_opt"/>
-                <we-button data-create-ribbon="" class="fa fa-plus text-success" data-no-preview="true"/>
+                <we-button data-edit-ribbon="" title="Edit" class="fa fa-edit" data-no-preview="true" data-dependencies="!no_ribbon_opt"/>
+                <we-button data-create-ribbon="" data-name="create_ribbon_opt" title="Create" class="fa fa-plus text-success" data-no-preview="true"/>
             </we-row>
             <div class="d-none" data-name="ribbon_customize_opt">
-                <we-row string="Ribbon">
-                    <we-input data-set-ribbon-html="" class="o_we_large" data-apply-to=".o_wsale_ribbon_dummy"/>
-                    <we-button class="fa fa-check" data-save-ribbon="" title="Validate" data-no-preview="true"/>
-                    <we-button class="fa fa-trash" data-delete-ribbon="" title="Delete" data-no-preview="true"/>
-                </we-row>
-                <we-colorpicker string="⌙ Background" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="background-color" data-color-prefix="bg-"/>
-                <we-colorpicker string="⌙ Text" title="" data-select-style="" data-apply-to=".o_wsale_ribbon_dummy" data-css-property="color"/>
-                <we-select string="⌙ Mode">
+                <we-input string="⌙ Content" data-set-ribbon-html="Badge Text" class="o_we_large" data-apply-to=".o_ribbon"/>
+                <we-colorpicker string="⌙ Background" title="" data-select-style="" data-css-property="background-color" data-color-prefix="bg-" data-apply-to=".o_ribbon"/>
+                <we-colorpicker string="⌙ Text" title="" data-select-style="" data-css-property="color" data-apply-to=".o_ribbon"/>
+                <we-select string="⌙ Style">
                     <we-button data-set-ribbon-mode="ribbon">Slanted</we-button>
                     <we-button data-set-ribbon-mode="tag">Tag</we-button>
                 </we-select>
@@ -126,6 +122,9 @@
                     <we-button data-set-ribbon-position="left">Left</we-button>
                     <we-button data-set-ribbon-position="right">Right</we-button>
                 </we-select>
+                <we-row string=" ">
+                    <we-button class="o_we_bg_danger" data-delete-ribbon="" data-no-preview="true">Delete Badge</we-button>
+                </we-row>
             </div>
         </div>
         <div data-selector="#wrapwrap > header"

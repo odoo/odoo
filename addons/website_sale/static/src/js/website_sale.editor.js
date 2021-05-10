@@ -57,6 +57,7 @@ var publicWidget = require('web.public.widget');
 const Wysiwyg = require('web_editor.wysiwyg');
 const {qweb, _t} = require('web.core');
 const {Markup} = require('web.utils');
+const Dialog = require('web.Dialog');
 
 Wysiwyg.include({
     custom_events: Object.assign(Wysiwyg.prototype.custom_events, {
@@ -362,14 +363,8 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
         this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
+        this.$ribbon = this.$target.find('.o_ribbon');
         return _super(...arguments);
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        this._resetRibbonDummy();
-        return this._super(...arguments);
     },
     /**
      * @override
@@ -380,15 +375,7 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
             .toggleClass('d-none', listLayoutEnabled);
         // Ribbons may have been edited or deleted in another products' option, need to make sure they're up to date
         this.rerender = true;
-    },
-    /**
-     * @override
-     */
-    onBlur: function () {
-        // Since changes will not be saved unless they are validated, reset the
-        // previewed ribbon onBlur to communicate that to the user
-        this._resetRibbonDummy();
-        this._toggleEditingUI(false);
+        this.ribbonEditMode = false;
     },
 
     //--------------------------------------------------------------------------
@@ -398,13 +385,16 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     /**
      * @override
      */
-    selectStyle(previewMode, widgetValue, params) {
+    async selectStyle(previewMode, widgetValue, params) {
         const proms = [this._super(...arguments)];
         if (params.cssProperty === 'background-color' && params.colorNames.includes(widgetValue)) {
             // Reset text-color when choosing a background-color class, so it uses the automatic text-color of the class.
-            proms.push(this.selectStyle(previewMode, '', {applyTo: '.o_wsale_ribbon_dummy', cssProperty: 'color'}));
+            proms.push(this.selectStyle(previewMode, '', {cssProperty: 'color'}));
         }
-        return Promise.all(proms);
+        await Promise.all(proms);
+        if (!previewMode) {
+            await this._saveRibbon();
+        }
     },
     /**
      * @see this.selectClass for params
@@ -415,101 +405,69 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         } else {
             this.prevRibbonId = this.$target[0].dataset.ribbonId;
         }
-        this.$target[0].dataset.ribbonId = widgetValue;
-        this.trigger_up('set_product_ribbon', {
-            templateId: this.productTemplateID,
-            ribbonId: widgetValue || false,
-        });
-        const ribbon = this.ribbons[widgetValue] || {html: '', bg_color: '', text_color: '', html_class: ''};
-        const $ribbons = $(`[data-ribbon-id="${widgetValue}"] .o_ribbon:not(.o_wsale_ribbon_dummy)`);
-        $ribbons.html(ribbon.html);
-        let htmlClasses;
-        this.trigger_up('get_ribbon_classes', {callback: classes => htmlClasses = classes});
-        $ribbons.removeClass(htmlClasses);
-
-        $ribbons.addClass(ribbon.html_class || '');
-        $ribbons.css('color', ribbon.text_color || '');
-        $ribbons.css('background-color', ribbon.bg_color || '');
-
-        if (!this.ribbons[widgetValue]) {
-            $(`[data-ribbon-id="${widgetValue}"]`).each((index, product) => delete product.dataset.ribbonId);
+        if (!previewMode) {
+            this.ribbonEditMode = false;
         }
-        this._resetRibbonDummy();
-        this._toggleEditingUI(false);
+        await this._setRibbon(widgetValue);
     },
     /**
      * @see this.selectClass for params
      */
     editRibbon(previewMode, widgetValue, params) {
-        this.saveMethod = 'modify';
-        this._toggleEditingUI(true);
+        this.ribbonEditMode = !this.ribbonEditMode;
     },
     /**
      * @see this.selectClass for params
      */
-    createRibbon(previewMode, widgetValue, params) {
-        this.saveMethod = 'create';
-        this.setRibbon(false);
-        this.$ribbon.html('Ribbon text');
+    async createRibbon(previewMode, widgetValue, params) {
+        await this._setRibbon(false);
+        this.$ribbon.text(_t('Badge Text'));
         this.$ribbon.addClass('bg-primary o_ribbon_left');
-        this._toggleEditingUI(true);
-        this.isCreating = true;
+        this.ribbonEditMode = true;
+        await this._saveRibbon(true);
     },
     /**
      * @see this.selectClass for params
      */
     async deleteRibbon(previewMode, widgetValue, params) {
-        if (this.isCreating) {
-            // Ribbon doesn't exist yet, simply discard.
-            this.isCreating = false;
-            this._resetRibbonDummy();
-            return this._toggleEditingUI(false);
+        const save = await new Promise(resolve => {
+            Dialog.confirm(this, _t('Are you sure you want to delete this badge ?'), {
+                confirm_callback: () => resolve(true),
+                cancel_callback: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
         }
         const {ribbonId} = this.$target[0].dataset;
         this.trigger_up('delete_ribbon', {id: ribbonId});
         this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
         this.rerender = true;
-        await this.setRibbon(false, ribbonId);
+        await this._setRibbon(ribbonId);
+        this.ribbonEditMode = false;
     },
     /**
      * @see this.selectClass for params
      */
-    async saveRibbon(previewMode, widgetValue, params) {
-        const text = this.$ribbon.html().trim();
-        if (!text) {
-            return;
-        }
-        const ribbon = {
-            'html': text,
-            'bg_color': this.$ribbon[0].style.backgroundColor,
-            'text_color': this.$ribbon[0].style.color,
-            'html_class': this.$ribbon.attr('class').split(' ')
-                .filter(c => !['d-none', 'o_wsale_ribbon_dummy', 'o_ribbon'].includes(c))
-                .join(' '),
-        };
-        ribbon.id = this.saveMethod === 'modify' ? parseInt(this.$target[0].dataset.ribbonId) : Date.now();
-        this.trigger_up('set_ribbon', {ribbon: ribbon});
-        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
-        this.rerender = true;
-        await this.setRibbon(false, ribbon.id);
-    },
-    /**
-     * @see this.selectClass for params
-     */
-    setRibbonHtml(previewMode, widgetValue, params) {
+    async setRibbonHtml(previewMode, widgetValue, params) {
         this.$ribbon.html(widgetValue);
+        if (!previewMode) {
+            await this._saveRibbon();
+        }
     },
     /**
      * @see this.selectClass for params
      */
-    setRibbonMode(previewMode, widgetValue, params) {
+    async setRibbonMode(previewMode, widgetValue, params) {
         this.$ribbon[0].className = this.$ribbon[0].className.replace(/o_(ribbon|tag)_(left|right)/, `o_${widgetValue}_$2`);
+        await this._saveRibbon();
     },
     /**
      * @see this.selectClass for params
      */
-    setRibbonPosition(previewMode, widgetValue, params) {
+    async setRibbonPosition(previewMode, widgetValue, params) {
         this.$ribbon[0].className = this.$ribbon[0].className.replace(/o_(ribbon|tag)_(left|right)/, `o_$1_${widgetValue}`);
+        await this._saveRibbon();
     },
     /**
      * @see this.selectClass for params
@@ -552,12 +510,10 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
      * @override
      */
     updateUIVisibility: async function () {
-        // Main updateUIVisibility will remove the d-none class because there are visible widgets
-        // inside of it. TODO: update this once updateUIVisibility can be used to compute visibility
+        // TODO: update this once updateUIVisibility can be used to compute visibility
         // of arbitrary DOM elements and not just widgets.
-        const isEditing = this.$el.find('[data-name="ribbon_options"]').hasClass('d-none');
         await this._super(...arguments);
-        this._toggleEditingUI(isEditing);
+        this.$el.find('[data-name="ribbon_customize_opt"]').toggleClass('d-none', !this.ribbonEditMode);
     },
 
     //--------------------------------------------------------------------------
@@ -570,9 +526,6 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
     async _renderCustomXML(uiFragment) {
         const $select = $(uiFragment.querySelector('.o_wsale_ribbon_select'));
         this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
-        if (!this.$ribbon) {
-            this._resetRibbonDummy();
-        }
         const classes = this.$ribbon[0].className;
         this.$ribbon[0].className = '';
         const defaultTextColor = window.getComputedStyle(this.$ribbon[0]).color;
@@ -617,28 +570,60 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
         return this._super(methodName, params);
     },
     /**
-     * Toggles the UI mode between select and create/edit mode.
-     *
-     * @private
-     * @param {Boolean} state true to activate editing UI, false to deactivate.
+     * @override
      */
-    _toggleEditingUI(state) {
-        this.$el.find('[data-name="ribbon_options"]').toggleClass('d-none', state);
-        this.$el.find('[data-name="ribbon_customize_opt"]').toggleClass('d-none', !state);
-        this.$('.o_ribbon:not(.o_wsale_ribbon_dummy)').toggleClass('d-none', state);
-        this.$ribbon.toggleClass('d-none', !state);
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'create_ribbon_opt') {
+            return !this.ribbonEditMode;
+        }
+        return this._super(...arguments);
     },
     /**
-     * Creates a copy of current ribbon to manipulate for edition/creation.
+     * Saves the ribbons.
      *
      * @private
+     * @param {Boolean} [isNewRibbon=false]
      */
-    _resetRibbonDummy() {
-        if (this.$ribbon) {
-            this.$ribbon.remove();
+    async _saveRibbon(isNewRibbon = false) {
+        const text = this.$ribbon.html().trim();
+        const ribbon = {
+            'html': text,
+            'bg_color': this.$ribbon[0].style.backgroundColor,
+            'text_color': this.$ribbon[0].style.color,
+            'html_class': this.$ribbon.attr('class').split(' ').filter(c => !['o_ribbon'].includes(c)).join(' '),
+        };
+        ribbon.id = isNewRibbon ? Date.now() : parseInt(this.$target.closest('.oe_product')[0].dataset.ribbonId);
+        this.trigger_up('set_ribbon', {ribbon: ribbon});
+        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
+        this.rerender = true;
+        await this._setRibbon(ribbon.id);
+    },
+    /**
+     * Sets the ribbon.
+     *
+     * @private
+     * @param {integer|false} ribbonId
+     */
+    async _setRibbon(ribbonId) {
+        this.$target[0].dataset.ribbonId = ribbonId;
+        this.trigger_up('set_product_ribbon', {
+            templateId: this.productTemplateID,
+            ribbonId: ribbonId || false,
+        });
+        const ribbon = this.ribbons[ribbonId] || {html: '', bg_color: '', text_color: '', html_class: ''};
+        const $ribbons = $(`[data-ribbon-id="${ribbonId}"] .o_ribbon`);
+        $ribbons.empty().append(ribbon.html);
+        let htmlClasses;
+        this.trigger_up('get_ribbon_classes', {callback: classes => htmlClasses = classes});
+        $ribbons.removeClass(htmlClasses);
+
+        $ribbons.addClass(ribbon.html_class || '');
+        $ribbons.css('color', ribbon.text_color || '');
+        $ribbons.css('background-color', ribbon.bg_color || '');
+
+        if (!this.ribbons[ribbonId]) {
+            $(`[data-ribbon-id="${ribbonId}"]`).each((index, product) => delete product.dataset.ribbonId);
         }
-        const $original = this.$('.o_ribbon');
-        this.$ribbon = $original.clone().addClass('d-none o_wsale_ribbon_dummy').appendTo($original.parent());
     },
 
     //--------------------------------------------------------------------------
