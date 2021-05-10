@@ -26,6 +26,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         snippet_will_be_cloned: '_onSnippetWillBeCloned',
         snippet_cloned: '_onSnippetCloned',
         snippet_dropped: '_onSnippetDropped',
+        snippet_removed: '_onSnippetRemoved',
         edition_will_stopped: '_onEditionWillStop',
         edition_was_stopped: '_onEditionWasStopped',
         request_save: '_onSnippetRequestSave',
@@ -304,7 +305,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 
     _getContentEditableAreas () {
-        return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id]').filter((_, el) => {
+        return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], :empty').filter((_, el) => {
             return !$(el).closest('.o_not_editable').length;
         }).toArray();
     },
@@ -322,11 +323,11 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @private
      */
     _addEditorMessages: function () {
-        var $target = this._targetForEdition();
-        this.$editorMessageElements = $target
-            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
+        const $editable = this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]');
+        this.$editorMessageElements = $editable
             .not('[data-editor-message]')
             .attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
+        $editable.filter(':empty').attr('contenteditable', false);
     },
     /**
      * Returns the target for edition.
@@ -475,18 +476,33 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
     /**
      * Called when a snippet is dropped in the page. Notifies the WebsiteRoot
-     * that is should start the public widgets for this snippet. Also add the
-     * editor messages.
+     * that is should start the public widgets for this snippet. Also marks the
+     * wrapper element as non-empty and makes it editable.
      *
      * @private
      * @param {OdooEvent} ev
      */
     _onSnippetDropped: function (ev) {
+        this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]')
+            .attr('contenteditable', true);
         this.trigger_up('widgets_start_request', {
             editableMode: true,
             $target: ev.data.$target,
         });
-        this._addEditorMessages();
+    },
+    /**
+     * Called when a snippet is removed from the page. If the wrapper element is
+     * empty, marks it as such and shows the editor messages.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetRemoved: function (ev) {
+        const $editable = this._targetForEdition().find('.oe_structure.oe_empty, [data-oe-type="html"]');
+        if (!$editable.children().length) {
+            $editable.empty(); // remove any superfluous whitespace
+            this._addEditorMessages();
+        }
     },
     /**
      * Get the cleaned value of the editable element.
