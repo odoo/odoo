@@ -32,6 +32,7 @@
     width: 0%;
     padding: 0 15px 0 0;
     min-width: 150px;
+    color: $headings-color;
 }
 $o-form-label-margin-right: 0px;
 
@@ -193,7 +194,7 @@ $o-form-label-margin-right: 0px;
         display: flex;
         justify-content: space-between;
         padding-left: $o-horizontal-padding;
-        border-bottom: 1px solid gray('400');
+        border-bottom: 1px solid $border-color;
         background-color: $o-view-background-color;
 
         > .o_statusbar_buttons, > .o_statusbar_status {
@@ -231,14 +232,10 @@ $o-form-label-margin-right: 0px;
 
             > .o_arrow_button {
                 min-height: $o-statusbar-height;
-                font-size: 11px;
-                font-weight: bold;
                 position: relative;
                 padding-left: $o-statusbar-arrow-width*2;
-                color: gray('700');
-                border-width: 0 0 0;
-                border-radius: 0;
-                transition: all 0.1s ease 0s;
+                border-width: 0;
+                font-size: $font-size-sm;
 
                 &:first-child {
                     padding-right: $o-horizontal-padding; // Compensate container padding
@@ -246,14 +243,10 @@ $o-form-label-margin-right: 0px;
                 }
                 &:last-child {
                     padding-left: $o-horizontal-padding - 1;
-                    border-left: 1px solid gray('400');
-                    &.disabled {
-                        border-color: gray('300');
-                    }
-                }
 
-                &:active {
-                    box-shadow: none;
+                    &:not(.disabled) {
+                        border-left: 1px solid $border-color;
+                    }
                 }
 
                 &:not(:first-child):before, &:not(:first-child):after {
@@ -265,19 +258,7 @@ $o-form-label-margin-right: 0px;
                     border-bottom: ceil($o-statusbar-height/2) solid transparent;
                     border-right: none;
                     border-left: $o-statusbar-arrow-width solid $o-view-background-color;
-                    transition: border 0.2s ease 0s;
                     -moz-transform: scale(0.9999); // Smooth the triangle on firefox
-                }
-
-                &:not(.disabled) {
-                    &:hover, &:active, &:focus {
-                        color: $o-brand-primary;
-                        background-color: gray('200');
-
-                        &:after {
-                            border-left-color: gray('200');
-                        }
-                    }
                 }
 
                 &:not(:first-child):before {
@@ -285,23 +266,29 @@ $o-form-label-margin-right: 0px;
                     border-left-color: gray('300');
                 }
 
-                &.btn-primary.disabled {
-                    color: $o-brand-odoo;
-                    font-size: 11px;
-                    background-color: gray('200');
+                &.disabled {
+                    opacity: 1;
+                    pointer-events: none;
                     cursor: default;
 
-                    &:after {
-                        border-left-color: gray('200');
+                    &:not(.btn-primary) {
+                        @include plain-hover-focus() {
+                            color: $text-muted;
+                        }
                     }
                 }
-            }
 
-            > .o_arrow_button, > .dropdown-menu > .o_arrow_button {
-                &.disabled {
-                    opacity: 1.0;
-                    color: $text-muted;
-                    pointer-events: none;
+                &.btn-primary.disabled {
+                    background-color: $o-brand-odoo;
+                    color: color-yiq($o-brand-odoo);
+
+                    &:after, &:before {
+                        border-left-color: $o-brand-odoo;
+                    }
+
+                    + .o_arrow_button:before {
+                        display: none;
+                    }
                 }
             }
         }
@@ -316,12 +303,12 @@ $o-form-label-margin-right: 0px;
             }
 
             > .dropdown-menu {
-                padding: 5px 0 2px 0;
-                min-width: 100px;
+                min-width: 0;
 
                 .dropdown-item.btn {
                     min-width: 100%;
                     margin-bottom: 3px;
+                    opacity: 1;
                 }
             }
         }
@@ -338,13 +325,13 @@ $o-form-label-margin-right: 0px;
         // Use box-shadow instead of border-bottom because some button boxes are
         // empty in some cases and we do not want to see a floating border in
         // that cases.
-        box-shadow: inset 0 -1px 0 gray('400');
+        box-shadow: inset 0 -1px 0 $border-color;
 
         &.o_full .oe_stat_button:not(.o_invisible_modifier) ~ .oe_stat_button {
-            border-left: 1px solid gray('400');
+            border-left: 1px solid $border-color;
         }
         &.o_not_full .oe_stat_button {
-            border-left: 1px solid gray('400');
+            border-left: 1px solid $border-color;
         }
 
         > .btn.oe_stat_button, > .o_dropdown_more {
@@ -405,7 +392,7 @@ $o-form-label-margin-right: 0px;
             > .o_stat_info, > span { // contains the value and text
                 display: inline-block;
                 vertical-align: middle;
-                font-weight: 500;
+                font-weight: $font-weight-normal;
 
                 max-width: 70%;
                 padding-right: $o-statbutton-spacing;
@@ -416,7 +403,7 @@ $o-form-label-margin-right: 0px;
                 }
 
                 .o_stat_value {
-                    font-weight: 700;
+                    font-weight: $font-weight-bold;
                     color: $o-brand-odoo;
                     line-height: 1.2;
                 }
@@ -577,7 +564,7 @@ $o-form-label-margin-right: 0px;
         }
 
         .o_form_label {
-            font-weight: normal;
+            font-weight: $font-weight-normal;
         }
 
         .o_field_widget {
@@ -607,7 +594,7 @@ $o-form-label-margin-right: 0px;
         }
 
         .o_td_label .o_form_label {
-            font-weight: bold;
+            font-weight: $font-weight-bold;
             margin-right: $o-form-label-margin-right;
         }
     }
@@ -623,14 +610,20 @@ $o-form-label-margin-right: 0px;
         > .o_form_label {
             @include o-td-label-style;
             margin-right: $o-form-label-margin-right;
-            font-weight: bold;
+            font-weight: $font-weight-bold;
         }
     }
 
     // Separators
     .o_horizontal_separator {
-        font-size: $h2-font-size;
-        margin: $o-form-spacing-unit 0;
+        font-size: $font-size-sm;
+        font-weight: $font-weight-bold;
+        margin: 1.2em 0 .8em;
+
+        &:not(:empty) {
+            box-shadow: 0 1px 0 rgba($body-color, .05);
+        }
+
         &:empty {
             height: $o-form-spacing-unit * 2;
         }
@@ -649,9 +642,10 @@ $o-form-label-margin-right: 0px;
     // Labels
     .o_form_label {
         margin: 0 $o-form-spacing-unit 0 0;
+        color: $headings-color;
         font-size: $font-size-base; // The label muse have the same size whatever their position
         line-height: $line-height-base;
-        font-weight: bold;
+        font-weight: $font-weight-bold;
     }
 
     // Form fields
@@ -747,7 +741,7 @@ $o-form-label-margin-right: 0px;
             width: 100%;
             text-align: right;
             border-top: 1px solid gray('300');
-            font-weight: bold;
+            font-weight: $font-weight-bold;
             font-size: 1.3em;
         }
     }
@@ -1040,7 +1034,7 @@ $o-form-label-margin-right: 0px;
     flex-flow: row wrap;
 
     .o_form_label.o_light_label, .o_light_label .o_form_label {
-        font-weight: normal;
+        font-weight: $font-weight-normal;
     }
     .o_setting_box:visible:nth-child(odd) {
         clear: left;
