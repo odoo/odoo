@@ -4958,8 +4958,93 @@ QUnit.module('basic_fields', {
         unpatchDate();
     });
 
+    QUnit.test('remaining_days widget on a date field in multi edit list view', async function (assert) {
+        assert.expect(7);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, date: '2017-10-08' }, // today
+            { id: 2, date: '2017-10-09' }, // tomorrow
+            { id: 8, date: false },
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree multi_edit="1"><field name="date" widget="remaining_days"/></tree>',
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+
+        // select two records and edit them
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell'));
+        assert.containsOnce(list, 'input.o_datepicker_input', 'should have date picker input');
+        await testUtils.fields.editAndTrigger(list.$('.o_datepicker_input'), '10/10/2017', ['input', 'change', 'focusout']);
+
+        assert.containsOnce(document.body, '.modal');
+        assert.strictEqual($('.modal .o_field_widget').text(), "In 2 days",
+            "should have 'In 2 days' value to change");
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+
+        assert.strictEqual(list.$('.o_data_row:first .o_data_cell').text(), "In 2 days",
+            "should have 'In 2 days' as date field value");
+        assert.strictEqual(list.$('.o_data_row:nth(1) .o_data_cell').text(), "In 2 days",
+            "should have 'In 2 days' as date field value");
+
+        list.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('remaining_days widget, enter wrong value manually in multi edit list view', async function (assert) {
+        assert.expect(6);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, date: '2017-10-08' }, // today
+            { id: 2, date: '2017-10-09' }, // tomorrow
+            { id: 8, date: false },
+        ];
+
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree multi_edit="1"><field name="date" widget="remaining_days"/></tree>',
+            translateParameters: { // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+
+        // select two records and edit them
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_list_record_selector input'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell'));
+        assert.containsOnce(list, 'input.o_datepicker_input', 'should have date picker input');
+        await testUtils.fields.editAndTrigger(list.$('.o_datepicker_input'), 'blabla', ['input', 'change']);
+        await testUtils.dom.click(list.$el);
+
+        assert.containsNone(document.body, '.modal');
+        assert.strictEqual(list.$('.o_data_cell:nth(0)').text(), 'Today');
+        assert.strictEqual(list.$('.o_data_cell:nth(1)').text(), 'Tomorrow');
+
+        list.destroy();
+        unpatchDate();
+    });
+
     QUnit.test('remaining_days widget on a date field in form view', async function (assert) {
-        assert.expect(4);
+        assert.expect(8);
 
         const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         this.data.partner.records = [
@@ -4977,11 +5062,64 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_field_widget').text(), 'Today');
         assert.hasClass(form.$('.o_field_widget'), 'font-weight-bold text-warning');
 
-        // in edit mode, this widget should not be editable.
+        // in edit mode, this widget should be editable.
         await testUtils.form.clickEdit(form);
 
         assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
-        assert.containsOnce(form, 'div.o_field_widget[name=date]');
+        assert.containsOnce(form, 'div.o_field_widget[name=date] .o_datepicker');
+
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 1,
+            "datepicker should be opened");
+
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .day[data-day="10/09/2017"]'));
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Tomorrow');
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .day[data-day="10/07/2017"]'));
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Yesterday');
+        assert.hasClass(form.$('.o_field_widget'), 'text-danger');
+
+        form.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('remaining_days widget on a datetime field in form view', async function (assert) {
+        assert.expect(6);
+
+        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        this.data.partner.records = [
+            { id: 1, datetime: '2017-10-08 10:00:00' }, // today
+        ];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="datetime" widget="remaining_days"/></form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Today');
+        assert.hasClass(form.$('.o_field_widget'), 'text-warning');
+
+        // in edit mode, this widget should be editable.
+        await testUtils.form.clickEdit(form);
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.containsOnce(form, 'div.o_field_widget[name=datetime] .o_datepicker');
+
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 1,
+            "datepicker should be opened");
+
+        await testUtils.dom.click($('.bootstrap-datetimepicker-widget .day[data-day="10/09/2017"]'));
+        await testUtils.dom.click($('a[data-action="close"]'));
+        await testUtils.form.clickSave(form);
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Tomorrow');
 
         form.destroy();
         unpatchDate();
