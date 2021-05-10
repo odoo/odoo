@@ -110,7 +110,7 @@ class AccountEdiFormat(models.Model):
 
         to_send = {}
         for invoice in invoices:
-            xml = b"<?xml version='1.0' encoding='UTF-8'?>" + invoice._export_as_xml()
+            xml = "<?xml version='1.0' encoding='UTF-8'?>" + str(invoice._export_as_xml())
             filename = self._l10n_it_edi_generate_electronic_invoice_filename(invoice)
             attachment = self.env['ir.attachment'].create({
                 'name': filename,

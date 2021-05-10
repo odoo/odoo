@@ -3,6 +3,7 @@
 from odoo import models
 
 import base64
+import markupsafe
 
 
 class AccountEdiFormat(models.Model):
@@ -21,12 +22,12 @@ class AccountEdiFormat(models.Model):
     def _export_efff(self, invoice):
         self.ensure_one()
         # Create file content.
-        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"
+        xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
         xml_content += self.env.ref('l10n_be_edi.export_efff_invoice')._render(self._get_efff_values(invoice))
         xml_name = '%s.xml' % invoice._get_efff_name()
         return self.env['ir.attachment'].create({
             'name': xml_name,
-            'datas': base64.encodebytes(xml_content),
+            'raw': xml_content.encode(),
             'mimetype': 'application/xml',
         })
 

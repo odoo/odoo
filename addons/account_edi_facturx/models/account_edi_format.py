@@ -9,6 +9,7 @@ from datetime import datetime
 from lxml import etree
 from PyPDF2 import PdfFileReader
 import base64
+import markupsafe
 
 import io
 
@@ -65,12 +66,12 @@ class AccountEdiFormat(models.Model):
             'is_html_empty': is_html_empty,
         }
 
-        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"
+        xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
         xml_content += self.env.ref('account_edi_facturx.account_invoice_facturx_export')._render(template_values)
         xml_name = '%s_facturx.xml' % (invoice.name.replace('/', '_'))
         return self.env['ir.attachment'].create({
             'name': xml_name,
-            'datas': base64.encodebytes(xml_content),
+            'raw': xml_content.encode(),
             'mimetype': 'application/xml'
         })
 

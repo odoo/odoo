@@ -196,7 +196,7 @@ class TestMailRender(common.MailCommon):
                 partner._name,
                 partner.ids,
                 engine='qweb_view',
-            )[partner.id].decode()
+            )[partner.id]
             self.assertEqual(rendered, expected)
 
     @users('employee')
@@ -278,7 +278,7 @@ class TestMailRender(common.MailCommon):
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
-            self.assertEqual(expected, result if engine == 'jinja' else result.decode())  # tde: checkme
+            self.assertEqual(expected, result if engine == 'jinja' else result)  # tde: checkme
 
         # code xml
         srces = [
@@ -290,7 +290,7 @@ class TestMailRender(common.MailCommon):
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
-            self.assertEqual(expected, result if engine == 'jinja' else result.decode())  # tde: checkme
+            self.assertEqual(expected, result if engine == 'jinja' else result)  # tde: checkme
 
         # condition block xml
         src = """<b>Test</b>

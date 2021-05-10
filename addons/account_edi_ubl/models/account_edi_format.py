@@ -8,6 +8,7 @@ from pathlib import PureWindowsPath
 
 import base64
 import logging
+import markupsafe
 
 _logger = logging.getLogger(__name__)
 
@@ -204,12 +205,12 @@ class AccountEdiFormat(models.Model):
     def _export_ubl(self, invoice):
         self.ensure_one()
         # Create file content.
-        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"
+        xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
         xml_content += self.env.ref('account_edi_ubl.export_ubl_invoice')._render(self._get_ubl_values(invoice))
         xml_name = '%s_ubl_2_1.xml' % (invoice.name.replace('/', '_'))
         return self.env['ir.attachment'].create({
             'name': xml_name,
-            'datas': base64.encodebytes(xml_content),
+            'raw': xml_content.encode(),
             'res_model': 'account.move',
             'res_id': invoice.id,
             'mimetype': 'application/xml'

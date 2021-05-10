@@ -818,9 +818,6 @@ class IrActionsReport(models.Model):
 
         html = self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
 
-        # Ensure the current document is utf-8 encoded.
-        html = html.decode('utf-8')
-
         bodies, html_ids, header, footer, specific_paperformat_args = self_sudo.with_context(context)._prepare_html(html)
 
         if self_sudo.attachment and set(res_ids) != set(html_ids):
