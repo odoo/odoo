@@ -1028,10 +1028,6 @@ class Task(models.Model):
             if not vals.get('parent_id'):
                 # 1) We must initialize display_project_id to follow project_id if there is no parent_id
                 vals['display_project_id'] = project_id
-            elif vals.get("display_project_id"):
-                # 2) We must make the project_id follows the display_project_id if set in the child.
-                vals['project_id'] = vals.get("display_project_id")
-                project_id = vals['project_id']
             if project_id and not "company_id" in vals:
                 vals["company_id"] = self.env["project.project"].browse(
                     project_id
@@ -1114,14 +1110,9 @@ class Task(models.Model):
         if 'stage_id' in vals and vals.get('stage_id'):
             self.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
         for task in self:
-            if not task.parent_id:
-                if 'project_id' in vals or 'parent_id' in vals:
-                    # We must make the display_project_id follow the project_id if no parent_id set
-                    task.display_project_id = task.project_id
-            elif 'display_project_id' in vals:
-                # We must make the project_id follow the display_project_id if parent_id is set
-                # and display_project_id changed
-                task.project_id = task.display_project_id or task.parent_id.project_id
+            if task.display_project_id != task.project_id and not task.parent_id:
+                # We must make the display_project_id follow the project_id if no parent_id set
+                task.display_project_id = task.project_id
         return result
 
     def update_date_end(self, stage_id):
@@ -1165,11 +1156,11 @@ class Task(models.Model):
         for task in self:
             task.email_from = task.partner_id.email or ((task.partner_id or task.parent_id) and task.email_from) or task.parent_id.email_from
 
-    @api.depends('parent_id.project_id')
+    @api.depends('parent_id.project_id', 'display_project_id')
     def _compute_project_id(self):
         for task in self:
-            if not task.project_id or not task.display_project_id:
-                task.project_id = task.parent_id.project_id
+            if task.parent_id:
+                task.project_id = task.display_project_id or task.parent_id.project_id
 
     # ---------------------------------------------------
     # Mail gateway
