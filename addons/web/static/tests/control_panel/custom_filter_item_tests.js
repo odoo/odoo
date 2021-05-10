@@ -146,6 +146,54 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             cfi.destroy();
         });
 
+        QUnit.test('filtering by ID interval works', async function (assert) {
+            assert.expect(2);
+            this.fields.id_field = { name: 'id_field', string: "ID", type: "id", searchable: true };
+
+            const expectedDomains = [
+                [['id_field','>', 10]],
+                [['id_field','<=', 20]],
+            ];
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    const preFilter = preFilters[0];
+                    // this step combine a tokenization/parsing followed by a string formatting
+                    let domain = pyUtils.assembleDomains([preFilter.domain]);
+                    domain = Domain.prototype.stringToArray(domain);
+                    assert.deepEqual(domain, expectedDomains.shift());
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { searchModel },
+            });
+
+            async function testValue(operator, value) {
+                // open filter menu generator, select ID field, switch operator, type value, then click apply
+                await cpHelpers.toggleAddCustomFilter(cfi);
+                await testUtils.fields.editSelect(cfi.el.querySelector('select.o_generator_menu_field'), 'id_field');
+                await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), operator);
+                await testUtils.fields.editInput(cfi.el.querySelector(
+                    'div.o_filter_condition > span.o_generator_menu_value input'),
+                    value
+                );
+                await cpHelpers.applyFilter(cfi);
+            }
+
+            for (const domain of expectedDomains) {
+                await testValue(domain[0][1], domain[0][2]);
+            }
+
+            cfi.destroy();
+        });
+
+
         QUnit.test('commit search with an extended proposition with field char does not cause a crash', async function (assert) {
             assert.expect(12);
 
