@@ -4,6 +4,22 @@ $o-td-label-padding-right: 8px;
     $sheet-min-width: 650px;
     $sheet-padding: 16px;
 
+    .o_statusbar_status > .o_arrow_button {
+        transition: none;
+        border-radius: 0;
+
+        &:active {
+            box-shadow: none;
+        }
+
+        &:not(.disabled):hover:after {
+            border-left-color: darken($secondary, 7.5%);
+        }
+        &:not(.disabled):active:after {
+            border-left-color: darken($secondary, 10%);
+        }
+    }
+
     &.o_form_nosheet.oe_form_nomargin {
         margin: 0;
     }
