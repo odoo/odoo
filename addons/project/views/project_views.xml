@@ -587,8 +587,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="base.group_user"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
-                                    <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /></span>
+                                    <a class="o_kanban_manage_toggle_button o_display_on_kanban_card_hover" href="#" groups="base.group_user">
+                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
+                                    </a>
+                                   <span class="o_display_on_kanban_card_hover">
+                                       <field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /> 
+                                    </span>
                                 </div>
 
                                 <div class="o_project_kanban_boxes">
