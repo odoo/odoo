@@ -467,6 +467,17 @@ class PosOrder(models.Model):
     def _prepare_invoice_vals(self):
         self.ensure_one()
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        note = self.note or ''
+        terms = ''
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
+            if self.env.company.terms_type == "html":
+                baseurl = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                terms = _('Terms & Conditions: %s/terms', baseurl)
+            else:
+                terms = self.company_id.invoice_terms
+
+        narration = note + '\n' + terms if note else terms
+
         vals = {
             'payment_reference': self.name,
             'invoice_origin': self.name,
@@ -474,7 +485,7 @@ class PosOrder(models.Model):
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
             'partner_id': self.partner_id.id,
-            'narration': self.note or '',
+            'narration': narration,
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
