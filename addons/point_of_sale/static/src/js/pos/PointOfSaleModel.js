@@ -2006,6 +2006,7 @@ class PointOfSaleModel extends EventBus {
                 'pos.pack.operation.lot',
                 {
                     id: this._getNextId(),
+                    pos_order_line_id: orderline.id,
                     lot_name: item.text,
                 },
                 {}
@@ -2016,8 +2017,9 @@ class PointOfSaleModel extends EventBus {
             this.deleteRecord('pos.pack.operation.lot', id);
         }
         orderline.pack_lot_ids = orderline.pack_lot_ids.filter((id) => !toRemove.has(id));
-        // automatically set the quantity to the number of lots.
-        orderline.qty = orderline.pack_lot_ids.length;
+        if (product.tracking === 'serial') {
+            orderline.qty = orderline.pack_lot_ids.length;
+        }
         return { cancelled: false };
     }
     /**

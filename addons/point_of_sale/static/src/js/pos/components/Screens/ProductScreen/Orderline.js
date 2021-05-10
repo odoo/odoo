@@ -42,7 +42,16 @@ class Orderline extends PosComponent {
         );
     }
     getOrderlineHasValidLots(orderline) {
-        return orderline.qty === orderline.pack_lot_ids.length;
+        const product = this.env.model.getRecord('product.product', orderline.product_id);
+        return product.tracking === 'serial'
+            ? orderline.qty === orderline.pack_lot_ids.length
+            : orderline.pack_lot_ids.length === 1;
+    }
+    getLotText(lot) {
+        const orderline = this.env.model.getRecord('pos.order.line', lot.pos_order_line_id);
+        const product = this.env.model.getRecord('product.product', orderline.product_id);
+        const template = product.tracking === 'serial' ? this.env._t('SN %s') : this.env._t('Lot %s');
+        return _.str.sprintf(template, lot.lot_name);
     }
     showListPrice(orderline, displayUnitPrice, lstPrice) {
         return (

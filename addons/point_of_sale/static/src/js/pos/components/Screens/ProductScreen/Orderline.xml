@@ -65,8 +65,7 @@
                 <ul class="info-list">
                     <t t-foreach="lotLines" t-as="lot" t-key="lot.id">
                         <li>
-                            SN
-                            <t t-esc="lot.lot_name" />
+                            <t t-esc="getLotText(lot)" />
                         </li>
                     </t>
                 </ul>

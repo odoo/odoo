@@ -116,7 +116,7 @@
                                 <t t-foreach="line.pack_lot_lines" t-as="lot" t-key="lot.id">
                                     <li>
                                         SN
-                                        <t t-esc="lot.attributes['lot_name']" />
+                                        <t t-esc="lot.lot_name" />
                                     </li>
                                 </t>
                             </ul>

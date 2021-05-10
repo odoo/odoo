@@ -230,8 +230,9 @@ class ProductScreen extends PosComponent {
             }
         }
     }
-    onClickLot({ detail: orderline }) {
-        this.env.model.actionHandler({ name: 'actionSetOrderlineLots', args: [orderline] });
+    async onClickLot({ detail: orderline }) {
+        await this.env.model.actionHandler({ name: 'actionSetOrderlineLots', args: [orderline] });
+        NumberBuffer.reset();
     }
     onSwitchPane() {
         if (this.mobile_pane === 'left') {
