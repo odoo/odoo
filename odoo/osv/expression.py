@@ -755,6 +755,9 @@ class expression(object):
                 (when available), or as an expanded [(left,in,child_ids)] """
             if not ids:
                 return [FALSE_LEAF]
+            if not all(ids):
+                # [('xxx', 'child_of', [False])] returns all records
+                return [TRUE_LEAF]
             if left_model._parent_store:
                 doms = OR([
                     [('parent_path', '=like', rec.parent_path + '%')]
