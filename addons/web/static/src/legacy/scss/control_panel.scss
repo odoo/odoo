@@ -1,6 +1,6 @@
 
 .o_control_panel {
-    border-bottom: 1px solid darken($o-control-panel-background-color, 20%);
+    border-bottom: 1px solid $border-color;
     @include o-webclient-padding($top: 5px, $bottom: 5px);
     background-color: $o-control-panel-background-color;
 
@@ -79,7 +79,6 @@
                 align-items: center;
 
                 .o_pager_counter {
-                    margin-right: 5px;
                     min-width: $o-statbutton-height;
                 }
             }

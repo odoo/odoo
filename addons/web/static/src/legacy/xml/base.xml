@@ -513,7 +513,7 @@
 
 <t t-name="web.Pager" owl="1">
     <nav class="o_pager" aria-label="Pager">
-        <span class="o_pager_counter" t-on-click.stop="">
+        <span class="o_pager_counter mr-2" t-on-click.stop="">
             <input t-if="state.editing" type="text"
                 class="o_pager_value o_input"
                 autofocus=""
@@ -533,7 +533,7 @@
         <span class="btn-group" aria-atomic="true">
             <!-- accesskeys not wanted in X2Many widgets -->
             <button type="button"
-                class="fa fa-chevron-left btn btn-secondary o_pager_previous"
+                class="fa fa-chevron-left btn btn-secondary o_pager_previous px-2 rounded-left"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'p' : false"
                 aria-label="Previous"
@@ -542,7 +542,7 @@
                 t-on-click="_changeSelection(-1)"
             />
             <button type="button"
-                class="fa fa-chevron-right btn btn-secondary o_pager_next"
+                class="fa fa-chevron-right btn btn-secondary o_pager_next px-2 rounded-right"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'n' : false"
                 aria-label="Next"
