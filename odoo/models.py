@@ -2048,58 +2048,133 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     def _read_group_fill_temporal(self, data, groupby, aggregated_fields, annotated_groupbys,
-                                  interval=dateutil.relativedelta.relativedelta(months=1)):
+                                  fill_from=False, fill_to=False, min_groups=False):
         """Helper method for filling date/datetime 'holes' in a result set.
 
         We are in a use case where data are grouped by a date field (typically
         months but it could be any other interval) and displayed in a chart.
 
-        Assume we group records by month, and we only have data for August,
+        Assume we group records by month, and we only have data for June,
         September and December. By default, plotting the result gives something
         like:
                                                 ___
                                       ___      |   |
-                                     |   |     |   |
                                      |   | ___ |   |
-                                     |   ||   ||   |
                                      |___||___||___|
-                                      Aug  Sep  Dec
+                                      Jun  Sep  Dec
 
-        The problem is that December data follows immediately September data,
-        which is misleading for the user. Adding explicit zeroes for missing data
-        gives something like:
+        The problem is that December data immediately follow September data,
+        which is misleading for the user. Adding explicit zeroes for missing
+        data gives something like:
+                                                           ___
+                             ___                          |   |
+                            |   |           ___           |   |
+                            |___| ___  ___ |___| ___  ___ |___|
+                             Jun  Jul  Aug  Sep  Oct  Nov  Dec
+
+        To customize this output, the context key "fill_temporal" can be used
+        under its dictionary format, which has 3 attributes : fill_from,
+        fill_to, min_groups (see params of this function)
+
+        Fill between bounds:
+        Using either `fill_from` and/or `fill_to` attributes, we can further
+        specify that at least a certain date range should be returned as
+        contiguous groups. Any group outside those bounds will not be removed,
+        but the filling will only occur between the specified bounds. When not
+        specified, existing groups will be used as bounds, if applicable.
+        By specifying such bounds, we can get empty groups before/after any
+        group with data.
+
+        If we want to fill groups only between August (fill_from)
+        and October (fill_to):
                                                      ___
                                  ___                |   |
-                                |   |               |   |
-                                |   | ___           |   |
-                                |   ||   |          |   |
-                                |___||___| ___  ___ |___|
-                                 Aug  Sep  Oct  Nov  Dec
+                                |   |      ___      |   |
+                                |___| ___ |___| ___ |___|
+                                 Jun  Aug  Sep  Oct  Dec
+
+        We still get June and December. To filter them out, we should match
+        `fill_from` and `fill_to` with the domain e.g. ['&',
+            ('date_field', '>=', 'YYYY-08-01'),
+            ('date_field', '<', 'YYYY-11-01')]:
+                                         ___
+                                    ___ |___| ___
+                                    Aug  Sep  Oct
+
+        Minimal filling amount:
+        Using `min_groups`, we can specify that we want at least that amount of
+        contiguous groups. This amount is guaranteed to be provided from
+        `fill_from` if specified, or from the lowest existing group otherwise.
+        This amount is not restricted by `fill_to`. If there is an existing
+        group before `fill_from`, `fill_from` is still used as the starting
+        group for min_groups, because the filling does not apply on that
+        existing group. If neither `fill_from` nor `fill_to` is specified, and
+        there is no existing group, no group will be returned.
+
+        If we set min_groups = 4:
+                                         ___
+                                    ___ |___| ___ ___
+                                    Aug  Sep  Oct Nov
 
         :param list data: the data containing groups
         :param list groupby: name of the first group by
         :param list aggregated_fields: list of aggregated fields in the query
-        :param relativedelta interval: interval between two temporal groups
-                expressed as a relativedelta month by default
+        :param str fill_from: (inclusive) string representation of a
+            date/datetime, start bound of the fill_temporal range
+            formats: date -> %Y-%m-%d, datetime -> %Y-%m-%d %H:%M:%S
+        :param str fill_to: (inclusive) string representation of a
+            date/datetime, end bound of the fill_temporal range
+            formats: date -> %Y-%m-%d, datetime -> %Y-%m-%d %H:%M:%S
+        :param int min_groups: minimal amount of required groups for the
+            fill_temporal range (should be >= 1)
         :rtype: list
         :return: list
         """
         first_a_gby = annotated_groupbys[0]
-        if not data:
-            return data
         if first_a_gby['type'] not in ('date', 'datetime'):
             return data
         interval = first_a_gby['interval']
+        granularity = first_a_gby['granularity']
+        tz = pytz.timezone(self._context['tz']) if first_a_gby["tz_convert"] else False
         groupby_name = groupby[0]
 
         # existing non null datetimes
-        existing = [d[groupby_name] for d in data if d[groupby_name]]
+        existing = [d[groupby_name] for d in data if d[groupby_name]] or [None]
+        # assumption: existing data is sorted by field 'groupby_name'
+        existing_from, existing_to = existing[0], existing[-1]
 
-        if len(existing) < 2:
+        if fill_from:
+            fill_from = date_utils.start_of(odoo.fields.Datetime.to_datetime(fill_from), granularity)
+            if tz:
+                fill_from = tz.localize(fill_from)
+        elif existing_from:
+            fill_from = existing_from
+        if fill_to:
+            fill_to = date_utils.start_of(odoo.fields.Datetime.to_datetime(fill_to), granularity)
+            if tz:
+                fill_to = tz.localize(fill_to)
+        elif existing_to:
+            fill_to = existing_to
+
+        if not fill_to and fill_from:
+            fill_to = fill_from
+        if not fill_from and fill_to:
+            fill_from = fill_to
+        if not fill_from and not fill_to:
             return data
 
-        # assumption: existing data is sorted by field 'groupby_name'
-        first, last = existing[0], existing[-1]
+        if min_groups > 0:
+            fill_to = max(fill_to, fill_from + (min_groups - 1) * interval)
+
+        if fill_to < fill_from:
+            return data
+
+        required_dates = date_utils.date_range(fill_from, fill_to, interval)
+
+        if existing[0] is None:
+            existing = list(required_dates)
+        else:
+            existing = sorted(set().union(existing, required_dates))
 
         empty_item = {'id': False, (groupby_name.split(':')[0] + '_count'): 0}
         empty_item.update({key: False for key in aggregated_fields})
@@ -2110,8 +2185,7 @@ class BaseModel(metaclass=MetaModel):
             grouped_data[d[groupby_name]].append(d)
 
         result = []
-
-        for dt in date_utils.date_range(first, last, interval):
+        for dt in existing:
             result.extend(grouped_data[dt] or [dict(empty_item, **{groupby_name: dt})])
 
         if False in grouped_data:
@@ -2223,6 +2297,7 @@ class BaseModel(metaclass=MetaModel):
             'type': field_type,
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
             'interval': time_intervals[gb_function or 'month'] if temporal else None,
+            'granularity': gb_function or 'month' if temporal else None,
             'tz_convert': tz_convert,
             'qualified_field': qualified_field,
         }
@@ -2503,9 +2578,15 @@ class BaseModel(metaclass=MetaModel):
 
         data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
 
-        if self.env.context.get('fill_temporal') and data:
+        fill_temporal = self.env.context.get('fill_temporal')
+        if (data and fill_temporal) or isinstance(fill_temporal, dict):
+            # fill_temporal = {} is equivalent to fill_temporal = True
+            # if fill_temporal is a dictionary and there is no data, there is a chance that we
+            # want to display empty columns anyway, so we should apply the fill_temporal logic
+            if not isinstance(fill_temporal, dict):
+                fill_temporal = {}
             data = self._read_group_fill_temporal(data, groupby, aggregated_fields,
-                                                  annotated_groupbys)
+                                                  annotated_groupbys, **fill_temporal)
 
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
 
