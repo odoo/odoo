@@ -5,13 +5,16 @@ const searchUtils = require('web.searchUtils');
 const GraphView = require('web.GraphView');
 const testUtils = require('web.test_utils');
 const { sortBy } = require('web.utils');
-
 const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
+const legacyViewRegistry = require("web.view_registry");
+const { registry } = require("@web/core/registry");
 
 const { createView } = testUtils;
 const cpHelpers = testUtils.controlPanel;
 const patchDate = testUtils.mock.patchDate;
+
+const viewRegistry = registry.category("views");
 
 const { INTERVAL_OPTIONS, PERIOD_OPTIONS, COMPARISON_OPTIONS } = searchUtils;
 const INTERVAL_OPTION_IDS = Object.keys(INTERVAL_OPTIONS);
@@ -129,7 +132,7 @@ QUnit.module('Views', {
     }
 }, function () {
 
-    QUnit.module('GraphView');
+    QUnit.module('GraphView (legacy)');
 
     QUnit.test('simple graph rendering', async function (assert) {
         assert.expect(5);
@@ -807,6 +810,10 @@ QUnit.module('Views', {
                     </templates>
                 </kanban>`,
         };
+
+        viewRegistry.remove("graph");
+        legacyViewRegistry.add("graph", GraphView); // We want to test the legacy view that was not added to viewRegistry!
+        // (see end of registerView in legacy_views.js)
 
         const webClient = await createWebClient({ serverData });
 
@@ -1555,7 +1562,7 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
-    QUnit.module('GraphView: comparison mode', {
+    QUnit.module('GraphView: comparison mode (legacy)', {
         beforeEach: async function () {
             this.data.foo.records[0].date = '2016-12-15';
             this.data.foo.records[1].date = '2016-12-17';

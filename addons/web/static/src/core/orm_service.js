@@ -87,7 +87,7 @@ function validateArray(name, array) {
     }
 }
 
-class ORM {
+export class ORM {
     constructor(rpc, user) {
         this.rpc = rpc;
         this.user = user;
