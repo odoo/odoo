@@ -80,7 +80,7 @@ class Message(models.Model):
     author_id = fields.Many2one(
         'res.partner', 'Author', index=True, ondelete='set null',
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.")
-    author_avatar = fields.Binary("Author's avatar", related='author_id.image_128', readonly=False)
+    author_avatar = fields.Binary("Author's avatar", related='author_id.image_128', depends=['author_id'], readonly=False)
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
     partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
