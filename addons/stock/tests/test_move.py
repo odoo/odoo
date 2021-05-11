@@ -2431,6 +2431,55 @@ class StockMove(SavepointCase):
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.customer_location), 3.0)
 
+    def test_use_unreserved_move_line_4(self):
+        product_01 = self.env['product.product'].create({
+            'name': 'Product 01',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        product_02 = self.env['product.product'].create({
+            'name': 'Product 02',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.env['stock.quant']._update_available_quantity(product_01, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(product_02, self.stock_location, 1)
+
+        customer = self.env['res.partner'].create({'name': 'SuperPartner'})
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': customer.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+
+        p01_move = self.env['stock.move'].create({
+            'name': 'SuperMove01',
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'picking_id': picking.id,
+            'product_id': product_01.id,
+            'product_uom_qty': 1,
+            'product_uom': product_01.uom_id.id,
+        })
+        p02_move = self.env['stock.move'].create({
+            'name': 'SuperMove02',
+            'location_id': picking.location_id.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'picking_id': picking.id,
+            'product_id': product_02.id,
+            'product_uom_qty': 1,
+            'product_uom': product_02.uom_id.id,
+        })
+
+        picking.action_confirm()
+        picking.action_assign()
+        p01_move.product_uom_qty = 0
+        picking.do_unreserve()
+        picking.action_assign()
+        p01_move.product_uom_qty = 1
+        self.assertEqual(p01_move.state, 'confirmed')
+
     def test_edit_reserved_move_line_1(self):
         """ Test that editing a stock move line linked to an untracked product correctly and
         directly adapts the reservation. In this case, we edit the sublocation where we take the
