@@ -67,7 +67,7 @@ odoo.define('web.filter_menu_tests', function (require) {
 
             await cpHelpers.toggleFilterMenu(controlPanel);
             await cpHelpers.toggleAddCustomFilter(controlPanel);
-            const optionEls = controlPanel.el.querySelectorAll('div.o_filter_condition > select.o_generator_menu_field option');
+            const optionEls = controlPanel.el.querySelectorAll('div.o_filter_condition select.o_generator_menu_field option');
             assert.strictEqual(optionEls[0].innerText.trim(), 'Date');
             assert.strictEqual(optionEls[1].innerText.trim(), 'ID');
 
@@ -127,9 +127,9 @@ odoo.define('web.filter_menu_tests', function (require) {
             await cpHelpers.toggleAddCustomFilter(controlPanel);
             // choose ID field in 'Add Custome filter' menu and value 1
             await testUtils.fields.editSelect(
-                controlPanel.el.querySelector('div.o_filter_condition > select.o_generator_menu_field'), 'id');
+                controlPanel.el.querySelector('div.o_filter_condition select.o_generator_menu_field'), 'id');
             await testUtils.fields.editInput(
-                controlPanel.el.querySelector('div.o_filter_condition > span.o_generator_menu_value > input'), 1);
+                controlPanel.el.querySelector('div.o_filter_condition span.o_generator_menu_value > input'), 1);
 
             await cpHelpers.applyFilter(controlPanel);
 

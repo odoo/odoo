@@ -39,7 +39,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             await cpHelpers.toggleFavoriteMenu(controlPanel);
             assert.containsNone(controlPanel, '.dropdown-divider');
             assert.containsOnce(controlPanel, '.o_add_favorite');
-            assert.strictEqual(controlPanel.el.querySelector('.o_add_favorite > button').innerText.trim(),
+            assert.strictEqual(controlPanel.el.querySelector('.o_add_favorite > span').innerText.trim(),
                 "Save current search");
 
             await cpHelpers.toggleSaveFavorite(controlPanel);

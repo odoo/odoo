@@ -82,34 +82,45 @@
 
 // Filter menu
 .o_filter_menu {
-
     .o_filter_condition {
-        margin-bottom: 8px;
-        position: relative;
-
-        .o_or_filter { // or between conditions
-            @include o-position-absolute($top: 3px, $left: 4px);
+        &.o_filter_condition_with_buttons {
+            padding-right: 0;
+            padding-left: $dropdown-item-padding-x*1.5;
         }
 
-        .o_generator_menu_operator {
-            margin: 3px 0px; // vertical gap between selects
+        .o_or_filter {
+            @include o-position-absolute($left: $dropdown-item-padding-x*.5);
         }
 
-        .o_generator_menu_value { // date fields: datepicker position
+        .o_generator_menu_value {
+            color: $o-main-text-color; // avoid to inherit .dropdown-item style
+
             .datepickerbutton {
                 cursor: pointer;
                 @include o-position-absolute(3px, -20px);
             }
         }
 
-        .o_generator_menu_delete { // delete condition button position
-            cursor: pointer;
-            @include o-position-absolute($top: 6px, $right: 4px);
+        .o_generator_menu_delete {
+            @include o-hover-opacity;
+
+            &:before {
+                @include o-position-absolute(0, 0, 0, 0);
+                pointer-events: none;
+                z-index: -1;
+                content: "";
+            }
+
+            &:hover:before {
+                background-color: gray('100');
+            }
         }
     }
+    .o_add_condition {
+        line-height: 1.1;
 
-    .o_add_filter_menu { // apply and add buttons
-        display: flex;
-        justify-content: space-between;
+        .fa {
+            font-size: $font-size-lg;
+        }
     }
 }

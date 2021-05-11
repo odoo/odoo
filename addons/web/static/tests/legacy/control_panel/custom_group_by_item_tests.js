@@ -29,7 +29,7 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
             assert.hasClass(cgi.el, 'o_generator_menu');
             assert.strictEqual(cgi.el.children.length, 1);
 
-            await testUtils.dom.click(cgi.el.querySelector('.o_generator_menu button.o_add_custom_group_by'));
+            await testUtils.dom.click(cgi.el.querySelector('.o_generator_menu span.o_add_custom_group_by'));
 
             // Single select node with a single option
             assert.containsOnce(cgi, 'div > select.o_group_by_selector');
@@ -61,12 +61,12 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
                 env: { searchModel },
             });
 
-            await testUtils.dom.click(cgi.el.querySelector('.o_generator_menu button.o_add_custom_group_by'));
+            await testUtils.dom.click(cgi.el.querySelector('.o_generator_menu span.o_add_custom_group_by'));
             await testUtils.dom.click(cgi.el.querySelector('.o_generator_menu button.o_apply_group_by'));
 
             // The only thing visible should be the button 'Add Custome Group';
             assert.strictEqual(cgi.el.children.length, 1);
-            assert.containsOnce(cgi, 'button.o_add_custom_group_by');
+            assert.containsOnce(cgi, 'span.o_add_custom_group_by');
 
             cgi.destroy();
         });
