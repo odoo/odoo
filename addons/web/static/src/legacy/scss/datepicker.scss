@@ -92,17 +92,21 @@ div.dropdown-menu.bootstrap-datetimepicker-widget {
     }
 }
 
-.picker-switch {
-    font-size: $font-size-lg;
+.bootstrap-datetimepicker-widget {
+    .picker-switch {
+        font-size: $font-size-lg;
+    }
 
-    span.fa {
-        margin: 0;
-        @include transition($btn-transition);
-        &.primary {
-            background-color: $o-brand-primary;
-            color: white;
-            &:hover {
-                background-color: darken($o-brand-primary, 10%);
+    .accordion-toggle {
+        span.fa {
+            margin: 0;
+            border-radius: 0;
+            color: $o-main-text-color;
+            border-top: 1px solid $border-color;
+            box-shadow: 0 1px 0 $border-color; // overlaps with main box border
+
+            &.primary {
+                color: $o-brand-primary;
             }
         }
     }
