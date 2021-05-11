@@ -434,6 +434,12 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.mobile, self.test_phone_data[2])
         self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[2])
 
+        # updating country should trigger sanitize computation
+        lead.write({'country_id': self.env.ref('base.be').id})
+        self.assertEqual(lead.phone, self.test_phone_data[1])
+        self.assertEqual(lead.mobile, self.test_phone_data[2])
+        self.assertFalse(lead.phone_sanitized)
+
     @users('user_sales_manager')
     def test_phone_mobile_search(self):
         lead_1 = self.env['crm.lead'].create({
