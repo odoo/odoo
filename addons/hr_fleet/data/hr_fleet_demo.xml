@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet.vehicle_1" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_qdp"/>
+    </record>
+    <!-- Link addresses linked to cars to employees, ease migration from external to internal -->
+    <record id="hr.employee_hne" model="hr.employee">
+        <field name="address_home_id" ref="base.res_partner_address_25"/>
+    </record>
+    <record id="hr.employee_fpi" model="hr.employee">
+        <field name="address_home_id" ref="base.res_partner_address_17"/>
+    </record>
+    <record id="hr.employee_jog" model="hr.employee">
+        <field name="address_home_id" ref="base.res_partner_address_16"/>
+    </record>
+    <record id="hr.employee_jep" model="hr.employee">
+        <field name="address_home_id" ref="base.res_partner_address_15"/>
+    </record>
+
+    <record id="fleet.vehicle_2" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_hne"/>
+    </record>
+    <record id="fleet.vehicle_3" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_fpi"/>
+    </record>
+    <record id="fleet.vehicle_4" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_jog"/>
+    </record>
+    <record id="fleet.vehicle_5" model="fleet.vehicle">
+        <field name="driver_employee_id" ref="hr.employee_jep"/>
+    </record>
+</odoo>
