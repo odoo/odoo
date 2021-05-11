@@ -17,4 +17,5 @@ class ResPartner(models.Model):
     def _sms_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to
         send an SMS on a record. """
+        # TDE note: should override _phone_get_number_fields but ok as sms override it
         return ['mobile', 'phone']
