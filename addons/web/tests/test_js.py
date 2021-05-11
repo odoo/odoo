@@ -16,15 +16,19 @@ class WebSuite(odoo.tests.HttpCase):
 
     def test_check_suite(self):
         # verify no js test is using `QUnit.only` as it forbid any other test to be executed
-        self._check_only_call('qunit_suite_tests')
-        self._check_only_call('qunit_mobile_suite_tests')
+        self._check_only_call('web.qunit_suite_tests')
+        self._check_only_call('web.qunit_mobile_suite_tests')
 
     def _check_only_call(self, suite):
         # As we currently aren't in a request context, we can't render `web.layout`.
         # redefinied it as a minimal proxy template.
         self.env.ref('web.layout').write({'arch_db': '<t t-name="web.layout"><head><meta charset="utf-8"/><t t-esc="head"/></head></t>'})
 
-        for asset in self.env['ir.qweb']._get_asset_content(suite, options={})[0]:
+        assets = self.env['ir.qweb']._get_asset_content(suite, options={})[0]
+        if len(assets) == 0:
+            self.fail("No assets found in the given test suite")
+
+        for asset in assets:
             filename = asset['filename']
             if not filename or asset['atype'] != 'text/javascript':
                 continue
