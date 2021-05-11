@@ -15,7 +15,7 @@ class CrmTeamMember(models.Model):
     crm_team_id = fields.Many2one(
         'crm.team', string='Sales Team',
         default=False,  # TDE: temporary fix to activate depending computed fields
-        check_company=True, index=True, required=True)
+        check_company=True, index=True, ondelete="cascade", required=True)
     user_id = fields.Many2one(
         'res.users', string='Salesperson',  # TDE FIXME check responsible field
         check_company=True, index=True, ondelete='cascade', required=True,

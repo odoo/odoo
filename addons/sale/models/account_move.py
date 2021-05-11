@@ -14,6 +14,7 @@ class AccountMove(models.Model):
 
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', default=_get_invoice_default_sale_team,
+        ondelete="set null", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_shipping_id = fields.Many2one(
         'res.partner',
