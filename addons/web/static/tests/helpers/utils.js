@@ -86,10 +86,82 @@ function findElement(el, selector) {
     return target;
 }
 
-export function triggerEvent(el, selector, eventType, eventAttrs) {
+const keyboardEventBubble = (args) =>
+    Object.assign({}, args, { bubbles: true, keyCode: args.which });
+
+const mouseEventMapping = (args) =>
+    Object.assign({}, args, {
+        bubbles: true,
+        cancelable: true,
+        clientX: args ? args.pageX : undefined,
+        clientY: args ? args.pageY : undefined,
+        view: window,
+    });
+
+const mouseEventNoBubble = (args) =>
+    Object.assign({}, args, {
+        bubbles: false,
+        cancelable: false,
+        clientX: args ? args.pageX : undefined,
+        clientY: args ? args.pageY : undefined,
+        view: window,
+    });
+
+const noBubble = (args) => Object.assign({}, args, { bubbles: false });
+
+const onlyBubble = (args) => Object.assign({}, args, { bubbles: true });
+
+// TriggerEvent constructor/args processor mapping
+const EVENT_TYPES = {
+    auxclick: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    click: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    contextmenu: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    dblclick: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    mousedown: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    mouseup: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    mousemove: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    mouseenter: { constructor: MouseEvent, processParameters: mouseEventNoBubble },
+    mouseleave: { constructor: MouseEvent, processParameters: mouseEventNoBubble },
+    mouseover: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    mouseout: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    focus: { constructor: FocusEvent, processParameters: noBubble },
+    focusin: { constructor: FocusEvent, processParameters: onlyBubble },
+    blur: { constructor: FocusEvent, processParameters: noBubble },
+    cut: { constructor: ClipboardEvent, processParameters: onlyBubble },
+    copy: { constructor: ClipboardEvent, processParameters: onlyBubble },
+    paste: { constructor: ClipboardEvent, processParameters: onlyBubble },
+    keydown: { constructor: KeyboardEvent, processParameters: keyboardEventBubble },
+    keypress: { constructor: KeyboardEvent, processParameters: keyboardEventBubble },
+    keyup: { constructor: KeyboardEvent, processParameters: keyboardEventBubble },
+    drag: { constructor: DragEvent, processParameters: onlyBubble },
+    dragend: { constructor: DragEvent, processParameters: onlyBubble },
+    dragenter: { constructor: DragEvent, processParameters: onlyBubble },
+    dragstart: { constructor: DragEvent, processParameters: onlyBubble },
+    dragleave: { constructor: DragEvent, processParameters: onlyBubble },
+    dragover: { constructor: DragEvent, processParameters: onlyBubble },
+    drop: { constructor: DragEvent, processParameters: onlyBubble },
+    input: { constructor: InputEvent, processParameters: onlyBubble },
+    compositionstart: { constructor: CompositionEvent, processParameters: onlyBubble },
+    compositionend: { constructor: CompositionEvent, processParameters: onlyBubble },
+};
+
+export async function triggerEvent(el, selector, eventType, eventAttrs = {}) {
+    let event;
+    if (eventType in EVENT_TYPES) {
+        const { constructor, processParameters } = EVENT_TYPES[eventType];
+        event = new constructor(eventType, processParameters(eventAttrs));
+    } else {
+        event = new Event(eventType, Object.assign({}, eventAttrs, { bubbles: true }));
+    }
     const target = findElement(el, selector);
-    target.dispatchEvent(new Event(eventType, eventAttrs));
-    return nextTick();
+    target.dispatchEvent(event);
+    await nextTick();
+}
+
+export async function triggerEvents(el, querySelector, events) {
+    for (let e = 0; e < events.length; e++) {
+        await triggerEvent(el, querySelector, events[e]);
+    }
 }
 
 export function click(el, selector) {
