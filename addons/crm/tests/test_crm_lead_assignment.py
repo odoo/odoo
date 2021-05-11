@@ -151,6 +151,8 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.members.invalidate_cache(fnames=['lead_month_count'])
         self.assertEqual(self.sales_team_1_m3.lead_month_count, 12)
 
+        # sales_team_1_m2 is opt-out (new field in 14.3) -> even with max, no lead assigned
+        self.sales_team_1_m2.update({'assignment_max': 45, 'assignment_optout': True})
         with self.with_user('user_sales_manager'):
             self.env['crm.team'].browse(self.sales_team_1.ids)._action_assign_leads(work_days=4)
 
