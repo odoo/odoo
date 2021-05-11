@@ -106,6 +106,12 @@ class AccountEdiFormat(models.Model):
     # Import
     ####################################################
 
+    def _get_bis3_namespaces(self):
+        return {
+            'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
+            'cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2',
+        }
+
     def _bis3_get_extra_partner_domains(self, tree):
         """ Returns an additional domain to find the partner of the invoice based on specific implementation of BIS3.
         TO OVERRIDE
