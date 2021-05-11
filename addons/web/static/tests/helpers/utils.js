@@ -23,8 +23,11 @@ export function patchDate(year, month, day, hours, minutes, seconds) {
     const actualDate = new Date();
     const fakeDate = new Date(year, month, day, hours, minutes, seconds);
     const timeInterval = actualDate.getTime() - fakeDate.getTime();
+    const originalNow = Settings.now;
     Settings.now = () => Date.now() - timeInterval;
-    registerCleanup(() => Settings.resetCaches());
+    registerCleanup(() => {
+        Settings.now = originalNow;
+    });
 }
 
 let nextId = 1;
