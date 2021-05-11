@@ -82,9 +82,11 @@
                     <cac:SellersItemIdentification t-if="line.product_id.default_code">
                         <cbc:ID t-esc="line.product_id.default_code"/>
                     </cac:SellersItemIdentification>
-                    <cac:ClassifiedTaxCategory>
-                        <cbc:ID t-esc="line_vals['tax_detail_vals']['tax_category']"/>
-                        <cbc:Percent t-esc="line_vals['tax_detail_vals']['tax_percent']"/>
+                    <cac:ClassifiedTaxCategory
+                            t-foreach="tax_details['invoice_line_tax_details'][line]['tax_details'].values()"
+                            t-as="tax_detail_vals">
+                        <cbc:ID t-esc="tax_detail_vals['tax_category']"/>
+                        <cbc:Percent t-esc="tax_detail_vals['tax_percent']"/>
                         <cac:TaxScheme>
                             <cbc:ID>VAT</cbc:ID>
                         </cac:TaxScheme>
@@ -139,14 +141,14 @@
                 <cac:TaxTotal>
                     <cbc:TaxAmount
                         t-att-currencyID="record.currency_id.name"
-                        t-esc="format_monetary(total_tax_amount_currency)"/>
-                    <cac:TaxSubtotal t-foreach="tax_detail_vals_list" t-as="tax_detail_vals">
+                        t-esc="format_monetary(balance_multiplicator * tax_details['tax_amount_currency'])"/>
+                    <cac:TaxSubtotal t-foreach="tax_details['tax_details'].values()" t-as="tax_detail_vals">
                         <cbc:TaxableAmount
                                 t-att-currencyID="record.currency_id.name"
-                                t-esc="format_monetary(tax_detail_vals['base_currency'])"/>
+                                t-esc="format_monetary(balance_multiplicator * tax_detail_vals['base_amount_currency'])"/>
                         <cbc:TaxAmount
                                 t-att-currencyID="record.currency_id.name"
-                                t-esc="format_monetary(tax_detail_vals['amount_currency'])"/>
+                                t-esc="format_monetary(balance_multiplicator * tax_detail_vals['tax_amount_currency'])"/>
                         <cac:TaxCategory>
                             <cbc:ID t-esc="tax_detail_vals['tax_category']"/>
                             <cbc:Percent t-esc="tax_detail_vals['tax_percent']"/>
@@ -159,7 +161,7 @@
                 <cac:TaxTotal t-if="record.currency_id != record.company_currency_id">
                     <cbc:TaxAmount
                         t-att-currencyID="record.company_currency_id.name"
-                        t-esc="format_monetary(total_tax_amount)"/>
+                        t-esc="format_monetary(balance_multiplicator * tax_details['tax_amount'])"/>
                 </cac:TaxTotal>
                 <cac:LegalMonetaryTotal>
                     <cbc:LineExtensionAmount

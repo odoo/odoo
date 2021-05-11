@@ -59,6 +59,7 @@ class AccountEdiFormat(models.Model):
         # Create file content.
         template_values = {
             **invoice._prepare_edi_vals_to_export(),
+            'tax_details': invoice._prepare_edi_tax_details(),
             'format_date': format_date,
             'format_monetary': format_monetary,
             'is_html_empty': is_html_empty,
