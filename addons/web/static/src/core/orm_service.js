@@ -128,20 +128,6 @@ class ORM {
         return this.call(model, "read", [ids, fields], { context: ctx });
     }
 
-    readGroup(model, domain, fields, groupby, options = {}, ctx = {}) {
-        validatePrimitiveList("fields", "string", fields);
-        validatePrimitiveList("groupby", "string", groupby);
-        validateArray("domain", domain);
-        const kwargs = {
-            domain,
-            groupby,
-            fields,
-            context: ctx,
-        };
-        assignOptions(kwargs, options, ["lazy", "offset", "orderby", "limit"]);
-        return this.call(model, "web_read_group", [], kwargs);
-    }
-
     search(model, domain, options = {}, ctx = {}) {
         validateArray("domain", domain);
         const kwargs = {
@@ -167,6 +153,20 @@ class ORM {
             return true;
         }
         return this.call(model, "unlink", [ids], { context: ctx });
+    }
+
+    webReadGroup(model, domain, fields, groupby, options = {}, ctx = {}) {
+        validatePrimitiveList("fields", "string", fields);
+        validatePrimitiveList("groupby", "string", groupby);
+        validateArray("domain", domain);
+        const kwargs = {
+            domain,
+            groupby,
+            fields,
+            context: ctx,
+        };
+        assignOptions(kwargs, options, ["lazy", "offset", "orderby", "limit"]);
+        return this.call(model, "web_read_group", [], kwargs);
     }
 
     webSearchRead(model, domain, fields, options = {}, ctx = {}) {

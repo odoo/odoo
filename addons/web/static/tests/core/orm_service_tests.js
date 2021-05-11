@@ -155,11 +155,11 @@ QUnit.test("write method", async (assert) => {
     });
 });
 
-QUnit.test("readGroup method", async (assert) => {
+QUnit.test("webReadGroup method", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
-    await env.services.orm.readGroup(
+    await env.services.orm.webReadGroup(
         "sale.order",
         [["user_id", "=", 2]],
         ["amount_total:sum"],

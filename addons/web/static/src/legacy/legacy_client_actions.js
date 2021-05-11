@@ -42,7 +42,7 @@ function registerClientAction(name, action) {
                     this.props.state && this.props.state.__on_reverse_breadcrumb__;
                 useSetupAction({
                     beforeLeave: () => this.controllerRef.comp.__widget.canBeRemoved(),
-                    export: () => this.controllerRef.comp.exportState(),
+                    exportState: () => this.controllerRef.comp.exportState(),
                 });
                 this.onScrollTo = (ev) => {
                     setScrollPosition(this, { left: ev.detail.left, top: ev.detail.top });

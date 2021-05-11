@@ -5,7 +5,10 @@ import { registry } from "@web/core/registry";
 
 const debugRegistry = registry.category("debug");
 
-function actionSeparator() {
+function actionSeparator({ action }) {
+    if (!action.id || !action.res_model) {
+        return null;
+    }
     return {
         type: "separator",
         sequence: 100,
@@ -182,12 +185,12 @@ function viewRecordRules({ accessRights, action, env }) {
 }
 
 debugRegistry
-.category("action")
-.add("actionSeparator", actionSeparator)
-.add("editAction", editAction)
-.add("viewFields", viewFields)
-.add("manageFilters", manageFilters)
-.add("technicalTranslation", technicalTranslation)
-.add("accessSeparator", accessSeparator)
-.add("viewAccessRights", viewAccessRights)
-.add("viewRecordRules", viewRecordRules);
+    .category("action")
+    .add("actionSeparator", actionSeparator)
+    .add("editAction", editAction)
+    .add("viewFields", viewFields)
+    .add("manageFilters", manageFilters)
+    .add("technicalTranslation", technicalTranslation)
+    .add("accessSeparator", accessSeparator)
+    .add("viewAccessRights", viewAccessRights)
+    .add("viewRecordRules", viewRecordRules);

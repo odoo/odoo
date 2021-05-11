@@ -498,5 +498,6 @@ odoo.define('web.test.x2many', function (require) {
         content: "cancel change",
         trigger: '.o_cp_buttons .o_form_button_cancel',
         run: 'click',
-    }]);
+    }
+]);
 });
