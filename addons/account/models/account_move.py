@@ -203,6 +203,7 @@ class AccountMove(models.Model):
     payment_reference = fields.Char(string='Payment Reference', index=True, copy=False,
         help="The payment reference to set on journal items.")
     payment_id = fields.Many2one(
+        index=True,
         comodel_name='account.payment',
         string="Payment", copy=False, check_company=True)
     statement_line_id = fields.Many2one(
