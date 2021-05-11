@@ -67,6 +67,7 @@
                         <group string="Driver">
                             <field name="active" invisible="1"/>
                             <field name="vehicle_type" invisible="1"/>
+                            <field name="fleet_id" widget="many2one_fleet_category"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]"/>
                             <field name="future_driver_id"/>
                             <field name="plan_to_change_car" groups="fleet.fleet_group_manager" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
@@ -139,23 +140,26 @@
             <tree string="Vehicle" 
                 decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue"
                 decoration-danger="contract_renewal_overdue"
+                multi_edit="1"
                 sample="1">
                 <field name="active" invisible="1"/>
-                <field name="license_plate"/>
-                <field name="model_id" widget="many2one_avatar" />
-                <field name="driver_id" widget="many2one_avatar"/>
-                <field name="future_driver_id"  widget="many2one_avatar"/>
+                <field name="license_plate" readonly="1"/>
+                <field name="model_id" widget="many2one_avatar" readonly="1"/>
+                <field name="fleet_id" widget="many2one_fleet_category" options="{'no_open': True}"/>
+                <field name="driver_id" widget="many2one_avatar" readonly="1"/>
+                <field name="future_driver_id"  widget="many2one_avatar" readonly="1"/>
                 <field name="log_drivers" invisible="1"/>
-                <field name="vin_sn"/>
-                <field name="co2" string="CO2 Emissions g/km" optional="hide" />
-                <field name="acquisition_date"/>
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                <field name="state_id" widget="badge" />
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="vin_sn" readonly="1"/>
+                <field name="co2" string="CO2 Emissions g/km" optional="hide"  readonly="1"/>
+                <field name="acquisition_date" readonly="1"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
+                <field name="state_id" widget="badge" readonly="1"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                 <field name="contract_renewal_due_soon" invisible="1"/>
                 <field name="contract_renewal_overdue" invisible="1"/>
                 <field name="contract_renewal_total" invisible="1"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
+                <field name="manager_id" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -168,13 +172,11 @@
                 <field string="Vehicle" name="name" filter_domain="['|', ('name', 'ilike', self), ('license_plate', 'ilike', self)]"/>
                 <field string="Drivers" name="log_drivers" filter_domain="[('log_drivers.driver_id.name', 'ilike', self)]"/>
                 <field string="Current Driver" name="driver_id"/>
-                <field name="model_id"/>
-                <field name="future_driver_id"/>
                 <field name="tag_ids"/>
-                <field name="location"/>
                 <field string="Status" name="state_id"/>
                 <filter string="Available" name="available"
                     domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), '|', '&amp;', ('plan_to_change_car', '=', True), ('vehicle_type', '=', 'car'), '&amp;', ('plan_to_change_bike', '=', True), ('vehicle_type', '=', 'bike')]"/>
+                <filter name="no_fleet" string="No Fleet" domain="[('fleet_id', '=', False)]"/>
                 <filter string="Bikes" name="bikes" domain="[('vehicle_type', '=', 'bike')]"/>
                 <filter string="Cars" name="cars" domain="[('vehicle_type', '=', 'car')]"/>
                 <filter string="Trailer Hook" name="trailer_hook" domain="[('trailer_hook', '=', True)]"/>
@@ -315,8 +317,9 @@
         </field>
     </record>
 
-    <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2" groups="fleet_group_user"/>
-    <menuitem action="fleet_vehicle_action" parent="fleet_vehicles" id="fleet_vehicle_menu" groups="fleet_group_user" sequence="1"/>
+    <menuitem name="Fleet" parent="menu_root" id="fleet_vehicles" sequence="2" groups="fleet_group_user"/>
+    <menuitem action="fleet_vehicle_action" parent="fleet_vehicles" name="Search"
+        id="fleet_vehicle_menu" groups="fleet_group_user" sequence="0"/>
 
    <record id='fleet_vehicle_odometer_view_form' model='ir.ui.view'>
         <field name="name">fleet.vehicle.odometer.form</field>

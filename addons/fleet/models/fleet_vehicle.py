@@ -20,7 +20,20 @@ class FleetVehicle(models.Model):
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     description = fields.Html("Vehicle Description")
     active = fields.Boolean('Active', default=True, tracking=True)
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+    fleet_id = fields.Many2one('fleet.category', string='Fleet')
+    manager_id = fields.Many2one(
+        'res.users', 'Manager',
+        compute='_compute_manager_id', store=True, readonly=False,
+        domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)],
+    )
+    #Company should always be the same as fleet_id, but since we do have a case where fleet_id is null
+    # and we want the vehicle to be company bound we need to store it aswell, fleet_id.company_id is not editable
+    company_id = fields.Many2one(
+        'res.company', 'Company',
+        compute='_compute_company_id',
+        default=lambda self: self.env.company,
+        store=True,
+    )
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     license_plate = fields.Char(tracking=True,
         help='License plate number of the vehicle (i = plate number for a car)')
@@ -30,7 +43,6 @@ class FleetVehicle(models.Model):
     future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         tracking=True, required=True, help='Model of the vehicle')
-    manager_id = fields.Many2one('res.users', 'Fleet Manager', domain=lambda self: [('groups_id', 'in', self.env.ref('fleet.fleet_group_manager').id)])
 
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignment Logs')
@@ -95,6 +107,18 @@ class FleetVehicle(models.Model):
     frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], help="Frame type of the bike")
     electric_assistance = fields.Boolean()
     frame_size = fields.Float()
+
+    @api.depends('fleet_id')
+    def _compute_manager_id(self):
+        for record in self:
+            record.manager_id = record.fleet_id.manager_id
+
+    @api.depends('fleet_id')
+    def _compute_company_id(self):
+        for record in self:
+            # Retain company when fleet is unset
+            if record.fleet_id:
+                record.company_id = record.fleet_id.company_id
 
     @api.depends('vehicle_type')
     def _compute_doors(self):
@@ -223,7 +247,7 @@ class FleetVehicle(models.Model):
         if ptc_value:
             res.sudo().write(ptc_value)
         if 'driver_id' in vals and vals['driver_id']:
-            res.create_driver_history(vals['driver_id'])
+            res.create_driver_history(vals)
         if 'future_driver_id' in vals and vals['future_driver_id']:
             state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
             states = res.mapped('state_id').ids
@@ -239,7 +263,7 @@ class FleetVehicle(models.Model):
         if 'driver_id' in vals and vals['driver_id']:
             driver_id = vals['driver_id']
             for vehicle in self.filtered(lambda v: v.driver_id.id != driver_id):
-                vehicle.create_driver_history(driver_id)
+                vehicle.create_driver_history(vals)
                 if vehicle.driver_id:
                     vehicle.activity_schedule(
                         'mail.mail_activity_data_todo',
@@ -259,13 +283,19 @@ class FleetVehicle(models.Model):
         res = super(FleetVehicle, self).write(vals)
         return res
 
-    def create_driver_history(self, driver_id):
+    def _get_driver_history_data(self, vals):
+        self.ensure_one()
+        return {
+            'vehicle_id': self.id,
+            'driver_id': vals['driver_id'],
+            'date_start': fields.Date.today(),
+        }
+
+    def create_driver_history(self, vals):
         for vehicle in self:
-            self.env['fleet.vehicle.assignation.log'].create({
-                'vehicle_id': vehicle.id,
-                'driver_id': driver_id,
-                'date_start': fields.Date.today(),
-            })
+            self.env['fleet.vehicle.assignation.log'].create(
+                vehicle._get_driver_history_data(vals),
+            )
 
     def action_accept_driver_change(self):
         # Find all the vehicles for which the driver is the future_driver_id
