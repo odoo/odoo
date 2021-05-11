@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:29+0000\n"
-"PO-Revision-Date: 2021-02-18 14:29+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -189,12 +189,17 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__package_carrier_type
+#: model:ir.model.fields,field_description:delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_tree
 msgid "Carrier"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_package_type__shipper_package_code
+msgid "Carrier Code"
 msgstr ""
 
 #. module: delivery
@@ -272,11 +277,6 @@ msgid "Define a new delivery method"
 msgstr ""
 
 #. module: delivery
-#: model:ir.ui.menu,name:delivery.menu_delivery
-msgid "Delivery"
-msgstr ""
-
-#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
 msgstr ""
@@ -311,16 +311,8 @@ msgid "Delivery Package Selection Wizard"
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
-#: model:ir.ui.menu,name:delivery.menu_delivery_packagings
-#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
-msgid "Delivery Packages"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
-#: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
-msgid "Delivery Packaging"
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
+msgid "Delivery Package Type"
 msgstr ""
 
 #. module: delivery
@@ -355,8 +347,18 @@ msgid "Delivery cost should be recomputed"
 msgstr ""
 
 #. module: delivery
+#: model_terms:ir.ui.view,arch_db:delivery.vpicktree_view_tree
+msgid "Destination"
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
+msgid "Destination Country"
 msgstr ""
 
 #. module: delivery
@@ -375,13 +377,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_template__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
 #: model:ir.model.fields,field_description:delivery.field_sale_order__display_name
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:delivery.field_stock_move__display_name
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:delivery.field_stock_package_type__display_name
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__display_name
 #: model:ir.model.fields,field_description:delivery.field_stock_return_picking__display_name
@@ -482,27 +484,17 @@ msgid "HS Code"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__height
-msgid "Height"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_height
-msgid "Height must be positive"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__id
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__id
 #: model:ir.model.fields,field_description:delivery.field_product_template__id
 #: model:ir.model.fields,field_description:delivery.field_res_partner__id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__id
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__id
 #: model:ir.model.fields,field_description:delivery.field_stock_move__id
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line__id
+#: model:ir.model.fields,field_description:delivery.field_stock_package_type__id
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__id
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__id
 #: model:ir.model.fields,field_description:delivery.field_stock_return_picking__id
@@ -551,13 +543,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package____last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier____last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule____last_update
-#: model:ir.model.fields,field_description:delivery.field_product_packaging____last_update
 #: model:ir.model.fields,field_description:delivery.field_product_template____last_update
 #: model:ir.model.fields,field_description:delivery.field_res_partner____last_update
 #: model:ir.model.fields,field_description:delivery.field_sale_order____last_update
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line____last_update
 #: model:ir.model.fields,field_description:delivery.field_stock_move____last_update
 #: model:ir.model.fields,field_description:delivery.field_stock_move_line____last_update
+#: model:ir.model.fields,field_description:delivery.field_stock_package_type____last_update
 #: model:ir.model.fields,field_description:delivery.field_stock_picking____last_update
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package____last_update
 #: model:ir.model.fields,field_description:delivery.field_stock_return_picking____last_update
@@ -581,21 +573,6 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__packaging_length
-msgid "Length"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_length
-msgid "Length must be positive"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__length_uom_name
-msgid "Length unit of measure label"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
 msgstr ""
@@ -616,23 +593,8 @@ msgid "Margin on Rate"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__max_weight
-msgid "Max Weight"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_max_weight
-msgid "Max Weight must be positive"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,help:delivery.field_product_packaging__max_weight
-msgid "Maximum weight shippable in this packaging"
 msgstr ""
 
 #. module: delivery
@@ -641,7 +603,7 @@ msgid "Name"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields.selection,name:delivery.selection__product_packaging__package_carrier_type__none
+#: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
 msgstr ""
 
@@ -669,11 +631,6 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__shipper_package_code
-msgid "Package Code"
 msgstr ""
 
 #. module: delivery
@@ -730,11 +687,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_product_packaging
-msgid "Product Packaging"
 msgstr ""
 
 #. module: delivery
@@ -883,6 +835,18 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_package_type
+msgid "Stock package type"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_picking__destination_country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
 msgstr ""
 
 #. module: delivery
@@ -1055,20 +1019,9 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__weight_uom_name
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_product_packaging__width
-msgid "Width"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model.constraint,message:delivery.constraint_product_packaging_positive_width
-msgid "Width must be positive"
 msgstr ""
 
 #. module: delivery

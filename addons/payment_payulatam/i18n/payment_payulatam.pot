@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,9 +28,27 @@ msgid "ID"
 msgstr ""
 
 #. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid payment status."
+msgstr ""
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Invalid sign: received %(sign)s, computed %(check)s."
+msgstr ""
+
+#. module: payment_payulatam
 #: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer____last_update
 #: model:ir.model.fields,field_description:payment_payulatam.field_payment_transaction____last_update
 msgid "Last Modified on"
+msgstr ""
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_payulatam
@@ -54,26 +72,6 @@ msgid "PayU Latam Merchant ID"
 msgstr ""
 
 #. module: payment_payulatam
-#: code:addons/payment_payulatam/models/payment.py:0
-#, python-format
-msgid "PayU Latam: received data for reference %s; multiple orders found"
-msgstr ""
-
-#. module: payment_payulatam
-#: code:addons/payment_payulatam/models/payment.py:0
-#, python-format
-msgid "PayU Latam: received data for reference %s; no order found"
-msgstr ""
-
-#. module: payment_payulatam
-#: code:addons/payment_payulatam/models/payment.py:0
-#, python-format
-msgid ""
-"PayU Latam: received data with missing reference (%s) or transaction id (%s)"
-" or sign (%s)"
-msgstr ""
-
-#. module: payment_payulatam
 #: model:ir.model,name:payment_payulatam.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr ""
@@ -86,4 +84,26 @@ msgstr ""
 #. module: payment_payulatam
 #: model:ir.model.fields,field_description:payment_payulatam.field_payment_acquirer__provider
 msgid "Provider"
+msgstr ""
+
+#. module: payment_payulatam
+#: code:addons/payment_payulatam/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing reference (%(ref)s) or sign (%(sign)s)."
+msgstr ""
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__payulatam_merchant_id
+msgid "The ID solely used to identify the account with PayULatam"
+msgstr ""
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__payulatam_account_id
+msgid ""
+"The ID solely used to identify the country-dependent shop with PayULatam"
+msgstr ""
+
+#. module: payment_payulatam
+#: model:ir.model.fields,help:payment_payulatam.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
