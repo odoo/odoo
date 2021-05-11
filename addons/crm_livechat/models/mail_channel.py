@@ -24,7 +24,6 @@ class MailChannel(models.Model):
     def _convert_visitor_to_lead(self, partner, key):
         """ Create a lead from channel /lead command
         :param partner: internal user partner (operator) that created the lead;
-        :param channel_partners: channel members;
         :param key: operator input in chat ('/lead Lead about Product')
         """
         description = ''.join(
@@ -35,7 +34,7 @@ class MailChannel(models.Model):
         # anonymous user whatever the participants. Otherwise keep only share
         # partners (no user or portal user) to link to the lead.
         customers = self.env['res.partner']
-        for customer in self.channel_partner_ids.filtered(lambda p: p != partner and p.partner_share):
+        for customer in self.with_context(active_test=False).channel_partner_ids.filtered(lambda p: p != partner and p.partner_share):
             if customer.user_ids and all(user._is_public() for user in customer.user_ids):
                 customers = self.env['res.partner']
                 break
