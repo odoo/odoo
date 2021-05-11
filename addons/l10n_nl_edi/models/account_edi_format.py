@@ -35,7 +35,7 @@ class AccountEdiFormat(models.Model):
                     return [('l10n_nl_kvk', '=', endpoint.text)]
                 elif scheme == '0190' and endpoint.text:
                     return [('l10n_nl_oin', '=', endpoint.text)]
-        return []
+        return super()._bis3_get_extra_partner_domains(tree)
 
     ####################################################
     # Export
