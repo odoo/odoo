@@ -98,6 +98,12 @@ class FleetVehicle(models.Model):
         string='Has Contracts Overdue')
     contract_renewal_name = fields.Text(compute='_compute_contract_reminder', string='Name of contract to renew soon')
     contract_renewal_total = fields.Text(compute='_compute_contract_reminder', string='Total of contracts due or overdue minus one')
+    contract_state = fields.Selection(
+        [('futur', 'Incoming'),
+         ('open', 'In Progress'),
+         ('expired', 'Expired'),
+         ('closed', 'Closed')
+        ], string='Last Contract State', compute='_compute_contract_reminder', required=False)
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", help='Value of the bought vehicle')
     net_car_value = fields.Float(string="Purchase Value", help="Purchase value of the vehicle")
     residual_value = fields.Float()
@@ -165,6 +171,7 @@ class FleetVehicle(models.Model):
             due_soon = False
             total = 0
             name = ''
+            state = ''
             for element in record.log_contracts:
                 if element.state in ('open', 'expired') and element.expiration_date:
                     current_date_str = fields.Date.context_today(record)
@@ -186,11 +193,13 @@ class FleetVehicle(models.Model):
                         if log_contract:
                             # we display only the name of the oldest overdue/due soon contract
                             name = log_contract.name
+                            state = log_contract.state
 
             record.contract_renewal_overdue = overdue
             record.contract_renewal_due_soon = due_soon
             record.contract_renewal_total = total - 1  # we remove 1 from the real total for display purposes
             record.contract_renewal_name = name
+            record.contract_state = state
 
     @api.depends('model_id')
     def _compute_transmission(self):

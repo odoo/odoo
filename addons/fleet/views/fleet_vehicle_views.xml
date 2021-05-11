@@ -149,15 +149,16 @@
                 <field name="driver_id" widget="many2one_avatar" readonly="1"/>
                 <field name="future_driver_id"  widget="many2one_avatar" readonly="1"/>
                 <field name="log_drivers" invisible="1"/>
-                <field name="vin_sn" readonly="1"/>
+                <field name="vin_sn" readonly="1" optional="hide"/>
                 <field name="co2" string="CO2 Emissions g/km" optional="hide"  readonly="1"/>
                 <field name="acquisition_date" readonly="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1"/>
-                <field name="state_id" widget="badge" readonly="1"/>
-                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                <field name="state_id" widget="badge" readonly="1" optional="hide"/>
                 <field name="contract_renewal_due_soon" invisible="1"/>
                 <field name="contract_renewal_overdue" invisible="1"/>
                 <field name="contract_renewal_total" invisible="1"/>
+                <field name="contract_state" widget="badge" decoration-info="contract_state == 'open'"
+                    decoration-danger="contract_state == 'expired'" optional="hide"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
                 <field name="manager_id" optional="hide"/>
             </tree>
@@ -172,6 +173,8 @@
                 <field string="Vehicle" name="name" filter_domain="['|', ('name', 'ilike', self), ('license_plate', 'ilike', self)]"/>
                 <field string="Drivers" name="log_drivers" filter_domain="[('log_drivers.driver_id.name', 'ilike', self)]"/>
                 <field string="Current Driver" name="driver_id"/>
+                <field string="Model" name="model_id"/>
+                <field string="License Plate" name="license_plate"/>
                 <field name="tag_ids"/>
                 <field string="Status" name="state_id"/>
                 <filter string="Available" name="available"
