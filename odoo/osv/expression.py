@@ -117,6 +117,7 @@ import collections.abc
 import warnings
 
 import logging
+import reprlib
 import traceback
 from functools import partial
 
@@ -875,7 +876,7 @@ class expression(object):
                     push(('id', inselect_operator, (subselect, params)), model, alias, internal=True)
                 else:
                     _logger.error("Binary field '%s' stored in attachment: ignore %s %s %s",
-                                  field.string, left, operator, right)
+                                  field.string, left, operator, reprlib.repr(right))
                     push(TRUE_LEAF, model, alias)
 
             # -------------------------------------------------
