@@ -66,8 +66,12 @@
         <field name="inherit_id" ref="rating.rating_rating_view_graph"/>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <xpath expr="//graph" position="attributes">
-                <attribute name="js_class">project_rating_graph</attribute>
+            <xpath expr="//field[@name='rating']" position="attributes">
+                <attribute name="string">Rating Value (/5)</attribute>
+            </xpath>
+            <xpath expr="//graph" position="inside">
+                <field name="res_id" type="measure" string="Task"/>
+                <field name="parent_res_id" type="measure" string="Project"/>
             </xpath>
         </field>
     </record>
