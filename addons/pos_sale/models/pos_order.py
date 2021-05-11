@@ -50,14 +50,18 @@ class PosOrder(models.Model):
     def create_from_ui(self, orders, draft=False):
         order_ids = super(PosOrder, self).create_from_ui(orders, draft)
         for order in self.sudo().browse([o['id'] for o in order_ids]):
-            for line in order.lines.filtered(lambda l: l.sale_order_origin_id):
+            for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id):
+                sale_lines = line.sale_order_origin_id.order_line
                 sale_line = self.env['sale.order.line'].create({
                     'order_id': line.sale_order_origin_id.id,
                     'product_id': line.product_id.id,
                     'price_unit': line.price_unit,
-                    'product_uom_qty': - line.qty,
+                    'product_uom_qty': 0,
+                    'qty_invoiced': 1,
                     'tax_id': [(6, 0, line.tax_ids.ids)],
-                    'discount': line.discount,
+                    'is_downpayment': True,
+                    'discount': 0,
+                    'sequence': sale_lines and sale_lines[-1].sequence + 1 or 10,
                 })
                 sale_line._compute_tax_id()
 
@@ -74,7 +78,15 @@ class PosOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
-    class PosOrderLine(models.Model):
-        _inherit = 'pos.order.line'
 
-        sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order")
+class PosOrderLine(models.Model):
+    _inherit = 'pos.order.line'
+
+    sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order")
+    sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line")
+
+    def _prepare_invoice_vals(self):
+        vals = super()._prepare_invoice_vals()
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
+            vals['narration'] = vals['narration'] + '\n' + self.company_id.invoice_terms if vals['narration'] else self.company_id.invoice_terms
+        return vals

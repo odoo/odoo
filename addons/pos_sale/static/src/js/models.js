@@ -48,14 +48,17 @@ models.Orderline = models.Orderline.extend({
   initialize: function (attributes, options) {
       super_order_line_model.initialize.apply(this, arguments);
       this.sale_order_origin_id = options.sale_order_origin_id;
+      this.sale_order_line_id = options.sale_order_line_id;
   },
   init_from_JSON: function (json) {
       super_order_line_model.init_from_JSON.apply(this, arguments);
       this.sale_order_origin_id = json.sale_order_origin_id;
+      this.sale_order_line_id = json.sale_order_line_id;
   },
   export_as_JSON: function () {
       const json = super_order_line_model.export_as_JSON.apply(this, arguments);
       json.sale_order_origin_id = this.sale_order_origin_id ? this.sale_order_origin_id.id : false;
+      json.sale_order_line_id = this.sale_order_line_id ?  this.sale_order_line_id.id : false;
       return json;
   },
   get_sale_order: function(){

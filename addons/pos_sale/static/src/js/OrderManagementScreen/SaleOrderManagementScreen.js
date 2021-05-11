@@ -95,6 +95,8 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
               if (orderPricelist){
                   currentPOSOrder.set_pricelist(orderPricelist);
               }
+              currentPOSOrder.sale_order_origin_id = clickedOrder;
+
               if (selectedOption){
                 let lines = sale_order.order_line;
                 let product_to_add_in_pos = lines.filter(line => !this.env.pos.db.get_product_by_id(line.product_id[0])).map(line => line.product_id[0]);
@@ -128,14 +130,10 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         price: line.price_unit,
                         price_manually_set: true,
                         sale_order_origin_id: clickedOrder,
+                        sale_order_line_id: line,
                     });
 
-                    let quantity = line.product_uom_qty;
-                    if (line.product_uom_qty > 0) {
-                        quantity = new_line.setQuantityWithPolicy(line.product_uom_qty, line.qty_invoiced, line.qty_delivered);
-                    }
-
-                    new_line.set_quantity(quantity);
+                    new_line.set_quantity(line.qty_to_invoice);
                     new_line.set_unit_price(line.price_unit);
                     new_line.set_discount(line.discount);
                     this.env.pos.get_order().add_orderline(new_line);
@@ -211,7 +209,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
           let so_lines = await this.rpc({
               model: 'sale.order.line',
               method: 'read',
-              args: [ids, ["product_id", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "product_type"]],
+              args: [ids, ["product_id", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "product_type", "qty_to_invoice"]],
               context: this.env.session.user_context,
           });
           let pos_lines = so_lines.filter(line => line.product_type);

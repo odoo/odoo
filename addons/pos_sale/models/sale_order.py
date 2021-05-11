@@ -27,3 +27,23 @@ class PosOrder(models.Model):
             'view_mode': 'tree,form',
             'domain': [('id', 'in', linked_orders.ids)],
         }
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_line_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
+
+    @api.depends('pos_order_line_ids.qty')
+    def _compute_qty_delivered(self):
+        super()._compute_qty_delivered()
+        for sale_line in self:
+            sale_line.qty_delivered += sum([pos_line.qty for pos_line in sale_line.pos_order_line_ids if not sale_line.is_downpayment], 0)
+
+    @api.depends('pos_order_line_ids.qty')
+    def _get_invoice_qty(self):
+        super()._get_invoice_qty()
+        for sale_line in self:
+            if sale_line.is_downpayment:
+                sale_line.qty_invoiced = 1
+            else:
+                sale_line.qty_invoiced += sum([pos_line.qty for pos_line in sale_line.pos_order_line_ids if not sale_line.is_downpayment], 0)
