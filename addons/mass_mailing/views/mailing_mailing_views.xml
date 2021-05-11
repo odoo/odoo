@@ -313,7 +313,6 @@
                     <field name='user_id'/>
                     <field name='expected'/>
                     <field name='failed'/>
-                    <field name='total'/>
                     <field name='mailing_model_id'/>
                     <field name='mailing_model_name'/>
                     <field name='sent_date'/>
@@ -367,7 +366,6 @@
                                     <div class="o_kanban_record_body" t-if="!selection_mode" attrs="{'invisible': [('sent_date', '=', False), ('schedule_date', '=', False), ('state', '!=', 'in_queue')]}">
                                         <div>
                                             <span attrs="{'invisible': [('sent_date', '=', False)]}"><b><field name="delivered"/> / <field name="expected"/></b> Delivered to</span>
-                                            <span attrs="{'invisible': [('sent_date', '!=', False)]}"><b><field name='total'/></b></span>
                                             <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
                                             <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
                                         </div>
@@ -395,12 +393,6 @@
                                             t-attf-title="Scheduled on #{record.schedule_date.value}" class="d-inline-flex">
                                             <span class="fa fa-hourglass-half mr-2 small my-auto" aria-label="Scheduled date"/>
                                             <span class="align-self-baseline"><field name="schedule_date" widget="date"/></span>
-                                        </span>
-                                        <span attrs="{'invisible': ['|', '|', ('sent_date', '!=', False), ('schedule_date', '!=', False), ('state', '=', 'in_queue')]}"
-                                            class="oe_clear">
-                                            <b><field name='total'/></b>
-                                            <field name='mailing_model_id' attrs="{'invisible': [('mailing_model_name','=','mailing.list')]}"/>
-                                            <span attrs="{'invisible': [('mailing_model_name','!=','mailing.list')]}">Mailing Contact</span>
                                         </span>
                                         <span attrs="{'invisible': ['|', '|', ('schedule_date', '!=', False), ('state', '!=', 'in_queue'), ('next_departure', '=', False)]}"
                                             t-attf-title="Scheduled on #{record.next_departure.value}" class="d-inline-flex">
