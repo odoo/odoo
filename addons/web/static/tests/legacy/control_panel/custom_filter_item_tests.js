@@ -46,9 +46,9 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             // Single condition
             assert.containsOnce(cfi, 'div.o_filter_condition');
-            assert.containsOnce(cfi, 'div.o_filter_condition > select.o_generator_menu_field');
-            assert.containsOnce(cfi, 'div.o_filter_condition > select.o_generator_menu_operator');
-            assert.containsOnce(cfi, 'div.o_filter_condition > span.o_generator_menu_value');
+            assert.containsOnce(cfi, 'div.o_filter_condition select.o_generator_menu_field');
+            assert.containsOnce(cfi, 'div.o_filter_condition select.o_generator_menu_operator');
+            assert.containsOnce(cfi, 'div.o_filter_condition span.o_generator_menu_value');
             assert.containsNone(cfi, 'div.o_filter_condition .o_or_filter');
             assert.containsNone(cfi, 'div.o_filter_condition .o_generator_menu_delete');
 
@@ -228,7 +228,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
             // The only thing visible should be the button 'Add Custome Filter';
             assert.strictEqual(cfi.el.children.length, 1);
-            assert.containsOnce(cfi, 'button.o_add_custom_filter');
+            assert.containsOnce(cfi, 'span.o_add_custom_filter');
 
             cfi.destroy();
         });
@@ -267,7 +267,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 await testUtils.fields.editSelect(cfi.el.querySelector('select.o_generator_menu_field'), 'id_field');
                 await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), operator);
                 await testUtils.fields.editInput(cfi.el.querySelector(
-                    'div.o_filter_condition > span.o_generator_menu_value input'),
+                    'div.o_filter_condition span.o_generator_menu_value input'),
                     value
                 );
                 await cpHelpers.applyFilter(cfi);
@@ -319,7 +319,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 await cpHelpers.toggleAddCustomFilter(cfi);
                 await testUtils.fields.editSelect(cfi.el.querySelector('select.o_generator_menu_field'), 'many2one_field');
                 await testUtils.fields.editInput(cfi.el.querySelector(
-                    'div.o_filter_condition > span.o_generator_menu_value input'),
+                    'div.o_filter_condition span.o_generator_menu_value input'),
                     value
                 );
                 await cpHelpers.applyFilter(cfi);
@@ -369,7 +369,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             assert.strictEqual(cfi.el.querySelector('.o_generator_menu_operator').value, 'between');
 
             await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), '=');
-            await testUtils.fields.editSelect(cfi.el.querySelector('div.o_filter_condition > span.o_generator_menu_value input'), '02/22/2017 11:00:00'); // in TZ
+            await testUtils.fields.editSelect(cfi.el.querySelector('div.o_filter_condition span.o_generator_menu_value input'), '02/22/2017 11:00:00'); // in TZ
             await cpHelpers.applyFilter(cfi);
 
             cfi.destroy();

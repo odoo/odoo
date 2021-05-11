@@ -93,7 +93,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function toggleAddCustomFilter(el) {
-        await click(getNode(el).querySelector(`button.o_add_custom_filter`));
+        await click(getNode(el).querySelector(`span.o_add_custom_filter`));
     }
 
     /**
@@ -125,7 +125,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function toggleAddCustomGroup(el) {
-        await click(getNode(el).querySelector(`button.o_add_custom_group_by`));
+        await click(getNode(el).querySelector(`span.o_add_custom_group_by`));
     }
 
     /**
@@ -161,7 +161,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @returns {Promise}
      */
     async function toggleSaveFavorite(el) {
-        await click(getNode(el).querySelector(`.o_favorite_menu .o_add_favorite button`));
+        await click(getNode(el).querySelector(`.o_favorite_menu .o_add_favorite .dropdown-item`));
     }
 
     /**
@@ -188,7 +188,7 @@ odoo.define('web.test_utils_control_panel', function (require) {
      */
     async function deleteFavorite(el, favoriteFinder) {
         const favorite = findItem(el, `.o_favorite_menu .o_menu_item`, favoriteFinder);
-        await click(favorite.querySelector('i.fa-trash-o'));
+        await click(favorite.querySelector('i.fa-trash'));
     }
 
     /**

@@ -755,7 +755,7 @@ QUnit.module('Views', {
         assert.containsOnce(pivot, '.o_pivot_field_menu .o_generator_menu',
             "should have custom group generator same as searchview groupby");
         // check custom groupby selection has groupable fields only
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_add_custom_group_by'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu .o_add_custom_group_by'));
         assert.containsN(pivot, '.o_pivot_field_menu .o_generator_menu .o_group_by_selector option', 6,
             "should have 3 fields in custom groupby");
         const optionDescriptions = [...pivot.$('.o_pivot_field_menu .o_generator_menu .o_group_by_selector option')]
@@ -818,7 +818,7 @@ QUnit.module('Views', {
         assert.containsN(pivot, '.o_pivot_field_menu > .dropdown-item', 3,
             "should have 3 dropdown items same as searchview groupby");
 
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_add_custom_group_by'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu .o_add_custom_group_by'));
         await testUtils.fields.editSelect(pivot.$('.o_pivot_field_menu .o_generator_menu .o_group_by_selector'), 'date');
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_apply_group_by'));
         // click on closed header to open groupby selection dropdown
@@ -910,7 +910,7 @@ QUnit.module('Views', {
 
         // click on closed header to open dropdown and apply groupby on date field
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_add_custom_group_by'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu .o_add_custom_group_by'));
         await testUtils.fields.editSelect(pivot.$('.o_pivot_field_menu .o_generator_menu .o_group_by_selector'), 'date');
         checkReadGroup = true;
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_apply_group_by'));
@@ -1021,7 +1021,7 @@ QUnit.module('Views', {
 
         // click on closed header to open dropdown and apply groupby on date field
         await testUtils.dom.click(pivot.$('thead .o_pivot_header_cell_closed'));
-        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu button.o_add_custom_group_by'));
+        await testUtils.dom.click(pivot.$('.o_pivot_field_menu .o_generator_menu .o_add_custom_group_by'));
         assert.containsOnce(pivot, '.o_pivot_field_menu .o_generator_menu',
             "should have custom group generator in groupby dropdown");
 

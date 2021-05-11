@@ -255,7 +255,13 @@
             </ul>
         </t>
         <a t-else="" class="dropdown-item"
-            t-att-class="{ selected: props.isActive, [props.className]: props.className }"
+            t-att-class="{
+                selected: props.isActive,
+                [props.className]: props.className,
+                'd-flex': props.removable,
+                'align-items-center': props.removable,
+                'justify-content-between': props.removable
+            }"
             t-att-aria-checked="props.isActive ? 'true' : 'false'"
             role="menuitemcheckbox"
             t-att-href="props.url or '#'"
@@ -263,7 +269,7 @@
             >
             <t t-esc="props.description"/>
             <i t-if="props.removable"
-                class="o_icon_right fa fa-trash-o"
+                class="o_icon_right fa fa-trash btn btn-link text-danger p-0 mr-n3"
                 title="Delete item"
                 t-on-click.stop.prevent="trigger('remove-item', { item: props })"
             />
@@ -273,18 +279,20 @@
 
 <t t-name="web.CustomFavoriteItem" owl="1">
     <li class="o_menu_item o_add_favorite" role="menuitem">
-        <button type="button"
+        <span type="button"
             class="dropdown-item"
             t-ref="fallback-focus"
             t-on-click="state.open = !state.open"
+            t-att-class="{ 'active': state.open, 'o_dropdown_item_active_noarrow' : state.open}"
             >
             <t>Save current search</t>
-        </button>
+        </span>
         <div t-if="state.open" class="dropdown-item-text">
-            <div role="menuitem" class="dropdown-item-text">
+            <div class="my-2">
                 <input type="text"
                     class="o_input"
                     autofocus=""
+                    placeholder="My custom search"
                     t-ref="description"
                     t-model.trim="state.description"
                     t-on-keydown="_onInputKeydown"
@@ -310,10 +318,9 @@
                 />
                 <label class="custom-control-label" t-att-for="shareAllUsersId">
                     <t>Share with all users</t>
-                    <i class="fa fa-users" role="img" aria-label="Users" title="Users"/>
                 </label>
             </div>
-            <div class="dropdown-item-text">
+            <div class="mt-3">
                 <button type="button" class="o_save_favorite btn btn-primary" t-on-click="_saveFavorite">Save</button>
             </div>
         </div>
@@ -322,109 +329,110 @@
 
 <t t-name="web.CustomFilterItem" owl="1">
     <div class="o_generator_menu">
-        <button type="button"
-            class="o_add_custom_filter dropdown-item"
+        <span class="o_add_custom_filter dropdown-item"
             aria-expanded="false"
             t-ref="fallback-focus"
             t-on-click="state.open = !state.open"
             t-on-keydown="_onKeydown"
+            t-att-class="{ 'active': state.open, 'o_dropdown_item_active_noarrow' : state.open}"
             >
             <t>Add Custom Filter</t>
-        </button>
+        </span>
         <t t-if="state.open">
+            <t t-set="showRemoveIcons" t-value="state.conditions.length gt 1"/>
+
             <div t-foreach="state.conditions" t-as="condition" t-key="condition_index"
-                class=" o_filter_condition dropdown-item-text"
-                >
+                class="o_filter_condition dropdown-item-text position-relative d-flex align-items-center py-2 mb-2"
+                t-att-class="{ 'o_filter_condition_with_buttons': showRemoveIcons }">
                 <t t-set="fieldType" t-value="fields[condition.field].type"/>
                 <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
-                <span t-if="!condition_first" class="o_or_filter">or</span>
-                <select class="o_input o_generator_menu_field"
-                    t-on-change="_onFieldSelect(condition)"
-                    >
-                    <option t-foreach="fields" t-as="field" t-key="field_index"
-                        t-att-value="field.name"
-                        t-att-selected="field_index === condition.field"
-                        t-esc="field.string"
-                    />
-                </select>
-                <select class="o_input o_generator_menu_operator"
-                    t-on-change="_onOperatorSelect(condition)"
-                    >
-                    <option t-foreach="OPERATORS[FIELD_TYPES[fieldType]]" t-as="operator" t-key="operator_index"
-                        t-att-value="operator.symbol"
-                        t-att-selected="operator_index === condition.operator"
-                        t-esc="operator.description"
-                    />
-                </select>
-                <span t-if="!('value' in selectedOperator)" class="o_generator_menu_value">
-                    <t t-if="fieldType === 'date'">
-                        <DatePicker
-                            date="condition.value[0]"
-                            t-on-datetime-changed="_onDateChanged(condition, 0)"
-                        />
-                        <DatePicker t-if="selectedOperator.symbol === 'between'"
-                            date="condition.value[1]"
-                            t-on-datetime-changed="_onDateChanged(condition, 1)"
-                        />
-                    </t>
-                    <t t-elif="fieldType === 'datetime'">
-                        <DateTimePicker
-                            date="condition.value[0]"
-                            t-on-datetime-changed="_onDateChanged(condition, 0)"
-                        />
-                        <DateTimePicker t-if="selectedOperator.symbol === 'between'"
-                            date="condition.value[1]"
-                            t-on-datetime-changed="_onDateChanged(condition, 1)"
-                        />
-                    </t>
-                    <select t-elif="fieldType === 'selection'" class="o_input"
-                        t-on-change="_onValueInput(condition)"
+
+                <div t-if="!condition_first" class="o_or_filter text-center text-muted font-italic small">or</div>
+                <div class="d-flex flex-column">
+                    <select class="o_input o_generator_menu_field pr-3"
+                        t-on-change="_onFieldSelect(condition)"
                         >
-                        <option t-foreach="fields[condition.field].selection" t-as="option" t-key="option_index"
-                            t-att-value="option[0]"
-                            t-esc="option[1]"
+                        <option t-foreach="fields" t-as="field" t-key="field_index"
+                            t-att-value="field.name"
+                            t-att-selected="field_index === condition.field"
+                            t-esc="field.string"
                         />
                     </select>
-                    <input t-elif="fieldType === 'float'"
-                        class="o_input"
-                        step="0.01"
-                        t-att-type="DECIMAL_POINT === '.' ? 'number' : 'text'"
-                        t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
-                        t-attf-pattern="[0-9]+([\\{{ DECIMAL_POINT }}][0-9]+)?"
-                        t-att-value="condition.displayedValue"
-                        t-on-input="_onValueInput(condition)"
-                    />
-                    <input t-elif="['integer', 'id'].includes(fieldType)"
-                        class="o_input"
-                        step="1"
-                        type="number"
-                        t-att-value="condition.displayedValue"
-                        t-on-input="_onValueInput(condition)"
-                    />
-                    <input t-else=""
-                        type="text"
-                        class="o_input"
-                        t-att-value="condition.displayedValue"
-                        t-on-input="_onValueInput(condition)"
-                    />
-                </span>
-                <i t-if="state.conditions.length gt 1"
-                    class="fa fa-trash-o o_generator_menu_delete"
-                    role="image"
-                    aria-label="Delete"
-                    title="Delete"
-                    t-on-click="_onRemoveCondition(condition_index)"
-                />
+                    <select class="o_input o_generator_menu_operator my-1 pr-3"
+                        t-on-change="_onOperatorSelect(condition)"
+                        >
+                        <option t-foreach="OPERATORS[FIELD_TYPES[fieldType]]" t-as="operator" t-key="operator_index"
+                            t-att-value="operator.symbol"
+                            t-att-selected="operator_index === condition.operator"
+                            t-esc="operator.description"
+                        />
+                    </select>
+                    <span t-if="!('value' in selectedOperator)" class="o_generator_menu_value">
+                        <t t-if="fieldType === 'date'">
+                            <DatePicker
+                                date="condition.value[0]"
+                                t-on-datetime-changed="_onDateChanged(condition, 0)"
+                            />
+                            <DatePicker t-if="selectedOperator.symbol === 'between'"
+                                date="condition.value[1]"
+                                t-on-datetime-changed="_onDateChanged(condition, 1)"
+                            />
+                        </t>
+                        <t t-elif="fieldType === 'datetime'">
+                            <DateTimePicker
+                                date="condition.value[0]"
+                                t-on-datetime-changed="_onDateChanged(condition, 0)"
+                            />
+                            <DateTimePicker t-if="selectedOperator.symbol === 'between'"
+                                date="condition.value[1]"
+                                t-on-datetime-changed="_onDateChanged(condition, 1)"
+                            />
+                        </t>
+                        <select t-elif="fieldType === 'selection'" class="o_input"
+                            t-on-change="_onValueInput(condition)"
+                            >
+                            <option t-foreach="fields[condition.field].selection" t-as="option" t-key="option_index"
+                                t-att-value="option[0]"
+                                t-esc="option[1]"
+                            />
+                        </select>
+                        <input t-elif="fieldType === 'float'"
+                            class="o_input"
+                            step="0.01"
+                            t-att-type="DECIMAL_POINT === '.' ? 'number' : 'text'"
+                            t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
+                            t-attf-pattern="[0-9]+([\{{ DECIMAL_POINT }}][0-9]+)?"
+                            t-att-value="condition.displayedValue"
+                            t-on-input="_onValueInput(condition)"
+                        />
+                        <input t-elif="['integer', 'id'].includes(fieldType)"
+                            class="o_input"
+                            step="1"
+                            type="number"
+                            t-att-value="condition.displayedValue"
+                            t-on-input="_onValueInput(condition)"
+                        />
+                        <input t-else=""
+                            type="text"
+                            class="o_input"
+                            t-att-value="condition.displayedValue"
+                            t-on-input="_onValueInput(condition)"
+                        />
+                    </span>
+                </div>
+                <button t-if="showRemoveIcons" class="o_generator_menu_delete btn btn-link text-danger"
+                        aria-label="Delete condition"
+                        title="Delete condition"
+                        t-on-click="_onRemoveCondition(condition_index)">
+                    &#215;
+                </button>
             </div>
-            <div class="o_add_filter_menu dropdown-item-text">
-                <button type="button" class="btn btn-primary o_apply_filter" t-on-click="_onApply">
+            <div class="o_add_filter_menu dropdown-item-text pt-2 d-flex justify-content-between text-nowrap">
+                <button type="button" class="btn btn-primary btn-sm mr-2 o_apply_filter" t-on-click="_onApply">
                     <t>Apply</t>
                 </button>
-                <button type="button"
-                    class="btn btn-secondary o_add_condition"
-                    t-on-click="_addNewCondition"
-                    >
-                    <i class="fa fa-plus-circle"/>
+                <button type="button" class="o_add_condition btn btn-secondary btn-sm d-flex align-items-center text-left" t-on-click="_addNewCondition">
+                    <i class="fa fa-plus-circle mr-2"/>
                     <t>Add a condition</t>
                 </button>
             </div>
@@ -434,16 +442,17 @@
 
 <t t-name="web.CustomGroupByItem" owl="1">
     <div class="o_generator_menu">
-        <button type="button"
+        <span type="button"
             class="o_add_custom_group_by dropdown-item"
             aria-expanded="false"
             t-ref="fallback-focus"
             t-on-click="state.open = !state.open"
             t-on-keydown="_onKeydown"
+            t-att-class="{ 'active': state.open, 'o_dropdown_item_active_noarrow' : state.open}"
             >
             <t>Add Custom Group</t>
-        </button>
-        <div t-if="state.open" class="dropdown-item-text">
+        </span>
+        <div t-if="state.open" class="dropdown-item-text my-2">
             <select class="w-auto o_input o_group_by_selector" t-model="state.fieldName">
                 <option t-foreach="props.fields" t-as="field" t-key="field.name"
                     t-att-value="field.name"
