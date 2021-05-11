@@ -238,7 +238,7 @@ var FormRenderer = BasicRenderer.extend({
             const name = notebook.dataset.name;
             if (name in state) {
                 const navs = notebook.querySelectorAll(':scope .o_notebook_headers .nav-item');
-                const pages = notebook.querySelectorAll(':scope .tab-content > .tab-pane');
+                const pages = notebook.querySelectorAll(':scope > .tab-content > .tab-pane');
                 // We can't base the amount on the 'navs' length since some overrides
                 // are adding pageless nav items.
                 const validTabsAmount = pages.length;

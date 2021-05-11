@@ -345,6 +345,34 @@ class TestMrpOrder(TestMrpCommon):
         production.workorder_ids[0].button_start()
         self.assertEqual(production.workorder_ids.qty_producing, 5, "Wrong quantity is suggested to produce.")
 
+    def test_update_quantity_5(self):
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 3}),
+            ],
+        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = bom
+        production_form.product_qty = 1
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
+        production.action_confirm()
+        production.action_assign()
+        production_form = Form(production)
+        # change the quantity producing and the initial demand
+        # in the same transaction
+        production_form.qty_producing = 10
+        with production_form.move_raw_ids.edit(0) as move:
+            move.product_uom_qty = 2
+        production = production_form.save()
+        production.button_mark_done()
+
     def test_update_plan_date(self):
         """Editing the scheduled date after planning the MO should unplan the MO, and adjust the date on the stock moves"""
         planned_date = datetime(2023, 5, 15, 9, 0)

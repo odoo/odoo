@@ -129,12 +129,12 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'philip.j.fry@test.example.com',
             'turanga.leela@test.example.com',
         ]
-        cls.test_pĥone_data = [
+        cls.test_phone_data = [
             '+1 202 555 0122',  # formatted US number
             '202 555 0999',  # local US number
             '202 555 0888',  # local US number
         ]
-        cls.test_pĥone_data_sanitized = [
+        cls.test_phone_data_sanitized = [
             '+12025550122',
             '+12025550999',
             '+12025550888',
@@ -153,7 +153,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.contact_1 = cls.env['res.partner'].create({
             'name': 'Philip J Fry',
             'email': cls.test_email_data[1],
-            'mobile': cls.test_pĥone_data[0],
+            'mobile': cls.test_phone_data[0],
             'title': cls.env.ref('base.res_partner_title_mister').id,
             'function': 'Delivery Boy',
             'phone': False,
@@ -167,8 +167,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.contact_2 = cls.env['res.partner'].create({
             'name': 'Turanga Leela',
             'email': cls.test_email_data[2],
-            'mobile': cls.test_pĥone_data[1],
-            'phone': cls.test_pĥone_data[2],
+            'mobile': cls.test_phone_data[1],
+            'phone': cls.test_phone_data[2],
             'parent_id': False,
             'is_company': False,
             'street': 'Cookieville Minimum-Security Orphanarium',
