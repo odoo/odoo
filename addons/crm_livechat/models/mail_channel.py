@@ -32,7 +32,7 @@ class MailChannel(models.Model):
         # partners (no user or portal user) to link to the lead.
         customers = self.env['res.partner']
         for customer in self.with_context(active_test=False).channel_partner_ids.filtered(lambda p: p != partner and p.partner_share):
-            if customer.user_ids and all(user._is_public() for user in customer.user_ids):
+            if customer.is_public:
                 customers = self.env['res.partner']
                 break
             else:
