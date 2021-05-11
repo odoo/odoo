@@ -74,18 +74,18 @@
         background-color: gray('200');
     }
     /* compat 12.0 */
-    .row:not(#total) > div > table tr:not(:first-child):not(:last-child) td:last-child {
+    .row:not(#total) > div > table tbody tr:not(:last-child) td:last-child {
         background-color: gray('200');
     }
     /*Total table*/
     /* row div rule compat 12.0 */
     .row > div > table,
     div#total table {
+        thead tr:first-child,
+        tr.o_subtotal {
+            border-bottom: 1px solid gray('700');
+        }
         tr {
-            &:first-child,
-            &.o_subtotal {
-                border-bottom: 1px solid gray('700');
-            }
             &.o_subtotal{
                 td:first-child {
                     border-right: none;
