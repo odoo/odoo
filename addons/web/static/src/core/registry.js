@@ -80,11 +80,12 @@ export class Registry extends EventBus {
      * @param {string} key
      * @returns {any}
      */
-    get(key) {
-        if (!(key in this.content)) {
+    get(key, defaultValue) {
+        if (arguments.length < 2 && !(key in this.content)) {
             throw new KeyNotFoundError(`Cannot find ${key} in this registry!`);
         }
-        return this.content[key][1];
+        const info = this.content[key];
+        return info ? info[1] : defaultValue;
     }
 
     /**
