@@ -53,7 +53,8 @@ up a management by affair.
             'hr_timesheet/static/src/js/timesheet_factor.js',
             'hr_timesheet/static/src/js/timesheet_config_form_view.js',
             'hr_timesheet/static/src/js/qr_code_action.js',
-            'hr_timesheet/static/src/js/timesheet_graph.js',
+            'hr_timesheet/static/src/js/timesheet_graph_view.js',
+            'hr_timesheet/static/src/js/timesheet_graph_model.js',
         ],
         'web.qunit_suite_tests': [
             'hr_timesheet/static/tests/**/*',
