@@ -150,8 +150,10 @@ class SaleOrder(models.Model):
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
+        data = dict((d['sale_id'][0], d['sale_id_count']) for d in self.env['stock.picking'].read_group(
+            [('sale_id', 'in', self.ids)], ['sale_id'], ['sale_id']))
         for order in self:
-            order.delivery_count = len(order.picking_ids)
+            order.delivery_count = data.get(order.id, 0)
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
