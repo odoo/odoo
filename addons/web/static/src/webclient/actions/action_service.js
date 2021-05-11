@@ -948,15 +948,8 @@ function makeActionManager(env) {
             case "ir.actions.server":
                 return _executeServerAction(action, options);
             default: {
-                let handler;
-                try {
-                    handler = actionHandlersRegistry.get(action.type);
-                } catch (e) {
-                    if (!(e instanceof KeyNotFoundError)) {
-                        throw e;
-                    }
-                }
-                if (handler) {
+                let handler = actionHandlersRegistry.get(action.type, null);
+                if (handler !== null) {
                     return handler({ env, action, options });
                 }
                 throw new Error(
