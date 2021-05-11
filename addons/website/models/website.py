@@ -249,8 +249,8 @@ class Website(models.Model):
 
     def create_and_redirect_configurator(self):
         self._force()
-        action = self.env['ir.actions.actions']._for_xml_id('website.start_configurator_act_url')
-        return action
+        configurator_action_todo = self.env.ref('website.website_configurator_todo')
+        return configurator_action_todo.action_launch()
 
     # ----------------------------------------------------------
     # Configurator
@@ -288,7 +288,8 @@ class Website(models.Model):
 
     @api.model
     def configurator_skip(self):
-        self.configurator_done = True
+        website = self.get_current_website()
+        website.configurator_done = True
 
     @api.model
     def configurator_apply(self, **kwargs):
