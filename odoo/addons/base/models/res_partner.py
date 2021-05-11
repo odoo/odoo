@@ -208,6 +208,7 @@ class Partner(models.Model):
     mobile = fields.Char()
     is_company = fields.Boolean(string='Is a Company', default=False,
         help="Check if the contact is a company, otherwise it is a person")
+    is_public = fields.Boolean(compute='_compute_is_public')
     industry_id = fields.Many2one('res.partner.industry', 'Industry')
     # company_type is only an interface field, do not use it in business logic
     company_type = fields.Selection(string='Company Type',
@@ -546,6 +547,11 @@ class Partner(models.Model):
                 url = url.replace(netloc=url.path, path='')
             website = url.replace(scheme='http').to_url()
         return website
+
+    def _compute_is_public(self):
+        for partner in self.with_context(active_test=False):
+            users = partner.user_ids
+            partner.is_public = users and any(user._is_public() for user in users)
 
     def write(self, vals):
         if vals.get('active') is False:

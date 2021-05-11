@@ -151,3 +151,9 @@ class TestPartner(TransactionCase):
             [(test_partner.id, expected_partner_name)],
             "'Destination Contact' name should contain db ID in brackets"
         )
+
+    def test_partner_is_public(self):
+        """ Check that base.partner_user is a public partner."""
+        self.assertFalse(self.env.ref('base.public_user').active)
+        self.assertFalse(self.env.ref('base.public_partner').active)
+        self.assertTrue(self.env.ref('base.public_partner').is_public)
