@@ -657,7 +657,7 @@
             <field name="arch" type="xml">
                 <tree string="Vendor Information" multi_edit="1">
                     <field name="sequence" widget="handle"/>
-                    <field name="name" readonly="1"/>
+                    <field name="name" readonly="1" context="{'res_partner_search_mode': 'supplier'}"/>
                     <field name="product_id" readonly="1" optional="hide"
                         invisible="context.get('product_template_invisible_variant', False)"
                         groups="product.group_product_variant"/>
