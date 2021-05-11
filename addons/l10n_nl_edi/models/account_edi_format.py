@@ -83,11 +83,9 @@ class AccountEdiFormat(models.Model):
     ####################################################
 
     def _check_move_configuration(self, invoice):
-        res = super()._check_move_configuration(invoice)
+        errors = super()._check_move_configuration(invoice)
         if self.code != 'nlcius_1':
-            return res
-
-        errors = []
+            return errors
 
         supplier = invoice.company_id.partner_id.commercial_partner_id
         if not supplier.street or not supplier.zip or not supplier.city:
@@ -129,12 +127,6 @@ class AccountEdiFormat(models.Model):
         invoice = invoices  # no batch ensure that there is only one invoice
         attachment = self._export_nlcius(invoice)
         return {invoice: {'success': True, 'attachment': attachment}}
-
-    def _is_embedding_to_invoice_pdf_needed(self):
-        self.ensure_one()
-        if self.code != 'nlcius_1':
-            return super()._is_embedding_to_invoice_pdf_needed()
-        return False
 
     def _create_invoice_from_xml_tree(self, filename, tree):
         self.ensure_one()
