@@ -457,7 +457,7 @@ class StockWarehouseOrderpoint(models.Model):
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
             orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
-            orderpoints_exceptions = []
+            all_orderpoints_exceptions = []
             while orderpoints_batch:
                 procurements = []
                 for orderpoint in orderpoints_batch:
@@ -473,8 +473,10 @@ class StockWarehouseOrderpoint(models.Model):
                     with self.env.cr.savepoint():
                         self.env['procurement.group'].with_context(from_orderpoint=True).run(procurements, raise_user_error=raise_user_error)
                 except ProcurementException as errors:
+                    orderpoints_exceptions = []
                     for procurement, error_msg in errors.procurement_exceptions:
                         orderpoints_exceptions += [(procurement.values.get('orderpoint_id'), error_msg)]
+                    all_orderpoints_exceptions += orderpoints_exceptions
                     failed_orderpoints = self.env['stock.warehouse.orderpoint'].concat(*[o[0] for o in orderpoints_exceptions])
                     if not failed_orderpoints:
                         _logger.error('Unable to process orderpoints')
@@ -492,7 +494,7 @@ class StockWarehouseOrderpoint(models.Model):
                     break
 
             # Log an activity on product template for failed orderpoints.
-            for orderpoint, error_msg in orderpoints_exceptions:
+            for orderpoint, error_msg in all_orderpoints_exceptions:
                 existing_activity = self.env['mail.activity'].search([
                     ('res_id', '=', orderpoint.product_id.product_tmpl_id.id),
                     ('res_model_id', '=', self.env.ref('product.model_product_template').id),
