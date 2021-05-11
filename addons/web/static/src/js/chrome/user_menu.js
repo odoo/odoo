@@ -78,7 +78,7 @@ var UserMenu = Widget.extend({
      * @private
      */
     _onMenuDocumentation: function () {
-        window.open('https://www.odoo.com/documentation/user', '_blank');
+        window.open('https://www.odoo.com/documentation/12.0', '_blank');
     },
     /**
      * @private
