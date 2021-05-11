@@ -10,7 +10,7 @@ class PosConfig(models.Model):
 
 
     crm_team_id = fields.Many2one(
-        'crm.team', string="Sales Team",
+        'crm.team', string="Sales Team", ondelete="set null",
         help="This Point of sale's sales will be related to this Sales Team.")
 
     @api.onchange('company_id')
