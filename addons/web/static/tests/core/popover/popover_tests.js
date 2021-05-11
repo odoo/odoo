@@ -154,13 +154,17 @@ QUnit.test("Show popover on hover", async function (assert) {
     const parent = await mount(Parent, { env, target });
     assert.containsNone(target, ".o_popover", "Should not contain any popover");
 
-    await triggerEvent(target, "#open", "mouseenter", { bubbles: true });
+    const buttonParent = target.querySelector("#open").parentElement;
+
+    // mouseenter is listen on the button's parent
+    await triggerEvent(buttonParent, null, "mouseenter");
 
     assert.containsOnce(target, ".o_popover", "Should contain one popover");
     const popover = target.querySelector(".o_popover");
     assert.ok(pointsTo(popover, target.querySelector("#open"), "bottom"));
 
-    await triggerEvent(target, "#open", "mouseleave", { bubbles: true });
+    // mouseleave is listen on the button's parent
+    await triggerEvent(buttonParent, null, "mouseleave");
     assert.containsNone(target, ".o_popover", "Should not contain any popover");
 
     parent.destroy();
