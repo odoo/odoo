@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CustomFavoriteItem" owl="1" >
+        <Dropdown class="o_add_favorite">
+            Save current search
+            <t t-set-slot="menu">
+                <input type="text"
+                    class="o_input"
+                    autofocus=""
+                    t-ref="description"
+                    t-model.trim="state.description"
+                    t-on-keydown="onInputKeydown"
+                    />
+                <CheckBox value="state.isDefault" t-on-change="onDefaultCheckboxChange">
+                    Use by default
+                </CheckBox>
+                <CheckBox value="state.isShared" t-on-change="onShareCheckboxChange">
+                    Share with all users
+                </CheckBox>
+                <DropdownItem>
+                    <button class="o_save_favorite btn btn-primary" t-on-click="saveFavorite">
+                        Save
+                    </button>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

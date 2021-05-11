@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CustomGroupByItem" owl="1">
+        <Dropdown class="o_add_custom_group_menu o_dropdown_inline">
+            Add Custom Group
+            <t t-set-slot="menu">
+                <select class="w-auto o_input" t-model="state.fieldName">
+                    <option t-foreach="props.fields" t-as="field" t-key="field.name"
+                        t-att-value="field.name"
+                        t-esc="field.string"
+                        />
+                </select>
+                <DropdownItem>
+                    <button type="button" class="btn btn-primary" t-on-click="onApply">
+                        Apply
+                    </button>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>
