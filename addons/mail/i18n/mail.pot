@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:29+0000\n"
-"PO-Revision-Date: 2021-02-18 14:29+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -141,6 +141,16 @@ msgstr ""
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid ", due on"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
+msgid "-&gt;"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
+msgid ".<br/>"
 msgstr ""
 
 #. module: mail
@@ -318,11 +328,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid "<span class=\"oe_read_only\">&amp;nbsp;</span>"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>\n"
@@ -406,6 +411,12 @@ msgid "Access Groups"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__category
+msgid "Action"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_channel__message_needaction
 #: model:ir.model.fields,field_description:mail.field_mail_thread__message_needaction
@@ -425,12 +436,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
-#: model:ir.model.fields,field_description:mail.field_mail_activity_type__category
-msgid "Action to Perform"
 msgstr ""
 
 #. module: mail
@@ -506,6 +511,11 @@ msgid "Activity Mixin"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "Activity Settings"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_state
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_state
@@ -545,15 +555,6 @@ msgstr ""
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "Activity type"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
-#: model:ir.model.fields,field_description:mail.field_ir_actions_server__channel_ids
-#: model:ir.model.fields,field_description:mail.field_ir_cron__channel_ids
-#, python-format
-msgid "Add Channels"
 msgstr ""
 
 #. module: mail
@@ -618,11 +619,6 @@ msgid "Add attachments"
 msgstr ""
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
-msgid "Add channels to notify..."
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add contacts to notify..."
@@ -640,6 +636,14 @@ msgstr ""
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Add this email address to white list of people"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Adding followers on channels is not possible. Consider adding members "
+"instead."
 msgstr ""
 
 #. module: mail
@@ -937,6 +941,12 @@ msgid "Automatic notification"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_activity_type__triggered_next_type_id
+msgid ""
+"Automatically schedule this activity once the current one is marked as done."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #: code:addons/mail/static/src/components/message/message.xml:0
@@ -1145,6 +1155,12 @@ msgid "Cc"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity__chaining_type
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
+msgid "Chaining Type"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,help:mail.field_mail_activity_type__decoration_type
 msgid "Change the background color of the related activities of this type."
@@ -1168,11 +1184,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 #, python-format
 msgid "Channel"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_channel__channel_message_ids
-msgid "Channel Message"
 msgstr ""
 
 #. module: mail
@@ -1201,9 +1212,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #: code:addons/mail/static/src/components/messaging_menu/messaging_menu.xml:0
-#: model:ir.model.fields,field_description:mail.field_mail_mail__channel_ids
-#: model:ir.model.fields,field_description:mail.field_mail_message__channel_ids
-#: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
 #: model:ir.ui.menu,name:mail.mail_channel_menu_settings
@@ -1584,7 +1592,7 @@ msgid "Custom channel name"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
+#: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr ""
 
@@ -1626,13 +1634,8 @@ msgid "Default"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_description
-msgid "Default Description"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_next_type_id
-msgid "Default Next Activity"
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_note
+msgid "Default Note"
 msgstr ""
 
 #. module: mail
@@ -1885,6 +1888,7 @@ msgid "Do you really want to delete \"%s\"?"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
 msgstr ""
@@ -1940,6 +1944,8 @@ msgstr ""
 #: code:addons/mail/static/src/components/attachment/attachment.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
+#: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
+#: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
 #: code:addons/mail/static/src/xml/thread.xml:0
@@ -2175,11 +2181,6 @@ msgid "Email message"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_followers__email
-msgid "Email of the related partner (if exist) or False"
-msgstr ""
-
-#. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
 msgid "Email resend wizard"
 msgstr ""
@@ -2258,19 +2259,8 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_channel_res_model_id_uniq
-msgid "Error, a channel cannot follow twice the same object."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
 msgid "Error, a partner cannot follow twice the same object."
-msgstr ""
-
-#. module: mail
-#: model:ir.model.constraint,message:mail.constraint_mail_followers_partner_xor_channel
-msgid ""
-"Error: A follower must be either a partner or a channel (but not both)."
 msgstr ""
 
 #. module: mail
@@ -2333,14 +2323,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/message/message.js:0
-#: code:addons/mail/static/src/components/message/message.js:0
-#, python-format
-msgid "False"
 msgstr ""
 
 #. module: mail
@@ -2453,17 +2435,6 @@ msgstr ""
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_channel_ids
-#: model:ir.model.fields,field_description:mail.field_mail_channel__message_channel_ids
-#: model:ir.model.fields,field_description:mail.field_mail_thread__message_channel_ids
-#: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_channel_ids
-#: model:ir.model.fields,field_description:mail.field_mail_thread_cc__message_channel_ids
-#: model:ir.model.fields,field_description:mail.field_res_partner__message_channel_ids
-#: model:ir.model.fields,field_description:mail.field_res_users__message_channel_ids
-msgid "Followers (Channels)"
 msgstr ""
 
 #. module: mail
@@ -2622,6 +2593,17 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has Mentions"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_blacklist__has_message
+#: model:ir.model.fields,field_description:mail.field_mail_channel__has_message
+#: model:ir.model.fields,field_description:mail.field_mail_thread__has_message
+#: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__has_message
+#: model:ir.model.fields,field_description:mail.field_mail_thread_cc__has_message
+#: model:ir.model.fields,field_description:mail.field_res_partner__has_message
+#: model:ir.model.fields,field_description:mail.field_res_users__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: mail
@@ -2853,12 +2835,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_followers__is_active
-msgid ""
-"If the related partner is active (if exist) or if related channel exist"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
@@ -2972,6 +2948,20 @@ msgid "Invalid primary email field on model %s"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Invalid value when creating a channel with members, only 4 or 6 are allowed."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid ""
+"Invalid value when creating a channel with memberships, only 0 is allowed."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/wizard/invite.py:0
 #, python-format
 msgid "Invitation to follow %(document_model)s: %(document_name)s"
@@ -3044,6 +3034,11 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
+msgid "Is Member"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__notification
 msgid "Is Notification"
 msgstr ""
@@ -3054,18 +3049,8 @@ msgid "Is Read"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_channel__is_subscribed
-msgid "Is Subscribed"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
 msgid "Is a chat"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
-msgid "Is a member"
 msgstr ""
 
 #. module: mail
@@ -3245,12 +3230,6 @@ msgid "List of cc from incoming emails."
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_wizard_invite__channel_ids
-msgid ""
-"List of channels that will be added as listeners of the current document."
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__partner_ids
 msgid ""
 "List of partners that will be added as follower of the current document."
@@ -3260,16 +3239,6 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "List users in the current channel"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_followers__channel_id
-msgid "Listener"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_channel__channel_partner_ids
-msgid "Listeners"
 msgstr ""
 
 #. module: mail
@@ -3531,6 +3500,7 @@ msgid "Meeting"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_channel__channel_partner_ids
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Members"
 msgstr ""
@@ -3902,11 +3872,6 @@ msgid "Name get of the related document."
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_followers__name
-msgid "Name of the related partner (if exist) or the related channel"
-msgstr ""
-
-#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__report_name
 msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
@@ -4032,6 +3997,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/activity.js:0
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 #, python-format
 msgid "Next Activity"
 msgstr ""
@@ -4747,6 +4713,22 @@ msgid "Post your message on the thread"
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Posting a message should be done on a business document. Use message_notify "
+"to send a notification to an user."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"Posting a message with channels as listeners is not supported since Odoo "
+"14.3+. Please update code accordingly."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_paynow
@@ -4947,11 +4929,6 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
 msgid "Recommended Activity Type"
-msgstr ""
-
-#. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_type__next_type_ids
-msgid "Recommended Next Activities"
 msgstr ""
 
 #. module: mail
@@ -5232,6 +5209,7 @@ msgid "Save as new template"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "Schedule"
 msgstr ""
@@ -5274,7 +5252,6 @@ msgid "Schedule an activity"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
 #: model:ir.model.fields,field_description:mail.field_mail_template__scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__scheduled_date
 msgid "Scheduled Date"
@@ -5696,6 +5673,21 @@ msgid "Subtypes"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__suggested_next_type_ids
+msgid "Suggest"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__suggest
+msgid "Suggest Next Activity"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_activity_type__suggested_next_type_ids
+msgid "Suggest these activities once the current one is marked as done."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_summary
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
@@ -6108,17 +6100,13 @@ msgid "Tracking values"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
-#: model:ir.model.fields,field_description:mail.field_mail_activity_type__force_next
-msgid "Trigger Next Activity"
+#: model:ir.model.fields,field_description:mail.field_mail_activity_type__triggered_next_type_id
+msgid "Trigger"
 msgstr ""
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/message/message.js:0
-#: code:addons/mail/static/src/components/message/message.js:0
-#, python-format
-msgid "True"
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__trigger
+msgid "Trigger Next Activity"
 msgstr ""
 
 #. module: mail
@@ -6813,13 +6801,13 @@ msgid "Zoom Out (-)"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
-msgid "after previous activity deadline"
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
+msgid "after completion date"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
-msgid "after validation date"
+#: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
+msgid "after previous activity deadline"
 msgstr ""
 
 #. module: mail
@@ -6850,6 +6838,13 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/components/message/message.xml:0
+#, python-format
+msgid "channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "channel."
 msgstr ""
@@ -6860,6 +6855,7 @@ msgid "days"
 msgstr ""
 
 #. module: mail
+#. openerp-web
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
@@ -6884,7 +6880,7 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
-msgid "e.g. Follow-up Call"
+msgid "e.g. Schedule a meeting"
 msgstr ""
 
 #. module: mail
@@ -6941,6 +6937,28 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "mail_blacklist_removal"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"message_post does not support model and res_id parameters anymore. Please "
+"call message_post on record."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid ""
+"message_post does not support subtype parameter anymore. Please give a valid"
+" subtype_id or subtype_xmlid value instead."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:0
+#, python-format
+msgid "message_post partner_ids and must be integer list, not commands."
 msgstr ""
 
 #. module: mail
@@ -7088,11 +7106,4 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__weeks
 msgid "weeks"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/components/message/message.xml:0
-#, python-format
-msgid "channel"
 msgstr ""

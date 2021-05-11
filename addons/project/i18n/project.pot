@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:28+0000\n"
-"PO-Revision-Date: 2021-02-18 14:28+0000\n"
+"POT-Creation-Date: 2021-05-11 09:25+0000\n"
+"PO-Revision-Date: 2021-05-11 09:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -86,6 +86,18 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "%s Use the %s icon to organize your daily activities."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "(+ %(child_count)s tasks)"
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "(+ 1 task)"
 msgstr ""
 
 #. module: project
@@ -399,6 +411,13 @@ msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">@</span>\n"
+"                                            <span class=\"oe_edit_only\">@</span>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "<span>Are you sure you want to delete this project ?</span>"
 msgstr ""
@@ -455,6 +474,14 @@ msgstr ""
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A sub-task cannot be a recurring task. Please consider making its parent "
+"task, a recurring task."
 msgstr ""
 
 #. module: project
@@ -776,30 +803,16 @@ msgid "Blocked"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__depend_on_ids
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "Blocked By"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Brainstorm"
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid ""
-"By saving this change, the customer email and phone number will also be "
-"updated."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "By saving this change, the customer email will also be updated."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "By saving this change, the customer phone number will also be updated."
 msgstr ""
 
 #. module: project
@@ -810,6 +823,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__child_text
+msgid "Child Text"
 msgstr ""
 
 #. module: project
@@ -1136,6 +1154,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
+#: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Deadline"
 msgstr ""
 
@@ -1202,15 +1221,9 @@ msgid "Delivered"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "Describe your project..."
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
 #: model:ir.model.fields,field_description:project.field_project_task__description
 #: model:ir.model.fields,field_description:project.field_project_task_type__description
-#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Description"
 msgstr ""
@@ -1222,6 +1235,12 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Design"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
+msgid "Determine the order in which to perform tasks"
 msgstr ""
 
 #. module: project
@@ -1274,6 +1293,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__display_project_id
+msgid "Display Project"
 msgstr ""
 
 #. module: project
@@ -1466,12 +1490,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__message_channel_ids
-#: model:ir.model.fields,field_description:project.field_project_task__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 msgid "Followers (Partners)"
@@ -1570,6 +1588,12 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__has_message
+#: model:ir.model.fields,field_description:project.field_project_task__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: project
@@ -2144,6 +2168,11 @@ msgid "Next Activities"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
@@ -2201,7 +2230,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
 #: model_terms:ir.actions.act_window,help:project.action_view_task
-#: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid "No tasks found. Let's create one!"
 msgstr ""
 
@@ -2380,6 +2408,7 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Parent Task"
 msgstr ""
@@ -2499,6 +2528,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
@@ -2553,14 +2583,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_project__subtask_project_id
-#: model:ir.model.fields,help:project.field_project_task__subtask_project_id
-msgid ""
-"Project in which sub-tasks of the current project will be created. It can be"
-" the current project itself."
 msgstr ""
 
 #. module: project
@@ -2704,7 +2726,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
-#: model:mail.message.subtype,description:project.mt_task_rating
 msgid "Ratings"
 msgstr ""
 
@@ -2903,11 +2924,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Restore"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__ribbon_message
-msgid "Ribbon Message"
 msgstr ""
 
 #. module: project
@@ -3177,13 +3193,6 @@ msgid "Sub-task Count"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
-#: model:ir.model.fields,field_description:project.field_project_task__subtask_project_id
-msgid "Sub-task Project"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.project_task_action_sub_task
 #: model:ir.model.fields,field_description:project.field_project_project__allow_subtasks
 #: model:ir.model.fields,field_description:project.field_project_task__child_ids
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_subtask_project
@@ -3273,10 +3282,22 @@ msgid "Task Count"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__task_count_with_subtasks
+msgid "Task Count With Subtasks"
+msgstr ""
+
+#. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__allow_task_dependencies
+#: model:ir.model.fields,field_description:project.field_project_task__allow_task_dependencies
+#: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_task_dependencies
+msgid "Task Dependencies"
 msgstr ""
 
 #. module: project
@@ -3587,7 +3608,6 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
 #: model_terms:ir.actions.act_window,help:project.action_view_task
-#: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
@@ -3704,6 +3724,11 @@ msgid "Use Subtasks"
 msgstr ""
 
 #. module: project
+#: model:res.groups,name:project.group_project_task_dependencies
+msgid "Use Task Dependencies"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
 msgid "Use Tasks as"
 msgstr ""
@@ -3732,6 +3757,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_email
 msgid "User Email"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "View Task"
 msgstr ""
 
 #. module: project
@@ -3881,6 +3911,12 @@ msgstr ""
 msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot create cyclic dependency."
 msgstr ""
 
 #. module: project

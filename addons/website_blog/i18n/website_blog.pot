@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.1\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:28+0000\n"
-"PO-Revision-Date: 2020-12-11 07:28+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -202,8 +202,14 @@ msgid "All Blogs"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "All blogs"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Alone in the ocean"
 msgstr ""
 
 #. module: website_blog
@@ -211,15 +217,6 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/website_blog.js:0
 #, python-format
 msgid "Amazing blog article: %s! Check it live: %s"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
-#, python-format
-msgid ""
-"An error occured with this latest posts block. If the problem persists, "
-"please consider deleting it and adding a new one"
 msgstr ""
 
 #. module: website_blog
@@ -278,8 +275,9 @@ msgid "Avatar"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "Big Pictures"
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Awesome hotel rooms"
 msgstr ""
 
 #. module: website_blog
@@ -288,6 +286,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
 #: model:website.menu,name:website_blog.menu_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_blog_view_search
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #, python-format
@@ -392,18 +391,8 @@ msgid "Can Publish"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "Cards"
-msgstr ""
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
 msgid "Category"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "Choose a blog"
 msgstr ""
 
 #. module: website_blog
@@ -444,11 +433,6 @@ msgid "Comments"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
-msgid "Confirm"
-msgstr ""
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__content
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__content
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
@@ -483,7 +467,7 @@ msgid "Created on"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Dexter"
 msgstr ""
 
@@ -493,17 +477,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_edit_options
 msgid "Duplicate"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
-msgid "Edit"
 msgstr ""
 
 #. module: website_blog
@@ -527,11 +507,6 @@ msgid "Edit the 'Filter Results' page header."
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
-msgid "Existing"
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
 msgid "Facebook"
@@ -549,12 +524,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: website_blog
-#: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_channel_ids
-#: model:ir.model.fields,field_description:website_blog.field_blog_post__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_partner_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_partner_ids
 msgid "Followers (Partners)"
@@ -566,13 +535,9 @@ msgid "Group By"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "Horizontal"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "Hover effect"
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__has_message
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: website_blog
@@ -581,6 +546,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
 #: model:ir.model.fields,field_description:website_blog.field_website__id
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
 msgid "ID"
 msgstr ""
 
@@ -601,7 +567,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_card_template
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_card
 msgid "In"
 msgstr ""
 
@@ -618,8 +584,20 @@ msgid "Is Published"
 msgstr ""
 
 #. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Islands"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Jungle"
+msgstr ""
+
+#. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:0
+#: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Large"
 msgstr ""
@@ -636,6 +614,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag____last_update
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category____last_update
 #: model:ir.model.fields,field_description:website_blog.field_website____last_update
+#: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -657,23 +636,17 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Latest"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "Layout"
+#: model:ir.filters,name:website_blog.dynamic_snippet_latest_blog_post_filter
+msgid "Latest Blog Posts"
 msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_share_links_display
 msgid "LinkedIn"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "List"
 msgstr ""
 
 #. module: website_blog
@@ -683,13 +656,13 @@ msgid "Main Attachment"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Marley"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:0
+#: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Medium"
 msgstr ""
@@ -722,14 +695,13 @@ msgid "Meta Title"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
-msgid "Most viewed"
+#: model:ir.filters,name:website_blog.dynamic_snippet_most_viewed_blog_post_filter
+msgid "Most Viewed Blog Posts"
 msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__name
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Name"
 msgstr ""
 
@@ -738,18 +710,6 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:0
 #, python-format
 msgid "New Blog Post"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
-msgid "New tag"
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
-#, python-format
-msgid "No blog post was found. Make sure your posts are published."
 msgstr ""
 
 #. module: website_blog
@@ -773,7 +733,7 @@ msgid "No tags defined yet."
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "None"
 msgstr ""
 
@@ -832,7 +792,6 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_count
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__post_ids
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Posts"
 msgstr ""
 
@@ -897,8 +856,17 @@ msgid "SMS Delivery error"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
-msgid "Save"
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_big_picture
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_card
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_horizontal
+#: model_terms:ir.ui.view,arch_db:website_blog.dynamic_filter_template_blog_post_list
+msgid "Sample"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Satellites"
 msgstr ""
 
 #. module: website_blog
@@ -906,6 +874,18 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Search for an image. (eg: type \"business\")"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Seaside vs mountain side"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Seeing the world from above"
 msgstr ""
 
 #. module: website_blog
@@ -969,8 +949,20 @@ msgid "Share this post"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
 msgid "Silly-Chico"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Skies"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Spotting the fauna"
 msgstr ""
 
 #. module: website_blog
@@ -1018,7 +1010,6 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_tree
-#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Tag List"
 msgstr ""
 
@@ -1038,7 +1029,14 @@ msgstr ""
 #: model:ir.ui.menu,name:website_blog.menu_blog_tag_global
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
+#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Tags"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Taking pictures in the dark"
 msgstr ""
 
 #. module: website_blog
@@ -1070,14 +1068,14 @@ msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:0
+#: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "This tag already exists"
 msgstr ""
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.editor.js:0
+#: code:addons/website_blog/static/src/js/options.js:0
 #, python-format
 msgid "Tiny"
 msgstr ""
@@ -1128,6 +1126,12 @@ msgid "Used in:"
 msgstr ""
 
 #. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "Viewpoints"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.post_info
 msgid "Views"
 msgstr ""
@@ -1167,6 +1171,11 @@ msgid "Website Messages"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model,name:website_blog.model_website_snippet_filter
+msgid "Website Snippet Filter"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_url
 msgid "Website URL"
 msgstr ""
@@ -1203,6 +1212,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__website_meta_og_img
 msgid "Website opengraph image"
+msgstr ""
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_snippet_filter.py:0
+#, python-format
+msgid "With a View"
 msgstr ""
 
 #. module: website_blog
@@ -1265,5 +1280,17 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+msgid ""
+"|\n"
+"                            <i class=\"fa fa-comment text-muted mr-1\"/>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
 msgid "| No comments yet"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_options_template
+msgid "⌙ Hover effect"
 msgstr ""

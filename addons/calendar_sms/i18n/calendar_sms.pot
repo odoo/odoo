@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgid "Event reminder: ${object.name}, ${object.display_time}"
 msgstr ""
 
 #. module: calendar_sms
-#: code:addons/calendar_sms/models/calendar.py:0
+#: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Event reminder: %(name)s, %(time)s."
 msgstr ""
@@ -68,13 +68,45 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "SMS"
+msgstr ""
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "SMS Template"
+msgstr ""
+
+#. module: calendar_sms
 #: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
 msgid "SMS Text Message"
 msgstr ""
 
 #. module: calendar_sms
-#: model:ir.actions.act_window,name:calendar_sms.calendar_event_act_window_sms_composer_single
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
+msgid "Send SMS"
+msgstr ""
+
+#. module: calendar_sms
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "Send SMS Text Message"
+msgstr ""
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
 msgid "Send SMS to attendees"
+msgstr ""
+
+#. module: calendar_sms
+#: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "Template used to render SMS reminder content."
+msgstr ""
+
+#. module: calendar_sms
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "There are no attendees on these events"
 msgstr ""
 
 #. module: calendar_sms

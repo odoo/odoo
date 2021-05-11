@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2021-05-11 09:27+0000\n"
+"PO-Revision-Date: 2021-05-11 09:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -198,11 +198,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
 msgid "Followers (Partners)"
 msgstr ""
@@ -220,6 +215,11 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Group By"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -325,6 +325,11 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
 msgid "Name of the batch transfer"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -448,8 +453,18 @@ msgid "Search Batch Transfer"
 msgstr ""
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Set quantities"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
 msgid "Show Check Availability"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_validate
+msgid "Show Validate"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -522,6 +537,12 @@ msgstr ""
 msgid ""
 "Technical field used to compute whether the check availability button should"
 " be shown."
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_validate
+msgid ""
+"Technical field used to decide whether the validate button should be shown."
 msgstr ""
 
 #. module: stock_picking_batch

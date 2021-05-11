@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:28+0000\n"
-"PO-Revision-Date: 2021-02-18 14:28+0000\n"
+"POT-Creation-Date: 2021-05-11 09:25+0000\n"
+"PO-Revision-Date: 2021-05-11 09:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -73,6 +73,12 @@ msgid "# of BoM Where is Used"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_routing.py:0
+#, python-format
+msgid "%i work orders"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "%s %s unbuilt in"
@@ -88,6 +94,16 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
+msgid "&amp; Cost"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
+msgid "&gt;"
 msgstr ""
 
 #. module: mrp
@@ -110,6 +126,11 @@ msgstr ""
 msgid ""
 ".\n"
 "            Manual actions may be needed."
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "/&gt;"
 msgstr ""
 
 #. module: mrp
@@ -482,11 +503,6 @@ msgid "Allowed Mo"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_product_ids
-msgid "Allowed Product"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
 msgid "Allowed to Reserve Production"
 msgstr ""
@@ -688,6 +704,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__bom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_bom_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 msgid "Bill of Material"
 msgstr ""
 
@@ -811,6 +828,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
+#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "BoM Structure"
 msgstr ""
@@ -821,11 +839,6 @@ msgstr ""
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #, python-format
 msgid "BoM Structure & Cost"
-msgstr ""
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
-msgid "BoM Structure &amp; Cost"
 msgstr ""
 
 #. module: mrp
@@ -945,6 +958,11 @@ msgid "Checksum/SHA1"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
+msgid "Cleanup Time"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view_kanban
 msgid "Code"
@@ -1024,6 +1042,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
 msgid "Compute based on tracked time"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
+msgid "Computed on last"
 msgstr ""
 
 #. module: mrp
@@ -1557,13 +1580,6 @@ msgstr ""
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
-msgid ""
-"Existing Serial number (%s). Please correct the serial numbers encoded."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
 msgid "Exp %s"
 msgstr ""
 
@@ -1667,13 +1683,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_channel_ids
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__message_channel_ids
-#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_partner_ids
@@ -1689,6 +1698,11 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Force"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__forecasted_issue
+msgid "Forecasted Issue"
 msgstr ""
 
 #. module: mrp
@@ -1771,6 +1785,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_produced
 msgid "Has Been Produced"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__has_message
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__has_message
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: mrp
@@ -2572,6 +2593,12 @@ msgid "New"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_calendar_event_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_date_deadline
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -2789,6 +2816,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2810,6 +2838,11 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Operations Planned"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
+msgid "Operations Search Filters"
 msgstr ""
 
 #. module: mrp
@@ -3044,6 +3077,13 @@ msgstr ""
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Print"
+msgstr ""
+
+#. module: mrp
+#. openerp-web
+#: code:addons/mrp/static/src/xml/mrp.xml:0
+#, python-format
+msgid "Print All Variants"
 msgstr ""
 
 #. module: mrp
@@ -3424,6 +3464,11 @@ msgid "Reporting"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+msgid "Reserve"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Reserved"
 msgstr ""
@@ -3634,6 +3679,11 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Settings"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
+msgid "Setup Time"
 msgstr ""
 
 #. module: mrp
@@ -4100,16 +4150,6 @@ msgid "Time Tracking: %(user)s"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
-msgid "Time after prod."
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
-msgid "Time before prod."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_stop
 msgid "Time in minutes for the cleaning."
 msgstr ""
@@ -4489,6 +4529,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
+#: code:addons/mrp/models/stock_scrap.py:0
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -4714,6 +4755,7 @@ msgid "Work orders in progress. Click to block work center."
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Workcenter"
 msgstr ""
@@ -4954,13 +4996,6 @@ msgstr ""
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You should provide a lot number for the final product."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:0
-#, python-format
-msgid ""
-"You should provide either a product or a product template to search a BoM"
 msgstr ""
 
 #. module: mrp

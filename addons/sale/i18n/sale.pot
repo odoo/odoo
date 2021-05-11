@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:29+0000\n"
-"PO-Revision-Date: 2021-02-18 14:29+0000\n"
+"POT-Creation-Date: 2021-05-11 09:27+0000\n"
+"PO-Revision-Date: 2021-05-11 09:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -216,10 +216,10 @@ msgid ""
 "            <tr>\n"
 "                <td>\n"
 "                    <strong>Payment Method:</strong>\n"
-"                    % if transaction.payment_token_id:\n"
-"                        ${transaction.payment_token_id.name}\n"
+"                    % if transaction.token_id:\n"
+"                        ${transaction.token_id.name}\n"
 "                    % else:\n"
-"                        ${transaction.acquirer_id.name}\n"
+"                        ${transaction.acquirer_id.sudo().name}\n"
 "                    % endif\n"
 "                     (${format_amount(transaction.amount, object.currency_id)})\n"
 "                </td>\n"
@@ -366,6 +366,13 @@ msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+msgid ""
+"<span attrs=\"{'invisible': [('advance_payment_method', '!=', "
+"'percentage')]}\" class=\"oe_inline\">%</span>"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
@@ -502,6 +509,13 @@ msgid "<strong>Fiscal Position Remark:</strong>"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid ""
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                        If you believe that it is an error, please contact the website administrator."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Order Date:</strong>"
@@ -567,37 +581,11 @@ msgid "A confirmed sales order requires a confirmation date."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:0
-#, python-format
-msgid "A journal must be specified for the acquirer %s."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/models/sale.py:0
-#, python-format
-msgid "A payment acquirer is required to create a transaction."
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
 msgid ""
 "A standard invoice is issued with all the order lines ready for invoicing,"
 "         according to their invoicing policy (based on ordered or delivered "
 "quantity)."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/models/sale.py:0
-#, python-format
-msgid ""
-"A transaction can't be linked to sales orders having different currencies."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/models/sale.py:0
-#, python-format
-msgid ""
-"A transaction can't be linked to sales orders having different partners."
 msgstr ""
 
 #. module: sale
@@ -618,18 +606,8 @@ msgid "Accept &amp; Pay"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
-msgid "Accept &amp; Pay Quotation"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
-msgid "Accept &amp; Sign Quotation"
 msgstr ""
 
 #. module: sale
@@ -1600,11 +1578,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
 msgstr ""
@@ -1689,6 +1662,11 @@ msgid "Group By"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
 msgstr ""
@@ -1761,14 +1739,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
-#, python-format
-msgid ""
-"If we store your payment information on our server, subscription payments "
-"will be made automatically."
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
@@ -1804,18 +1774,6 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Invalid signature data."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/models/sale.py:0
-#, python-format
-msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/models/sale.py:0
-#, python-format
-msgid "Invalid token found! Token partner %s != %s"
 msgstr ""
 
 #. module: sale
@@ -2252,6 +2210,11 @@ msgid "New Quotation"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
@@ -2572,20 +2535,7 @@ msgid "Partner Country"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/controllers/portal.py:0
-#, python-format
-msgid "Pay & Confirm"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Pay &amp; Confirm"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/models/payment.py:0
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-#, python-format
 msgid "Pay Now"
 msgstr ""
 
@@ -2990,7 +2940,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
 msgstr ""
 
@@ -3044,6 +2993,21 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Review, Accept &amp; Pay Quotation"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Review, Accept &amp; Sign Quotation"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
+msgid "Review, Sign &amp; Pay Quotation"
 msgstr ""
 
 #. module: sale
@@ -3434,11 +3398,6 @@ msgid "Sign &amp; Pay"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
-msgid "Sign &amp; Pay Quotation"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
 msgid "Sign online"
 msgstr ""
@@ -3758,6 +3717,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/controllers/portal.py:0
+#: code:addons/sale/controllers/portal.py:0
+#, python-format
+msgid "The provided parameters are invalid."
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
 msgid ""
 "The rate of the currency to the currency of rate 1 applicable at the date of"
@@ -3936,6 +3902,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tracking"
 msgstr ""
 
 #. module: sale
