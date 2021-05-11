@@ -192,7 +192,7 @@ class WebsiteVisitor(models.Model):
         if visitor and not visitor.timezone:
             tz = self._get_visitor_timezone()
             if tz:
-                visitor.timezone = tz
+                visitor._update_visitor_timezone(tz)
         if not visitor and force_create:
             visitor = self._create_visitor()
 
@@ -291,6 +291,17 @@ class WebsiteVisitor(models.Model):
         deadline = datetime.now() - timedelta(days=delay_days)
         visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', deadline)])
         visitors_to_archive.write({'active': False})
+        
+    def _update_visitor_timezone(self, timezone):
+        """ We need to do this part here to avoid concurrent updates error. """
+        try:
+            with self.env.cr.savepoint():
+                query_lock = "SELECT * FROM website_visitor where id = %s FOR NO KEY UPDATE NOWAIT"
+                self.env.cr.execute(query_lock, (self.id,), log_exceptions=False)
+                query = "UPDATE website_visitor SET timezone = %s WHERE id = %s"
+                self.env.cr.execute(query, (timezone, self.id), log_exceptions=False)
+        except Exception:
+            pass
 
     def _update_visitor_last_visit(self):
         """ We need to do this part here to avoid concurrent updates error. """
