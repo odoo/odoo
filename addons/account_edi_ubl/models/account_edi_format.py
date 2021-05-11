@@ -190,6 +190,7 @@ class AccountEdiFormat(models.Model):
 
         return {
             **invoice._prepare_edi_vals_to_export(),
+            'tax_details': invoice._prepare_edi_tax_details(),
             'ubl_version': 2.1,
             'type_code': 380 if invoice.move_type == 'out_invoice' else 381,
             'payment_means_code': 42 if invoice.journal_id.bank_account_id else 31,
