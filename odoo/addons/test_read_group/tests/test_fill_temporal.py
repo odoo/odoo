@@ -667,3 +667,244 @@ class TestFillTemporal(common.TransactionCase):
         groups = model_fill.read_group([], fields=['datetime', 'value'], groupby=['datetime'])
 
         self.assertEqual(groups, expected)
+
+    def test_with_bounds(self):
+        """Test the alternative dictionary format for the fill_temporal context key (fill_from, fill_to).
+
+        We apply the fill_temporal logic only to a cibled portion of the result of a read_group.
+        [fill_from, fill_to] are the inclusive bounds of this portion.
+        Data outside those bounds will not be filtered out
+        Bounds will be converted to the start of the period which they belong to (depending
+        on the granularity of the groupby). This means that we can put any date of the period as the bound
+        and it will still work.
+        """
+        self.Model.create({'date': '1916-02-15', 'value': 1})
+        self.Model.create({'date': '1916-06-15', 'value': 2})
+        self.Model.create({'date': '1916-11-15', 'value': 3})
+
+        expected = [{
+            '__domain': ['&', ('date', '>=', '1916-02-01'), ('date', '<', '1916-03-01')],
+            '__range': {'date': {'from': '1916-02-01', 'to': '1916-03-01'}},
+            'date': 'February 1916',
+            'date_count': 1,
+            'value': 1
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-05-01'), ('date', '<', '1916-06-01')],
+            '__range': {'date': {'from': '1916-05-01', 'to': '1916-06-01'}},
+            'date': 'May 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-06-01'), ('date', '<', '1916-07-01')],
+            '__range': {'date': {'from': '1916-06-01', 'to': '1916-07-01'}},
+            'date': 'June 1916',
+            'date_count': 1,
+            'value': 2
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-07-01'), ('date', '<', '1916-08-01')],
+            '__range': {'date': {'from': '1916-07-01', 'to': '1916-08-01'}},
+            'date': 'July 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-08-01'), ('date', '<', '1916-09-01')],
+            '__range': {'date': {'from': '1916-08-01', 'to': '1916-09-01'}},
+            'date': 'August 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-11-01'), ('date', '<', '1916-12-01')],
+            '__range': {'date': {'from': '1916-11-01', 'to': '1916-12-01'}},
+            'date': 'November 1916',
+            'date_count': 1,
+            'value': 3
+        }]
+
+        model_fill = self.Model.with_context(fill_temporal={"fill_from": '1916-05-15', "fill_to": '1916-08-15'})
+        groups = model_fill.read_group([], fields=['date', 'value'], groupby=['date'])
+
+        self.assertEqual(groups, expected)
+
+    def test_upper_bound(self):
+        """Test the alternative dictionary format for the fill_temporal context key (fill_to).
+
+        Same as with both bounds, but this time the first bound is the earliest group with data
+        (since only fill_to is set)
+        """
+        self.Model.create({'date': '1916-02-15', 'value': 1})
+
+        expected = [{
+            '__domain': ['&', ('date', '>=', '1916-02-01'), ('date', '<', '1916-03-01')],
+            '__range': {'date': {'from': '1916-02-01', 'to': '1916-03-01'}},
+            'date': 'February 1916',
+            'date_count': 1,
+            'value': 1
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-03-01'), ('date', '<', '1916-04-01')],
+            '__range': {'date': {'from': '1916-03-01', 'to': '1916-04-01'}},
+            'date': 'March 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-04-01'), ('date', '<', '1916-05-01')],
+            '__range': {'date': {'from': '1916-04-01', 'to': '1916-05-01'}},
+            'date': 'April 1916',
+            'date_count': 0,
+            'value': False
+        }]
+
+        model_fill = self.Model.with_context(fill_temporal={"fill_to": '1916-04-15'})
+        groups = model_fill.read_group([], fields=['date', 'value'], groupby=['date'])
+
+        self.assertEqual(groups, expected)
+
+    def test_lower_bound(self):
+        """Test the alternative dictionary format for the fill_temporal context key (fill_from).
+
+        Same as with both bounds, but this time the second bound is the lastest group with data
+        (since only fill_from is set)
+        """
+        self.Model.create({'date': '1916-04-15', 'value': 1})
+
+        expected = [{
+            '__domain': ['&', ('date', '>=', '1916-02-01'), ('date', '<', '1916-03-01')],
+            '__range': {'date': {'from': '1916-02-01', 'to': '1916-03-01'}},
+            'date': 'February 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-03-01'), ('date', '<', '1916-04-01')],
+            '__range': {'date': {'from': '1916-03-01', 'to': '1916-04-01'}},
+            'date': 'March 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-04-01'), ('date', '<', '1916-05-01')],
+            '__range': {'date': {'from': '1916-04-01', 'to': '1916-05-01'}},
+            'date': 'April 1916',
+            'date_count': 1,
+            'value': 1
+        }]
+
+        model_fill = self.Model.with_context(fill_temporal={"fill_from": '1916-02-15'})
+        groups = model_fill.read_group([], fields=['date', 'value'], groupby=['date'])
+
+        self.assertEqual(groups, expected)
+
+    def test_empty_context_key(self):
+        """Test the alternative dictionary format for the fill_temporal context key.
+
+        When fill_temporal context key is set to an empty dictionary, it must be equivalent to being True
+        """
+        self.Model.create({'date': '1916-02-15', 'value': 1})
+        self.Model.create({'date': '1916-04-15', 'value': 2})
+
+        expected = [{
+            '__domain': ['&', ('date', '>=', '1916-02-01'), ('date', '<', '1916-03-01')],
+            '__range': {'date': {'from': '1916-02-01', 'to': '1916-03-01'}},
+            'date': 'February 1916',
+            'date_count': 1,
+            'value': 1
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-03-01'), ('date', '<', '1916-04-01')],
+            '__range': {'date': {'from': '1916-03-01', 'to': '1916-04-01'}},
+            'date': 'March 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-04-01'), ('date', '<', '1916-05-01')],
+            '__range': {'date': {'from': '1916-04-01', 'to': '1916-05-01'}},
+            'date': 'April 1916',
+            'date_count': 1,
+            'value': 2
+        }]
+
+        model_fill = self.Model.with_context(fill_temporal={})
+        groups = model_fill.read_group([], fields=['date', 'value'], groupby=['date'])
+
+        self.assertEqual(groups, expected)
+
+    def test_min_groups(self):
+        """Test the alternative dictionary format for the fill_temporal context key (min_groups).
+
+        We guarantee that at least a certain amount of contiguous groups is returned, from the
+        earliest group with data.
+        """
+        self.Model.create({'date': '1916-02-15', 'value': 1})
+
+        expected = [{
+            '__domain': ['&', ('date', '>=', '1916-02-01'), ('date', '<', '1916-03-01')],
+            '__range': {'date': {'from': '1916-02-01', 'to': '1916-03-01'}},
+            'date': 'February 1916',
+            'date_count': 1,
+            'value': 1
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-03-01'), ('date', '<', '1916-04-01')],
+            '__range': {'date': {'from': '1916-03-01', 'to': '1916-04-01'}},
+            'date': 'March 1916',
+            'date_count': 0,
+            'value': False
+        }]
+
+        model_fill = self.Model.with_context(fill_temporal={"min_groups": 2})
+        groups = model_fill.read_group([], fields=['date', 'value'], groupby=['date'])
+
+        self.assertEqual(groups, expected)
+
+    def test_with_bounds_and_min_groups(self):
+        """Test the alternative dictionary format for the fill_temporal context key (fill_from, fill_to, min_groups).
+
+        We guarantee that at least a certain amount of contiguous groups is returned, from the
+        fill_from bound. The fill_from bound has precedence over the first group with data regarding min_groups
+        (min_groups will first try to anchor itself on fill_from, or, if not specified, on the first group with data).
+        This amount is not restricted by the fill_to bound, so, if necessary, the fill_temporal
+        logic will be applied until min_groups is guaranteed, even for groups later than fill_to
+        Groups outside the specifed bounds are not counted as part of min_groups, unless added specifically
+        to guarantee min_groups.
+        """
+        self.Model.create({'date': '1916-02-15', 'value': 1})
+        self.Model.create({'date': '1916-06-15', 'value': 2})
+        self.Model.create({'date': '1916-11-15', 'value': 3})
+
+        expected = [{
+            '__domain': ['&', ('date', '>=', '1916-02-01'), ('date', '<', '1916-03-01')],
+            '__range': {'date': {'from': '1916-02-01', 'to': '1916-03-01'}},
+            'date': 'February 1916',
+            'date_count': 1,
+            'value': 1
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-05-01'), ('date', '<', '1916-06-01')],
+            '__range': {'date': {'from': '1916-05-01', 'to': '1916-06-01'}},
+            'date': 'May 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-06-01'), ('date', '<', '1916-07-01')],
+            '__range': {'date': {'from': '1916-06-01', 'to': '1916-07-01'}},
+            'date': 'June 1916',
+            'date_count': 1,
+            'value': 2
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-07-01'), ('date', '<', '1916-08-01')],
+            '__range': {'date': {'from': '1916-07-01', 'to': '1916-08-01'}},
+            'date': 'July 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-08-01'), ('date', '<', '1916-09-01')],
+            '__range': {'date': {'from': '1916-08-01', 'to': '1916-09-01'}},
+            'date': 'August 1916',
+            'date_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&', ('date', '>=', '1916-11-01'), ('date', '<', '1916-12-01')],
+            '__range': {'date': {'from': '1916-11-01', 'to': '1916-12-01'}},
+            'date': 'November 1916',
+            'date_count': 1,
+            'value': 3
+        }]
+
+        model_fill = self.Model.with_context(fill_temporal={"fill_from": '1916-05-15', "fill_to": '1916-07-15', "min_groups": 4})
+        groups = model_fill.read_group([], fields=['date', 'value'], groupby=['date'])
+
+        self.assertEqual(groups, expected)
