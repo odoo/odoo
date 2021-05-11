@@ -16,13 +16,6 @@ options.registry.countdown = options.Class.extend({
     // Options
     //--------------------------------------------------------------------------
 
-    onBuilt: function() {
-        [...this.$target.get()]
-            .map(countdownNode => ([...countdownNode.querySelectorAll('img.s_preview')]))
-            .flat()
-            .forEach(previewNode => previewNode.remove());
-    },
-
     /**
      * Changes the countdown action at zero.
      *

@@ -103,8 +103,6 @@ const ChartWidget = publicWidget.Widget.extend({
             };
         }
 
-        const preview = this.el.querySelector('img.s_preview');
-        if (preview) preview.parentNode.removeChild(preview);
         const canvas = this.el.querySelector('canvas');
         this.chart = new window.Chart(canvas, chartData);
         return this._super.apply(this, arguments);
