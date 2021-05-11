@@ -13,7 +13,7 @@
     position: relative;
     @extend .font-weight-bold;
 
-    &:before {
+    &:not(.o_dropdown_item_active_noarrow):before {
       @include o-position-absolute(0);
       transform: translate(-1.5em, 90%);
       font: .7em/1em FontAwesome;
