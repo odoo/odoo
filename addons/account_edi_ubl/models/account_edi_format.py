@@ -259,10 +259,3 @@ class AccountEdiFormat(models.Model):
             attachment = self._export_ubl(invoice)
             res[invoice] = {'success': True, 'attachment': attachment}
         return res
-
-    def _is_embedding_to_invoice_pdf_needed(self):
-        # OVERRIDE
-        self.ensure_one()
-        if self.code != 'ubl_2_1':
-            return super()._is_embedding_to_invoice_pdf_needed()
-        return False  # ubl must not be embedded to PDF.
