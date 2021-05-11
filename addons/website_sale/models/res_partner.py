@@ -13,7 +13,7 @@ class ResPartner(models.Model):
     def _compute_last_website_so_id(self):
         SaleOrder = self.env['sale.order']
         for partner in self:
-            is_public = any(u._is_public() for u in partner.with_context(active_test=False).user_ids)
+            is_public = partner.is_public
             website = ir_http.get_request_website()
             if website and not is_public:
                 partner.last_website_so_id = SaleOrder.search([
