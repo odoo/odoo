@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:29+0000\n"
-"PO-Revision-Date: 2021-02-18 14:29+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -110,6 +110,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.report_simple_barcode
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label
 msgid "<span class=\"text-muted\">No barcode available</span>"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "<span>%</span>"
 msgstr ""
 
 #. module: product
@@ -779,6 +784,16 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__priority__1
+msgid "Favorite"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Favorites"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__fixed
 msgid "Fixed Price"
@@ -788,12 +803,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
 msgid "Followers"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__message_channel_ids
-#: model:ir.model.fields,field_description:product.field_product_template__message_channel_ids
-msgid "Followers (Channels)"
 msgstr ""
 
 #. module: product
@@ -858,6 +867,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__has_message
+#: model:ir.model.fields,field_description:product.field_product_template__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: product
@@ -1235,6 +1250,12 @@ msgid "Never"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1255,6 +1276,11 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__priority__0
+msgid "Normal"
 msgstr ""
 
 #. module: product
@@ -1341,6 +1367,11 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
 msgid "Percentage Price"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
+msgid "Pills"
 msgstr ""
 
 #. module: product
@@ -1510,6 +1541,12 @@ msgstr ""
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Print"
+msgstr ""
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__priority
+#: model:ir.model.fields,field_description:product.field_product_template__priority
+msgid "Priority"
 msgstr ""
 
 #. module: product
@@ -2372,12 +2409,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__volume
 #: model:ir.model.fields,field_description:product.field_product_template__volume
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
-msgid "Volume"
-msgstr ""
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
-msgid "Volume UoM"
+msgid "Volume"
 msgstr ""
 
 #. module: product
@@ -2406,12 +2439,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
-msgid "Weight"
-msgstr ""
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
-msgid "Weight UoM"
+msgid "Weight"
 msgstr ""
 
 #. module: product

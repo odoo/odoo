@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:29+0000\n"
-"PO-Revision-Date: 2021-02-18 14:29+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,16 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
 msgid "# Views"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+msgid "#{post.name}"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "#{post_name}"
 msgstr ""
 
 #. module: website_forum
@@ -571,6 +581,28 @@ msgid "<span class=\"mx-1 d-none d-sm-inline\">&amp;nbsp;|</span>"
 msgstr ""
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "<span class=\"mx-1 text-400 d-none d-lg-block\">|</span>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "<span class=\"mx-1\">|</span>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid ""
+"<span class=\"mx-1\">|</span>\n"
+"                    <i class=\"fa fa-star\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "<span class=\"mx-3  mx-lg-2 text-400 d-none d-md-inline\">|</span>"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "<span class=\"navbar-text mr-1\">Go to:</span>"
 msgstr ""
@@ -704,7 +736,6 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#. openerp-web
 #: code:addons/website_forum/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
@@ -1625,13 +1656,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_channel_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_channel_ids
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_partner_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_partner_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_partner_ids
@@ -1795,6 +1819,13 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__uid_has_answered
 msgid "Has Answered"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__has_message
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__has_message
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: website_forum

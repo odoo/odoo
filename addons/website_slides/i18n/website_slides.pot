@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:28+0000\n"
-"PO-Revision-Date: 2021-02-18 14:28+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -349,13 +349,6 @@ msgid "<i class=\"fa fa-graduation-cap mr-1\"/>All courses"
 msgstr ""
 
 #. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_main
-msgid ""
-"<i class=\"fa fa-home\"/>\n"
-"                                            Course"
-msgstr ""
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-home\"/> About"
 msgstr ""
@@ -396,11 +389,6 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "<i class=\"fa fa-plus mr-1\"/><span>Add Content</span>"
-msgstr ""
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
-msgid "<i class=\"fa fa-plus mr-1\"/><span>Add Tag</span>"
 msgstr ""
 
 #. module: website_slides
@@ -639,6 +627,11 @@ msgid "<span class=\"p-2\">Course content</span>"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
+msgid "<span class=\"text-500 mx-2\">•</span>"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span class=\"text-muted font-weight-bold mr-3\">Rating</span>"
 msgstr ""
@@ -680,6 +673,7 @@ msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<span>Add Tag</span>"
 msgstr ""
 
@@ -721,6 +715,11 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span>XP</span>"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_share_modal_header
+msgid "<span>×</span>"
 msgstr ""
 
 #. module: website_slides
@@ -2215,12 +2214,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_channel_ids
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_partner_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_partner_ids
 msgid "Followers (Partners)"
@@ -2339,6 +2332,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_ir_http
 msgid "HTTP Routing"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: website_slides
@@ -2934,6 +2933,11 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Next"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: website_slides
@@ -4268,7 +4272,6 @@ msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
-#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Type"
 msgstr ""

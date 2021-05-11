@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.2\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-18 14:29+0000\n"
-"PO-Revision-Date: 2021-02-18 14:29+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-05-11 09:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -511,6 +511,12 @@ msgid "Created on"
 msgstr ""
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__cron_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__cron_id
+msgid "Cron"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__currency_id
@@ -690,11 +696,6 @@ msgid "Followers"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_partner_ids
 msgid "Followers (Partners)"
 msgstr ""
@@ -715,9 +716,9 @@ msgid "Formatted Email"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_friday
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_friday
-msgid "Friday"
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__fri
+msgid "Fri"
 msgstr ""
 
 #. module: lunch
@@ -726,6 +727,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
+msgid "Has Message"
 msgstr ""
 
 #. module: lunch
@@ -995,20 +1001,6 @@ msgid "Lunch: Receive meals"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.ir_cron_lunch_alerts_ir_actions_server
-#: model:ir.cron,cron_name:lunch.ir_cron_lunch_alerts
-#: model:ir.cron,name:lunch.ir_cron_lunch_alerts
-msgid "Lunch: alert chat notification"
-msgstr ""
-
-#. module: lunch
-#: model:ir.actions.server,name:lunch.ir_cron_lunch_ir_actions_server
-#: model:ir.cron,cron_name:lunch.ir_cron_lunch
-#: model:ir.cron,name:lunch.ir_cron_lunch
-msgid "Lunch: automatic email send"
-msgstr ""
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
@@ -1054,9 +1046,9 @@ msgid "Moment"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_monday
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_monday
-msgid "Monday"
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__mon
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__mon
+msgid "Mon"
 msgstr ""
 
 #. module: lunch
@@ -1111,6 +1103,11 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__new_until
 msgid "New Until"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: lunch
@@ -1456,9 +1453,9 @@ msgid "Sandwich"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_saturday
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_saturday
-msgid "Saturday"
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__sat
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__sat
+msgid "Sat"
 msgstr ""
 
 #. module: lunch
@@ -1541,9 +1538,9 @@ msgid "Summary of all lunch orders, grouped by vendor and by date."
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_sunday
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_sunday
-msgid "Sunday"
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__sun
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__sun
+msgid "Sun"
 msgstr ""
 
 #. module: lunch
@@ -1601,9 +1598,9 @@ msgid "This is the first time you order a meal"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_thursday
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_thursday
-msgid "Thursday"
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__thu
+msgid "Thu"
 msgstr ""
 
 #. module: lunch
@@ -1685,9 +1682,9 @@ msgid "Total Price"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_tuesday
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_tuesday
-msgid "Tuesday"
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__tue
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__tue
+msgid "Tue"
 msgstr ""
 
 #. module: lunch
@@ -1751,9 +1748,9 @@ msgid "Vendors"
 msgstr ""
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_alert__recurrency_wednesday
-#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_wednesday
-msgid "Wednesday"
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__wed
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__wed
+msgid "Wed"
 msgstr ""
 
 #. module: lunch
