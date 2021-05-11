@@ -314,7 +314,7 @@ export class ViewAdapter extends ActionAdapter {
     }
 
     async loadViews(resModel, context, views) {
-        return (await this.vm.loadViews({ resModel, views, context }, {})).fields_views;
+        return (await this.vm.loadViews({ resModel, views, context }, {})).__legacy__.fields_views;
     }
 
     /**
@@ -326,13 +326,20 @@ export class ViewAdapter extends ActionAdapter {
         if (ev.name === "switch_view") {
             const state = ev.target.exportState();
             try {
-                await this.actionService.switchView(payload.view_type, {
-                    resId: payload.res_id,
-                    resIds: state.resIds,
-                    searchModel: state.searchModel,
-                    searchPanel: state.searchPanel,
-                    mode: payload.mode,
-                });
+                const props = {};
+                if (payload.mode) {
+                    props.mode = payload.mode;
+                }
+                // if (payload.res_id) {
+                // if make 'open a record, come back, and create a new record' crash
+                props.resId = payload.res_id;
+                // }
+                for (const key of ["resIds", "searchModel", "searchPanel"]) {
+                    if (state[key]) {
+                        props[key] = state[key];
+                    }
+                }
+                await this.actionService.switchView(payload.view_type, props);
             } catch (e) {
                 if (e instanceof ViewNotFoundError) {
                     return;

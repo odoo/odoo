@@ -802,26 +802,6 @@
     <div class="o_content"/>
 </div>
 
-<div t-name="web.NoContentHelper" class="o_view_nocontent" role="alert" owl="1">
-    <div class="o_nocontent_help">
-        <p class="o_view_nocontent_empty_folder">
-            <t t-if="title" t-esc="title"/>
-            <t t-else="1">No data to display</t>
-        </p>
-        <p>
-            <t t-if="description" t-esc="description"/>
-            <t t-else="1">Try to add some records, or make sure that there is no
-                active filter in the search bar.</t>
-        </p>
-    </div>
-</div>
-
-<div t-name="web.ActionHelper" class="o_view_nocontent" owl="1">
-    <div class="o_nocontent_help">
-        <t t-raw="noContentHelp"/>
-    </div>
-</div>
-
 <t t-name="ListView.buttons">
     <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
         <button type="button" class="btn btn-primary o_list_button_save" accesskey="s">

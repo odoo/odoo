@@ -28,7 +28,7 @@ function fieldsViewGet({ component, env }) {
     let { arch } = component.props;
     if ("viewInfo" in component.props) {
         //legacy
-        arch = component.props.viewInfo.arch
+        arch = component.props.viewInfo.arch;
     }
     return {
         type: "item",
@@ -45,7 +45,7 @@ export function editView({ accessRights, component, env }) {
         return null;
     }
     let type;
-    let { viewId } = component.props;
+    let { viewId } = component.props.info || {}; // fallback is there for legacy
     if ("viewInfo" in component.props) {
         // legacy
         viewId = component.props.viewInfo.view_id;
@@ -70,7 +70,7 @@ export function editSearchView({ accessRights, component, env }) {
     if (!accessRights.canEditView) {
         return null;
     }
-    let { searchViewId } = component.props;
+    let { searchViewId } = component.props.info || {}; // fallback is there for legacy
     if ("viewParams" in component.props) {
         //legacy
         searchViewId = component.props.viewParams.controlPanelFieldsView.view_id;

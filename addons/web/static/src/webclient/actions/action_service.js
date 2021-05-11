@@ -1,16 +1,25 @@
 /** @odoo-module **/
 
-import { cleanDomFromBootstrap } from "@web/legacy/utils";
+import { ActionDialog } from "./action_dialog";
 import { browser } from "../../core/browser/browser";
-import { useBus } from "../../core/bus_hook";
-import { makeContext } from "../../core/context";
+import { CallbackRecorder } from "./action_hook";
+import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { download } from "../../core/network/download";
 import { evaluateExpr } from "../../core/py_js/py";
-import { registry } from "../../core/registry";
 import { KeepLast } from "../../core/utils/concurrency";
+import { makeContext } from "../../core/context";
+import { registry } from "@web/core/registry";
 import { sprintf } from "../../core/utils/strings";
-import { ActionDialog } from "./action_dialog";
+import { useBus } from "../../core/bus_hook";
 import { useDebugMenu } from "@web/core/debug/debug_menu";
+import { View } from "@web/views/view";
+
+const { Component, hooks, tags } = owl;
+const { useRef, useSubEnv } = hooks;
+
+const actionHandlersRegistry = registry.category("action_handlers");
+const actionRegistry = registry.category("actions");
+const viewRegistry = registry.category("views");
 
 /** @typedef {number|false} ActionId */
 /** @typedef {Object} ActionDescription */
@@ -31,12 +40,6 @@ import { useDebugMenu } from "@web/core/debug/debug_menu";
  * @property {Object} [props]
  * @property {ViewType} [viewType]
  */
-
-const { Component, hooks, tags } = owl;
-
-const viewRegistry = registry.category("views");
-const actionHandlersRegistry = registry.category("action_handlers");
-const actionRegistry = registry.category("actions");
 
 export function clearUncommittedChanges(env) {
     const callbacks = [];
@@ -72,7 +75,6 @@ const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|grou
 
 // only register this template once for all dynamic classes ControllerComponent
 const ControllerComponentTemplate = tags.xml`<t t-component="Component" t-props="props"
-    registerCallback="registerCallback"
     t-ref="component"
     t-on-history-back="onHistoryBack"
     t-on-controller-title-updated.stop="onTitleUpdated"/>`;
@@ -353,29 +355,61 @@ function makeActionManager(env) {
         const viewSwitcherEntries = views
             .filter((v) => v.multiRecord === view.multiRecord)
             .map((v) => {
-                return {
-                    // FIXME: missing accesskey
+                const viewSwitcherEntry = {
                     icon: v.icon,
-                    name: v.display_name,
-                    type: v.type,
-                    multiRecord: v.multiRecord,
+                    name: v.display_name.toString(),
+                    type: v.type, // prefere jsID like in breadcrumbs and call array switcherEntries?
+                    multiRecord: v.multiRecord, // remove?
                 };
+                if (view.type === v.type) {
+                    viewSwitcherEntry.active = true;
+                }
+                return viewSwitcherEntry;
             });
+        const context = action.context || {};
         const flags = action.flags || {};
-        const viewProps = Object.assign(_getActionProps(action, props), {
-            actionFlags: Object.assign({}, flags, flags[view.type]),
-            context: action.context,
+        const viewProps = Object.assign({}, props, {
+            actionFlags: Object.assign({}, flags, flags[view.type]), // review system
+            actionId: action.id || false,
+            context,
+            display: { mode: target === "new" ? "inDialog" : target },
+            displayName: action.display_name || action.name,
             domain: action.domain || [],
+            groupBy: action.context.group_by || [],
+            loadActionMenus: target !== "new" && target !== "inline",
+            loadIrFilters: action.views.some((v) => v[1] === "search"),
             resModel: action.res_model,
             type: view.type,
             views: action.views,
             viewSwitcherEntries,
-            loadActionMenus: target !== "new" && target !== "inline",
-            loadIrFilters: action.views.some((v) => v[1] === "search"),
         });
+
+        if (target === "inline") {
+            viewProps.searchMenuTypes = [];
+        }
+
+        const specialKeys = ["help", "useSampleModel", "limit", "count"];
+        for (const key in specialKeys) {
+            if (key in action) {
+                viewProps[key] = action;
+            }
+        }
+
+        if (context.active_id || context.active_ids || context.search_disable_custom_filters) {
+            viewProps.activateFavorite = false; // not sure --> check logic
+        }
+
+        // view specific
         if (action.res_id) {
             viewProps.resId = action.res_id;
         }
+
+        // LEGACY CODE COMPATIBILITY: remove when all views will be written in owl
+        if (view.isLegacy) {
+            Object.assign(viewProps, { action, View: view });
+        }
+        // END LEGACY CODE COMPATIBILITY
+
         return viewProps;
     }
 
@@ -429,6 +463,7 @@ function makeActionManager(env) {
      * @param {UpdateStackOptions} options
      * @param {boolean} [options.clearBreadcrumbs=false]
      * @param {number} [options.index]
+     * @param {Object} [options.shareSearchState]
      * @returns {Promise<Number>}
      */
     async function _updateUI(controller, options = {}) {
@@ -444,25 +479,32 @@ function makeActionManager(env) {
         class ControllerComponent extends Component {
             setup() {
                 this.Component = controller.Component;
-                this.componentRef = hooks.useRef("component");
+                this.componentRef = useRef("component");
                 useDebugMenu("action", { action });
-                this.registerCallback = null;
                 if (action.target !== "new") {
-                    let beforeLeaveFn;
-                    this.registerCallback = (type, fn) => {
-                        switch (type) {
-                            case "export":
-                                controller.getState = fn;
-                                break;
-                            case "beforeLeave":
-                                beforeLeaveFn = fn;
-                                break;
+                    this.__beforeLeave__ = new CallbackRecorder();
+                    this.__exportState__ = new CallbackRecorder();
+                    this.__exportSearchState__ = new CallbackRecorder();
+                    controller.getState = () => {
+                        const exportFns = this.__exportState__.callbacks;
+                        if (exportFns.length) {
+                            return Object.assign({}, ...exportFns.map((fn) => fn()));
+                        }
+                    };
+                    controller.getSearchState = () => {
+                        const exportFns = this.__exportSearchState__.callbacks;
+                        if (exportFns.length) {
+                            return Object.assign({}, ...exportFns.map((fn) => fn()));
                         }
                     };
                     useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (callbacks) => {
-                        if (beforeLeaveFn) {
-                            callbacks.push(beforeLeaveFn);
-                        }
+                        const beforeLeaveFns = this.__beforeLeave__.callbacks;
+                        callbacks.push(...beforeLeaveFns);
+                    });
+                    useSubEnv({
+                        __beforeLeave__: this.__beforeLeave__,
+                        __exportState__: this.__exportState__,
+                        __exportSearchState__: this.__exportSearchState__,
                     });
                 }
             }
@@ -496,7 +538,10 @@ function makeActionManager(env) {
                         if (!nextStackActionIds.includes(c.action.jsId)) {
                             if (c.action.type === "ir.actions.act_window") {
                                 for (const viewType in c.action.controllers) {
-                                    toDestroy.add(c.action.controllers[viewType]);
+                                    const controller = c.action.controllers[viewType];
+                                    if (controller.Component.isLegacy) {
+                                        toDestroy.add(controller);
+                                    }
                                 }
                             } else {
                                 toDestroy.add(c);
@@ -504,7 +549,7 @@ function makeActionManager(env) {
                         }
                     }
                     for (const c of toDestroy) {
-                        if (c.exportedState) {
+                        if (c.exportedState && c.exportedState.__legacy_widget__) {
                             c.exportedState.__legacy_widget__.destroy();
                         }
                     }
@@ -573,12 +618,22 @@ function makeActionManager(env) {
         }
 
         const currentController = _getCurrentController();
+        let searchState;
         if (currentController && currentController.getState) {
             currentController.exportedState = currentController.getState();
+        }
+        if (currentController && currentController.getSearchState) {
+            searchState = currentController.getSearchState();
+            currentController.exportedSearchState = searchState;
         }
 
         if (controller.exportedState) {
             controller.props.state = controller.exportedState;
+        }
+        if (options.shareSearchState && searchState) {
+            controller.props.searchState = searchState;
+        } else if (controller.exportedSearchState) {
+            controller.props.searchState = controller.exportedSearchState;
         }
 
         const index = _computeStackIndex(options);
@@ -670,7 +725,7 @@ function makeActionManager(env) {
 
         const controller = {
             jsId: `controller_${++id}`,
-            Component: view,
+            Component: view.isLegacy ? view : View,
             action,
             view,
             views,
@@ -687,7 +742,7 @@ function makeActionManager(env) {
         if (lazyView) {
             updateUIOptions.lazyController = {
                 jsId: `controller_${++id}`,
-                Component: lazyView,
+                Component: lazyView.isLegacy ? lazyView : View,
                 action,
                 view: lazyView,
                 views,
@@ -1085,7 +1140,7 @@ function makeActionManager(env) {
         }
         const newController = controller.action.controllers[viewType] || {
             jsId: `controller_${++id}`,
-            Component: view,
+            Component: view.isLegacy ? view : View,
             action: controller.action,
             views: controller.views,
             view,
@@ -1118,7 +1173,7 @@ function makeActionManager(env) {
             index = index > -1 ? index : controllerStack.length;
         }
         await clearUncommittedChanges(env);
-        return _updateUI(newController, { index });
+        return _updateUI(newController, { index, shareSearchState: true });
     }
 
     /**

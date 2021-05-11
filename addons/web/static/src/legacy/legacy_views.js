@@ -71,7 +71,7 @@ function registerView(name, LegacyView) {
                 this.props.state && this.props.state.__on_reverse_breadcrumb__;
             useSetupAction({
                 beforeLeave: () => this.controllerRef.comp.__widget.canBeRemoved(),
-                export: () => this.controllerRef.comp.exportState(),
+                exportState: () => this.controllerRef.comp.exportState(),
             });
             this.onScrollTo = (ev) => {
                 setScrollPosition(this, { left: ev.detail.left, top: ev.detail.top });
@@ -80,13 +80,12 @@ function registerView(name, LegacyView) {
 
         async willStart() {
             const params = {
-                model: this.props.resModel,
+                resModel: this.props.resModel,
                 views: this.props.views,
                 context: this.props.context,
             };
             const options = {
                 actionId: this.props.actionId,
-                context: this.props.context,
                 loadActionMenus: this.props.loadActionMenus,
                 loadIrFilters: this.props.loadIrFilters,
             };

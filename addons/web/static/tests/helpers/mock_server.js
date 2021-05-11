@@ -143,7 +143,7 @@ export class MockServer {
         if (kwargs.options.toolbar) {
             fvg.toolbar = this.models[modelName].toolbar || {};
         }
-        if (viewId) {
+        if (viewId !== undefined) {
             fvg.view_id = viewId;
             fvg.name = key;
         }
