@@ -65,54 +65,34 @@ class AccountEdiFormat(models.Model):
             'profile_id': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
         })
 
-        all_tax_detail_per_tax = {}
+        # Tax details.
+
+        def grouping_key_generator(tax_values):
+            tax = tax_values['tax_id']
+            return {
+                'tax_percent': tax.amount,
+                'tax_category': 'S' if tax.amount else 'Z',
+            }
+
+        values['tax_details'] = invoice._prepare_edi_tax_details(
+            filter_to_apply=lambda x: x['tax_repartition_line_id'].use_in_tax_closing,
+            grouping_key_generator=grouping_key_generator,
+        )
         for line_vals in values['invoice_line_vals_list']:
-            line_vals['price_subtotal_with_no_tax_closing'] = line_vals['line'].price_subtotal
-            tax_detail_per_tax = {}
-            for tax_detail_vals in line_vals['tax_detail_vals_list']:
-                tax = tax_detail_vals['tax']
-
-                tax_percent = tax.amount
-                tax_category = 'S' if tax_percent else 'Z'
-                key = (tax_category, tax_percent)
-                tax_detail_per_tax.setdefault(key, {
-                    'base': tax_detail_vals['tax_base_amount'],
-                    'base_currency': tax_detail_vals['tax_base_amount_currency'],
-                    'amount': 0.0,
-                    'amount_currency': 0.0,
-                    'tax_percent': tax_percent,
-                    'tax_category': tax_category,
-                })
-                vals = tax_detail_per_tax[key]
-
-                vals['amount'] += tax_detail_vals['tax_amount_closing']
-                vals['amount_currency'] += tax_detail_vals['tax_amount_currency_closing']
-                delta_tax = tax_detail_vals['tax_amount_currency'] - tax_detail_vals['tax_amount_currency_closing']
-                line_vals['price_subtotal_with_no_tax_closing'] += delta_tax
-
-            if len(tax_detail_per_tax) > 1:
+            if len(values['tax_details']['invoice_line_tax_details'][line_vals['line']]['tax_details']) > 1:
                 raise UserError("Multiple vat percentage not supported on the same invoice line")
 
-            line_vals['tax_detail_vals'] = list(tax_detail_per_tax.values())[0]
+        tax_details_no_tax_closing = invoice._prepare_edi_tax_details(
+            filter_to_apply=lambda x: not x['tax_repartition_line_id'].use_in_tax_closing,
+        )
+        for line_vals in values['invoice_line_vals_list']:
+            line_vals['price_subtotal_with_no_tax_closing'] = line_vals['line'].price_subtotal
+            for tax_detail in tax_details_no_tax_closing['invoice_line_tax_details'][line_vals['line']]['tax_details'].values():
+                line_vals['price_subtotal_with_no_tax_closing'] += tax_detail['tax_amount_currency']
 
-            for key, tax_vals in tax_detail_per_tax.items():
-                all_tax_detail_per_tax.setdefault(key, {
-                    **tax_vals,
-                    'base': 0.0,
-                    'base_currency': 0.0,
-                    'amount': 0.0,
-                    'amount_currency': 0.0,
-                })
-                vals = all_tax_detail_per_tax[key]
-                vals['base'] += tax_vals['base']
-                vals['base_currency'] += tax_vals['base_currency']
-                vals['amount'] += tax_vals['amount']
-                vals['amount_currency'] += tax_vals['amount_currency']
-
-        values['tax_detail_vals_list'] = list(all_tax_detail_per_tax.values())
         values['total_untaxed_amount'] = sum(x['price_subtotal_with_no_tax_closing'] for x in values['invoice_line_vals_list'])
-        values['total_tax_amount'] = sum(x['amount'] for x in values['tax_detail_vals_list'])
-        values['total_tax_amount_currency'] = sum(x['amount_currency'] for x in values['tax_detail_vals_list'])
+
+        # Misc.
 
         for partner_vals in (values['customer_vals'], values['supplier_vals']):
             partner = partner_vals['partner']
