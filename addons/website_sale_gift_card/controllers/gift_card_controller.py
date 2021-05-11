@@ -22,10 +22,10 @@ class GiftCardController(main.WebsiteSale):
         return super().shop_payment(**post)
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
-    def cart(self, **post):
+    def cart(self, access_token=None, revive='', **post):
         order = request.website.sale_get_order()
         order._recompute_gift_card_lines()
-        return super().cart(**post)
+        return super().cart(access_token=access_token, revive=revive, **post)
 
     def _get_shop_payment_values(self, order, **kwargs):
         values = super()._get_shop_payment_values(order, **kwargs)

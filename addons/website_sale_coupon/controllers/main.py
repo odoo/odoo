@@ -23,10 +23,10 @@ class WebsiteSale(main.WebsiteSale):
         return super(WebsiteSale, self).shop_payment(**post)
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
-    def cart(self, **post):
+    def cart(self, access_token=None, revive='', **post):
         order = request.website.sale_get_order()
         order.recompute_coupon_lines()
-        return super(WebsiteSale, self).cart(**post)
+        return super().cart(access_token=access_token, revive=revive, **post)
 
     # Override
     # Add in the rendering the free_shipping_line
