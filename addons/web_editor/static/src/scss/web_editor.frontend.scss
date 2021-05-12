@@ -34,20 +34,31 @@
 .o_we_shape {
     @extend %o-we-background-layer;
 
+    // Default map to use to map shape file colors to color combination
+    // background colors.
+    $default-color-to-cc-bg-map: (
+        1: 4,
+        2: 3,
+        3: 2,
+        4: 1,
+        5: 5,
+    );
     @each $module, $shapes in $o-bg-shapes {
         @each $shape, $style in $shapes {
             $url-params: '';
             $colors: map-get($style, 'colors');
             @each $i in $colors {
-                // %23 is the url-encoded form of '#' which doesn't work as is in urls.
-                $color: str-replace("#{map-get($o-color-palette, "o-color-#{$i}")}", '#', '%23');
+                $cc: map-get($default-color-to-cc-bg-map, $i);
+                // %23 is the url-encoded form of '#'
+                $color: str-replace("#{o-color('o-cc#{$cc}-bg')}", '#', '%23');
                 $url-params: '#{$url-params}&c#{$i}=#{$color}';
             }
 
             // eg: o_website_shape_bg_1
             &.o_#{$module}_#{str-replace($shape, '/', '_')} {
-                // When not customized, this URL, built in SCSS, allows for the
-                // shape to be dynamic and adapted if future color changes.
+                // When the shape is not customized, this URL, built in SCSS,
+                // allows for the shape to respond to palette changes.
+                // Mainly useful for default pages built by the configurator.
                 background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
                 background-position: map-get($style, 'position');
                 background-size: map-get($style, 'size');
