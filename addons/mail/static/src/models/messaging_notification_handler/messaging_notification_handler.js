@@ -261,8 +261,8 @@ function factory(dependencies) {
                     // on `channel` channels for performance reasons
                     channel.markAsFetched();
                 }
-                // (re)open chat on receiving new message
-                if (channel.channel_type !== 'channel' && !this.env.messaging.device.isMobile) {
+                // open chat on receiving new message if it was not already opened or folded
+                if (channel.channel_type !== 'channel' && !this.env.messaging.device.isMobile && !channel.chatWindow) {
                     this.env.messaging.chatWindowManager.openThread(channel);
                 }
             }
