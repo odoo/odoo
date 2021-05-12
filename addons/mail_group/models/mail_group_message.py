@@ -21,6 +21,7 @@ class MailGroupMessage(models.Model):
     _description = 'Mailing List Message'
     _rec_name = 'subject'
     _order = 'create_date DESC'
+    _primary_email = 'email_from'
 
     # <mail.message> fields, can not be done with inherits because it will impact
     # the performance of the <mail.message> model (different cache, so the ORM will need

@@ -74,6 +74,7 @@ class MailThread(models.AbstractModel):
     _description = 'Email Thread'
     _mail_flat_thread = True  # flatten the discussion history
     _mail_post_access = 'write'  # access required on the document to post on it
+    _primary_email = 'email'  # Must be set for the models that can be created by alias
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
 
     message_is_follower = fields.Boolean(
@@ -809,6 +810,116 @@ class MailThread(models.AbstractModel):
                 self.env[model.model].sudo().search([('message_bounce', '>', 0), ('email_normalized', '=', valid_email)])._message_reset_bounce(valid_email)
 
     @api.model
+    def _check_primary_email(self):
+        """Check if the "_primary_email" model attribute is correctly set.
+
+        If it is correctly set, return the _primary_email field name
+        Otherwise return None
+        """
+        primary_email = getattr(self, '_primary_email', None)
+        if primary_email and primary_email in self._fields:
+            return primary_email
+
+    @api.model
+    def _routing_detect_loop_from_records_domain(self, email_from_normalized):
+        """Return the domain to be used to detect duplicated records created by alias.
+
+        :param email_from_normalized: FROM of the incoming email, normalized
+        """
+        primary_email = self._check_primary_email()
+        if primary_email:
+            return [(primary_email, 'ilike', email_from_normalized)]
+
+        _logger.info('Primary email missing on %s', self._name)
+
+    @api.model
+    def _routing_detect_loop_from_records(self, message, message_dict, routes):
+        """This method returns True if the incoming email should be ignored.
+
+        The goal of this method is to prevent loops which can occur if an auto-replier
+        send emails to Odoo.
+        """
+        email_from = message_dict.get('email_from')
+        if not email_from:
+            return False
+
+        email_from_normalized = tools.email_normalize(email_from)
+
+        # Detect the email address sent to many emails
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        # Period in minutes in which we will look for <mail.mail>
+        INCOMING_LIMIT_PERIOD = int(get_param('mail.gateway.loop.minutes', 120))
+        INCOMING_LIMIT_ALIAS = int(get_param('mail.gateway.loop.threshold', 20))
+
+        create_date_limit = self.env.cr.now() - datetime.timedelta(minutes=INCOMING_LIMIT_PERIOD)
+
+        # Search only once per model
+        models = {
+            self.env[model]
+            for model, thread_id, *__ in routes or []
+            if not thread_id  # Reply to an existing thread
+        }
+
+        for model in models:
+            if not hasattr(model, '_routing_detect_loop_from_records_domain'):
+                continue
+
+            domain = model._routing_detect_loop_from_records_domain(email_from_normalized)
+
+            if not domain:
+                _logger.info('Domain missing for %s, could not find duplicated.', self._name)
+                continue
+
+            mail_incoming_messages_count = model.sudo().search_count(
+                expression.AND([
+                    [('create_date', '>', create_date_limit)],
+                    domain,
+                ]),
+            )
+
+            if mail_incoming_messages_count >= INCOMING_LIMIT_ALIAS:
+                _logger.info('Email address %s created too many <%s>.', email_from, model)
+
+                body = self.env['ir.qweb']._render(
+                    'mail.message_notification_limit_email',
+                    {'email': message_dict.get('to')},
+                    minimal_qcontext=True,
+                    raise_if_not_found=False,
+                )
+
+                # Add a reference with a tag, to be able to ignore response to this email
+                references = (
+                    message_dict.get('message_id', '') + ' '
+                    + tools.generate_tracking_message_id('loop-detection-bounce-email')
+                )
+                self._routing_create_bounce_email(email_from, body, message, references=references)
+                return True
+
+        return False
+
+    @api.model
+    def _routing_detect_loop_from_headers(self, message, msg_dict):
+        """Detect common headers set by the auto-repliers / mailing lists."""
+
+        # Detect if the email has been sent by an auto-replier or by a mailing list
+        for header in ('X-Autoreply', 'X-Autorespond', 'Feedback-ID', 'List-Id', 'List-Unsubscribe'):
+            if header in message:
+                _logger.info('Email sent by an auto-replier (%s), ignoring it.', header)
+                return True
+
+        precedence = 'Precedence' in message and tools.decode_message_header(message, 'Precedence')
+        if precedence and precedence.lower() in ('bulk', 'auto_reply', 'list'):
+            _logger.info('Email sent by an auto-replier (Precedence), ignoring it.')
+            return True
+
+        if '-loop-detection-bounce-email@' in msg_dict.get('references', '') \
+           or '-loop-detection-bounce-email@' in msg_dict.get('in_reply_to', ''):
+            _logger.info('Email is a reply to the bounce notification, ignoring it.')
+            return True
+
+        return False
+
+    @api.model
     def message_route(self, message, message_dict, model=None, thread_id=None, custom_values=None):
         """ Attempt to figure out the correct target model, thread_id,
         custom_values and user_id to use for an incoming message.
@@ -1091,8 +1202,14 @@ class MailThread(models.AbstractModel):
                          msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
             return False
 
+        if self._routing_detect_loop_from_headers(message, msg_dict):
+            return
+
         # find possible routes for the message
         routes = self.message_route(message, msg_dict, model, thread_id, custom_values)
+        if self._routing_detect_loop_from_records(message, msg_dict, routes):
+            return
+
         thread_id = self._message_route_process(message, msg_dict, routes)
         return thread_id
 
@@ -1123,6 +1240,11 @@ class MailThread(models.AbstractModel):
         name_field = self._rec_name or 'name'
         if name_field in fields and not data.get('name'):
             data[name_field] = msg_dict.get('subject', '')
+
+        primary_email = self._check_primary_email()
+        if primary_email and msg_dict.get('email_from'):
+            data[primary_email] = msg_dict['email_from']
+
         return self.create(data)
 
     def message_update(self, msg_dict, update_vals=None):
