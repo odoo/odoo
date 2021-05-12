@@ -3021,7 +3021,7 @@ class _RelationalMulti(_Relational):
 
     def _setup_regular_full(self, model):
         super(_RelationalMulti, self)._setup_regular_full(model)
-        if isinstance(self.domain, list):
+        if not self.compute and isinstance(self.domain, list):
             self.depends = tuple(unique(itertools.chain(self.depends, (
                 self.name + '.' + arg[0]
                 for arg in self.domain

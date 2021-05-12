@@ -692,6 +692,40 @@ class ComputeUnassigned(models.Model):
                 record.bares = record.foo
 
 
+class ComputeOne2many(models.Model):
+    _name = 'test_new_api.one2many'
+    _description = "A computed editable one2many field with a domain"
+
+    name = fields.Char()
+    line_ids = fields.One2many(
+        'test_new_api.one2many.line', 'container_id',
+        compute='_compute_line_ids', store=True, readonly=False,
+        domain=[('count', '>', 0)],
+    )
+
+    @api.depends('name')
+    def _compute_line_ids(self):
+        # increment counter of line with the same name, or create a new line
+        for record in self:
+            if not record.name:
+                continue
+            for line in record.line_ids:
+                if line.name == record.name:
+                    line.count += 1
+                    break
+            else:
+                record.line_ids = [(0, 0, {'name': record.name})]
+
+
+class ComputeOne2manyLine(models.Model):
+    _name = 'test_new_api.one2many.line'
+    _description = "Line of a computed one2many"
+
+    name = fields.Char()
+    count = fields.Integer(default=1)
+    container_id = fields.Many2one('test_new_api.one2many', required=True)
+
+
 class ModelBinary(models.Model):
     _name = 'test_new_api.model_binary'
     _description = 'Test Image field'
