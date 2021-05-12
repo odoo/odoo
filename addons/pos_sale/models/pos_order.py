@@ -65,6 +65,17 @@ class PosOrder(models.Model):
                 })
                 sale_line._compute_tax_id()
 
+            # update the demand qty in the stock moves related to the sale order line
+            # flush the qty_delivered to make sure the updated qty_delivered is used when
+            # updating the demand value
+            so_lines = order.lines.mapped('sale_order_line_id')
+            so_lines.flush(['qty_delivered'])
+            for so_line in so_lines:
+                for stock_move in so_line.move_ids:
+                    if not stock_move.picking_id.state in ['waiting', 'confirmed', 'assigned']:
+                        continue
+                    stock_move.product_uom_qty = so_line.product_uom_qty - so_line.qty_delivered
+
         return order_ids
 
     def action_view_sale_order(self):
