@@ -1,10 +1,10 @@
-odoo.define('mail/static/src/models/message_tracking_value/message_tracking_value.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one } = require('mail/static/src/model/model_field.js');
+import { registerNewModel } from '@mail/model/model_core';
+import { attr, many2one } from '@mail/model/model_field';
 
-const { format } = require('web.field_utils');
+import { format } from 'web.field_utils';
+
 function factory(dependencies) {
 
     class MessageTrackingValue extends dependencies['mail.model'] {
@@ -169,6 +169,4 @@ function factory(dependencies) {
 }
 
 registerNewModel('mail.message_tracking_value', factory);
-    
-});
     

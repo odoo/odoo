@@ -50,17 +50,17 @@
                             </t>
                             <span class="o_ThreadPreview_messageBody">
                                 <t t-if="thread.lastMessage and thread.lastMessage.trackingValues.length > 0">
-                                    <span class="o_ThreadNeedactionPreview_trackingValue">
-                                        <span class="o_ThreadNeedactionPreview_trackingValueFieldName">
+                                    <span class="o_ThreadPreview_trackingValue">
+                                        <span class="o_ThreadPreview_trackingValueFieldName">
                                             <t t-esc="thread.lastMessage.trackingValues[0].changedField"/>
                                         </span>
-                                        <span class="o_ThreadNeedactionPreview_trackingValueOldValue">
+                                        <span class="o_ThreadPreview_trackingValueOldValue">
                                             <t t-esc="thread.lastMessage.trackingValues[0].oldValue"/>
                                         </span>
-                                        <span class="o_ThreadNeedactionPreview_arrow">
-                                            <div class="o_ThreadNeedactionPreview_trackingValueSeparator fa fa-long-arrow-right" role="img"/>
+                                        <span class="o_ThreadPreview_arrow">
+                                            <div class="o_ThreadPreview_trackingValueSeparator fa fa-long-arrow-right" role="img"/>
                                         </span>
-                                        <span class="o_ThreadNeedactionPreview_trackingValueNewValue">
+                                        <span class="o_ThreadPreview_trackingValueNewValue">
                                             <t t-esc="thread.lastMessage.trackingValues[0].newValue"/>
                                         </span>
                                     </span>

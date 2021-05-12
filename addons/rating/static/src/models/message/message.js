@@ -1,7 +1,6 @@
 /** @odoo-module **/
-import { registerFieldPatchModel, registerClassPatchModel } from 'mail/static/src/model/model_core.js';
-
-const { attr } = require('mail/static/src/model/model_field.js');
+import { registerFieldPatchModel, registerClassPatchModel } from '@mail/model/model_core';
+import { attr } from '@mail/model/model_field';
 
 registerFieldPatchModel('mail.message', 'rating/static/src/models/message.message.js', {
     ratingImg: attr(),
