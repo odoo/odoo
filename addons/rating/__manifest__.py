@@ -24,6 +24,12 @@ This module allows a customer to give rating.
         'web.assets_frontend': [
             'rating/static/src/scss/**/*',
         ],
+        'web.qunit_suite_tests': [
+            'rating/static/src/components/thread_needaction_preview/thread_needaction_preview_tests.js',
+            'rating/static/src/components/thread_preview/thread_preview_tests.js',
+            'rating/static/tests/helpers/mock_models.js',
+            'rating/static/tests/helpers/mock_server.js',
+        ],
         'web.assets_qweb': [
             'rating/static/src/components/thread_needaction_preview/thread_needaction_preview.xml',
             'rating/static/src/components/thread_preview/thread_preview.xml',
