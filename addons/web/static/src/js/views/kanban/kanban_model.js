@@ -489,6 +489,11 @@ var KanbanModel = BasicModel.extend({
                // reload the progressbars
                return def;
            }
+           if (element.activeFilter && element.activeFilter.value) {
+               // We must not read_group when an active filter (and thus
+               // a domain extension) is applied to the list datapoint.
+               return def;
+           }
        }
         // If we updated a record, then we must potentially update columns'
         // progressbars, so we need to load groups info again

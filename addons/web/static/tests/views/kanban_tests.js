@@ -5865,9 +5865,11 @@ QUnit.module('Views', {
     QUnit.test('column progressbars active filter should remove from old column when record drag and drop to new column', async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records.push({id: 5, bar: false, foo: "gnap", product_id: 5, state: "gnap"});
-        this.data.partner.records.push({id: 6, bar: false, foo: "blip", product_id: 5, state: "blip"});
-        this.data.partner.records.push({id: 7, bar: false, foo: "blip", product_id: 5, state: "blip"});
+        this.data.partner.records.push(...[
+            {id: 5, bar: false, foo: "gnap", product_id: 5, state: "gnap"},
+            {id: 6, bar: false, foo: "blip", product_id: 5, state: "blip"},
+            {id: 7, bar: false, foo: "blip", product_id: 5, state: "blip"},
+        ]);
 
         const kanban = await createView({
             View: KanbanView,
@@ -6306,7 +6308,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('RPCs when (de)activating kanban view progressbar filters', async function (assert) {
-        assert.expect(14);
+        assert.expect(10);
 
         const kanban = await createView({
             View: KanbanView,
@@ -6345,12 +6347,8 @@ QUnit.module('Views', {
             // activate filter
             '/web/dataset/search_read',
             // activate another filter (switching)
-            'web_read_group',
-            'read_progress_bar',
             '/web/dataset/search_read',
             // deactivate active filter
-            'web_read_group',
-            'read_progress_bar',
             '/web/dataset/search_read',
             'web_read_group',
             'read_progress_bar',
