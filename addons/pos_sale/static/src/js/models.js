@@ -80,9 +80,17 @@ models.Orderline = models.Orderline.extend({
     }
     return json;
   },
-  setQuantityWithPolicy: function(product_uom_qty, qty_invoiced, qty_delivered) {
-       return product_uom_qty - Math.max(qty_invoiced, qty_delivered);
-  },
+  /**
+   * Set quantity based on the give sale order line.
+   * @param {'sale.order.line'} saleOrderLine
+   */
+  setQuantityFromSOL: function(saleOrderLine) {
+      if (this.product.type === 'service') {
+        this.set_quantity(saleOrderLine.qty_to_invoice);
+      } else {
+        this.set_quantity(saleOrderLine.product_uom_qty - saleOrderLine.qty_delivered);
+      }
+  }
 });
 
 });
