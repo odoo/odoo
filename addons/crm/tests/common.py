@@ -491,7 +491,7 @@ class TestLeadConvertCommon(TestCrmCommon):
         })
         cls.sales_team_convert_m1.write({
             'assignment_max': 30,
-            'assignment_domain': [('priority', 'in', ['2', '3'])]
+            'assignment_domain': [('probability', '>=', 20)]
         })
         cls.sales_team_convert_m2 = cls.env['crm.team.member'].create({
             'user_id': cls.user_sales_manager.id,
