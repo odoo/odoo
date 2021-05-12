@@ -28,9 +28,9 @@ class MailChannel(models.Model):
         :param key: operator input in chat ('/lead Lead about Product')
         """
         description = ''.join(
-            '%s: %s\n' % (message.author_id.name or self.anonymous_name, message.body)
+            '%s: %s<br/>' % (message.author_id.name or self.anonymous_name, html2plaintext(message.body))
             for message in self.message_ids.sorted('id')
-        )
+        ) # converting message body back to plaintext for correct data formating in description
         # if public user is part of the chat: consider lead to be linked to an
         # anonymous user whatever the participants. Otherwise keep only share
         # partners (no user or portal user) to link to the lead.
@@ -48,7 +48,7 @@ class MailChannel(models.Model):
             'partner_id': customers[0].id if customers else False,
             'user_id': False,
             'team_id': False,
-            'description': html2plaintext(description),
+            'description': description,
             'referred': partner.name,
             'source_id': utm_source and utm_source.id,
         })
