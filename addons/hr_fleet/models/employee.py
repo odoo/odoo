@@ -9,6 +9,10 @@ class Employee(models.Model):
     _inherit = 'hr.employee'
 
     employee_cars_count = fields.Integer(compute="_compute_employee_cars_count", string="Cars", groups="fleet.fleet_group_manager")
+    car_ids = fields.One2many(
+        'fleet.vehicle', 'driver_employee_id', string='Vehicles (private)',
+        groups="fleet.fleet_group_manager,hr.group_hr_user",
+    )
     mobility_card = fields.Char(groups="fleet.fleet_group_user")
 
     def action_open_employee_cars(self):
@@ -26,16 +30,8 @@ class Employee(models.Model):
         }
 
     def _compute_employee_cars_count(self):
-        driver_ids = (self.mapped('user_id.partner_id') | self.sudo().mapped('address_home_id')).ids
-        fleet_data = self.env['fleet.vehicle.assignation.log'].read_group(
-            domain=[('driver_id', 'in', driver_ids)], fields=['vehicle_id:array_agg'], groupby=['driver_id'])
-        mapped_data = {
-            group['driver_id'][0]: len(set(group['vehicle_id']))
-            for group in fleet_data
-        }
         for employee in self:
-            drivers = employee.user_id.partner_id | employee.sudo().address_home_id
-            employee.employee_cars_count = sum(mapped_data.get(pid, 0) for pid in drivers.ids)
+            employee.employee_cars_count = len(employee.car_ids)
 
     def action_get_claim_report(self):
         self.ensure_one()

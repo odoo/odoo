@@ -10,6 +10,7 @@
     'data': [
         'data/hr_fleet_data.xml',
         'security/ir.model.access.csv',
+        'security/hr_fleet_security.xml',
         'views/employee_views.xml',
         'views/fleet_category_views.xml',
         'views/fleet_vehicle_views.xml',
