@@ -1,12 +1,15 @@
 /** @odoo-module **/
 
-import { makePreProcessQuery, makePushState, routeToUrl } from "@web/core/browser/router_service";
+import { browser } from "@web/core/browser/browser";
+import { routerService } from "@web/core/browser/router_service";
 import { localization } from "@web/core/l10n/localization";
 import { translatedTerms } from "@web/core/l10n/translation";
 import { rpcService } from "@web/core/network/rpc_service";
 import { SIZES } from "@web/core/ui_service";
 import { computeAllowedCompanyIds, makeSetCompanies } from "@web/core/user_service";
 import { effectService } from "@web/webclient/effects/effect_service";
+import { objectToUrlEncodedString } from "../../src/core/utils/urls";
+import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
 
 const { Component } = owl;
@@ -27,7 +30,7 @@ export const defaultLocalization = {
     weekStart: 7,
 };
 
-export function makeFakeLocalizationService(config) {
+export function makeFakeLocalizationService() {
     patchWithCleanup(localization, defaultLocalization);
 
     return {
@@ -49,7 +52,7 @@ export function makeFakeUserService(values) {
     const { uid, name, username, is_admin, user_companies, partner_id, user_context } = sessionInfo;
     return {
         name: "user",
-        start(env) {
+        start() {
             let allowedCompanies = computeAllowedCompanyIds();
             const setCompanies = makeSetCompanies(() => allowedCompanies);
             const context = {
@@ -170,64 +173,70 @@ export function makeMockFetch(mockRPC) {
     };
 }
 
-function stripUndefinedQueryKey(query) {
-    const keyValArray = Array.from(Object.entries(query)).filter(([k, v]) => v !== undefined);
-    // transform to Object.fromEntries in es > 2019
-    const newObj = {};
-    keyValArray.forEach(([k, v]) => {
-        newObj[k] = v;
+export function makeMockLocation() {
+    const locationLink = Object.assign(document.createElement("a"), {
+        href: window.location.origin + window.location.pathname,
+        assign(url) {
+            this.href = url;
+        },
     });
-    return newObj;
+    return new Proxy(locationLink, {
+        get(target, p) {
+            return target[p];
+        },
+        set(target, p, value) {
+            target[p] = value;
+            if (p === "hash") {
+                window.dispatchEvent(new HashChangeEvent("hashchange"));
+            }
+            return true;
+        },
+    });
 }
 
-function getRoute(route) {
-    route.hash = stripUndefinedQueryKey(route.hash);
-    route.search = stripUndefinedQueryKey(route.search);
-    return route;
-}
-
-export function makeFakeRouterService(params) {
-    let _current = {
-        pathname: "test.wowl",
-        search: {},
-        hash: {},
-    };
-    if (params && params.initialRoute) {
-        Object.assign(_current, params.initialRoute);
-    }
-    let current = getRoute(_current);
-    return {
-        start(env) {
-            function loadState(hash) {
-                current.hash = hash;
-                env.bus.trigger("ROUTE_CHANGE");
-            }
-            env.bus.on("test:hashchange", null, loadState);
-            function getCurrent() {
-                return current;
-            }
-            function doPush(mode = "push", route) {
-                const oldUrl = routeToUrl(current);
-                const newRoute = getRoute(route);
-                const newUrl = routeToUrl(newRoute);
-                if (params && params.onPushState && oldUrl !== newUrl) {
-                    params.onPushState(mode, route.hash);
+/**
+ * @param {Object} [params={}]
+ * @param {Object} [params.initialRoute] initial route object
+ * @param {Object} [params.onPushState] hook on the "pushState" method
+ * @param {Object} [params.onRedirect] hook on the "redirect" method
+ * @returns {RouterService}
+ */
+export function makeFakeRouterService(params = {}) {
+    const mockLocation = makeMockLocation();
+    Object.assign(mockLocation, params.initialRoute);
+    patchWithCleanup(browser, {
+        location: mockLocation,
+        history: {
+            pushState(state, title, url) {
+                mockLocation.assign(url);
+                if (params.onPushState) {
+                    params.onPushState(url);
                 }
-                current = newRoute;
-            }
-            const preProcessQuery = makePreProcessQuery(getCurrent);
-            return {
-                get current() {
-                    return getCurrent();
+            },
+            replaceState(state, title, url) {
+                mockLocation.assign(url);
+                if (params.onReplaceState) {
+                    params.onReplaceState(url);
+                }
+            },
+        },
+    });
+    return {
+        start({ bus }) {
+            const router = routerService.start(...arguments);
+            bus.on("test:hashchange", null, (hash) => {
+                mockLocation.hash = objectToUrlEncodedString(hash);
+            });
+            registerCleanup(router.cancelPushes);
+            patchWithCleanup(router, {
+                async redirect() {
+                    await this._super(...arguments);
+                    if (params.onRedirect) {
+                        params.onRedirect(...arguments);
+                    }
                 },
-                pushState: makePushState(getCurrent, doPush.bind(null, "push"), preProcessQuery),
-                replaceState: makePushState(
-                    getCurrent,
-                    doPush.bind(null, "replace"),
-                    preProcessQuery
-                ),
-                redirect: (params && params.redirect) || (() => {}),
-            };
+            });
+            return router;
         },
     };
 }
@@ -275,7 +284,7 @@ export const fakeCookieService = {
             get current() {
                 return cookie;
             },
-            setCookie(key, value, ttl) {
+            setCookie(key, value) {
                 if (value !== undefined) {
                     cookie[key] = value;
                 }

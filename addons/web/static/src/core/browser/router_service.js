@@ -5,6 +5,11 @@ import { shallowEqual } from "../utils/objects";
 import { objectToUrlEncodedString } from "../utils/urls";
 import { browser } from "./browser";
 
+/**
+ * @typedef {{ [key: string]: string }} Query
+ * @typedef {{ [key: string]: any }} Route
+ */
+
 function parseString(str) {
     const parts = str.split("&");
     const result = {};
@@ -16,139 +21,161 @@ function parseString(str) {
     return result;
 }
 
+/**
+ * For each push request (replaceState or pushState), filterout keys that have been locked before
+ * overrides locked keys that are explicitly re-locked or unlocked
+ * registers keys in "hash" in "lockedKeys" according to the "lock" Boolean
+ *
+ * @param {Set<string>} lockedKeys A set containing all keys that were locked
+ * @param {Query} hash An Object representing the pushed url hash
+ * @param {Query} currentHash The current hash compare against
+ * @param  {Object} [options={}] Whether to lock all hash keys in "hash" to prevent them from being changed afterwards
+ * @param  {Boolean} [options.lock] Whether to lock all hash keys in "hash" to prevent them from being changed afterwards
+ * @return {Query} The resulting "hash" where previous locking has been applied
+ */
+function applyLocking(lockedKeys, hash, currentHash, options = {}) {
+    const newHash = {};
+    for (const key in hash) {
+        if ("lock" in options) {
+            options.lock ? lockedKeys.add(key) : lockedKeys.delete(key);
+        } else if (lockedKeys.has(key)) {
+            // forbid implicit override of key
+            continue;
+        }
+        newHash[key] = hash[key];
+    }
+    for (const key in currentHash) {
+        if (lockedKeys.has(key) && !(key in newHash)) {
+            newHash[key] = currentHash[key];
+        }
+    }
+    return newHash;
+}
+
+function computeNewRoute(hash, replace, currentRoute) {
+    if (!replace) {
+        hash = Object.assign({}, currentRoute.hash, hash);
+    }
+    hash = sanitizeHash(hash);
+    if (!shallowEqual(currentRoute.hash, hash)) {
+        return Object.assign({}, currentRoute, { hash });
+    }
+    return false;
+}
+
 function sanitizeHash(hash) {
     return Object.fromEntries(Object.entries(hash).filter(([, v]) => v !== undefined));
 }
 
+/**
+ * @param {string} hash
+ * @returns {any}
+ */
 export function parseHash(hash) {
-    return hash === "#" || hash === "" ? {} : parseString(hash.slice(1));
+    return hash && hash !== "#" ? parseString(hash.slice(1)) : {};
 }
 
+/**
+ * @param {string} search
+ * @returns {any}
+ */
 export function parseSearchQuery(search) {
-    return search === "" ? {} : parseString(search.slice(1));
+    return search ? parseString(search.slice(1)) : {};
 }
 
+/**
+ * @param {{ [key: string]: any }} route
+ * @returns
+ */
 export function routeToUrl(route) {
     const search = objectToUrlEncodedString(route.search);
     const hash = objectToUrlEncodedString(route.hash);
     return route.pathname + (search ? "?" + search : "") + (hash ? "#" + hash : "");
 }
 
-export function redirect(env, url, wait) {
-    const load = () => browser.location.assign(url);
+async function redirect(env, url, wait = false) {
     if (wait) {
-        const wait_server = function () {
-            env.services
-                .rpc("/web/webclient/version_info", {})
-                .then(load)
-                .catch(() => browser.setTimeout(wait_server, 250));
-        };
-        browser.setTimeout(wait_server, 1000);
-    } else {
-        load();
+        await new Promise((resolve) => {
+            const waitForServer = (delay) => {
+                browser.setTimeout(async () => {
+                    env.services
+                        .rpc("/web/webclient/version_info", {})
+                        .then(resolve)
+                        .catch(() => waitForServer(250));
+                }, delay);
+            };
+            waitForServer(1000);
+        });
     }
+    browser.location.assign(url);
 }
 
 function getRoute() {
-    const { pathname, search, hash } = window.location;
+    const { pathname, search, hash } = browser.location;
     const searchQuery = parseSearchQuery(search);
     const hashQuery = parseHash(hash);
     return { pathname, search: searchQuery, hash: hashQuery };
 }
 
-/**
- * @param {function} getCurrent function that returns the current route
- * @returns {function} function to compute the next hash
- */
-export function makePreProcessQuery(getCurrent) {
-    const lockedKeys = new Set();
-    return (hash) => {
-        const newHash = {};
-        Object.keys(hash).forEach((key) => {
-            if (lockedKeys.has(key)) {
-                return;
-            }
-            const k = key.split(" ");
-            let value;
-            if (k.length === 2) {
-                value = hash[key];
-                key = k[1];
-                if (k[0] === "lock") {
-                    lockedKeys.add(key);
-                } else if (k[0] === "unlock") {
-                    lockedKeys.delete(key);
-                } else {
-                    return;
-                }
-            }
-            newHash[key] = value || hash[key];
-        });
-        const current = getCurrent();
-        Object.keys(current.hash).forEach((key) => {
-            if (lockedKeys.has(key) && !(key in newHash)) {
-                newHash[key] = current.hash[key];
-            }
-        });
-        return newHash;
-    };
-}
-
 function makeRouter(env) {
-    let bus = env.bus;
+    const bus = env.bus;
+    const lockedKeys = new Set();
     let current = getRoute();
+    let pushTimeout;
     browser.addEventListener("hashchange", () => {
         current = getRoute();
         bus.trigger("ROUTE_CHANGE");
     });
 
-    function doPush(mode = "push", route) {
-        if (!shallowEqual(route.hash, current.hash)) {
-            const url = location.origin + routeToUrl(route);
-            if (mode === "push") {
-                window.history.pushState({}, url, url);
-            } else {
-                window.history.replaceState({}, url, url);
+    /**
+     * @param {string} mode
+     * @returns {(hash: string, options: any) => any}
+     */
+    function makeDebouncedPush(mode) {
+        let allPushArgs = [];
+        function doPush() {
+            // Aggregates push/replace state arguments
+            const replace = allPushArgs.some(([, options]) => options && options.replace);
+            const newHash = allPushArgs.reduce((finalHash, [hash, options]) => {
+                hash = applyLocking(lockedKeys, hash, current.hash, options);
+                if (finalHash) {
+                    hash = applyLocking(lockedKeys, hash, finalHash, options);
+                }
+                return Object.assign(finalHash || {}, hash);
+            }, null);
+            // Calculates new route based on aggregated hash and options
+            const newRoute = computeNewRoute(newHash, replace, current);
+            if (!newRoute) {
+                return;
             }
+            // If the route changed: pushes or replaces browser state
+            const url = browser.location.origin + routeToUrl(newRoute);
+            if (mode === "push") {
+                browser.history.pushState({}, "", url);
+            } else {
+                browser.history.replaceState({}, "", url);
+            }
+            current = getRoute();
         }
-        current = getRoute();
+        return function pushOrReplaceState(hash, options) {
+            allPushArgs.push([hash, options]);
+            browser.clearTimeout(pushTimeout);
+            pushTimeout = browser.setTimeout(() => {
+                doPush();
+                pushTimeout = null;
+                allPushArgs = [];
+            });
+        };
     }
 
-    function getCurrent() {
-        return current;
-    }
-
-    const preProcessQuery = makePreProcessQuery(getCurrent);
     return {
         get current() {
-            return getCurrent();
+            return current;
         },
-        pushState: makePushState(getCurrent, doPush.bind(null, "push"), preProcessQuery),
-        replaceState: makePushState(getCurrent, doPush.bind(null, "replace"), preProcessQuery),
+        pushState: makeDebouncedPush("push"),
+        replaceState: makeDebouncedPush("replace"),
         redirect: (url, wait) => redirect(env, url, wait),
-    };
-}
-
-export function makePushState(getCurrent, doPush, preProcessQuery) {
-    let _replace = false;
-    let timeoutId;
-    let tempHash;
-    return (hash, replace = false) => {
-        clearTimeout(timeoutId);
-        hash = preProcessQuery(hash);
-        _replace = _replace || replace;
-        tempHash = Object.assign(tempHash || {}, hash);
-        timeoutId = setTimeout(() => {
-            tempHash = sanitizeHash(tempHash);
-            const current = getCurrent();
-            if (!_replace) {
-                tempHash = Object.assign({}, current.hash, tempHash);
-            }
-            const route = Object.assign({}, current, { hash: tempHash });
-            doPush(route);
-            tempHash = undefined;
-            timeoutId = undefined;
-            _replace = false;
-        });
+        cancelPushes: () => browser.clearTimeout(pushTimeout),
     };
 }
 
@@ -161,7 +188,7 @@ export const routerService = {
 export function objectToQuery(obj) {
     const query = {};
     Object.entries(obj).forEach(([k, v]) => {
-        query[k] = v ? `${v}` : v;
+        query[k] = v ? String(v) : v;
     });
     return query;
 }

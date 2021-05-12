@@ -1162,7 +1162,7 @@ function makeActionManager(env) {
         const newState = {};
         const action = controller.action;
         if (action.id) {
-            newState.action = `${action.id}`;
+            newState.action = action.id;
         } else if (action.type === "ir.actions.client") {
             newState.action = action.tag;
         }
@@ -1182,7 +1182,7 @@ function makeActionManager(env) {
             newState.view_type = props.type;
             newState.id = props.recordId ? `${props.recordId}` : undefined;
         }
-        env.services.router.pushState(newState, true);
+        env.services.router.pushState(newState, { replace: true });
     }
     return {
         doAction,
