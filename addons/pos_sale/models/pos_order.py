@@ -50,20 +50,20 @@ class PosOrder(models.Model):
     def create_from_ui(self, orders, draft=False):
         order_ids = super(PosOrder, self).create_from_ui(orders, draft)
         for order in self.sudo().browse([o['id'] for o in order_ids]):
-            for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id):
+            for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != -1):
                 sale_lines = line.sale_order_origin_id.order_line
                 sale_line = self.env['sale.order.line'].create({
                     'order_id': line.sale_order_origin_id.id,
                     'product_id': line.product_id.id,
                     'price_unit': line.price_unit,
                     'product_uom_qty': 0,
-                    'qty_invoiced': 1,
                     'tax_id': [(6, 0, line.tax_ids.ids)],
                     'is_downpayment': True,
                     'discount': 0,
                     'sequence': sale_lines and sale_lines[-1].sequence + 1 or 10,
                 })
                 sale_line._compute_tax_id()
+                line.sale_order_line_id = sale_line
 
             # update the demand qty in the stock moves related to the sale order line
             # flush the qty_delivered to make sure the updated qty_delivered is used when

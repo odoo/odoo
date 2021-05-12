@@ -37,13 +37,10 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
         for sale_line in self:
-            sale_line.qty_delivered += sum([pos_line.qty for pos_line in sale_line.pos_order_line_ids if not sale_line.is_downpayment], 0)
+            sale_line.qty_delivered += sum([pos_line.qty for pos_line in sale_line.pos_order_line_ids], 0)
 
     @api.depends('pos_order_line_ids.qty')
     def _get_invoice_qty(self):
         super()._get_invoice_qty()
         for sale_line in self:
-            if sale_line.is_downpayment:
-                sale_line.qty_invoiced = 1
-            else:
-                sale_line.qty_invoiced += sum([pos_line.qty for pos_line in sale_line.pos_order_line_ids if not sale_line.is_downpayment], 0)
+            sale_line.qty_invoiced += sum([pos_line.qty for pos_line in sale_line.pos_order_line_ids], 0)
