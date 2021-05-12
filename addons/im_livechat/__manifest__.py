@@ -97,6 +97,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/js/boot.js',
             'web/static/src/js/libs/download.js',
             'web/static/src/js/libs/content-disposition.js',
+            'web/static/src/js/libs/pdfjs.js',
             'web/static/src/js/services/config.js',
             'web/static/src/js/core/abstract_service.js',
             'web/static/src/js/core/class.js',
