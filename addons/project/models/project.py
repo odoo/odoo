@@ -941,6 +941,7 @@ class Task(models.Model):
     _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
+    _primary_email = 'email_from'
     _check_company_auto = True
 
     @api.model
@@ -2155,7 +2156,6 @@ class Task(models.Model):
             custom_values = {}
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
-            'email_from': msg.get('from'),
             'planned_hours': 0.0,
             'partner_id': msg.get('author_id'),
             'description': msg.get('body'),

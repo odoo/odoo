@@ -32,6 +32,7 @@
         'data/mail_message_subtype_data.xml',
         'data/mail_templates_chatter.xml',
         'data/mail_templates_email_layouts.xml',
+        'data/mail_templates_mailgateway.xml',
         'data/mail_channel_data.xml',
         'data/mail_activity_data.xml',
         'data/ir_cron_data.xml',
