@@ -69,6 +69,56 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         date = Datetime.from_string('2020-01-20 16:00:00')
         cls.crm_lead_dt_mock.now.return_value = date
 
+    @users('user_sales_manager')
+    def test_duplicates_computation(self):
+        """ Test Lead._get_lead_duplicates() and check won / probability usage """
+        test_lead = self.env['crm.lead'].browse(self.lead_1.ids)
+        customer, dup_leads = self._create_duplicates(test_lead)
+        dup_leads += self.env['crm.lead'].create([
+            {'name': 'Duplicate lead: same email_from, lost',
+             'type': 'lead',
+             'email_from': test_lead.email_from,
+             'probability': 0, 'active': False,
+            },
+            {'name': 'Duplicate lead: same email_from, proba 0 but not lost',
+             'type': 'lead',
+             'email_from': test_lead.email_from,
+             'probability': 0, 'active': True,
+            },
+            {'name': 'Duplicate opp: same email_from, won',
+             'type': 'opportunity',
+             'email_from': test_lead.email_from,
+             'probability': 100, 'stage_id': self.stage_team1_won.id,
+            },
+            {'name': 'Duplicate opp: same email_from, proba 100 but not won',
+             'type': 'opportunity',
+             'email_from': test_lead.email_from,
+             'probability': 100, 'stage_id': self.stage_team1_2.id,
+            }
+        ])
+        lead_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate lead: same email_from, lost')
+        _opp_proba100 = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, proba 100 but not won')
+        opp_won = dup_leads.filtered(lambda lead: lead.name == 'Duplicate opp: same email_from, won')
+        opp_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate: lost opportunity')
+
+        test_lead.write({'partner_id': customer.id})
+
+        # not include_lost = remove archived leads as well as 'won' opportunities
+        result = test_lead._get_lead_duplicates(
+            partner=test_lead.partner_id,
+            email=test_lead.email_from,
+            include_lost=False
+        )
+        self.assertEqual(result, test_lead + dup_leads - (lead_lost + opp_won + opp_lost))
+
+        # include_lost = remove archived opp only
+        result = test_lead._get_lead_duplicates(
+            partner=test_lead.partner_id,
+            email=test_lead.email_from,
+            include_lost=True
+        )
+        self.assertEqual(result, test_lead + dup_leads - (lead_lost))
+
     def test_initial_data(self):
         """ Ensure initial data to avoid spaghetti test update afterwards """
         self.assertFalse(self.lead_1.date_conversion)
@@ -341,35 +391,35 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
 
     @users('user_sales_manager')
     def test_lead_merge_duplicates(self):
-        """ Test Lead._get_lead_duplicates() """
+        """ Test Lead._get_lead_duplicates() and check: partner / email fallbacks """
+        customer, dup_leads = self._create_duplicates(self.lead_1)
+        lead_partner = dup_leads.filtered(lambda lead: lead.name == 'Duplicate: customer ID')
+        self.assertTrue(bool(lead_partner))
 
-        # Check: partner / email fallbacks
-        self._create_duplicates(self.lead_1)
         self.lead_1.write({
-            'partner_id': self.customer.id,
+            'partner_id': customer.id,
         })
         convert = self.env['crm.lead2opportunity.partner'].with_context({
             'active_model': 'crm.lead',
             'active_id': self.lead_1.id,
             'active_ids': self.lead_1.ids,
         }).create({})
-        self.assertEqual(convert.partner_id, self.customer)
-        # self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | self.lead_email_from | self.lead_email_normalized | self.lead_partner | self.opp_lost)
-        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | self.lead_email_from | self.lead_partner | self.opp_lost)
+        self.assertEqual(convert.partner_id, customer)
+        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | dup_leads)
 
         # Check: partner fallbacks
         self.lead_1.write({
             'email_from': False,
-            'partner_id': self.customer.id,
+            'partner_id': customer.id,
         })
-        self.customer.write({'email': False})
+        customer.write({'email': False})
         convert = self.env['crm.lead2opportunity.partner'].with_context({
             'active_model': 'crm.lead',
             'active_id': self.lead_1.id,
             'active_ids': self.lead_1.ids,
         }).create({})
-        self.assertEqual(convert.partner_id, self.customer)
-        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | self.lead_partner)
+        self.assertEqual(convert.partner_id, customer)
+        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | lead_partner)
 
     @users('user_sales_manager')
     def test_lead_merge_duplicates_flow(self):
@@ -379,23 +429,22 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.lead_1.write({
             'email_from': 'Amy Wong <amy.wong@test.example.com>'
         })
-        self._create_duplicates(self.lead_1)
+        customer, dup_leads = self._create_duplicates(self.lead_1)
+        opp_lost = dup_leads.filtered(lambda lead: lead.name == 'Duplicate: lost opportunity')
+        self.assertTrue(bool(opp_lost))
 
         convert = self.env['crm.lead2opportunity.partner'].with_context({
             'active_model': 'crm.lead',
             'active_id': self.lead_1.id,
             'active_ids': self.lead_1.ids,
         }).create({})
-        self.assertEqual(convert.partner_id, self.customer)
-        # TDE FIXME: should check for email_normalized -> lead_email_normalized not correctly found
-        # self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | lead_email_from | lead_email_normalized | lead_partner | opp_lost)
-        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | self.lead_email_from | self.lead_partner | self.opp_lost)
+        self.assertEqual(convert.partner_id, customer)
+        self.assertEqual(convert.duplicated_lead_ids, self.lead_1 | dup_leads)
 
         convert.action_apply()
         self.assertEqual(
-            # (self.lead_1 | self.lead_email_from | self.lead_email_normalized | self.lead_partner | self.opp_lost).exists(),
-            (self.lead_1 | self.lead_email_from | self.lead_partner | self.opp_lost).exists(),
-            self.opp_lost)
+            (self.lead_1 | dup_leads).exists(),
+            opp_lost)
 
 
 @tagged('lead_manage')
