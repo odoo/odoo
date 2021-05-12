@@ -750,3 +750,13 @@ $o-bg-shapes: ('web_editor': (
     'Zigs/04': ('position': bottom, 'size': 100% auto, 'colors': (1), 'repeat-y': false),
     'Zigs/05': ('position': bottom, 'size': 100% auto, 'colors': (3), 'repeat-y': false),
 ));
+
+@function change-shape-colors-mapping($module, $shape-name, $mapping, $shapes: $o-bg-shapes) {
+    $-module-shapes: map-get($shapes, $module);
+    $-modified-module-shapes: map-merge($-module-shapes, (
+        $shape-name: map-merge(map-get($-module-shapes, $shape-name), ('color-to-cc-bg-map': $mapping)),
+    ));
+    @return map-merge($shapes, (
+        $module: $-modified-module-shapes,
+    ));
+}
