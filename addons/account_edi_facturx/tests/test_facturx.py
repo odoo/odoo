@@ -82,7 +82,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                         </SpecifiedTradeProduct>
                         <SpecifiedLineTradeAgreement>
                             <GrossPriceProductTradePrice>
-                                <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
+                                <ChargeAmount currencyID="Gol">1100.000</ChargeAmount>
                                 <AppliedTradeAllowanceCharge>
                                     <ChargeIndicator>
                                         <Indicator>true</Indicator>
@@ -164,7 +164,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
 
         applied_xpath = '''
             <xpath expr="//GrossPriceProductTradePrice/ChargeAmount" position="replace">
-                <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
+                <ChargeAmount currencyID="Gol">1000.000</ChargeAmount>
             </xpath>
             <xpath expr="//SpecifiedLineTradeSettlement" position="replace">
                 <SpecifiedLineTradeSettlement>
