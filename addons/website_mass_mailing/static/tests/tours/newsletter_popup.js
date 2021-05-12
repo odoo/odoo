@@ -22,7 +22,7 @@ tour.register('newsletter_popup_edition', {
         in_modal: false,
         run: () => null,
     },
-    wTourUtils.clickOnSave(),
+    ...wTourUtils.clickOnSave(),
     {
         content: "Check the modal has been saved, closed",
         trigger: '.o_newsletter_popup',

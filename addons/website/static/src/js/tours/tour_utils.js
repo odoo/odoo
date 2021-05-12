@@ -6,37 +6,6 @@ const _t = core._t;
 
 var tour = require("web_tour.tour");
 
-/**
-
-const snippets = [
-    {
-        id: 's_cover',
-        name: 'Cover',
-    },
-    {
-        id: 's_text_image',
-        name: 'Text - Image',
-    }
-];
-
-tour.register("themename_tour", {
-    url: "/",
-    saveAs: "homepage",
-}, [
-    wTourUtils.dragNDrop(snippets[0]),
-    wTourUtils.clickOnText(snippets[0], 'h1'),
-    wTourUtils.changeOption('colorFilter', 'span.o_we_color_preview', _t('color filter')),
-    wTourUtils.selectHeader(),
-    wTourUtils.changeOption('HeaderTemplate', '[data-name="header_alignment_opt"]', _t('alignment')),
-    wTourUtils.goBackToBlocks(),
-    wTourUtils.dragNDrop(snippets[1]),
-    wTourUtils.changeImage(snippets[1]),
-    wTourUtils.clickOnSave(),
-]);
-**/
-
-
-
 function addMedia(position = "right") {
     return {
         trigger: `.modal-content footer .btn-primary`,
@@ -168,12 +137,16 @@ function clickOnSnippet(snippet, position = "bottom") {
 }
 
 function clickOnSave(position = "bottom") {
-    return {
+    return [{
         trigger: "button[data-action=save]",
         in_modal: false,
         content: _t("Good job! It's time to <b>Save</b> your work."),
         position: position,
-    };
+    }, {
+        trigger: 'body:not(.editor_enable)',
+        auto: true, // Just making sure save is finished in automatic tests
+        run: () => null,
+    }];
 }
 
 /**
@@ -261,7 +234,7 @@ function registerThemeHomepageTour(name, steps) {
         sequence: 1010,
         saveAs: "homepage",
     }, prepend_trigger(
-        steps,
+        steps.concat(clickOnSave()),
         "html[data-view-xmlid='website.homepage'] "
     ));
 }
