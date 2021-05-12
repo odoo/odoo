@@ -47,8 +47,9 @@
         @each $shape, $style in $shapes {
             $url-params: '';
             $colors: map-get($style, 'colors');
+            $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, map-get($style, 'color-to-cc-bg-map') or ());
             @each $i in $colors {
-                $cc: map-get($default-color-to-cc-bg-map, $i);
+                $cc: map-get($color-to-cc-bg-map, $i);
                 // %23 is the url-encoded form of '#'
                 $color: str-replace("#{o-color('o-cc#{$cc}-bg')}", '#', '%23');
                 $url-params: '#{$url-params}&c#{$i}=#{$color}';
