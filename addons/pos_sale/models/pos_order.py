@@ -74,7 +74,10 @@ class PosOrder(models.Model):
                 for stock_move in so_line.move_ids:
                     if not stock_move.picking_id.state in ['waiting', 'confirmed', 'assigned']:
                         continue
-                    stock_move.product_uom_qty = so_line.product_uom_qty - so_line.qty_delivered
+                    new_qty = so_line.product_uom_qty - so_line.qty_delivered
+                    if new_qty < 0:
+                        new_qty = 0
+                    stock_move.product_uom_qty = new_qty
 
         return order_ids
 
