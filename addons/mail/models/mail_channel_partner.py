@@ -23,6 +23,7 @@ class ChannelPartner(models.Model):
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
+    last_meaningful_action_time = fields.Datetime('Last action time for the thread', default=fields.Datetime.now)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -44,4 +45,6 @@ class ChannelPartner(models.Model):
         if not self.env.is_admin():
             if {'channel_id', 'partner_id', 'partner_email'} & set(vals):
                 raise AccessError(_('You can not write on this field'))
+        if vals.get('is_pinned'):
+            vals['last_meaningful_action_time'] = fields.Datetime.now()
         return super(ChannelPartner, self).write(vals)

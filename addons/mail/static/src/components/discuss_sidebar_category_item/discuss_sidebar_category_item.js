@@ -7,47 +7,17 @@ import Dialog from 'web.Dialog';
 
 const { Component } = owl;
 
-export class DiscussSidebarItem extends Component {
+export class DiscussSidebarCategoryItem extends Component {
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
     /**
-     * Get the counter of this discuss item, which is based on the thread type.
-     *
-     * @returns {integer}
+     * @returns {mail.discuss_sidebar_category_item}
      */
-    get counter() {
-        if (this.thread.model === 'mail.box') {
-            return this.thread.counter;
-        } else if (this.thread.channel_type === 'channel') {
-            return this.thread.message_needaction_counter;
-        } else if (this.thread.channel_type === 'chat') {
-            return this.thread.localMessageUnreadCounter;
-        }
-        return 0;
-    }
-
-    /**
-     * @returns {mail.discuss}
-     */
-    get discuss() {
-        return this.messaging && this.messaging.discuss;
-    }
-
-    /**
-     * @returns {boolean}
-     */
-    hasUnpin() {
-        return this.thread.channel_type === 'chat';
-    }
-
-    /**
-     * @returns {mail.thread}
-     */
-    get thread() {
-        return this.messaging && this.messaging.models['mail.thread'].get(this.props.threadLocalId);
+    get categoryItem() {
+        return this.messaging.models['mail.discuss_sidebar_category_item'].get(this.props.categoryItemLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -68,13 +38,13 @@ export class DiscussSidebarItem extends Component {
                             text: this.env._t("Leave"),
                             classes: 'btn-primary',
                             close: true,
-                            click: resolve
+                            click: resolve,
                         },
                         {
                             text: this.env._t("Discard"),
-                            close: true
-                        }
-                    ]
+                            close: true,
+                        },
+                    ],
                 }
             );
         });
@@ -89,7 +59,7 @@ export class DiscussSidebarItem extends Component {
      * @param {Event} ev
      */
     _onCancelRenaming(ev) {
-        this.discuss.cancelThreadRenaming(this.thread);
+        this.messaging.discuss.cancelThreadRenaming(this.categoryItem.channel);
     }
 
     /**
@@ -100,7 +70,7 @@ export class DiscussSidebarItem extends Component {
         if (isEventHandled(ev, 'EditableText.click')) {
             return;
         }
-        this.thread.open();
+        this.categoryItem.channel.open();
     }
 
     /**
@@ -119,10 +89,10 @@ export class DiscussSidebarItem extends Component {
      */
     async _onClickLeave(ev) {
         ev.stopPropagation();
-        if (this.thread.creator === this.messaging.currentUser) {
+        if (this.categoryItem.channel.creator === this.messaging.currentUser) {
             await this._askAdminConfirmation();
         }
-        this.thread.unsubscribe();
+        this.categoryItem.channel.unsubscribe();
     }
 
     /**
@@ -131,7 +101,7 @@ export class DiscussSidebarItem extends Component {
      */
     _onClickRename(ev) {
         ev.stopPropagation();
-        this.discuss.setThreadRenaming(this.thread);
+        this.messaging.discuss.setThreadRenaming(this.categoryItem.channel);
     }
 
     /**
@@ -140,15 +110,7 @@ export class DiscussSidebarItem extends Component {
      */
     _onClickSettings(ev) {
         ev.stopPropagation();
-        return this.env.bus.trigger('do-action', {
-            action: {
-                type: 'ir.actions.act_window',
-                res_model: this.thread.model,
-                res_id: this.thread.id,
-                views: [[false, 'form']],
-                target: 'current'
-            },
-        });
+        return this.categoryItem._onClickSettingsCommand();
     }
 
     /**
@@ -157,7 +119,7 @@ export class DiscussSidebarItem extends Component {
      */
     _onClickUnpin(ev) {
         ev.stopPropagation();
-        this.thread.unsubscribe();
+        this.categoryItem.channel.unsubscribe();
     }
 
     /**
@@ -168,16 +130,16 @@ export class DiscussSidebarItem extends Component {
      */
     _onValidateEditableText(ev) {
         ev.stopPropagation();
-        this.discuss.onValidateEditableText(this.thread, ev.detail.newName);
+        this.messaging.discuss.onValidateEditableText(this.categoryItem.channel, ev.detail.newName);
     }
 
 }
 
-Object.assign(DiscussSidebarItem, {
+Object.assign(DiscussSidebarCategoryItem, {
     props: {
-        threadLocalId: String,
+        categoryItemLocalId: String,
     },
-    template: 'mail.DiscussSidebarItem',
+    template: 'mail.DiscussSidebarCategoryItem',
 });
 
-registerMessagingComponent(DiscussSidebarItem);
+registerMessagingComponent(DiscussSidebarCategoryItem);

@@ -3,6 +3,7 @@
 import { nextAnimationFrame } from '@mail/utils/test_utils';
 
 import MockServer from 'web.MockServer';
+import { datetime_to_str } from 'web.time';
 
 MockServer.include({
     /**
@@ -245,6 +246,12 @@ MockServer.include({
         }
         if (args.model === 'mail.message' && args.method === 'unstar_all') {
             return this._mockMailMessageUnstarAll();
+        }
+        // mail.user.settings methods
+        if (args.model === 'mail.user.settings' && args.method === 'set_mail_user_settings') {
+            const id = args.args[0][0];
+            const new_settings = args.kwargs.new_settings;
+            return this._mockMailUserSettingsSetMailUserSettings(id, new_settings);
         }
         // res.partner methods
         if (args.method === 'get_mention_suggestions') {
@@ -710,6 +717,7 @@ MockServer.include({
             channel_type: 'chat',
             is_minimized: true,
             is_pinned: true,
+            last_meaningful_action_time: datetime_to_str(new Date()),
             members: [[6, 0, partners_to]],
             name: partners.map(partner => partner.name).join(", "),
             public: 'private',
@@ -965,12 +973,23 @@ MockServer.include({
     _mockMailChannelMessagePost(id, kwargs, context) {
         const message_type = kwargs.message_type || 'notification';
         const channel = this._getRecords('mail.channel', [['id', '=', id]])[0];
-        if (channel.channel_type !== 'channel' && !channel.is_pinned) {
+        if (channel.channel_type !== 'channel') {
             // channel.partner not handled here for simplicity
             this._mockWrite('mail.channel', [
                 [channel.id],
-                { is_pinned: true },
+                {
+                    last_meaningful_action_time: datetime_to_str(new Date()),
+                },
             ]);
+            if (!channel.is_pinned) {
+                this._mockWrite('mail.channel', [
+                    [channel.id],
+                    {
+                        is_pinned: true,
+                    },
+                ]);
+            }
+
         }
         const messageId = this._mockMailThreadMessagePost(
             'mail.channel',
@@ -1624,6 +1643,27 @@ MockServer.include({
         ];
     },
     /**
+     * Simulates `set_mail_user_settings` on `mail.user.settings`.
+     *
+     * @param {integer} id
+     * @param {object.<string, boolean>} new_settings
+     */
+     _mockMailUserSettingsSetMailUserSettings(id, new_settings) {
+        this._mockWrite('mail.user.settings', [
+            [id],
+            new_settings,
+        ]);
+        const mailUserSettings = this._getRecords('mail.user.settings', [['id', '=', id]]);
+        const notification = [
+            ['dbName', 'res.partner', this.currentPartnerId],
+            {
+                type: 'mail_user_settings',
+                payload: mailUserSettings,
+            },
+        ];
+        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
+    },
+    /**
      * Simulates `get_mention_suggestions` on `res.partner`.
      *
      * @private
@@ -1802,10 +1842,16 @@ MockServer.include({
      */
     _mockResUsers_InitMessaging(ids) {
         const user = this._getRecords('res.users', [['id', 'in', ids]])[0];
+        let current_user_settings = this._getRecords('mail.user.settings', [['user_id', '=', this.currentUserId]])[0];
+        if (!current_user_settings) {
+            const settingsId = this._mockCreate('mail.user.settings', { user_id: this.currentUserId });
+            current_user_settings = this._getRecords('mail.user.settings', [['id', '=', settingsId]])[0];
+        }
         return {
             channels: this._mockMailChannelChannelInfo(this._mockResPartner_GetChannelsAsMember(user.partner_id).map(channel => channel.id)),
             current_partner: this._mockResPartnerMailPartnerFormat(user.partner_id).get(user.partner_id),
             current_user_id: this.currentUserId,
+            current_user_settings,
             mail_failures: this._mockResPartner_MessageFetchFailed(user.partner_id),
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
