@@ -9,6 +9,8 @@ import Timer from '@mail/utils/timer/timer';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
+import { str_to_datetime } from 'web.time';
+
 function factory(dependencies) {
 
     class Thread extends dependencies['mail.model'] {
@@ -168,6 +170,9 @@ function factory(dependencies) {
             }
             if ('is_pinned' in data) {
                 data2.isServerPinned = data.is_pinned;
+            }
+            if ('last_meaningful_action_time' in data && data.last_meaningful_action_time) {
+                data2.lastMeaningfulActionTime = str_to_datetime(data.last_meaningful_action_time);
             }
             if ('last_message' in data && data.last_message) {
                 const messageData = this.env.models['mail.message'].convertData({
@@ -1791,6 +1796,11 @@ function factory(dependencies) {
         isTemporary: attr({
             default: false,
         }),
+        /**
+         * Date object describes when the last meanful action is done in a thread,
+         * e.g. pin or send/receive messages.
+         */
+        lastMeaningfulActionTime: attr(),
         lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
             compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
         }),

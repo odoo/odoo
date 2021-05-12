@@ -421,6 +421,10 @@ class Channel(models.Model):
         message_format_values = message.message_format()[0]
         bus_notifications = self._channel_message_notifications(message, message_format_values)
         self.env['bus.bus'].sudo().sendmany(bus_notifications)
+        # Last meaningful action time is updated for a chat when posting a message.
+        # So the channel_info needs to be sent to update the UI
+        if self.is_chat:
+            self._broadcast(self.channel_partner_ids.ids)
         return rdata
 
     def _message_receive_bounce(self, email, partner):
@@ -580,6 +584,7 @@ class Channel(models.Model):
                     info['seen_message_id'] = partner_channel.seen_message_id.id
                     info['custom_channel_name'] = partner_channel.custom_channel_name
                     info['is_pinned'] = partner_channel.is_pinned
+                    info['last_meaningful_action_time'] = partner_channel.last_meaningful_action_time
 
             # add members infos
             if channel.channel_type != 'channel':

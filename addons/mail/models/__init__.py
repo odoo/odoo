@@ -21,6 +21,7 @@ from . import mail_channel_partner
 from . import mail_channel
 from . import mail_template
 from . import mail_shortcode
+from . import mail_user_settings
 from . import models
 from . import res_partner
 from . import res_users

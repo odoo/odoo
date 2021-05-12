@@ -25,6 +25,7 @@ class Users(models.Model):
         help="Policy on how to handle Chatter notifications:\n"
              "- Handle by Emails: notifications are sent to your email address\n"
              "- Handle in Odoo: notifications appear in your Odoo Inbox")
+    mail_user_settings = fields.One2many('mail.user.settings', 'user_id')
 
     @property
     def SELF_READABLE_FIELDS(self):

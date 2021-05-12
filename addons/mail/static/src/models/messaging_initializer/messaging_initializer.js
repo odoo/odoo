@@ -5,7 +5,6 @@ import { one2one } from '@mail/model/model_field';
 import { executeGracefully } from '@mail/utils/utils';
 import { create, link, insert } from '@mail/model/model_field_command';
 
-
 function factory(dependencies) {
 
     class MessagingInitializer extends dependencies['mail.model'] {
@@ -69,6 +68,7 @@ function factory(dependencies) {
          * @param {Array} [param0.commands=[]]
          * @param {Object} param0.current_partner
          * @param {integer} param0.current_user_id
+         * @param {Object} param0.current_user_settings
          * @param {Object} [param0.mail_failures={}]
          * @param {integer} [param0.needaction_inbox_counter=0]
          * @param {Object} param0.partner_root
@@ -81,6 +81,7 @@ function factory(dependencies) {
             commands = [],
             current_partner,
             current_user_id,
+            current_user_settings,
             mail_failures = {},
             menu_id,
             needaction_inbox_counter = 0,
@@ -103,6 +104,8 @@ function factory(dependencies) {
                 needaction_inbox_counter,
                 starred_counter,
             });
+            // init mail user settings
+            this._initMailUserSettings(current_user_settings);
             // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
             this._initCommands(commands);
@@ -198,6 +201,45 @@ function factory(dependencies) {
                 }
             }));
             this.messaging.notificationGroupManager.computeGroups();
+        }
+
+        /**
+         * @param {object} mailUserSettings
+         * @param {integer} mailUserSettings.id
+         * @param {boolean} mailUserSettings.is_discuss_sidebar_category_channel_open
+         * @param {boolean} mailUserSettings.is_discuss_sidebar_category_chat_open
+         */
+        _initMailUserSettings({ id, is_discuss_sidebar_category_channel_open, is_discuss_sidebar_category_chat_open }) {
+            this.messaging.update({
+                mailUserSettingsId: id,
+            });
+            this.messaging.discuss.update({
+                categoryChannel: create({
+                    autocompleteMethod: 'channel',
+                    commandAddTitleText: this.env._t("Add or join a channel"),
+                    counterComputeMethod: 'needaction',
+                    displayName: this.env._t("Channels"),
+                    hasAddCommand: true,
+                    hasViewCommand: true,
+                    isServerOpen: is_discuss_sidebar_category_channel_open,
+                    newItemPlaceholderText: this.env._t("Find or create a channel..."),
+                    serverStateKey: 'is_discuss_sidebar_category_channel_open',
+                    sortComputeMethod: 'name',
+                    supportedChannelTypes: ['channel'],
+                }),
+                categoryChat: create({
+                    autocompleteMethod: 'chat',
+                    commandAddTitleText: this.env._t("Start a conversation"),
+                    counterComputeMethod: 'unread',
+                    displayName: this.env._t("Direct Messages"),
+                    hasAddCommand: true,
+                    isServerOpen: is_discuss_sidebar_category_chat_open,
+                    newItemPlaceholderText: this.env._t("Find or start a conversation..."),
+                    serverStateKey: 'is_discuss_sidebar_category_chat_open',
+                    sortComputeMethod: 'last_action',
+                    supportedChannelTypes: ['chat'],
+                }),
+            });
         }
 
         /**

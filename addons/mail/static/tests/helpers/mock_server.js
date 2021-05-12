@@ -3,6 +3,7 @@
 import { nextAnimationFrame } from '@mail/utils/test_utils';
 
 import MockServer from 'web.MockServer';
+import { datetime_to_str } from 'web.time';
 
 MockServer.include({
     /**
@@ -234,6 +235,12 @@ MockServer.include({
         if (args.model === 'mail.message' && args.method === 'unstar_all') {
             return this._mockMailMessageUnstarAll();
         }
+        // mail.user.settings methods
+        if (args.model === 'mail.user.settings' && args.method === 'set_mail_user_settings') {
+            const id = args.args[0][0];
+            const new_settings = args.kwargs.new_settings;
+            return this._mockMailUserSettingsSetMailUserSettings(id, new_settings);
+        }
         // res.partner methods
         if (args.method === 'get_mention_suggestions') {
             if (args.model === 'mail.channel') {
@@ -382,6 +389,12 @@ MockServer.include({
         const currentPartner = this._getRecords('res.partner', [['id', '=', this.currentPartnerId]])[0];
         const currentPartnerFormat = this._mockResPartnerMailPartnerFormat(currentPartner.id);
 
+        let current_user_settings = this._getRecords('mail.user.settings', [['user_id', '=', this.currentUserId]])[0];
+        if (!current_user_settings) {
+            const settingsId = this._mockCreate('mail.user.settings', { user_id: this.currentUserId });
+            current_user_settings = this._getRecords('mail.user.settings', [['id', '=', settingsId]])[0];
+        }
+
         const needaction_inbox_counter = this._mockResPartnerGetNeedactionCount();
 
         const mailFailures = this._mockMailMessageMessageFetchFailed();
@@ -403,6 +416,7 @@ MockServer.include({
             commands,
             current_partner: currentPartnerFormat,
             current_user_id: this.currentUserId,
+            current_user_settings,
             mail_failures: mailFailures,
             menu_id: false,
             needaction_inbox_counter,
@@ -728,6 +742,7 @@ MockServer.include({
             channel_type: 'chat',
             is_minimized: true,
             is_pinned: true,
+            last_meaningful_action_time: datetime_to_str(new Date()),
             members: [[6, 0, partners_to]],
             name: partners.map(partner => partner.name).join(", "),
             public: 'private',
@@ -970,12 +985,23 @@ MockServer.include({
     _mockMailChannelMessagePost(id, kwargs, context) {
         const message_type = kwargs.message_type || 'notification';
         const channel = this._getRecords('mail.channel', [['id', '=', id]])[0];
-        if (channel.channel_type !== 'channel' && !channel.is_pinned) {
+        if (channel.channel_type !== 'channel') {
             // channel.partner not handled here for simplicity
             this._mockWrite('mail.channel', [
                 [channel.id],
-                { is_pinned: true },
+                {
+                    last_meaningful_action_time: datetime_to_str(new Date()),
+                },
             ]);
+            if (!channel.is_pinned) {
+                this._mockWrite('mail.channel', [
+                    [channel.id],
+                    {
+                        is_pinned: true,
+                    },
+                ]);
+            }
+
         }
         const messageId = this._mockMailThreadMessagePost(
             'mail.channel',
@@ -1621,6 +1647,27 @@ MockServer.include({
             ['partner_id', 'in', partner_ids || []],
         ]);
         this._mockUnlink(model, [followers.map(follower => follower.id)]);
+    },
+    /**
+     * Simulates `set_mail_user_settings` on `mail.user.settings`.
+     *
+     * @param {integer} id
+     * @param {object.<string, boolean>} new_settings
+     */
+     _mockMailUserSettingsSetMailUserSettings(id, new_settings) {
+        this._mockWrite('mail.user.settings', [
+            [id],
+            new_settings,
+        ]);
+        const mailUserSettings = this._getRecords('mail.user.settings', [['id', '=', id]]);
+        const notification = [
+            ['dbName', 'res.partner', this.currentPartnerId],
+            {
+                type: 'mail_user_settings',
+                payload: mailUserSettings,
+            },
+        ];
+        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
     },
     /**
      * Simulates `get_mention_suggestions` on `res.partner`.

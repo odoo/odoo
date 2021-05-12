@@ -243,6 +243,10 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
+        /**
+         * Id of the current user's mail.user.settings record.
+         */
+        mailUserSettingsId: attr(),
         messagingMenu: one2one('mail.messaging_menu', {
             default: create(),
             inverse: 'messaging',

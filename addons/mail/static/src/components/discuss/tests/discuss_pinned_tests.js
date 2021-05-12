@@ -43,7 +43,7 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarItem[data-thread-local-id="${
+        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             this.env.models['mail.thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
@@ -66,7 +66,7 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
         model: 'mail.channel',
     });
     await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
+        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             threadGeneral.localId
         }"]`).click()
     );
@@ -110,13 +110,13 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
         model: 'mail.channel',
     });
     await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
+        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             threadGeneral.localId
         }"]`).click()
     );
     assert.verifySteps([], "neither channel_fold nor execute_command are called yet");
     await afterNextRender(() =>
-        document.querySelector('.o_DiscussSidebarItem_commandLeave').click()
+        document.querySelector('.o_DiscussSidebarCategoryItem_commandLeave').click()
     );
     assert.verifySteps(
         [
@@ -127,7 +127,7 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
         "The channel must have been removed from discuss sidebar"
     );
     assert.containsOnce(
@@ -156,12 +156,12 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
         "1 channel is present in discuss sidebar and it is 'general'"
     );
 
     await afterNextRender(() =>
-        document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
+        document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             threadGeneral.localId
         }"]`).click()
     );
@@ -194,7 +194,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
         "The channel must have been removed from discuss sidebar"
     );
 });
@@ -220,12 +220,12 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
     });
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
         "The channel #General is in discuss sidebar"
     );
     assert.containsNone(
         document.body,
-        'o_DiscussSidebarItem_commandLeave',
+        'o_DiscussSidebarCategoryItem_commandLeave',
         "The group_based_subscription channel is not unpinnable"
     );
 });

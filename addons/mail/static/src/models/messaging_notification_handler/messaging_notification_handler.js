@@ -357,6 +357,21 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @param {object} payload
+         * @param {boolean} payload.is_discuss_sidebar_category_channel_open
+         * @param {boolean} payload.is_discuss_sidebar_category_chat_open
+         */
+        _handleNotificationMailUserSettings({ is_discuss_sidebar_category_channel_open, is_discuss_sidebar_category_chat_open }) {
+            this.env.messaging.discuss.categoryChannel.update({
+                isServerOpen: is_discuss_sidebar_category_channel_open,
+            });
+            this.env.messaging.discuss.categoryChat.update({
+                isServerOpen: is_discuss_sidebar_category_chat_open,
+            });
+        }
+
+        /**
+         * @private
          * @param {Object} data
          */
         _handleNotificationNeedaction(data) {
@@ -389,6 +404,8 @@ function factory(dependencies) {
                 return this._handleNotificationChannelSeen(data.channel_id, data);
             } else if (type === 'deletion') {
                 return this._handleNotificationPartnerDeletion(data);
+            } else if (type === 'mail_user_settings') {
+                return this._handleNotificationMailUserSettings(data.payload);
             } else if (type === 'message_notification_update') {
                 return this._handleNotificationPartnerMessageNotificationUpdate(data.elements);
             } else if (type === 'mark_as_read') {
