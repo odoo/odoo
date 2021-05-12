@@ -24,8 +24,13 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env['crm.lead'].browse(test_leads.ids)
 
+<<<<<<< HEAD
         with self.assertQueryCount(user_sales_manager=252):
             test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=False)
+=======
+        with self.assertQueryCount(user_sales_manager=254):  # often 251, sometimes +3 on runbot
+            test_leads.handle_salesmen_assignment(user_ids=user_ids, team_id=False)
+>>>>>>> 1ca4f6845d0... temp
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert | self.sales_team_1)
         self.assertEqual(test_leads[0::3].user_id, self.user_sales_manager)
@@ -42,8 +47,13 @@ class TestLeadConvertMass(crm_common.TestLeadConvertMassCommon):
         with self.assertQueryCount(user_sales_manager=0):
             test_leads = self.env['crm.lead'].browse(test_leads.ids)
 
+<<<<<<< HEAD
         with self.assertQueryCount(user_sales_manager=220):  # still some randomness (220 spotted) - crm only: 218
             test_leads._handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
+=======
+        with self.assertQueryCount(user_sales_manager=221):  # crm only: 215 - generally 218, sometimes +2/+3 on runbot
+            test_leads.handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
+>>>>>>> 1ca4f6845d0... temp
 
         self.assertEqual(test_leads.team_id, self.sales_team_convert)
         self.assertEqual(test_leads[0::3].user_id, self.user_sales_manager)
