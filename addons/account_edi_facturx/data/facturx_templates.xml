@@ -29,7 +29,7 @@
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
                                 t-att-currencyID="record.currency_id.name"
-                                t-esc="format_monetary(line.price_unit, record.currency_id)"/>
+                                t-esc="format_monetary(line.price_subtotal, record.currency_id)"/>
 
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
