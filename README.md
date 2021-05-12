@@ -26,7 +26,8 @@ a full-featured <a href="https://www.odoo.com">Open Source ERP</a> when you inst
 
 Getting started with Odoo
 -------------------------
-For a standard installation please follow the <a href="https://www.odoo.com/documentation/14.0/setup/install.html">Setup instructions</a>
+
+For a standard installation please follow the <a href="https://www.odoo.com/documentation/14.0/administration/install.html">Setup instructions</a>
 from the documentation.
 
-To learn the software, we recommend the <a href="https://www.odoo.com/slides">Odoo eLearning</a>, or <a href="https://www.odoo.com/page/scale-up-business-game">Scale-up</a>, the <a href="https://www.odoo.com/page/scale-up-business-game">business game</a>. Developers can start with <a href="https://www.odoo.com/documentation/14.0/tutorials.html">the developer tutorials</a>
+To learn the software, we recommend the <a href="https://www.odoo.com/slides">Odoo eLearning</a>, or <a href="https://www.odoo.com/page/scale-up-business-game">Scale-up</a>, the <a href="https://www.odoo.com/page/scale-up-business-game">business game</a>. Developers can start with <a href="https://www.odoo.com/documentation/14.0/developer/howtos.html">the developer tutorials</a>
