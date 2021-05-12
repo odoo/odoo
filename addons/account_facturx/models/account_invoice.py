@@ -195,7 +195,15 @@ class AccountInvoice(models.Model):
                             invoice_line_form.name = line_elements[0].text
                         line_elements = element.xpath('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', namespaces=tree.nsmap)
                         if line_elements and line_elements[0].text:
-                            product = self.env['product.product'].search([('default_code', '=', line_elements[0].text)])
+                            code = line_elements[0].text
+                            product = None
+                            if partner:
+                                spinf = self.env['product.supplierinfo'].search([
+                                    ('product_code', '=', code),
+                                    ('name', '=', partner)])
+                                product = spinf and spinf.product_id or None
+                            if not product:
+                                product = self.env['product.product'].search([('default_code', '=', code)])
                             if product:
                                 invoice_line_form.product_id = product
                         if not invoice_line_form.product_id:
