@@ -303,11 +303,13 @@ class ProductProduct(models.Model):
 
         # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
         qty_to_take_on_candidates = quantity
-        candidates = self.env['stock.valuation.layer'].sudo().search([
-            ('product_id', '=', self.id),
-            ('remaining_qty', '>', 0),
-            ('company_id', '=', company.id),
-        ])
+        candidates_domain = self._run_fifo_get_candidates_domain(company)
+        candidates = (
+            self.env["stock.valuation.layer"]
+            .sudo()
+            .with_context(active_test=False)
+            .search(candidates_domain)
+        )
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
@@ -323,7 +325,12 @@ class ProductProduct(models.Model):
                 'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
                 'remaining_value': new_remaining_value,
             }
-
+            candidate_vals = self._run_fifo_prepare_candidate_update(
+                candidate,
+                qty_taken_on_candidate,
+                value_taken_on_candidate,
+                candidate_vals,
+            )
             candidate.write(candidate_vals)
 
             qty_to_take_on_candidates -= qty_taken_on_candidate
@@ -412,9 +419,17 @@ class ProductProduct(models.Model):
 
                 candidate_vals = {
                     'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
-                    'remaining_value': new_remaining_value
+                    'remaining_value': new_remaining_value,
                 }
+                candidate_vals = self._run_fifo_vacuum_prepare_candidate_update(
+                    svl_to_vacuum,
+                    candidate,
+                    qty_taken_on_candidate,
+                    value_taken_on_candidate,
+                    candidate_vals,
+                )
                 candidate.write(candidate_vals)
+
                 if not (candidate.remaining_qty > 0):
                     all_candidates -= candidate
 
@@ -691,6 +706,35 @@ class ProductProduct(models.Model):
             tmp_value += negative_stock_value
 
         return tmp_value / qty_to_invoice
+
+    def _run_fifo_get_candidates_domain(self, company):
+        candidates_domain = [
+            ("product_id", "=", self.id),
+            ("remaining_qty", ">", 0),
+            ("company_id", "=", company.id),
+        ]
+        return candidates_domain
+
+    def _run_fifo_prepare_candidate_update(
+        self,
+        candidate,
+        qty_taken_on_candidate,
+        value_taken_on_candidate,
+        candidate_vals,
+    ):
+        self.ensure_one()
+        return candidate_vals
+
+    def _run_fifo_vacuum_prepare_candidate_update(
+        self,
+        svl_to_vacuum,
+        candidate,
+        qty_taken_on_candidate,
+        value_taken_on_candidate,
+        candidate_vals,
+    ):
+        self.ensure_one()
+        return candidate_vals
 
 
 class ProductCategory(models.Model):
