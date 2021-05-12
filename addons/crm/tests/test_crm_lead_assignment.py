@@ -28,8 +28,8 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
         # don't mess with existing leads, unlink those assigned to users used here to make tests
         # repeatable (archive is not sufficient because of lost leads)
         cls.env['crm.lead'].with_context(active_test=False).search(['|', ('team_id', '=', False), ('user_id', 'in', cls.sales_teams.member_ids.ids)]).unlink()
-        cls.bundle_size = 5
-        cls.env['ir.config_parameter'].set_param('crm.assignment.bundle', '%s' % cls.bundle_size)
+        cls.bundle_size = 50
+        cls.env['ir.config_parameter'].set_param('crm.assignment.commit.bundle', '%s' % cls.bundle_size)
         cls.env['ir.config_parameter'].set_param('crm.assignment.delay', '0')
 
     def assertInitialData(self):
@@ -43,7 +43,7 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
         self.assertEqual(self.sales_team_1_m3.assignment_domain, "[('probability', '>=', 20)]")
 
         self.assertEqual(self.sales_team_convert.assignment_domain, "[('priority', 'in', ['1', '2', '3'])]")
-        self.assertEqual(self.sales_team_convert_m1.assignment_domain, "[('priority', 'in', ['2', '3'])]")
+        self.assertEqual(self.sales_team_convert_m1.assignment_domain, "[('probability', '>=', 20)]")
         self.assertEqual(self.sales_team_convert_m2.assignment_domain, False)
 
         # start afresh
@@ -148,6 +148,8 @@ class TestLeadAssign(TestLeadAssignCommon):
 
         # re-assign existing leads, check monthly count is updated
         existing_leads[-2:]._handle_salesmen_assignment(user_ids=self.user_sales_manager.ids)
+        # commit probability and related fields
+        leads.flush()
         self.members.invalidate_cache(fnames=['lead_month_count'])
         self.assertEqual(self.sales_team_1_m3.lead_month_count, 12)
 
@@ -197,10 +199,15 @@ class TestLeadAssign(TestLeadAssignCommon):
 
         # teams assign
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
+        self.assertEqual(len(leads), 122)
         leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
         leads_stc = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
-        self.assertLessEqual(len(leads_st1), 128)
-        self.assertLessEqual(len(leads_stc), 96)
+
+        # check random globally assigned enough leads to team
+        self.assertLessEqual(len(leads_st1), 83)  # 75 * 122 / 165 * 1.5 (because random)
+        self.assertLessEqual(len(leads_stc), 100)  # 90 * 122 / 165 * 1.5 (because random)
+        self.assertGreaterEqual(len(leads_st1), 27)  # 75 * 122 / 165 * 0.5 (because random)
+        self.assertGreaterEqual(len(leads_stc), 33)  # 90 * 122 / 165 * 0.5 (because random)
         self.assertEqual(len(leads_st1) + len(leads_stc), len(leads))  # Make sure all lead are assigned
 
         # salespersons assign
@@ -228,7 +235,7 @@ class TestLeadAssign(TestLeadAssignCommon):
             lead_type='lead',
             user_ids=[False],
             partner_ids=[False],
-            count=100
+            count=150
         )
         # commit probability and related fields
         leads.flush()
@@ -250,9 +257,14 @@ class TestLeadAssign(TestLeadAssignCommon):
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
         leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
         leads_stc = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
-        self.assertEqual(len(leads_st1) + len(leads_stc), 100)  # 2 * 2 * 75 / 30.0
-        self.assertLessEqual(len(leads_st1), 100)  # 2 * 2 * 75 / 30.0
-        self.assertLessEqual(len(leads_stc), 66)  # 2 * 2 * 90 / 30.0
+        self.assertEqual(len(leads), 150)
+
+        # check random globally assigned enough leads to team
+        self.assertLessEqual(len(leads_st1), 102)  # 75 * 150 / 165 * 1.5 (because random)
+        self.assertLessEqual(len(leads_stc), 123)  # 90 * 150 / 165 * 1.5 (because random)
+        self.assertGreaterEqual(len(leads_st1), 34)  # 75 * 150 / 165 * 0.5 (because random)
+        self.assertGreaterEqual(len(leads_stc), 41)  # 90 * 150 / 165 * 0.5 (because random)
+        self.assertEqual(len(leads_st1) + len(leads_stc), len(leads))  # Make sure all lead are assigned
 
         # salespersons assign
         self.members.invalidate_cache(fnames=['lead_month_count'])
@@ -267,7 +279,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         """ Test assignment on a more high volume oriented test set in order to
         test more real life use cases. """
         # create leads enough to assign one month of work
-        _lead_count, _email_dup_count, _partner_count = 500, 50, 150
+        _lead_count, _email_dup_count, _partner_count = 600, 50, 150
         leads = self._create_leads_batch(
             lead_type='lead',
             user_ids=[False],
@@ -281,7 +293,6 @@ class TestLeadAssign(TestLeadAssignCommon):
 
         # assign for one month, aka a lot
         self.env.ref('crm.ir_cron_crm_lead_assign').write({'interval_type': 'days', 'interval_number': 30})
-        self.env['ir.config_parameter'].set_param('crm.assignment.bundle', '20')
         # create a third team
         sales_team_3 = self.env['crm.team'].create({
             'name': 'Sales Team 3',
@@ -311,9 +322,9 @@ class TestLeadAssign(TestLeadAssignCommon):
             'assignment_max': 15,
             'assignment_domain': [('probability', '>=', 10)],
         })
-        sales_teams = self.sales_teams | sales_team_3
+        sales_teams = self.sales_teams + sales_team_3
         self.assertEqual(sum(team.assignment_max for team in sales_teams), 300)
-        self.assertEqual(len(leads), 550)
+        self.assertEqual(len(leads), 650)
 
         # assign probability to leads (bypass auto probability as purpose is not to test pls)
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -331,6 +342,18 @@ class TestLeadAssign(TestLeadAssignCommon):
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])
         self.assertEqual(leads.team_id, sales_teams)
         self.assertEqual(leads.user_id, sales_teams.member_ids)
+        self.assertEqual(len(leads), 600)
+
+        # check random globally assigned enough leads to team
+        leads_st1 = leads.filtered_domain([('team_id', '=', self.sales_team_1.id)])
+        leads_st2 = leads.filtered_domain([('team_id', '=', self.sales_team_convert.id)])
+        leads_st3 = leads.filtered_domain([('team_id', '=', sales_team_3.id)])
+        self.assertLessEqual(len(leads_st1), 225)  # 75 * 600 / 300 * 1.5 (because random)
+        self.assertLessEqual(len(leads_st2), 270)  # 90 * 600 / 300 * 1.5 (because random)
+        self.assertLessEqual(len(leads_st3), 405)  # 135 * 600 / 300 * 1.5 (because random)
+        self.assertGreaterEqual(len(leads_st1), 75)  # 75 * 600 / 300 * 0.5 (because random)
+        self.assertGreaterEqual(len(leads_st2), 90)  # 90 * 600 / 300 * 0.5 (because random)
+        self.assertGreaterEqual(len(leads_st3), 135)  # 135 * 600 / 300 * 0.5 (because random)
 
         # salespersons assign
         self.members.invalidate_cache(fnames=['lead_month_count'])
