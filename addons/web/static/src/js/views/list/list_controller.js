@@ -244,10 +244,10 @@ var ListController = BasicController.extend({
      * @param {string} dataPointId a dataPoint of type 'list' (may be grouped)
      * @return {Promise}
      */
-    _addRecord: function (dataPointId) {
+    _addRecord: function (dataPointId, options) {
         var self = this;
         this._disableButtons();
-        return this.renderer.unselectRow().then(function () {
+        return this.renderer.unselectRow(options).then(function () {
             return self.model.addDefaultRecord(dataPointId, {
                 position: self.editable,
             });
@@ -560,8 +560,9 @@ var ListController = BasicController.extend({
     _onAddRecord: function (ev) {
         ev.stopPropagation();
         var dataPointId = ev.data.groupId || this.handle;
+        const stayInEdit = ev.data.stayInEdit;
         if (this.activeActions.create) {
-            this._addRecord(dataPointId);
+            this._addRecord(dataPointId, { stayInEdit: stayInEdit });
         } else if (ev.data.onFail) {
             ev.data.onFail();
         }
@@ -732,7 +733,7 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onSaveLine: function (ev) {
-        this.saveRecord(ev.data.recordID)
+        this.saveRecord(ev.data.recordID, { stayInEdit: ev.data.stayInEdit })
             .then(ev.data.onSuccess)
             .guardedCatch(ev.data.onFailure);
     },

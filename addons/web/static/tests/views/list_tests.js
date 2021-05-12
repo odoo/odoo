@@ -8,6 +8,7 @@ var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
 var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
+const ListController = require('web.ListController');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
@@ -4332,6 +4333,39 @@ QUnit.module('Views', {
         assert.containsN(list, 'tr.o_data_row', 5, "should have created a 5th row");
 
         assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/default_get']);
+        list.destroy();
+    });
+
+    QUnit.test('pressing ENTER/TAB in editable list view should keep list in editable mode', async function (assert) {
+        assert.expect(4);
+
+        testUtils.mock.patch(ListController, {
+            _setMode: function (mode, recordID) {
+                assert.notEqual(mode, "readonly", "should not set mode to readonly");
+                return this._super(...arguments);
+            },
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="foo"/></tree>',
+        });
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        assert.hasClass(list.$('tr.o_data_row:eq(4)'), 'o_selected_row',
+            "5th row should be selected");
+
+        await testUtils.fields.editInput(list.$('tr.o_selected_row input[name="foo"]'), 'test');
+        // press enter in input
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input'), 'enter');
+
+        await testUtils.fields.editInput(list.$('tr.o_selected_row input[name="foo"]'), 'test');
+        // press enter in input
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input'), 'tab');
+
+        testUtils.mock.unpatch(ListController);
         list.destroy();
     });
 

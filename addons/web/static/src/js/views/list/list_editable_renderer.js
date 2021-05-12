@@ -484,7 +484,7 @@ ListRenderer.include({
      *   possibly removed). If may be rejected, when the row is dirty and the
      *   user refuses to discard its changes.
      */
-    unselectRow: function () {
+    unselectRow: function (options) {
         // Protect against calling this method when no row is selected
         if (this.currentRow === null) {
             return Promise.resolve();
@@ -502,6 +502,7 @@ ListRenderer.include({
         return new Promise((resolve, reject) => {
             this.trigger_up('save_line', {
                 recordID: recordID,
+                stayInEdit: options && options.stayInEdit,
                 onSuccess: resolve,
                 onFailure: reject,
             });
@@ -1015,8 +1016,9 @@ ListRenderer.include({
             } else if (this.editable) {
                 // if for some reason (e.g. create feature is disabled) we can't add a new
                 // record, select the first record row
-                this.unselectRow().then(this.trigger_up.bind(this, 'add_record', {
+                this.unselectRow({stayInEdit: true}).then(this.trigger_up.bind(this, 'add_record', {
                     groupId: groupId,
+                    stayInEdit: true,
                     onFail: this._selectCell.bind(this, borderRowIndex, cellIndex, cellOptions),
                 }));
             }
