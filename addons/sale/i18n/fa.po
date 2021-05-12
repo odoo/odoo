@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-09 10:27+0000\n"
-"PO-Revision-Date: 2021-04-27 18:38+0430\n"
+"PO-Revision-Date: 2021-05-10 14:02+0430\n"
 "Last-Translator: Amir <a.soleimani@kenevist.ir>\n"
-"Language-Team: English <kde-i18n-doc@kde.org>\n"
+"Language-Team: English <a.soleimani@kenevist.ir>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -37,7 +37,7 @@ msgstr "تعداد سفارش‌های فروش"
 #: model:mail.template,report_name:sale.email_template_edi_sale
 #: model:mail.template,report_name:sale.mail_template_sale_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -45,6 +45,8 @@ msgid ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${(object.get_portal_last_transaction().state == "
+"'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -53,11 +55,14 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
 "${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
+"${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -694,8 +699,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                                <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
-"<span class=\"o_stat_text\">مشتری</span>\n"
-"                                <span class=\"o_stat_text\">پیش‌نمایش</span>"
+"<span class=\"o_stat_text\">پیش‌نمایش</span>\n"
+"                                <span class=\"o_stat_text\">مشتری</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -975,7 +980,7 @@ msgstr "شماره حساب"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
 msgid "Account used for deposits"
-msgstr "حساب مورد استفاده برای سپردهBها"
+msgstr "حساب مورد استفاده برای سپرده‌ها"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -1989,7 +1994,7 @@ msgstr "به‌طور کامل فاکتور‌شده"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
-msgstr "اقدامات آتی"
+msgstr " اقدا‌م‌های آتی"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
@@ -2124,7 +2129,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
-"اگر لیست قیمت را تغییر دهید، فقط ردیفهای تازه اضافه شده تحت تأثیر قرار خواهند"
+"اگر لیست قیمت را تغییر دهید، فقط ردیف‌های تازه اضافه شده تحت تأثیر قرار خواهند"
 " گرفت"
 
 #. module: sale
@@ -2206,7 +2211,7 @@ msgstr "فاکتور ایجاد شد"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
 msgid "Invoice Lines"
-msgstr "ردیفهای فاکتور"
+msgstr "ردیف‌های فاکتور"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -2434,7 +2439,7 @@ msgstr "اقدامات مهلت‌گذشته"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr "زمان تحویل"
+msgstr "مدت زمان تحویل"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3936,7 +3941,7 @@ msgstr ""
 "وضعیت بر مبنای اقدامات\n"
 "سررسید گذشته: مهلت اقدام گذشته است\n"
 "امروز: تاریخ اقدام امروز است\n"
-"برنامه‌ریزی شده: اقدامات آتی"
+"برنامه‌ریزی شده:  اقدا‌م‌های آتی"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe

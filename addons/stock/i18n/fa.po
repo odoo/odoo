@@ -92,13 +92,13 @@ msgstr ""
 "* پیش‌نویس: انتقال هنوز تأیید نشده است. رزرو شامل آن نمی‌شود. \n"
 "* در انتظار انجام یک عملیات دیگر: این انتقال قبل از آماده شدن منتظر یک عملیات"
 " دیگر است. \n"
-"* در انتظار: انتقال در انتظار موجود شدن برخی از محصولات است. \n"
+"* در انتظار: انتقال در انتظار موجود شدن برخی از کالاها است. \n"
 "(الف) روش حمل \"در اولین زمان ممکن\" است: هیچ محصولی قابل رزرو نیست. \n"
-"(ب) روش حمل  \"وقتی همه کالاها آماده‌اند\" است:برخی محصولات قابل رزرو هستند."
+"(ب) روش حمل  \"وقتی همه کالاها آماده‌اند\" است:برخی کالاها قابل رزرو هستند."
 " \n"
 "  * آماده : انتقال آماده پردازش است. \n"
 "(الف) روش حمل \"در اولین زمان ممکن\" است: حداقل یک محصول رزرو شده است. \n"
-"(ب) روش حمل \"وقتی همه کالاها آماده‌اند\" است: کلیه محصولات رزرو شده‌اند. \n"
+"(ب) روش حمل \"وقتی همه کالاها آماده‌اند\" است: کلیه کالاها رزرو شده‌اند. \n"
 "  * انجام شد: انتقال پردازش شده است. \n"
 "  * لغو شد: انتقال لغو شد."
 
@@ -216,7 +216,7 @@ msgstr ""
 " استفاده می‌شود، مکان‌های زیرمجموعه آن در آنجا جمع می‌شود. نمی‌تواند مستقیما"
 " کالایی داشته باشد \n"
 "* مکان داخلی: مکان‌های فیزیکی داخل انبارهای شخصی شما، \n"
-"* مکان مشتری: مکان مجازی نشان دهنده مکان مقصد برای محصولات ارسال شده به"
+"* مکان مشتری: مکان مجازی نشان دهنده مکان مقصد برای کالاهای ارسال شده به"
 " مشتریان شما \n"
 "* کسر و اضافه انبار: مکان مجازی به عنوان نقطه مقابل انبار برای انجام عملیات"
 " انبارگردانی مورد استفاده قرار می‌گیرد. برای تصحیح مجموع موجودی کالاها"
@@ -753,8 +753,8 @@ msgstr ""
 "اضافه کردن و شخصی سازی‌ عملیات مسیر جهت طی مراحل جابه‌جایی‌های کالا در مجموعه"
 " انبار(ها): به عنوان مثال تخلیه > کنترل کیفی ‌> انبارش برای کالاهای درراه،"
 " حواله > بسته‌بندی > حمل کالاهای خروجی. \n"
-" شما همچنین می‌توانید استراتژی‌های چینش مکان‌های مجموعه انبار خود را در برای"
-" ارسال مستقیم محصولات درراه به مکان‌های زیرمجموعه خاص تنظیم کنید (به عنوان"
+" شما همچنین می‌توانید استراتژی‌های چینش مکان‌های مجموعه انبار خود را برای"
+" ارسال مستقیم کالاهای درراه به مکان‌های زیرمجموعه خاص تنظیم کنید (به عنوان"
 " مثال سبدها، قفسه‌ها)."
 
 #. module: stock
@@ -769,7 +769,7 @@ msgstr ""
 "اضافه کردن و شخصی سازی‌ عملیات مسیر جهت طی مراحل جابه‌جایی‌های کالا در "
 "مجموعه انبار(ها): به عنوان مثال تخلیه > کنترل کیفی ‌> انبارش برای کالاهای "
 "درراه، حواله > بسته‌بندی > حمل کالاهای خروجی. شما همچنین می‌توانید "
-"استراتژی‌های چینش مجموعه مکان‌های انبار خود را در برای ارسال مستقیم محصولات "
+"استراتژی‌های چینش مجموعه مکان‌های انبار خود را در برای ارسال مستقیم کالاهای "
 "درراه به مکان‌های زیرمجموعه خاص تنظیم کنید (به عنوان مثال سبدها، قفسه‌ها)."
 
 #. module: stock
@@ -889,7 +889,7 @@ msgid ""
 "Apply specific route(s) for the replenishment instead of product's default "
 "routes."
 msgstr ""
-"به‌کار بردن مسیر(های) خاص برای درخواست کالا به جای مسیرهای پیش‌فرض کالا"
+"به‌کار بردن مسیر(های) خاص برای تامین مجدد کالا به جای مسیرهای پیش‌فرض کالا"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -1502,7 +1502,7 @@ msgstr "شمارش حواله‌های منتظر "
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_inventory
 msgid "Count Sheet"
-msgstr "شمارش برگه حواله***"
+msgstr "شمارش برگه حواله"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
@@ -1571,7 +1571,7 @@ msgid ""
 "Create new putaway rules to dispatch automatically specific products to "
 "their appropriate destination location upon receptions."
 msgstr ""
-"قوانین جدید برای چینش ایجاد کنید تا محصولات خاص را به طور خودکار پس از رسید "
+"قوانین جدید برای چینش ایجاد کنید تا کالاهای خاص را به طور خودکار پس از رسید "
 "به مکان مورد نظر خود بفرستید. "
 
 #. module: stock
@@ -1731,7 +1731,7 @@ msgstr "مشتری"
 #: model:ir.model.fields,field_description:stock.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template__sale_delay
 msgid "Customer Lead Time"
-msgstr "زمان تحویل مشتری"
+msgstr "مدت زمان تحویل مشتری"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
@@ -1765,7 +1765,7 @@ msgstr "تاریخ"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Processing"
-msgstr "تاریخ پردازش***"
+msgstr "تاریخ پردازش"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date_deadline
@@ -1777,12 +1777,12 @@ msgstr "تاریخ وعده داده شده به مشتری در سند بالا
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Date Scheduled"
-msgstr "تاریخ برنامه‌ریزی شده***"
+msgstr "تاریخ برنامه‌ریزی شده"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
 msgid "Date at which the replenishment should take place."
-msgstr "تاریخی که در آن درخواست کالا باید انجام شود."
+msgstr "تاریخی که در آن درخواست تامین مجدد باید انجام شود."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -1988,7 +1988,7 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
-"زمان تحویل، به روز. تعداد روزهای وعده داده‌شده به مشتری، بین تایید سفارش و "
+"مدت زمان تحویل، به روز. تعداد روزهای وعده داده‌شده به مشتری، بین تایید سفارش و "
 "تحویل"
 
 #. module: stock
@@ -2680,7 +2680,7 @@ msgstr "نام کامل مکان"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
-msgstr "اقدامات آتی"
+msgstr " اقدا‌م‌های آتی"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -2956,7 +2956,7 @@ msgid ""
 "numbers."
 msgstr ""
 "اگر این باکس علامت خورده باشد، کنویست به طور خودکار جزییات عملیات را با توجه"
-" محصولات مربوطه، مکان‌ها و سری ساخت/ شماره سریال از قبل پر می‌کند"
+" کالاهای مربوطه، مکان‌ها و سری ساخت/ شماره سریال از قبل پر می‌کند"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -3572,7 +3572,7 @@ msgstr "تاریخ روزهای سرنخ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
 msgid "Lead Time"
-msgstr "زمان تحویل"
+msgstr "مدت زمان تحویل"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__none
@@ -3783,7 +3783,7 @@ msgid ""
 "            From their traceability report you will see the full history of"
 " their use, as well as their composition."
 msgstr ""
-"سری‌های ساخت و شماره سریال‌ها به شما کمک می‌کنند تا مسیری را که محصولات شما"
+"سری‌های ساخت و شماره سریال‌ها به شما کمک می‌کنند تا مسیری را که کالاهای شما"
 " طی می‌کنند را دنبال کنید. \n"
 "             از گزارش قابل رهگیری آنها می‌توان تاریخچه کامل استفاده از آنها و"
 " همچنین ترکیب آنها را مشاهده کرد. "
@@ -3858,7 +3858,7 @@ msgstr "عملیات دستی"
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "Manual Replenishment"
-msgstr "دوباره پر کردن به صورت دستی"
+msgstr "تامین مجدد به صورت دستی"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_config_settings__module_procurement_jit__0
@@ -4263,7 +4263,7 @@ msgid ""
 "unit of measure of the product"
 msgstr ""
 "مقادیر موجود ظاهری که برای انتقال رزرو نشده‌اند، در واحد اندازه‌گیری پیش‌فرض"
-" محصولات"
+" کالاها"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -4793,7 +4793,7 @@ msgstr "عملیات قبلی"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
 msgid "Preferred Route"
-msgstr "مسیرهای مورد نظر"
+msgstr "مسیر مورد نظر"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -5594,18 +5594,18 @@ msgstr "پنجره درخواست کالا"
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Replenishment"
-msgstr "دوباره پر کردن"
+msgstr "تامین مجدد"
 
 #. module: stock
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr "گزارش دوباره پر کردن"
+msgstr "گزارش تامین مجدد"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
-msgstr "جستجوی گزارش دوباره پر کردن"
+msgstr "جستجوی گزارش تامین مجدد"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
@@ -6352,7 +6352,7 @@ msgstr ""
 "وضعیت بر مبنای اقدامات\n"
 "سررسید گذشته: مهلت اقدام گذشته است\n"
 "امروز: تاریخ اقدام امروز است\n"
-"برنامه‌ریزی شده: اقدامات آتی"
+"برنامه‌ریزی شده:  اقدا‌م‌های آتی"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -6449,7 +6449,7 @@ msgstr "گزترش تعداد انبار"
 #: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
 #: model:ir.model,name:stock.model_report_stock_report_product_template_replenishment
 msgid "Stock Replenishment Report"
-msgstr "گزارش دوباره پر شدن انبار"
+msgstr "گزارش تامین مجدد انبار"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -6566,11 +6566,11 @@ msgid ""
 " source location."
 msgstr ""
 "برداشت از موجودی: کالاها از موجودی فعلی در مکان مبدا دریافت می‌شوند.\n"
-"اجرای قاعده دیگر: سیستم سعی خواهد کرد یک قاعده انبار برای آوردن محصولات در"
+"اجرای قاعده دیگر: سیستم سعی خواهد کرد یک قاعده انبار برای آوردن کالاها در"
 " مکان مبدا پیدا کند. موجودی فعلی نادیده گرفته خواهد شد. \n"
-"برداشت از موجودی، در صورت عدم موجودی، قاعده دیگری را به اجرا بگذار: محصولات"
+"برداشت از موجودی، در صورت عدم موجودی، قاعده دیگری را به اجرا بگذار: کالاها"
 " از موجودی موجود در مکان مبدا گرفته خواهد شد. اگر موجودی در دسترس نباشد،"
-" سیستم سعی می‌کند قانونی برای آوردن محصولات در محل منبع پیدا کند. "
+" سیستم سعی می‌کند قانونی برای آوردن کالاها در محل منبع پیدا کند. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -6730,7 +6730,7 @@ msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
 msgstr ""
-"تاریخ مورد انتظار انتقال ایجاد‌شده بر اساس این زمان تحویل محاسبه می‌شود."
+"تاریخ مورد انتظار انتقال ایجاد‌شده بر اساس این مدت زمان تحویل محاسبه می‌شود."
 
 #. module: stock
 #. openerp-web
@@ -7530,7 +7530,7 @@ msgid ""
 " replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
 msgstr ""
-"درخواست تهیه کالا.\n"
+"درخواست تامین مجدد کالا.\n"
 "بسته به پیکربندی کالا، درخواست کالا برای موجودی ممکن است یک مناقصه،\n"
 "یک سفارش تولید یا یک انتقال را اجرا کند."
 
@@ -7925,7 +7925,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid "You are good, no replenishment to perform!"
-msgstr "وضعیت شما خوب است، نیاز به درخواست تهیه کالا ندارید."
+msgstr "وضعیت شما خوب است، نیاز به درخواست تامین مجدد ندارید."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -8105,8 +8105,8 @@ msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
-"شما نمی‌توانید نسبت این واحد  اندازه‌گیری را تغییر دهید زیرا برخی از محصولات"
-" با این واحد اندازه‌گیری قبلا حوابه‌شان صادر یا در حال حاضر رزرو شده‌اند. "
+"شما نمی‌توانید نسبت این واحد اندازه‌گیری را تغییر دهید زیرا برخی از کالاها"
+" با این واحد اندازه‌گیری قبلا حواله‌شان صادر یا در حال حاضر رزرو شده‌اند. "
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -8348,7 +8348,7 @@ msgid ""
 " click.\n"
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
-"شما در اینجا پیشنهادات جدیدی را برای پر کردن بر اساس پیش‌بینی موجودی پیدا"
+"شما در اینجا پیشنهادات جدیدی را برای تامین مجدد بر اساس پیش‌بینی موجودی پیدا"
 " خواهید کرد. \n"
 "             مقدار را برای خرید یا ساخت و سفارشات را با کلیک انتخاب کنید. \n"
 "             برای صرفه‌جویی در وقت در آینده، قواعد را به صورت \"خودکار\""

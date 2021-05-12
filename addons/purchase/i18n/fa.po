@@ -60,12 +60,12 @@ msgstr "'استعلام - %s' % (object.name)"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr "تطبیق سه گانه"
+msgstr "تطبیق سه طرفه"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr "تطبیق سه گانه: خریدها، رسیدها، و صورت‌حساب‌ها"
+msgstr "تطبیق سه طرفه: سفارشات، حواله‌ها، و صورت‌حساب‌ها"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_reminder
@@ -238,7 +238,7 @@ msgstr "<i class=\"fa fa-print\"/> چاپ"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "<p> %s modified receipt dates for the following products:</p>"
-msgstr "<p> %s تاریخ دریافت را برای محصولات زیر اصلاح کرد:</p>"
+msgstr "<p> %s تاریخ دریافت را برای کالاهای زیر اصلاح کرد:</p>"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -546,7 +546,7 @@ msgstr "چندین گزینه را به سفارش خرید از یک شبکه �
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Add some products or services to your quotation."
-msgstr "به پیشنهاد قیمت خود محصولات یا خدماتی را اضافه کنید. "
+msgstr "به پیشنهاد قیمت خود کالاها یا خدماتی را اضافه کنید. "
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1051,7 +1051,7 @@ msgid ""
 "Delivery date expected from vendor. This date respectively defaults to "
 "vendor pricelist lead time then today's date."
 msgstr ""
-"تاریخ تحویلی که از تامین کننده انتظار می‌رود. این تاریخ  به صورت پیش‌فرض زمان"
+"تاریخ تحویلی که از تامین کننده انتظار می‌رود. این تاریخ  به صورت پیش‌فرض مدت زمان"
 " اعلامیه قیمت تامین کننده است. در غیر این صورت تاریخ پیش‌فرض، تاریخ امروز"
 " می‌باشد. "
 
@@ -1202,7 +1202,7 @@ msgstr "صورت‌حساب صادر شده"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Future Activities"
-msgstr "اقدامات آتی"
+msgstr " اقدا‌م‌های آتی"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
@@ -1284,7 +1284,7 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
-"اگر فعال شده باشد، در صورت‌حساب‌های تامین‌کننده تطبیق سه گانه فعال می‌شود: "
+"اگر فعال شده باشد، در صورت‌حساب‌های تامین‌کننده تطبیق سه طرفه فعال می‌شود: "
 "پرداخت فاکتور منوط به دریافت اقلام می‌شود."
 
 #. module: purchase
@@ -1411,7 +1411,7 @@ msgstr "استعلام‌های از سررسید گذشته"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "Lead Time to Purchase"
-msgstr "زمان مانده دریافت خرید"
+msgstr "مدت زمان تا دریافت خرید"
 
 #. module: purchase
 #. openerp-web
@@ -1475,7 +1475,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "مدیریت توافقات خرید(برگذاری مناقصه، قرارداد‌های بلندمدت)"
+msgstr "مدیریت توافقات خرید(برگزاری مناقصه، قرارداد‌های بلندمدت)"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1500,8 +1500,8 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"حاشیه خطای زمان‌های تحویل تامین‌کننده. زمانی که سیستم، سفارش‌های خرید را "
-"برای سفارشگذاری مجدد کالاها ایجاد می‌کند، چندین روز جلوتر برای مواجهه با "
+"حاشیه خطای مدت زمان‌های تحویل تامین‌کننده. زمانی که سیستم، سفارش‌های خرید را "
+"برای سفارش‌گذاری مجدد کالاها ایجاد می‌کند، چندین روز جلوتر برای مواجهه با "
 "تاخیر‌های غیرمنتظره تامین‌کننده برنامه‌ریزی می‌شود. "
 
 #. module: purchase
@@ -1511,8 +1511,8 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"حاشیه خطای زمان‌های تحویل تامین‌کننده. زمانی که سیستم، سفارش‌های خرید را "
-"برای سفارشگذاری مجدد کالاها ایجاد می‌کند، چندین روز جلوتر برای مواجهه با "
+"حاشیه خطای مدت زمان‌های تحویل تامین‌کننده. زمانی که سیستم، سفارش‌های خرید را "
+"برای سفارش‌گذاری مجدد کالاها ایجاد می‌کند، چندین روز جلوتر برای مواجهه با "
 "تاخیر‌های غیرمنتظره تامین‌کننده برنامه‌ریزی می‌شود. "
 
 #. module: purchase
@@ -1978,7 +1978,7 @@ msgstr "ورودی شبکه خرید"
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lead
 msgid "Purchase Lead Time"
-msgstr "زمان تحویل خرید"
+msgstr "مدت زمان تحویل خرید"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -2455,7 +2455,7 @@ msgstr "نام بخش (به عنوان مثال، کالاها، خدمات)"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr "زمان تحویل مطمئن برای خریدها"
+msgstr "حاشیه ایمنی مدت زمان تحویل خریدها"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
@@ -2579,7 +2579,7 @@ msgstr ""
 "وضعیت بر مبنای اقدامات\n"
 "سررسید گذشته: مهلت اقدام گذشته است\n"
 "امروز: تاریخ اقدام امروز است\n"
-"برنامه‌ریزی شده: اقدامات آتی"
+"برنامه‌ریزی شده:  اقدا‌م‌های آتی"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -2640,7 +2640,7 @@ msgid ""
 "There is no invoiceable line. If a product has a control policy based on "
 "received quantity, please make sure that a quantity has been received."
 msgstr ""
-"هیچ ردیفی قابل پرداختی وجود ندارد. اگر بروی کالایی سیاست کنترلی بر اساس مقدار"
+"هیچ ردیفی قابل پرداختی وجود ندارد. اگر برروی کالایی سیاست کنترلی بر اساس مقدار"
 " دریافت شده  اعمال شده است، لطفاً اطمینان حاصل کنید که مقداری که باید دریافت"
 " شده است. "
 

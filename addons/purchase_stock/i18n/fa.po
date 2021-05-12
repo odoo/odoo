@@ -51,8 +51,7 @@ msgid ""
 "<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
 "Delivery Data</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">هیج داده‌ای"
-" برای تحویل‌های به موقع وجود ندارد</span>"
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">اطلاعات تحویل وجود ندارد</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -181,7 +180,7 @@ msgstr "ردیف سفارش خرید ایجاد شده"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__product_description_variants
 msgid "Custom Description"
-msgstr "توضیحات دلخواه"
+msgstr "توضیحات"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
@@ -395,7 +394,7 @@ msgstr "سری ساخت/شماره سریال"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Manual Replenishment"
-msgstr "دستورالعمل درخواست کالا"
+msgstr "دستورالعمل تامین مجدد کالا"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -409,7 +408,7 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
-"حاشیه خطای زمان‌های تحویل تامین‌کننده. زمانی که سیستم، سفارش‌های خرید را "
+"حاشیه خطای مدت زمان‌های تحویل تامین‌کننده. زمانی که سیستم، سفارش‌های خرید را "
 "برای سفارشگذاری مجدد کالاها ایجاد می‌کند، چندین روز جلوتر برای مواجهه با "
 "تاخیر‌های غیرمنتظره تامین‌کننده برنامه‌ریزی می‌شود. "
 
@@ -560,7 +559,7 @@ msgstr "گزارش خرید"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Purchase Security Lead Time"
-msgstr "زمان ایمنی تحویل کالای خریداری شده"
+msgstr "مدت زمان ایمنی تحویل کالای خریداری شده"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
@@ -598,7 +597,7 @@ msgstr "رسیدها"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr "گزارش درخواست کالا"
+msgstr "گزارش تامین مجدد کالا"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -645,7 +644,7 @@ msgstr "انتقال‌های موجودی"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr "گزارش دوباره پر شدن انبار"
+msgstr "گزارش تامین مجدد انبار"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_rule
@@ -671,7 +670,7 @@ msgstr "فنی: مورد استفاده در محاسبه مقادیر"
 #: code:addons/purchase_stock/models/stock.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
-msgstr "درخواست کالاهای زیر ایجاد شده است"
+msgstr "درخواست تامین مجدد کالاهای زیر ایجاد شده است"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -739,7 +738,7 @@ msgstr "امکان لغو سفارش وجود ندارد %s چون بعضی در
 #: code:addons/purchase_stock/static/src/js/tours/purchase_stock.js:0
 #, python-format
 msgid "Validate the receipt of all ordered products."
-msgstr "دریافت کلیه محصولات سفارش داده شده را تایید کنید."
+msgstr "دریافت کلیه کالاهای سفارش داده شده را تایید کنید."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id
@@ -756,7 +755,7 @@ msgstr "گزارش تاخیر تامین کننده "
 #: code:addons/purchase_stock/models/stock_rule.py:0
 #, python-format
 msgid "Vendor Lead Time"
-msgstr "زمان تحویل تامین کننده"
+msgstr "مدت زمان تحویل تامین کننده"
 
 #. module: purchase_stock
 #: model_terms:ir.actions.act_window,help:purchase_stock.action_purchase_vendor_delay_report
