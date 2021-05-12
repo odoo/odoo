@@ -345,13 +345,32 @@ class Website(models.Model):
             else:
                 page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
             rendered_snippets = []
-            for snippet in snippet_list:
+            nb_snippets = len(snippet_list)
+            for i, snippet in enumerate(snippet_list, start=1):
                 try:
                     view_id = self.env['website'].with_context(website_id=website.id).viewref(snippet)
                     if view_id:
                         rendered_snippet = pycompat.to_text(view_id._render())
                         el = html.fragment_fromstring(rendered_snippet)
+
+                        # Add the data-snippet attribute to identify the snippet
+                        # for compatibility code
                         el.attrib['data-snippet'] = snippet.split('.', 1)[-1]
+
+                        # Tweak the shape of the first snippet to connect it
+                        # properly with the header color in some themes
+                        if i == 1:
+                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                            if shape_el:
+                                shape_el[0].attrib['class'] += ' o_header_extra_shape_mapping'
+
+                        # Tweak the shape of the last snippet to connect it
+                        # properly with the footer color in some themes
+                        if i == nb_snippets:
+                            shape_el = el.xpath("//*[hasclass('o_we_shape')]")
+                            if shape_el:
+                                shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
+
                         rendered_snippet = pycompat.to_text(html.tostring(el))
                         rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
