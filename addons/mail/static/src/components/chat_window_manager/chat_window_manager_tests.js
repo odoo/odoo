@@ -2223,7 +2223,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
 });
 
 QUnit.test('new message separator is shown in a chat window of a chat on receiving new message if there is a history of conversation', async function (assert) {
-    assert.expect(6);
+    assert.expect(3);
 
     this.data['res.partner'].records.push({ id: 10, name: "Demo" });
     this.data['res.users'].records.push({
@@ -2247,16 +2247,7 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
         model: 'mail.channel',
         res_id: 10,
     });
-    await this.start({
-        mockRPC(route, args) {
-            if (args.method === 'channel_fold') {
-                const channel_uuid = args.kwargs.uuid;
-                assert.strictEqual(channel_uuid, 'channel-10-uuid', "chat window fold state should have been sent to server");
-                assert.step(`rpc:channel_fold:${channel_uuid}`);
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
 
     // simulate receiving a message
     await afterNextRender(async () => this.env.services.rpc({
@@ -2284,10 +2275,6 @@ QUnit.test('new message separator is shown in a chat window of a chat on receivi
         document.body,
         '.o_MessageList_separatorNewMessages',
         "should display 'new messages' separator in the conversation, from reception of new messages"
-    );
-    assert.verifySteps(
-        ['rpc:channel_fold:channel-10-uuid'],
-        "fold state of chat window of chat should have been updated to server"
     );
 });
 
@@ -2481,6 +2468,46 @@ QUnit.test('chat window should open when receiving a new DM', async function (as
         document.body,
         '.o_ChatWindow',
         "a chat window should be open now that current user received a new message"
+    );
+});
+
+QUnit.test('chat window should remain folded when new message is received', async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 10, name: "Demo" });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 10,
+    });
+    this.data['mail.channel'].records = [
+        {
+            channel_type: "chat",
+            id: 10,
+            is_minimized: true,
+            is_pinned: false,
+            members: [this.data.currentPartnerId, 10],
+            state: 'folded',
+            uuid: 'channel-10-uuid',
+        },
+    ];
+
+    await this.start();
+    // simulate receiving a new message
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            message_content: "New Message 2",
+            uuid: 'channel-10-uuid',
+        },
+    }));
+    assert.hasClass(
+        document.querySelector(`.o_ChatWindow`),
+        'o-folded',
+        "chat window should remain folded"
     );
 });
 
