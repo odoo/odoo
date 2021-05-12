@@ -37,6 +37,6 @@ class MailMessage(models.Model):
         rating_message_mapping = dict((r.message_id.id, r) for r in ratings)
         for vals in message_values:
             vals.update({
-                'rating_img': ('rating/static/src/img/' + rating_message_mapping[vals['id']]._get_rating_image_filename()) if (vals['id'] in rating_message_mapping) else None,
+                'rating_img': ('/rating/static/src/img/' + rating_message_mapping[vals['id']]._get_rating_image_filename()) if (vals['id'] in rating_message_mapping) else None,
             })
         return message_values
