@@ -25,6 +25,7 @@ export const browser = Object.assign({}, owl.browser, {
     removeEventListener: window.removeEventListener.bind(window),
     console: window.console,
     location: window.location,
+    history: window.history,
     navigator: navigator,
     open: window.open.bind(window),
     XMLHttpRequest: window.XMLHttpRequest,

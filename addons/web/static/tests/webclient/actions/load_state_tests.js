@@ -58,14 +58,14 @@ QUnit.module("ActionManager", (hooks) => {
         );
         assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App2");
         assert.deepEqual(webClient.env.services.router.current.hash, {
-            action: "1001",
-            menu_id: "2",
+            action: 1001,
+            menu_id: 2,
         });
     });
 
     QUnit.test("initial loading with action id", async (assert) => {
         assert.expect(4);
-        const hash = { action: 1001 };
+        const hash = "#action=1001";
         serviceRegistry.add("router", makeFakeRouterService({ initialRoute: { hash } }), {
             force: true,
         });
@@ -82,7 +82,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("initial loading with action tag", async (assert) => {
         assert.expect(3);
-        const hash = { action: "__test__client__action__" };
+        const hash = "#action=__test__client__action__";
         serviceRegistry.add("router", makeFakeRouterService({ initialRoute: { hash } }), {
             force: true,
         });
@@ -112,11 +112,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("correctly sends additional context", async (assert) => {
         assert.expect(1);
-        const hash = {
-            action: 1001,
-            active_id: 4,
-            active_ids: "4,8",
-        };
+        const hash = "#action=1001&active_id=4&active_ids=4,8";
         serviceRegistry.add("router", makeFakeRouterService({ initialRoute: { hash } }), {
             force: true,
         });
@@ -248,7 +244,7 @@ QUnit.module("ActionManager", (hooks) => {
             1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" },
             2: { id: 2, children: [], name: "App2", appID: 2, actionID: 1002, xmlid: "menu_2" },
         };
-        const hash = { id: 2, model: "partner" };
+        const hash = "#id=2&model=partner";
         serviceRegistry.add("router", makeFakeRouterService({ initialRoute: { hash } }), {
             force: true,
         });
@@ -533,7 +529,7 @@ QUnit.module("ActionManager", (hooks) => {
         await loadState(webClient, { action: 3 });
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {
-            action: "3",
+            action: 3,
             model: "partner",
             view_type: "list",
         });
@@ -542,8 +538,8 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {
-            action: "3",
-            id: "1",
+            action: 3,
+            id: 1,
             model: "partner",
             view_type: "form",
         });
@@ -585,7 +581,7 @@ QUnit.module("ActionManager", (hooks) => {
         await loadState(webClient, { action: 9 });
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {
-            action: "9",
+            action: 9,
         });
         assert.verifySteps([], "should not push the loaded state");
         await testUtils.dom.click($(webClient.el).find("#client_action_button"));
@@ -593,14 +589,14 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["push_state"], "should push the state of it changes afterwards");
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {
-            action: "9",
+            action: 9,
             someValue: "X",
         });
         delete core.action_registry.map.ClientAction;
     });
 
     QUnit.test("change a param of an ir.actions.client in the url", async function (assert) {
-        assert.expect(13);
+        assert.expect(12);
         const ClientAction = AbstractAction.extend({
             hasControlPanel: true,
             init: function (parent, action) {
@@ -622,8 +618,8 @@ QUnit.module("ActionManager", (hooks) => {
         serviceRegistry.add(
             "router",
             makeFakeRouterService({
-                onPushState(mode) {
-                    assert.step(`push_state ${mode}`);
+                onPushState() {
+                    assert.step("push_state");
                 },
             }),
             { force: true }
@@ -634,10 +630,10 @@ QUnit.module("ActionManager", (hooks) => {
         assert.deepEqual(currentHash, {});
         // execute the client action
         await doAction(webClient, 9);
-        assert.verifySteps(["start", "push_state push"]);
+        assert.verifySteps(["start", "push_state"]);
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {
-            action: "9",
+            action: 9,
             a: "default value",
         });
         assert.strictEqual(
@@ -656,10 +652,10 @@ QUnit.module("ActionManager", (hooks) => {
             action: 9,
             a: "new value",
         });
-        assert.verifySteps(["start", "push_state push"]);
+        assert.verifySteps(["start"]); // No push state since the hash hasn't changed
         currentHash = webClient.env.services.router.current.hash;
         assert.deepEqual(currentHash, {
-            action: "9",
+            action: 9,
             a: "new value",
         });
         assert.strictEqual(
@@ -783,15 +779,10 @@ QUnit.module("ActionManager", (hooks) => {
             root: { id: "root", children: [1], name: "root", appID: "root" },
             1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1 },
         };
-        serviceRegistry.add(
-            "router",
-            makeFakeRouterService({
-                initialRoute: {
-                    hash: { home: 1 },
-                },
-            }),
-            { force: true }
-        );
+        const hash = "#home=1";
+        serviceRegistry.add("router", makeFakeRouterService({ initialRoute: { hash } }), {
+            force: true,
+        });
         const mockRPC = async function (route) {
             assert.step(route);
         };

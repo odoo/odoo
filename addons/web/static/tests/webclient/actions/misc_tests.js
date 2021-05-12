@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import testUtils from "web.test_utils";
-import core from "web.core";
-import Widget from "web.Widget";
 import AbstractAction from "web.AbstractAction";
+import core from "web.core";
+import testUtils from "web.test_utils";
+import Widget from "web.Widget";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { legacyExtraNextTick } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
@@ -75,7 +75,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("action in handler registry", async (assert) => {
         assert.expect(2);
         const env = await makeTestEnv(testConfig);
-        actionHandlersRegistry.add("ir.action_in_handler_registry", ({ env, action, options }) =>
+        actionHandlersRegistry.add("ir.action_in_handler_registry", ({ action }) =>
             assert.step(action.type)
         );
         await doAction(env, {
@@ -145,7 +145,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("action cache: additionalContext is respected", async function (assert) {
         assert.expect(5);
 
-        const mockRPC = async (route, args) => {
+        const mockRPC = async (route) => {
             if (route === "/web/action/load") {
                 assert.step("server loaded");
             }
@@ -326,7 +326,7 @@ QUnit.module("ActionManager", (hooks) => {
                     this._super.apply(this, arguments);
                 },
             });
-            const mockRPC = async function (route, args) {
+            const mockRPC = async function (route) {
                 if (route === "/web/dataset/search_read") {
                     await Promise.resolve(def);
                 }
@@ -378,7 +378,7 @@ QUnit.module("ActionManager", (hooks) => {
             action: "Partners Action 4",
         });
         currentHash = webClient.env.services.router.current.hash;
-        assert.deepEqual(currentHash, { action: "4", model: "partner", view_type: "kanban" });
+        assert.deepEqual(currentHash, { action: 4, model: "partner", view_type: "kanban" });
         await doAction(webClient, 8);
         currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, {
@@ -386,7 +386,7 @@ QUnit.module("ActionManager", (hooks) => {
             action: "Favorite Ponies",
         });
         currentHash = webClient.env.services.router.current.hash;
-        assert.deepEqual(currentHash, { action: "8", model: "pony", view_type: "list" });
+        assert.deepEqual(currentHash, { action: 8, model: "pony", view_type: "list" });
         await testUtils.dom.click($(webClient.el).find("tr.o_data_row:first"));
         await legacyExtraNextTick();
         currentTitle = webClient.env.services.title.getParts();
@@ -395,7 +395,7 @@ QUnit.module("ActionManager", (hooks) => {
             action: "Twilight Sparkle",
         });
         currentHash = webClient.env.services.router.current.hash;
-        assert.deepEqual(currentHash, { action: "8", id: "4", model: "pony", view_type: "form" });
+        assert.deepEqual(currentHash, { action: 8, id: 4, model: "pony", view_type: "form" });
     });
 
     QUnit.test(

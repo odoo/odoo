@@ -30,8 +30,8 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         await nextTick();
         urlState = webClient.env.services.router.current;
-        assert.strictEqual(urlState.hash.action, "1002");
-        assert.strictEqual(urlState.hash.menu_id, "2");
+        assert.strictEqual(urlState.hash.action, 1002);
+        assert.strictEqual(urlState.hash.menu_id, 2);
         assert.strictEqual(
             webClient.el.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 2"
@@ -49,8 +49,8 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         await nextTick();
         urlState = webClient.env.services.router.current;
-        assert.strictEqual(urlState.hash.action, "1002");
-        assert.strictEqual(urlState.hash.menu_id, "2");
+        assert.strictEqual(urlState.hash.action, 1002);
+        assert.strictEqual(urlState.hash.menu_id, 2);
         assert.strictEqual(
             webClient.el.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 2"
@@ -58,8 +58,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(webClient.el.querySelector(".o_menu_brand").textContent, "App2");
         await doAction(webClient, 1001, { clearBreadcrumbs: true });
         urlState = webClient.env.services.router.current;
-        assert.strictEqual(urlState.hash.action, "1001");
-        assert.strictEqual(urlState.hash.menu_id, "2");
+        assert.strictEqual(urlState.hash.action, 1001);
+        assert.strictEqual(urlState.hash.menu_id, 2);
         assert.strictEqual(
             webClient.el.querySelector(".test_client_action").textContent.trim(),
             "ClientAction_Id 1"
@@ -122,7 +122,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(urlState.hash.arbitrary, "actionPushed");
         await doAction(webClient, 1001);
         urlState = webClient.env.services.router.current;
-        assert.strictEqual(urlState.hash.action, "1001");
+        assert.strictEqual(urlState.hash.action, 1001);
         assert.strictEqual(urlState.hash.arbitrary, undefined);
     });
 
@@ -152,8 +152,8 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         await nextTick();
         urlState = webClient.env.services.router.current;
-        assert.strictEqual(urlState.hash.action, "1002");
-        assert.strictEqual(urlState.hash.menu_id, "2");
+        assert.strictEqual(urlState.hash.action, 1002);
+        assert.strictEqual(urlState.hash.menu_id, 2);
     });
 
     QUnit.test("action in target new do not push state", async (assert) => {
@@ -162,7 +162,7 @@ QUnit.module("ActionManager", (hooks) => {
         serviceRegistry.add(
             "router",
             makeFakeRouterService({
-                onPushState(mode, newState) {
+                onPushState() {
                     throw new Error("should not push state");
                 },
             }),
@@ -178,30 +178,30 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ testConfig });
         await doAction(webClient, 4);
         assert.deepEqual(webClient.env.services.router.current.hash, {
-            action: "4",
+            action: 4,
             model: "partner",
             view_type: "kanban",
         });
         await doAction(webClient, 8);
         assert.deepEqual(webClient.env.services.router.current.hash, {
-            action: "8",
+            action: 8,
             model: "pony",
             view_type: "list",
         });
         await testUtils.dom.click($(webClient.el).find("tr.o_data_row:first"));
         await legacyExtraNextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
-            action: "8",
+            action: 8,
             model: "pony",
             view_type: "form",
-            id: "4",
+            id: 4,
         });
     });
 
     QUnit.test("push state after action is loaded, not before", async function (assert) {
         assert.expect(2);
         const def = testUtils.makeTestPromise();
-        const mockRPC = async function (route, args) {
+        const mockRPC = async function (route) {
             if (route === "/web/dataset/search_read") {
                 await def;
             }
@@ -215,7 +215,7 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.nextTick();
         await legacyExtraNextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
-            action: "4",
+            action: 4,
             model: "partner",
             view_type: "kanban",
         });
@@ -231,7 +231,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ testConfig, mockRPC });
         await doAction(webClient, 8);
         assert.deepEqual(webClient.env.services.router.current.hash, {
-            action: "8",
+            action: 8,
             model: "pony",
             view_type: "list",
         });
@@ -240,7 +240,7 @@ QUnit.module("ActionManager", (hooks) => {
         // we make sure here that the list view is still in the dom
         assert.containsOnce(webClient, ".o_list_view", "there should still be a list view in dom");
         assert.deepEqual(webClient.env.services.router.current.hash, {
-            action: "8",
+            action: 8,
             model: "pony",
             view_type: "list",
         });

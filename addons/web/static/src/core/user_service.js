@@ -91,7 +91,7 @@ export const userService = {
         };
 
         const stringCIds = allowedCompanies.join(",");
-        router.replaceState({ "lock cids": stringCIds });
+        router.replaceState({ cids: stringCIds }, { lock: true });
         cookie.setCookie("cids", stringCIds);
 
         const setCompanies = makeSetCompanies(() => allowedCompanies);
@@ -126,7 +126,7 @@ export const userService = {
             showEffect,
             setCompanies: (mode, companyId) => {
                 const nextCompanyIds = setCompanies(mode, companyId).join(",");
-                router.pushState({ "lock cids": nextCompanyIds });
+                router.pushState({ cids: nextCompanyIds }, { lock: true });
                 cookie.setCookie("cids", nextCompanyIds);
                 browser.setTimeout(() => window.location.reload()); // history.pushState is a little async
             },

@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { patch, unpatch } from "@web/core/utils/patch";
-import * as LegacyRegistry from "web.Registry";
-import core from "web.core";
 import AbstractAction from "web.AbstractAction";
+import core from "web.core";
+import * as LegacyRegistry from "web.Registry";
 import { registerCleanup } from "../../helpers/cleanup";
-import { nextTick } from "../../helpers/utils";
+import { nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerTestConfig } from "../../webclient/actions/helpers";
 
 let testConfig;
@@ -26,11 +25,14 @@ QUnit.module("Service Provider Adapter Notification", (hooks) => {
       assert.expect(8);
       let notifId;
       let timeoutCB;
-      patch(browser, "mock.settimeout.cb", {
-        setTimeout: (cb, t) => {
-          timeoutCB = cb;
-          assert.step("time: " + t);
-          return 1;
+      patchWithCleanup(browser, {
+        setTimeout: (cb, delay) => {
+            if (!delay) {
+                return; // Timeouts from router service
+            }
+            timeoutCB = cb;
+            assert.step("time: " + delay);
+            return 1;
         },
       });
       const NotifyAction = AbstractAction.extend({
@@ -75,7 +77,6 @@ QUnit.module("Service Provider Adapter Notification", (hooks) => {
       await nextTick();
       assert.containsNone(document.body, ".o_notification");
       assert.verifySteps(["time: 3000"]);
-      unpatch(browser, "mock.settimeout.cb");
     }
   );
 });

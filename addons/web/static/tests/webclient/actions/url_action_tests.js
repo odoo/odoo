@@ -19,7 +19,7 @@ QUnit.module("ActionManager", (hooks) => {
         serviceRegistry.add(
             "router",
             makeFakeRouterService({
-                redirect: (url) => {
+                onRedirect(url) {
                     assert.step(url);
                 },
             }),
