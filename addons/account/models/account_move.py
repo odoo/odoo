@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
-from odoo.tools import float_compare, date_utils, email_split, email_re
+from odoo.tools import float_compare, date_utils, email_split, email_re, html_escape
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -1864,7 +1864,12 @@ class AccountMove(models.Model):
             default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
         if self.move_type == 'entry':
             default['partner_id'] = False
-        return super(AccountMove, self).copy(default)
+        copied_am = super().copy(default)
+        copied_am._message_log(body=_(
+            'This entry has been duplicated from <a href=# data-oe-model=account.move data-oe-id=%(id)d>%(title)s</a>',
+            id=self.id, title=html_escape(self.display_name)
+        ))
+        return copied_am
 
     @api.model_create_multi
     def create(self, vals_list):
