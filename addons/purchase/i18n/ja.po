@@ -19,8 +19,8 @@
 # NANIWA Masahiro <naniwa.masahiro@gmail.com>, 2020
 # Hau Dao <hau@quartile.co>, 2020
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
-# Noma Yuki, 2020
 # Kakurai Ai <ai@quartile.co>, 2021
+# Noma Yuki, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Kakurai Ai <ai@quartile.co>, 2021\n"
+"Last-Translator: Noma Yuki, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,16 +155,27 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\"><p style=\"margin: 0px; padding: "
-"0px; font-size: 13px;\">親愛なる$ {object.partner_id.name}%if "
-"object.partner_id.parent_id:($ "
-"{object.partner_id.parent_id.name})％endif<br/><br/>添付ファイルには、注文書<strong>$ "
-"{object.name}</strong> ％if object.partner_ref：with reference：$ "
-"{object.partner_ref}％endif <strong>amount</strong> in <strong>$ "
-"{format_amount（object.amount_total、object.currency_id）}</strong> from $ "
-"{object。 company_id.name}。<br/><br/> ％if object.date_planned：レシートは<strong>$ "
-"{format_date（object.date_planned）}である</strong>と予想されます。<br/><br/>この注文の受領を確認していただけますか?"
-" ％endif</p></div>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        ${object.partner_id.name}様\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        添付ファイルは、注文書 <strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            with reference: ${object.partner_ref}\n"
+"        % endif\n"
+"        金額は <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"         ${object.company_id.name}様からです。 \n"
+"        <br/><br/>\n"
+"        % if object.date_planned:\n"
+"            レシートは <strong>${format_date(object.date_planned)}</strong>と予想されます。\n"
+"            <br/><br/>\n"
+"            この注文の受領をご確認いただけますか?\n"
+"        % endif\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -243,7 +254,7 @@ msgstr "<p> %s が次の製品の領収日付を編集しました:</p>"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "<p> &nbsp; - %s from %s to %s </p>"
-msgstr "<p>&nbsp; -%sから％sへの％s</p>"
+msgstr "<p>&nbsp; -%s%sから%sへ</p>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -270,8 +281,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"各企業固有の値\" aria-"
-"label=\"各企業固有の値\" groups=\"base.group_multi_company\" role=\"img\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -309,7 +321,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "<span> day(s) before</span>"
-msgstr "<span>数日前</span>"
+msgstr "<span>日前</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -791,7 +803,7 @@ msgstr "取消済"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Cancelled Purchase Order #"
-msgstr "キャンセルされた注文書#(番号)"
+msgstr "キャンセルされた注文書#"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -1776,7 +1788,7 @@ msgstr "支払条件"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Please define an accounting purchase journal for the company %s (%s)."
-msgstr "会社%s(％s)の会計購入仕訳帳を定義してください。"
+msgstr "会社%s(%s)の会計購入仕訳帳を定義してください。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
@@ -2377,7 +2389,7 @@ msgstr "セクション"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "セクション名"
+msgstr "セクション名 (例 商品、サービス)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
@@ -2980,4 +2992,4 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "day(s) before"
-msgstr "前日"
+msgstr "日前"

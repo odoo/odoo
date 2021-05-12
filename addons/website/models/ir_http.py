@@ -189,11 +189,12 @@ class Http(models.AbstractModel):
     @classmethod
     def _add_dispatch_parameters(cls, func):
 
-        # Force website with query string paramater, typically set from website selector in frontend navbar
+        # DEPRECATED for /website/force/<website_id> - remove me in master~saas-14.4
+        # Force website with query string paramater, typically set from website selector in frontend navbar and inside tests
         force_website_id = request.httprequest.args.get('fw')
-        if (force_website_id and request.session.get('force_website_id') != force_website_id and
-                request.env.user.has_group('website.group_multi_website') and
-                request.env.user.has_group('website.group_website_publisher')):
+        if (force_website_id and request.session.get('force_website_id') != force_website_id
+                and request.env.user.has_group('website.group_multi_website')
+                and request.env.user.has_group('website.group_website_publisher')):
             request.env['website']._force_website(request.httprequest.args.get('fw'))
 
         context = {}

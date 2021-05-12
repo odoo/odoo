@@ -17,6 +17,7 @@
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
+# Alex Comba <alex.comba@agilebg.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
@@ -161,7 +162,7 @@ msgstr "(inizialmente assegnata a "
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid ", due on"
-msgstr ", dovuto in data"
+msgstr ", con scadenza"
 
 #. module: mail
 #. openerp-web
@@ -1224,7 +1225,7 @@ msgstr "CC"
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,help:mail.field_mail_activity_type__decoration_type
 msgid "Change the background color of the related activities of this type."
-msgstr "Cambia il colore di sfondo per le attività collegate di questo tipo."
+msgstr "Cambia il colore di sfondo per le attività correlate di questo tipo."
 
 #. module: mail
 #. openerp-web
@@ -1553,7 +1554,7 @@ msgstr "Crea o cerca canale..."
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Created"
-msgstr "Creato"
+msgstr "Creazione"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -1783,7 +1784,7 @@ msgstr "Elimina e-mail"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_message
 msgid "Delete Message Copy"
-msgstr "Eliminare copia del messaggio"
+msgstr "Elimina copia messaggio"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
@@ -2255,7 +2256,7 @@ msgstr "Messaggio e-mail"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__email
 msgid "Email of the related partner (if exist) or False"
-msgstr "E-mail del partner collegato (se esistente) oppure Falso"
+msgstr "E-mail del partner correlato (se esistente) oppure Falso"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
@@ -2334,8 +2335,8 @@ msgid ""
 "Error without exception. Probably due do sending an email without computed "
 "recipients."
 msgstr ""
-"Errore senza eccezione. Probabilmente dovuto all'invio di una e-mail senza "
-"l'elaborazione dei destinatari."
+"Errore senza eccezione. È probabile sia dovuto all'invio di una e-mail senza"
+" l'elaborazione dei destinatari."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_channel_res_model_id_uniq
@@ -2397,12 +2398,12 @@ msgstr "Rappresentazione del modello non riuscita : %s (%d)"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
-msgstr "Motivo del fallimento"
+msgstr "Causa errore"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_reason
 msgid "Failure reason"
-msgstr "Motivo del fallimento"
+msgstr "Causa errore"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__failure_reason
@@ -2410,14 +2411,13 @@ msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
 msgstr ""
-"Motivo del fallimento: solitamente è l'eccezione mandata dal server di posta"
-" elettronica conservata per facilitare il debugging delle email che "
-"costituiscono un problema."
+"Causa errore. Di solito è l'eccezione generata dal server e-mail, "
+"memorizzata per facilitare il debug dei problemi con la posta."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr "Tipo di fallimento"
+msgstr "Tipo di errore"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__starred_partner_ids
@@ -4036,7 +4036,7 @@ msgstr "Nome ricevuto del documento collegato."
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__name
 msgid "Name of the related partner (if exist) or the related channel"
-msgstr "Nome del partner collegato (se esistente) oppure canale collegato"
+msgstr "Nome del partner (se esistente) o del canale correlato"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__report_name
@@ -5186,7 +5186,7 @@ msgstr "Respinto"
 #: model:ir.model.fields,field_description:mail.field_mail_message__res_id
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_id
 msgid "Related Document ID"
-msgstr "ID documento collegato"
+msgstr "ID documento correlato"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model
@@ -5196,7 +5196,7 @@ msgstr "ID documento collegato"
 #: model:ir.model.fields,field_description:mail.field_mail_template__model
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__res_model
 msgid "Related Document Model"
-msgstr "Modello documento collegato"
+msgstr "Modello documento correlato"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__res_model
@@ -5211,12 +5211,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Related Message"
-msgstr "Messaggio collegato"
+msgstr "Messaggio correlato"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__partner_id
 msgid "Related Partner"
-msgstr "Partner collegato"
+msgstr "Partner correlato"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__relation_field
@@ -5255,7 +5255,7 @@ msgstr "Rimuovi messaggio senza motivazione"
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
 "Rimuove l'azione contestuale per usare questo modello nei documenti "
-"collegati."
+"correlati."
 
 #. module: mail
 #. openerp-web
@@ -5756,8 +5756,8 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
-"Azione barra laterale per rendere questo template disponibile sui record del"
-" model relativo"
+"Azione su barra laterale per rendere disponibile il modello ai record del "
+"modello di documento correlato"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
@@ -6740,7 +6740,7 @@ msgstr "Chi può seguire le attività del gruppo"
 #: code:addons/mail/static/src/xml/activity.xml:0
 #, python-format
 msgid "Write Feedback"
-msgstr "Scrivi un'opinione"
+msgstr "Scrivi commento"
 
 #. module: mail
 #. openerp-web
@@ -7063,7 +7063,7 @@ msgstr "riunioni-cda"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "by"
-msgstr "di"
+msgstr "da"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -7124,12 +7124,12 @@ msgstr "generale"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been created from:"
-msgstr "è stato creato da:"
+msgstr "è stato creato a partire da:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been modified from:"
-msgstr ""
+msgstr "è stato modificato a partire da:"
 
 #. module: mail
 #: code:addons/mail/models/models.py:0
@@ -7296,7 +7296,7 @@ msgstr "modello obiettivo sconosciuto %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 msgid "using"
-msgstr ""
+msgstr "usando"
 
 #. module: mail
 #. openerp-web

@@ -345,6 +345,34 @@ class TestMrpOrder(TestMrpCommon):
         production.workorder_ids[0].button_start()
         self.assertEqual(production.workorder_ids.qty_producing, 5, "Wrong quantity is suggested to produce.")
 
+    def test_update_quantity_5(self):
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 3}),
+            ],
+        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = bom
+        production_form.product_qty = 1
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
+        production.action_confirm()
+        production.action_assign()
+        production_form = Form(production)
+        # change the quantity producing and the initial demand
+        # in the same transaction
+        production_form.qty_producing = 10
+        with production_form.move_raw_ids.edit(0) as move:
+            move.product_uom_qty = 2
+        production = production_form.save()
+        production.button_mark_done()
+
     def test_update_plan_date(self):
         """Editing the scheduled date after planning the MO should unplan the MO, and adjust the date on the stock moves"""
         planned_date = datetime(2023, 5, 15, 9, 0)
@@ -1552,3 +1580,45 @@ class TestMrpOrder(TestMrpCommon):
         # of a conversion 187.5ml = 0.188L
         # thus creating an extra line with 'product_uom_qty': 0.5
         self.assertEqual(len(mo_product_final_form.move_raw_ids.move_line_ids), 1, 'One move line should exist for the MO.')
+
+    def test_multi_button_plan(self):
+        """ Test batch methods (confirm/validate) of the MO with the same bom """
+        self.bom_2.type = "normal"  # avoid to get the operation of the kit bom
+
+        mo_3 = Form(self.env['mrp.production'])
+        mo_3.bom_id = self.bom_3
+        mo_3 = mo_3.save()
+
+        self.assertEqual(len(mo_3.workorder_ids), 2)
+
+        mo_3.button_plan()
+        self.assertEqual(mo_3.state, 'confirmed')
+        self.assertEqual(mo_3.workorder_ids[0].state, 'ready')
+
+        mo_1 = Form(self.env['mrp.production'])
+        mo_1.bom_id = self.bom_3
+        mo_1 = mo_1.save()
+
+        mo_2 = Form(self.env['mrp.production'])
+        mo_2.bom_id = self.bom_3
+        mo_2 = mo_2.save()
+
+        self.assertEqual(mo_1.product_id, self.product_6)
+        self.assertEqual(mo_2.product_id, self.product_6)
+        self.assertEqual(len(self.bom_3.operation_ids), 2)
+        self.assertEqual(len(mo_1.workorder_ids), 2)
+        self.assertEqual(len(mo_2.workorder_ids), 2)
+
+        (mo_1 | mo_2).button_plan()  # Confirm and plan in the same "request"
+        self.assertEqual(mo_1.state, 'confirmed')
+        self.assertEqual(mo_2.state, 'confirmed')
+        self.assertEqual(mo_1.workorder_ids[0].state, 'ready')
+        self.assertEqual(mo_2.workorder_ids[0].state, 'ready')
+
+        # produce
+        res_dict = (mo_1 | mo_2).button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(mo_1.state, 'done')
+        self.assertEqual(mo_2.state, 'done')

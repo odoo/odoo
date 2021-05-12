@@ -334,7 +334,7 @@ class Repair(models.Model):
             if not journal:
                 raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (company.name, company.id))
 
-            if (partner_invoice.id, currency.id) not in grouped_invoices_vals:
+            if (partner_invoice.id, currency.id, company.id) not in grouped_invoices_vals:
                 grouped_invoices_vals[(partner_invoice.id, currency.id, company.id)] = []
             current_invoices_list = grouped_invoices_vals[(partner_invoice.id, currency.id, company.id)]
 
@@ -706,7 +706,8 @@ class RepairLine(models.Model):
         if self.type != 'remove':
             if partner:
                 fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=self.repair_id.address_id.id)
-                self.tax_id = fpos.map_tax(self.product_id.taxes_id, self.product_id, partner)
+                taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
+                self.tax_id = fpos.map_tax(taxes, self.product_id, partner).ids
             warning = False
             pricelist = self.repair_id.pricelist_id
             if not pricelist:
@@ -781,7 +782,8 @@ class RepairFee(models.Model):
 
         if partner and self.product_id:
             fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=self.repair_id.address_id.id)
-            self.tax_id = fpos.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+            taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
+            self.tax_id = fpos.map_tax(taxes, self.product_id, partner).ids
         if partner:
             self.name = self.product_id.with_context(lang=partner.lang).display_name
         else:

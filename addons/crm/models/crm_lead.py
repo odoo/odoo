@@ -1516,6 +1516,10 @@ class Lead(models.Model):
                     break
         return result
 
+    def _phone_get_number_fields(self):
+        """ Use mobile or phone fields to compute sanitized phone number """
+        return ['mobile', 'phone']
+
     @api.model
     def get_import_templates(self):
         return [{

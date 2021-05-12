@@ -284,7 +284,7 @@ class IrMailServer(models.Model):
         """
         email_from = email_from or self._get_default_from_address()
         assert email_from, "You must either provide a sender address explicitly or configure "\
-                           "using the combintion of `mail.catchall.domain` and `mail.default.from` "\
+                           "using the combination of `mail.catchall.domain` and `mail.default.from` "\
                            "ICPs, in the server configuration file or with the "\
                            "--email-from startup parameter."
 

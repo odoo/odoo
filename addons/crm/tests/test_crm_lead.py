@@ -217,16 +217,16 @@ class TestCRMLead(TestCrmCommon):
         lead_form = Form(lead)
 
         # reset partner phone to a local number and prepare formatted / sanitized values
-        partner_phone, partner_mobile = self.test_pĥone_data[2], self.test_pĥone_data[1]
+        partner_phone, partner_mobile = self.test_phone_data[2], self.test_phone_data[1]
         partner_phone_formatted = phone_format(partner_phone, 'US', '1')
         partner_phone_sanitized = phone_format(partner_phone, 'US', '1', force_format='E164')
         partner_mobile_formatted = phone_format(partner_mobile, 'US', '1')
         partner_mobile_sanitized = phone_format(partner_mobile, 'US', '1', force_format='E164')
         partner_email, partner_email_normalized = self.test_email_data[2], self.test_email_data_normalized[2]
         self.assertEqual(partner_phone_formatted, '+1 202-555-0888')
-        self.assertEqual(partner_phone_sanitized, self.test_pĥone_data_sanitized[2])
+        self.assertEqual(partner_phone_sanitized, self.test_phone_data_sanitized[2])
         self.assertEqual(partner_mobile_formatted, '+1 202-555-0999')
-        self.assertEqual(partner_mobile_sanitized, self.test_pĥone_data_sanitized[1])
+        self.assertEqual(partner_mobile_sanitized, self.test_phone_data_sanitized[1])
         # ensure initial data
         self.assertEqual(partner.phone, partner_phone)
         self.assertEqual(partner.mobile, partner_mobile)
@@ -388,13 +388,40 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(new_lead.partner_id.team_id, self.sales_team_1)
 
     @users('user_sales_manager')
+    def test_phone_mobile_update(self):
+        lead = self.env['crm.lead'].create({
+            'name': 'Lead 1',
+            'country_id': self.env.ref('base.us').id,
+            'phone': self.test_phone_data[0],
+        })
+        self.assertEqual(lead.phone, self.test_phone_data[0])
+        self.assertFalse(lead.mobile)
+        self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[0])
+
+        lead.write({'phone': False, 'mobile': self.test_phone_data[1]})
+        self.assertFalse(lead.phone)
+        self.assertEqual(lead.mobile, self.test_phone_data[1])
+        self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[1])
+
+        lead.write({'phone': self.test_phone_data[1], 'mobile': self.test_phone_data[2]})
+        self.assertEqual(lead.phone, self.test_phone_data[1])
+        self.assertEqual(lead.mobile, self.test_phone_data[2])
+        self.assertEqual(lead.phone_sanitized, self.test_phone_data_sanitized[2])
+
+        # updating country should trigger sanitize computation
+        lead.write({'country_id': self.env.ref('base.be').id})
+        self.assertEqual(lead.phone, self.test_phone_data[1])
+        self.assertEqual(lead.mobile, self.test_phone_data[2])
+        self.assertFalse(lead.phone_sanitized)
+
+    @users('user_sales_manager')
     def test_phone_mobile_search(self):
         lead_1 = self.env['crm.lead'].create({
             'name': 'Lead 1',
             'country_id': self.env.ref('base.be').id,
             'phone': '+32485001122',
         })
-        lead_2 = self.env['crm.lead'].create({
+        _lead_2 = self.env['crm.lead'].create({
             'name': 'Lead 2',
             'country_id': self.env.ref('base.be').id,
             'phone': '+32485112233',
