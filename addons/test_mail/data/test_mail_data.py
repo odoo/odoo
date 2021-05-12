@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+MAIL_TEMPLATE = """Return-Path: {return_path}
 To: {to}
 cc: {cc}
 Received: by mail1.openerp.com (Postfix, from userid 10002)

@@ -3,6 +3,8 @@
 
 import socket
 
+from datetime import datetime
+
 from unittest.mock import DEFAULT
 from unittest.mock import patch
 
@@ -12,6 +14,7 @@ from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.sql_db import Cursor
 from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import email_split_and_format, formataddr, mute_logger
@@ -1402,6 +1405,84 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(len(record), 1)
         self.assertEqual(record.name, 'Spammy')
         self.assertEqual(record._name, 'mail.test.gateway')
+
+    # --------------------------------------------------
+    # Emails loop detection
+    # --------------------------------------------------
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail')
+    @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 10, 0, 0))
+    def test_routing_loop_alias(self):
+        """Test the limit on the number of record we can create by alias."""
+        self.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.minutes', 30)
+        self.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.threshold', 5)
+
+        alias = self.env['mail.alias'].create({
+            'alias_name': 'test',
+            'alias_user_id': False,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
+            'alias_contact': 'everyone',
+        })
+
+        # Send an email 2 hours ago, should not have an impact on more recent emails
+        with patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 1, 8, 0, 0)):
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.email_from,
+                f'{self.alias.alias_name}@{self.alias_domain}',
+                subject='Test alias loop old',
+                target_model=alias.alias_model_id.model,
+            )
+
+        for i in range(5):
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.email_from,
+                f'{self.alias.alias_name}@{self.alias_domain}',
+                subject=f'Test alias loop {i}',
+                target_model=alias.alias_model_id.model,
+            )
+
+        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Test alias loop %')])
+        self.assertEqual(len(records), 6, 'Should have created 6 <mail.test.gateway>')
+        self.assertEqual(set(records.mapped('email_from')), set([self.email_from]),
+            msg='Should have automatically filled the email field')
+
+        self.assertEqual(set(records.mapped('email_from')), {self.email_from})
+
+        for email_from in (self.email_from, self.email_from.upper()):
+            with self.mock_mail_gateway():
+                self.format_and_process(
+                    MAIL_TEMPLATE,
+                    email_from,
+                    f'{self.alias.alias_name}@{self.alias_domain}',
+                    subject='Test alias loop X',
+                    target_model=alias.alias_model_id.model,
+                    return_path=email_from,
+                )
+
+            new_record = self.env['mail.test.gateway'].search([('name', '=', 'Test alias loop X')])
+            self.assertFalse(
+                new_record,
+                msg='The loop should have been detected and the record should not have been created')
+
+            self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', [email_from])
+            self.assertIn('-loop-detection-bounce-email@', self._mails[0]['references'],
+                msg='The "bounce email" tag must be in the reference')
+
+        # The reply to the bounce email must be ignored
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                self.email_from,
+                f'{self.alias.alias_name}@{self.alias_domain}',
+                subject='Test alias loop X',
+                target_model=alias.alias_model_id.model,
+                return_path=self.email_from,
+                extra='References: <test-1337-loop-detection-bounce-email@odoo.com>',
+            )
+
+        self.assertNotSentEmail()
 
 
 class TestMailThreadCC(TestMailCommon):

@@ -10,6 +10,7 @@ class MailingSimple(models.Model):
     _description = 'Simple Mailing'
     _name = 'mailing.test.simple'
     _inherit = ['mail.thread']
+    _primary_email = 'email_from'
 
     name = fields.Char()
     email_from = fields.Char()
