@@ -760,3 +760,23 @@ $o-bg-shapes: ('web_editor': (
         $module: $-modified-module-shapes,
     ));
 }
+
+@function add-extra-shape-colors-mapping($module, $shape-name, $mapping-name, $mapping, $shapes: $o-bg-shapes) {
+    $-module-shapes: map-get($shapes, $module);
+    $-shape-data: map-get($-module-shapes, $shape-name);
+    $-extra-mappings: map-get($-shape-data, 'extra-mappings') or ();
+    $-modified-module-shapes: map-merge($-module-shapes, (
+        $shape-name: map-merge($-shape-data, ('extra-mappings': map-merge($-extra-mappings, ($mapping-name: $mapping)))),
+    ));
+    @return map-merge($shapes, (
+        $module: $-modified-module-shapes,
+    ));
+}
+
+@function add-header-shape-colors-mapping($module, $shape-name, $mapping, $shapes: $o-bg-shapes) {
+    @return add-extra-shape-colors-mapping($module, $shape-name, 'header', $mapping, $shapes);
+}
+
+@function add-footer-shape-colors-mapping($module, $shape-name, $mapping, $shapes: $o-bg-shapes) {
+    @return add-extra-shape-colors-mapping($module, $shape-name, 'footer', $mapping, $shapes);
+}
