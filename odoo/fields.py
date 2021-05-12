@@ -3237,7 +3237,7 @@ class _RelationalMulti(_Relational):
 
     def get_depends(self, model):
         depends, depends_context = super().get_depends(model)
-        if not self.related and isinstance(self.domain, list):
+        if not self.compute and isinstance(self.domain, list):
             depends = unique(itertools.chain(depends, (
                 self.name + '.' + arg[0]
                 for arg in self.domain
