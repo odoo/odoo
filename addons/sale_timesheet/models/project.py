@@ -88,7 +88,7 @@ class Project(models.Model):
         if operator not in ('=', '!='):
             raise UserError(_('Operation not supported'))
         if not ((isinstance(value, bool) and value is False) or (isinstance(value, str) and value in ('task_rate', 'fixed_rate', 'employee_rate'))):
-            return UserError(_('Value does not exist in the pricing type'))
+            raise UserError(_('Value does not exist in the pricing type'))
         if value is False:
             return [('allow_billable', operator, value)]
 
@@ -167,9 +167,9 @@ class Project(models.Model):
     def _check_sale_line_type(self):
         for project in self.filtered(lambda project: project.sale_line_id):
             if not project.sale_line_id.is_service:
-                raise ValidationError(_("A billable project should be linked to a Sales Order Item having a Service product."))
+                raise ValidationError(_("You cannot link a billable project to a sales order item that is not a service."))
             if project.sale_line_id.is_expense:
-                raise ValidationError(_("A billable project should be linked to a Sales Order Item that does not come from an expense or a vendor bill."))
+                raise ValidationError(_("You cannot link a billable project to a sales order item that comes from an expense or a vendor bill."))
 
     def write(self, values):
         res = super(Project, self).write(values)
