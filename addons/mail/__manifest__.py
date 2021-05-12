@@ -20,6 +20,7 @@
         'views/mail_tracking_views.xml',
         'views/mail_notification_views.xml',
         'views/mail_message_views.xml',
+        'views/mail_incoming_message_views.xml',
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
         'views/mail_moderation_views.xml',

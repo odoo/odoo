@@ -1178,6 +1178,194 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(record.name, 'Spammy')
         self.assertEqual(record._name, 'mail.test.gateway')
 
+    # --------------------------------------------------
+    # Emails loop detection
+    # --------------------------------------------------
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    def test_email_loop_direct_contact_catchall(self):
+        catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
+        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.period", 30)
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.alias", 5)
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.replies", 15)
+
+        email_to = f'{catchall_alias}@{catchall_domain}'
+
+        for __ in range(5):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, email_to,
+                subject='Test loop reply',
+                target_model='mail.test.container')
+
+        mail_messages = self.env['mail.message'].search([('subject', '=', 'Test loop reply')])
+        self.assertFalse(mail_messages, msg='Should not have created a <mail.message>')
+
+        mail_incoming_messages = self.env['mail.incoming.message'].search([('subject', '=', 'Test loop reply')])
+        self.assertEqual(len(mail_incoming_messages), 5, msg='Should have created 5 <mail.incoming.message>')
+        self.assertEqual(set(mail_incoming_messages.mapped('email_from')), {self.email_from})
+        self.assertEqual(set(mail_incoming_messages.mapped('email_to')), {email_to})
+
+        # Send one more email to overcome the limit
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, email_to,
+                subject='Test loop reply',
+                target_model='mail.test.container')
+
+        self.assertNotSentEmail()
+
+        mail_incoming_messages = self.env['mail.incoming.message'].search([('subject', '=', 'Test loop reply')])
+        self.assertEqual(len(mail_incoming_messages), 5, msg='Should not have created a new <mail.incoming.message>')
+
+        # Send an other email but with a different subject
+        self.format_and_process(
+            MAIL_TEMPLATE, self.email_from, email_to,
+            subject='New subject',
+            target_model='mail.test.container')
+
+        mail_incoming_messages = self.env['mail.incoming.message'].search([('subject', '=', 'New subject')])
+        self.assertFalse(mail_incoming_messages, msg='Should not have created a new <mail.incoming.message>')
+
+        # Send an other email but from a different address
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                MAIL_TEMPLATE, 'contact_2@example.com', email_to,
+                subject='New subject 2',
+                target_model='mail.test.container')
+
+        mail_incoming_messages = self.env['mail.incoming.message'].search([('subject', '=', 'New subject 2')])
+        self.assertEqual(len(mail_incoming_messages), 1, msg='Should have created a new <mail.incoming.message>')
+        self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'])
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail')
+    def test_email_loop_alias(self):
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.period", 30)
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.alias", 5)
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.replies", 15)
+
+        alias = self.env['mail.alias'].create({
+            'alias_name': 'test',
+            'alias_user_id': False,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
+            'alias_contact': 'everyone',
+        })
+
+        for i in range(5):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from,
+                '%s@%s' % (self.alias.alias_name, self.alias_domain),
+                subject='Test alias loop %i' % i,
+                target_model=alias.alias_model_id.model
+            )
+
+        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Test alias loop %')])
+        self.assertEqual(len(records), 5, 'Should have created 5 <mail.test.gateway>')
+
+        self.format_and_process(
+            MAIL_TEMPLATE, self.email_from,
+            '%s@%s' % (self.alias.alias_name, self.alias_domain),
+            subject='Test alias loop X',
+            target_model=alias.alias_model_id.model
+        )
+
+        new_record = self.env['mail.test.gateway'].search([('name', '=', 'Test alias loop X')])
+        self.assertFalse(new_record, msg='The loop should have been detected and the record should not have been created')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail')
+    def test_email_loop_alias_bounce(self):
+        """When we send an email to this alias, we will receive an email
+            > Only authenticated partner can create a record using this alias
+
+        We should prevent loop in that case.
+        """
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.period", 30)
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.alias", 5)
+
+        self.alias.write({
+            'alias_contact': 'partners',
+            'alias_bounced_content': '<p>What Is Dead May Never Die</p>'
+        })
+
+        with self.mock_mail_gateway():
+            for __ in range(5):
+                self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Should Bounce')
+
+        self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], body_content='<p>What Is Dead May Never Die</p>')
+        self.assertEqual(len(self._mails), 5, "Should have sent 5 bounce email")
+
+        with self.mock_mail_gateway():
+            self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Should Bounce')
+
+        self.assertNotSentEmail()
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail')
+    def test_email_loop_replies(self):
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.period", 30)
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.alias", 5)
+        self.env["ir.config_parameter"].sudo().set_param("mail.incoming.limit.replies", 15)
+
+        init_message_ids = self.test_record.message_ids
+
+        for __ in range(15):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from,
+                'contact@test.com',
+                subject='Re: news', extra='In-Reply-To:\r\n\t%s\n' % self.fake_email.message_id)
+
+        new_message_ids = self.test_record.message_ids - init_message_ids
+        self.assertEqual(len(new_message_ids), 15, "Should be able to replies to existing thread more than the limit of record creation by alias")
+
+        # Now we overcome the limit allowed for the replies
+        self.format_and_process(
+            MAIL_TEMPLATE, self.email_from,
+            'contact@test.com',
+            subject='Re: news', extra='In-Reply-To:\r\n\t%s\n' % self.fake_email.message_id)
+        new_message_ids = self.test_record.message_ids - init_message_ids
+        self.assertEqual(len(new_message_ids), 15, "Should not be able to overcome the replies limit on the same thread")
+
+        # Test that the limit is not cross record and should be computed based on the thread
+        # So we should be able to post an other message on an other thread
+        test_record_2 = self.env['mail.test.gateway'].with_context(self._test_context).create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com',
+        })
+        fake_email_2 = self.env['mail.message'].create({
+            'model': 'mail.test.gateway',
+            'res_id': test_record_2.id,
+            'subject': 'Public Discussion',
+            'message_type': 'email',
+            'subtype_id': self.env.ref('mail.mt_comment').id,
+            'author_id': self.partner_1.id,
+            'message_id': '<123456-openerp-%s-mail.test.gateway@%s>' % (test_record_2.id, socket.gethostname()),
+        })
+        self.format_and_process(
+            MAIL_TEMPLATE, self.email_from,
+            'contact@test.com',
+            subject='Test message to an other existing thread', extra='In-Reply-To:\r\n\t%s\n' % fake_email_2.message_id)
+        self.assertEqual(len(test_record_2.message_ids.filtered_domain([('subject', '=', 'Test message to an other existing thread')])), 1,
+                         msg='Should be able to post on an other thread')
+
+        # Now test that we can still create record by alias even if we replies to existing mail thread
+        alias = self.env['mail.alias'].create({
+            'alias_name': 'test',
+            'alias_user_id': False,
+            'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id,
+            'alias_contact': 'everyone',
+        })
+
+        for i in range(5):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.email_from,
+                '%s@%s' % (self.alias.alias_name, self.alias_domain),
+                subject='Test alias loop %i' % i,
+                target_model=alias.alias_model_id.model
+            )
+
+        records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Test alias loop %')])
+        self.assertEqual(len(records), 5, 'Should have created 5 <mail.test.gateway>')
+
 
 class TestMailThreadCC(TestMailCommon):
 

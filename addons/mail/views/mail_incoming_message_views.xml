@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="mail_incoming_message_view_tree" model="ir.ui.view">
+            <field name="name">mail.incoming.message.tree</field>
+            <field name="model">mail.incoming.message</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree string="Messages">
+                    <field name="subject"/>
+                    <field name="email_from"/>
+                    <field name="email_to"/>
+                    <field name="is_routed"/>
+                    <field name="alias_model"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mail_incoming_message_view_form" model="ir.ui.view">
+            <field name="name">mail.incoming.message.view.form</field>
+            <field name="model">mail.incoming.message</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <sheet>
+                        <group>
+                            <field name="subject"/>
+                            <field name="email_from"/>
+                            <field name="email_to"/>
+                        </group>
+                        <group>
+                            <field name="is_routed"/>
+                            <field name="alias_model"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_incoming_message_view_search" model="ir.ui.view">
+            <field name="name">mail.incoming.message.search</field>
+            <field name="model">mail.incoming.message</field>
+            <field name="priority">25</field>
+            <field name="arch" type="xml">
+                <search string="Messages Search">
+                    <field name="email_from"/>
+                    <field name="email_to"/>
+                    <field name="subject"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail_incoming_message_action" model="ir.actions.act_window">
+            <field name="name">Incoming Messages</field>
+            <field name="res_model">mail.incoming.message</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="mail_incoming_message_view_search"/>
+        </record>
+
+    </data>
+</odoo>

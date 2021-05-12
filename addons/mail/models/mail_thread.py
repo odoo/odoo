@@ -649,7 +649,10 @@ class MailThread(models.AbstractModel):
             # sender should not see private diagnostics info, just the error
             raise ValueError(short_message)
 
-    def _routing_create_bounce_email(self, email_from, body_html, message, **mail_values):
+    def _routing_create_bounce_email(self, email_from, body_html, message, message_dict, **mail_values):
+        if self._ignore_incoming_email(message, message_dict, None):
+            return
+
         bounce_to = tools.decode_message_header(message, 'Return-Path') or email_from
         bounce_mail_values = {
             'author_id': False,
@@ -813,7 +816,7 @@ class MailThread(models.AbstractModel):
                     False
                 )
                 body = alias._get_alias_bounced_body(message_dict)
-                self._routing_create_bounce_email(email_from, body, message, references=message_id)
+                self._routing_create_bounce_email(email_from, body, message, message_dict, references=message_id)
                 return False
 
         return (model, thread_id, route[2], route[3], route[4])
@@ -969,7 +972,7 @@ class MailThread(models.AbstractModel):
                 body = self.env.ref('mail.mail_bounce_catchall')._render({
                     'message': message,
                 }, engine='ir.qweb')
-                self._routing_create_bounce_email(email_from, body, message, references=message_id, reply_to=self.env.company.email)
+                self._routing_create_bounce_email(email_from, body, message, message_dict, references=message_id, reply_to=self.env.company.email)
                 return []
 
             dest_aliases = self.env['mail.alias'].search([('alias_name', 'in', rcpt_tos_valid_localparts)])
@@ -1007,6 +1010,110 @@ class MailThread(models.AbstractModel):
             'Create an appropriate mail.alias or force the destination model.' %
             (email_from, email_to, message_id)
         )
+
+    def _ignore_incoming_email(self, message, message_dict, routes):
+        """This method returns True is the incoming email should be ignored.
+
+        The goal of this method is to prevent loops which can occur if an auto-replier
+        send email to Odoo. We have 2 limits, one for the replies and one for the records
+        created by the alias.
+
+        It also detects common headers set by the auto-repliers / mailing lists.
+        """
+
+        # Detect if the email has been sent by an auto-replier or by a mailing list
+        for header in ['X-Autoreply', 'X-Autorespond', 'Feedback-ID', 'List-Id', 'List-Unsubscribe']:
+            if header in message:
+                _logger.info('Email sent by an auto-replier (%s), ignoring it.', header)
+                return True
+
+        if 'Auto-Submitted' in message and message['Auto-Submitted'].lower() != 'no':
+            _logger.info('Email sent by an auto-replier (Auto-Submitted), ignoring it.')
+            return True
+
+        if 'Precedence' in message and message['Precedence'].lower() in ('bulk', 'auto_reply', 'list'):
+            _logger.info('Email sent by an auto-replier (Precedence), ignoring it.')
+            return True
+
+        # Detect the email address sent to many emails
+        MessageIncoming = self.env['mail.incoming.message'].sudo()
+        Message = self.env['mail.message'].sudo()
+        get_param = self.env["ir.config_parameter"].sudo().get_param
+
+        INCOMING_LIMIT_PERIOD = int(get_param("mail.incoming.limit.period", 60))
+        INCOMING_LIMIT_ALIAS = int(get_param("mail.incoming.limit.alias", 5))
+        INCOMING_LIMIT_REPLIES = int(get_param("mail.incoming.limit.replies", 90))
+
+        create_date_limit = datetime.datetime.now() - datetime.timedelta(minutes=INCOMING_LIMIT_PERIOD)
+
+        if routes:
+            for model, thread_id, *__ in routes:
+                if thread_id:
+                    # Reply to an existing mail thread
+                    mail_messages_count = Message.search_count([
+                        ('create_date', '>', create_date_limit),
+                        ('email_from', '=', message_dict.get('email_from')),
+                        ('message_type', '=', 'email'),
+                        ('model', '=', model),
+                        ('res_id', '=', thread_id),
+                    ])
+
+                    if mail_messages_count >= INCOMING_LIMIT_REPLIES:
+                        _logger.info('This email address replied to many times to the thread %s.', thread_id)
+                        return True
+                else:
+                    # Creation of a record by an alias
+                    mail_incoming_messages_count = MessageIncoming.search_count([
+                        ('create_date', '>', create_date_limit),
+                        ('email_from', '=', message_dict.get('email_from')),
+                        ('email_to', '=', message_dict.get('to')),
+                        ('is_routed', '=', True),
+                        ('alias_model', '=', model),
+                    ])
+
+                    if mail_incoming_messages_count >= INCOMING_LIMIT_ALIAS:
+                        _logger.info('This email address created too many <%s>.', model)
+                        return True
+
+        else:
+            # Email not routed
+            mail_incoming_messages_count = MessageIncoming.search_count([
+                ('create_date', '>', create_date_limit),
+                ('email_from', '=', message_dict.get('email_from')),
+                ('email_to', '=', message_dict.get('to')),
+                ('is_routed', '=', False),
+                ('alias_model', '=', False),
+            ])
+
+            if mail_incoming_messages_count >= INCOMING_LIMIT_ALIAS:
+                _logger.info('This email address sent too many emails to the same destination.')
+                return True
+
+        return False
+
+    def _log_incoming_email(self, message_dict, routes):
+        """Log the incoming email to be able to detect loop."""
+        if routes:
+            self.env['mail.incoming.message'].sudo().create([
+                {
+                    'subject': message_dict.get('subject'),
+                    'email_from': message_dict.get('email_from'),
+                    'email_to': message_dict.get('to'),
+                    'is_routed': True,
+                    'alias_model': model,
+                }
+                for model, thread_id, *__ in routes
+                # Do not need to log replies to existing thread
+                if not thread_id
+            ])
+        else:
+            self.env['mail.incoming.message'].sudo().create({
+                'subject': message_dict.get('subject'),
+                'email_from': message_dict.get('email_from'),
+                'email_to': message_dict.get('to'),
+                'is_routed': False,
+                'alias_model': False,
+            })
 
     @api.model
     def _message_route_process(self, message, message_dict, routes):
@@ -1122,8 +1229,10 @@ class MailThread(models.AbstractModel):
 
         # find possible routes for the message
         routes = self.message_route(message, msg_dict, model, thread_id, custom_values)
-        thread_id = self._message_route_process(message, msg_dict, routes)
-        return thread_id
+        if not self._ignore_incoming_email(message, msg_dict, routes):
+            self._log_incoming_email(msg_dict, routes)
+            thread_id = self._message_route_process(message, msg_dict, routes)
+            return thread_id
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
