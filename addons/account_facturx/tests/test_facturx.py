@@ -84,7 +84,7 @@ class TestAccountEdiFacturx(AccountTestEdiCommon):
                         </SpecifiedTradeProduct>
                         <SpecifiedLineTradeAgreement>
                             <GrossPriceProductTradePrice>
-                                <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
+                                <ChargeAmount currencyID="Gol">1100.000</ChargeAmount>
                                 <AppliedTradeAllowanceCharge>
                                     <ChargeIndicator>
                                         <Indicator>true</Indicator>
@@ -173,7 +173,7 @@ class TestAccountEdiFacturx(AccountTestEdiCommon):
                 self.get_xml_tree_from_string(self.expected_invoice_facturx_values),
                 '''
                     <xpath expr="//GrossPriceProductTradePrice/ChargeAmount" position="replace">
-                        <ChargeAmount currencyID="Gol">275.000</ChargeAmount>
+                        <ChargeAmount currencyID="Gol">1000.000</ChargeAmount>
                     </xpath>
                     <xpath expr="//SpecifiedLineTradeSettlement" position="replace">
                         <SpecifiedLineTradeSettlement>
