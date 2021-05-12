@@ -121,7 +121,7 @@ class Lead(models.Model):
         'res.company', string='Company', index=True,
         compute='_compute_company_id', readonly=False, store=True)
     referred = fields.Char('Referred By')
-    description = fields.Text('Notes')
+    description = fields.Html('Notes')
     active = fields.Boolean('Active', default=True, tracking=True)
     type = fields.Selection([
         ('lead', 'Lead'), ('opportunity', 'Opportunity')],
@@ -1376,7 +1376,7 @@ class Lead(models.Model):
 
     def _merge_get_fields_specific(self):
         return {
-            'description': lambda fname, leads: '\n\n'.join(desc for desc in leads.mapped('description') if desc),
+            'description': lambda fname, leads: '<br/><br/>'.join(desc for desc in leads.mapped('description') if not is_html_empty(desc)),
             'type': lambda fname, leads: 'opportunity' if any(lead.type == 'opportunity' for lead in leads) else 'lead',
             'priority': lambda fname, leads: max(leads.mapped('priority')) if leads else False,
         }
