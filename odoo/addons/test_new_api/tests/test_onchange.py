@@ -675,3 +675,47 @@ class TestComputeOnchange(common.TransactionCase):
         form.foo = "foo6"
         self.assertEqual(form.bar, "foo6")
         self.assertEqual(form.baz, "baz5")
+
+    def test_one2many(self):
+        """ Test a computed, editable one2many field with a domain. """
+        record = self.env['test_new_api.one2many'].create({'name': 'foo'})
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+        ])
+
+        # trigger recomputation by changing name
+        record.name = 'bar'
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+        ])
+
+        # manually adding a line should not trigger recomputation
+        record.line_ids.create({'name': 'baz', 'container_id': record.id})
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+            {'name': 'baz', 'count': 1},
+        ])
+
+        # changing the field in the domain should not trigger recomputation...
+        record.line_ids[-1].count = 2
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+            {'name': 'baz', 'count': 2},
+        ])
+
+        # ...and may show cache inconsistencies
+        record.line_ids[-1].count = 0
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+            {'name': 'baz', 'count': 0},
+        ])
+        record.flush()
+        record.invalidate_cache()
+        self.assertRecordValues(record.line_ids, [
+            {'name': 'foo', 'count': 1},
+            {'name': 'bar', 'count': 1},
+        ])
