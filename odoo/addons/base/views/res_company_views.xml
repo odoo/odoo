@@ -44,6 +44,28 @@
                                 <group name="social_media"/>
                             </group>
                         </page>
+                        <page string="Accounting Firm Information" name="agent_info">
+                            <group name="agent_info_group">
+                                <group>
+                                    <field name="agent_name"/>
+                                    <label for="agent_street" string="Agent's Address"/>
+                                    <div class="o_address_format">
+                                        <field name="agent_street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="agent_street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="agent_city" placeholder="City" class="o_address_city"/>
+                                        <field name="agent_state_id" placeholder="State" class="o_address_state" options='{"no_open": True}'/>
+                                        <field name="agent_zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="agent_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                    <field name="agent_vat"/>
+                                </group>
+                                <group>
+                                    <field name="agent_phone" class="o_force_ltr"/>
+                                    <field name="agent_mobile" class="o_force_ltr"/>
+                                    <field name="agent_email"/>
+                                </group>
+                            </group>
+                        </page>
                     </notebook>
                     </sheet>
                 </form>

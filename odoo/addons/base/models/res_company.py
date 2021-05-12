@@ -93,6 +93,19 @@ class Company(models.Model):
     font = fields.Selection([("Lato", "Lato"), ("Roboto", "Roboto"), ("Open_Sans", "Open Sans"), ("Montserrat", "Montserrat"), ("Oswald", "Oswald"), ("Raleway", "Raleway")], default="Lato")
     primary_color = fields.Char()
     secondary_color = fields.Char()
+
+    agent_name = fields.Char(string="Agent's Name")
+    agent_street = fields.Char()
+    agent_street2 = fields.Char()
+    agent_zip = fields.Char()
+    agent_city = fields.Char()
+    agent_state_id = fields.Many2one('res.country.state', string="Agent's State", domain="[('country_id', '=?', country_id)]")
+    agent_country_id = fields.Many2one('res.country', string="Agent's Country")
+    agent_vat = fields.Char(string="Agent's Tax ID", readonly=False)
+    agent_email = fields.Char(string="Agent's Email", readonly=False)
+    agent_phone = fields.Char(string="Agent's Phone", readonly=False)
+    agent_mobile = fields.Char(string="Agent's Mobile", readonly=False)
+
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
