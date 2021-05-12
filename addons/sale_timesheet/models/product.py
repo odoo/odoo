@@ -93,7 +93,7 @@ class ProductTemplate(models.Model):
     def _unlink_except_master_data(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product.product_tmpl_id in self:
-            raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+            raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.') % time_product.name)
 
     def write(self, vals):
         # timesheet product can't be archived
@@ -101,7 +101,7 @@ class ProductTemplate(models.Model):
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product.product_tmpl_id in self:
-                raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.') % time_product.name)
         return super(ProductTemplate, self).write(vals)
 
 
@@ -126,7 +126,7 @@ class ProductProduct(models.Model):
     def _unlink_except_master_data(self):
         time_product = self.env.ref('sale_timesheet.time_product')
         if time_product in self:
-            raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+            raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.') % time_product.name)
 
     def write(self, vals):
         # timesheet product can't be archived
@@ -134,5 +134,5 @@ class ProductProduct(models.Model):
         if not test_mode and 'active' in vals and not vals['active']:
             time_product = self.env.ref('sale_timesheet.time_product')
             if time_product in self:
-                raise ValidationError(_('The %s product is required by the Timesheet app and cannot be archived/deleted.') % time_product.name)
+                raise ValidationError(_('The %s product is required by the Timesheets app and cannot be archived nor deleted.') % time_product.name)
         return super(ProductProduct, self).write(vals)
