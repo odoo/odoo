@@ -511,10 +511,10 @@ function parseDateTime(value, field, options) {
     if (!value) {
         return false;
     }
-    var datePattern = time.getLangDateFormat(),
-        timePattern = time.getLangTimeFormat();
-    var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D'),
-        timePatternWoZero = timePattern.replace('HH','H').replace('mm','m').replace('ss','s');
+    const datePattern = time.getLangDateFormat();
+    const timePattern = time.getLangTimeFormat();
+    const datePatternWoZero = time.getLangDateFormatWoZero();
+    const timePatternWoZero = time.getLangTimeFormatWoZero();
     var pattern1 = datePattern + ' ' + timePattern;
     var pattern2 = datePatternWoZero + ' ' + timePatternWoZero;
     var datetime;
