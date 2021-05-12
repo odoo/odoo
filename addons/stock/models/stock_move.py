@@ -163,7 +163,7 @@ class StockMove(models.Model):
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
-    has_move_lines = fields.Boolean(compute='_compute_has_move_lines')
+    move_lines_count = fields.Integer(compute='_compute_move_lines_count')
     package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, copy=False)
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
@@ -268,9 +268,9 @@ class StockMove(models.Model):
             move.reference = move.picking_id.name if move.picking_id else move.name
 
     @api.depends('move_line_ids')
-    def _compute_has_move_lines(self):
+    def _compute_move_lines_count(self):
         for move in self:
-            move.has_move_lines = bool(move.move_line_ids)
+            move.move_lines_count = len(move.move_line_ids)
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
@@ -352,12 +352,16 @@ class StockMove(models.Model):
             elif len(move_lines) == 1:
                 move_lines[0].qty_done = quantity_done
             else:
-                # Bypass the error if we're trying to write the same value.
-                ml_quantity_done = 0
-                for move_line in move_lines:
-                    ml_quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
-                if float_compare(quantity_done, ml_quantity_done, precision_rounding=move.product_uom.rounding) != 0:
-                    raise UserError(_("Cannot set the done quantity from this stock move, work directly with the move lines."))
+                move._multi_line_quantity_done_set(quantity_done)
+
+    def _multi_line_quantity_done_set(self, quantity_done):
+        move_lines = self._get_move_lines()
+        # Bypass the error if we're trying to write the same value.
+        ml_quantity_done = 0
+        for move_line in move_lines:
+            ml_quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, self.product_uom, round=False)
+        if float_compare(quantity_done, ml_quantity_done, precision_rounding=self.product_uom.rounding) != 0:
+            raise UserError(_("Cannot set the done quantity from this stock move, work directly with the move lines."))
 
     def _set_product_qty(self):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity

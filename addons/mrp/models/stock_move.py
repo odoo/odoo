@@ -419,3 +419,10 @@ class StockMove(models.Model):
             candidate_moves_list.append(production.move_raw_ids)
         for production in self.mapped('production_id'):
             candidate_moves_list.append(production.move_finished_ids)
+
+    def _multi_line_quantity_done_set(self, quantity_done):
+        if self.raw_material_production_id:
+            self.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
+            self.move_line_ids = self._set_quantity_done_prepare_vals(quantity_done)
+        else:
+            super()._multi_line_quantity_done_set(quantity_done)
