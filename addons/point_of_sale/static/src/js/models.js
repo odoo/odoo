@@ -3302,8 +3302,10 @@ exports.Order = Backbone.Model.extend({
     get_rounding_applied: function() {
         if(this.pos.config.cash_rounding) {
             const only_cash = this.pos.config.only_round_cash_method;
-            const has_cash = this.selected_paymentline ? this.selected_paymentline.payment_method.is_cash_count == true: false;
-            if (!only_cash || (only_cash && has_cash)) {
+            const paymentlines = this.get_paymentlines();
+            const last_line = paymentlines ? paymentlines[paymentlines.length-1]: false;
+            const last_line_is_cash = last_line ? last_line.payment_method.is_cash_count == true: false;
+            if (!only_cash || (only_cash && last_line_is_cash)) {
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var total = round_pr(remaining, this.pos.cash_rounding[0].rounding);
                 var sign = remaining > 0 ? 1.0 : -1.0;
