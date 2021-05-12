@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, date
 from odoo import fields, models
 from odoo.addons.resource.models.resource import datetime_to_string, string_to_datetime, Intervals
 from odoo.osv import expression
@@ -256,4 +256,23 @@ class HrContract(models.Model):
             self.sudo()._remove_work_entries()
         if vals.get('state') in ['draft', 'cancel']:
             self._cancel_work_entries()
-        return result
+        dependendant_fields = self._get_fields_that_recompute_we()
+        if any(key in dependendant_fields for key in vals.keys()):
+            for contract in self:
+                date_from = max(self.date_start, self.date_generated_from.date())
+                date_to = min(self.date_end or date.max, self.date_generated_to.date())
+                if date_from != date_to:
+                    contract._recompute_work_entries(date_from, date_to)
+
+    def _recompute_work_entries(self, date_from, date_to):
+        self.ensure_one()
+        wizard = self.env['hr.work.entry.regeneration.wizard'].create({
+            'employee_id': self.employee_id.id,
+            'date_from': date_from,
+            'date_to': date_to,
+        })
+        wizard.with_context(work_entry_skip_validation=True).regenerate_work_entries()
+
+    def _get_fields_that_recompute_we(self):
+        # Returns the fields that should recompute the work entries
+        return ['resource_calendar_id']
