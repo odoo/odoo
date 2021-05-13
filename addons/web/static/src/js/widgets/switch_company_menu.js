@@ -25,6 +25,7 @@ var SwitchCompanyMenu = Widget.extend({
     },
     // force this item to be the first one to the left of the UserMenu in the systray
     sequence: 1,
+    TOGGLE_DELAY: 1000,
     /**
      * @override
      */
@@ -45,6 +46,14 @@ var SwitchCompanyMenu = Widget.extend({
         this.current_company = this.allowed_company_ids[0];
         this.current_company_name = session.user_companies.allowed_companies[this.current_company]['name'];
         return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _getElements() {
+        return [...this.el.querySelectorAll(".dropdown-item")];
     },
 
     //--------------------------------------------------------------------------
@@ -98,19 +107,32 @@ var SwitchCompanyMenu = Widget.extend({
         ev.preventDefault();
         ev.stopPropagation();
         var dropdownItem = $(ev.currentTarget).parent();
-        var companyID = dropdownItem.data('company-id');
-        var allowed_company_ids = this.allowed_company_ids;
-        var current_company_id = allowed_company_ids[0];
+        const allowedCompanyIds = this.allowed_company_ids;
+        const currentCompanyId = allowedCompanyIds[0];
         if (dropdownItem.find('.fa-square-o').length) {
-            allowed_company_ids.push(companyID);
             dropdownItem.find('.fa-square-o').removeClass('fa-square-o').addClass('fa-check-square');
             $(ev.currentTarget).attr('aria-checked', 'true');
         } else {
-            allowed_company_ids.splice(allowed_company_ids.indexOf(companyID), 1);
             dropdownItem.find('.fa-check-square').addClass('fa-square-o').removeClass('fa-check-square');
             $(ev.currentTarget).attr('aria-checked', 'false');
         }
-        session.setCompanies(current_company_id, allowed_company_ids);
+        const toggleCompany = () => {
+            [...this._getElements()].forEach((item) => {
+                const companyID = parseInt(item.getAttribute('data-company-id'));
+                if (item.querySelector('.fa-check-square')) {
+                    if (!allowedCompanyIds.includes(companyID)) {
+                        allowedCompanyIds.push(companyID);
+                    }
+                } else if (allowedCompanyIds.includes(companyID)) {
+                    allowedCompanyIds.splice(allowedCompanyIds.indexOf(companyID), 1);
+                }
+            });
+            session.setCompanies(currentCompanyId, allowedCompanyIds);
+        };
+        if (this.toggleTimeout) {
+            clearTimeout(this.toggleTimeout);
+        }
+        this.toggleTimeout = setTimeout(toggleCompany, this.TOGGLE_DELAY);
     },
 
 });

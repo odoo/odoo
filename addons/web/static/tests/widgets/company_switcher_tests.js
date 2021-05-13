@@ -89,6 +89,11 @@ QUnit.module('widgets', {
                 allowed_company_ids: [1],
             },
         };
+        this.originalToggleDelay = SwitchCompanyMenu.prototype.TOGGLE_DELAY;
+        SwitchCompanyMenu.prototype.TOGGLE_DELAY = 0;
+    },
+    afterEach: function () {
+        SwitchCompanyMenu.prototype.TOGGLE_DELAY = this.originalToggleDelay;
     },
 
 }, function () {
@@ -123,6 +128,38 @@ QUnit.module('widgets', {
                 assertMainCompany: [1, "Main company should not have changed"],
                 assertCompanies: [[1, 2, 3], "All companies should be activated"],
             });
+        });
+
+        QUnit.test("Toggle multiple companies at once", async function (assert) {
+            /**
+             *          [x] **Company 1**          [x] **Company 1**
+             *  toggle->[ ] Company 2     ====>    [x] Company 2
+             *  toggle->[x] Company 3              [ ] Company 3
+             */
+            assert.expect(2);
+            SwitchCompanyMenu.prototype.TOGGLE_DELAY = this.originalToggleDelay;
+            let resolver;
+            const prom = new Promise((r) => {
+                resolver = r;
+            });
+
+            const menu = await createSwitchCompanyMenu({
+                session: {
+                    ...this.session_mock_multi,
+                    setCompanies: function (mainCompanyId, companyIds) {
+                        assert.strictEqual(mainCompanyId, 1, "Main company should not have changed");
+                        assert.deepEqual(companyIds, [1, 2], "First and Second company should be activated");
+                        resolver();
+                    },
+                },
+            });
+
+            await testUtils.dom.click(menu.$('.dropdown-toggle')); // open company switcher dropdown
+            await testUtils.dom.click(menu.$(`div[data-company-id="2"] div.toggle_company`));
+            await testUtils.dom.click(menu.$(`div[data-company-id="3"] div.toggle_company`));
+
+            await prom;
+            menu.destroy();
         });
 
         QUnit.test("Toggle active company in mutliple company mode", async function (assert) {
