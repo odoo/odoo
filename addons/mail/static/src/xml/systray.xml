@@ -8,8 +8,8 @@
     <t t-name="mail.systray.ActivityMenu.Previews">
         <t t-set="activities" t-value="widget._activities"/>
         <t t-if="_.isEmpty(activities)">
-            <div class="dropdown-item-text text-center o_no_activity">
-                <span>No activities planned.</span>
+            <div class="dropdown-item-text text-center o_no_activity d-flex justify-content-center">
+                <span>Congratulations, you're done with your activities.</span>
             </div>
         </t>
         <t t-foreach="activities" t-as="activity">
