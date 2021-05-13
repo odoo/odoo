@@ -470,7 +470,7 @@ var MockServer = Class.extend({
             domain = domain.map(function (criterion) {
                 if (criterion[1] === 'child_of') {
                     var oldLength = 0;
-                    var childIDs = [criterion[2]];
+                    var childIDs = criterion[2];
                     while (childIDs.length > oldLength) {
                         oldLength = childIDs.length;
                         _.each(records, function (r) {
