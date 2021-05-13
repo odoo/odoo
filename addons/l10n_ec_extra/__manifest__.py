@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Ecuadorian Accounting EDI',
+    'name': 'Ecuadorian Accounting Extras',
     'version': '3.3',
     'description': '''
 Functional
@@ -56,6 +56,9 @@ Authors:
         'views/account_tax_view.xml',
         'views/l10n_latam_document_type_view.xml',
         'views/l10n_ec_sri_payment.xml',
+        'views/account_move_view.xml',
+        'views/account_journal_view.xml',
+        'views/product_view.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True,

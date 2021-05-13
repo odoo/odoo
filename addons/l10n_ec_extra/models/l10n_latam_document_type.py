@@ -36,3 +36,5 @@ class L10nLatamDocumentType(models.Model):
         string='Authorization',
         help='Ecuadorian tax authority requires an authorization for certain documents',
         )
+
+    

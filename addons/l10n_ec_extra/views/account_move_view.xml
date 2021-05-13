@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="account_move_form_view" model="ir.ui.view">
+		<field name="name">account.move.line.witholding</field>
+		<field name="model">account.move</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="account.view_move_form"/>
+		<field name="arch" type="xml">
+			<xpath expr="//page[@id='invoice_tab']/field/tree/field[@name='tax_ids']" position="after">
+				<field name="witholding_tax_ids" widget="many2many_tags"
+					domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', '=', parent.company_id)]"
+					context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
+					options="{'no_create': True}"
+					optional="show"/>
+			</xpath>
+
+			<xpath expr="//page[@id='aml_tab']/field/tree/field[@name='tax_ids']" position="after">
+				<field name="witholding_tax_ids" widget="many2many_tags"
+					optional="hide"
+					domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain)]"
+					context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain}"
+					options="{'no_create': True}"
+					force_save="1"
+					attrs="{'readonly': [
+						'|', '|',
+						('display_type', 'in', ('line_section', 'line_note')),
+						('tax_line_id', '!=', False),
+						'&amp;',
+						('parent.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
+						('account_internal_type', 'in', ('receivable', 'payable')),
+					]}"/>
+			</xpath>
+
+			<xpath expr="//field[@name='invoice_payments_widget']" position="before">
+				<field name="amount_by_group_wth" widget="tax-group-custom-field" nolabel="1" colspan="2" attrs="{'invisible': [('amount_tax', '=', 0)]}"/>
+			</xpath>
+		</field>
+	</record>
+</odoo>

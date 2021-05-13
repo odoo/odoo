@@ -5,5 +5,7 @@ from . import account_tax
 from . import account_tax_group
 from . import l10n_latam_document_type
 from . import l10n_ec_sri_payment
-
+from . import account_move
+from . import product
+from . import account_journal
 
