@@ -30,6 +30,11 @@
             <field name="arch" type="xml">
                 <form string="Account Journal">
                     <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button class="oe_stat_button" type="action"
+                                    name="%(action_account_moves_all_a)d" icon="fa-book" string="Journal Entries"
+                                    context="{'search_default_journal_id':active_id}"/>
+                        </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <div class="oe_title">
                             <label for="name"/>
