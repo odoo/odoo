@@ -66,6 +66,7 @@ class Partner(models.Model):
                 continue
 
             street_format = (partner.country_id.street_format or
+                self.env.company.country_id.street_format or
                 '%(street_number)s/%(street_number2)s %(street_name)s')
             street_raw = partner.street
             vals = self._split_street_with_params(street_raw, street_format)
