@@ -187,23 +187,32 @@ class AccountPayment(models.Model):
                 self.journal_id.display_name))
 
         # Compute amounts.
-        write_off_amount = write_off_line_vals.get('amount', 0.0)
+        write_off_amount_currency = write_off_line_vals.get('amount', 0.0)
 
         if self.payment_type == 'inbound':
             # Receive money.
-            counterpart_amount = -self.amount
-            write_off_amount *= -1
+            liquidity_amount_currency = self.amount
         elif self.payment_type == 'outbound':
             # Send money.
-            counterpart_amount = self.amount
+            liquidity_amount_currency = -self.amount
+            write_off_amount_currency *= -1
         else:
-            counterpart_amount = 0.0
-            write_off_amount = 0.0
+            liquidity_amount_currency = write_off_amount_currency = 0.0
 
-        balance = self.currency_id._convert(counterpart_amount, self.company_id.currency_id, self.company_id, self.date)
-        counterpart_amount_currency = counterpart_amount
-        write_off_balance = self.currency_id._convert(write_off_amount, self.company_id.currency_id, self.company_id, self.date)
-        write_off_amount_currency = write_off_amount
+        write_off_balance = self.currency_id._convert(
+            write_off_amount_currency,
+            self.company_id.currency_id,
+            self.company_id,
+            self.date,
+        )
+        liquidity_balance = self.currency_id._convert(
+            liquidity_amount_currency,
+            self.company_id.currency_id,
+            self.company_id,
+            self.date,
+        )
+        counterpart_amount_currency = -liquidity_amount_currency - write_off_amount_currency
+        counterpart_balance = -liquidity_balance - write_off_balance
         currency_id = self.currency_id.id
 
         if self.is_internal_transfer:
@@ -236,33 +245,33 @@ class AccountPayment(models.Model):
             {
                 'name': liquidity_line_name or default_line_name,
                 'date_maturity': self.date,
-                'amount_currency': -counterpart_amount_currency,
+                'amount_currency': liquidity_amount_currency,
                 'currency_id': currency_id,
-                'debit': balance < 0.0 and -balance or 0.0,
-                'credit': balance > 0.0 and balance or 0.0,
+                'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
+                'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
-                'account_id': self.journal_id.payment_debit_account_id.id if balance < 0.0 else self.journal_id.payment_credit_account_id.id,
+                'account_id': self.journal_id.payment_credit_account_id.id if liquidity_balance < 0.0 else self.journal_id.payment_debit_account_id.id,
             },
             # Receivable / Payable.
             {
                 'name': self.payment_reference or default_line_name,
                 'date_maturity': self.date,
-                'amount_currency': counterpart_amount_currency + write_off_amount_currency if currency_id else 0.0,
+                'amount_currency': counterpart_amount_currency,
                 'currency_id': currency_id,
-                'debit': balance + write_off_balance > 0.0 and balance + write_off_balance or 0.0,
-                'credit': balance + write_off_balance < 0.0 and -balance - write_off_balance or 0.0,
+                'debit': counterpart_balance if counterpart_balance > 0.0 else 0.0,
+                'credit': -counterpart_balance if counterpart_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
                 'account_id': self.destination_account_id.id,
             },
         ]
-        if write_off_balance:
+        if not self.currency_id.is_zero(write_off_amount_currency):
             # Write-off line.
             line_vals_list.append({
                 'name': write_off_line_vals.get('name') or default_line_name,
-                'amount_currency': -write_off_amount_currency,
+                'amount_currency': write_off_amount_currency,
                 'currency_id': currency_id,
-                'debit': write_off_balance < 0.0 and -write_off_balance or 0.0,
-                'credit': write_off_balance > 0.0 and write_off_balance or 0.0,
+                'debit': write_off_balance if write_off_balance > 0.0 else 0.0,
+                'credit': -write_off_balance if write_off_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
                 'account_id': write_off_line_vals.get('account_id'),
             })
@@ -713,16 +722,21 @@ class AccountPayment(models.Model):
             # This allows to create a new payment with custom 'line_ids'.
 
             if writeoff_lines:
+                counterpart_amount = sum(counterpart_lines.mapped('amount_currency'))
                 writeoff_amount = sum(writeoff_lines.mapped('amount_currency'))
-                counterpart_amount = counterpart_lines['amount_currency']
-                if writeoff_amount > 0.0 and counterpart_amount > 0.0:
-                    sign = 1
-                else:
+
+                # To be consistent with the payment_difference made in account.payment.register,
+                # 'writeoff_amount' needs to be signed regarding the 'amount' field before the write.
+                # Since the write is already done at this point, we need to base the computation on accounting values.
+                if (counterpart_amount > 0.0) == (writeoff_amount > 0.0):
                     sign = -1
+                else:
+                    sign = 1
+                writeoff_amount = abs(writeoff_amount) * sign
 
                 write_off_line_vals = {
                     'name': writeoff_lines[0].name,
-                    'amount': writeoff_amount * sign,
+                    'amount': writeoff_amount,
                     'account_id': writeoff_lines[0].account_id.id,
                 }
             else:
