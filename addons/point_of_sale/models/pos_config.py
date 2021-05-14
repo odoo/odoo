@@ -595,7 +595,7 @@ class PosConfig(models.Model):
         self = self.sudo()
         if not companies:
             companies = self.env['res.company'].search([])
-        for company in companies:
+        for company in companies.filtered('account_default_pos_receivable_account_id'):
             if company.chart_template_id:
                 cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
                 pos_receivable_account = company.account_default_pos_receivable_account_id
