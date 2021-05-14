@@ -56,6 +56,7 @@
             'mail/static/src/scss/variables.scss',
         ],
         'web.assets_backend': [
+            'mail/static/src/js/core/dialog.js',
             'mail/static/src/js/core/translation.js',
             'mail/static/src/js/many2many_tags_email.js',
             'mail/static/src/js/m2x_avatar_user.js',
@@ -338,6 +339,7 @@
             'mail/static/src/utils/throttle/throttle_tests.js',
             'mail/static/src/utils/timer/timer_tests.js',
             'mail/static/src/widgets/form_renderer/form_renderer_tests.js',
+            'mail/static/src/widgets/list_view/list_view_tests.js',
             'mail/static/src/widgets/notification_alert/notification_alert_tests.js',
         ],
         'web.qunit_mobile_suite_tests': [

@@ -375,6 +375,7 @@ var BasicActivity = AbstractField.extend({
             this.$('.o_activity_selected').removeClass('o_activity_selected');
             $actLi.toggleClass('o_activity_selected');
             $panel.collapse('toggle');
+            $panel.find('#activity_feedback').focus();
 
         } else if (!$markDoneBtn.data('bs.popover')) {
             $markDoneBtn.popover({
@@ -416,6 +417,11 @@ var BasicActivity = AbstractField.extend({
     _onMarkActivityDoneActions: function ($btn, $form, activityID) {
         var self = this;
         $form.find('#activity_feedback').val(self._draftFeedback[activityID]);
+        $form.on('keydown', '#activity_feedback', function (ev) {
+            if (ev.key === 'Enter') {
+                ev.stopPropagation(); // Prevent list view actions
+            }
+        });
         $form.on('click', '.o_activity_popover_done', function (ev) {
             ev.stopPropagation();
             self._markActivityDone({
@@ -423,12 +429,32 @@ var BasicActivity = AbstractField.extend({
                 feedback: $form.find('#activity_feedback').val(),
             });
         });
+        $form.on('keydown', '.o_activity_popover_done', function (ev) {
+            if (ev.key === 'Enter') {
+                ev.stopPropagation(); // Prevent list view actions
+                ev.preventDefault();
+                self._markActivityDone({
+                    activityID: activityID,
+                    feedback: $form.find('#activity_feedback').val(),
+                });
+            }
+        });
         $form.on('click', '.o_activity_popover_done_next', function (ev) {
             ev.stopPropagation();
             self._markActivityDoneAndScheduleNext({
                 activityID: activityID,
                 feedback: $form.find('#activity_feedback').val(),
             });
+        });
+        $form.on('keydown', '.o_activity_popover_done_next', function (ev) {
+            if (ev.key === 'Enter') {
+                ev.stopPropagation(); // Prevent list view actions
+                ev.preventDefault();
+                self._markActivityDoneAndScheduleNext({
+                    activityID: activityID,
+                    feedback: $form.find('#activity_feedback').val(),
+                });
+            }
         });
         $form.on('click', '.o_activity_popover_discard', function (ev) {
             ev.stopPropagation();
