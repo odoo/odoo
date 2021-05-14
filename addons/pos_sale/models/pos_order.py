@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import float_compare, float_is_zero
 
 
 class PosOrder(models.Model):
@@ -70,14 +71,26 @@ class PosOrder(models.Model):
             # updating the demand value
             so_lines = order.lines.mapped('sale_order_line_id')
             so_lines.flush(['qty_delivered'])
+            # track the waiting pickings
+            waiting_picking_ids = set()
             for so_line in so_lines:
                 for stock_move in so_line.move_ids:
-                    if not stock_move.picking_id.state in ['waiting', 'confirmed', 'assigned']:
+                    picking = stock_move.picking_id
+                    if not picking.state in ['waiting', 'confirmed', 'assigned']:
                         continue
                     new_qty = so_line.product_uom_qty - so_line.qty_delivered
-                    if new_qty < 0:
+                    if float_compare(new_qty, 0, precision_rounding=stock_move.product_uom.rounding) <= 0:
                         new_qty = 0
                     stock_move.product_uom_qty = new_qty
+                    waiting_picking_ids.add(picking.id)
+
+            def is_product_uom_qty_zero(move):
+                return float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding)
+
+            # cancel the waiting pickings if each product_uom_qty of move is zero
+            for picking in self.env['stock.picking'].browse(waiting_picking_ids):
+                if all(is_product_uom_qty_zero(move) for move in picking.move_lines):
+                    picking.action_cancel()
 
         return order_ids
 
