@@ -20,7 +20,7 @@ models.load_models([{
   loaded: product_model.loaded,
 }]);
 
-models.load_fields("product.product", "invoice_policy");
+models.load_fields("product.product", ["invoice_policy", "type"]);
 
 var super_order_model = models.Order.prototype;
 models.Order = models.Order.extend({
