@@ -37,7 +37,7 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
         for sale_line in self:
-            sale_line.qty_delivered += sum([pos_line.qty for pos_line in sale_line.pos_order_line_ids], 0)
+            sale_line.qty_delivered += sum([pos_line.qty for pos_line in sale_line.pos_order_line_ids if sale_line.product_id.type != 'service'], 0)
 
     @api.depends('pos_order_line_ids.qty')
     def _get_invoice_qty(self):
