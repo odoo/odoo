@@ -24,7 +24,12 @@
                             <div class="text-muted">
                                 This product will be applied when down payment is made
                             </div>
-                            <field name="down_payment_product_id" domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <field
+                                name="down_payment_product_id"
+                                domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                                context="{'default_type': 'service', 'default_taxes_id': False }"
+                                required="1"
+                            />
                         </div>
                     </div>
                 </div>
