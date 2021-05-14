@@ -312,7 +312,7 @@ class PurchaseOrderLine(models.Model):
 
         not_ppg_cancel_lines = self.filtered(lambda line: not line.propagate_cancel)
         not_ppg_cancel_lines.move_dest_ids.write({'procure_method': 'make_to_stock'})
-        not_ppg_cancel_lines.move_dest_ids.recompute_state()
+        not_ppg_cancel_lines.move_dest_ids._recompute_state()
 
         return super().unlink()
 
