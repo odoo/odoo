@@ -48,7 +48,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
      *
      * @override
      */
-    commitChanges: function () {
+    commitChanges: async function () {
         var self = this;
         if (this.mode === 'readonly' || !this.isRendered) {
             return this._super();
@@ -60,7 +60,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
 
         var $editable = this.wysiwyg.getEditable();
-
+        if (this.wysiwyg.snippetsMenu) {
+            await this.wysiwyg.snippetsMenu.cleanForSave();
+        }
         return this.wysiwyg.saveModifiedImages(this.$content).then(function () {
             self._isDirty = self.wysiwyg.isDirty();
 
