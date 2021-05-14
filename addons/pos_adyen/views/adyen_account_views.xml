@@ -21,7 +21,6 @@
         </field>
     </record>
 
-
     <record id="adyen_store_view_form" model="ir.ui.view">
         <field name="name">adyen.store.view.form</field>
         <field name="model">adyen.store</field>
@@ -29,6 +28,7 @@
             <form string="Adyen Store">
                 <sheet>
                     <group>
+                        <field name="store_reference" invisible="1" />
                         <field name="store_uuid" attrs="{'invisible': [('id', '=', False)]}"/>
                         <field name="name" attrs="{'readonly': [('id', '!=', False)]}"/>
                         <field name="phone_number" attrs="{'readonly': [('id', '!=', False)]}"/>
