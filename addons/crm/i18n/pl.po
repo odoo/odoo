@@ -202,6 +202,8 @@ msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
+"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> w </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -324,7 +326,7 @@ msgstr "Aktywne"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_tomerge_ids
 msgid "Active Leads"
-msgstr ""
+msgstr "Aktywne sygnały"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_ids
@@ -384,7 +386,7 @@ msgstr "Typy czynności"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Activity by"
-msgstr ""
+msgstr "Działanie "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -477,7 +479,7 @@ msgstr "Przypisane do"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
 msgid "Assignment Date"
-msgstr ""
+msgstr "Data przypisania"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -503,12 +505,12 @@ msgstr "Czarna lista"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Telefon na czarnej liście to telefon komórkowy"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Telefon na czarnej liście to telefon"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -687,7 +689,7 @@ msgstr "Konfiguracja"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Configure a custom domain"
-msgstr ""
+msgstr "Skonfiguruj domenę niestandardową"
 
 #. module: crm
 #. openerp-web
@@ -824,6 +826,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
 msgstr ""
+"Utwórz żądanie wyszukiwania sygnałów bezpośrednio z potoku możliwości."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -996,6 +999,8 @@ msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
 msgstr ""
+"Czy wiesz, że wiadomości e-mail wysyłane na alias zespołu sprzedaży generują"
+" możliwości w Twoim potoku sprzedaży?"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
@@ -2099,7 +2104,7 @@ msgstr "Liczba błędów"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
 msgid "Number of leads and opportunities assigned this last month."
-msgstr ""
+msgstr "Liczba sygnałów i możliwości przypisanych w zeszłym miesiącu."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -2133,6 +2138,10 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
+"Silnik sztucznej inteligencji Odoo przewiduje wskaźnik sukcesu każdej okazji"
+" na podstawie Twojej historii. Zawsze możesz ręcznie zaktualizować wskaźnik "
+"sukcesu, ale jeśli pozwolisz Odoo wykonać swoją pracę, wynik jest "
+"aktualizowany, gdy szansa rośnie w Twoim cyklu sprzedaży."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -2460,7 +2469,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
 msgid "Prorated Revenue"
-msgstr ""
+msgstr "Przychody proporcjonalne"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -2573,7 +2582,7 @@ msgstr "Zespół sprzedaży"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Sales Team Settings"
-msgstr ""
+msgstr "Ustawienia zespołu sprzedaży"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
@@ -2882,7 +2891,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_recurring_plan_check_number_of_months
 msgid "The number of month can't be negative."
-msgstr ""
+msgstr "Liczba miesięcy nie może być ujemna."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_user_id
@@ -3120,7 +3129,7 @@ msgstr "Licznik nieprzeczytanych wiadomości"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Update Probabilities"
-msgstr ""
+msgstr "Zaktualizuj prawdopodobieństwa"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
@@ -3159,6 +3168,12 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"Skorzystaj z sygnałów, jeśli potrzebujesz etapu kwalifikacji przed "
+"utworzeniem szansy sprzedaży lub klienta. Może to być otrzymana wizytówka, "
+"formularz kontaktowy wypełniony w Twojej witrynie lub importowany plik "
+"niewykwalifikowanych potencjalnych klientów itp. Po zakwalifikowaniu sygnał "
+"można przekształcić w możliwość biznesową i / lub nowego klienta w książce "
+"adresowej."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -3263,7 +3278,7 @@ msgstr "Sukces"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__won_count
 msgid "Won Count"
-msgstr ""
+msgstr "Ilość wygranych"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_won

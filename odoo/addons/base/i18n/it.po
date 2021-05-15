@@ -7793,7 +7793,7 @@ msgstr "- Questo modulo non crea menù."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not create report."
-msgstr "- Questo modulo non crea resoconti."
+msgstr "- Questo modulo non crea report."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -8217,7 +8217,7 @@ msgstr "<strong>Confermare la password per proseguire</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
 msgid "<strong>Reports :</strong>"
-msgstr "<strong>Resoconti:</strong>"
+msgstr "<strong>Report:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -9942,7 +9942,7 @@ msgstr "Gestione immobilizzazioni"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__report_ids
 msgid "Associated reports"
-msgstr "Documenti associati"
+msgstr "Report associati"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_association
@@ -13566,6 +13566,8 @@ msgid ""
 "Domain on non-relational field \"%(name)s\" makes no sense "
 "(domain:%(domain)s)"
 msgstr ""
+"Non ha senso un dominio su un campo non relazionale \"%(name)s\" (dominio: "
+"%(domain)s)"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -14619,6 +14621,8 @@ msgstr ""
 msgid ""
 "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s"
 msgstr ""
+"Il campo \"%(field)s\", trovato nel nodo \"groupby\", non esiste nel modello"
+" %(model)s"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -14627,6 +14631,8 @@ msgid ""
 "Field '%(name)s' found in 'groupby' node can only be of type many2one, found"
 " %(type)s"
 msgstr ""
+"Il campo \"%(name)s\", trovato nel nodo \"groupby\", può essere solo di tipo"
+" molti a uno, trovato %(type)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__help
@@ -15105,6 +15111,8 @@ msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"Trovati più di 10 errori e più di uno ogni 10 record, è stato interrotto per"
+" evitare di mostrarne troppi."
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -16537,6 +16545,8 @@ msgid ""
 "Image size excessive, uploaded images must be smaller than %s million "
 "pixels."
 msgstr ""
+"L'immagine ha una dimensione eccessiva. Le immagini caricate devono essere "
+"inferiori a %s milioni di pixel. "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -16892,7 +16902,7 @@ msgstr ""
 #: code:addons/models.py:0
 #, python-format
 msgid "Insufficient fields for Calendar View!"
-msgstr "Campi insufficienti per la visualizzazione del Calendario!"
+msgstr "Campi non sufficienti per la vista calendario."
 
 #. module: base
 #: code:addons/models.py:0
@@ -16901,8 +16911,8 @@ msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
 "or a date_delay"
 msgstr ""
-"Campi insufficienti per visualizzare il Calendario per %s, manca una data di"
-" fine (date_stop) o un periodo (date_delay)"
+"Campi non sufficienti per generare una vista calendario per %s, date_stop o "
+"date_delay mancanti"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__integer
@@ -17095,6 +17105,8 @@ msgid ""
 "Invalid inheritance mode: if the mode is 'extension', the view must extend "
 "an other view"
 msgstr ""
+"Modo di ereditarietà non valido: se è una \"estensione\", la vista deve "
+"estendere un'altra vista"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_ui_view_qweb_required_key
@@ -17888,7 +17900,7 @@ msgstr "Avvia Procedura guidata di configurazione"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__address_format
 msgid "Layout in Reports"
-msgstr "Layout nei Report"
+msgstr "Struttura nei report"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_enrich
@@ -19776,13 +19788,13 @@ msgstr "Non aggiornabile"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Non-relational field %r in dependency %r"
-msgstr "Campo %r non relazionale per la dipendenza %r"
+msgstr "Campo %r non relazionale nella dipendenza %r"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
-msgstr "Nome di campo '%s' non relazionale per il campo connesso '%s'"
+msgstr "Nome campo non relazionale \"%s\" nel campo correlato \"%s\""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_testing_utilities
@@ -19863,7 +19875,7 @@ msgstr "Diritti di accesso non sufficienti per l'ID esterno:"
 #: code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Note: this might be a multi-company issue."
-msgstr ""
+msgstr "Nota: potrebbe essere un problema multi azienda."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -21552,6 +21564,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Viene impiegato solo se la vista eredita da un'altra vista (inherit_id non è falso/nullo).\n"
+"\n"
+"* Se estensione (predefinito), ed è richiesta la vista, viene cercata la\n"
+"primaria più vicina (via inherit_id). Quindi vengono applicate, con il\n"
+"suo modello, tutte quelle che ereditano dalla vista stessa\n"
+"* Se primario, viene pienamente risolta la vista primaria più vicina (anche\n"
+"se usa un modello diverso), quindi vengono applicate le specifiche\n"
+"di ereditarietà della vista stessa (<xpath/>) usando il risultato come fosse\n"
+"l'attuale architettura.\n"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -21671,7 +21692,7 @@ msgstr "Password facoltativa per autenticazione SMTP"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Optional timezone name"
-msgstr ""
+msgstr "Nome facoltativo per il fuso orario"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_user
@@ -22733,7 +22754,7 @@ msgstr "Larghezza pagina di stampa (mm)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__print_report_name
 msgid "Printed Report Name"
-msgstr "Nome resoconto stampato"
+msgstr "Nome report stampato"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__priority
@@ -23511,7 +23532,7 @@ msgstr "Azienda correlata"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related
 msgid "Related Field"
-msgstr "Campo collegato"
+msgstr "Campo correlato"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation
@@ -23531,19 +23552,19 @@ msgstr "Azione server correlata"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related_field_id
 msgid "Related field"
-msgstr "Campo collegato"
+msgstr "Campo correlato"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
-msgstr ""
+msgstr "Il campo correlato \"%s\" non possiede il comodello \"%s\""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
-msgstr "Il campo collegato \"%s\" non possiede il tipo \"%s\""
+msgstr "Il campo correlato \"%s\" non possiede il tipo \"%s\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__relation_field
@@ -23653,12 +23674,12 @@ msgstr "Ripeti ogni x."
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Report"
-msgstr "Resoconto"
+msgstr "Report"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
 msgid "Report Action"
-msgstr "Azione resoconto"
+msgstr "Azione report"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_file
@@ -23668,33 +23689,33 @@ msgstr "File report"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_footer
 msgid "Report Footer"
-msgstr "Piè di pagina documento"
+msgstr "Piè di pagina report"
 
 #. module: base
 #: model:ir.model,name:base.model_report_layout
 msgid "Report Layout"
-msgstr "Struttura resoconto"
+msgstr "Struttura report"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Model"
-msgstr "Modello resoconto"
+msgstr "Modello report"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__report_type
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Type"
-msgstr "Tipo resoconto"
+msgstr "Tipo report"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Xml"
-msgstr "Resoconto XML"
+msgstr "XML del report"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view_tree
 msgid "Report xml"
-msgstr "Resoconto XML"
+msgstr "XML del report"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_reporting
@@ -23714,7 +23735,7 @@ msgstr "Rendiconti per localizzazione argentina"
 #: model:ir.ui.menu,name:base.menu_ir_action_report
 #: model:ir.ui.menu,name:base.reports_menuitem
 msgid "Reports"
-msgstr "Resoconti"
+msgstr "Report"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__request
@@ -24973,7 +24994,7 @@ msgstr "Social network LinkedIn"
 #: model:ir.module.category,name:base.module_category_marketing_social_marketing
 #: model:ir.module.module,shortdesc:base.module_social
 msgid "Social Marketing"
-msgstr ""
+msgstr "Marketing social"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_media
@@ -25040,7 +25061,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__sort
 msgid "Sort"
-msgstr "Ordinare"
+msgstr "Ordinamento"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_form
@@ -25994,8 +26015,8 @@ msgid ""
 "The corresponding related field, if any. This must be a dot-separated list "
 "of field names."
 msgstr ""
-"Il campo relazionale corrispondente, se del caso. Deve essere un elenco di "
-"nomi di campi separati da punti."
+"Campo correlato corrispondente, se esistente. Deve essere un elenco di nomi "
+"campo separati da punti."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_unique_name
@@ -27495,6 +27516,8 @@ msgstr "Errore sconosciuto durante l'importazione:"
 #, python-format
 msgid "Unknown field \"%(field)s\" in \"group_by\" value in %(attribute)s=%(value)r"
 msgstr ""
+"Campo \"%(field)s\" sconosciuto nel valore \"group_by\" per "
+"%(attribute)s=%(value)r"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -27512,7 +27535,7 @@ msgstr "Campo %r sconosciuto per la dipendenza %r"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
-msgstr "Nome campo \"%s\" sconosciuto nel campo relazione \"%s\""
+msgstr "Nome campo \"%s\" sconosciuto nel campo correlato \"%s\""
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:0
@@ -28136,7 +28159,7 @@ msgstr "Vedi e crea report"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__mode
 msgid "View inheritance mode"
-msgstr "Modo ereditarietà della vista"
+msgstr "Modo di ereditarietà della vista"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_livechat
