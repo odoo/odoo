@@ -63,6 +63,7 @@ class ir_cron(models.Model):
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
+    is_running = fields.Boolean(string='Running', help='Is True when the cron is currently running.', compute='_compute_is_running', groups='base.group_no_one')
 
     @api.model
     def create(self, values):
@@ -82,6 +83,15 @@ class ir_cron(models.Model):
             cron.with_user(cron.user_id).with_context(lastcall=cron.lastcall).ir_actions_server_id.run()
             cron.lastcall = fields.Datetime.now()
         return True
+
+    def _compute_is_running(self):
+        for cron in self:
+            is_running = False
+            try:
+                cron._try_lock()
+            except UserError:
+                is_running = True
+            cron.is_running = is_running
 
     @classmethod
     def _process_jobs(cls, db_name):
