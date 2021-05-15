@@ -8,6 +8,7 @@
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
+# Petra <bop@odoo.com>, 2020
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Simone Bernini <simone@aperturelabs.it>, 2020
@@ -17,7 +18,6 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2020
-# Petra <bop@odoo.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
 msgid ""
@@ -1561,7 +1561,7 @@ msgstr "Allegato"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__copy_ids
 msgid "Attachment using a copy of me"
-msgstr "Allegato"
+msgstr "Allegato a partire da una copia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -5177,7 +5177,7 @@ msgstr "Etichetta menù"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__copy_ids
 msgid "Menu using a copy of me"
-msgstr "Menu"
+msgstr "Menù a partire da una copia"
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -5647,6 +5647,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Viene impiegato solo se la vista eredita da un'altra vista (inherit_id non è falso/nullo).\n"
+"\n"
+"* Se estensione (predefinito), ed è richiesta la vista, viene cercata la\n"
+"primaria più vicina (via inherit_id). Quindi vengono applicate, con il\n"
+"suo modello, tutte quelle che ereditano dalla vista stessa\n"
+"* Se primario, viene pienamente risolta la vista primaria più vicina (anche\n"
+"se usa un modello diverso), quindi vengono applicate le specifiche\n"
+"di ereditarietà della vista stessa (<xpath/>) usando il risultato come fosse\n"
+"l'attuale architettura.\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -5801,7 +5810,7 @@ msgstr "Visibilità pagina"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__copy_ids
 msgid "Page using a copy of me"
-msgstr ""
+msgstr "Pagina a partire da una copia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
@@ -7516,7 +7525,7 @@ msgstr "Fuso orario"
 #: model:digest.tip,name:website.digest_tip_website_0
 #: model_terms:digest.tip,tip_description:website.digest_tip_website_0
 msgid "Tip: Engage with visitors to convert them into leads"
-msgstr ""
+msgstr "Consiglio: coinvolgi i visitatori per convertirti in contatti"
 
 #. module: website
 #: model:digest.tip,name:website.digest_tip_website_2
@@ -8084,7 +8093,7 @@ msgstr "Tipo vista"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__mode
 msgid "View inheritance mode"
-msgstr "Modo ereditarietà della vista"
+msgstr "Modo di ereditarietà della vista"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -8100,7 +8109,7 @@ msgstr "Visualizzazioni"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__copy_ids
 msgid "Views using a copy of me"
-msgstr "Vista"
+msgstr "Viste a partire da una copia"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids

@@ -2005,7 +2005,7 @@ msgstr "Completata"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Launch Next"
-msgstr "Completata - Avvia successiva"
+msgstr "Completata/Avvia successiva"
 
 #. module: mail
 #. openerp-web
@@ -2014,7 +2014,7 @@ msgstr "Completata - Avvia successiva"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr "Completata e programma successiva"
+msgstr "Completata/Programma successiva"
 
 #. module: mail
 #. openerp-web
@@ -3009,8 +3009,7 @@ msgstr "In arrivo"
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
 msgstr ""
-"Indica che questa attività è stata creata automaticamente e non da un "
-"utente. "
+"Indica che l'attività è stata creata automaticamente e non da un utente."
 
 #. module: mail
 #. openerp-web
@@ -3735,7 +3734,7 @@ msgstr "Immagine errore di consegna messaggio"
 #: model:ir.model.fields,help:mail.field_mail_mail__description
 #: model:ir.model.fields,help:mail.field_mail_message__description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr "Descrizione del messaggio: l'oggetto o la parte iniziale del corpo"
+msgstr "Descrizione messaggio: l'oggetto o la parte iniziale del corpo"
 
 #. module: mail
 #. openerp-web
@@ -3900,8 +3899,8 @@ msgstr "Modello della risorsa seguita"
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
-"Modello a cui applicare il sottotipo. Se False, questo sottotipo è applicato"
-" a tutti i modelli."
+"Modello a cui viene applicato il sottotipo. Se Falso, il sottotipo viene "
+"applicato a tutti i modelli."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model
@@ -4031,7 +4030,7 @@ msgstr "Nome"
 #: model:ir.model.fields,help:mail.field_mail_mail__record_name
 #: model:ir.model.fields,help:mail.field_mail_message__record_name
 msgid "Name get of the related document."
-msgstr "Nome ricevuto del documento collegato."
+msgstr "Nome ricevuto del documento correlato."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__name
@@ -5573,7 +5572,7 @@ msgstr "Invia"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Send Again"
-msgstr "Inviare di nuovo"
+msgstr "Invia di nuovo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__send_mail
@@ -6031,7 +6030,7 @@ msgstr "The escaped html code replacing the shortcut"
 #: model:ir.model.fields,help:mail.field_res_partner__user_id
 #: model:ir.model.fields,help:mail.field_res_users__user_id
 msgid "The internal user in charge of this contact."
-msgstr "L'utente interno responsabile di questo contatto. "
+msgstr "L'utente interno responsabile del contatto."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_model_id
@@ -6067,10 +6066,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Proprietario dei record creati al ricevimento di e-mail per questo alias. Se"
-" questo campo non è impostato, il sistema proverà a cercare il proprietario "
-"in base al mittente (campo \"Da\"). Se all'indirizzo non è associato alcun "
-"utente di sistema verrà usato l'account amministratore."
+"Proprietario dei record creati al ricevimento di e-mail per l'alias. Se il "
+"campo non è impostato, il sistema prova a cercare il proprietario in base al"
+" mittente (campo \"Da\"). Se all'indirizzo non è associato alcun utente di "
+"sistema, viene usato l'account amministratore."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -6099,7 +6098,7 @@ msgstr "La scorciatoia che deve essere sostituita nei messaggi della chat "
 #: model:ir.model.fields,help:mail.field_mail_template__model_id
 #: model:ir.model.fields,help:mail.field_mail_template_preview__model_id
 msgid "The type of document this template can be used with"
-msgstr "Il tipo di documento con il quale questo modello può essere usato"
+msgstr "Tipo di documento con il quale può essere usato il modello"
 
 #. module: mail
 #. openerp-web
@@ -6312,7 +6311,7 @@ msgstr "Tipologia"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_from
 msgid "Type of delay"
-msgstr "Tipologia ritardo"
+msgstr "Tipo di ritardo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__state
@@ -6538,7 +6537,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_active_domain
 msgid "Use active domain"
-msgstr "Utilizza dominio attivo"
+msgstr "Usa dominio attivo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_id
@@ -6548,7 +6547,7 @@ msgstr "Modello da usare"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__sequence
 msgid "Used to order subtypes."
-msgstr "Usato per ordinare i sottotipi."
+msgstr "Utilizzata per ordinare i sottotipi."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -6646,7 +6645,7 @@ msgstr "Video"
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
-msgstr "Vista"
+msgstr "Vedi"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
