@@ -13,3 +13,4 @@ Entrivis Tech Pvt. Ltd. hello@entrivistech.com https://github.com/Entrivis-Tech
 List of contributors:
 
 Krutarth Buch krutarth@entrivistech.com https://github.com/krutarthbuch
+Meet Dholakia meet@entrivistech.com https://github.com/MeetKD
