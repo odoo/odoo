@@ -3,17 +3,18 @@
 # 	* website_sale_wishlist
 # 
 # Translators:
+# Cas Vissers <casvissers@brahoo.nl>, 2017
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2021-05-11 09:27+0000\n"
+"PO-Revision-Date: 2017-07-17 09:13+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +23,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header
-msgid ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wishlist"
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid "<i class=\"fa fa-heart-o fa-2x\" role=\"img\" aria-label=\"Add to wishlist\"/>"
 msgstr ""
-"<i class=\"fa fa-heart\"/>\n"
-"                        Wenslijst"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -39,15 +36,6 @@ msgstr "<small><i class=\"fa fa-trash-o\"/> Verwijder</small>"
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
 msgstr "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Voeg toe aan whitelist\"/>"
-
-#. module: website_sale_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
-msgid ""
-"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
-"Add to wishlist"
-msgstr ""
-"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Toevoegen aan "
-"wenslijst\"/> Toevoegen aan wenslijst"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
@@ -71,9 +59,9 @@ msgid "Add to Wishlist"
 msgstr "Toevoegen aan wenslijst"
 
 #. module: website_sale_wishlist
-#: model:ir.model,name:website_sale_wishlist.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Automatisch vacuum"
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid "Add to wishlist"
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -96,9 +84,13 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__display_name
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__display_name
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
 #. module: website_sale_wishlist
 #: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
@@ -106,12 +98,20 @@ msgid "Duplicated wishlisted product for this partner."
 msgstr "Gedupliceerd wenslijst product voor deze relatie."
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template__id
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__id
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_sale_wishlist
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product____last_update
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_product_template____last_update
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist____last_update
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner____last_update
+#: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
@@ -182,6 +182,11 @@ msgid "Shop Wishlist"
 msgstr "Shop wenslijst"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.snippet_options
+msgid "Show Empty Wishlist"
+msgstr "Toon lege wenslijst."
+
+#. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_users
 msgid "Users"
 msgstr "Gebruikers"
@@ -194,5 +199,6 @@ msgstr "Website"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_partner__wishlist_ids
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_res_users__wishlist_ids
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.header_wishlist_link
 msgid "Wishlist"
 msgstr "Wenslijst"
