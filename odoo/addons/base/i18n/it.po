@@ -16327,6 +16327,8 @@ msgid ""
 "Invalid inheritance mode: if the mode is 'extension', the view must extend "
 "an other view"
 msgstr ""
+"Modo di ereditarietà non valido: se è una \"estensione\", la vista deve "
+"estendere un'altra vista"
 
 #. module: base
 #: sql_constraint:ir.ui.view:0
@@ -20771,6 +20773,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Viene impiegato solo se la vista eredita da un'altra vista (inherit_id non è falso/nullo).\n"
+"\n"
+"* Se estensione (predefinito), ed è richiesta la vista, viene cercata la\n"
+"primaria più vicina (via inherit_id). Quindi vengono applicate, con il\n"
+"suo modello, tutte quelle che ereditano dalla vista stessa\n"
+"* Se primario, viene pienamente risolta la vista primaria più vicina (anche\n"
+"se usa un modello diverso), quindi vengono applicate le specifiche\n"
+"di ereditarietà della vista stessa (<xpath/>) usando il risultato come fosse\n"
+"l'attuale architettura.\n"
 
 #. module: base
 #: sql_constraint:res.currency.rate:0
@@ -22550,7 +22561,7 @@ msgstr "Campo collegato"
 #: code:addons/base/models/ir_model.py:440
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
-msgstr ""
+msgstr "Il campo correlato \"%s\" non possiede il comodello \"%s\""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:438
@@ -22651,7 +22662,7 @@ msgstr "Ripeti ogni x."
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Report"
-msgstr "Resoconto"
+msgstr "Report"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report
@@ -26423,7 +26434,7 @@ msgstr "Campo %r sconosciuto per la dipendenza %r"
 #: code:addons/base/models/ir_model.py:426
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
-msgstr "Nome campo \"%s\" sconosciuto nel campo relazione \"%s\""
+msgstr "Nome campo \"%s\" sconosciuto nel campo correlato \"%s\""
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:361
