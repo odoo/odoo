@@ -20,9 +20,9 @@
 # Martin Trigaux, 2019
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
 # Kim Asplund <kim.asplund@gmail.com>, 2020
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2020
 # Michael Tanzi <michael.tanzi@vertel.se>, 2020
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # 
 msgid ""
 msgstr ""
@@ -30,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-10 14:44+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2021\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1062,6 +1062,11 @@ msgid ""
 "    PayUmoney payment gateway supports only INR currency.\n"
 "    "
 msgstr ""
+"\n"
+"    PayuMoney Payment Acquirer for India.\n"
+"\n"
+"    PayUmoney payment gateway supports only INR currency.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_tax_cash_basis
@@ -5121,6 +5126,11 @@ msgid ""
 "Works with Worldline keys version 2.0, contains implementation of\n"
 "payments acquirer using Worldline SIPS."
 msgstr ""
+"\n"
+"Worldline SIPS Payment Acquirer for online payments\n"
+"\n"
+"Works with Worldline keys version 2.0, contains implementation of\n"
+"payments acquirer using Worldline SIPS."
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:1091
@@ -5356,7 +5366,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "2. %a ,%A         ==&gt; Fri, Friday"
-msgstr ""
+msgstr "2. %a ,%A         ==&gt; fre, fredag"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -5391,7 +5401,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "9. %w              ==&gt; 5 ( Friday is the 6th day)"
-msgstr ""
+msgstr "9. %w              ==&gt; 5 ( fredag är den 6:e dagen)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -5581,6 +5591,9 @@ msgid ""
 "                                <span colspan=\"2\">Week of the Year: %(woy)s</span>\n"
 "                                <span colspan=\"2\">Day of the Week (0:Monday): %(weekday)s</span>"
 msgstr ""
+"<span colspan=\"2\">Dag på året: %(doy)s</span>\n"
+"                                <span colspan=\"2\">Vecka på året: %(woy)s</span>\n"
+"                                <span colspan=\"2\">Dag i vecka (0:måndag): %(weekday)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -5590,6 +5603,10 @@ msgid ""
 "                                <span colspan=\"2\">Minute: %(min)s</span>\n"
 "                                <span colspan=\"2\">Second: %(sec)s</span>"
 msgstr ""
+"<span colspan=\"2\">Timme 00-&gt;24: %(h24)s</span>\n"
+"                                <span colspan=\"2\">Timme 00-&gt;12: %(h12)s</span>\n"
+"                                <span colspan=\"2\">Minut: %(min)s</span>\n"
+"                                <span colspan=\"2\">Sekund: %(sec)s</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -6741,7 +6758,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
-msgstr ""
+msgstr "Adyen Payment Acquirer"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -7238,7 +7255,7 @@ msgstr "Författares namn"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr ""
+msgstr "Authorize.Net Payment Acquirer"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__auto_search
@@ -7832,7 +7849,7 @@ msgstr "Brunei Darussalam"
 #: model:ir.module.module,description:base.module_payment_buckaroo
 #: model:ir.module.module,shortdesc:base.module_payment_buckaroo
 msgid "Buckaroo Payment Acquirer"
-msgstr ""
+msgstr "Buckaroo Payment Acquirer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
@@ -9968,7 +9985,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
-msgstr "Ignorera"
+msgstr "Avbryt"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_discuss
@@ -11831,7 +11848,7 @@ msgstr "Franska sydterritorierna"
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Friday"
-msgstr "Fredag"
+msgstr "fredag"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__date_from
@@ -12615,7 +12632,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Here is the exported translation file:"
-msgstr ""
+msgstr "Detta är den exporterade översättningen:"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:631
@@ -15401,7 +15418,7 @@ msgstr "Monaco"
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Monday"
-msgstr "Måndag"
+msgstr "måndag"
 
 #. module: base
 #: model:res.country,name:base.mn
@@ -17037,7 +17054,7 @@ msgstr "Kontorstillbehör"
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
-msgstr ""
+msgstr "Ogone Payment Acquirer"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -17798,52 +17815,52 @@ msgstr "Betalväxel"
 #: model:ir.module.module,description:base.module_payment
 #: model:ir.module.module,summary:base.module_payment
 msgid "Payment Acquirer Base Module"
-msgstr ""
+msgstr "Payment Acquirer Base Module"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_adyen
 msgid "Payment Acquirer: Adyen Implementation"
-msgstr ""
+msgstr "Payment Acquirer: Adyen Implementation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_authorize
 msgid "Payment Acquirer: Authorize.net Implementation"
-msgstr ""
+msgstr "Payment Acquirer: Authorize.net Implementation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_buckaroo
 msgid "Payment Acquirer: Buckaroo Implementation"
-msgstr ""
+msgstr "Payment Acquirer: Buckaroo Implementation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_ogone
 msgid "Payment Acquirer: Ogone Implementation"
-msgstr ""
+msgstr "Payment Acquirer: Ogone Implementation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
 msgid "Payment Acquirer: Paypal Implementation"
-msgstr ""
+msgstr "Payment Acquirer: Paypal Implementation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payumoney
 msgid "Payment Acquirer: PayuMoney Implementation"
-msgstr ""
+msgstr "Payment Acquirer: PayuMoney Implementation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
 msgid "Payment Acquirer: Stripe Implementation"
-msgstr ""
+msgstr "Payment Acquirer: Stripe Implementation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe_sca
 msgid "Payment Acquirer: Stripe Implementation for the EU PSD2"
-msgstr ""
+msgstr "Payment Acquirer: Stripe Implementation for the EU PSD2"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
 msgid "Payment Acquirer: Transfer Implementation"
-msgstr ""
+msgstr "Payment Acquirer: Transfer Implementation"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_followup
@@ -17859,7 +17876,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_payment_paypal
 #: model:ir.module.module,shortdesc:base.module_payment_paypal
 msgid "Paypal Payment Acquirer"
-msgstr ""
+msgstr "Paypal Payment Acquirer"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_payroll
@@ -17875,7 +17892,7 @@ msgstr "Löner"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payumoney
 msgid "PayuMoney Payment Acquirer"
-msgstr ""
+msgstr "PayuMoney Payment Acquirer"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -20249,13 +20266,13 @@ msgstr "Gata 2"
 #: model:ir.module.module,description:base.module_payment_stripe
 #: model:ir.module.module,shortdesc:base.module_payment_stripe
 msgid "Stripe Payment Acquirer"
-msgstr ""
+msgstr "Stripe Payment Acquirer"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_stripe_sca
 #: model:ir.module.module,shortdesc:base.module_payment_stripe_sca
 msgid "Stripe Payment Acquirer - Strong Customer Authentication Update"
-msgstr ""
+msgstr "Stripe Payment Acquirer - Strong Customer Authentication Update"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -20315,7 +20332,7 @@ msgstr "Sammandrag"
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Sunday"
-msgstr "Söndag"
+msgstr "söndag"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__params
@@ -22061,7 +22078,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_payment_transfer
 #: model:ir.module.module,shortdesc:base.module_payment_transfer
 msgid "Transfer Payment Acquirer"
-msgstr ""
+msgstr "Transfer Payment Acquirer"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
@@ -23335,7 +23352,7 @@ msgstr ""
 #. module: base
 #: selection:res.lang,week_start:0
 msgid "Wednesday"
-msgstr "Onsdag"
+msgstr "onsdag"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
