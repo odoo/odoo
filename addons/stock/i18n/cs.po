@@ -78,6 +78,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
+" * Návrh: Převod zatím není potvrzen. Rezervace se neuplatňuje.\n"
+" * Čeká se na další operaci: Tento převod čeká na jinou operaci, než bude připraven.\n"
+" * Čeká: Tento převod čeká na dostupnost některých produktů.\n"
+"(a) Zásada přepravy je \"Co nejdříve\": Žádný výrobek nemohl být rezervován.\n"
+"(b) Zásada přepravy je \"Až budou všechny produkty připraveny\": Ne všechny produkty mohly být rezervovány.\n"
+" * Připraveno: Převod je připraven ke zpracování.\n"
+"(a) Zásada přepravy je \"Co nejdříve\": alespoň jeden výrobek byl rezervován.\n"
+"(b) Zásada přepravy je \"Až budou všechny produkty připraveny\": všechny produkty byly rezervovány.\n"
+" * Hotovo: Převod byl zpracován.\n"
+" * Zrušeno: Převod byl zrušen."
 
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
@@ -5963,6 +5973,8 @@ msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
 msgstr ""
+"Technické pole sloužící k zobrazení omezení vlastnictví kvantifikátorů, "
+"které je třeba vzít v úvahu při označování tohoto kroku jako \"hotový\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__price_unit
@@ -6347,6 +6359,10 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
+"Zdá se, že tento výběr je zřetězený s jinou operací. Pokud později obdržíte "
+"zboží, které nyní vracíte, ujistěte se, že jste vrácenou vychystávku "
+"<b>obrátili</b>, abyste se vyhnuli opětovnému použití logistických pravidel "
+"(což by vytvořilo duplicitní operace)."
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
