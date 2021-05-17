@@ -355,13 +355,22 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(tools.float_compare(lead_tag_1_2.automated_probability, 28.05, 2), 0)
 
         # set email_state for each lead and update probabilities
-        leads.filtered(lambda lead: lead.id % 2 == 0).email_state = 'correct'
-        leads.filtered(lambda lead: lead.id % 2 == 1).email_state = 'incorrect'
+        # for Team 1
+        leads[0].email_state = state_values[1] # lost
+        leads[1].email_state = state_values[1] # lost
+        leads[2].email_state = state_values[0] # won
+        # for Team 2
+        leads[5].email_state = state_values[0] # lost
+        leads[6].email_state = state_values[0] # lost
+        leads[7].email_state = state_values[0] # won
+
+        leads[3].email_state = state_values[1]
+        leads[8].email_state = state_values[0]
         Lead._cron_update_automated_probabilities()
         leads_with_tags.invalidate_cache()
 
-        self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
-        self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
+        self.assertEqual(tools.float_compare(leads[3].automated_probability, 2.25, 2), 0)
+        self.assertEqual(tools.float_compare(leads[8].automated_probability, 1.29, 2), 0)
 
         # remove all pls fields
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", False)
@@ -376,8 +385,8 @@ class TestCRMPLS(TransactionCase):
         Lead._cron_update_automated_probabilities()
         leads_with_tags.invalidate_cache()
 
-        self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
-        self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
+        self.assertEqual(tools.float_compare(leads[3].automated_probability, 2.25, 2), 0)
+        self.assertEqual(tools.float_compare(leads[8].automated_probability, 1.29, 2), 0)
 
     def test_settings_pls_start_date(self):
         # We test here that settings never crash due to ill-configured config param 'crm.pls_start_date'
