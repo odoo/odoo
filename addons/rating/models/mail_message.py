@@ -30,7 +30,7 @@ class MailMessage(models.Model):
 
     def message_format(self):
         message_values = super().message_format()
-        ratings = self.env['rating.rating'].search(
+        ratings = self.env['rating.rating'].sudo().search(
             [('message_id', 'in', self.ids), ('consumed', '=', True)])
         if not ratings:
             return message_values
