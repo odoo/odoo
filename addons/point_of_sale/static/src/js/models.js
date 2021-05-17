@@ -3307,7 +3307,7 @@ exports.Order = Backbone.Model.extend({
             if (!only_cash || (only_cash && has_cash)) {
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var total = round_pr(remaining, this.pos.cash_rounding[0].rounding);
-                var sign = total > 0 ? 1.0 : -1.0;
+                var sign = remaining > 0 ? 1.0 : -1.0;
 
                 var rounding_applied = total - remaining;
                 rounding_applied *= sign;
