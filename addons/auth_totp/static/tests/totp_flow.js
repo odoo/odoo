@@ -39,10 +39,10 @@ tour.register('totp_tour_setup', {
     url: '/web'
 }, [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
-    trigger: 'button[name=totp_enable_wizard]',
+    trigger: 'button[name=action_totp_enable_wizard]',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: 'div:contains("confirm your password")',
+    trigger: 'div:contains("enter your password")',
     run: () => {},
 }, {
     content: "Input password",
@@ -53,18 +53,21 @@ tour.register('totp_tour_setup', {
     trigger: "button:contains(Confirm Password)",
 }, {
     content: "Check the wizard has opened",
-    trigger: 'div:contains("Scan the image below")',
+    trigger: 'li:contains("When requested to do so")',
     run: () => {}
 }, {
     content: "Get secret from collapsed div",
-    trigger: 'a:contains("show the code")',
+    trigger: 'a:contains("Cannot scan it?")',
     run(helpers) {
-        const secret = this.$anchor.closest('div').find('code').text();
+        const $secret = this.$anchor.closest('div').find('span[name=secret]');
+        const $copyBtn = $secret.find('button');
+        $copyBtn.remove();
+        const secret = $secret.text();
         ajax.jsonRpc('/totphook', 'call', {
             secret
         }).then((token) => {
             helpers._text(helpers._get_action_values('input[name=code]'), token);
-            helpers._click(helpers._get_action_values('button.btn-primary:contains(Enable)'));
+            helpers._click(helpers._get_action_values('button.btn-primary:contains(Activate)'));
             $('body').addClass('got-token')
         });
     }
@@ -77,7 +80,7 @@ tour.register('totp_tour_setup', {
 ...openUserProfileAtSecurityTab(),
 {
     content: "Check that the button has changed",
-    trigger: 'button:contains(Disable two-factor authentication)',
+    trigger: 'button[name=action_totp_disable]',
     run: () => {}
 }]);
 
@@ -109,7 +112,7 @@ tour.register('totp_login_enabled', {
             helpers._text(helpers._get_action_values(), token);
             // FIXME: is there a way to put the button as its own step trigger without
             //        the tour straight blowing through and not waiting for this?
-            helpers._click(helpers._get_action_values('button:contains("Verify")'));
+            helpers._click(helpers._get_action_values('button:contains("Login")'));
         });
     }
 }, {
@@ -117,16 +120,16 @@ tour.register('totp_login_enabled', {
     trigger: ".o_user_menu .oe_topbar_name",
     run: () => {}
 },
-// now go and disable totp would be annoying to do in a separate tour
+// now go and disable two-factor authentication would be annoying to do in a separate tour
 // because we'd need to login & totp again as HttpCase.authenticate can't
 // succeed w/ totp enabled
 ...openUserProfileAtSecurityTab(),
 {
     content: "Open totp wizard",
-    trigger: 'button[name=totp_disable]',
+    trigger: 'button[name=action_totp_disable]',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: 'div:contains("confirm your password")',
+    trigger: 'div:contains("enter your password")',
     run: () => {},
 }, {
     content: "Input password",
@@ -140,7 +143,7 @@ tour.register('totp_login_enabled', {
 ...openUserProfileAtSecurityTab(),
 {
     content: "Check that the button has changed",
-    trigger: 'button:contains(Enable two-factor authentication)',
+    trigger: 'button[name=action_totp_enable_wizard]',
     run: () => {}
 }]);
 
@@ -212,20 +215,17 @@ tour.register('totp_admin_disables', {
         }
         const $row = this.$anchor.closest('tr');
         const sel = $row.find('.o_list_record_selector input[type=checkbox]');
-        const totp = $row[0].children[columns['totp_enabled']].querySelector('input');
-        if (totp.checked) {
-            helpers.click(sel);
-        }
+        helpers.click(sel);
     }
 }, {
     content: "Open Actions menu",
     trigger: 'button.o_dropdown_toggler:contains("Action")'
 }, {
     content: "Select totp remover",
-    trigger: 'a.dropdown-item:contains(Disable TOTP on users)'
+    trigger: 'a.dropdown-item:contains(Disable two-factor authentication)'
 }, { // enhanced security yo
     content: "Check that we have to enter enhanced security mode",
-trigger: 'div:contains("confirm your password")',
+trigger: 'div:contains("enter your password")',
     run: () => {},
 }, {
     content: "Input password",
@@ -235,13 +235,13 @@ trigger: 'div:contains("confirm your password")',
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
 }, {
-    content: "check that demo user has been de-totp'd",
+    content: "open the user's form",
     trigger: "td.o_data_cell:contains(demo)",
-    run: function () {
-        const totpcell = this.$anchor.closest('tr')[0].children[columns['totp_enabled']];
-        if (totpcell.querySelector('input').checked) {
-            throw new Error("totp should have been disabled on demo user");
-        }
-    }
+}, {
+    content: "go to Account security Tab",
+    trigger: "a.nav-link:contains(Account Security)",
+}, {
+    content: "check that demo user has been de-totp'd",
+    trigger: "button:contains(Invite to use 2FA)",
 }])
 });
