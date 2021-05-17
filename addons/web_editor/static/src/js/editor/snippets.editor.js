@@ -2261,6 +2261,13 @@ var SnippetsMenu = Widget.extend({
                     self._activateSnippet(false, true); // arg2 removes spinner on snippets on drag
                     self._activateInsertionZones($selectorSiblings, $selectorChildren);
 
+                    if ($toInsert.hasClass('o_we_has_generic_preview')) {
+                        const genericPreview = document.createElement('div')
+                        genericPreview.classList.add('o_we_generic_preview');
+                        genericPreview.innerHTML = 'Snippet preview'
+                        $toInsert.prepend(genericPreview);
+                    }
+
                     self.getEditableArea().find('.oe_drop_zone').droppable({
                         over: function () {
                             if (dropped) {
@@ -2300,6 +2307,7 @@ var SnippetsMenu = Widget.extend({
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.options.wysiwyg.odooEditor.automaticStepSkipStack();
                     $toInsert.removeClass('oe_snippet_body');
+                    $toInsert.find('.o_we_generic_preview').remove();
                     self.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
 
                     if (!dropped && ui.position.top > 3 && ui.position.left + ui.helper.outerHeight() < self.el.getBoundingClientRect().left) {
