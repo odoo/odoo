@@ -4418,12 +4418,19 @@ class AccountMoveLine(models.Model):
                     if line.tax_repartition_line_id:
                         # Tax line.
                         grouping_key = self.env['account.partial.reconcile']._get_cash_basis_tax_line_grouping_key_from_record(line)
-                        account_vals_to_fix[grouping_key] = {
-                            **vals,
-                            'account_id': line.account_id.id,
-                            'tax_base_amount': line.tax_base_amount,
-                            'tax_repartition_line_id': line.tax_repartition_line_id.id,
-                        }
+                        if grouping_key in account_vals_to_fix:
+                            account_vals_to_fix[grouping_key].update({
+                                'debit': account_vals_to_fix[grouping_key]['debit'] + vals['debit'],
+                                'credit': account_vals_to_fix[grouping_key]['credit'] + vals['credit'],
+                                'tax_base_amount': account_vals_to_fix[grouping_key]['tax_base_amount'] + line.tax_base_amount,
+                            })
+                        else:
+                            account_vals_to_fix[grouping_key] = {
+                                **vals,
+                                'account_id': line.account_id.id,
+                                'tax_base_amount': line.tax_base_amount,
+                                'tax_repartition_line_id': line.tax_repartition_line_id.id,
+                            }
                     elif line.tax_ids:
                         # Base line.
                         account_to_fix = line.company_id.account_cash_basis_base_account_id
