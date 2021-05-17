@@ -118,9 +118,11 @@ var SectionAndNoteFieldOne2Many = FieldOne2Many.extend({
 // We want a FieldChar for section,
 // and a FieldText for the rest (product and note).
 var SectionAndNoteFieldText = function (parent, name, record, options) {
-    var isSection = record.data.display_type === 'line_section';
-    var isNote = record.data.display_type === 'line_note';
-    var Constructor = isSection ? FieldChar : isNote ? FieldHtml : ListFieldText;
+    const isPurchaseOrderLine = record.model === 'purchase.order.line';
+    const isSection = record.data.display_type === 'line_section';
+    const isNote = record.data.display_type === 'line_note';
+    // We do not want the html functionality for the purchase scope
+    const Constructor = isSection ? FieldChar : isNote && !isPurchaseOrderLine ? FieldHtml : ListFieldText;
     return new Constructor(parent, name, record, options);
 };
 
