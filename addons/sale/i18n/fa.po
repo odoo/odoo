@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-09 10:27+0000\n"
-"PO-Revision-Date: 2021-05-10 14:02+0430\n"
+"PO-Revision-Date: 2021-05-15 18:20+0430\n"
 "Last-Translator: Amir <a.soleimani@kenevist.ir>\n"
 "Language-Team: English <a.soleimani@kenevist.ir>\n"
 "MIME-Version: 1.0\n"
@@ -546,13 +546,13 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'quotation' if object.state in ('draft', 'sent')"
-" else 'order'\n"
+"        % set doc_name = 'پیشنهاد قیمت' if object.state in ('draft', 'sent')"
+" else 'سفارش'\n"
 "        سلام،\n"
 "        <br/><br/>\n"
-"        پیش‌فاکتور شما\n"
+"        \n"
 "        % if ctx.get('proforma'):\n"
-"            برای ${doc_name} <strong>${object.name}</strong"
+"            پیش‌فاکتور شما برای ${doc_name} <strong>${object.name}</strong"
 ">\n"
 "            % if object.origin:\n"
 "                (با شناسه‌ی: ${object.origin} )\n"
@@ -560,7 +560,7 @@ msgstr ""
 "            به مبلغ  <strong>${format_amount(object.amount_total,"
 " object.pricelist_id.currency_id)}</strong> آماده است.\n"
 "        % else:\n"
-"            ${doc_name} <strong>${object.name}</strong>\n"
+"            ${doc_name} <strong>${object.name}</strong> شما\n"
 "            % if object.origin:\n"
 "                (با شناسه‌ی: ${object.origin} )\n"
 "            % endif\n"
@@ -2802,7 +2802,7 @@ msgstr ""
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
-msgstr "فقط یک مقدار سفارشی در هر مقدار ویژگی در هر ردیف سفارش فروش مجاز است."
+msgstr "فقط یک مقدار سفارشی در هر مقدار خصوصیت در هر ردیف سفارش فروش مجاز است."
 
 #. module: sale
 #. openerp-web
@@ -3369,7 +3369,7 @@ msgstr "مرجع سندی که این درخواست سفارش فروش را ا
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr ""
+msgstr "فاکتور عادی"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3692,7 +3692,7 @@ msgstr "کالایی را انتخاب نمایید یا کالای جدیدی �
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select product attributes and optional products from the sales order"
-msgstr "ویژگی‌های کالا و کالاهای اختیاری را در سفارش فروش انتخاب کنید"
+msgstr "خصوصیات کالا و کالاهای اختیاری را در سفارش فروش انتخاب کنید"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3726,7 +3726,7 @@ msgstr "کالاهای فروش با تعداد مشخص در هر بسته"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr "فروش انواع محصول با استفاده از ویژگی‌ها مختلف (اندازه ، رنگ و غیره)"
+msgstr "فروش انواع محصول با استفاده از خصوصیت‌های مختلف (اندازه ، رنگ و غیره)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4210,7 +4210,7 @@ msgid ""
 "        "
 msgstr ""
 "چیزی برای فاکتور نیست! \n"
-"دلیل(های) این رفتار می‌تواند این باشد:\n"
+"دلیل(های) این خطا می‌تواند این باشد:\n"
 "- شما باید کالاهای خود را قبل از فاکتور تحویل دهید: بر روی نماد \"کامیون\""
 " (بالا سمت راست صفحه خود) کلیک کنید و دستورالعمل‌ها را دنبال کنید. \n"
 "- شما باید مبنای فاکتور محصول خود را اصلاح کنید: محصول را باز کنید، به \"تب"

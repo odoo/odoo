@@ -75,12 +75,12 @@ msgid ""
 "        Note: the variants creation mode cannot be changed once the attribute"
 " is used on at least one product."
 msgstr ""
-"- فوراً: به محض افزودن ویژگی و مقادیر آن به یک کالا، همه گونه‌های ممکنه ایجاد"
+"- بلافاصله: به محض افزودن خصوصیت و مقادیر آن به یک کالا، همه گونه‌های ممکنه ایجاد"
 " می‌شوند. \n"
-"         - به صورت پویا: هر گونه فقط هنگامی ایجاد می‌شود که ویژگی‌ها و مقادیر"
+"         - برحسب نیاز: هر گونه فقط هنگامی ایجاد می‌شود که خصوصیات و مقادیر"
 " مربوط به آن، به سفارش فروش اضافه شود. \n"
-"         - هرگز: هرگز گزینه برای ویژگی ایجاد نمی‌شود. \n"
-"         توجه: با ایجاد ویژگی برای حداقل یک کالا، حالت ایجاد انواع گونه‌ها"
+"         - ایجاد نشود: هرگز گزینه برای خصوصیت ایجاد نمی‌شود. \n"
+"         توجه: با ایجاد خصوصیت برای حداقل یک کالا، حالت ایجاد انواع گونه‌ها"
 " قابل تغییر نیست."
 
 #. module: product
@@ -308,7 +308,7 @@ msgstr "همه کالاها"
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
-msgstr "به کاربران اجازه می‌دهد مقادیر سفارشی برای مقدار مشخصه وارد کنند"
+msgstr "به کاربران اجازه می‌دهد مقادیر سفارشی برای مقدار خصوصیت وارد کنند"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
@@ -905,12 +905,12 @@ msgstr "مدت"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
-msgstr "به صورت پویا"
+msgstr "برحسب نیازا"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr "هر مقدار باید فقط یک بار در هر ویژگی برای هر کالا تعریف شود."
+msgstr "هر مقدار باید فقط یک بار در هر خصوصیت برای هر کالا تعریف شود."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
@@ -950,7 +950,7 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
 msgstr ""
-"قیمت اضافی برای گونه با این مقدار ویژگی در قیمت فروش. به عنوان مثال ۲۰۰  "
+"قیمت اضافی برای گونه با این مقدار خصوصیت در قیمت فروش. به عنوان مثال ۲۰۰  "
 "قیمت اضافی ، 1000 + 200 = 1200."
 
 #. module: product
@@ -1065,7 +1065,7 @@ msgid ""
 "color if the attribute type is 'Color'."
 msgstr ""
 "در اینجا می‌توانید یک کد رنگ HTML خاص (به عنوان مثال # ff0000) تنظیم کنید "
-"تا رنگ را نشان دهد اگر نوع ویژگی \"Color\" باشد."
+"تا رنگ را نشان دهد اگر نوع خصوصیت \"Color\" باشد."
 
 #. module: product
 #: model:product.product,name:product.expense_hotel
@@ -1239,7 +1239,7 @@ msgstr "محل کار فردی"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
 msgid "Instantly"
-msgstr "فورا"
+msgstr "بلافاصله"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1288,7 +1288,7 @@ msgstr "یک خصوصیت کالاست"
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
 msgid "Is custom value"
-msgstr "مقدار سفارشی است"
+msgstr "دریافت توضیحات مشتری"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
@@ -1415,7 +1415,7 @@ msgid ""
 "Make this attribute value not compatible with other values of the product or"
 " some attribute values of optional and accessory products."
 msgstr ""
-"این مقدار ویژگی را با سایر مقادیر کالا یا برخی از مقادیر ویژگی کالاها "
+"این مقدار خصوصیت را با سایر مقادیر کالا یا برخی از مقادیر خصوصیت کالاها "
 "اختیاری و لوازم جانبی سازگار نکنید."
 
 #. module: product
@@ -1491,7 +1491,7 @@ msgstr "نام"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
 msgid "Never"
-msgstr "هرگز"
+msgstr "ایجاد نشود"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1588,7 +1588,7 @@ msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
 msgstr ""
-"به دلیل عدم هم‌خوانی شما نمی‌توانید برروی کالای  %s مقدار  %s به همراه ویژگی"
+"به دلیل عدم هم‌خوانی شما نمی‌توانید برروی کالای %s مقدار %s به خصوصیت"
 "  %s مرتبط کنید."
 
 #. module: product
@@ -1597,7 +1597,7 @@ msgstr ""
 msgid ""
 "On the product %s you cannot transform the attribute %s into the attribute "
 "%s."
-msgstr "شما نمی‌توانید برروی کالای %s ویژگی %s به ویژگی %s تبدیل کنید."
+msgstr "شما نمی‌توانید برروی کالای %s خصوصیت %s را به خصوصیت %s تبدیل کنید."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -1838,28 +1838,28 @@ msgstr "کالا"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr "ویژگی کالا"
+msgstr "خصوصیت کالا"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr "مشخصه سفارشی ویژگی کالا"
+msgstr "مشخصه سفارشی خصوصیت کالا"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
 msgid "Product Attribute Values"
-msgstr "مقادیر ویژگی کالا"
+msgstr "مقادیر خصوصیت کالا"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr "مقادیر و ویژگی کالا"
+msgstr "مقادیر و خصوصیت کالا"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
 msgid "Product Attributes"
-msgstr "ویژگی‌های کالا"
+msgstr "خصوصیات کالا"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_product_barcode
@@ -1947,12 +1947,12 @@ msgstr "استثنا شدن خصوصیت برای کالا"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "ردیف ویژگی قالب کالا"
+msgstr "ردیف خصوصیت قالب کالا"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr "مقدار ویژگی قالب کالا"
+msgstr "مقدار خصوصیت قالب کالا"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
@@ -2088,7 +2088,7 @@ msgstr "تعداد کالا موجود در بسته‌بندی"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
 msgid "Radio"
-msgstr ""
+msgstr "دکمه رادیویی"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
@@ -2168,7 +2168,7 @@ msgstr "قیمت فروش"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
 msgid "Select"
-msgstr "انتخاب"
+msgstr "منوی بازشو"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__categ_id
@@ -2336,14 +2336,14 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
-msgstr "ویژگی %s باید حداقل یک مقدار برای کالای %s داشته باشد."
+msgstr "خصوصیت %s باید حداقل یک مقدار برای کالای %s داشته باشد."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
 msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
-msgstr "به محض استفاده از مقدار برروی یک کالا، مشخصه غیرقابل تغییر می‌شود."
+msgstr "به محض استفاده از مقدار برروی یک کالا، خصوصیت غیرقابل تغییر می‌شود."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2435,7 +2435,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
-msgstr "مقدار%s برای ویژگی %s بر روی کالای %s تعریف نشده است."
+msgstr "مقدار%s برای خصوصیت %s بر روی کالای %s تعریف نشده است."
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2463,7 +2463,7 @@ msgstr "این از فرم کالا می‌آید."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr "این مجموع قیمت اضافی برای همه ویژگی‌ها است."
+msgstr "این مجموع قیمت اضافی برای همه خصوصیات است."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2642,7 +2642,7 @@ msgstr "استفاده شده در کالاها"
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr "ردیف‌های معتبر ویژگی‌ کالا"
+msgstr "ردیف‌های معتبر خصوصیت کالا"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2733,15 +2733,19 @@ msgstr "گونه‌: %s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
 msgstr "گونه‌ها"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+msgid "Variants"
+msgstr "گونه"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variants Creation Mode"
-msgstr "حالت ایجاد انواع گونه‌های"
+msgstr "روش ایجاد گونه‌ها"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__name
@@ -2902,7 +2906,7 @@ msgid ""
 " is used on the following products:\n"
 "%s"
 msgstr ""
-"شما نمی‌توانید ویژگی %s حالت ایجاد انواع گونه‌های تغییر دهید، زیرا این ویژگی"
+"شما نمی‌توانید خصوصیت %s حالت ایجاد انواع گونه‌های تغییر دهید، زیرا این ویژگی"
 " توسط کالاهایی زیر مورد استفاده است:\n"
 "%s"
 
@@ -2913,7 +2917,7 @@ msgid ""
 "You cannot change the attribute of the value %s because it is used on the "
 "following products:%s"
 msgstr ""
-"شما نمی‌توانید ویژگی مقدار %s را تغییر دهید، زیرا این ویژگی توسط کالاهایی "
+"شما نمی‌توانید خصوصیت مقدار %s را تغییر دهید، زیرا این ویژگی توسط کالاهایی "
 "زیر مورد استفاده است: %s"
 
 #. module: product
@@ -2939,7 +2943,7 @@ msgstr "شما نمی‌توانید گروه‌های بازگشتی انتخا
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
 msgid "You cannot create two values with the same name for the same attribute."
-msgstr "شما برای یک ویژگی نمی‌توانید دو مقدار با یک نام ایجاد کنید."
+msgstr "شما برای یک خصوصیت نمی‌توانید دو مقدار با یک نام ایجاد کنید."
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:0
@@ -2959,7 +2963,7 @@ msgid ""
 " products:\n"
 "%s"
 msgstr ""
-"شما نمی‌توانید ویژگی %s را حذف کنید، زیرا این ویژگی توسط کالاهایی زیر مورد"
+"شما نمی‌توانید خصوصیت %s را حذف کنید، زیرا این ویژگی توسط کالاهایی زیر مورد"
 " استفاده است:\n"
 "%s"
 
@@ -2986,7 +2990,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot move the attribute %s from the product %s to the product %s."
-msgstr "شما نمی‌توانید ویژگی %s را از کالای %s به کالای %s جابجا کنید."
+msgstr "شما نمی‌توانید خصوصیت %s را از کالای %s به کالای %s جابجا کنید."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
