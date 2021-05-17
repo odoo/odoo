@@ -703,7 +703,11 @@ class BaseModel(metaclass=MetaModel):
         depends = {}
         cls._sql_constraints = {}
 
+<<<<<<< HEAD
         for base in reversed(cls.__base_classes):
+=======
+        for base in reversed(cls.__bases__):
+>>>>>>> 888cdfcd8eaa0c058dd5c96370398b3e3ec86fc7
             if is_definition_class(base):
                 # the following attributes are not taken from registry classes
                 if cls._name not in base._inherit and not base._description:
