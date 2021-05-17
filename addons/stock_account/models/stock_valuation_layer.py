@@ -39,7 +39,7 @@ class StockValuationLayer(models.Model):
     def _validate_accounting_entries(self):
         am_vals = []
         for svl in self:
-            if not svl.product_id.valuation == 'real_time':
+            if not svl.product_id.valuation == 'real_time' or svl.product_id.type != 'product':
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue
