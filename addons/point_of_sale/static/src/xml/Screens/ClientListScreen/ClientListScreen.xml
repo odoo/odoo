@@ -5,40 +5,36 @@
         <div class="clientlist-screen screen" t-on-activate-edit-mode="activateEditMode">
             <div class="screen-content">
                 <div class="top-content">
-                    <div t-if="!state.detailIsShown &amp;&amp; !state.selectedClient" class="button new-customer" role="img" aria-label="Add a customer"
-                          t-on-click="trigger('activate-edit-mode', { isNewClient: true })"
-                          title="Add a customer">
-                        <t t-if="!env.isMobile">
-                            Create
-                        </t>
-                        <t t-else="">
-                            <i class="fa fa-plus"></i>
-                        </t>
-                    </div>
-                    <div t-if="isNextButtonVisible" t-on-click="clickNext"
-                          class="button next highlight">
-                        <t t-if="!env.isMobile">
-                            <t t-esc="nextButton.text" />
-                        </t>
-                        <t t-else="">
-                            <i t-if="nextButton.command === 'deselect'" class="fa fa-trash"></i>
-                            <i t-if="nextButton.command === 'set'" class="fa fa-check"></i>
-                        </t>
-                    </div>
-                    <div class="button" t-if="state.detailIsShown" t-on-click="trigger('click-save')">
-                        <t t-if="!env.isMobile">
+                    <div class="clientlist-buttons">
+                        <div t-if="!state.detailIsShown &amp;&amp; !state.selectedClient" class="button new-customer" role="img" aria-label="Add a customer"
+                              t-on-click="trigger('activate-edit-mode', { isNewClient: true })"
+                              title="Add a customer">
+                            <i class="fa fa-plus"/>
+                            <t t-if="!env.isMobile">
+                                <span> Create</span>
+                            </t>
+                        </div>
+                        <div t-if="isNextButtonVisible" t-on-click="clickNext" class="button next highlight">
+                            <t t-if="!env.isMobile">
+                                <t t-esc="nextButton.text" />
+                            </t>
+                            <t t-else="">
+                                <i t-if="nextButton.command === 'deselect'" class="fa fa-trash"/>
+                                <i t-elif="nextButton.command === 'set'" class="fa fa-check"/>
+                            </t>
+                        </div>
+                        <div class="button" t-if="state.detailIsShown" t-on-click="trigger('click-save')">
                             <i class="fa fa-floppy-o"/>
-                            <span> Save</span>
-                        </t>
-                        <t t-else="">
-                            <i class="fa fa-floppy-o"/>
-                        </t>
-                    </div>
-                    <div class="button back" t-on-click="back">
-                        <t t-if="!env.isMobile">Discard</t>
-                        <t t-else="">
-                            <i class="fa fa-undo"></i>
-                        </t>
+                            <t t-if="!env.isMobile">
+                                <span> Save</span>
+                            </t>
+                        </div>
+                        <div class="button back" t-on-click="back">
+                                <i class="fa fa-angle-double-left"/>
+                                <t t-if="!env.isMobile">
+                                    <span> Discard</span>
+                                </t>
+                        </div>
                     </div>
                     <div t-if="!state.detailIsShown" class="searchbox-client top-content-center">
                         <input placeholder="Search Customers" size="1" t-on-keyup="updateClientList" />
