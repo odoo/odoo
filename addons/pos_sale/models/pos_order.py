@@ -66,10 +66,16 @@ class PosOrder(models.Model):
                 sale_line._compute_tax_id()
                 line.sale_order_line_id = sale_line
 
+            so_lines = order.lines.mapped('sale_order_line_id')
+
+            # confirm the unconfirmed sale orders that are linked to the sale order lines
+            sale_orders = so_lines.mapped('order_id')
+            for sale_order in sale_orders.filtered(lambda so: so.state in ['draft', 'sent']):
+                sale_order.action_confirm()
+
             # update the demand qty in the stock moves related to the sale order line
             # flush the qty_delivered to make sure the updated qty_delivered is used when
             # updating the demand value
-            so_lines = order.lines.mapped('sale_order_line_id')
             so_lines.flush(['qty_delivered'])
             # track the waiting pickings
             waiting_picking_ids = set()
