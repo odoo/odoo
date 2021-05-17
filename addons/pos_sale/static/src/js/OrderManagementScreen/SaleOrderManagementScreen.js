@@ -209,8 +209,8 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
         async _getSOLines(ids) {
           let so_lines = await this.rpc({
               model: 'sale.order.line',
-              method: 'read',
-              args: [ids, ["product_id", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "product_type", "qty_to_invoice"]],
+              method: 'read_converted',
+              args: [ids],
               context: this.env.session.user_context,
           });
           let pos_lines = so_lines.filter(line => line.product_type);
