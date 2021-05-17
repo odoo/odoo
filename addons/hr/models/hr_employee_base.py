@@ -28,7 +28,7 @@ class HrEmployeeBase(models.AbstractModel):
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    parent_id = fields.Many2one('hr.employee', 'Manager', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    parent_id = fields.Many2one('hr.employee', 'Manager')
     coach_id = fields.Many2one('hr.employee', 'Coach')
     tz = fields.Selection(
         string='Timezone', related='resource_id.tz', readonly=False,
