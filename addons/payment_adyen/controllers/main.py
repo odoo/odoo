@@ -271,6 +271,8 @@ class AdyenController(http.Controller):
                 notification_data['resultCode'] = 'Authorised'
             elif event_code == 'CANCELLATION':
                 notification_data['resultCode'] = 'Cancelled'
+            elif event_code == 'REFUND':
+                notification_data['resultCode'] = 'Refund'
             else:
                 continue  # Don't handle unsupported event codes
 

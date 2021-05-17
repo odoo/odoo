@@ -6,6 +6,12 @@
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_draft']" position="after">
+                <field name="refund_amount_allowed" invisible="1"/>
+                <button type="object" name="action_refund_wizard"
+                    string="Refund"
+                    attrs="{'invisible': [('refund_amount_allowed', '&lt;=', 0)]}" class="btn-secondary"/>
+            </xpath>
             <xpath expr='//group[2]' position="inside">
                 <field name="payment_transaction_id" groups="base.group_no_one" attrs="{'invisible': [('use_electronic_payment_method', '!=', True)]}"/>
             </xpath>

@@ -3,12 +3,14 @@
 # Endpoints of the API.
 # See https://docs.adyen.com/api-explorer/#/CheckoutService/v53/overview for Checkout API
 # See https://docs.adyen.com/api-explorer/#/Recurring/v49/overview for Recurring API
+# See https://docs.adyen.com/api-explorer/#/Payment/v64/overview for Payment API
 API_ENDPOINT_VERSIONS = {
     '/disable': 49,           # Recurring API
     '/originKeys': 53,        # Checkout API
     '/payments': 53,          # Checkout API
     '/payments/details': 53,  # Checkout API
     '/paymentMethods': 53,    # Checkout API
+    '/refund': 64,            # Payment API
 }
 
 # Adyen-specific mapping of currency codes in ISO 4217 format to the number of decimals.
@@ -28,7 +30,7 @@ RESULT_CODES_MAPPING = {
         'ChallengeShopper', 'IdentifyShopper', 'Pending', 'PresentToShopper', 'Received',
         'RedirectShopper'
     ),
-    'done': ('Authorised',),
+    'done': ('Authorised', 'Refund'),
     'cancel': ('Cancelled',),
     'error': ('Error',),
     'refused': ('Refused',),

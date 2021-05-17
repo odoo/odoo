@@ -68,7 +68,8 @@ class PaymentTransaction(models.Model):
                    ('online_direct', "Online direct payment"),
                    ('online_token', "Online payment by token"),
                    ('validation', "Validation of the payment method"),
-                   ('offline', "Offline payment by token")],
+                   ('offline', "Offline payment by token"),
+                   ('refund', "Refund")],
         readonly=True)
     payment_id = fields.Many2one(string="Payment", comodel_name='account.payment', readonly=True)
     invoice_ids = fields.Many2many(
@@ -76,6 +77,18 @@ class PaymentTransaction(models.Model):
         column1='transaction_id', column2='invoice_id', readonly=True, copy=False,
         domain=[('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))])
     invoices_count = fields.Integer(string="Invoices Count", compute='_compute_invoices_count')
+    original_transaction_id = fields.Many2one(
+        string="Saved Original Transaction",
+        comodel_name='payment.transaction',
+        help="The original transaction. Many refunds can be linked to an original transaction.",
+        readonly=True)
+    refund_transaction_ids = fields.One2many(
+        string="Refund Transactions",
+        comodel_name='payment.transaction',
+        inverse_name='original_transaction_id',
+        domain=[('operation', '=', 'refund')],
+        readonly=True)
+    refunds_count = fields.Integer(string="Refunds Count", compute='_compute_refunds_count')
 
     # Fields used for user redirection & payment post-processing
     is_post_processed = fields.Boolean(
@@ -133,6 +146,11 @@ class PaymentTransaction(models.Model):
         tx_data = dict(self.env.cr.fetchall())  # {id: count}
         for tx in self:
             tx.invoices_count = tx_data.get(tx.id, 0)
+
+    @api.depends('refund_transaction_ids')
+    def _compute_refunds_count(self):
+        for record in self:
+            record.refunds_count = len(record.refund_transaction_ids)
 
     #=== CONSTRAINT METHODS ===#
 
@@ -248,6 +266,15 @@ class PaymentTransaction(models.Model):
             action['domain'] = [('id', 'in', invoice_ids)]
         return action
 
+    def action_view_refunds(self):
+        return {
+            'name': _('Refund'),
+            'view_mode': 'tree',
+            'res_model': 'payment.transaction',
+            'type': 'ir.actions.act_window',
+            'domain': [('original_transaction_id', '=', self.id)],
+        }
+
     def action_capture(self):
         """ Check the state of the transactions and request their capture. """
         if any(tx.state != 'authorized' for tx in self):
@@ -263,6 +290,14 @@ class PaymentTransaction(models.Model):
 
         for tx in self:
             tx._send_void_request()
+
+    def action_refund(self, refund_amount):
+        """ Check the state of the transaction and request to have them refund. """
+        if any(tx.state != 'done' for tx in self):
+            raise ValidationError(_("Only done transactions can be refunded."))
+
+        for tx in self:
+            tx._send_refund_request(refund_amount=refund_amount)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
@@ -378,7 +413,7 @@ class PaymentTransaction(models.Model):
                                     of the callback model
         :param str callback_method: The name of the callback method
         :return: The callback hash
-        :retype: str
+        :rtype: str
         """
         if callback_model_id and callback_res_id and callback_method:
             model_name = self.env['ir.model'].sudo().browse(callback_model_id).model
@@ -386,6 +421,23 @@ class PaymentTransaction(models.Model):
             callback_hash = hmac_tool(self.env(su=True), 'generate_callback_hash', token)
             return callback_hash
         return None
+
+    def _create_refund_transaction(self, **custom_create_values):
+        """ Return a new transaction with a refund operation.
+
+        :return: The refund transaction
+        :rtype: payment.transaction
+        """
+        self.ensure_one
+
+        return self.create({
+            'acquirer_id': self.acquirer_id.id,
+            'acquirer_reference': self.acquirer_reference,
+            'currency_id': self.currency_id.id,
+            'partner_id': self.partner_id.id,
+            'operation': 'refund',
+            **custom_create_values,
+        })
 
     def _get_processing_values(self):
         """ Return a dict of values used to process the transaction.
@@ -674,7 +726,7 @@ class PaymentTransaction(models.Model):
             success = getattr(record, method)(tx)  # Execute the callback
             tx.callback_is_done = success or success is None  # Missing returns are successful
 
-    def _send_refund_request(self):
+    def _send_refund_request(self, **kwargs):
         """ Request the provider of the acquirer handling the transaction to refund it.
 
         For an acquirer to support tokenization, it must override this method and request a refund
@@ -826,7 +878,8 @@ class PaymentTransaction(models.Model):
 
         payment_method = self.env['account.payment.method'].search([('code', '=', self.acquirer_id.provider)], limit=1)
         payment_values = {
-            'amount': self.amount,
+            'amount': abs(self.amount),
+            # Note: outbound transaction may have a negative amount, but a payment must be positive
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.commercial_partner_id.id,

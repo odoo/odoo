@@ -31,6 +31,9 @@ class PaymentAcquirer(models.Model):
     adyen_checkout_api_url = fields.Char(
         string="Checkout API URL", help="The base URL for the Checkout API endpoints",
         required_if_provider='adyen')
+    adyen_payment_api_url = fields.Char(
+        string="Payment API URL", help="The base URL for the Payment API endpoints",
+        required_if_provider='adyen')
     adyen_recurring_api_url = fields.Char(
         string="Recurring API URL", help="The base URL for the Recurring API endpoints",
         required_if_provider='adyen')

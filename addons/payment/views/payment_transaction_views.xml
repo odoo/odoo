@@ -14,6 +14,9 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="action_view_refunds" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('refunds_count', '=', 0)]}">
+                            <field name="refunds_count" widget="statinfo" string="Refunds"/>
+                        </button>
                         <button name="action_view_invoices" type="object"
                                 class="oe_stat_button" icon="fa-money"
                                 attrs="{'invisible': [('invoices_count', '=', 0)]}">

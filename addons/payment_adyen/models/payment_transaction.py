@@ -5,6 +5,7 @@ import pprint
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS, RESULT_CODES_MAPPING
@@ -194,3 +195,53 @@ class PaymentTransaction(models.Model):
         _logger.info(
             "created token with id %s for partner with id %s", token.id, self.partner_id.id
         )
+
+    def _send_refund_request(self, **kwargs):
+        """ Override of payment to send a refund request to Adyen.
+        Note: self.ensure_one()
+        :return: None
+        """
+        super()._send_refund_request(**kwargs)
+        if self.provider != 'adyen':
+            return
+
+        refund_amount = kwargs.get('refund_amount', 0)
+
+        converted_amount = payment_utils.to_minor_currency_units(refund_amount,
+            self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name))
+
+        data = {
+            'merchantAccount': self.acquirer_id.adyen_merchant_account,
+            'modificationAmount': {
+                'value': converted_amount,
+                'currency': self.currency_id.name,
+            },
+            'originalReference': self.acquirer_reference,
+            'reference': self.reference,
+        }
+        response_content = self.acquirer_id._adyen_make_request(
+            url_field_name='adyen_payment_api_url',
+            endpoint='/refund',
+            payload=data,
+            method='POST'
+        )
+
+        # Handle the payment request response
+        if response_content['response'] == '[refund-received]':
+            # the PSP reference associated with this /refund request is different from the
+            # psp reference associated with the original payment request
+            tx = self._create_refund_transaction(
+                amount=-refund_amount,
+                original_transaction_id=self.id,
+                reference=self._compute_reference(self.provider, prefix=f"R{self.reference:s}"),
+            )
+            tx._set_done()
+
+            # log the refund in the payment's chatter
+            self.payment_id.message_post(body=_("Refund request of %s has been sent. The "
+                "payment will be created once the refund has been accepted. Transaction reference: %s",
+                format_amount(self.env, -tx.amount, tx.currency_id), tx.reference))
+
+        else:
+            _logger.info("refund request response:\n%s", pprint.pformat(response_content))
+            raise ValidationError(_("The refund request couldn't be processed."))

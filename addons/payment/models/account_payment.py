@@ -15,6 +15,7 @@ class AccountPayment(models.Model):
             ('id', 'in', suitable_payment_token_ids),
         ]""",
         help="Note that only tokens from acquirers allowing to capture the amount are available.")
+    refund_amount_allowed = fields.Monetary(compute='_compute_refund_amount_allowed')
 
     # == Display purpose fields ==
     suitable_payment_token_ids = fields.Many2many(
@@ -52,6 +53,20 @@ class AccountPayment(models.Model):
             codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
             codes.append('electronic')
             payment.use_electronic_payment_method = payment.payment_method_code in codes
+
+    @api.depends('payment_transaction_id.acquirer_id.support_refund')
+    def _compute_refund_amount_allowed(self):
+        for payment in self:
+            if payment.payment_transaction_id.acquirer_id.support_refund:
+                refund_txs = payment.env['payment.transaction'].search([
+                    ('original_transaction_id', '=', payment.payment_transaction_id.id),
+                    ('operation', '=', 'refund'),
+                    ('state', 'in', ['pending', 'authorized', 'done'])])
+                refund_amount = sum(refund_txs.mapped('amount'))
+                payment.refund_amount_allowed = payment.payment_transaction_id.amount + refund_amount
+                # Note: refund tx amounts are negative, the refunded amount shouldn't be subtracted.
+            else:
+                payment.refund_amount_allowed = 0
 
     @api.onchange('partner_id', 'payment_method_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
@@ -127,3 +142,13 @@ class AccountPayment(models.Model):
         payments_tx_not_done.action_cancel()
 
         return res
+
+    def action_refund_wizard(self):
+        view = {
+            'name': _('Refund'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'payment.refund.wizard',
+            'target': 'new',
+        }
+        return view

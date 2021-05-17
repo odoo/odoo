@@ -29,6 +29,7 @@
         'wizards/account_payment_register_views.xml',
         'wizards/payment_acquirer_onboarding_templates.xml',
         'wizards/payment_link_wizard_views.xml',
+        'wizards/payment_refund_wizard_views.xml',
     ],
     'auto_install': True,
     'assets': {

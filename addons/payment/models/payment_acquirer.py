@@ -99,6 +99,7 @@ class PaymentAcquirer(models.Model):
     # Feature support fields
     support_authorization = fields.Boolean(string="Authorize Mechanism Supported")
     support_fees_computation = fields.Boolean(string="Fees Computation Supported")
+    support_refund = fields.Boolean(string="Refund Supported")
     support_tokenization = fields.Boolean(string="Tokenization supported")
 
     # Kanban view fields
