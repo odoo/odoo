@@ -6,7 +6,7 @@ const ajax = require('web.ajax');
 
 tour.register('apikeys_tour_setup', {
     test: true,
-    url: '/web',
+    url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
 }, [{
     content: 'Open user account menu',
     trigger: '.o_user_menu .oe_topbar_name',
@@ -24,7 +24,7 @@ tour.register('apikeys_tour_setup', {
     trigger: 'button:contains("New API Key")',
 }, {
     content: "Check that we have to enter enhanced security mode",
-    trigger: 'div:contains("confirm your password")',
+    trigger: 'div:contains("enter your password")',
     run: () => {},
 }, {
     content: "Input password",
@@ -72,7 +72,7 @@ tour.register('apikeys_tour_setup', {
 // deletes the previously created key
 tour.register('apikeys_tour_teardown', {
     test: true,
-    url: '/web',
+    url: '/web?debug=1', // Needed as API key part is now only displayed in debug mode
 }, [{
     content: 'Open preferences',
     trigger: '.o_user_menu .oe_topbar_name',
