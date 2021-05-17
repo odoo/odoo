@@ -283,6 +283,21 @@ var utils = {
         return Math.max(min, Math.min(max, val));
     },
     /**
+     * Looks through the list and returns the first value that matches all
+     * of the key-value pairs listed in properties.
+     * If no match is found, or if list is empty, undefined will be returned.
+     *
+     * @param {Array} list
+     * @param {Object} props
+     * @returns 
+     */
+    findWhere: function (list, props) {
+        if (!Array.isArray(list)) {
+            return;
+        }
+        return list.find(item => Object.keys(props).every(key => item[key] === props[key]));
+    },
+    /**
      * @param {number} value
      * @param {integer} decimals
      * @returns {boolean}
