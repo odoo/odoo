@@ -100,3 +100,58 @@ class EventSaleTest(common.TransactionCase):
         self.assertEqual(test_event._is_event_registrable(), False)
 
         self.patcher.stop()
+
+    def test_01_ticket_price_with_pricelist_and_tax(self):
+        self.env.user.partner_id.country_id = False
+        pricelist = self.env['product.pricelist'].search([], limit=1)
+
+        tax = self.env['account.tax'].create({
+            'name': "Tax 10",
+            'amount': 10,
+        })
+
+        event_product = self.env['product.template'].create({
+            'name': 'Event Product',
+            'list_price': 10.0,
+        })
+
+        event_product.taxes_id = tax
+
+        event = self.env['event.event'].create({
+            'name': 'New Event',
+            'date_begin': '2020-02-02',
+            'date_end': '2020-04-04',
+        })
+        event_ticket = self.env['event.event.ticket'].create({
+            'name': 'VIP',
+            'price': 1000.0,
+            'event_id': event.id,
+            'product_id': event_product.product_variant_id.id,
+        })
+
+        pricelist.item_ids = self.env['product.pricelist.item'].create({
+            'applied_on': "1_product",
+            'base': "list_price",
+            'compute_price': "fixed",
+            'fixed_price': 6.0,
+            'product_tmpl_id': event_product.id,
+        })
+
+        pricelist.discount_policy = 'without_discount'
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'pricelist_id': pricelist.id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'name': event.name,
+            'product_id': event_product.product_variant_id.id,
+            'product_uom_qty': 1,
+            'product_uom': event_product.uom_id.id,
+            'price_unit': event_product.list_price,
+            'order_id': so.id,
+            'event_id': event.id,
+            'event_ticket_id': event_ticket.id,
+        })
+        sol.product_id_change()
+        self.assertEqual(so.amount_total, 660.0, "Ticket is $1000 but the event product is on a pricelist 10 -> 6. So, $600 + a 10% tax.")
