@@ -832,6 +832,22 @@ var exportVariable = (function (exports) {
         return blockTagNames.includes(tagName);
     }
 
+    /**
+     * Return true if the given node appears bold. The node is considered to appear
+     * bold if its font weight is bigger than 500 (eg.: Heading 1), or if its font
+     * weight is bigger than that of its closest block.
+     *
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    function isBold(node) {
+        const fontWeight = +getComputedStyle(closestElement(node)).fontWeight;
+        return (
+            fontWeight > 500 ||
+            fontWeight > +getComputedStyle(closestBlock(node)).fontWeight
+        );
+    }
+
     function isUnbreakable(node) {
         if (!node || node.nodeType === Node.TEXT_NODE || !node.isContentEditable) {
             return false;
@@ -1216,15 +1232,27 @@ var exportVariable = (function (exports) {
 
     /**
      * Add a BR in the given node if its closest ancestor block has nothing to make
-     * it visible.
+     * it visible, and/or add a zero-width space in the given node if it's an empty
+     * inline unremovable so the cursor can stay in it.
      *
      * @param {HTMLElement} el
+     * @returns {Object} { br: the inserted <br> if any,
+     *                     zws: the inserted zero-width space if any }
      */
     function fillEmpty(el) {
+        const fillers = {};
         const blockEl = closestBlock(el);
         if (isShrunkBlock(blockEl)) {
-            blockEl.appendChild(document.createElement('br'));
+            const br = document.createElement('br');
+            blockEl.appendChild(br);
+            fillers.br = br;
         }
+        if (!el.textContent.length && isUnremovable(el) && !isBlock(el)) {
+            const zws = document.createTextNode('\u200B');
+            el.appendChild(zws);
+            fillers.zws = zws;
+        }
+        return fillers;
     }
     /**
      * Removes the given node if invisible and all its invisible ancestors.
@@ -2697,9 +2725,14 @@ var exportVariable = (function (exports) {
             getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
             const isAlreadyBold = getSelectedNodes(editor.editable)
                 .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length)
-                .find(n => Number.parseInt(getComputedStyle(n.parentElement).fontWeight) > 500);
+                .find(n => isBold(n.parentElement));
             applyInlineStyle(editor, el => {
-                el.style.fontWeight = isAlreadyBold ? 'normal' : 'bolder';
+                if (isAlreadyBold) {
+                    const block = closestBlock(el);
+                    el.style.fontWeight = isBold(block) ? 'normal' : getComputedStyle(block).fontWeight;
+                } else {
+                    el.style.fontWeight = 'bolder';
+                }
             });
         },
         italic: editor => editor.document.execCommand('italic'),
@@ -2946,8 +2979,9 @@ var exportVariable = (function (exports) {
 
     const KEYBOARD_TYPES = { VIRTUAL: 'VIRTUAL', PHYSICAL: 'PHYSICAL', UNKNOWN: 'UKNOWN' };
 
-    const isUndo = ev => ev.key === 'z' && (ev.ctrlKey || ev.metaKey);
-    const isRedo = ev => ev.key === 'y' && (ev.ctrlKey || ev.metaKey);
+    const IS_KEYBOARD_EVENT_UNDO = ev => ev.key === 'z' && (ev.ctrlKey || ev.metaKey);
+    const IS_KEYBOARD_EVENT_REDO = ev => ev.key === 'y' && (ev.ctrlKey || ev.metaKey);
+    const IS_KEYBOARD_EVENT_BOLD = ev => ev.key === 'b' && (ev.ctrlKey || ev.metaKey);
 
     function defaultOptions(defaultObject, object) {
         const newObject = Object.assign({}, defaultObject, object);
@@ -2994,6 +3028,7 @@ var exportVariable = (function (exports) {
             this._domListeners = [];
 
             this.resetHistory();
+            this._historyStepsActive = true;
 
             // Set of labels that which prevent the automatic step mechanism if
             // it contains at least one element.
@@ -3325,6 +3360,9 @@ var exportVariable = (function (exports) {
 
         // One step completed: apply to vDOM, setup next history step
         historyStep(skipRollback = false) {
+            if (!this._historyStepsActive) {
+                return;
+            }
             this.observerFlush();
             // check that not two unBreakables modified
             if (this._toRollback) {
@@ -3636,6 +3674,12 @@ var exportVariable = (function (exports) {
                 this._toRollback === UNBREAKABLE_ROLLBACK_CODE ? false : this._toRollback;
             this._checkStepUnbreakable = false;
         }
+        historyPauseSteps() {
+            this._historyStepsActive = false;
+        }
+        historyUnpauseSteps() {
+            this._historyStepsActive = true;
+        }
 
         /**
          * Same as @see _applyCommand, except that also simulates all the
@@ -3739,8 +3783,11 @@ var exportVariable = (function (exports) {
             fillEmpty(closestBlock(range.endContainer));
             // Ensure trailing space remains visible.
             const joinWith = range.endContainer;
+            const joinSibling = joinWith && joinWith.nextSibling;
             const oldText = joinWith.textContent;
-            if (joinWith && oldText.endsWith(' ')) {
+            const hasSpaceAfter = joinSibling && joinSibling.textContent.startsWith(' ');
+            const shouldPreserveSpace = (doJoin || hasSpaceAfter) && joinWith && oldText.endsWith(' ');
+            if (shouldPreserveSpace) {
                 joinWith.textContent = oldText.replace(/ $/, '\u00A0');
                 setCursor(joinWith, nodeSize(joinWith));
             }
@@ -3768,13 +3815,19 @@ var exportVariable = (function (exports) {
             }
             next = joinWith && joinWith.nextSibling;
             if (
-                joinWith &&
-                oldText.endsWith(' ') &&
+                shouldPreserveSpace &&
                 !(next && next.nodeType === Node.TEXT_NODE && next.textContent.startsWith(' '))
             ) {
                 // Restore the text we modified in order to preserve trailing space.
                 joinWith.textContent = oldText;
                 setCursor(joinWith, nodeSize(joinWith));
+            }
+            if (joinWith) {
+                const el = closestElement(joinWith);
+                const { zws } = fillEmpty(el);
+                if (zws) {
+                    setCursor(zws, 0, zws, nodeSize(zws));
+                }
             }
         }
 
@@ -4010,13 +4063,12 @@ var exportVariable = (function (exports) {
                 }
             }
             if (sel.rangeCount) {
-                const closestsStartContainer = closestElement(sel.getRangeAt(0).startContainer, '*');
-                const selectionStartStyle = getComputedStyle(closestsStartContainer);
+                const closestStartContainer = closestElement(sel.getRangeAt(0).startContainer, '*');
+                const selectionStartStyle = getComputedStyle(closestStartContainer);
 
                 // queryCommandState('bold') does not take stylesheets into account
-                const isBold = Number.parseInt(selectionStartStyle.fontWeight) > 500;
                 const button = this.toolbar.querySelector('#bold');
-                button.classList.toggle('active', isBold);
+                button.classList.toggle('active', isBold(closestStartContainer));
 
                 const fontSizeValue = this.toolbar.querySelector('#fontSizeCurrentValue');
                 if (fontSizeValue) {
@@ -4227,21 +4279,27 @@ var exportVariable = (function (exports) {
 
                 if (closestTag === 'LI') {
                     this._applyCommand('indentList', ev.shiftKey ? 'outdent' : 'indent');
-                    ev.preventDefault();
                 } else if (closestTag === 'TABLE') {
                     this._onTabulationInTable(ev);
-                    ev.preventDefault();
+                } else if (!ev.shiftKey) {
+                    this.execCommand('insertText', '\u00A0 \u00A0\u00A0');
                 }
-            } else if (isUndo(ev)) {
+                ev.preventDefault();
+            } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
                 // Ctrl-Z
                 ev.preventDefault();
                 ev.stopPropagation();
                 this.historyUndo();
-            } else if (isRedo(ev)) {
+            } else if (IS_KEYBOARD_EVENT_REDO(ev)) {
                 // Ctrl-Y
                 ev.preventDefault();
                 ev.stopPropagation();
                 this.historyRedo();
+            } else if (IS_KEYBOARD_EVENT_BOLD(ev)) {
+                // Ctrl-B
+                ev.preventDefault();
+                ev.stopPropagation();
+                this.execCommand('bold');
             }
         }
         /**
@@ -4334,15 +4392,15 @@ var exportVariable = (function (exports) {
             const canUndoRedo = !['INPUT', 'TEXTAREA'].includes(this.document.activeElement.tagName);
 
             if (this.options.controlHistoryFromDocument && canUndoRedo) {
-                if (isUndo(ev) && canUndoRedo) {
+                if (IS_KEYBOARD_EVENT_UNDO(ev) && canUndoRedo) {
                     ev.preventDefault();
                     this.historyUndo();
-                } else if (isRedo(ev) && canUndoRedo) {
+                } else if (IS_KEYBOARD_EVENT_REDO(ev) && canUndoRedo) {
                     ev.preventDefault();
                     this.historyRedo();
                 }
             } else {
-                if (isRedo(ev) || isUndo(ev)) {
+                if (IS_KEYBOARD_EVENT_REDO(ev) || IS_KEYBOARD_EVENT_UNDO(ev)) {
                     this._onKeyupResetContenteditableNodes.push(
                         ...this.editable.querySelectorAll('[contenteditable=true]'),
                     );
@@ -4631,6 +4689,7 @@ var exportVariable = (function (exports) {
     exports.insertListAfter = insertListAfter;
     exports.insertText = insertText;
     exports.isBlock = isBlock;
+    exports.isBold = isBold;
     exports.isContentTextNode = isContentTextNode;
     exports.isEmptyBlock = isEmptyBlock;
     exports.isFakeLineBreak = isFakeLineBreak;
