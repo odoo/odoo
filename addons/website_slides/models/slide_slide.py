@@ -780,9 +780,10 @@ class Slide(models.Model):
         youtube_duration = youtube_values.get('contentDetails', {}).get('duration')
         if youtube_duration:
             parsed_duration = re.search(r'^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$', youtube_duration)
-            values['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
-                                        (int(parsed_duration.group(2) or 0) / 60) + \
-                                        (int(parsed_duration.group(3) or 0) / 3600)
+            if parsed_duration:
+                values['completion_time'] = (int(parsed_duration.group(1) or 0)) + \
+                                            (int(parsed_duration.group(2) or 0) / 60) + \
+                                            (int(parsed_duration.group(3) or 0) / 3600)
 
         if youtube_values.get('snippet'):
             snippet = youtube_values['snippet']

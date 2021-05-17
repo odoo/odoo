@@ -5,12 +5,11 @@
 # Translators:
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
+# Simone Bernini <simone@aperturelabs.it>, 2020
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
-# Niccolò Lubello <nlubello@gmail.com>, 2020
 # efraimbiffi <eab@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Giovanni Perteghella <giovanni@perteghella.org>, 2020
-# Simone Bernini <simone@aperturelabs.it>, 2020
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2020
 # Paolo Valier, 2020
 # David Minneci <david@numeko.it>, 2020
@@ -44,7 +43,7 @@ msgstr "N. di fatture"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__html_3ds
 msgid "3D Secure HTML"
-msgstr "3D Secure HTML"
+msgstr "HTML 3D Secure"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -181,7 +180,8 @@ msgstr "Per creare una nuova transazione di pagamento è richiesto un token."
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "A transaction %s with %s initiated using %s credit card."
-msgstr "Avviata una transazione %s con %s utilizzando la carta di credito %s."
+msgstr ""
+"Avviata una transazione %s con %s, utilizzando la carta di credito %s."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -337,7 +337,7 @@ msgid ""
 "be undone."
 msgstr ""
 "Annullare veramente la transazione autorizzata? Questa azione non può essere"
-" annullata."
+" revocata."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -453,12 +453,12 @@ msgstr "Registra importo manualmente"
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr "Registra la transazione"
+msgstr "Registra transazione"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
 msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr "Acquisisce l'importo da Odoo quando viene completata la consegna."
+msgstr "Quando viene completata la consegna, registra l'importo da Odoo."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -789,7 +789,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Fees"
-msgstr "Imposte"
+msgstr "Commissioni"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_implemented
@@ -811,12 +811,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr "Tariffe fisse nazionali"
+msgstr "Commissioni fisse nazionali"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
-msgstr "Tariffe fisse internazionali"
+msgstr "Commissioni fisse internazionali"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__form
@@ -841,7 +841,7 @@ msgstr "Da"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
-msgstr ""
+msgstr "Generazione link di pagamento"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
@@ -907,7 +907,7 @@ msgstr "ID"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "If not defined, the acquirer name will be used."
-msgstr "Se non definito, verrà usato il nome del sistema."
+msgstr "Se non definito, viene usato il nome del sistema."
 
 #. module: payment
 #. openerp-web
@@ -1158,8 +1158,8 @@ msgstr "Metodo"
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
 msgstr ""
-"Riferimento partner mancante durante il tentativo di creazione di un nuovo "
-"token di pagamento"
+"Riferimento partner mancante nel tentativo di creare un nuovo token di "
+"pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1259,13 +1259,13 @@ msgstr "Dati accessibili solo agli amministratori."
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only transactions having the authorized status can be captured."
-msgstr ""
+msgstr "Possono essere registrate solo transazioni con stato autorizzato."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only transactions having the capture status can be voided."
-msgstr "Possono essere annullate solo transazioni con stato acquisizione."
+msgstr "Possono essere annullate solo transazioni con stato registrazione."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1746,8 +1746,8 @@ msgstr "Modalità test"
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
-"I sistemi di pagamento %s non sono autorizzati alla modalità di acquisizione"
-" manuale."
+"I sistemi di pagamento %s non sono autorizzati alla modalità di "
+"registrazione manuale."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1762,8 +1762,8 @@ msgid ""
 "The transaction %s with %s for %s has been authorized. Waiting for "
 "capture..."
 msgstr ""
-"La transazione %s con %s per %s è stata autorizzata. In attesa di "
-"acquisizione..."
+"La transazione %s con %s, pari a %s, è stata autorizzata. In attesa di "
+"registrazione..."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1772,14 +1772,14 @@ msgid ""
 "The transaction %s with %s for %s has been cancelled with the following "
 "message: %s"
 msgstr ""
-"La transazione %s con %s per %s è stata annullata con il seguente messaggio:"
-" %s"
+"La transazione %s con %s, pari a %s, è stata annullata con il seguente "
+"messaggio: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The transaction %s with %s for %s has been cancelled."
-msgstr "La transazione %s con %s per %s è stata annullata."
+msgstr "La transazione %s con %s, pari a %s, è stata annullata."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1788,8 +1788,8 @@ msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
 msgstr ""
-"La transazione %s con %s per %s è stata confermata. Il relativo pagamento è "
-"stato registrato: %s"
+"La transazione %s con %s, pari a %s, è stata confermata. Il relativo "
+"pagamento è stato registrato: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1798,12 +1798,14 @@ msgid ""
 "The transaction %s with %s for %s has return failed with the following error"
 " message: %s"
 msgstr ""
+"La transazione %s con %s, pari a %s, ha restituito un errore con il seguente"
+" messaggio: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
-msgstr "La transazione %s con %s per %s è in attesa."
+msgstr "La transazione %s con %s, pari a %s, è in attesa."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1954,7 +1956,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Void Transaction"
-msgstr "Transazione annullata"
+msgstr "Annulla transazione"
 
 #. module: payment
 #. openerp-web
