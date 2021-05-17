@@ -95,7 +95,6 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
               if (orderPricelist){
                   currentPOSOrder.set_pricelist(orderPricelist);
               }
-              currentPOSOrder.sale_order_origin_id = clickedOrder;
 
               if (selectedOption){
                 // settle the order

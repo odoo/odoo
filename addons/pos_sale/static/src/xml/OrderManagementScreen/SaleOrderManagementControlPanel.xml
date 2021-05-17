@@ -16,11 +16,6 @@
                     <i class="fa fa-remove" />
                 </span>
             </div>
-            <t t-if="selectedSO">
-                <div class="item button next highlight" t-on-click="trigger('unlink-so')">
-                    <span>Unlink <t t-esc="selectedSO"/></span>
-                </div>
-            </t>
             <div t-if="showPageControls" class="item">
                 <div class="page-controls">
                     <div class="previous" t-on-click="trigger('prev-page')">

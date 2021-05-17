@@ -33,7 +33,6 @@ odoo.define('pos_sale.SaleOrderManagementControlPanel', function (require) {
             // even if this component is destroyed (unmounted).
             this.orderManagementContext = useContext(contexts.orderManagement);
             useListener('clear-search', this._onClearSearch);
-            useListener('unlink-so', this._unlinkSO);
             useAutofocus({ selector: 'input' });
 
             let currentClient = this.env.pos.get_client();
@@ -123,11 +122,6 @@ odoo.define('pos_sale.SaleOrderManagementControlPanel', function (require) {
         _onClearSearch() {
             this.orderManagementContext.searchString = '';
             this.onInputKeydown({ key: 'Enter' });
-        }
-        _unlinkSO() {
-          let currentPOSOrder = this.env.pos.get_order();
-          currentPOSOrder.sale_order_origin_id = null;
-          this.trigger('close-screen');
         }
     }
     SaleOrderManagementControlPanel.template = 'SaleOrderManagementControlPanel';
