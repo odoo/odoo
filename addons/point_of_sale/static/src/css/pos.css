@@ -1853,6 +1853,11 @@ td {
     padding: 16px;
     border-bottom: solid 5px rgb(110,200,155);
 }
+@media screen and (max-width: 768px) {
+    .pos .clientlist-screen .client-details {
+        border-bottom: 0;
+    }
+}
 .pos .clientlist-screen .client-picture{
     height: 64px;
     width: 64px;
@@ -1949,11 +1954,25 @@ td {
 .pos .clientlist-screen .client-detail > .empty{
     opacity: 0.3;
 }
-
+.pos .clientlist-screen .clientlist-buttons {
+    display: flex;
+}
+@media screen and (max-width: 768px) {
+    .pos .clientlist-screen .clientlist-buttons {
+        flex-direction: row-reverse;
+    }
+    .pos .clientlist-screen .clientlist-buttons .button {
+        width: 25px;
+    }
+}
 .pos .clientlist-screen .button.new-customer {
     min-width: 30px;
 }
-
+@media screen and (max-width: 768px) {
+    .pos .clientlist-screen .button.new-customer {
+        min-width: 25px;
+    }
+}
 .pos .searchbox-client {
     padding: 3px 13px;
     margin-top: 12px;
