@@ -157,17 +157,38 @@ class MassMailingList(models.Model):
         action['context'] = {'default_list_ids': self.ids, 'create': False, 'search_default_filter_bounce': 1}
         return action
 
-    def action_merge(self, src_lists, archive):
+    def action_mailing_lists_merge(self):
+        dest = self[0]
+
+        for record in self[1:]:
+            if dest.contact_count < record.contact_count:
+                dest = record
+            elif dest.contact_count == record.contact_count and \
+                    dest.mailing_count < record.mailing_count:
+                dest = record
+            elif dest.contact_count == record.contact_count and \
+                    dest.mailing_count == record.mailing_count and \
+                    dest.create_date > record.create_date:
+                dest = record
+        dest.action_merge((self - dest))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Mailing Lists'),
+            'res_model': 'mailing.list',
+            'view_mode': 'form',
+            'res_id': dest.id
+        }
+
+    def action_merge(self, src_lists):
         """
             Insert all the contact from the mailing lists 'src_lists' to the
-            mailing list in 'self'. Possibility to archive the mailing lists
-            'src_lists' after the merge except the destination mailing list 'self'.
+            mailing list in 'self'. Delete mailing lists 'src_lists' after
+            the merge except the destination mailing list 'self'.notes
         """
         # Explation of the SQL query with an example. There are the following lists
         # A (id=4): yti@odoo.com; yti@example.com
         # B (id=5): yti@odoo.com; yti@openerp.com
-        # C (id=6): nothing
-        # To merge the mailing lists A and B into C, we build the view st that looks
+        # To merge the mailing lists A and B, we build the view st that looks
         # like this with our example:
         #
         #  contact_id |           email           | row_number |  list_id |
@@ -217,10 +238,44 @@ class MassMailingList(models.Model):
                     )
                 ) st
             WHERE st.rn = 1;""", (self.id, tuple(src_lists.ids), self.id))
+        self.env.cr.execute("""
+            UPDATE mailing_contact_list_rel
+            SET opt_out = TRUE
+            WHERE contact_id IN (
+                SELECT st.contact_id AS contact_id
+                FROM
+                    (
+                    SELECT
+                        contact.id AS contact_id,
+                        contact.email AS email,
+                        list.id AS list_id,
+                        row_number() OVER (PARTITION BY email ORDER BY email) AS rn,
+                        contact_list_rel.opt_out AS opt_out
+                    FROM
+                        mailing_contact contact,
+                        mailing_contact_list_rel contact_list_rel,
+                        mailing_list list
+                    WHERE contact.id=contact_list_rel.contact_id
+                    AND COALESCE(contact_list_rel.opt_out,FALSE) = TRUE
+                    AND contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)
+                    AND list.id=contact_list_rel.list_id
+                    AND list.id IN %s
+                    AND EXISTS
+                        (
+                        SELECT 1
+                        FROM
+                            mailing_contact contact2,
+                            mailing_contact_list_rel contact_list_rel2
+                        WHERE contact2.email = contact.email
+                        AND contact_list_rel2.contact_id = contact2.id
+                        AND contact_list_rel2.list_id = %s
+                        )
+                    ) st
+                WHERE st.rn = 1
+            );""", (tuple(src_lists.ids), self.id))
         self.flush()
         self.invalidate_cache()
-        if archive:
-            (src_lists - self).action_archive()
+        (src_lists - self).unlink()
 
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
