@@ -16,9 +16,6 @@
                     </div>
                 </div>
                 <div class="default-view">
-                    <div class="pos-receipt-container">
-                        <OrderReceipt order="currentOrder" t-ref="order-receipt" />
-                    </div>
                     <div class="actions">
                         <h1>How would you like to receive your receipt?</h1>
                         <div class="buttons">
@@ -39,6 +36,9 @@
                                 <t t-esc="orderUiState.emailNotice"></t>
                             </div>
                         </t>
+                    </div>
+                    <div class="pos-receipt-container">
+                        <OrderReceipt order="currentOrder" t-ref="order-receipt" />
                     </div>
                 </div>
             </div>
