@@ -84,7 +84,7 @@ class Currency(models.Model):
             currency.rate = (currency_rates.get(currency.id) or 1.0) / last_rate[company]
             currency.inverse_rate = 1 / currency.rate
             if currency != company.currency_id:
-                currency.rate_string = '1 %s = %s %s' % (company.currency_id.name, currency.rate, currency.name)
+                currency.rate_string = '1 %s = %.6f %s' % (company.currency_id.name, currency.rate, currency.name)
             else:
                 currency.rate_string = ''
 
