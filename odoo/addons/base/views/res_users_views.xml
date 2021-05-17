@@ -39,19 +39,18 @@
         <record id="identity_check_wizard" model="ir.ui.view">
             <field name="model">res.users.identitycheck</field>
             <field name="arch" type="xml">
-                <form string="Security Control">
+                <form string="Password Confirmation">
                     <sheet clas="bg-primary">
-                        <h3><strong>Please confirm your password to continue</strong></h3>
-                        <p>This is necessary for security-related changes. The authorization will last for a few minutes.</p>
+                        <h3><strong>Please enter your password to confirm you own this account</strong></h3>
+                        <br/>
                         <div>
-                            <label for="password" class="col-4 col-md-12 px-0"/>
                             <field class="col-10 col-md-6 px-0" name="password" autocomplete="current-password" required="True" password="True"/>
                         </div>
+                        <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
                     </sheet>
                     <footer>
                         <button string="Confirm Password" type="object" name="run_check" class="btn btn-primary" data-hotkey="q"/>
                         <button string="Cancel" special="cancel" data-hotkey="z" class="btn btn-secondary"/>
-                        <a href="/web/reset_password/" class="btn btn-link" role="button">Forgot password?</a>
                     </footer>
                 </form>
             </field>
@@ -235,7 +234,7 @@
                                 </group>
                                 <field name="groups_id"/>
                             </page>
-                            <page string="Preferences" name="references">
+                            <page string="Preferences" name="preferences">
                                 <group>
                                     <group string="Localization" name="preferences">
                                         <field name="active" invisible="1"/>
@@ -433,7 +432,7 @@
                         <field name="name" readonly="1" class="oe_inline"/>
                     </h1>
                     <notebook>
-                        <page string="Preferences">
+                        <page string="Preferences" name="preferences_page">
                             <group name="preferences">
                                 <group>
                                     <field name="email" widget="email" readonly="0"/>
@@ -465,16 +464,17 @@
                             <group name="preference_contact"></group>
                         </page>
                         <page string="Account Security">
-                            <group name="auth" string="Authentication">
+                            <group name="auth" string="Password Management">
                                 <div>
                                     <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
                                 </div>
                             </group>
-                            <group string="Developer API Keys" help="test">
-                                <a href="https://www.odoo.com/documentation/14.0/developer/webservices/odoo.html#api-keys" target="_blank">
-                                    <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
-                                    <span>Documentation</span>
-                                </a>
+                            <group groups="base.group_no_one">
+                                <div class="o_horizontal_separator">Developer API Keys
+                                    <a href="https://www.odoo.com/documentation/14.0/developer/webservices/odoo.html#api-keys" target="_blank">
+                                        <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>
+                                    </a>
+                                </div>
                                 <div colspan="2" attrs="{'invisible': [('api_key_ids', '=', [])]}">
                                     <field name="api_key_ids" nolabel="1" colspan="4" readonly="0">
                                         <tree editable="bottom" create="false" delete="false">

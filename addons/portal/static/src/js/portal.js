@@ -207,9 +207,6 @@ function handleCheckIdentity(rpc, wrapped) {
                     }
                 }, {
                     text: _t('Cancel'), close: true
-                }, {
-                    text: _t('Forgot password?'), classes: 'btn btn-link',
-                    click() { window.location.href = "/web/reset_password/"; }
                 }]
             }).on('close', null, () => {
                 // unlink wizard object?
