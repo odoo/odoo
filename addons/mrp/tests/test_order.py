@@ -1708,3 +1708,45 @@ class TestMrpOrder(TestMrpCommon):
         wizard.process()
         self.assertEqual(mo_1.state, 'done')
         self.assertEqual(mo_2.state, 'done')
+
+    def test_workcenter_timezone(self):
+        # Workcenter is based in Bangkok
+        # Possible working hours are Monday to Friday, from 8:00 to 12:00 and from 13:00 to 17:00 (UTC+7)
+        workcenter = self.workcenter_1
+        workcenter.resource_calendar_id.tz = 'Asia/Bangkok'
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_1.product_tmpl_id.id,
+            'bom_line_ids': [(0, 0, {
+                'product_id': self.product_2.id,
+            })],
+            'operation_ids': [(0, 0, {
+                'name': 'SuperOperation01',
+                'workcenter_id': workcenter.id,
+            }), (0, 0, {
+                'name': 'SuperOperation01',
+                'workcenter_id': workcenter.id,
+            })],
+        })
+
+        # Next Monday at 6:00 am UTC
+        date_planned = (Dt.now() + timedelta(days=7 - Dt.now().weekday())).replace(hour=6, minute=0, second=0)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.date_planned_start = date_planned
+        mo = mo_form.save()
+
+        mo.workorder_ids[0].duration_expected = 240
+        mo.workorder_ids[1].duration_expected = 60
+
+        mo.action_confirm()
+        mo.button_plan()
+
+        # Asia/Bangkok is UTC+7 and the start date is on Monday at 06:00 UTC (i.e., 13:00 UTC+7).
+        # So, in Bangkok, the first workorder uses the entire Monday afternoon slot 13:00 - 17:00 UTC+7 (i.e., 06:00 - 10:00 UTC)
+        # The second job uses the beginning of the Tuesday morning slot: 08:00 - 09:00 UTC+7 (i.e., 01:00 - 02:00 UTC)
+        self.assertEqual(mo.workorder_ids[0].date_planned_start, date_planned)
+        self.assertEqual(mo.workorder_ids[0].date_planned_finished, date_planned + timedelta(hours=4))
+        tuesday = date_planned + timedelta(days=1)
+        self.assertEqual(mo.workorder_ids[1].date_planned_start, tuesday.replace(hour=1))
+        self.assertEqual(mo.workorder_ids[1].date_planned_finished, tuesday.replace(hour=2))
