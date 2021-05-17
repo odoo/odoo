@@ -29,7 +29,7 @@ function registerView(name, LegacyView) {
             this.Widget = Widget; // fool the ComponentAdapter with a simple Widget
             this.View = LegacyView;
             this.viewInfo = {};
-            this.viewParams = {
+            this.viewParams = Object.assign({}, this.props.actionFlags, {
                 action: this.props.action,
                 // legacy views automatically add the last part of the breadcrumbs
                 breadcrumbs: breadcrumbsToLegacy(this.props.breadcrumbs),
@@ -48,7 +48,7 @@ function registerView(name, LegacyView) {
                         this.props.searchPanel ||
                         (this.props.state && this.props.state.searchPanel),
                 },
-            };
+            });
             // Only add mode to viewParams if it is specified to avoid overwriting the default mode in some view (eg graph)
             if (this.props.mode) {
                 this.viewParams.mode = this.props.mode;
