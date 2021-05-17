@@ -352,7 +352,9 @@ function makeActionManager(env) {
                     multiRecord: v.multiRecord,
                 };
             });
+        const flags = action.flags || {};
         const props = Object.assign({}, _getActionProps(action), {
+            actionFlags: Object.assign({}, flags, flags[view.type]),
             context: action.context,
             domain: action.domain || [],
             model: action.res_model,

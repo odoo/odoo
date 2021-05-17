@@ -1408,6 +1408,39 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
+    QUnit.test("flags field of ir.actions.act_window is used", async function (assert) {
+        // more info about flags field : https://github.com/odoo/odoo/commit/c9b133813b250e89f1f61816b0eabfb9bee2009d
+        assert.expect(7);
+        testConfig.serverData.actions[44] = {
+            id: 33,
+            name: "Partners",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            flags: {
+                withControlPanel: false,
+            },
+            views: [[false, "form"]],
+        };
+        const mockRPC = async (route, args) => {
+            assert.step((args && args.method) || route);
+        };
+        const webClient = await createWebClient({ testConfig, mockRPC });
+        await doAction(webClient, 44);
+        assert.containsOnce(webClient, ".o_form_view", "should display the form view");
+        assert.containsNone(
+            document.body,
+            ".o_control_panel",
+            "should not display the control panel"
+        );
+
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "load_views",
+            "onchange",
+        ]);
+    });
+
     QUnit.test("save current search", async function (assert) {
         assert.expect(4);
         testUtils.mock.patch(ListController, {
