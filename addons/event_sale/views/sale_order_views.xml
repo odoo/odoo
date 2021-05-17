@@ -12,6 +12,7 @@
                             ('event_ticket_ids.product_id','=', product_id),
                             ('date_end','&gt;=',time.strftime('%Y-%m-%d 00:00:00'))
                         ]"
+                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                         attrs="{'invisible': [('event_ok', '=', False)], 'required': [('event_ok', '!=', False)]}"
                         options="{'no_open': True, 'no_create': True}"
                     />
@@ -22,6 +23,7 @@
                             ('product_id','=',product_id),
                             '|', ('seats_availability', '=', 'unlimited'), ('seats_available', '>', 0)
                         ]"
+                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                         attrs="{
                             'invisible': ['|', ('event_ok', '=', False), ('event_id', '=', False)],
                             'required': [('event_ok', '!=', False), ('event_id', '!=', False)],
