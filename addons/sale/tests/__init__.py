@@ -12,4 +12,3 @@ from . import test_sale_refund
 from . import test_sale_signature
 from . import test_sale_transaction
 from . import test_sale_flow
-from . import test_sale_fiscal_position
