@@ -1,11 +1,14 @@
 /** @odoo-module **/
 
+import ThreadNeedactionPreview from '@mail/components/thread_needaction_preview/thread_needaction_preview';
 import {
     afterEach,
     afterNextRender,
     beforeEach,
     start,
 } from '@mail/utils/test_utils';
+
+const components = { ThreadNeedactionPreview };
 
 QUnit.module('rating', {}, function () {
 QUnit.module('components', {}, function () {
