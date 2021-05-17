@@ -5,6 +5,7 @@ from dateutil import relativedelta
 from datetime import timedelta
 from functools import partial
 import datetime
+from pytz import timezone
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import ValidationError
@@ -225,8 +226,8 @@ class MrpWorkcenter(models.Model):
         start_datetime, revert = make_aware(start_datetime)
 
         resource = self.resource_id
-        get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, domain=[('time_type', 'in', ['other', 'leave'])], resources=resource)
-        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=[('time_type', '=', 'other')], resources=resource)
+        get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, domain=[('time_type', 'in', ['other', 'leave'])], resources=resource, tz=timezone(self.resource_calendar_id.tz))
+        get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=[('time_type', '=', 'other')], resources=resource, tz=timezone(self.resource_calendar_id.tz))
 
         remaining = duration
         start_interval = start_datetime
