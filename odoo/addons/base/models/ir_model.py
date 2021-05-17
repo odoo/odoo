@@ -1023,6 +1023,8 @@ class IrModelFields(models.Model):
             model_id = self.env['ir.model']._get_id(model_name)
             for field in self.env[model_name]._fields.values():
                 rows.append(self._reflect_field_params(field, model_id))
+        if not rows:
+            return
         cols = list(unique(['model', 'name'] + list(rows[0])))
         expected = [tuple(row[col] for col in cols) for row in rows]
 
