@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tests.common import Form
+from odoo import fields
 
 
 @tagged('post_install', '-at_install')
@@ -2075,6 +2077,56 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         # Check full reconciliation
         self.assertTrue(all(line.full_reconcile_id for line in lines_to_reconcile), "All tax lines should be fully reconciled")
+
+    def test_caba_double_tax(self):
+        """ Test the CABA entries generated from an invoice with almost
+        equal lines, different only on analytic accounting
+        """
+        # Make the tax account reconcilable
+        self.tax_account_1.reconcile = True
+
+        # Create an invoice with a CABA tax using 'Include in analytic cost'
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', account_predictive_bills_disable_prediction=True))
+        move_form.invoice_date = fields.Date.from_string('2019-01-01')
+        move_form.partner_id = self.partner_a
+        self.cash_basis_tax_a_third_amount.analytic = True
+        test_analytic_account = self.env['account.analytic.account'].create({'name': 'test_analytic_account'})
+
+        tax = self.cash_basis_tax_a_third_amount
+
+        # line with analytic account, will generate 2 lines in CABA move
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.name = "test line with analytic account"
+            line_form.product_id = self.product_a
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(tax)
+            line_form.analytic_account_id = test_analytic_account
+            line_form.price_unit = 100
+
+        # line with analytic account, will generate other 2 lines in CABA move
+        # even if the tax is the same
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.name = "test line"
+            line_form.product_id = self.product_a
+            line_form.tax_ids.clear()
+            line_form.tax_ids.add(tax)
+            line_form.price_unit = 100
+
+        rslt = move_form.save()
+        rslt.action_post()
+
+        pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=rslt.ids).create({
+            'amount': rslt.amount_total,
+            'payment_date': rslt.date,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+        })
+        pmt_wizard._create_payments()
+
+        partial_rec = rslt.mapped('line_ids.matched_debit_ids')
+        caba_move = self.env['account.move'].search([('tax_cash_basis_rec_id', '=', partial_rec.id)])
+        self.assertEqual(len(caba_move.line_ids), 4, "All lines should be there")
+        self.assertEqual(caba_move.line_ids.filtered(lambda x: x.tax_line_id).balance, 66.66, "Tax amount should take into account both lines")
 
     def test_caba_dest_acc_reconciliation_partial_pmt(self):
         """ Test the reconciliation of tax lines (when using a reconcilable tax account)
