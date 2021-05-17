@@ -187,15 +187,14 @@ class ResUsers(models.Model):
             template = self.env.ref('auth_signup.reset_password_email')
         assert template._name == 'mail.template'
 
-        template_values = {
+        email_values = {
             'email_to': '${object.email|safe}',
             'email_cc': False,
             'auto_delete': True,
-            'partner_to': False,
+            'recipient_ids': [],
+            'partner_ids': [],
             'scheduled_date': False,
         }
-        if any(template[field] != value for (field, value) in template_values.items()):
-            template.write(template_values)
 
         for user in self:
             if not user.email:
@@ -203,7 +202,7 @@ class ResUsers(models.Model):
             # TDE FIXME: make this template technical (qweb)
             with self.env.cr.savepoint():
                 force_send = not(self.env.context.get('import_file', False))
-                template.send_mail(user.id, force_send=force_send, raise_exception=True)
+                template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
 
     def send_unregistered_user_reminder(self, after_days=5):
