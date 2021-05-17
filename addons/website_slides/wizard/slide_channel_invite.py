@@ -6,7 +6,6 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import formataddr
 
 _logger = logging.getLogger(__name__)
 
@@ -15,35 +14,20 @@ emails_split = re.compile(r"[;,\n\r]+")
 
 class SlideChannelInvite(models.TransientModel):
     _name = 'slide.channel.invite'
+    _inherit = 'mail.composer.mixin'
     _description = 'Channel Invitation Wizard'
 
     # composer content
-    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
-    body = fields.Html('Contents', sanitize_style=True, compute='_compute_body', readonly=False, store=True)
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
-    template_id = fields.Many2one(
-        'mail.template', 'Use template',
-        domain="[('model', '=', 'slide.channel.partner')]")
     # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     # slide channel
     channel_id = fields.Many2one('slide.channel', string='Slide channel', required=True)
 
-    @api.depends('template_id')
-    def _compute_subject(self):
-        for invite in self:
-            if invite.template_id:
-                invite.subject = invite.template_id.subject
-            elif not invite.subject:
-                invite.subject = False
-
-    @api.depends('template_id')
-    def _compute_body(self):
-        for invite in self:
-            if invite.template_id:
-                invite.body = invite.template_id.body_html
-            elif not invite.body:
-                invite.body = False
+    # Overrides of mail.composer.mixin
+    @api.depends('channel_id')  # fake trigger otherwise not computed in new mode
+    def _compute_render_model(self):
+        self.render_model = 'slide.channel.partner'
 
     @api.onchange('partner_ids')
     def _onchange_partner_ids(self):
@@ -92,8 +76,8 @@ class SlideChannelInvite(models.TransientModel):
 
     def _prepare_mail_values(self, slide_channel_partner):
         """ Create mail specific for recipient """
-        subject = self.env['mail.render.mixin']._render_template(self.subject, 'slide.channel.partner', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
-        body = self.env['mail.render.mixin']._render_template(self.body, 'slide.channel.partner', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
+        subject = self._render_field('subject', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
+        body = self._render_field('body', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
         # post the message
         mail_values = {
             'email_from': self.env.user.email_formatted,
