@@ -686,4 +686,57 @@ QUnit.test("Schedule activity dialog uses the same search view as activity view"
     ])
 });
 
+QUnit.test('Activity view: apply progressbar filter', async function (assert) {
+    assert.expect(9);
+
+    serverData.actions = {
+        1: {
+            id: 1,
+            name: 'Task Action',
+            res_model: 'task',
+            type: 'ir.actions.act_window',
+            views: [[false, 'activity']],
+        }
+    };
+    serverData.views = {
+        'task,false,activity':
+            `<activity string="Task" >
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>`,
+        'task,false,search': '<search></search>',
+    };
+
+    const webClient = await createWebClient({ serverData, legacyParams: { withLegacyMockServer: true } });
+
+    await doAction(webClient, 1);
+
+    assert.containsNone(webClient.el.querySelector('.o_activity_view thead'),
+        '.o_activity_filter_planned,.o_activity_filter_today,.o_activity_filter_overdue,.o_activity_filter___false',
+        "should not have active filter");
+    assert.containsNone(webClient.el.querySelector('.o_activity_view tbody'),
+        '.o_activity_filter_planned,.o_activity_filter_today,.o_activity_filter_overdue,.o_activity_filter___false',
+        "should not have active filter");
+    assert.strictEqual(webClient.el.querySelector('.o_activity_view tbody .o_activity_record').textContent,
+        'Office planning', "'Office planning' should be first record");
+    assert.containsOnce(webClient.el.querySelector('.o_activity_view tbody'), '.planned',
+        "other records should be available");
+
+    await testUtils.dom.click(webClient.el.querySelector('.o_kanban_counter_progress .progress-bar[data-filter="planned"]'));
+    assert.containsOnce(webClient.el.querySelector('.o_activity_view thead'), '.o_activity_filter_planned',
+        "planned should be active filter");
+    assert.containsN(webClient.el.querySelector('.o_activity_view tbody'), '.o_activity_filter_planned', 5,
+        "planned should be active filter");
+    assert.strictEqual(webClient.el.querySelector('.o_activity_view tbody .o_activity_record').textContent,
+        'Meeting Room Furnitures', "'Office planning' should be first record");
+    const tr = webClient.el.querySelectorAll('.o_activity_view tbody tr')[1];
+    assert.hasClass(tr.querySelectorAll('td')[1], 'o_activity_empty_cell',
+        "other records should be hidden");
+    assert.containsNone(webClient.el.querySelector('.o_activity_view tbody'), 'planned',
+        "other records should be hidden");
+});
+
 });
