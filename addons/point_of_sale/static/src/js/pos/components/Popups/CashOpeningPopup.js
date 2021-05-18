@@ -3,8 +3,9 @@
 const { useState } = owl.hooks;
 import { parse } from 'web.field_utils';
 import NumberBuffer from 'point_of_sale.NumberBuffer';
+import PosComponent from 'point_of_sale.PosComponent';
 
-class CashOpeningPopup extends owl.Component {
+class CashOpeningPopup extends PosComponent {
     constructor() {
         super(...arguments);
         this.currency = this.env.model.currency;
