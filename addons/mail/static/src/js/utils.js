@@ -15,16 +15,13 @@ var _t = core._t;
  * @returns {string}
  */
 function parseAndTransform(htmlString, transformFunction) {
-    var openToken = "OPEN" + Date.now();
-    var string = htmlString.replace(/&lt;/g, openToken);
     var children;
     try {
-        children = $('<div>').html(string).contents();
+        children = $('<div>').html(htmlString).contents();
     } catch (e) {
-        children = $('<div>').html('<pre>' + string + '</pre>').contents();
+        children = $('<div>').html('<pre>' + htmlString + '</pre>').contents();
     }
-    return _parseAndTransform(children, transformFunction)
-                .replace(new RegExp(openToken, "g"), "&lt;");
+    return _parseAndTransform(children, transformFunction);
 }
 
 /**
@@ -71,8 +68,9 @@ function linkify(text, attrs) {
 
 function addLink(node, transformChildren) {
     if (node.nodeType === 3) {  // text node
-        const linkified = linkify(node.data);
-        if (linkified !== node.data) {
+        const data = owl.utils.escape(node.data);
+        const linkified = linkify(data);
+        if (linkified !== data) {
             const div = document.createElement('div');
             div.innerHTML = linkified;
             for (const childNode of [...div.childNodes]) {
@@ -81,7 +79,7 @@ function addLink(node, transformChildren) {
             node.parentNode.removeChild(node);
             return linkified;
         }
-        return node.textContent;
+        return data;
     }
     if (node.tagName === "A") return node.outerHTML;
     transformChildren();
@@ -110,13 +108,13 @@ function htmlToTextContentInline(htmlString) {
 }
 
 function stripHTML(node, transformChildren) {
-    if (node.nodeType === 3) return node.data;  // text node
+    if (node.nodeType === 3) return owl.utils.escape(node.data);  // text node
     if (node.tagName === "BR") return "\n";
     return transformChildren();
 }
 
 function inline(node, transform_children) {
-    if (node.nodeType === 3) return node.data;
+    if (node.nodeType === 3) return owl.utils.escape(node.data);
     if (node.nodeType === 8) return "";
     if (node.tagName === "BR") return " ";
     if (node.tagName.match(/^(A|P|DIV|PRE|BLOCKQUOTE)$/)) return transform_children();

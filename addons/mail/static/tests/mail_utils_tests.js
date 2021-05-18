@@ -35,6 +35,18 @@ QUnit.test('add_link utility function', function (assert) {
     });
 });
 
+QUnit.test('addLink: linkify inside text node (0 occurrence)', function (assert) {
+    assert.expect(1);
+
+    const content = '&amp; &amp;amp; &gt; &lt;';
+    const linkified = utils.parseAndTransform(content, utils.addLink);
+    assert.strictEqual(
+        linkified,
+        content,
+        "linkifying text should not break html entities"
+    );
+});
+
 QUnit.test('addLink: linkify inside text node (1 occurrence)', function (assert) {
     assert.expect(5);
 
@@ -104,6 +116,30 @@ QUnit.test('addLink: linkify inside text node (2 occurrences)', function (assert
         div.querySelectorAll(':scope a')[1].textContent,
         'https://somelink2.com',
         "text content of 2nd link should be equivalent to its non-linkified version"
+    );
+});
+
+QUnit.test('inline: inline utility function', function (assert) {
+    assert.expect(1);
+
+    const content = '&amp; &amp;amp; &gt; &lt;';
+    const linkified = utils.parseAndTransform(content, utils.inline);
+    assert.strictEqual(
+        linkified,
+        content,
+        "inlining text should not break html entities"
+    );
+});
+
+QUnit.test('stripHTML: stripHTML utility function', function (assert) {
+    assert.expect(1);
+
+    const content = '&amp; &amp;amp; &gt; &lt;';
+    const linkified = utils.parseAndTransform(content, utils.stripHTML);
+    assert.strictEqual(
+        linkified,
+        content,
+        "stripHTML should not break html entities"
     );
 });
 
