@@ -1,4 +1,4 @@
-odoo.define("website.configurator.tour", function (require) {
+odoo.define("website.configurator_tour", function (require) {
 "use strict";
 
 const wTourUtils = require("website.tour_utils");
