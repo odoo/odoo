@@ -1226,7 +1226,9 @@ MockServer.include({
                 notifications.map(notification => notification.id)
             );
             const trackingValueIds = this._getRecords('mail.tracking.value', [
+                '|',
                 ['id', 'in', message.tracking_value_ids],
+                ['mail_message_id', '=', message.id],
             ]);
             const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
