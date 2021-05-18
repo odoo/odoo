@@ -3188,13 +3188,10 @@
             }
             ctx.addElse();
             // new component
-            let dynamicFallback = "";
-            if (!value.match(INTERP_REGEXP)) {
-                dynamicFallback = `|| ${ctx.formatExpression(value)}`;
-            }
+            const contextualValue = value.match(INTERP_REGEXP) ? "false" : ctx.formatExpression(value);
             const interpValue = ctx.interpolate(value);
             ctx.addLine(`let componentKey${componentID} = ${interpValue};`);
-            ctx.addLine(`let W${componentID} = context.constructor.components[componentKey${componentID}] || QWeb.components[componentKey${componentID}]${dynamicFallback};`);
+            ctx.addLine(`let W${componentID} = ${contextualValue} || context.constructor.components[componentKey${componentID}] || QWeb.components[componentKey${componentID}];`);
             // maybe only do this in dev mode...
             ctx.addLine(`if (!W${componentID}) {throw new Error('Cannot find the definition of component "' + componentKey${componentID} + '"')}`);
             ctx.addLine(`w${componentID} = new W${componentID}(parent, props${componentID});`);
@@ -5391,9 +5388,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.2.4';
-    __info__.date = '2021-02-10T13:24:25.187Z';
-    __info__.hash = '985e985';
+    __info__.version = '1.2.5';
+    __info__.date = '2021-05-18T08:01:47.651Z';
+    __info__.hash = '968a546';
     __info__.url = 'https://github.com/odoo/owl';
 
 
