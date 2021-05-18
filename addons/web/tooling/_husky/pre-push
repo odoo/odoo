@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Called by "git push" after it has checked the remote status,
+# but before anything has been pushed.
+#
+# If this script exits with a non-zero status nothing will be pushed.
+#
+# Try a force push to master, you should get a message `*** [Policy]  Are you sure you want...`
+#
+# The commands below will not be allowed without confirmation...
+# `git push --force <remote> master-wowl`
+# `git push --delete <remote> master-wowl`
+#
+# Nor will a force push while on the master branch be allowed...
+# `git co master-wowl`
+# `git push --force <remote>`
+# 
+# Requires git 1.8.2 or newer
+#
+# Git 1.8.2 release notes cover the new pre-push hook:
+# <https://github.com/git/git/blob/master/Documentation/RelNotes/1.8.2.txt>
+#
+# See Sample pre-push script:
+# <https://github.com/git/git/blob/87c86dd14abe8db7d00b0df5661ef8cf147a72a3/templates/hooks--pre-push.sample>
+
+protected_branch='master-wowl'
+
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+push_command=$(ps -ocommand= -p $PPID)
+
+is_destructive='force|delete|\-f'
+
+ask_confirmation(){
+    echo "[Policy] Are you sure you want to force push or delete the '$protected_branch' branch? [y|n]"
+    read -n 1 -r < /dev/tty
+
+    echo
+        if echo $REPLY | grep -E '^[Yy]$' > /dev/null; then
+            exit 0 # push will execute
+        fi
+        exit 1 # push will not execute
+
+  exit 1
+}
+
+if [[ $push_command =~ $is_destructive ]] && [ $current_branch = $protected_branch ]; then
+  ask_confirmation
+fi
+
+unset ask_confirmation
+
+exit 0
