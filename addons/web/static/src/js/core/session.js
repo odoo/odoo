@@ -223,9 +223,13 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     load_qweb: function (mods) {
         var self = this;
         var lock = this.qweb_mutex.exec(function () {
-            var cacheId = self.cache_hashes && self.cache_hashes.qweb;
-            var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now());
-            return $.get(route, { bundle: 'web.assets_qweb' }).then(function (doc) {
+            let load = odoo.loadQwebPromise;
+            if (!load){
+                const cacheId = self.cache_hashes && self.cache_hashes.qweb;
+                const route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now());
+                load = $.get(route, { bundle: 'web.assets_qweb' });
+            }
+            return load.then(function (doc) {
                 if (!doc) { return; }
                 const owlTemplates = [];
                 for (let child of doc.querySelectorAll("templates > [owl]")) {
