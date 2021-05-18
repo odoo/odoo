@@ -16,7 +16,8 @@ class AccountInvoiceConfirm(models.TransientModel):
         context = dict(self._context or {})
         active_ids = context.get('active_ids', []) or []
 
-        for record in self.env['account.invoice'].browse(active_ids):
+        invoice_list = self.env['account.invoice'].browse(active_ids).sorted(lambda i: (i.date_invoice, i.reference or '', i.id))
+        for record in invoice_list:
             if record.state != 'draft':
                 raise UserError(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' state."))
             record.action_invoice_open()
