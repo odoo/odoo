@@ -8,7 +8,8 @@
         t-att-class="{ 'o_dropdown_active': state.open }"
         t-on-click="onTogglerClick"
         t-on-mouseenter="onTogglerMouseEnter"
-        t-att-title="props.title">
+        t-att-title="props.title"
+        t-att-data-hotkey="props.hotkey">
         <span>
           <t t-slot="default" />
         </span>

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useHotkey } from "../hotkey_hook";
 import { useActiveElement } from "../ui_service";
 
 const { Component, hooks, misc, QWeb } = owl;
@@ -10,6 +11,15 @@ export class Dialog extends Component {
     setup() {
         this.modalRef = useRef("modal");
         useActiveElement("modal");
+        useHotkey(
+            "escape",
+            () => {
+                if (!this.modalRef.el.classList.contains("o_inactive_modal")) {
+                    this.close();
+                }
+            },
+            { altIsOptional: true }
+        );
         useSubEnv({ inDialog: true });
     }
 

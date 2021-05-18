@@ -6,10 +6,12 @@ import { scrollTo } from "../utils/scrolling";
 import { ParentClosingMode } from "./dropdown_item";
 
 const { Component, core, hooks, useState, QWeb } = owl;
-const { useExternalListener, onMounted, onWillStart } = hooks;
+const { useExternalListener, onMounted, onPatched, onWillStart } = hooks;
 
 export class Dropdown extends Component {
     setup() {
+        this.hotkeyService = useService("hotkey");
+        this.hotkeyTokens = [];
         this.state = useState({ open: this.props.startOpen, groupIsOpen: this.props.startOpen });
 
         this.ui = useService("ui");
@@ -31,6 +33,16 @@ export class Dropdown extends Component {
             });
         });
 
+        function autoSubscribeKeynav() {
+            if (this.state.open) {
+                this.subscribeKeynav();
+            } else {
+                this.unsubscribeKeynav();
+            }
+        }
+
+        onMounted(autoSubscribeKeynav.bind(this));
+        onPatched(autoSubscribeKeynav.bind(this));
         onWillStart(() => {
             if ((this.state.open || this.state.groupIsOpen) && this.props.beforeOpen) {
                 return this.props.beforeOpen();
@@ -80,6 +92,43 @@ export class Dropdown extends Component {
             items[nextActiveIndex].classList.add("o_dropdown_active");
             scrollTo(items[nextActiveIndex], this.el.querySelector(".o_dropdown_menu"));
         }
+    }
+
+    subscribeKeynav() {
+        if (this.hotkeyTokens.length) {
+            return;
+        }
+
+        const subs = {
+            arrowup: () => this.setActiveItem("PREV"),
+            arrowdown: () => this.setActiveItem("NEXT"),
+            "shift+arrowup": () => this.setActiveItem("FIRST"),
+            "shift+arrowdown": () => this.setActiveItem("LAST"),
+            enter: () => {
+                const activeItem = this.el.querySelector(
+                    ":scope > ul.o_dropdown_menu > .o_dropdown_item.o_dropdown_active"
+                );
+                if (activeItem) {
+                    activeItem.click();
+                }
+            },
+            escape: this.close.bind(this),
+        };
+
+        this.hotkeyTokens = [];
+        for (const [hotkey, callback] of Object.entries(subs)) {
+            this.hotkeyTokens.push(
+                this.hotkeyService.registerHotkey(hotkey, callback, {
+                    altIsOptional: true,
+                    allowRepeat: true,
+                })
+            );
+        }
+    }
+
+    unsubscribeKeynav() {
+        this.hotkeyTokens.forEach((tokenId) => this.hotkeyService.unregisterHotkey(tokenId));
+        this.hotkeyTokens = [];
     }
 
     close() {
