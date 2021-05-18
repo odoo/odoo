@@ -6,6 +6,7 @@ const dom = require('web.dom');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
 var portalComposer = require('portal.composer');
+const {Markup} = require('web.utils');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -118,13 +119,14 @@ var PortalChatter = publicWidget.Widget.extend({
     /**
      * Update the messages format
      *
-     * @param {Array<Object>}
+     * @param {Array<Object>} messages
      * @returns {Array}
      */
-    preprocessMessages: function (messages) {
+    preprocessMessages(messages) {
         _.each(messages, function (m) {
             m['author_avatar_url'] = _.str.sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
             m['published_date_str'] = _.str.sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
+            m['body'] = Markup(m.body);
         });
         return messages;
     },

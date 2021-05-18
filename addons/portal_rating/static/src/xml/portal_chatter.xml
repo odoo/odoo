@@ -16,7 +16,7 @@
     </t>
 
     <t t-extend="portal.chatter_messages">
-        <t t-jquery="t[t-raw='message.body']" t-operation="before">
+        <t t-jquery="t[t-out='message.body']" t-operation="before">
             <t t-if="message['rating_value']">
                 <t t-call="portal_rating.rating_stars_static">
                     <t t-set="val" t-value="message.rating_value"/>
