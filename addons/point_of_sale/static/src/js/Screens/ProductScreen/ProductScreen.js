@@ -182,6 +182,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
         async _newOrderlineSelected() {
             NumberBuffer.reset();
+            this.state.numpadMode = 'quantity';
         }
         _setValue(val) {
             if (this.currentOrder.get_selected_orderline()) {
