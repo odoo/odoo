@@ -132,13 +132,6 @@
             border-style: none;
             display: table-cell;
             cursor: pointer;
-            @include o-hover-text-color($text-muted, theme-color('danger'));
-        }
-
-        // Contextual classes
-        @each $color, $value in $theme-colors {
-            $safe: saturate(theme-color-level($color, 2), 10%);
-            @include text-emphasis-variant(".text-#{$color}", $safe);
         }
 
         // Grouped list views

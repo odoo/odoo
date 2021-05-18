@@ -291,6 +291,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web._assets_backend_helpers': [
             'web/static/src/legacy/scss/bootstrap_overridden.scss',
+            'web/static/src/legacy/scss/bs_mixins_overrides_backend.scss',
         ],
         'web._assets_frontend_helpers': [
             'web/static/src/legacy/scss/bootstrap_overridden_frontend.scss',
