@@ -45,7 +45,27 @@
                                     threadLocalId="thread.localId"
                                 />
                             </t>
-                            <t t-esc="inlineLastNeedactionMessageAsOriginThreadBody"/>
+                            <span class="o_ThreadNeedactionPreview_messageBody">
+                                <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.trackingValues.length > 0">
+                                    <span class="o_ThreadNeedactionPreview_trackingValue">
+                                        <span class="o_ThreadNeedactionPreview_trackingValueFieldName">
+                                            <t t-esc="thread.lastNeedactionMessageAsOriginThread.trackingValues[0].changedField"/>
+                                        </span>
+                                        <span class="o_ThreadNeedactionPreview_trackingValueOldValue">
+                                            <t t-esc="thread.lastNeedactionMessageAsOriginThread.trackingValues[0].oldValue"/>
+                                        </span>
+                                        <span class="o_ThreadNeedactionPreview_arrow">
+                                            <div class="o_ThreadNeedactionPreview_trackingValueSeparator fa fa-long-arrow-right" role="img"/>
+                                        </span>
+                                        <span class="o_ThreadNeedactionPreview_trackingValueNewValue">
+                                            <t t-esc="thread.lastNeedactionMessageAsOriginThread.trackingValues[0].newValue"/>
+                                        </span>
+                                    </span>
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="inlineLastNeedactionMessageAsOriginThreadBody"/>
+                                </t>
+                            </span>
                         </span>
                         <span class="o-autogrow"/>
                         <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_markAsRead fa fa-check" title="Mark as Read" t-on-click="_onClickMarkAsRead" t-ref="markAsRead"/>

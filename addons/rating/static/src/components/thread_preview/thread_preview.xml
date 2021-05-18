@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ThreadPreview" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o_ThreadPreview_messageBody')]" position="replace">
+            <t t-if="thread.lastMessage and thread.lastMessage.ratingImg">
+                <span class="o_ThreadPreview_rating_text">Rating:</span>
+                <span class="o_ThreadPreview_rating_image">
+                    <img height="17px" t-att-src="thread.lastMessage.ratingImg"/>
+                </span>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>
