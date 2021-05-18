@@ -62,3 +62,9 @@ class LoyaltyRule(models.Model):
 class LoyaltyReward(models.Model):
     _name = 'loyalty.reward'
     _inherit = ['loyalty.reward', 'image.mixin']
+
+    def _get_discount_product_values(self):
+        result = super()._get_discount_product_values()
+        result['taxes_id'] = False
+        result['supplier_taxes_id'] = False
+        return result

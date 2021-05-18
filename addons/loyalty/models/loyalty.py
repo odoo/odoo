@@ -64,7 +64,33 @@ class LoyaltyReward(models.Model):
         if self.filtered(lambda reward: reward.reward_type == 'gift' and not reward.gift_product_id):
             raise ValidationError(_('The gift product field is mandatory for gift rewards'))
 
-    @api.constrains('reward_type', 'discount_product_id')
-    def _check_discount_product(self):
-        if self.filtered(lambda reward: reward.reward_type == 'discount' and not reward.discount_product_id):
-            raise ValidationError(_('The discount product field is mandatory for discount rewards'))
+    @api.model
+    def create(self, vals):
+        reward = super().create(vals)
+        if reward.reward_type == 'discount' and not vals.get('discount_product_id'):
+            reward._create_discount_product()
+        return reward
+
+    def write(self, vals):
+        res = super().write(vals)
+        for reward in self.filtered(lambda reward: reward.reward_type == 'discount'):
+            if not reward.discount_product_id:
+                reward._create_discount_product()
+            elif 'display_name' in vals:
+                reward.discount_product_id.write({'name': self[0].display_name})
+        return res
+
+    def _get_discount_product_values(self):
+        return {
+            'name': self.display_name,
+            'type': 'service',
+            'sale_ok': False,
+            'purchase_ok': False,
+            'lst_price': 0, #Do not set a high value to avoid issue with coupon code
+        }
+
+    def _create_discount_product(self):
+        self.ensure_one()
+        values = self._get_discount_product_values()
+        discount_product_id = self.env['product.product'].create(values)
+        self.write({'discount_product_id': discount_product_id.id})

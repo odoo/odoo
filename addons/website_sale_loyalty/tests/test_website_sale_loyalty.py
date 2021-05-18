@@ -217,12 +217,10 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         })
 
         # fixed amount discount
-        product_discount = self.env['product.product'].create({'name': 'Discount'})
         reward_id = self.env['loyalty.reward'].create({
             'name': '-20 Discount',
             'reward_type': 'discount',
             'point_cost': 100,
-            'discount_product_id': product_discount.id,
             'discount_type': 'fixed_amount',
             'discount_fixed_amount': 20,
         })
@@ -230,18 +228,16 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
         sale_order._cart_update_reward(reward_id.id, 1)
         self.assertEqual(len(sale_order.order_line), 2)
-        self.assertEqual(sale_order.amount_total, 92)  # (100-20)+15%
-        sale_order._cart_update(product_discount.id, add_qty=-1)
+        self.assertEqual(sale_order.amount_total, 95)  # (100+15%)-20)
+        sale_order._cart_update(reward_id.discount_product_id.id, add_qty=-1, line_id=sale_order.order_line[1].id)
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
 
         # percentage amount discount on full order
-        product_discount = self.env['product.product'].create({'name': 'Discount'})
         reward_id = self.env['loyalty.reward'].create({
             'name': '10% Discount',
             'reward_type': 'discount',
             'point_cost': 100,
-            'discount_product_id': product_discount.id,
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'on_order',
@@ -251,7 +247,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         sale_order._cart_update_reward(reward_id.id, 1)
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 103.5)  # (100+15%)-11.5
-        sale_order._cart_update(product_discount.id, add_qty=-1)
+        sale_order._cart_update(reward_id.discount_product_id.id, add_qty=-1, line_id=sale_order.order_line[1].id)
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
 
@@ -271,12 +267,10 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         })
 
         # percentage amount discount on cheapest
-        product_discount = self.env['product.product'].create({'name': 'Discount'})
         reward_id = self.env['loyalty.reward'].create({
             'name': '10% Discount',
             'reward_type': 'discount',
             'point_cost': 100,
-            'discount_product_id': product_discount.id,
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'cheapest_product',
@@ -285,18 +279,16 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         self.assertEqual(sale_order.amount_total, 402.5)  # (2*100+3*50)+15% = 350+15%
         sale_order._cart_update_reward(reward_id.id, 1)
         self.assertEqual(len(sale_order.order_line), 3)
-        self.assertEqual(sale_order.amount_total, 385.25)  # (2*100+3*(50-5))+15% = 335+15%
-        sale_order._cart_update(product_discount.id, add_qty=-1)
+        self.assertEqual(sale_order.amount_total, 396.75)  # (2*100+3*50-5)+15% = 345+15%
+        sale_order._cart_update(reward_id.discount_product_id.id, add_qty=-1, line_id=sale_order.order_line[2].id)
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 402.5)  # (2*100+3*50)+15% = 350+15%
 
         # percentage amount discount on specific product
-        product_discount = self.env['product.product'].create({'name': 'Discount'})
         reward_id = self.env['loyalty.reward'].create({
             'name': '10% Discount',
             'reward_type': 'discount',
             'point_cost': 100,
-            'discount_product_id': product_discount.id,
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'specific_products',
@@ -307,7 +299,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         sale_order._cart_update_reward(reward_id.id, 1)
         self.assertEqual(len(sale_order.order_line), 3)
         self.assertEqual(sale_order.amount_total, 379.5)  # (2*(100-10)+3*50)+15% = 330+15%
-        sale_order._cart_update(product_discount.id, add_qty=-1)
+        sale_order._cart_update(reward_id.discount_product_id.id, add_qty=-1, line_id=sale_order.order_line[2].id)
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 402.5)  # (2*100+3*50)+15% = 350+15%
 
@@ -338,12 +330,10 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         })
 
         # fixed amount discount
-        product_discount = self.env['product.product'].create({'name': 'Discount', 'taxes_id': tax_15})
         reward_id = self.env['loyalty.reward'].create({
             'name': '-20 Discount',
             'reward_type': 'discount',
             'point_cost': 100,
-            'discount_product_id': product_discount.id,
             'discount_type': 'fixed_amount',
             'discount_fixed_amount': 20,
         })
@@ -351,18 +341,16 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
         sale_order._cart_update_reward(reward_id.id, 1)
         self.assertEqual(len(sale_order.order_line), 2)
-        self.assertEqual(sale_order.amount_total, 92)  # (100-20)+15%
-        sale_order._cart_update(product_discount.id, add_qty=-1)
+        self.assertEqual(sale_order.amount_total, 95)  # (100+15%)-20
+        sale_order._cart_update(reward_id.discount_product_id.id, add_qty=-1, line_id=sale_order.order_line[1].id)
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
 
         # percentage amount discount on full order
-        product_discount = self.env['product.product'].create({'name': 'Discount'})
         reward_id = self.env['loyalty.reward'].create({
             'name': '10% Discount',
             'reward_type': 'discount',
             'point_cost': 100,
-            'discount_product_id': product_discount.id,
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'on_order',
@@ -372,7 +360,7 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         sale_order._cart_update_reward(reward_id.id, 1)
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 103.5)  # (100+15%)-11.5
-        sale_order._cart_update(product_discount.id, add_qty=-1)
+        sale_order._cart_update(reward_id.discount_product_id.id, add_qty=-1, line_id=sale_order.order_line[1].id)
         self.assertEqual(len(sale_order.order_line), 1)
         self.assertEqual(sale_order.amount_total, 115)  # 100+15%
 
@@ -400,17 +388,15 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         self.assertEqual(len(sale_order.order_line), 5)  # 2 products + 1 reward for points + 2 discounts
         self.assertEqual(len(sale_order.website_order_line), 3)  # 2 products + 1 reward
         self.assertEqual(sale_order.amount_total, 375.75)  # 2*(100-10)+15%+3*(50-10%)+25%
-        sale_order._cart_update(product_discount.id, add_qty=-1)
+        sale_order._cart_update(reward_id.discount_product_id.id, add_qty=-1, line_id=sale_order.order_line[2].id)
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 417.5)  # (2*100)+15%+(3*50)+25% = 200+15% + 150+25%
 
         # percentage amount discount on cheapest
-        product_discount = self.env['product.product'].create({'name': 'Discount'})
         reward_id = self.env['loyalty.reward'].create({
             'name': '10% Discount',
             'reward_type': 'discount',
             'point_cost': 100,
-            'discount_product_id': product_discount.id,
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'cheapest_product',
@@ -419,18 +405,16 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         self.assertEqual(sale_order.amount_total, 417.5)  # (2*100)+15%+(3*50)+25% = 200+15% + 150+25%
         sale_order._cart_update_reward(reward_id.id, 1)
         self.assertEqual(len(sale_order.order_line), 3)
-        self.assertEqual(sale_order.amount_total, 398.75)  # (2*100)+15%+3*(50-10%))+25% = 230+135+15%
-        sale_order._cart_update(product_discount.id, add_qty=-1)
+        self.assertEqual(sale_order.amount_total, 411.25)  # (2*100)+15%+(3*50-5)+25% = 230 + 181.25
+        sale_order._cart_update(reward_id.discount_product_id.id, add_qty=-1, line_id=sale_order.order_line[2].id)
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 417.5)  # (2*100)+15%+(3*50)+25% = 200+15% + 150+25%
 
         # percentage amount discount on specific product
-        product_discount = self.env['product.product'].create({'name': 'Discount'})
         reward_id = self.env['loyalty.reward'].create({
             'name': '10% Discount',
             'reward_type': 'discount',
             'point_cost': 100,
-            'discount_product_id': product_discount.id,
             'discount_type': 'percentage',
             'discount_percentage': 10,
             'discount_apply_on': 'specific_products',
@@ -441,6 +425,6 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         sale_order._cart_update_reward(reward_id.id, 1)
         self.assertEqual(len(sale_order.order_line), 3)
         self.assertEqual(sale_order.amount_total, 394.5)  # (2*(100-10)+15%)+(3*50+25%) = 207+187.5
-        sale_order._cart_update(product_discount.id, add_qty=-1)
+        sale_order._cart_update(reward_id.discount_product_id.id, add_qty=-1, line_id=sale_order.order_line[2].id)
         self.assertEqual(len(sale_order.order_line), 2)
         self.assertEqual(sale_order.amount_total, 417.5)  # (2*100)+15%+(3*50)+25% = 200+15% + 150+25%

@@ -97,7 +97,7 @@
                 <group>
                     <group>
                         <field name="reward_type" string="Reward" widget="radio"/>
-                        <field name="discount_product_id" string="Discount Product" attrs="{'invisible': [('reward_type', '!=', 'discount')], 'required': [('reward_type', '=', 'discount')]}"/>
+                        <field name="discount_product_id" string="Discount Product" readonly="1" attrs="{'invisible': ['|', ('reward_type', '!=', 'discount'), ('discount_product_id', '=', False)]}"/>
                     </group>
                     <group>
                         <field name="gift_product_id" attrs="{'invisible': [('reward_type', '!=', 'gift')], 'required': [('reward_type', '=', 'gift')]}" placeholder="Select reward product"/>
