@@ -74,9 +74,6 @@ class ThreadPreview extends Component {
         if (!this.thread.lastMessage) {
             return '';
         }
-        // if (this.thread.lastMessage.subtype_description == "Ratings") {
-        //     return this.thread.lastMessage.prettyBody;
-        // }
         return mailUtils.htmlToTextContentInline(this.thread.lastMessage.prettyBody);
     }
 
