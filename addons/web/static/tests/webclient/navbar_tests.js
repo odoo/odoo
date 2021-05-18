@@ -188,9 +188,13 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
     };
     baseConfig.serverData.menus = newMenus;
     const env = await makeTestEnv(baseConfig);
+
+    // Force the parent width, to make this test independent of screen size
+    const target = getFixture();
+    target.style.width = "1080px";
+
     // Set menu and mount
     env.services.menu.setCurrentMenu(1);
-    const target = getFixture();
     const navbar = await mount(MyNavbar, { env, target });
     assert.containsN(
         navbar.el,
@@ -198,10 +202,10 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
         3,
         "should have 3 menu sections displayed (that are not the 'more' menu)"
     );
-    assert.containsOnce(
+    assert.containsNone(
         navbar.el,
-        ".o_menu_sections_more.d-none",
-        "the 'more' menu should be hidden"
+        ".o_menu_sections_more",
+        "the 'more' menu should not exist"
     );
     // Force minimal width and dispatch window resize event
     navbar.el.style.width = "0%";
@@ -234,10 +238,10 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
         3,
         "should have 3 menu sections displayed (that are not the 'more' menu)"
     );
-    assert.containsOnce(
+    assert.containsNone(
         navbar.el,
-        ".o_menu_sections_more.d-none",
-        "the 'more' menu should be hidden"
+        ".o_menu_sections_more",
+        "the 'more' menu should not exist"
     );
     // Check the navbar adaptation calls
     assert.verifySteps([
@@ -245,6 +249,105 @@ QUnit.test("can adapt with 'more' menu sections behavior", async (assert) => {
         "adapt -> hide 3/3 sections",
         "adapt -> hide 0/3 sections",
     ]);
+    navbar.destroy();
+});
+
+QUnit.test("'more' menu sections adaptations do not trigger render in some cases", async (assert) => {
+    let adaptRunning = false;
+    let adaptCount = 0;
+    let adaptRenderCount = 0;
+    class MyNavbar extends NavBar {
+        async adapt() {
+            adaptRunning = true;
+            adaptCount++;
+            await super.adapt();
+            adaptRunning = false;
+        }
+        async render() {
+            if (adaptRunning) {
+                adaptRenderCount++;
+            }
+            await super.render(...arguments);
+        }
+    }
+
+    const newMenus = {
+        root: { id: "root", children: [1], name: "root", appID: "root" },
+        1: { id: 1, children: [11, 12, 13], name: "App1", appID: 1 },
+        11: { id: 11, children: [], name: "Section 1", appID: 1 },
+        12: { id: 12, children: [], name: "Section 2", appID: 1 },
+        13: { id: 13, children: [], name: "Section 3", appID: 1 },
+    };
+    baseConfig.serverData.menus = newMenus;
+
+    // Force the parent width, to make this test independent of screen size
+    const target = getFixture();
+    target.style.width = "600px";
+
+    const env = await makeTestEnv(baseConfig);
+    const navbar = await mount(MyNavbar, { env, target });
+    assert.strictEqual(navbar.currentAppSections.length, 0, "0 app sub menus");
+    assert.strictEqual(navbar.el.offsetWidth, 600);
+    assert.strictEqual(adaptCount, 1);
+    assert.strictEqual(
+        adaptRenderCount, 0,
+        "during adapt, render not triggered as the navbar has no app sub menus"
+    );
+
+    // Force minimal width and dispatch window resize event
+    navbar.el.style.width = "0%";
+    window.dispatchEvent(new Event("resize"));
+    await nextTick();
+    assert.strictEqual(navbar.el.offsetWidth, 0);
+    assert.strictEqual(adaptCount, 2);
+    assert.strictEqual(
+        adaptRenderCount, 0,
+        "during adapt, render not triggered as the navbar has no app sub menus"
+    );
+
+    // Set menu
+    env.services.menu.setCurrentMenu(1);
+    await nextTick();
+    assert.strictEqual(navbar.currentAppSections.length, 3, "3 app sub menus");
+    assert.strictEqual(
+        navbar.currentAppSectionsExtra.length, 3,
+        "all app sub menus are inside the more menu"
+    );
+    assert.strictEqual(adaptCount, 3);
+    assert.strictEqual(
+        adaptRenderCount, 1,
+        "during adapt, render triggered as the navbar does not have enough space for app sub menus"
+    );
+
+    // Force 40% width and dispatch window resize event
+    navbar.el.style.width = "40%";
+    window.dispatchEvent(new Event("resize"));
+    await nextTick();
+    assert.strictEqual(
+        navbar.currentAppSectionsExtra.length, 3,
+        "all app sub menus are STILL inside the more menu"
+    );
+    assert.strictEqual(adaptCount, 4);
+    assert.strictEqual(
+        adaptRenderCount, 1,
+        "during adapt, render not triggered as the more menu dropdown is STILL the same"
+    );
+
+    // Reset to full width and dispatch window resize event
+    navbar.el.style.width = "100%";
+    window.dispatchEvent(new Event("resize"));
+    await nextTick();
+    assert.strictEqual(navbar.currentAppSections.length, 3, "still 3 app sub menus");
+    assert.strictEqual(
+        navbar.currentAppSectionsExtra.length, 0,
+        "all app sub menus are NO MORE inside the more menu"
+    );
+    assert.strictEqual(adaptCount, 5);
+    assert.strictEqual(
+        adaptRenderCount, 2,
+        "during adapt, render triggered as the more menu dropdown is NO MORE the same"
+    );
+
     navbar.destroy();
 });
 
@@ -271,9 +374,12 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
     baseConfig.serverData.menus = newMenus;
     const env = await makeTestEnv(baseConfig);
 
+    // Force the parent width, to make this test independent of screen size
+    const target = getFixture();
+    target.style.width = "1080px";
+
     // Set App1 menu and mount
     env.services.menu.setCurrentMenu(1);
-    const target = getFixture();
     const navbar = await mount(NavBar, { env, target });
 
     // Force minimal width and dispatch window resize event
