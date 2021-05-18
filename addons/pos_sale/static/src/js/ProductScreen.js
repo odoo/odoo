@@ -1,4 +1,4 @@
-odoo.define('pos_iot.ProductScreen', function (require) {
+odoo.define('pos_sale.ProductScreen', function (require) {
     'use strict';
 
     const ProductScreen = require('point_of_sale.ProductScreen');
@@ -11,6 +11,7 @@ odoo.define('pos_iot.ProductScreen', function (require) {
                 this._setNumpadModeToPrice();
             }
             mounted() {
+                super.mounted();
                 this._setNumpadModeToPrice();
             }
             _setNumpadModeToPrice() {
