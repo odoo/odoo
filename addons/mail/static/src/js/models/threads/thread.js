@@ -295,7 +295,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
     _generateEmojis: function (htmlString) {
         _.each(emojis, function (emoji) {
             _.each(emoji.sources, function (source) {
-                var escapedSource = String(source).replace(/([.*+?=^!:${}()|[\]/\\])/g, '\\$1');
+                var escapedSource = _.escape(String(source)).replace(/([.*+?=^!:${}()|[\]/\\])/g, '\\$1');
                 var regexp = new RegExp("(\\s|^)(" + escapedSource + ")(?=\\s|$)", 'g');
                 htmlString = htmlString.replace(regexp, '$1' + emoji.unicode);
             });

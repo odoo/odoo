@@ -35,5 +35,110 @@ QUnit.test('add_link utility function', function (assert) {
     });
 });
 
+QUnit.test('addLink: linkify inside text node (0 occurrence)', function (assert) {
+    assert.expect(1);
+
+    var content = '&amp; &amp;amp; &gt; &lt;';
+    var linkified = utils.parseAndTransform(content, utils.addLink);
+    assert.strictEqual(
+        linkified,
+        content,
+        "linkifying text should not break html entities"
+    );
+});
+
+QUnit.test('addLink: linkify inside text node (1 occurrence)', function (assert) {
+    assert.expect(6);
+
+    var content = '<p>some text https://somelink.com</p>';
+    var linkified = utils.parseAndTransform(content, utils.addLink);
+    assert.ok(
+        linkified.startsWith('<p>some text <a'),
+        "linkified text should start with non-linkified start part, followed by an '<a>' tag"
+    );
+    assert.ok(
+        linkified.endsWith('</a></p>'),
+        "linkified text should end with closing '<a>' tag"
+    );
+
+    // linkify may add some attributes. Since we do not care of their exact
+    // stringified representation, we continue deeper assertion with query
+    // selectors.
+    var fragment = document.createDocumentFragment();
+    var div = document.createElement('div');
+    fragment.appendChild(div);
+    div.innerHTML = linkified;
+    assert.strictEqual(
+        div.textContent,
+        'some text https://somelink.com',
+        "linkified text should have same text content as non-linkified version"
+    );
+    assert.strictEqual(
+        div.querySelectorAll(':scope a').length,
+        1,
+        "linkified text should have an <a> tag"
+    );
+    assert.strictEqual(
+        div.querySelector(':scope a').textContent,
+        'https://somelink.com',
+        "text content of link should be equivalent of its non-linkified version"
+    );
+
+    content = '&quot;www.example.com/?q=a&amp;lang=b&quot;';
+    linkified = utils.parseAndTransform(content, utils.addLink);
+    assert.strictEqual(
+        linkified,
+        "&quot;<a target=\"_blank\" href=\"http://www.example.com/?q=a&amp;lang=b\">" +
+        "www.example.com/?q=a&amp;lang=b</a>&quot;",
+        "linkifying text should not break html entities"
+    );
+});
+
+QUnit.test('addLink: linkify inside text node (2 occurrences)', function (assert) {
+    assert.expect(4);
+
+    // linkify may add some attributes. Since we do not care of their exact
+    // stringified representation, we continue deeper assertion with query
+    // selectors.
+    var content = '<p>some text https://somelink.com and again https://somelink2.com ...</p>';
+    var linkified = utils.parseAndTransform(content, utils.addLink);
+    var fragment = document.createDocumentFragment();
+    var div = document.createElement('div');
+    fragment.appendChild(div);
+    div.innerHTML = linkified;
+    assert.strictEqual(
+        div.textContent,
+        'some text https://somelink.com and again https://somelink2.com ...',
+        "linkified text should have same text content as non-linkified version"
+    );
+    assert.strictEqual(
+        div.querySelectorAll(':scope a').length,
+        2,
+        "linkified text should have 2 <a> tags"
+    );
+    assert.strictEqual(
+        div.querySelectorAll(':scope a')[0].textContent,
+        'https://somelink.com',
+        "text content of 1st link should be equivalent to its non-linkified version"
+    );
+    assert.strictEqual(
+        div.querySelectorAll(':scope a')[1].textContent,
+        'https://somelink2.com',
+        "text content of 2nd link should be equivalent to its non-linkified version"
+    );
+});
+
+QUnit.test('inline: inline utility function', function (assert) {
+    assert.expect(1);
+
+    var content = '&amp; &amp;amp; &gt; &lt;';
+    var linkified = utils.parseAndTransform(content, utils.inline);
+    assert.strictEqual(
+        linkified,
+        content,
+        "inlining text should not break html entities"
+    );
+});
+
 });
 });

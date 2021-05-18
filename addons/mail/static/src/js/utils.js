@@ -37,10 +37,17 @@ function linkify(text, attrs) {
     attrs = _.map(attrs, function (value, key) {
         return key + '="' + _.escape(value) + '"';
     }).join(' ');
-    return text.replace(urlRegexp, function (url) {
+    var curIndex = 0;
+    var result = "";
+    var match;
+    while ((match = urlRegexp.exec(text)) !== null) {
+        result += _.escape(text.slice(curIndex, match.index));
+        var url = _.escape(match[0]);
         var href = (!/^https?:\/\//i.test(url)) ? "http://" + url : url;
-        return '<a ' + attrs + ' href="' + href + '">' + url + '</a>';
-    });
+        result += '<a ' + attrs + ' href="' + href + '">' + url + '</a>';
+        curIndex = match.index + match[0].length;
+    }
+    return result + _.escape(text.slice(curIndex));
 }
 
 function addLink(node, transformChildren) {
@@ -59,7 +66,7 @@ function stripHTML(node, transformChildren) {
 }
 
 function inline(node, transform_children) {
-    if (node.nodeType === 3) return node.data;
+    if (node.nodeType === 3) return _.escape(node.data);
     if (node.nodeType === 8) return "";
     if (node.tagName === "BR") return " ";
     if (node.tagName.match(/^(A|P|DIV|PRE|BLOCKQUOTE)$/)) return transform_children();
