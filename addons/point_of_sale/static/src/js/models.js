@@ -434,6 +434,7 @@ exports.PosModel = Backbone.Model.extend({
             }
             return domain;
         },
+        limit: function(self) { return self.config.limited_products_loading? 200000: false},
         context: function(self){ return { display_default_code: false }; },
         loaded: function(self, products){
             var using_company_currency = self.config.currency_id[0] === self.company.currency_id[0];
@@ -647,6 +648,7 @@ exports.PosModel = Backbone.Model.extend({
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
                     var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                     var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
+                    var limit   = typeof model.limit === 'function'   ? model.limit(self, tmp): model.limit;
                     progress += progress_step;
 
                     if( model.model ){
@@ -663,6 +665,7 @@ exports.PosModel = Backbone.Model.extend({
                             params.domain = domain;
                             params.fields = fields;
                             params.orderBy = order;
+                            params.limit = limit;
                         }
 
                         self.rpc(params).then(function (result) {
