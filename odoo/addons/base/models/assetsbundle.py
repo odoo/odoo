@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-from collections import OrderedDict
-from datetime import datetime
-from subprocess import Popen, PIPE
 import base64
 import hashlib
 import itertools
@@ -9,10 +6,13 @@ import json
 import logging
 import os
 import re
+import tempfile
 import textwrap
 import uuid
+from collections import OrderedDict
+from datetime import datetime
+from subprocess import Popen, PIPE
 
-import psycopg2
 try:
     import sass as libsass
 except ImportError:
@@ -23,7 +23,7 @@ except ImportError:
 from odoo import SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator
+from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator, osutil
 from odoo.tools.misc import html_escape as escape
 from odoo.tools.pycompat import to_text
 
@@ -1017,17 +1017,25 @@ class ScssStylesheetAsset(PreprocessedCSS):
         if libsass is None:
             return super(ScssStylesheetAsset, self).compile(source)
 
-        try:
-            return libsass.compile(
-                string=source,
-                include_paths=[
-                    self.bootstrap_path,
-                ],
-                output_style=self.output_style,
-                precision=self.precision,
-            )
-        except libsass.CompileError as e:
-            raise CompileError(e.args[0])
+        with tempfile.TemporaryFile() as newstderr:
+            try:
+                with osutil.redirect_fd(2, redirect_to=newstderr.fileno()):
+                    return libsass.compile(
+                        string=source,
+                        include_paths=[
+                            self.bootstrap_path,
+                        ],
+                        output_style=self.output_style,
+                        precision=self.precision,
+                    )
+            except libsass.CompileError as e:
+                raise CompileError(e.args[0])
+            finally:
+                newstderr.seek(0)
+                warnings = newstderr.read().strip()
+                if warnings:
+                    _logger.getChild('libsass').warning("%s", warnings.decode())
+
 
     def get_command(self):
         try:

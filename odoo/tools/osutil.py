@@ -166,6 +166,31 @@ else:
         except Exception:
             return False
 
+
+@contextmanager
+def redirect_fd(fd, *, redirect_to):
+    """ Redirects anything written to `fd` to `redirect_to`. Restores `fd` on
+    contextmanager exit.
+
+    Similar to :class:`python:contextlib.redirect_stdout`, but works at the fd
+    level instead of the file-like object level.
+
+    .. warning::
+
+        When applied to global fds (e.g. standard streams), this obviously has
+        global effects.
+
+    :param int fd:
+    :param int redirect_to:
+    """
+    oldfd = os.dup(fd)
+    try:
+        os.dup2(redirect_to, fd)
+        yield
+    finally:
+        os.dup2(oldfd, fd)
+        os.close(oldfd)
+
 if __name__ == '__main__':
     from pprint import pprint as pp
     pp(listdir('../report', True))
