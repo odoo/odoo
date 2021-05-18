@@ -100,7 +100,7 @@ tour.register('sale_timesheet_tour', {
         actions.text('Brandon Freeman', this.$anchor.find('input'));
     },
 }, {
-    trigger: 'ul.o_partner_autocomplete_dropdown > li:first-child > a',
+    trigger: 'ul.o_partner_autocomplete_dropdown > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown.',
     run: 'click',
 }, {
