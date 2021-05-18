@@ -187,7 +187,7 @@ class ActivityRenderer extends AbstractRendererOwl {
             this.activeFilter.activityTypeId = ev.detail.columnID;
             this.activeFilter.resIds = Object.entries(this.props.grouped_activities)
                 .filter(([, resIds]) => ev.detail.columnID in resIds &&
-                    resIds[ev.detail.columnID].state === ev.detail.values.activeFilter)
+                    resIds[ev.detail.columnID].state === ev.detail.values.activeFilter.value)
                 .map(([key]) => parseInt(key));
         } else {
             this.activeFilter.state = null;
