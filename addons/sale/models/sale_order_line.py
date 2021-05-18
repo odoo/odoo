@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-from functools import partial
-from itertools import groupby
+from datetime import timedelta
 
-from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.misc import formatLang, get_lang
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools.misc import get_lang
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare, float_round
-
-
-from werkzeug.urls import url_encode
 
 
 class SaleOrderLine(models.Model):
@@ -112,7 +107,7 @@ class SaleOrderLine(models.Model):
                     if invoice_line.move_id.move_type == 'out_invoice':
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
                     elif invoice_line.move_id.move_type == 'out_refund':
-                        if not line.is_downpayment or line.untaxed_amount_to_invoice == 0 :
+                        if not line.is_downpayment or line.untaxed_amount_to_invoice == 0:
                             qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
             line.qty_invoiced = qty_invoiced
 
@@ -710,7 +705,7 @@ class SaleOrderLine(models.Model):
             pricelist_item = PricelistItem.browse(rule_id)
             if pricelist_item.pricelist_id.discount_policy == 'without_discount':
                 while pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id and pricelist_item.base_pricelist_id.discount_policy == 'without_discount':
-                    price, rule_id = pricelist_item.base_pricelist_id.with_context(uom=uom.id).get_product_price_rule(product, qty, self.order_id.partner_id)
+                    _price, rule_id = pricelist_item.base_pricelist_id.with_context(uom=uom.id).get_product_price_rule(product, qty, self.order_id.partner_id)
                     pricelist_item = PricelistItem.browse(rule_id)
 
             if pricelist_item.base == 'standard_price':
