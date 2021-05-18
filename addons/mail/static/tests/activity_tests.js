@@ -558,5 +558,57 @@ QUnit.test("Activity view: on_destroy_callback doesn't crash", async function (a
     activity.destroy();
 });
 
+QUnit.test('Activity view: apply progressbar filter', async function (assert) {
+    assert.expect(9);
+
+    const actionManager = await createActionManager({
+        actions: [{
+            id: 1,
+            name: 'Task Action',
+            res_model: 'task',
+            type: 'ir.actions.act_window',
+            views: [[false, 'activity']],
+        }],
+        archs: {
+            'task,false,activity': `
+            <activity string="Task">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>`,
+            'task,false,search': '<search></search>',
+        },
+        data: this.data,
+    });
+    await actionManager.doAction(1);
+
+    assert.containsNone(actionManager.$('.o_activity_view thead'),
+        '.o_activity_filter_planned,.o_activity_filter_today,.o_activity_filter_overdue,.o_activity_filter___false',
+        "should not have active filter");
+    assert.containsNone(actionManager.$('.o_activity_view tbody'),
+        '.o_activity_filter_planned,.o_activity_filter_today,.o_activity_filter_overdue,.o_activity_filter___false',
+        "should not have active filter");
+    assert.strictEqual(actionManager.$('.o_activity_view tbody .o_activity_record:first').text(), 'Office planning',
+        "'Office planning' should be first record");
+    assert.containsOnce(actionManager.$('.o_activity_view tbody'), '.planned',
+        "other records should be hidden");
+
+    await testUtils.dom.click(actionManager.$('.o_kanban_counter_progress:first .progress-bar[data-filter="planned"]'));
+    assert.containsOnce(actionManager.$('.o_activity_view thead'), '.o_activity_filter_planned',
+        "planned should be active filter");
+    assert.containsN(actionManager.$('.o_activity_view tbody'), '.o_activity_filter_planned', 5,
+        "planned should be active filter");
+    assert.strictEqual(actionManager.$('.o_activity_view tbody .o_activity_record:first').text(), 'Meeting Room Furnitures',
+        "'Office planning' should be first record");
+    assert.hasClass(actionManager.$('.o_activity_view tbody tr:eq(1) td:eq(1)'), 'o_activity_empty_cell',
+        "other records should be hidden");
+    assert.containsNone(actionManager.$('.o_activity_view tbody'), 'planned',
+        "other records should be hidden");
+
+    actionManager.destroy();
+});
+
 });
 });
