@@ -2472,11 +2472,18 @@ class AccountMove(models.Model):
                 move.with_context(check_move_validity=False)._onchange_currency()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
+<<<<<<< HEAD
         to_post.mapped('line_ids').create_analytic_lines()
         to_post.write({
             'state': 'posted',
             'posted_before': True,
         })
+=======
+        self.mapped('line_ids').create_analytic_lines()
+        for move in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
+            if move.auto_post and move.date > fields.Date.today():
+                raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(get_lang(self.env).date_format))))
+>>>>>>> f9cb859b788... temp
 
         for move in to_post:
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
