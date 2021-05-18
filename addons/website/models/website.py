@@ -418,8 +418,8 @@ class Website(models.Model):
         website.configurator_done = True
 
         # Enable tour
-        tour_asset_id = self.env['ir.asset']._get_related_assets([('name', '=', 'website.configurator_tour')])
-        tour_asset_id.sudo().write({'active': True})
+        tour_asset_id = self.env.ref('website.configurator_tour')
+        tour_asset_id.copy({'key': tour_asset_id.key, 'website_id': website.id, 'active': True})
 
         # logo was generated as base64 url
         logo = kwargs.get('logo')
