@@ -2,22 +2,42 @@
 
 const { Component, QWeb } = owl;
 
+/**
+ * @enum {string}
+ */
 export const ParentClosingMode = {
     None: "none",
     ClosestParent: "closest",
     AllParents: "all",
 };
 
+/**
+ * @typedef DropdownItemSelectedEventDetail
+ * @property {*} payload
+ * @property {Object} dropdownClosingRequest
+ * @property {boolean} dropdownClosingRequest.isFresh
+ * @property {ParentClosingMode} dropdownClosingRequest.mode
+ *
+ * @typedef {CustomEvent<DropdownItemSelectedEventDetail>} DropdownItemSelectedEvent
+ */
+
+/**
+ * @extends Component
+ */
 export class DropdownItem extends Component {
+    /**
+     * Triggers a custom DropdownItemSelectedEvent
+     */
     onClick() {
-        const payload = {
+        /** @type DropdownItemSelectedEventDetail */
+        const detail = {
             payload: this.props.payload,
             dropdownClosingRequest: {
                 isFresh: true,
                 mode: this.props.parentClosingMode,
             },
         };
-        this.trigger("dropdown-item-selected", payload);
+        this.trigger("dropdown-item-selected", detail);
     }
 }
 DropdownItem.template = "web.DropdownItem";
