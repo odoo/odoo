@@ -10,6 +10,7 @@
 
 -   [Browser](browser.md)
 -   [Bus](bus.md)
+-   [Commands](commands/readme.md)
 -   [Core](core/readme.md)
 -   [Environment](environment.md)
 -   [Global odoo object](global_odoo_object.md)

@@ -33,7 +33,7 @@
   </t>
 
   <t t-name="web.NavBar.AppsMenu" owl="1">
-    <Dropdown title="'Home Menu'" class="o_navbar_apps_menu">
+    <Dropdown hotkey="'h'" title="'Home Menu'" class="o_navbar_apps_menu">
       <i class="fa fa-th-large" />
       <t t-set-slot="menu">
         <MenuItem
@@ -52,13 +52,20 @@
       <t t-foreach="sections" t-as="section" t-key="section.id">
         <t t-set="sectionsVisibleCount" t-value="(sections.length - currentAppSectionsExtra.length)" />
 
+        <t t-if="section_index lt Math.min(10, sectionsVisibleCount)">
+          <t t-set="hotkey" t-value="((section_index + 1) % 10).toString()"/>
+        </t>
+        <t t-else="">
+          <t t-set="hotkey" t-value="undefined"/>
+        </t>
+
         <t t-if="!section.childrenTree.length">
-          <MenuItem title="section.name" payload="section">
+          <MenuItem title="section.name" payload="section" hotkey="hotkey">
             <span t-esc="section.name" t-att-data-section="section.id" />
           </MenuItem>
         </t>
         <t t-else="">
-          <MenuDropdown title="section.name" xmlid="section.xmlid">
+          <MenuDropdown hotkey="hotkey" title="section.name" xmlid="section.xmlid">
             <span t-esc="section.name" t-att-data-section="section.id" />
             <t t-set-slot="menu">
               <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
@@ -71,6 +78,9 @@
 
       <t t-call="web.NavBar.SectionsMenu.MoreDropdown">
         <t t-set="sections" t-value="currentAppSectionsExtra" />
+        <t t-if="sectionsVisibleCount lt 10">
+          <t t-set="hotkey" t-value="(sectionsVisibleCount + 1 % 10).toString()"/>
+        </t>
       </t>
 
     </ul>
@@ -94,7 +104,7 @@
   </t>
 
   <t t-name="web.NavBar.SectionsMenu.MoreDropdown" owl="1">
-    <Dropdown class="o_menu_sections_more d-none" title="'More Menu'">
+    <Dropdown class="o_menu_sections_more d-none" title="'More Menu'" hotkey="hotkey">
       <i class="fa fa-plus"/>
       <t t-set-slot="menu">
         <t t-foreach="sections" t-as="section" t-key="section.id">

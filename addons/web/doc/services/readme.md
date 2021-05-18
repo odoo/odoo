@@ -18,21 +18,23 @@ available to the interface (and to other services).
 
 ## List of all services
 
-| Service                               | Purpose                                                    |
-| ------------------------------------- | ---------------------------------------------------------- |
-| [`action_manager`](action_manager.md) | perform actions following user interactions                |
-| [`crash_manager`](crash_manager.md)   | listen errors and open error dialogs                       |
-| [`dialog_manager`](dialog_manager.md) | open dialogs                                               |
-| [`menus`](menus.md)                   | keep track of all menu items (app and submenus)            |
-| [`model`](model.md)                   | interact with (python) models                              |
-| [`notifications`](notifications.md)   | display a notification (or error)                          |
-| [`popover`](popover.md)               | add/remove popover                                         |
-| [`router`](router.md)                 | manage the url                                             |
-| [`rpc`](rpc.md)                       | perform a RPC (in other word, call the server)             |
-| [`title`](title.md)                   | allow to read/modify the document title                    |
-| [`ui`](ui.md)                         | miscellaneous ui features: active element, block/unblock   |
-| [`user`](user.md)                     | keep track of user main properties (lang, ...) and context |
-| [`view_manager`](view_manager.md)     | load (and keep in cache) views information                 |
+| Service                                     | Purpose                                                    |
+| ------------------------------------------- | ---------------------------------------------------------- |
+| [`action_manager`](action_manager.md)       | perform actions following user interactions                |
+| [`command`](../commands/command_service.md) | manage commands                                            |
+| [`crash_manager`](crash_manager.md)         | listen errors and open error dialogs                       |
+| [`dialog_manager`](dialog_manager.md)       | open dialogs                                               |
+| [`hotkey`](hotkey.md)                       | manage all keyboard shortcuts in a single place            |
+| [`menus`](menus.md)                         | keep track of all menu items (app and submenus)            |
+| [`model`](model.md)                         | interact with (python) models                              |
+| [`notifications`](notifications.md)         | display a notification (or error)                          |
+| [`popover`](popover.md)                     | add/remove popover                                         |
+| [`router`](router.md)                       | manage the url                                             |
+| [`rpc`](rpc.md)                             | perform a RPC (in other word, call the server)             |
+| [`title`](title.md)                         | allow to read/modify the document title                    |
+| [`ui`](ui.md)                               | miscellaneous ui features: active element, block/unblock   |
+| [`user`](user.md)                           | keep track of user main properties (lang, ...) and context |
+| [`view_manager`](view_manager.md)           | load (and keep in cache) views information                 |
 
 ## Defining a service
 
