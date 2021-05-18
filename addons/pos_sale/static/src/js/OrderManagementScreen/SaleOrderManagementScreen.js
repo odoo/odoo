@@ -111,7 +111,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         cancelText: this.env._t('No'),
                     });
                     if (confirmed){
-                        await this._addProducts(product_to_add_in_pos);
+                        await this.env.pos._addProducts(product_to_add_in_pos);
                     }
 
                 }
@@ -171,25 +171,6 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
               this.close();
             }
 
-        }
-
-        async _addProducts(ids){
-            await this.rpc({
-                model: 'product.product',
-                method: 'write',
-                args: [ids, {'available_in_pos': true}],
-                context: this.env.session.user_context,
-            });
-            let product_model = _.find(this.env.pos.models, function(model){return model.model === 'product.product';});
-            let fields = product_model.fields;
-            let product = await this.rpc({
-                model: 'product.product',
-                method: 'read',
-                args: [ids, fields],
-                context: this.env.session.user_context,
-            });
-
-            product_model.loaded(this.env.pos, product);
         }
 
         async _getSaleOrder(id) {

@@ -200,10 +200,33 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
         }
-        _barcodeProductAction(code) {
-            // NOTE: scan_product call has side effect in pos if it returned true.
-            if (!this.env.pos.scan_product(code)) {
-                this._barcodeErrorAction(code);
+        async _barcodeProductAction(code) {
+            let scannedProduct = this.env.pos.scan_product(code);
+            if (!scannedProduct) {
+                // find the barcode in the backend
+                const foundProductIds = await this.rpc({
+                    model: 'product.product',
+                    method: 'search',
+                    args: [[['barcode', '=', code.code]]],
+                    context: this.env.session.user_context,
+                });
+                if (foundProductIds.length) {
+                    await this.env.pos._addProducts(foundProductIds);
+                    // assume that the result is unique.
+                    scannedProduct = this.env.pos.db.get_product_by_id(foundProductIds[0]);
+                } else {
+                    return this._barcodeErrorAction(code);
+                }
+            }
+            const selectedOrder = this.env.pos.get_order();
+            if (code.type === 'price') {
+                selectedOrder.add_product(scannedProduct, { price: code.value });
+            } else if (code.type === 'weight') {
+                selectedOrder.add_product(scannedProduct, { quantity: code.value, merge: false });
+            } else if (code.type === 'discount') {
+                selectedOrder.add_product(scannedProduct, { discount: code.value, merge: false });
+            } else {
+                selectedOrder.add_product(scannedProduct);
             }
         }
         _barcodeClientAction(code) {
