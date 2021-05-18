@@ -6,7 +6,7 @@
 // Invalid
 .o_field_invalid {
     &.o_input, .o_input, &.o_form_label {
-        color: theme-color('danger')!important;
+        @extend .text-danger;
         border-color: theme-color('danger')!important; // enterprise o_required_modifier rule overrides this without !important
     }
 }
@@ -281,7 +281,7 @@
                 color: $o-main-color-muted;
             }
             &.fa-star {
-                color: gold;
+                color: $o-main-favorite-color;
             }
         }
     }
@@ -292,19 +292,16 @@
             font-size: 16px;
         }
         i.fa-star-o {
-            color: $o-main-color-muted;
-            &:hover {
-                color: gold;
-            }
+            @include o-hover-text-color($o-main-color-muted, $o-main-favorite-color);
         }
         i.fa-star {
-            color: gold;
+            color: $o-main-favorite-color;
         }
     }
 
     // Specific success color for toggle_button widget
     .fa.o_toggle_button_success {
-        color: theme-color('success');
+        @extend .text-success;
     }
 
     // Handle widget

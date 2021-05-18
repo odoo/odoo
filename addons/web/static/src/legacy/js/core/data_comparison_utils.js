@@ -96,9 +96,9 @@ function renderVariation(variation, field, options) {
     var value;
     if (!isNaN(variation)) {
         if (variation > 0) {
-            className += ' o_positive';
+            className += ' o_positive text-success';
         } else if (variation < 0) {
-            className += ' o_negative';
+            className += ' o_negative text-danger';
         } else {
             className += ' o_null';
         }
