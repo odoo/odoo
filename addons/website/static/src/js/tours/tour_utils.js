@@ -55,6 +55,7 @@ function changeColumnSize(position = "right") {
 function changeIcon(snippet, index = 0, position = "bottom") {
     return {
         trigger: `#wrapwrap .${snippet.id} i:eq(${index})`,
+        extra_trigger: "body.editor_enable",
         content: _t("<b>Double click on an icon</b> to change it with one of your choice."),
         position: position,
         run: "dblclick",
@@ -64,6 +65,7 @@ function changeIcon(snippet, index = 0, position = "bottom") {
 function changeImage(snippet, position = "bottom") {
     return {
         trigger: snippet.id ? `#wrapwrap .${snippet.id} img` : snippet,
+        extra_trigger: "body.editor_enable",
         content: _t("<b>Double click on an image</b> to change it with one of your choice."),
         position: position,
         run: "dblclick",
@@ -130,6 +132,7 @@ function clickOnEdit(position = "bottom") {
 function clickOnSnippet(snippet, position = "bottom") {
     return {
         trigger: snippet.id ? `#wrapwrap .${snippet.id}` : snippet,
+        extra_trigger: "body.editor_enable",
         content: _t("<b>Click on a snippet</b> to access its options menu."),
         position: position,
         run: "click",
@@ -158,6 +161,7 @@ function clickOnSave(position = "bottom") {
 function clickOnText(snippet, element, position = "bottom") {
     return {
         trigger: snippet.id ? `#wrapwrap .${snippet.id} ${element}` : snippet,
+        extra_trigger: "body.editor_enable",
         content: _t("<b>Click on a text</b> to start editing it."),
         position: position,
         run: "text",
