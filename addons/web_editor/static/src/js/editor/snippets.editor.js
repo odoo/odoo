@@ -188,7 +188,10 @@ var SnippetEditor = Widget.extend({
                     },
                     handle: '.o_move_handle',
                     helper: () => {
-                        var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
+                        var $clone = this.$target.clone().css({
+                            transform: 'rotate(-14deg) scale(0.5)',
+                            border: 0,
+                        });
                         $clone.appendTo(this.$body).removeClass('d-none');
                         return $clone;
                     },
@@ -2264,7 +2267,7 @@ var SnippetsMenu = Widget.extend({
                     if ($toInsert.hasClass('o_we_has_generic_preview')) {
                         const genericPreview = document.createElement('div')
                         genericPreview.classList.add('o_we_generic_preview');
-                        genericPreview.innerHTML = 'Snippet preview'
+                        genericPreview.innerText = 'Snippet preview'
                         $toInsert.prepend(genericPreview);
                     }
 
