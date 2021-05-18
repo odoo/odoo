@@ -2271,7 +2271,7 @@ class AccountMove(models.Model):
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         self.mapped('line_ids').create_analytic_lines()
-        for move in self:
+        for move in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
             if move.auto_post and move.date > fields.Date.today():
                 raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(get_lang(self.env).date_format))))
 
