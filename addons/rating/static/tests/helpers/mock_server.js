@@ -31,7 +31,9 @@ MockServer.include({
             const rating = this._getRecords('rating.rating', [
                 ['message_id', '=', response.id],
             ]);
-            response.rating_img = "/rating/static/src/img/rating_" + rating[0].rating + ".png";
+            if (rating.length > 0) {
+                response.rating_img = "/rating/static/src/img/rating_" + rating[0].rating + ".png";
+            }
         }
         return responses;
     },
