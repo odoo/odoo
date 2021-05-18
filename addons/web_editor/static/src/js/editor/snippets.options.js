@@ -4154,6 +4154,203 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     }
 });
 
+/**
+ * General options that are common to a font awesome icon and an image.
+ */
+registry.StaticMediaTools = SnippetOptionWidget.extend({
+    currentShapes: {},
+    alignments: {
+        left: ['float-left'],
+        center: ['d-block', 'mx-auto'],
+        right: ['float-right'],
+    },
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    toggleShapeRounded(previewMode) {
+        this._toggleShape(previewMode, 'rounded');
+    },
+    toggleShapeCircle(previewMode) {
+        this._toggleShape(previewMode, 'rounded-circle');
+    },
+    toggleShapeShadow(previewMode) {
+        this._toggleShape(previewMode, 'shadow');
+    },
+    toggleShapeThumbnail(previewMode) {
+        this._toggleShape(previewMode, 'img-thumbnail');
+    },
+    setPadding(previewMode, padding, params) {
+        if (previewMode === true) {
+            this.currentPadding = params.possibleValues.find(c => this.$target.hasClass(c)) || '';
+        }
+        for (const value of params.possibleValues) {
+            if (previewMode === 'reset') {
+                this.$target.toggleClass(value, value === this.currentPadding);
+            } else {
+                this.$target.toggleClass(value, value === padding)
+            }
+        }
+        if (previewMode === false) {
+            this.currentPadding = padding;
+        }
+    },
+    align(previewMode, alignment, params) {
+        if (previewMode === true) {
+            this.currentAlignment = this._getAlignment();
+        }
+        const targetAlignment = previewMode === 'reset' ? this.currentAlignment : alignment;
+        for (const value of params.possibleValues) {
+            this.$target.toggleClass(this.alignments[value] || '', value === targetAlignment);
+        }
+        if (previewMode === false) {
+            this.currentAlignment = alignment;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (['toggleShapeRounded', 'toggleShapeCircle', 'toggleShapeShadow', 'toggleShapeThumbnail'].includes(methodName)) {
+            return params.possibleValues.find(c => this.$target.hasClass(c)) || '';
+        } else if (methodName === 'setPadding') {
+            return params.possibleValues.find(c => this.$target.hasClass(c)) || '';
+        } else if (methodName === 'align') {
+            return this._getAlignment();
+        }
+        return this._super(...arguments);
+    },
+    _getAlignment() {
+        for (const [alignment, [alignClass]] of Object.entries(this.alignments)) {
+            if (this.$target.hasClass(alignClass)) {
+                return alignment;
+            }
+        }
+        return '';
+    },
+    _toggleShape(previewMode, shape) {
+        if (previewMode === true) {
+            this.currentShapes[shape] = this.$target.hasClass(shape);
+            this.$target.toggleClass(shape, true);
+        } else if (previewMode === 'reset') {
+            this.$target.toggleClass(shape, this.currentShapes[shape]);
+        } else if (previewMode === false) {
+            this.$target.toggleClass(shape, !this.currentShapes[shape]);
+            this.currentShapes[shape] = this.$target.hasClass(shape);
+        }
+    },
+});
+
+/**
+ * General options of a font awesome icon.
+ */
+registry.FontawesomeTools = SnippetOptionWidget.extend({
+    setSize(previewMode, size, params) {
+        if (previewMode === true) {
+            this.currentSize = params.possibleValues.find(c => this.$target.hasClass(c)) || '';
+        }
+        for (const value of params.possibleValues) {
+            if (previewMode === 'reset') {
+                this.$target.toggleClass(value, value === this.currentSize);
+            } else {
+                this.$target.toggleClass(value, value === size)
+            }
+        }
+        if (previewMode === false) {
+            this.currentSize = size;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'setSize') {
+            return params.possibleValues.find(c => this.$target.hasClass(c)) || '';
+        } else if (methodName === 'align') {
+            return this._getAlignment();
+        }
+        return this._super(...arguments);
+    },
+});
+
+/**
+ * General options of an image.
+ */
+registry.ImageTools = SnippetOptionWidget.extend({
+    setWidth(previewMode, width, params) {
+        if (previewMode === true) {
+            this.currentWidth = this.$target.css('width');
+        }
+        if (previewMode === 'reset') {
+            this.$target.css('width', this.currentWidth);
+        } else {
+            this.$target.css('width', width);
+        }
+        if (previewMode === false) {
+            this.currentWidth = width;
+        }
+    },
+    setAlt(previewMode, alt) {
+        this.$target.attr('alt', alt);
+    },
+    setTitle(previewMode, title) {
+        this.$target.attr('title', title);
+    },
+    crop() {
+        new weWidgets.ImageCropWidget(this, this.$target[0]).appendTo(this.options.wysiwyg.$editable);
+    },
+    transform() {
+        if (this.$target.data('transfo-destroy')) {
+            this.$target.removeData('transfo-destroy');
+            return;
+        }
+        const document = this.$target[0].ownerDocument
+        this.$target.transfo({ document });
+        const mousedown = mousedownEvent => {
+            if (!$(mousedownEvent.target).closest('.transfo-container').length) {
+                this.$target.transfo('destroy');
+                $(document).off('mousedown', mousedown);
+            }
+            if ($(mousedownEvent.target).closest('#image-transform').length) {
+                this.$target
+                    .data('transfo-destroy', true)
+                    .attr('style', (this.$target.attr('style') || '')
+                    .replace(/[^;]*transform[\w:]*;?/g, ''));
+            }
+            this.$target.trigger('content_changed');
+        };
+        $(document).on('mousedown', mousedown);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'setWidth') {
+            return this.$target[0].style.width || '';
+        } else if (methodName === 'setAlt') {
+            return this.$target.attr('alt');
+        } else if (methodName === 'setTitle') {
+            return this.$target.attr('title');
+        }
+        return this._super(...arguments);
+    },
+});
+
 /*
  * Abstract option to be extended by the ImageOptimize and BackgroundOptimize
  * options that handles all the common parts.

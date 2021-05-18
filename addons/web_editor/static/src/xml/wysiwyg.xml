@@ -79,34 +79,6 @@
         </div>
     </form>
 
-    <!-- Alt Tools (allows to change alt and title of page images) -->
-    <t t-name="wysiwyg.widgets.altTools">
-        <we-customizeblock-option>
-            <we-row>
-                <we-title
-                    title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
-                    ⌙ Description
-                </we-title>
-                <we-input class="o_we_user_value_widget">
-                    <div>
-                        <input id="alt" required="required" t-att-value="widget.alt" type="text"/>
-                    </div>
-                </we-input>
-            </we-row>
-            <we-row>
-                <we-title
-                    title="'Title tag' is shown as a tooltip when you hover the picture.">
-                    ⌙ Tooltip
-                </we-title>
-                <we-input class="o_we_user_value_widget">
-                    <div>
-                        <input id="title" required="required" t-att-value="widget.tag_title" type="text"/>
-                    </div>
-                </we-input>
-            </we-row>
-        </we-customizeblock-option>
-    </t>
-
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="wysiwyg.widgets.media">
         <ul class="nav nav-tabs" role="tablist">

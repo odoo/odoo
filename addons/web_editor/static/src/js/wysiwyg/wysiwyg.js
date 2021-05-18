@@ -524,28 +524,6 @@ const Wysiwyg = Widget.extend({
         }
     },
     /**
-     * Toggle the Alt tools in the toolbar to edit <img> alt and title attributes.
-     *
-     * @param {object} params
-     * @param {Node} [params.node]
-     */
-    toggleAltTools(params) {
-        const image = (params && params.node) || this.lastMediaClicked;
-        if (this.snippetsMenu) {
-            if (this.altTools) {
-                this.altTools.destroy();
-                this.altTools = undefined;
-            } else {
-                const $btn = this.toolbar.$el.find('#media-description');
-                this.altTools = new weWidgets.AltTools(this, params, image, $btn);
-                this.altTools.appendTo(this.toolbar.$el);
-            }
-        } else {
-            const altDialog = new weWidgets.AltDialog(this, params, image);
-            altDialog.open();
-        }
-    },
-    /**
      * Toggle the Link tools/dialog to edit links. If a snippet menu is present,
      * use the link tools, otherwise use the dialog.
      *
@@ -686,7 +664,7 @@ const Wysiwyg = Widget.extend({
                     this.openMediaDialog();
                     break;
                 case 'media-description':
-                    this.toggleAltTools();
+                    new weWidgets.AltDialog(this, {}, this.lastMediaClicked).open();
                     break;
             }
         };
@@ -952,9 +930,6 @@ const Wysiwyg = Widget.extend({
         const $target = e ? editorWindow.$(e.target) : editorWindow.$();
         // Restore paragraph dropdown button's default ID.
         this.toolbar.$el.find('#mediaParagraphDropdownButton').attr('id', 'paragraphDropdownButton');
-        // Remove the alt tools.
-        this.altTools && this.altTools.destroy();
-        this.altTools = undefined;
         // Hide the create-link button if the selection spans several blocks.
         const selection = this.odooEditor.document.getSelection();
         const range = selection.rangeCount && selection.getRangeAt(0);
