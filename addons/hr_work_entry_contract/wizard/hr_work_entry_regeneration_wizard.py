@@ -90,8 +90,8 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
             if self.date_from < self.earliest_available_date or self.date_to > self.latest_available_date:
                 raise ValidationError(_("The from date must be >= '%(earliest_available_date)s' and the to date must be <= '%(latest_available_date)s', which correspond to the generated work entries time interval.", earliest_available_date=self._date_to_string(self.earliest_available_date), latest_available_date=self._date_to_string(self.latest_available_date)))
 
-        date_from = max(self.date_from, self.earliest_available_date)
-        date_to = min(self.date_to, self.latest_available_date)
+        date_from = max(self.date_from, self.earliest_available_date) if self.earliest_available_date else self.date_from
+        date_to = min(self.date_to, self.latest_available_date) if self.latest_available_date else self.date_to
         work_entries = self.env['hr.work.entry'].search([
             ('employee_id', '=', self.employee_id.id),
             ('date_stop', '>=', date_from),
