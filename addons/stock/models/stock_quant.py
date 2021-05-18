@@ -236,7 +236,7 @@ class StockQuant(models.Model):
         if self.user_has_groups('stock.group_stock_user') and not self.user_has_groups('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
         action = {
-            'name': _('Stock On Hand'),
+            'name': _('Inventory Adjustments'),
             'view_mode': 'list',
             'view_id': self.env.ref('stock.view_stock_quant_tree_inventory_editable').id,
             'res_model': 'stock.quant',
