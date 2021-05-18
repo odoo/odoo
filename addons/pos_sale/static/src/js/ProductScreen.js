@@ -15,7 +15,7 @@ odoo.define('pos_iot.ProductScreen', function (require) {
             }
             _setNumpadModeToPrice() {
                 const selectedOrderline = this.currentOrder.get_selected_orderline();
-                if (selectedOrderline.product.id === selectedOrderline.pos.config.down_payment_product_id[0]) {
+                if (selectedOrderline && selectedOrderline.product.id === selectedOrderline.pos.config.down_payment_product_id[0]) {
                     this.state.numpadMode = 'price';
                 }
             }
