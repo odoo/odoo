@@ -249,7 +249,10 @@ class MrpBom(models.Model):
             return False
 
         product_ids = set()
-        product_boms = {}
+        cache = self.env.context.get("mrp_explode_cache", {})
+        cache_key = (picking_type or self.picking_type_id or None, self.company_id or None)
+        product_boms = cache.setdefault('product_boms', {}).setdefault(cache_key, {})
+
         def update_product_boms():
             products = self.env['product.product'].browse(product_ids)
             product_boms.update(self._get_product2bom(products, bom_type='phantom',
@@ -268,9 +271,9 @@ class MrpBom(models.Model):
             V |= set([product_id.product_tmpl_id.id])
             graph[product.product_tmpl_id.id].append(product_id.product_tmpl_id.id)
             bom_lines.append((bom_line, product, quantity, False))
-            product_ids.add(product_id.id)
-        update_product_boms()
-        product_ids.clear()
+            if not product_id in product_boms:
+                product_ids.add(product_id.id)
+
         while bom_lines:
             current_line, current_product, current_qty, parent_line = bom_lines[0]
             bom_lines = bom_lines[1:]

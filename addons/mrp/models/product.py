@@ -114,8 +114,9 @@ class ProductProduct(models.Model):
         res = super(ProductProduct, self - kits)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
         qties = self.env.context.get("mrp_compute_quantities", {})
         qties.update(res)
+        cache = {}
         for product in bom_kits:
-            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+            boms, bom_sub_lines = bom_kits[product].with_context(mrp_explode_cache=cache).explode(product, 1)
             ratios_virtual_available = []
             ratios_qty_available = []
             ratios_incoming_qty = []
