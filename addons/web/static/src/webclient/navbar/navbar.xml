@@ -15,10 +15,10 @@
           class="o_menu_brand"
           payload="currentApp"
           t-esc="currentApp.name"
-          t-ref="menuBrand"/>
+          t-ref="menuBrand" />
 
         <!-- Current App Sections -->
-        <t t-call="web.NavBar.SectionsMenu">
+        <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
           <t t-set="sections" t-value="currentAppSections" />
         </t>
 
@@ -76,7 +76,7 @@
         </t>
       </t>
 
-      <t t-call="web.NavBar.SectionsMenu.MoreDropdown">
+      <t t-if="currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown">
         <t t-set="sections" t-value="currentAppSectionsExtra" />
         <t t-if="sectionsVisibleCount lt 10">
           <t t-set="hotkey" t-value="(sectionsVisibleCount + 1 % 10).toString()"/>
@@ -104,7 +104,7 @@
   </t>
 
   <t t-name="web.NavBar.SectionsMenu.MoreDropdown" owl="1">
-    <Dropdown class="o_menu_sections_more d-none" title="'More Menu'" hotkey="hotkey">
+    <Dropdown class="o_menu_sections_more" title="'More Menu'" hotkey="hotkey">
       <i class="fa fa-plus"/>
       <t t-set-slot="menu">
         <t t-foreach="sections" t-as="section" t-key="section.id">

@@ -8,7 +8,7 @@ import { registry } from "../../core/registry";
 import { debounce } from "../../core/utils/timing";
 
 const { Component, hooks } = owl;
-const { useExternalListener } = hooks;
+const { useExternalListener, useRef } = hooks;
 const systrayRegistry = registry.category("systray");
 
 export class MenuDropdown extends Dropdown {
@@ -43,6 +43,7 @@ export class NavBar extends Component {
         this.currentAppSectionsExtra = [];
         this.actionService = useService("action");
         this.menuService = useService("menu");
+        this.appSubMenus = useRef("appSubMenus");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
         useExternalListener(window, "resize", debouncedAdapt);
     }
@@ -97,28 +98,34 @@ export class NavBar extends Component {
         }
 
         // ------- Initialize -------
-        // Check actual "more" dropdown state
-        const moreDropdown = this.el.querySelector(".o_menu_sections_more");
+        // Get the sectionsMenu
+        const sectionsMenu = this.appSubMenus.el;
+        if (!sectionsMenu) {
+            // No need to continue adaptations if there is no sections menu.
+            return;
+        }
+
+        // Save initial state to further check if new render has to be done.
         const initialAppSectionsExtra = this.currentAppSectionsExtra;
         const firstInitialAppSectionExtra = [...initialAppSectionsExtra].shift();
         const initialAppId = firstInitialAppSectionExtra && firstInitialAppSectionExtra.appID;
 
         // Restore (needed to get offset widths)
         const sections = [
-            ...this.el.querySelectorAll(".o_menu_sections > *:not(.o_menu_sections_more)"),
+            ...sectionsMenu.querySelectorAll(":scope > *:not(.o_menu_sections_more)"),
         ];
-        sections.forEach((s) => s.classList.remove("d-none"));
+        for (const section of sections) {
+            section.classList.remove("d-none");
+        }
         this.currentAppSectionsExtra = [];
-        moreDropdown.classList.add("d-none");
 
         // ------- Check overflowing sections -------
-        const sectionsMenu = this.el.querySelector(".o_menu_sections");
         const sectionsAvailableWidth = sectionsMenu.offsetWidth;
         const sectionsTotalWidth = sections.reduce((sum, s) => sum + s.offsetWidth, 0);
         if (sectionsAvailableWidth < sectionsTotalWidth) {
-            // Sections are overflowing, show "more" menu
-            moreDropdown.classList.remove("d-none");
-            let width = moreDropdown.offsetWidth;
+            // Sections are overflowing
+            // Initial width is harcoded to the width the more menu dropdown will take
+            let width = 46;
             for (const section of sections) {
                 if (sectionsAvailableWidth < width + section.offsetWidth) {
                     // Last sections are overflowing
