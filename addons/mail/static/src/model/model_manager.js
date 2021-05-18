@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
+import { checkDeclaredFieldsOnModels } from '@mail/model/model_check_declared_fields';
+import { checkProcessedFieldsOnModels } from '@mail/model/model_check_processed_fields';
 import { registry } from '@mail/model/model_core';
+import { InvalidFieldError } from '@mail/model/model_errors';
 import ModelField from '@mail/model/model_field';
 import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
 import { unlinkAll } from '@mail/model/model_field_command';
@@ -93,12 +96,14 @@ class ModelManager {
     /**
      * Called when all JS modules that register or patch models have been
      * done. This launches generation of models.
+     *
+     * @param {Map<string, Object>} fieldTypeRegistry
      */
-    start() {
+    start({ fieldTypeRegistry }) {
         /**
          * Generate the models.
          */
-        Object.assign(this.env.models, this._generateModels());
+        Object.assign(this.env.models, this._generateModels({ fieldTypeRegistry }));
     }
 
     //--------------------------------------------------------------------------
@@ -273,295 +278,24 @@ class ModelManager {
     /**
      * @private
      * @param {mail.model} Model class
+     * @param {string} patchName
      * @param {Object} patch
      */
-    _applyModelPatchFields(Model, patch) {
+    _applyModelPatchFields(Model, patchName, patch) {
         for (const [fieldName, field] of Object.entries(patch)) {
-            if (!Model.fields[fieldName]) {
-                Model.fields[fieldName] = field;
-            } else {
-                Object.assign(Model.fields[fieldName].dependencies, field.dependencies);
+            if (Model.fields[fieldName]) {
+                throw new InvalidFieldError({
+                    modelName: Model.modelName,
+                    fieldName,
+                    error: `invalid field patch "${patchName}" because the field already exists`,
+                    suggestion: `don't patch an existing field`,
+                });
             }
-        }
-    }
-
-    /**
-     * @private
-     * @param {Object} Models
-     * @throws {Error} in case some declared fields are not correct.
-     */
-    _checkDeclaredFieldsOnModels(Models) {
-        for (const Model of Object.values(Models)) {
-            for (const fieldName in Model.fields) {
-                const field = Model.fields[fieldName];
-                // 0. Get parented declared fields
-                const parentedMatchingFields = [];
-                let TargetModel = Model.__proto__;
-                while (Models[TargetModel.modelName]) {
-                    if (TargetModel.fields) {
-                        const matchingField = TargetModel.fields[fieldName];
-                        if (matchingField) {
-                            parentedMatchingFields.push(matchingField);
-                        }
-                    }
-                    TargetModel = TargetModel.__proto__;
-                }
-                // 1. Field type is required.
-                if (!(['attribute', 'relation'].includes(field.fieldType))) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" has unsupported type ${field.fieldType}.`);
-                }
-                // 2. Invalid keys based on field type.
-                if (field.fieldType === 'attribute') {
-                    const invalidKeys = Object.keys(field).filter(key =>
-                        ![
-                            'compute',
-                            'default',
-                            'dependencies',
-                            'fieldType',
-                            'isOnChange',
-                            'readonly',
-                            'related',
-                            'required',
-                        ].includes(key)
-                    );
-                    if (invalidKeys.length > 0) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
-                    }
-                }
-                if (field.fieldType === 'relation') {
-                    const invalidKeys = Object.keys(field).filter(key =>
-                        ![
-                            'compute',
-                            'default',
-                            'dependencies',
-                            'fieldType',
-                            'inverse',
-                            'isCausal',
-                            'isOnChange',
-                            'readonly',
-                            'related',
-                            'relationType',
-                            'required',
-                            'to',
-                        ].includes(key)
-                    );
-                    if (invalidKeys.length > 0) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" contains some invalid keys: "${invalidKeys.join(", ")}".`);
-                    }
-                    if (!Models[field.to]) {
-                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" targets to unknown model name "${field.to}".`);
-                    }
-                    if (field.isCausal && !(['one2many', 'one2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "isCausal" true with a relation of type "${field.relationType}" but "isCausal" is only supported for "one2many" and "one2one".`);
-                    }
-                    if (field.required && !(['one2one', 'many2one'].includes(field.relationType))) {
-                        throw new Error(`Relational field "${Model.modelName}/${fieldName}" has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
-                    }
-                }
-                // 3. Computed field.
-                if (field.compute && !(typeof field.compute === 'string')) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" property "compute" must be a string (instance method name).`);
-                }
-                if (field.compute && !(Model.prototype[field.compute])) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" property "compute" does not refer to an instance method of this Model.`);
-                }
-                if (
-                    field.dependencies &&
-                    (!field.compute && !parentedMatchingFields.some(field => field.compute))
-                ) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName} contains dependendencies but no compute method in itself or parented matching fields (dependencies only make sense for compute fields)."`);
-                }
-                if (
-                    (field.compute || parentedMatchingFields.some(field => field.compute)) &&
-                    (field.dependencies || parentedMatchingFields.some(field => field.dependencies))
-                ) {
-                    if (!(field.dependencies instanceof Array)) {
-                        throw new Error(`Compute field "${Model.modelName}/${fieldName}" dependencies must be an array of field names.`);
-                    }
-                    const unknownDependencies = field.dependencies.every(dependency => !(Model.fields[dependency]));
-                    if (unknownDependencies.length > 0) {
-                        throw new Error(`Compute field "${Model.modelName}/${fieldName}" contains some unknown dependencies: "${unknownDependencies.join(", ")}".`);
-                    }
-                }
-                if (field.isOnChange && !field.compute) {
-                    throw Error(`isOnChange field "${Model.modelName}/${fieldName}" must be a computed field.`);
-                }
-                // 4. Related field.
-                if (field.compute && field.related) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" cannot be a related and compute field at the same time.`);
-                }
-                if (field.related) {
-                    if (!(typeof field.related === 'string')) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" property "related" has invalid format.`);
-                    }
-                    const [relationName, relatedFieldName, other] = field.related.split('.');
-                    if (!relationName || !relatedFieldName || other) {
-                        throw new Error(`Field "${Model.modelName}/${fieldName}" property "related" has invalid format.`);
-                    }
-                    // find relation on self or parents.
-                    let relatedRelation;
-                    let TargetModel = Model;
-                    while (Models[TargetModel.modelName] && !relatedRelation) {
-                        if (TargetModel.fields) {
-                            relatedRelation = TargetModel.fields[relationName];
-                        }
-                        TargetModel = TargetModel.__proto__;
-                    }
-                    if (!relatedRelation) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" relates to unknown relation name "${relationName}".`);
-                    }
-                    if (relatedRelation.fieldType !== 'relation') {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" relates to non-relational field "${relationName}".`);
-                    }
-                    // Assuming related relation is valid...
-                    // find field name on related model or any parents.
-                    const RelatedModel = Models[relatedRelation.to];
-                    let relatedField;
-                    TargetModel = RelatedModel;
-                    while (Models[TargetModel.modelName] && !relatedField) {
-                        if (TargetModel.fields) {
-                            relatedField = TargetModel.fields[relatedFieldName];
-                        }
-                        TargetModel = TargetModel.__proto__;
-                    }
-                    if (!relatedField) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" relates to unknown related model field "${relatedFieldName}".`);
-                    }
-                    if (relatedField.fieldType !== field.fieldType) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" has mismatch type with its related model field.`);
-                    }
-                    if (
-                        relatedField.fieldType === 'relation' &&
-                        relatedField.to !== field.to
-                    ) {
-                        throw new Error(`Related field "${Model.modelName}/${fieldName}" has mismatch target model name with its related model field.`);
-                    }
-                }
+            const deeplyCopiedField = Object.assign({}, field);
+            if (deeplyCopiedField.dependencies) {
+                deeplyCopiedField.dependencies = [...deeplyCopiedField.dependencies];
             }
-        }
-    }
-
-    /**
-     * @private
-     * @param {Object} Models
-     * @throws {Error} in case some fields are not correct.
-     */
-    _checkProcessedFieldsOnModels(Models) {
-        for (const Model of Object.values(Models)) {
-            for (const fieldName in Model.fields) {
-                const field = Model.fields[fieldName];
-                if (!(['attribute', 'relation'].includes(field.fieldType))) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" has unsupported type ${field.fieldType}.`);
-                }
-                if (field.compute && field.related) {
-                    throw new Error(`Field "${Model.modelName}/${fieldName}" cannot be a related and compute field at the same time.`);
-                }
-                if (field.fieldType === 'attribute') {
-                    continue;
-                }
-                if (!field.relationType) {
-                    throw new Error(
-                        `Field "${Model.modelName}/${fieldName}" must define a relation type in "relationType".`
-                    );
-                }
-                if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(field.relationType))) {
-                    throw new Error(
-                        `Field "${Model.modelName}/${fieldName}" has invalid relation type "${field.relationType}".`
-                    );
-                }
-                if (!field.inverse) {
-                    throw new Error(
-                        `Field "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" must define an inverse relation name in "inverse".`
-                    );
-                }
-                if (!field.to) {
-                    throw new Error(
-                        `Relation "${
-                            Model.modelNames
-                        }/${
-                            fieldName
-                        }" must define a model name in "to" (1st positional parameter of relation field helpers).`
-                    );
-                }
-                const RelatedModel = Models[field.to];
-                if (!RelatedModel) {
-                    throw new Error(
-                        `Model name of relation "${Model.modelName}/${fieldName}" does not exist.`
-                    );
-                }
-                const inverseField = RelatedModel.fields[field.inverse];
-                if (!inverseField) {
-                    throw new Error(
-                        `Relation "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" has no inverse field "${RelatedModel.modelName}/${field.inverse}".`
-                    );
-                }
-                if (inverseField.inverse !== fieldName) {
-                    throw new Error(
-                        `Inverse field name of relation "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" does not match with field name of relation "${
-                            RelatedModel.modelName
-                        }/${
-                            inverseField.inverse
-                        }".`
-                    );
-                }
-                const allSelfAndParentNames = [];
-                let TargetModel = Model;
-                while (TargetModel) {
-                    allSelfAndParentNames.push(TargetModel.modelName);
-                    TargetModel = TargetModel.__proto__;
-                }
-                if (!allSelfAndParentNames.includes(inverseField.to)) {
-                    throw new Error(
-                        `Relation "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" has inverse relation "${
-                            RelatedModel.modelName
-                        }/${
-                            field.inverse
-                        }" misconfigured (currently "${
-                            inverseField.to
-                        }", should instead refer to this model or parented models: ${
-                            allSelfAndParentNames.map(name => `"${name}"`).join(', ')
-                        }?)`
-                    );
-                }
-                if (
-                    (field.relationType === 'many2many' && inverseField.relationType !== 'many2many') ||
-                    (field.relationType === 'one2one' && inverseField.relationType !== 'one2one') ||
-                    (field.relationType === 'one2many' && inverseField.relationType !== 'many2one') ||
-                    (field.relationType === 'many2one' && inverseField.relationType !== 'one2many')
-                ) {
-                    throw new Error(
-                        `Mismatch relations types "${
-                            Model.modelName
-                        }/${
-                            fieldName
-                        }" (${
-                            field.relationType
-                        }) and "${
-                            RelatedModel.modelName
-                        }/${
-                            field.inverse
-                        }" (${
-                            inverseField.relationType
-                        }).`
-                    );
-                }
-            }
+            Model.fields[fieldName] = deeplyCopiedField;
         }
     }
 
@@ -771,10 +505,11 @@ class ModelManager {
 
     /**
      * @private
+     * @param {Map<string, Object>} fieldTypeRegistry
      * @returns {Object}
-     * @throws {Error} in case it cannot generate models.
+     * @throws {Error|InvalidFieldError} in case it cannot generate models.
      */
-    _generateModels() {
+    _generateModels({ fieldTypeRegistry }) {
         const allNames = Object.keys(registry);
         const Models = {};
         const generatedNames = [];
@@ -808,7 +543,7 @@ class ModelManager {
                         patchInstanceMethods(Model, patch.name, patch.patch);
                         break;
                     case 'field':
-                        this._applyModelPatchFields(Model, patch.patch);
+                        this._applyModelPatchFields(Model, patch.name, patch.patch);
                         break;
                 }
             }
@@ -818,6 +553,18 @@ class ModelManager {
             if (generatedNames.includes(Model.modelName)) {
                 throw new Error(`Duplicate model name "${Model.modelName}" shared on 2 distinct Model classes.`);
             }
+            // Assign name of fields from Model to fields.
+            for (const [fieldName, field] of Object.entries(Model.fields)) {
+                if (field.fieldName) {
+                    throw new InvalidFieldError({
+                        modelName: Model.modelName,
+                        fieldName,
+                        error: `unsupported property fieldName`,
+                        suggestion: `remove the "fieldName" property`,
+                    });
+                }
+                field.fieldName = fieldName;
+            }
             Models[Model.modelName] = Model;
             generatedNames.push(Model.modelName);
             toGenerateNames = toGenerateNames.filter(name => name !== Model.modelName);
@@ -825,7 +572,7 @@ class ModelManager {
         /**
          * Check that declared model fields are correct.
          */
-        this._checkDeclaredFieldsOnModels(Models);
+        checkDeclaredFieldsOnModels({ Models, fieldTypeRegistry });
         /**
          * Process declared model fields definitions, so that these field
          * definitions are much easier to use in the system. For instance, all
@@ -837,7 +584,7 @@ class ModelManager {
          * Check that all model fields are correct, notably one relation
          * should have matching reversed relation.
          */
-        this._checkProcessedFieldsOnModels(Models);
+        checkProcessedFieldsOnModels({ Models, fieldTypeRegistry });
         return Models;
     }
 
@@ -907,9 +654,6 @@ class ModelManager {
          * 1. Prepare fields.
          */
         for (const Model of Object.values(Models)) {
-            if (!Object.prototype.hasOwnProperty.call(Model, 'fields')) {
-                Model.fields = {};
-            }
             Model.inverseRelations = [];
             // Make fields aware of their field name.
             for (const [fieldName, fieldData] of Object.entries(Model.fields)) {

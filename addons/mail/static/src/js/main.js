@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { attribute } from '@mail/model/fields/types/attribute/attribute';
+import { relation } from '@mail/model/fields/types/relation/relation';
 import ModelManager from '@mail/model/model_manager';
 import MessagingService from '@mail/services/messaging/messaging';
 
@@ -33,7 +35,10 @@ async function createMessaging() {
      */
     await env.session.is_bound;
 
-    env.modelManager.start();
+    const fieldTypeRegistry = new Map();
+    fieldTypeRegistry.set('attribute', attribute);
+    fieldTypeRegistry.set('relation', relation);
+    env.modelManager.start({ fieldTypeRegistry });
     /**
      * Create the messaging singleton record.
      */

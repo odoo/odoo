@@ -6,6 +6,8 @@ import {
     addMessagingToEnv,
     addTimeControlToEnv,
 } from '@mail/env/test_env';
+import { attribute } from '@mail/model/fields/types/attribute/attribute';
+import { relation } from '@mail/model/fields/types/relation/relation';
 import ModelManager from '@mail/model/model_manager';
 import ChatWindowService from '@mail/services/chat_window_service/chat_window_service';
 import DialogService from '@mail/services/dialog_service/dialog_service';
@@ -665,8 +667,12 @@ async function start(param0 = {}) {
              */
             await env.session.is_bound;
 
+            const fieldTypeRegistry = new Map();
+            fieldTypeRegistry.set('attribute', attribute);
+            fieldTypeRegistry.set('relation', relation);
+
             testEnv.modelManager = new ModelManager(testEnv);
-            testEnv.modelManager.start();
+            testEnv.modelManager.start({ fieldTypeRegistry });
             /**
              * Create the messaging singleton record.
              */
