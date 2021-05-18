@@ -11,6 +11,9 @@ import { getMatchingFieldsDefinitionFromParents } from '@mail/model/fields/get_m
  * @throws {InvalidFieldError}
  */
 export function checkRelatedProperty({ Models, Model, field }) {
+    if (!field.related) {
+        return;
+    }
     checkRelatedPropertyGoesWithoutComputeProperty({ Models, Model, field });
     checkRelatedPropertyIsString({ Model, field });
     checkFormatOfRelatedProperty({ Model, field });

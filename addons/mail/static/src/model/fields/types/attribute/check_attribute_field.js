@@ -4,35 +4,26 @@ import { InvalidFieldError } from '@mail/model/model_errors';
 
 /**
  * @param {Object} param0
+ * @param {Map} param0.fieldPropertyRegistry
  * @param {Object} param0.Models all existing models
  * @param {Object} param0.Model model being currently checked
  * @param {Object} param0.field field being currently checked
  * @throws {InvalidFieldError}
  */
-export function checkAttributeField({ Models, Model, field }) {
-    checkSupportedPropertiesOnAttributeField({ Model, field });
+export function checkAttributeField({ fieldPropertyRegistry, Models, Model, field }) {
+    checkSupportedPropertiesOnAttributeField({ fieldPropertyRegistry, Model, field });
 }
 
 /**
  * @param {Object} param0
+ * @param {Map} param0.fieldPropertyRegistry
  * @param {Object} param0.Model model being currently checked
  * @param {Object} param0.field field being currently checked
  * @throws {InvalidFieldError}
  */
-function checkSupportedPropertiesOnAttributeField({ Model, field }) {
-    const supportedProperties = new Set([
-        'compute',
-        'default',
-        'dependencies',
-        'fieldName',
-        'fieldType',
-        'isOnChange',
-        'readonly',
-        'related',
-        'required',
-    ]);
+function checkSupportedPropertiesOnAttributeField({ fieldPropertyRegistry, Model, field }) {
     for (const property of Object.keys(field)) {
-        if (!supportedProperties.has(property)) {
+        if (!fieldPropertyRegistry.has(property)) {
             throw new InvalidFieldError({
                 modelName: Model.modelName,
                 fieldName: field.fieldName,

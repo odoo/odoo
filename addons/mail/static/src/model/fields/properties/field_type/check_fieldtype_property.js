@@ -9,7 +9,7 @@ import { InvalidFieldError } from '@mail/model/model_errors';
  * @param {Object} param0.field field being currently checked
  * @throws {InvalidFieldError}
  */
-export function checkFieldType({ fieldTypeRegistry, Model, field }) {
+export function checkFieldTypeProperty({ fieldTypeRegistry, Model, field }) {
     if (!fieldTypeRegistry.has(field.fieldType)) {
         throw new InvalidFieldError({
             modelName: Model.modelName,

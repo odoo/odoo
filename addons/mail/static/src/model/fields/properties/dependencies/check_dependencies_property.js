@@ -11,6 +11,9 @@ import { getMatchingFieldsDefinitionFromParents } from '@mail/model/fields/get_m
  * @throws {InvalidFieldError}
  */
 export function checkDependenciesProperty({ Models, Model, field }) {
+    if (!field.dependencies) {
+        return;
+    }
     checkDependenciesPropetyGoesWithComputeProperty({ Model, field });
     checkDependenciesPropertyIsArray({ Model, field });
     checkExistenceOfTargetFieldForDependencies({ Models, Model, field });

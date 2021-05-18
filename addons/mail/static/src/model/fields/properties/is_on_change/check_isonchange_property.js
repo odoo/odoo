@@ -9,6 +9,9 @@ import { InvalidFieldError } from '@mail/model/model_errors';
  * @throws {InvalidFieldError}
  */
 export function checkIsOnChangeProperty({ Model, field }) {
+    if (!field.isOnChange) {
+        return;
+    }
     checkIsOnChangePropetyGoesWithComputeProperty({ Model, field });
 }
 

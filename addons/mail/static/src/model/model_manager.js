@@ -97,7 +97,7 @@ class ModelManager {
      * Called when all JS modules that register or patch models have been
      * done. This launches generation of models.
      *
-     * @param {Map<string, Object>} fieldTypeRegistry
+     * @param {Map} fieldTypeRegistry
      */
     start({ fieldTypeRegistry }) {
         /**
@@ -505,7 +505,7 @@ class ModelManager {
 
     /**
      * @private
-     * @param {Map<string, Object>} fieldTypeRegistry
+     * @param {Map} fieldTypeRegistry
      * @returns {Object}
      * @throws {Error|InvalidFieldError} in case it cannot generate models.
      */

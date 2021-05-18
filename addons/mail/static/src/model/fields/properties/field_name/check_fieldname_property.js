@@ -8,7 +8,7 @@ import { InvalidFieldError } from '@mail/model/model_errors';
  * @param {Object} param0.field field being currently checked
  * @throws {InvalidFieldError}
  */
-export function checkFieldName({ Model, field }) {
+export function checkFieldNameProperty({ Model, field }) {
     checkNonEmptinessOfFieldName({ Model, field });
     checkPresenceOfFieldInModel({ Model, field });
     checkMatchingFieldOnModel({ Model, field });

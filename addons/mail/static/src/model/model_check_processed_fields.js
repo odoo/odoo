@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { InvalidFieldError } from '@mail/model/model_errors';
-import { checkFieldName } from '@mail/model/fields/check_field_name';
 import { checkFieldType } from '@mail/model/fields/check_field_type';
 import { checkAttributeField } from '@mail/model/fields/types/attribute/check_attribute_field';
 import { checkRelationField } from '@mail/model/fields/types/relation/check_relation_field';
@@ -13,7 +12,7 @@ import { checkRelatedProperty } from '@mail/model/fields/properties/related/chec
 /**
  * @param {Object} param0
  * @param {Object} param0.Models
- * @param {Map<string, Object>} param0.fieldTypeRegistry
+ * @param {Map} param0.fieldTypeRegistry
  * @throws {Error} in case some fields are not correct.
  */
 export function checkProcessedFieldsOnModels({ Models, fieldTypeRegistry }) {
@@ -27,13 +26,13 @@ export function checkProcessedFieldsOnModels({ Models, fieldTypeRegistry }) {
 /**
  * @param {Object} param0
  * @param {Object} param0.Models
- * @param {Map<string, Object>} param0.fieldTypeRegistry
+ * @param {Map} param0.fieldTypeRegistry
  * @param {Object} param0.Model model being currently checked
  * @param {Object} param0.field field being currently checked
  * @throws {Error} in case some fields are not correct.
  */
 function checkProcessedFieldsOnModel({ Models, fieldTypeRegistry, Model, field }) {
-    checkFieldName({ Model, field });
+    // checkFieldName({ Model, field });
     checkFieldType({ fieldTypeRegistry, Model, field });
     // TODO SEB breaking because of extra properties (eg. dependents)
     // switch (field.fieldType) {

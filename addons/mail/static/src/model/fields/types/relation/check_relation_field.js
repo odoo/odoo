@@ -4,13 +4,14 @@ import { InvalidFieldError } from '@mail/model/model_errors';
 
 /**
  * @param {Object} param0
+ * @param {Map} param0.fieldPropertyRegistry
  * @param {Object} param0.Models all existing models
  * @param {Object} param0.Model model being currently checked
  * @param {Object} param0.field field being currently checked
  * @throws {InvalidFieldError}
  */
-export function checkRelationField({ Models, Model, field }) {
-    checkSupportedPropertiesOnRelationField({ Model, field });
+export function checkRelationField({ fieldPropertyRegistry, Models, Model, field }) {
+    checkSupportedPropertiesOnRelationField({ fieldPropertyRegistry, Model, field });
     checkExistenceOfTargetForRelationField({ Models, Model, field });
     if (field.isCausal) {
         checkSupportedRelationTypeForIsCausalProperty({ Model, field });
@@ -22,27 +23,14 @@ export function checkRelationField({ Models, Model, field }) {
 
 /**
  * @param {Object} param0
+ * @param {Map} param0.fieldPropertyRegistry
  * @param {Object} param0.Model model being currently checked
  * @param {Object} param0.field field being currently checked
  * @throws {InvalidFieldError}
  */
-function checkSupportedPropertiesOnRelationField({ Model, field }) {
-    const supportedProperties = new Set([
-        'compute',
-        'default',
-        'dependencies',
-        'fieldName',
-        'fieldType',
-        'inverse',
-        'isCausal',
-        'readonly',
-        'related',
-        'relationType',
-        'required',
-        'to',
-    ]);
+function checkSupportedPropertiesOnRelationField({ fieldPropertyRegistry, Model, field }) {
     for (const property of Object.keys(field)) {
-        if (!supportedProperties.has(property)) {
+        if (!fieldPropertyRegistry.has(property)) {
             throw new InvalidFieldError({
                 modelName: Model.modelName,
                 fieldName: field.fieldName,

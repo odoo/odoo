@@ -9,6 +9,9 @@ import { InvalidFieldError } from '@mail/model/model_errors';
  * @throws {InvalidFieldError}
  */
 export function checkComputeProperty({ Model, field }) {
+    if (!field.compute) {
+        return;
+    }
     checkComputePropertyIsString({ Model, field });
     checkExistenceOfMethodForComputeProperty({ Model, field });
 }
