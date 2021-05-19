@@ -158,6 +158,8 @@ class AccountEdiFormat(models.Model):
             )
         else:
             invoice.l10n_it_send_state = 'to_send'
+        if 'attachment' in res:
+            res['success'] = True
         return {invoice: res}
 
     def _post_invoice_edi(self, invoices, test_mode=False):

@@ -127,7 +127,7 @@ class AccountEdiFormat(models.Model):
 
         invoice = invoices  # no batch ensure that there is only one invoice
         attachment = self._export_nlcius(invoice)
-        return {invoice: {'attachment': attachment}}
+        return {invoice: {'success': True, 'attachment': attachment}}
 
     def _is_embedding_to_invoice_pdf_needed(self):
         self.ensure_one()

@@ -88,7 +88,9 @@ class AccountMove(models.Model):
             format_web_services = to_process.edi_format_id.filtered(lambda f: f._needs_web_services())
             move.edi_web_services_to_process = ', '.join(f.name for f in format_web_services)
 
-    @api.depends('restrict_mode_hash_table', 'state')
+    @api.depends(
+        'state',
+        'edi_document_ids.state')
     def _compute_show_reset_to_draft_button(self):
         # OVERRIDE
         super()._compute_show_reset_to_draft_button()
@@ -96,7 +98,6 @@ class AccountMove(models.Model):
         for move in self:
             for doc in move.edi_document_ids:
                 if doc.edi_format_id._needs_web_services() \
-                        and doc.attachment_id \
                         and doc.state in ('sent', 'to_cancel') \
                         and move.is_invoice(include_receipts=True) \
                         and doc.edi_format_id._is_required_for_invoice(move):
@@ -105,8 +106,7 @@ class AccountMove(models.Model):
 
     @api.depends(
         'state',
-        'edi_document_ids.state',
-        'edi_document_ids.attachment_id')
+        'edi_document_ids.state')
     def _compute_edi_show_cancel_button(self):
         for move in self:
             if move.state != 'posted':
@@ -114,7 +114,6 @@ class AccountMove(models.Model):
                 continue
 
             move.edi_show_cancel_button = any([doc.edi_format_id._needs_web_services()
-                                               and doc.attachment_id
                                                and doc.state == 'sent'
                                                and move.is_invoice(include_receipts=True)
                                                and doc.edi_format_id._is_required_for_invoice(move)
@@ -122,8 +121,7 @@ class AccountMove(models.Model):
 
     @api.depends(
         'state',
-        'edi_document_ids.state',
-        'edi_document_ids.attachment_id')
+        'edi_document_ids.state')
     def _compute_edi_show_abandon_cancel_button(self):
         for move in self:
             move.edi_show_abandon_cancel_button = any(doc.edi_format_id._needs_web_services()
@@ -420,8 +418,8 @@ class AccountMove(models.Model):
         # Set the electronic document to be canceled and cancel immediately for synchronous formats.
         res = super().button_cancel()
 
-        self.edi_document_ids.filtered(lambda doc: doc.attachment_id).write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
-        self.edi_document_ids.filtered(lambda doc: not doc.attachment_id).write({'state': 'cancelled', 'error': False, 'blocking_level': False})
+        self.edi_document_ids.filtered(lambda doc: doc.state != 'sent').write({'state': 'cancelled', 'error': False, 'blocking_level': False})
+        self.edi_document_ids.filtered(lambda doc: doc.state == 'sent').write({'state': 'to_cancel', 'error': False, 'blocking_level': False})
         self.edi_document_ids._process_documents_no_web_services()
         self.env.ref('account_edi.ir_cron_edi_network')._trigger()
 
@@ -438,7 +436,7 @@ class AccountMove(models.Model):
 
         res = super().button_draft()
 
-        self.edi_document_ids.write({'state': False, 'error': False, 'blocking_level': False})
+        self.edi_document_ids.write({'error': False, 'blocking_level': False})
 
         return res
 

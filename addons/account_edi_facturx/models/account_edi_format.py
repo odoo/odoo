@@ -30,7 +30,7 @@ class AccountEdiFormat(models.Model):
         res = {}
         for invoice in invoices:
             attachment = self._export_facturx(invoice)
-            res[invoice] = {'attachment': attachment}
+            res[invoice] = {'success': True, 'attachment': attachment}
         return res
 
     def _is_embedding_to_invoice_pdf_needed(self):
