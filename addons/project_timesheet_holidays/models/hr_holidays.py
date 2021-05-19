@@ -10,7 +10,7 @@ class HolidaysType(models.Model):
 
     def _default_project_id(self):
         company = self.company_id if self.company_id else self.env.company
-        return company.leave_timesheet_project_id.id
+        return company.internal_project_id.id
 
     def _default_task_id(self):
         company = self.company_id if self.company_id else self.env.company

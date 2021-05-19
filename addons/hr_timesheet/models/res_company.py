@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
@@ -36,6 +37,14 @@ class ResCompany(models.Model):
         default=_default_timesheet_encode_uom_id, domain=lambda self: [('category_id', '=', self.env.ref('uom.uom_categ_wtime').id)],
         help="""This will set the unit of measure used to encode timesheet. This will simply provide tools
         and widgets to help the encoding. All reporting will still be expressed in hours (default value).""")
+    internal_project_id = fields.Many2one(
+        'project.project', string="Internal Project",
+        help="Default project value for timesheet generated from time off type.")
+
+    @api.constrains('internal_project_id')
+    def _check_internal_project_id_company(self):
+        if self.filtered(lambda company: company.internal_project_id and company.internal_project_id.sudo().company_id != company):
+            raise ValidationError(_('The Internal Project of a company should be in that company.'))
 
     @api.model_create_multi
     def create(self, values):
@@ -62,6 +71,9 @@ class ResCompany(models.Model):
                 }) for name in [_('Training'), _('Meeting')]]
             }]
         project_ids = self.env['project.project'].create(results)
+        projects_by_company = {project.company_id.id: project for project in project_ids}
+        for company in self:
+            company.internal_project_id = projects_by_company.get(company.id, False)
         return project_ids
 
     def _is_timesheet_hour_uom(self):
