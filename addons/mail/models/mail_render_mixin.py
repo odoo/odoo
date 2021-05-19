@@ -231,9 +231,7 @@ class MailRenderMixin(models.AbstractModel):
 
         if preview:
             html_preview = Markup("""
-                <div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
                    {}
-                </div>
             """).format(preview)
             return tools.prepend_html_content(html, html_preview)
         return html
