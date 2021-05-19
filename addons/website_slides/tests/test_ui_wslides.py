@@ -102,7 +102,8 @@ class TestUi(TestUICommon):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id)]
+            'karma': 1,
+            'groups_id': [(6, 0, self.env.ref('base.group_user').ids)]
         })
 
         self.browser_js(
@@ -115,7 +116,8 @@ class TestUi(TestUICommon):
         user_demo = self.user_demo
         user_demo.flush()
         user_demo.write({
-            'groups_id': [(5, 0), (4, self.env.ref('base.group_user').id), (4, self.env.ref('website_slides.group_website_slides_officer').id)]
+            'karma': 1,
+            'groups_id': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
         })
 
         self.browser_js(
@@ -127,6 +129,7 @@ class TestUi(TestUICommon):
     def test_course_member_portal(self):
         user_portal = self.user_portal
         user_portal.flush()
+        user_portal.karma = 1
 
         self.browser_js(
             '/slides',
