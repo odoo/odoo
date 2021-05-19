@@ -117,7 +117,7 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
         self.assertEqual(tx_sudo.reference, self.reference)
 
         tx_sudo._set_done()
-        with mute_logger('odoo.addons.sale.models.payment'):
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
             tx_sudo._finalize_post_processing()
         self.assertEqual(self.order.state, 'draft') # Only a partial amount was paid
 
