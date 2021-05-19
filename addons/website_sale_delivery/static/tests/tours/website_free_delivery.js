@@ -41,10 +41,6 @@ tour.register('check_free_delivery', {
             trigger: '#payment_method label:contains("Wire Transfer")',
         },
         {
-            content: "Accept the Terms & conditions",
-            trigger: '#checkbox_tc',
-        },
-        {
             content: "Click on Pay Now",
             trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
         },
