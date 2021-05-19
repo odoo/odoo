@@ -15,6 +15,11 @@
                         <field name="amount_max" invisible="1"/>
                         <field name="description"/>
                         <field name="amount"/>
+                        <field name="acquirer_id"
+                            attrs="{'invisible': [('acquirers_count', '&lt;', 2)]}"
+                            options="{'no_open': True, 'no_create': True}"/>
+                        <field name="available_acquirer_ids" invisible="1"/>
+                        <field name="acquirers_count" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="access_token" invisible="1"/>
                     </group>

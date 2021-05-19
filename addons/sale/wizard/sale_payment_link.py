@@ -35,6 +35,7 @@ class PaymentLinkWizard(models.TransientModel):
                                     f'?reference={urls.url_quote(payment_link.description)}' \
                                     f'&amount={payment_link.amount}' \
                                     f'&sale_order_id={payment_link.res_id}' \
+                                    f'{"&acquirer_id=" + str(payment_link.acquirer_id.id) if payment_link.acquirer_id else "" }' \
                                     f'&access_token={payment_link.access_token}'
                 # Order-related fields are retrieved in the controller
             else:

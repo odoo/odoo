@@ -37,11 +37,35 @@ class PaymentLinkWizard(models.TransientModel):
     amount_max = fields.Monetary(currency_field='currency_id')
     currency_id = fields.Many2one('res.currency')
     partner_id = fields.Many2one('res.partner')
+    acquirer_id = fields.Many2one(
+        'payment.acquirer', string="Payment Acquirer",
+        help="If set, only this acquirer will be proposed to the customer.",
+        domain="[('id', 'in', available_acquirer_ids)]")
     partner_email = fields.Char(related='partner_id.email')
     link = fields.Char(string='Payment Link', compute='_compute_values')
     description = fields.Char('Payment Ref')
     access_token = fields.Char(compute='_compute_values')
     company_id = fields.Many2one('res.company', compute='_compute_company')
+    available_acquirer_ids = fields.Many2many('payment.acquirer', compute="_compute_available_acquirer_ids")
+    acquirers_count = fields.Integer(compute="_compute_acquirers_count")
+
+    @api.depends('currency_id', 'partner_id', 'company_id')
+    def _compute_available_acquirer_ids(self):
+        for wizard in self:
+            kwargs = {
+                'company_id': self.company_id.id,
+                'partner_id': self.partner_id.id,
+                'currency_id': self.currency_id.id,
+            }
+            if wizard.res_model == 'sale.order':
+                kwargs['sale_order_id'] = wizard.res_id
+            wizard.available_acquirer_ids = self.env['payment.acquirer']._get_compatible_acquirers(
+                **kwargs)
+
+    @api.depends('available_acquirer_ids')
+    def _compute_acquirers_count(self):
+        for wizard in self:
+            wizard.acquirers_count = len(wizard.available_acquirer_ids)
 
     @api.onchange('amount', 'description')
     def _onchange_amount(self):
@@ -50,7 +74,7 @@ class PaymentLinkWizard(models.TransientModel):
         if self.amount <= 0:
             raise ValidationError(_("The value of the payment amount must be positive."))
 
-    @api.depends('amount', 'description', 'partner_id', 'currency_id')
+    @api.depends('amount', 'description', 'partner_id', 'currency_id', 'acquirer_id')
     def _compute_values(self):
         for payment_link in self:
             payment_link.access_token = payment_utils.generate_access_token(
@@ -75,4 +99,5 @@ class PaymentLinkWizard(models.TransientModel):
                    f'&currency_id={payment_link.currency_id.id}' \
                    f'&partner_id={payment_link.partner_id.id}' \
                    f'&company_id={payment_link.company_id.id}' \
+                   f'{"&acquirer_id=" + str(payment_link.acquirer_id.id) if payment_link.acquirer_id else "" }' \
                    f'&access_token={payment_link.access_token}'
