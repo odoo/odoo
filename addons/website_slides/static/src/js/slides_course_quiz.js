@@ -5,6 +5,7 @@ odoo.define('website_slides.quiz', function (require) {
     var Dialog = require('web.Dialog');
     var core = require('web.core');
     var session = require('web.session');
+    const {Markup} = require('web.utils');
 
     var CourseJoinWidget = require('website_slides.course.join.widget').courseJoinWidget;
     var QuestionFormWidget = require('website_slides.quiz.question.form');
@@ -342,35 +343,39 @@ odoo.define('website_slides.quiz', function (require) {
          *
          * @private
          */
-        _submitQuiz: function () {
-            var self = this;
-
-            return this._rpc({
+        async _submitQuiz() {
+            const data = await this._rpc({
                 route: '/slides/slide/quiz/submit',
                 params: {
-                    slide_id: self.slide.id,
+                    slide_id: this.slide.id,
                     answer_ids: this._getQuizAnswers(),
                 }
-            }).then(function (data) {
-                if (data.error) {
-                    self._alertShow(data.error);
-                } else {
-                    self.quiz = _.extend(self.quiz, data);
-                    if (data.completed) {
-                        self._disableAnswers();
-                        new SlideQuizFinishModal(self, {
-                            quiz: self.quiz,
-                            hasNext: self.slide.hasNext,
-                            userId: self.userId
-                        }).open();
-                        self.slide.completed = true;
-                        self.trigger_up('slide_completed', {slide: self.slide, completion: data.channel_completion});
-                    }
-                    self._hideEditOptions();
-                    self._renderAnswersHighlightingAndComments();
-                    self._renderValidationInfo();
-                }
             });
+            if (data.error) {
+                this._alertShow(data.error);
+                return;
+            }
+            Object.assign(this.quiz, data);
+            const {rankProgress, completed, channel_completion: completion} = this.quiz;
+            // two of the rankProgress properties are HTML messages, mark if set
+            if ('description' in rankProgress) {
+                rankProgress['description'] = Markup(rankProgress['description'] || '');
+                rankProgress['previous_rank']['motivational'] =
+                    Markup(rankProgress['previous_rank']['motivational'] || '');
+            }
+            if (completed) {
+                this._disableAnswers();
+                new SlideQuizFinishModal(this, {
+                    quiz: this.quiz,
+                    hasNext: this.slide.hasNext,
+                    userId: this.userId
+                }).open();
+                this.slide.completed = true;
+                this.trigger_up('slide_completed', {slide: this.slide, completion});
+            }
+            this._hideEditOptions();
+            this._renderAnswersHighlightingAndComments();
+            this._renderValidationInfo();
         },
 
         /**

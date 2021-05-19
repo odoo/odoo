@@ -106,6 +106,9 @@ tour.register('course_member', {
 }, {
     trigger: '.o_wslides_js_lesson_quiz_submit'
 }, {
+    // check that we have a properly motivational message to motivate us!
+    trigger: '.o_wslides_quiz_modal_rank_motivational > div > div:contains("Reach the next rank and gain a very nice mug !")'
+}, {
     trigger: 'a:contains("End course")'
 },
 // eLearning: ending course redirect to /slides, course is completed now
