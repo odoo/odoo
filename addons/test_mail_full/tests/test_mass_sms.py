@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
 
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
@@ -63,6 +64,25 @@ class TestMassSMSCommon(TestMailFullCommon):
 @tagged('mass_mailing')
 class TestMassSMSInternals(TestMassSMSCommon):
 
+    @users('user_marketing')
+    def test_mass_sms_domain(self):
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'Xmas Spam',
+            'subject': 'Xmas Spam',
+            'mailing_model_id': self.env['ir.model']._get('mail.test.sms').id,
+            'mailing_type': 'sms',
+        })
+        self.assertEqual(literal_eval(mailing.mailing_domain), [])
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'Xmas Spam',
+            'subject': 'Xmas Spam',
+            'mailing_model_id': self.env['ir.model']._get('mail.test.sms.bl').id,
+            'mailing_type': 'sms',
+        })
+        self.assertEqual(literal_eval(mailing.mailing_domain), [('phone_sanitized_blacklisted', '=', False)])
+
+    @users('user_marketing')
     def test_mass_sms_internals(self):
         with self.with_user('user_marketing'):
             mailing = self.env['mailing.mailing'].create({
@@ -122,7 +142,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
         })
         self.env['phone.blacklist'].create({'number': '0456110011'})
         # new customer, number already on record -> should be ignored
-        country_be_id = self.env.ref('base.be').id,
+        country_be_id = self.env.ref('base.be').id
         nr2_partner = self.env['res.partner'].create({
             'name': 'Partner_nr2',
             'country_id': country_be_id,
@@ -272,3 +292,33 @@ class TestMassSMS(TestMassSMSCommon):
                 ('unsubscribe', False, {}),
             ] for record in self.records],
         )
+
+    @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mass_sms_w_opt_out(self):
+        mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
+        recipients = self._create_mailing_sms_test_records(model='mail.test.sms.bl.optout', count=5)
+
+        # optout records 0 and 1
+        (recipients[0] | recipients[1]).write({'opt_out': True})
+        # blacklist records 4
+        # TDE FIXME: sudo should not be necessary
+        self.env['phone.blacklist'].sudo().create({'number': recipients[4].phone_nbr})
+
+        mailing.write({
+            'mailing_model_id': self.env['ir.model']._get('mail.test.sms.bl.optout'),
+            'mailing_domain': [('id', 'in', recipients.ids)],
+        })
+
+        with self.mockSMSGateway():
+            mailing.action_send_sms()
+
+        self.assertSMSTraces(
+            [{'number': '+32456000000', 'state': 'ignored', 'failure_type': 'sms_blacklist'},  # TDE FIXME: should be opt_out
+             {'number': '+32456000101', 'state': 'ignored', 'failure_type': 'sms_blacklist'},  # TDE FIXME: should be opt_out
+             {'number': '+32456000202', 'state': 'sent'},
+             {'number': '+32456000303', 'state': 'sent'},
+             {'number': '+32456000404', 'state': 'ignored', 'failure_type': 'sms_blacklist'}],
+            mailing, recipients
+        )
+        self.assertEqual(mailing.ignored, 3)

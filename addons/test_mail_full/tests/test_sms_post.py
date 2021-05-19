@@ -91,7 +91,7 @@ class TestSMSPost(TestMailFullCommon, TestMailFullRecipients):
 
     def test_message_sms_model_w_partner_only(self):
         with self.with_user('employee'):
-            record = self.env['mail.test.sms.partner'].create({'partner_id': self.partner_1.id})
+            record = self.env['mail.test.sms.partner'].create({'customer_id': self.partner_1.id})
 
             with self.mockSMSGateway():
                 messages = record._message_sms(self._test_body)
@@ -100,7 +100,7 @@ class TestSMSPost(TestMailFullCommon, TestMailFullRecipients):
 
     def test_message_sms_model_w_partner_only_void(self):
         with self.with_user('employee'):
-            record = self.env['mail.test.sms.partner'].create({'partner_id': False})
+            record = self.env['mail.test.sms.partner'].create({'customer_id': False})
 
             with self.mockSMSGateway():
                 messages = record._message_sms(self._test_body)
