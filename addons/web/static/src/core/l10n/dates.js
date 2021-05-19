@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { memoize } from "../utils/functions";
 import { sprintf } from "../utils/strings";
 import { localization } from "./localization";
 import { _lt } from "./translation";
@@ -10,14 +11,20 @@ const { DateTime } = luxon;
  * Change the method toJSON to return the formated value to send server side.
  */
 DateTime.prototype.toJSON = function () {
-    return this.setLocale("en").toFormat("yyyy-MM-dd HH:mm:ss");
+    return this.toFormat("yyyy-MM-dd HH:mm:ss");
 };
 
 // -----------------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------------
+
+const alphaRegex = /[a-zA-Z]/g;
+const nonAlphaRegex = /[^a-zA-Z]/g;
+const nonDigitsRegex = /[^0-9]/g;
 
 const normalizeFormatTable = {
     // Python strftime to luxon.js conversion table
-    // See openerp/addons/base/views/res_lang_views.xml
+    // See odoo/addons/base/views/res_lang_views.xml
     // for details about supported directives
     a: "ccc",
     A: "cccc",
@@ -40,7 +47,71 @@ const normalizeFormatTable = {
     X: "HH:mm:ss",
 };
 
-const _normalize_format_cache = {};
+const smartDateUnits = {
+    d: "days",
+    m: "months",
+    w: "weeks",
+    y: "years",
+};
+const smartDateRegex = new RegExp(`^([+-])(\\d+)([${Object.keys(smartDateUnits).join("")}]?)$`);
+
+/**
+ * Smart date inputs are shortcuts to write dates quicker.
+ * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
+ *
+ * e.g.
+ *   "+1d" or "+1" will return now + 1 day
+ *   "-2w" will return now - 2 weeks
+ *   "+3m" will return now + 3 months
+ *   "-4y" will return now + 4 years
+ *
+ * @param {string} value
+ * @returns {DateTime|false} Luxon datetime object (in the UTC timezone)
+ */
+function parseSmartDateInput(value) {
+    const match = smartDateRegex.exec(value);
+    if (match) {
+        let date = DateTime.utc();
+        const offset = parseInt(match[2], 10);
+        const unit = smartDateUnits[match[3] || "d"];
+        if (match[1] === "+") {
+            date = date.plus({ [unit]: offset });
+        } else {
+            date = date.minus({ [unit]: offset });
+        }
+        return date;
+    }
+    return false;
+}
+
+/**
+ * Enforces some restrictions to a Luxon DateTime object.
+ * Returns it if within those restrictions.
+ * Returns false otherwise.
+ *
+ * @param {DateTime | false} date
+ * @returns {DateTime | false}
+ */
+function constrain(dt) {
+    let valid = dt !== false;
+    valid = valid && dt.isValid;
+    valid = valid && dt.year >= 1000;
+    valid = valid && dt.year < 10000;
+    return valid ? dt : false;
+}
+
+/**
+ * Removes any duplicated alphabetic characters in a given string.
+ * Example: "aa-bb-CCcc-ddD xxxx-Yy-ZZ" -> "a-b-Cc-dD x-Yy-Z"
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+const stripAlphaDupes = memoize(function _stripAlphaDupes(str) {
+    return str.replace(alphaRegex, (letter, index, str) => {
+        return letter === str[index - 1] ? "" : letter;
+    });
+});
 
 /**
  * Convert Python strftime to escaped luxon.js format.
@@ -48,32 +119,30 @@ const _normalize_format_cache = {};
  * @param {string} value original format
  * @returns {string} valid Luxon format
  */
-export function strftimeToLuxonFormat(value) {
-    if (_normalize_format_cache[value] === undefined) {
-        const isletter = /[a-zA-Z]/;
-        const output = [];
-        let inToken = false;
-        for (let index = 0; index < value.length; ++index) {
-            let character = value[index];
-            if (character === "%" && !inToken) {
-                inToken = true;
-                continue;
-            }
-            if (isletter.test(character)) {
-                if (inToken && normalizeFormatTable[character] !== undefined) {
-                    character = normalizeFormatTable[character];
-                } else {
-                    character = "[" + character + "]"; // moment.js escape
-                }
-            }
-            output.push(character);
-            inToken = false;
+export const strftimeToLuxonFormat = memoize(function _strftimeToLuxonFormat(value) {
+    const output = [];
+    let inToken = false;
+    for (let index = 0; index < value.length; ++index) {
+        let character = value[index];
+        if (character === "%" && !inToken) {
+            inToken = true;
+            continue;
         }
-        _normalize_format_cache[value] = output.join("");
+        if (character.match(alphaRegex)) {
+            if (inToken && normalizeFormatTable[character] !== undefined) {
+                character = normalizeFormatTable[character];
+            } else {
+                character = "[" + character + "]"; // moment.js escape
+            }
+        }
+        output.push(character);
+        inToken = false;
     }
-    return _normalize_format_cache[value];
-}
+    return output.join("");
+});
 
+// -----------------------------------------------------------------------------
+// Formatting
 // -----------------------------------------------------------------------------
 
 /**
@@ -105,38 +174,28 @@ export function formatDateTime(value, options = {}) {
 }
 
 // -----------------------------------------------------------------------------
-
-const alphaRegex = /[a-zA-Z]/g;
-const nonAlphaRegex = /[^a-zA-Z]/g;
-const nonDigitsRegex = /[^0-9]/g;
+// Parsing
+// -----------------------------------------------------------------------------
 
 /**
- * Removes any duplicated alphabetic characters in a given string.
- * Example: "aa-bb-CCcc-ddD xxxx-Yy-ZZ" -> "a-b-Cc-dD x-Yy-Z"
+ * Parses a string value to an UTC Luxon DateTime object.
  *
- * @param {string} str
- * @returns {string}
- */
-function stripAlphaDupes(str) {
-    return str.replace(alphaRegex, (letter, index, str) => {
-        return letter === str[index - 1] ? "" : letter;
-    });
-}
-
-/**
- * Confirms a Luxon DateTime object.
- * Returns it if within some defined properties.
- * Returns false otherwise.
+ * @param {string} value value to parse.
+ *  - Value can take the form of a smart date:
+ *    e.g. "+3w" for three weeks from now.
+ *    (`options.format` and `options.timezone` are ignored in this case)
  *
- * @param {DateTime | false} date
- * @returns {DateTime | false}
+ *  - If value cannot be parsed within the provided format,
+ *    ISO8601 and SQL formats are then tried.
+ *
+ * @param {object} options
+ * @param {string} [options.format]
+ *  Provided format used to parse the input value.
+ *  Default=the session localization format
+ * @returns {DateTime|false} Luxon DateTime object (in the UTC timezone)
  */
-function confirm(date) {
-    let valid = date !== false;
-    valid = valid && date.isValid;
-    valid = valid && date.year >= 1000;
-    valid = valid && date.year < 10000;
-    return valid ? date : false;
+export function parseDate(value, options = {}) {
+    return parseDateTime(value, { dateOnly: true, format: options.format });
 }
 
 /**
@@ -185,7 +244,7 @@ export function parseDateTime(value, options = {}) {
         zone: options.timezone ? "local" : "utc",
     };
 
-    let result = confirm(parseSmartDateInput(value));
+    let result = constrain(parseSmartDateInput(value));
 
     if (!result) {
         const fmt = options.format || localization.dateTimeFormat;
@@ -200,9 +259,9 @@ export function parseDateTime(value, options = {}) {
         };
 
         result =
-            confirm(DateTime.fromFormat(value, fmt, parseOpts)) ||
-            confirm(DateTime.fromFormat(value, fmtWoZero, parseOpts)) ||
-            confirm(DateTime.fromFormat(woSeps.val, woSeps.fmt, parseOpts));
+            constrain(DateTime.fromFormat(value, fmt, parseOpts)) ||
+            constrain(DateTime.fromFormat(value, fmtWoZero, parseOpts)) ||
+            constrain(DateTime.fromFormat(woSeps.val, woSeps.fmt, parseOpts));
     }
 
     if (!result) {
@@ -211,8 +270,8 @@ export function parseDateTime(value, options = {}) {
             // four digit characters as this could get misinterpreted as the time of
             // the actual date.
             result =
-                confirm(DateTime.fromISO(value, parseOpts)) || // ISO8601
-                confirm(DateTime.fromSQL(value, parseOpts)); // last try: SQL
+                constrain(DateTime.fromISO(value, parseOpts)) || // ISO8601
+                constrain(DateTime.fromSQL(value, parseOpts)); // last try: SQL
         }
     }
 
@@ -222,65 +281,4 @@ export function parseDateTime(value, options = {}) {
 
     result = result.toUTC();
     return options.dateOnly ? result.startOf("day") : result;
-}
-
-/**
- * Parses a string value to an UTC Luxon DateTime object.
- *
- * @param {string} value value to parse.
- *  - Value can take the form of a smart date:
- *    e.g. "+3w" for three weeks from now.
- *    (`options.format` and `options.timezone` are ignored in this case)
- *
- *  - If value cannot be parsed within the provided format,
- *    ISO8601 and SQL formats are then tried.
- *
- * @param {object} options
- * @param {string} [options.format]
- *  Provided format used to parse the input value.
- *  Default=the session localization format
- * @returns {DateTime|false} Luxon DateTime object (in the UTC timezone)
- */
-export function parseDate(value, options = {}) {
-    return parseDateTime(value, { dateOnly: true, format: options.format });
-}
-
-// -----------------------------------------------------------------------------
-
-const dateUnits = {
-    d: "days",
-    m: "months",
-    w: "weeks",
-    y: "years",
-};
-
-const smartDateRegex = new RegExp(`^([+-])(\\d+)([${Object.keys(dateUnits).join("")}]?)$`);
-
-/**
- * Smart date inputs are shortcuts to write dates quicker.
- * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
- *
- * e.g.
- *   "+1d" or "+1" will return now + 1 day
- *   "-2w" will return now - 2 weeks
- *   "+3m" will return now + 3 months
- *   "-4y" will return now + 4 years
- *
- * @param {string} value
- * @returns {DateTime|false} Luxon datetime object (in the UTC timezone)
- */
-export function parseSmartDateInput(value) {
-    const match = smartDateRegex.exec(value);
-    if (match) {
-        let date = DateTime.utc();
-        const offset = parseInt(match[2], 10);
-        const unit = dateUnits[match[3] || "d"];
-        if (match[1] === "+") {
-            date = date.plus({ [unit]: offset });
-        } else {
-            date = date.minus({ [unit]: offset });
-        }
-        return date;
-    }
-    return false;
 }
