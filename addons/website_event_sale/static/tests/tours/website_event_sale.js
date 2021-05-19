@@ -82,10 +82,6 @@ tour.register('event_buy_tickets', {
             trigger: '#payment_method label:contains("Wire Transfer")',
         },
         {
-            content: "Accept the Terms & conditions",
-            trigger: '#checkbox_tc',
-        },
-        {
             content: "Pay",
             //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
             // extra_trigger: '#payment_method input:checked,#payment_method:not(:has("input:radio:visible"))',

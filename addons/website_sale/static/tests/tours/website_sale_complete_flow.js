@@ -133,10 +133,6 @@ odoo.define('website_sale_tour.tour', function (require) {
         trigger: '#payment_method label:contains("Wire Transfer")',
     },
     {
-        content: "Accept the Terms & conditions",
-        trigger: '#checkbox_tc',
-    },
-    {
         content: "Pay Now",
         // extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
         trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
@@ -285,10 +281,6 @@ odoo.define('website_sale_tour.tour', function (require) {
         trigger: '#payment_method label:contains("Wire Transfer")',
     },
     {
-        content: "Accept the Terms & conditions",
-        trigger: '#checkbox_tc',
-    },
-    {
         content: "Pay Now",
         extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
         trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
@@ -392,10 +384,6 @@ odoo.define('website_sale_tour.tour', function (require) {
     {
         content: "Select `Wire Transfer` payment method",
         trigger: '#payment_method label:contains("Wire Transfer")',
-    },
-    {
-        content: "Accept the Terms & conditions",
-        trigger: '#checkbox_tc',
     },
     {
         content: "Pay Now",

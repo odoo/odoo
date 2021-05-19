@@ -1549,13 +1549,9 @@
         </t>
     </template>
 
-    <template id="payment_footer" name="Payment Footer">
-        <div class="custom-control custom-checkbox mt-2 o_accept_tc_button">
-            <input type="checkbox" id="checkbox_tc" class="custom-control-input"/>
-            <label for="checkbox_tc" class="custom-control-label">
-                I agree to the <a target="_BLANK" href="/terms">terms &amp; conditions</a>
-            </label>
-        </div>
+    <template id="payment_footer" name="Payment">
+        <div name="o_checkbox_container"
+             class="custom-control custom-checkbox mt-2 o_accept_tc_button"/>
         <div class="float-left mt-2">
             <a role="button" href="/shop/cart" class="btn btn-secondary">
                 <i class="fa fa-chevron-left"/> Return to Cart
@@ -1570,6 +1566,15 @@
                 <t t-esc="submit_button_label"/> <i class="fa fa-chevron-right"/>
             </button>
         </div>
+    </template>
+
+    <template id="payment_sale_note" inherit_id="payment_footer" name="Accept Terms &amp; Conditions" customize_show="True" active="False">
+        <xpath expr="//div[@name='o_checkbox_container']" position="inside">
+            <input type="checkbox" id="checkbox_tc" class="custom-control-input"/>
+            <label for="checkbox_tc" class="custom-control-label">
+                I agree to the <a target="_BLANK" href="/terms">terms &amp; conditions</a>
+            </label>
+        </xpath>
     </template>
 
     <template id="short_cart_summary" name="Short Cart right column">
