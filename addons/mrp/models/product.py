@@ -205,4 +205,5 @@ class ProductProduct(models.Model):
         res = super(ProductProduct, components).action_open_quants()
         if bom_kits:
             res['context']['single_product'] = False
+            res['context'].pop('default_product_tmpl_id', None)
         return res
