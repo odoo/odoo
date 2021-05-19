@@ -149,7 +149,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         'product_name': lines[i].product_id[1],
                         'product_uom_qty': lines[i].product_uom_qty,
                         'price_unit': lines[i].price_unit,
-                        'total': lines[i].price_unit * lines[i].product_uom_qty
+                        'total': lines[i].price_total,
                     }
                 }
 
@@ -159,11 +159,11 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                     pos: this.env.pos,
                     order: this.env.pos.get_order(),
                     product: this.env.pos.db.get_product_by_id(this.env.pos.config.down_payment_product_id[0]),
-                    price: sale_order.amount_untaxed,
+                    price: sale_order.amount_total,
                     price_manually_set: true,
                     sale_order_origin_id: clickedOrder,
                 });
-                new_line.set_unit_price(sale_order.amount_untaxed);
+                new_line.set_unit_price(sale_order.amount_total);
                 this.env.pos.get_order().add_orderline(new_line);
               }
 
