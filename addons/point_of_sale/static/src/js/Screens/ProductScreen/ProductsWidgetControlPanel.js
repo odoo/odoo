@@ -3,6 +3,8 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
 
     const { useRef } = owl.hooks;
     const { debounce } = owl.utils;
+    const { identifyError } = require('point_of_sale.utils');
+    const { ConnectionLostError, ConnectionAbortedError } = require('@web/core/network/rpc_service');
     const PosComponent = require('point_of_sale.PosComponent');
     const Registries = require('point_of_sale.Registries');
     const { posbus } = require('point_of_sale.utils');
@@ -36,6 +38,38 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
             this.searchWordInput.el.value = productName;
             this.trigger('switch-category', 0);
             this.trigger('update-search', productName);
+        }
+        async loadProductFromDB() {
+            if(!this.searchWordInput.el.value)
+                return;
+
+            try {
+                let ProductIds = await this.rpc({
+                    model: 'product.product',
+                    method: 'search',
+                    args: [[['name', 'ilike', this.searchWordInput.el.value + "%"]]],
+                    context: this.env.session.user_context,
+                });
+                if(!ProductIds.length) {
+                    this.showPopup('ErrorPopup', {
+                        title: this.env._t(''),
+                        body: this.env._t("No product found"),
+                    });
+                } else {
+                    await this.env.pos._addProducts(ProductIds);
+                }
+                this.trigger('update-product-list');
+            } catch (error) {
+                const identifiedError = identifyError(error)
+                if (identifiedError instanceof ConnectionLostError || identifiedError instanceof ConnectionAbortedError) {
+                    return this.showPopup('OfflineErrorPopup', {
+                        title: this.env._t('Network Error'),
+                        body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
+                    });
+                } else {
+                    throw error;
+                }
+            }
         }
     }
     ProductsWidgetControlPanel.template = 'ProductsWidgetControlPanel';
