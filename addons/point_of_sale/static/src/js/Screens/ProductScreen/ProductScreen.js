@@ -8,6 +8,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { Gui } = require('point_of_sale.Gui');
+    const { isRpcError } = require('point_of_sale.utils');
     const { useState } = owl.hooks;
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
@@ -204,12 +205,24 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             let scannedProduct = this.env.pos.scan_product(code);
             if (!scannedProduct) {
                 // find the barcode in the backend
-                const foundProductIds = await this.rpc({
-                    model: 'product.product',
-                    method: 'search',
-                    args: [[['barcode', '=', code.code]]],
-                    context: this.env.session.user_context,
-                });
+                let foundProductIds = [];
+                try {
+                    foundProductIds = await this.rpc({
+                        model: 'product.product',
+                        method: 'search',
+                        args: [[['barcode', '=', code.code]]],
+                        context: this.env.session.user_context,
+                    });
+                } catch (error) {
+                    if (isRpcError(error) && error.message.code < 0) {
+                        return this.showPopup('OfflineErrorPopup', {
+                            title: this.env._t('Network Error'),
+                            body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
+                        });
+                    } else {
+                        throw error;
+                    }
+                }
                 if (foundProductIds.length) {
                     await this.env.pos._addProducts(foundProductIds);
                     // assume that the result is unique.
