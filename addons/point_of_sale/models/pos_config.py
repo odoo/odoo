@@ -229,7 +229,11 @@ class PosConfig(models.Model):
         string='Shipping Policy', required=True, default='direct',
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
-    limited_products_loading = fields.Boolean('Load all Products')
+    limited_products_loading = fields.Boolean('Load all Products',
+                                              help="By default, 20 000 products are loaded (in debug mode to modify the value). "
+                                                   "Loading rule : first we load starred products (favorite), then all services, "
+                                                   "then recent inventory movements of products, then the most recently updated products.")
+    limited_products_amount = fields.Integer(default=20000)
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
@@ -732,3 +736,11 @@ class PosConfig(models.Model):
                 pos_config.write({'invoice_journal_id': invoice_journal_id.id})
             else:
                 pos_config.write({'module_account': False})
+
+    def get_limited_products_loading(self):
+        query = "with pm as (select product_id,max(write_date) date from stock_quant group by product_id) " \
+                "select p.id from product_product p left join product_template t on (product_tmpl_id=t.id) " \
+                "left join pm on (p.id=pm.product_id) where p.active and t.available_in_pos " \
+                "order by t.priority desc, t.type DESC, coalesce(pm.date,p.write_date) desc limit " + str(self.limited_products_amount) + ";"
+        self.env.cr.execute(query)
+        return self.env.cr.fetchall()

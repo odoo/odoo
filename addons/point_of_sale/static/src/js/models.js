@@ -422,7 +422,7 @@ exports.PosModel = Backbone.Model.extend({
                  'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
                  'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
-        domain: function(self){
+        domain: async function(self){
             var domain = ['&', '&', ['sale_ok','=',true],['available_in_pos','=',true],'|',['company_id','=',self.config.company_id[0]],['company_id','=',false]];
             if (self.config.limit_categories &&  self.config.iface_available_categ_ids.length) {
                 domain.unshift('&');
@@ -432,9 +432,19 @@ exports.PosModel = Backbone.Model.extend({
               domain.unshift(['id', '=', self.config.tip_product_id[0]]);
               domain.unshift('|');
             }
+
+            if(self.config.limited_products_loading) {
+                const result = await self.rpc({
+                      model: 'pos.config',
+                      method: 'get_limited_products_loading',
+                      args: [self.config.id],
+                });
+                domain.unshift('&');
+                domain.push(['id','in', result.map(elem => elem[0])]);
+            }
+
             return domain;
         },
-        limit: function(self) { return self.config.limited_products_loading? 200000: false},
         context: function(self){ return { display_default_code: false }; },
         loaded: function(self, products){
             var using_company_currency = self.config.currency_id[0] === self.company.currency_id[0];
@@ -630,7 +640,7 @@ exports.PosModel = Backbone.Model.extend({
         var tmp = {}; // this is used to share a temporary state between models loaders
 
         var loaded = new Promise(function (resolve, reject) {
-            function load_model(index) {
+            async function load_model(index) {
                 if (index >= self.models.length) {
                     resolve();
                 } else {
@@ -644,14 +654,13 @@ exports.PosModel = Backbone.Model.extend({
                     }
 
                     var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
-                    var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
+                    var domain =  typeof model.domain === 'function'  ? await model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
                     var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                     var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
-                    var limit   = typeof model.limit === 'function'   ? model.limit(self, tmp): model.limit;
                     progress += progress_step;
 
-                    if( model.model ){
+                    if(model.model ){
                         var params = {
                             model: model.model,
                             context: _.extend(context, self.session.user_context || {}),
@@ -665,7 +674,6 @@ exports.PosModel = Backbone.Model.extend({
                             params.domain = domain;
                             params.fields = fields;
                             params.orderBy = order;
-                            params.limit = limit;
                         }
 
                         self.rpc(params).then(function (result) {

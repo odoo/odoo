@@ -567,16 +567,25 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                              <field name="limited_products_loading"/>
+                                <field name="limited_products_loading"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="limited_products_loading" string="Limite Products Loading"/>
+                                <label for="limited_products_loading" string="Limited Products Loading"/>
                                 <div class="text-muted">
                                     Only load most common products at the opening of the PoS.
                                 </div>
+                                <div groups="base.group_no_one" class="content-group mt16" attrs="{'invisible' : [('limited_products_loading', '=', False)]}">
+                                    <div>
+                                        <label for="limited_products_amount" string="Number of Products Loaded"/>
+                                        <field name="limited_products_amount" class="oe_inline"/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                     <h2>Accounting</h2>
                     <div class="row mt16 o_settings_container" id="accounting_section">
