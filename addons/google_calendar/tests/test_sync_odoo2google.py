@@ -71,7 +71,9 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'interval': 'minutes',
             'duration': 18,
         })
-        with self.assertQueryCount(__system__=1209):
+        partner_model = self.env.ref('base.model_res_partner')
+        partner = self.env['res.partner'].search([], limit=1)
+        with self.assertQueryCount(__system__=1210):
             events = self.env['calendar.event'].create([{
                 'name': "Event %s" % (i),
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -80,6 +82,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 'alarm_ids': [(4, alarm.id)],
                 'privacy': 'private',
                 'need_sync': False,
+                'res_model_id': partner_model.id,
+                'res_id': partner.id,
             } for i in range(EVENT_COUNT)])
 
             events._sync_odoo2google(self.google_service)
@@ -99,7 +103,9 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'interval': 'minutes',
             'duration': 18,
         })
-        with self.assertQueryCount(__system__=6979):
+        partner_model = self.env.ref('base.model_res_partner')
+        partner = self.env['res.partner'].search([], limit=1)
+        with self.assertQueryCount(__system__=3637):
             event = self.env['calendar.event'].create({
                 'name': "Event",
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -111,7 +117,9 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 'interval': 1,
                 'recurrency': True,
                 'rrule_type': 'daily',
-                'end_type': 'forever'
+                'end_type': 'forever',
+                'res_model_id': partner_model.id,
+                'res_id': partner.id,
             })
 
         with self.assertQueryCount(__system__=2191):
