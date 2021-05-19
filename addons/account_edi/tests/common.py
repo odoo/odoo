@@ -38,7 +38,7 @@ def _mocked_post(edi_format, invoices):
             'datas': base64.encodebytes(b"<?xml version='1.0' encoding='UTF-8'?><Invoice/>"),
             'mimetype': 'application/xml'
         })
-        res[invoice] = {'attachment': attachment}
+        res[invoice] = {'success': True, 'attachment': attachment}
     return res
 
 
@@ -58,7 +58,7 @@ def _mocked_post_two_steps(edi_format, invoices):
                 'datas': base64.encodebytes(b"<?xml version='1.0' encoding='UTF-8'?><Invoice/>"),
                 'mimetype': 'application/xml'
             })
-            res[invoice] = {'attachment': attachment}
+            res[invoice] = {'success': True, 'attachment': attachment}
         return res
     else:
         raise ValueError('wrong use of "_mocked_post_two_steps"')

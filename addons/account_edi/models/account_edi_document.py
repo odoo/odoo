@@ -99,16 +99,11 @@ class AccountEdiDocument(models.Model):
                 move_result = edi_result.get(move, {})
                 if move_result.get('attachment'):
                     old_attachment = document.attachment_id
-                    values = {
-                        'attachment_id': move_result['attachment'].id,
-                        'error': move_result.get('error', False),
-                        'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if 'error' in move_result else False,
-                    }
-                    if not values.get('error'):
-                        values.update({'state': 'sent'})
-                    document.write(values)
+                    document.attachment_id = move_result['attachment']
                     if not old_attachment.res_model or not old_attachment.res_id:
                         attachments_to_unlink |= old_attachment
+                if move_result.get('success') is True:
+                    document.state = 'sent'
                 else:
                     document.write({
                         'error': move_result.get('error', False),
@@ -142,7 +137,7 @@ class AccountEdiDocument(models.Model):
                     if not old_attachment.res_model or not old_attachment.res_id:
                         attachments_to_unlink |= old_attachment
 
-                elif not move_result.get('success'):
+                else:
                     document.write({
                         'error': move_result.get('error', False),
                         'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if move_result.get('error') else False,
@@ -198,7 +193,7 @@ class AccountEdiDocument(models.Model):
         jobs_to_process = all_jobs[0:job_count] if job_count else all_jobs
 
         for documents, doc_type in jobs_to_process:
-            move_to_lock = documents.move_id
+            move_to_lock = documents.filtered(lambda doc: doc.state == 'to_cancel').move_id
             attachments_potential_unlink = documents.attachment_id.filtered(lambda a: not a.res_model and not a.res_id)
             try:
                 with self.env.cr.savepoint(flush=False):
