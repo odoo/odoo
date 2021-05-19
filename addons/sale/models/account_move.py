@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-
+from odoo.exceptions import UserError
 
 class AccountMove(models.Model):
     _name = 'account.move'
@@ -73,6 +73,25 @@ class AccountMove(models.Model):
                 'source_id': move.source_id.id,
             })
         return super()._reverse_moves(default_values_list=default_values_list, cancel=cancel)
+
+    def action_post(self):
+        #inherit of the function from account.move to validate a new tax and the priceunit of a downpayment
+        res = super(AccountMove, self).action_post()
+        line_ids = self.mapped('line_ids').filtered(lambda line: line.sale_line_ids.is_downpayment)
+        for line in line_ids:
+            try:
+                line.sale_line_ids.tax_id = line.tax_ids
+                if all(line.tax_ids.mapped('price_include')):
+                    line.sale_line_ids.price_unit = line.price_unit
+                else:
+                    #To keep positive amount on the sale order and to have the right price for the invoice
+                    #We need the - before our untaxed_amount_to_invoice
+                    line.sale_line_ids.price_unit = -line.sale_line_ids.untaxed_amount_to_invoice
+            except UserError:
+                # a UserError here means the SO was locked, which prevents changing the taxes
+                # just ignore the error - this is a nice to have feature and should not be blocking
+                pass
+        return res
 
     def _post(self, soft=True):
         # OVERRIDE
