@@ -24,7 +24,8 @@ const WEBSITE_PURPOSES = {
     1: {id: 1, label: _lt("get leads"), name: 'get_leads'},
     2: {id: 2, label: _lt("develop the brand"), name: 'develop_brand'},
     3: {id: 3, label: _lt("sell more"), name: 'sell_more'},
-    4: {id: 4, label: _lt("inform customers"), name: 'inform_customers'}
+    4: {id: 4, label: _lt("inform customers"), name: 'inform_customers'},
+    5: {id: 5, label: _lt("schedule appointments"), name: 'schedule_appointments'}
 };
 
 const PALETTE_NAMES = [
@@ -354,6 +355,10 @@ const actions = {
         state.selectedType = id;
     },
     selectWebsitePurpose({state}, id) {
+        Object.values(state.features).filter((feature) => feature.module_state !== 'installed').forEach((feature) => {
+            // need to check id, since we set to undefined in mount() to avoid the auto next screen on back button
+            feature.selected |= id && feature.website_types_preselection.includes(WEBSITE_PURPOSES[id].name);
+        });
         state.selectedPurpose = id;
     },
     selectIndustry({state}, id) {
@@ -475,6 +480,8 @@ async function applyConfigurator(self, themeName) {
             industry_id: self.state.selectedIndustry,
             selected_palette: selectedPalette,
             theme_name: themeName,
+            website_purpose: WEBSITE_PURPOSES[self.state.selectedPurpose].name,
+            website_type: WEBSITE_TYPES[self.state.selectedType].name,
         };
         const resp = await rpc.query({
             model: 'website',
