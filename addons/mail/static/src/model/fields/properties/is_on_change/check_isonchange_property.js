@@ -25,7 +25,7 @@ function checkIsOnChangePropetyGoesWithComputeProperty({ Model, field }) {
     if (!field.compute) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `unsupported "isOnChange" property on field without the "compute" property`,
             suggestion: `either remove the "isOnChange" property or add the "compute" property`,
         });

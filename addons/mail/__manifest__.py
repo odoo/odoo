@@ -155,7 +155,7 @@
             'mail/static/src/components/thread_typing_icon/thread_typing_icon.js',
             'mail/static/src/components/thread_view/thread_view.js',
             'mail/static/src/model/fields/**/*.js',
-            'mail/static/src/model/model_check_declared_fields.js',
+            'mail/static/src/model/model_check_declared_models.js',
             'mail/static/src/model/model_check_processed_fields.js',
             'mail/static/src/model/model_core.js',
             'mail/static/src/model/model_errors.js',

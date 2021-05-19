@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
-import { checkDeclaredFieldsOnModels } from '@mail/model/model_check_declared_fields';
+import { checkRegisteredProperties } from '@mail/model/fields/properties/check_registered_properties';
+import { checkRegisteredTypes } from '@mail/model/fields/types/check_registered_types';
+import { checkDeclaredModels } from '@mail/model/model_check_declared_models';
 import { checkProcessedFieldsOnModels } from '@mail/model/model_check_processed_fields';
 import { registry } from '@mail/model/model_core';
 import { InvalidFieldError } from '@mail/model/model_errors';
@@ -27,7 +29,13 @@ class ModelManager {
     // Public
     //--------------------------------------------------------------------------
 
-    constructor(env) {
+    /*
+     * @param {Object} param0
+     * @param {Object} param0.env
+     * @param {Map} param0.fieldPropertyRegistry
+     * @param {Map} param0.fieldTypeRegistry
+     */
+    constructor({ env, fieldPropertyRegistry, fieldTypeRegistry }) {
         /**
          * Inner separator used inside string to represent dependents.
          * Set as public attribute so that it can be used by model field.
@@ -37,6 +45,8 @@ class ModelManager {
          * The messaging env.
          */
         this.env = env;
+        this.fieldPropertyRegistry = fieldPropertyRegistry;
+        this.fieldTypeRegistry = fieldTypeRegistry;
 
         //----------------------------------------------------------------------
         // Various variables that are necessary to handle an update cycle. The
@@ -96,14 +106,14 @@ class ModelManager {
     /**
      * Called when all JS modules that register or patch models have been
      * done. This launches generation of models.
-     *
-     * @param {Map} fieldTypeRegistry
      */
-    start({ fieldTypeRegistry }) {
+    start() {
+        checkRegisteredProperties({ fieldPropertyRegistry: this.fieldPropertyRegistry });
+        checkRegisteredTypes({ env: this.env, fieldTypeRegistry: this.fieldTypeRegistry });
         /**
          * Generate the models.
          */
-        Object.assign(this.env.models, this._generateModels({ fieldTypeRegistry }));
+        Object.assign(this.env.models, this._generateModels());
     }
 
     //--------------------------------------------------------------------------
@@ -335,8 +345,8 @@ class ModelManager {
             // Ensure X2many relations are Set initially (other fields can stay undefined).
             for (const field of Model.__fieldList) {
                 record.__values[field.fieldName] = undefined;
-                if (field.fieldType === 'relation') {
-                    if (['one2many', 'many2many'].includes(field.relationType)) {
+                if (field.isRelation) {
+                    if (field.isX2Many) {
                         record.__values[field.fieldName] = new Set();
                     }
                 }
@@ -388,7 +398,7 @@ class ModelManager {
         }
         record._willDelete();
         for (const field of Model.__fieldList) {
-            if (field.fieldType === 'relation') {
+            if (field.isRelation) {
                 // ensure inverses are properly unlinked
                 field.parseAndExecuteCommands(record, unlinkAll(), { allowWriteReadonly: true });
             }
@@ -505,11 +515,10 @@ class ModelManager {
 
     /**
      * @private
-     * @param {Map} fieldTypeRegistry
      * @returns {Object}
      * @throws {Error|InvalidFieldError} in case it cannot generate models.
      */
-    _generateModels({ fieldTypeRegistry }) {
+    _generateModels() {
         const allNames = Object.keys(registry);
         const Models = {};
         const generatedNames = [];
@@ -555,15 +564,7 @@ class ModelManager {
             }
             // Assign name of fields from Model to fields.
             for (const [fieldName, field] of Object.entries(Model.fields)) {
-                if (field.fieldName) {
-                    throw new InvalidFieldError({
-                        modelName: Model.modelName,
-                        fieldName,
-                        error: `unsupported property fieldName`,
-                        suggestion: `remove the "fieldName" property`,
-                    });
-                }
-                field.fieldName = fieldName;
+                field.properties.fieldName = fieldName;
             }
             Models[Model.modelName] = Model;
             generatedNames.push(Model.modelName);
@@ -572,7 +573,7 @@ class ModelManager {
         /**
          * Check that declared model fields are correct.
          */
-        checkDeclaredFieldsOnModels({ Models, fieldTypeRegistry });
+        checkDeclaredModels({ Models, env: this.env });
         /**
          * Process declared model fields definitions, so that these field
          * definitions are much easier to use in the system. For instance, all
@@ -584,7 +585,7 @@ class ModelManager {
          * Check that all model fields are correct, notably one relation
          * should have matching reversed relation.
          */
-        checkProcessedFieldsOnModels({ Models, fieldTypeRegistry });
+        checkProcessedFieldsOnModels({ Models, env: this.env });
         return Models;
     }
 
@@ -618,17 +619,17 @@ class ModelManager {
      */
     _makeInverseRelationField(Model, field) {
         const relFunc =
-            field.relationType === 'many2many' ? ModelField.many2many
-            : field.relationType === 'many2one' ? ModelField.one2many
-            : field.relationType === 'one2many' ? ModelField.many2one
-            : field.relationType === 'one2one' ? ModelField.one2one
+            (field.isMany2X && field.isX2Many) ? ModelField.many2many
+            : (field.isOne2X && field.isX2Many) ? ModelField.one2many
+            : (field.isMany2X && field.isX2One) ? ModelField.many2one
+            : (field.isOne2X && field.isX2One) ? ModelField.one2one
             : undefined;
         if (!relFunc) {
             throw new Error(`Cannot compute inverse Relation of "${Model.modelName}/${field.fieldName}".`);
         }
         const inverseField = new ModelField(Object.assign(
             {},
-            relFunc(Model.modelName, { inverse: field.fieldName }),
+            relFunc(Model.modelName, { inverse: field.fieldName }).properties,
             {
                 env: this.env,
                 fieldName: `_inverse_${Model.modelName}/${field.fieldName}`,
@@ -656,10 +657,10 @@ class ModelManager {
         for (const Model of Object.values(Models)) {
             Model.inverseRelations = [];
             // Make fields aware of their field name.
-            for (const [fieldName, fieldData] of Object.entries(Model.fields)) {
-                Model.fields[fieldName] = new ModelField(Object.assign({}, fieldData, {
+            for (const fieldDefinition of Object.values(Model.fields)) {
+                const fieldName = fieldDefinition.properties.fieldName;
+                Model.fields[fieldName] = new ModelField(Object.assign({}, fieldDefinition.properties, {
                     env: this.env,
-                    fieldName,
                     modelManager: this,
                 }));
             }
@@ -669,7 +670,7 @@ class ModelManager {
          */
         for (const Model of Object.values(Models)) {
             for (const field of Object.values(Model.fields)) {
-                if (field.fieldType !== 'relation') {
+                if (!field.isRelation) {
                     continue;
                 }
                 if (field.inverse) {
@@ -804,7 +805,7 @@ class ModelManager {
             const field1 = Model.__fieldMap[fieldName1];
             if (fieldName2) {
                 // "fieldName1.fieldName2" -> dependent is on another record
-                if (['one2many', 'many2many'].includes(field1.relationType)) {
+                if (field1.isX2Many) {
                     for (const otherRecord of record[fieldName1]) {
                         const OtherModel = otherRecord.constructor;
                         const field2 = OtherModel.__fieldMap[fieldName2];

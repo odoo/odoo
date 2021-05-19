@@ -20,14 +20,17 @@ class ModelField {
         dependents = [],
         env,
         fieldName,
-        fieldType,
         hashes: extraHashes = [],
         inverse,
         isCausal = false,
+        isMany2X,
         isOnChange,
+        isOne2X,
+        isRelation,
+        isX2Many,
+        isX2One,
         readonly = false,
         related,
-        relationType,
         required = false,
         to,
     } = {}) {
@@ -67,15 +70,6 @@ class ModelField {
          * Name of the field in the definition of fields on model.
          */
         this.fieldName = fieldName;
-        /**
-         * Type of this field. 2 types of fields are currently supported:
-         *
-         *   1. 'attribute': fields that store primitive values like integers,
-         *                   booleans, strings, objects, array, etc.
-         *
-         *   2. 'relation': fields that relate to some other records.
-         */
-        this.fieldType = fieldType;
         /**
          * List of hashes registered on this field definition. Technical
          * prop that is specifically used in processing of dependent
@@ -142,6 +136,10 @@ class ModelField {
          */
         this.isOnChange = isOnChange;
         /**
+         * Determines whether this field relates to other records.
+         */
+        this.isRelation = isRelation;
+        /**
          * Determines whether the field is read only. Read only field
          * can't be updated once the record is created.
          * An exception is made for computed fields (updated when the
@@ -170,7 +168,10 @@ class ModelField {
          * 4 types of relation are supported: 'one2one', 'one2many', 'many2one'
          * and 'many2many'.
          */
-        this.relationType = relationType;
+        this.isX2One = isX2One;
+        this.isX2Many = isX2Many;
+        this.isMany2X = isMany2X;
+        this.isOne2X = isOne2X;
         /**
          * Determine whether the field is required or not.
          *
@@ -184,7 +185,7 @@ class ModelField {
          */
         this.to = to;
 
-        if (!this.default && this.fieldType === 'relation') {
+        if (!this.default && this.isRelation) {
             // default value for relational fields is the empty command
             this.default = [];
         }
@@ -197,7 +198,7 @@ class ModelField {
      * @returns {Object}
      */
     static attr(options) {
-        return Object.assign({ fieldType: 'attribute' }, options);
+        return { fieldType: 'attribute', properties: Object.assign({}, options) };
     }
 
     /**
@@ -208,7 +209,10 @@ class ModelField {
      * @returns {Object}
      */
     static many2many(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'many2many' }));
+        return ModelField._relation(modelName, Object.assign({}, options, {
+            isMany2X: true,
+            isX2Many: true,
+        }));
     }
 
     /**
@@ -219,7 +223,10 @@ class ModelField {
      * @returns {Object}
      */
     static many2one(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'many2one' }));
+        return ModelField._relation(modelName, Object.assign({}, options, {
+            isMany2X: true,
+            isX2One: true,
+        }));
     }
 
     /**
@@ -230,7 +237,10 @@ class ModelField {
      * @returns {Object}
      */
     static one2many(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'one2many' }));
+        return ModelField._relation(modelName, Object.assign({}, options, {
+            isOne2X: true,
+            isX2Many: true,
+        }));
     }
 
     /**
@@ -241,7 +251,10 @@ class ModelField {
      * @returns {Object}
      */
     static one2one(modelName, options) {
-        return ModelField._relation(modelName, Object.assign({}, options, { relationType: 'one2one' }));
+        return ModelField._relation(modelName, Object.assign({}, options, {
+            isOne2X: true,
+            isX2One: true,
+        }));
     }
 
     /**
@@ -257,7 +270,7 @@ class ModelField {
      */
     clear(record, options) {
         let hasChanged = false;
-        if (this.fieldType === 'relation') {
+        if (this.isRelation) {
             if (this.parseAndExecuteCommands(record, unlinkAll(), options)) {
                 hasChanged = true;
             }
@@ -294,7 +307,7 @@ class ModelField {
         const [relationName, relatedFieldName] = this.related.split('.');
         const Model = record.constructor;
         const relationField = Model.__fieldMap[relationName];
-        if (['one2many', 'many2many'].includes(relationField.relationType)) {
+        if (relationField.isX2Many) {
             const newVal = [];
             for (const otherRecord of record[relationName]) {
                 const OtherModel = otherRecord.constructor;
@@ -312,7 +325,7 @@ class ModelField {
                     }
                 }
             }
-            if (this.fieldType === 'relation') {
+            if (this.isRelation) {
                 return replace(newVal);
             }
             return newVal;
@@ -322,7 +335,7 @@ class ModelField {
             const OtherModel = otherRecord.constructor;
             const otherField = OtherModel.__fieldMap[relatedFieldName];
             const newVal = otherField.get(otherRecord);
-            if (this.fieldType === 'relation') {
+            if (this.isRelation) {
                 if (newVal) {
                     return replace(newVal);
                 } else {
@@ -331,8 +344,8 @@ class ModelField {
             }
             return newVal;
         }
-        if (this.fieldType === 'relation') {
-            return;
+        if (this.isRelation) {
+            return unlinkAll();
         }
     }
 
@@ -347,7 +360,7 @@ class ModelField {
             return [newVal];
         } else if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
             return newVal;
-        } else if (this.fieldType === 'relation') {
+        } else if (this.isRelation) {
             // Deprecated. Used only to support old syntax: `[...[name, value]]` command
             return newVal.map(([name, value]) => new FieldCommand(name, value));
         } else {
@@ -375,16 +388,10 @@ class ModelField {
      * @returns {any}
      */
     get(record) {
-        if (this.fieldType === 'attribute') {
-            return this.read(record);
-        }
-        if (this.fieldType === 'relation') {
-            if (['one2one', 'many2one'].includes(this.relationType)) {
-                return this.read(record);
-            }
+        if (this.isRelation && this.isX2Many) {
             return [...this.read(record)];
         }
-        throw new Error(`cannot get field with unsupported type ${this.fieldType}.`);
+        return this.read(record);
     }
 
     /**
@@ -417,7 +424,7 @@ class ModelField {
         for (const command of commandList) {
             const commandName = command.name;
             const newVal = command.value;
-            if (this.fieldType === 'attribute') {
+            if (!this.isRelation) {
                 switch (commandName) {
                     case 'clear':
                         if (this.clear(record, options)) {
@@ -440,9 +447,10 @@ class ModelField {
                         }
                         break;
                     default:
-                        throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(attribute type) does not support command "${commandName}"`);
                 }
-            } else if (this.fieldType === 'relation') {
+            }
+            if (this.isRelation) {
                 switch (commandName) {
                     case 'clear':
                         if (this.clear(record, options)) {
@@ -485,15 +493,15 @@ class ModelField {
                         }
                         break;
                     case 'update':
-                        if (!['one2one', 'many2one'].includes(this.relationType)) {
-                            throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "update". Only x2one relations are supported.`);
+                        if (!this.isX2One) {
+                            throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(relation type) does not support command "update". Only x2one relations are supported.`);
                         }
                         if (this._setRelationUpdateX2One(record, newVal, options)) {
                             hasChanged = true;
                         }
                         break;
                     default:
-                        throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(relation type) does not support command "${commandName}"`);
                 }
             }
         }
@@ -521,10 +529,13 @@ class ModelField {
      * @param {Object} [options]
      */
     static _relation(modelName, options) {
-        return Object.assign({
+        return {
             fieldType: 'relation',
-            to: modelName,
-        }, options);
+            properties: Object.assign({}, options, {
+                isRelation: true,
+                to: modelName,
+            }),
+        };
     }
 
     /**
@@ -632,14 +643,10 @@ class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationLink(record, newValue, options) {
-        switch (this.relationType) {
-            case 'many2many':
-            case 'one2many':
-                return this._setRelationLinkX2Many(record, newValue, options);
-            case 'many2one':
-            case 'one2one':
-                return this._setRelationLinkX2One(record, newValue, options);
+        if (this.isX2Many) {
+            return this._setRelationLinkX2Many(record, newValue, options);
         }
+        return this._setRelationLinkX2One(record, newValue, options);
     }
 
     /**
@@ -725,7 +732,7 @@ class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationReplace(record, newValue, options) {
-        if (['one2one', 'many2one'].includes(this.relationType)) {
+        if (this.isX2One) {
             // for x2one replace is just link
             return this._setRelationLinkX2One(record, newValue, options);
         }
@@ -789,14 +796,10 @@ class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationUnlink(record, newValue, options) {
-        switch (this.relationType) {
-            case 'many2many':
-            case 'one2many':
-                return this._setRelationUnlinkX2Many(record, newValue, options);
-            case 'many2one':
-            case 'one2one':
-                return this._setRelationUnlinkX2One(record, options);
+        if (this.isX2Many) {
+            return this._setRelationUnlinkX2Many(record, newValue, options);
         }
+        return this._setRelationUnlinkX2One(record, options);
     }
 
     /**

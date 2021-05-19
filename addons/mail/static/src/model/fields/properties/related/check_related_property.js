@@ -32,7 +32,7 @@ function checkRelatedPropertyGoesWithoutComputeProperty({ Models, Model, field }
     if ([...fields].some(field => field.compute)) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `unsupported "related" property on field with the "compute" property`,
             suggestion: `either remove the "related" property or remove the "compute" property`,
         });
@@ -49,7 +49,7 @@ function checkRelatedPropertyIsString({ Model, field }) {
     if (!(typeof field.related === 'string')) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `property "related" must be a string instead of "${field.related}"`,
             suggestion: `make it a string (with the format "relationFieldName.relatedFieldName")`,
         });
@@ -67,7 +67,7 @@ function checkFormatOfRelatedProperty({ Model, field }) {
     if (!relationName || !relatedFieldName || other) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `unsupported related format "${field.related}"`,
             suggestion: `use the format "relationFieldName.relatedFieldName".`,
         });
@@ -101,7 +101,7 @@ function checkExistenceOfRelationFieldForRelatedProperty({ Models, Model, field 
     if (relationFields.size === 0) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `undefined relation "${relationName}"`,
             suggestion: `target a field on the current model, or check for typos`,
         });
@@ -119,10 +119,10 @@ function checkFieldTypeOfRelationFieldForRelatedProperty({ Models, Model, field 
     const [relationName] = field.related.split('.');
     const relationFields = getMatchingFieldsDefinitionFromParents({ Models, Model, fieldName: relationName });
     for (const relationField of relationFields) {
-        if (relationField.fieldType !== 'relation') {
+        if (!relationField.isRelation) {
             throw new InvalidFieldError({
                 modelName: Model.modelName,
-                fieldName: field.fieldName,
+                fieldName: field.properties.fieldName,
                 error: `invalid field type of relation "${relationName}"`,
                 suggestion: `target a relation field`,
             });
@@ -145,7 +145,7 @@ function checkExistenceOfRelatedFieldForRelatedProperty({ Models, Model, field }
     if (relatedFields.size === 0) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `unsupported related field "${relatedName}"`,
             suggestion: `target a field on the relation model, or check for typos`,
         });
@@ -165,21 +165,21 @@ function checkFieldTypeOfRelatedFieldForRelatedProperty({ Models, Model, field }
     const RelatedModelName = [...relationFields].find(relationField => relationField.to).to;
     const relatedFields = getMatchingFieldsDefinitionFromParents({ Models, Model: Models[RelatedModelName], fieldName: relatedName });
     for (const relatedField of relatedFields) {
-        if (relatedField.fieldType !== field.fieldType) {
+        if (relatedField.isRelation !== field.isRelation) {
             throw new InvalidFieldError({
                 modelName: Model.modelName,
-                fieldName: field.fieldName,
+                fieldName: field.properties.fieldName,
                 error: `related field "${Model.modelName}/${field.fieldName}" has mismatch type`,
                 suggestion: `change the type of either the related field or the target field`,
             });
         }
         if (
-            relatedField.fieldType === 'relation' &&
+            relatedField.isRelation &&
             relatedField.to !== field.to
         ) {
             throw new InvalidFieldError({
                 modelName: Model.modelName,
-                fieldName: field.fieldName,
+                fieldName: field.properties.fieldName,
                 error: `related field "${Model.modelName}/${field.fieldName}" has mismatch target model name`,
                 suggestion: `change the relation model name of either the related field or the target field`,
             });

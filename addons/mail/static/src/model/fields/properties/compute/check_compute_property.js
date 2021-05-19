@@ -26,7 +26,7 @@ function checkComputePropertyIsString({ Model, field }) {
     if (!(typeof field.compute === 'string')) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `unsupported type of "compute" property "${field.compute}"`,
             suggestion: `compute value must be a string (the name of an instance method)`,
         });
@@ -43,7 +43,7 @@ function checkExistenceOfMethodForComputeProperty({ Model, field }) {
     if (!(Model.prototype[field.compute])) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `"compute" property "${field.compute}" targets to unknown method`,
             suggestion: `ensure the name of an instance method of this model is given, and check for typos`,
         });

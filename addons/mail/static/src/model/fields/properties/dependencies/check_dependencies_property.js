@@ -29,7 +29,7 @@ function checkDependenciesPropetyGoesWithComputeProperty({ Model, field }) {
     if (!field.compute) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `unsupported "dependendencies" property on field without the "compute" property`,
             suggestion: `either remove the "dependencies" property or add the "compute" property`,
         });
@@ -46,7 +46,7 @@ function checkDependenciesPropertyIsArray({ Model, field }) {
     if (!(field.dependencies instanceof Array)) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `property "dependencies" must be an array of field names instead of "${field.dependencies}"`,
             suggestion: `make it an array`,
         });
@@ -66,7 +66,7 @@ function checkExistenceOfTargetFieldForDependencies({ Models, Model, field }) {
         if (fields.size === 0) {
             throw new InvalidFieldError({
                 modelName: Model.modelName,
-                fieldName: field.fieldName,
+                fieldName: field.properties.fieldName,
                 error: `unsupported dependency "${dependency}"`,
                 suggestion: `make sure dependencies target only fields of current model, or check for typos`,
             });

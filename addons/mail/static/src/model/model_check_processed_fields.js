@@ -1,24 +1,20 @@
 /** @odoo-module **/
 
 import { InvalidFieldError } from '@mail/model/model_errors';
-import { checkFieldType } from '@mail/model/fields/check_field_type';
-import { checkAttributeField } from '@mail/model/fields/types/attribute/check_attribute_field';
-import { checkRelationField } from '@mail/model/fields/types/relation/check_relation_field';
 import { checkComputeProperty } from '@mail/model/fields/properties/compute/check_compute_property';
-import { checkDependenciesProperty } from '@mail/model/fields/properties/dependencies/check_dependencies_property';
 import { checkIsOnChangeProperty } from '@mail/model/fields/properties/is_on_change/check_isonchange_property';
 import { checkRelatedProperty } from '@mail/model/fields/properties/related/check_related_property';
 
 /**
  * @param {Object} param0
  * @param {Object} param0.Models
- * @param {Map} param0.fieldTypeRegistry
+ * @param {Object} param0.env
  * @throws {Error} in case some fields are not correct.
  */
-export function checkProcessedFieldsOnModels({ Models, fieldTypeRegistry }) {
+export function checkProcessedFieldsOnModels({ Models, env }) {
     for (const Model of Object.values(Models)) {
         for (const field of Object.values(Model.fields)) {
-            checkProcessedFieldsOnModel({ Models, fieldTypeRegistry, Model, field });
+            checkProcessedFieldsOnModel({ Models, env, Model, field });
         }
     }
 }
@@ -26,14 +22,15 @@ export function checkProcessedFieldsOnModels({ Models, fieldTypeRegistry }) {
 /**
  * @param {Object} param0
  * @param {Object} param0.Models
- * @param {Map} param0.fieldTypeRegistry
+ * @param {Object} param0.env
  * @param {Object} param0.Model model being currently checked
  * @param {Object} param0.field field being currently checked
  * @throws {Error} in case some fields are not correct.
  */
-function checkProcessedFieldsOnModel({ Models, fieldTypeRegistry, Model, field }) {
+function checkProcessedFieldsOnModel({ Models, env, Model, field }) {
     // checkFieldName({ Model, field });
-    checkFieldType({ fieldTypeRegistry, Model, field });
+    // TODO SEB fieldType not defined in processed field
+    // checkFieldType({ env.modelManager.fieldTypeRegistry, Model, field });
     // TODO SEB breaking because of extra properties (eg. dependents)
     // switch (field.fieldType) {
     //     case 'attribute':
@@ -59,34 +56,35 @@ function checkProcessedFieldsOnModel({ Models, fieldTypeRegistry, Model, field }
     if (field.compute && field.related) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `cannot be a related and compute field at the same time`,
             suggestion: ``,
         });
     }
-    if (field.fieldType === 'attribute') {
+    if (!field.isRelation) {
         return;
     }
-    if (!field.relationType) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.fieldName,
-            error: `must define a relation type in "relationType"`,
-            suggestion: ``,
-        });
-    }
-    if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(field.relationType))) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.fieldName,
-            error: `has invalid relation type "${field.relationType}"`,
-            suggestion: ``,
-        });
-    }
+    // TODO SEB check with x2/2x properties
+    // if (!field.relationType) {
+    //     throw new InvalidFieldError({
+    //         modelName: Model.modelName,
+    //         fieldName: field.properties.fieldName,
+    //         error: `must define a relation type in "relationType"`,
+    //         suggestion: ``,
+    //     });
+    // }
+    // if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(field.relationType))) {
+    //     throw new InvalidFieldError({
+    //         modelName: Model.modelName,
+    //         fieldName: field.properties.fieldName,
+    //         error: `has invalid relation type "${field.relationType}"`,
+    //         suggestion: ``,
+    //     });
+    // }
     if (!field.inverse) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `must define an inverse relation name in "inverse"`,
             suggestion: ``,
         });
@@ -94,7 +92,7 @@ function checkProcessedFieldsOnModel({ Models, fieldTypeRegistry, Model, field }
     if (!field.to) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `must define a model name in "to" (1st positional parameter of relation field helpers`,
                 suggestion: ``,
             });
@@ -103,7 +101,7 @@ function checkProcessedFieldsOnModel({ Models, fieldTypeRegistry, Model, field }
     if (!RelatedModel) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `model name does not exist.`,
             suggestion: ``,
         });
@@ -112,7 +110,7 @@ function checkProcessedFieldsOnModel({ Models, fieldTypeRegistry, Model, field }
     if (!inverseField) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `has no inverse field "${RelatedModel.modelName}/${field.inverse}"`,
             suggestion: ``,
         });
@@ -120,7 +118,7 @@ function checkProcessedFieldsOnModel({ Models, fieldTypeRegistry, Model, field }
     if (inverseField.inverse !== field.fieldName) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `inverse field does not match with field name of relation "${RelatedModel.modelName}/${inverseField.inverse}"`,
             suggestion: ``,
         });
@@ -134,22 +132,22 @@ function checkProcessedFieldsOnModel({ Models, fieldTypeRegistry, Model, field }
     if (!allSelfAndParentNames.includes(inverseField.to)) {
         throw new InvalidFieldError({
             modelName: Model.modelName,
-            fieldName: field.fieldName,
+            fieldName: field.properties.fieldName,
             error: `has inverse relation "${RelatedModel.modelName}/${field.inverse}" misconfigured (currently "${inverseField.to}", should instead refer to this model or parented models: ${allSelfAndParentNames.map(name => `"${name}"`).join(', ')}?)`,
             suggestion: ``,
         });
     }
-    if (
-        (field.relationType === 'many2many' && inverseField.relationType !== 'many2many') ||
-        (field.relationType === 'one2one' && inverseField.relationType !== 'one2one') ||
-        (field.relationType === 'one2many' && inverseField.relationType !== 'many2one') ||
-        (field.relationType === 'many2one' && inverseField.relationType !== 'one2many')
-    ) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.fieldName,
-            error: `Mismatch relations types "${Model.modelName}/${field.fieldName}" (${field.relationType}) and "${RelatedModel.modelName}/${field.inverse}" (${inverseField.relationType})`,
-            suggestion: ``,
-        });
-    }
+    // if (
+    //     (field.relationType === 'many2many' && inverseField.relationType !== 'many2many') ||
+    //     (field.relationType === 'one2one' && inverseField.relationType !== 'one2one') ||
+    //     (field.relationType === 'one2many' && inverseField.relationType !== 'many2one') ||
+    //     (field.relationType === 'many2one' && inverseField.relationType !== 'one2many')
+    // ) {
+    //     throw new InvalidFieldError({
+    //         modelName: Model.modelName,
+    //         fieldName: field.properties.fieldName,
+    //         error: `Mismatch relations types "${Model.modelName}/${field.fieldName}" (${field.relationType}) and "${RelatedModel.modelName}/${field.inverse}" (${inverseField.relationType})`,
+    //         suggestion: ``,
+    //     });
+    // }
 }
