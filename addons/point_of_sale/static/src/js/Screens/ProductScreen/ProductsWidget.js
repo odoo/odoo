@@ -17,6 +17,7 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             useListener('update-search', this._updateSearch);
             useListener('try-add-product', this._tryAddProduct);
             useListener('clear-search', this._clearSearch);
+            useListener('update-product-list', this._updateProductList);
             this.state = useState({ searchWord: '' });
         }
         mounted() {
@@ -32,14 +33,16 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             return this.state.searchWord.trim();
         }
         get productsToDisplay() {
+            let list = [];
             if (this.searchWord !== '') {
-                return this.env.pos.db.search_product_in_category(
+                list = this.env.pos.db.search_product_in_category(
                     this.selectedCategoryId,
                     this.searchWord
                 );
             } else {
-                return this.env.pos.db.get_product_by_category(this.selectedCategoryId);
+                list = this.env.pos.db.get_product_by_category(this.selectedCategoryId);
             }
+            return list.sort(function (a, b) { return a.display_name.localeCompare(b.display_name) });
         }
         get subcategories() {
             return this.env.pos.db
@@ -78,6 +81,10 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
         }
         _clearSearch() {
             this.state.searchWord = '';
+        }
+        _updateProductList(event) {
+            this.render();
+            this.trigger('switch-category', 0);
         }
     }
     ProductsWidget.template = 'ProductsWidget';

@@ -229,6 +229,18 @@ class PosConfig(models.Model):
         string='Shipping Policy', required=True, default='direct',
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
+    limited_products_loading = fields.Boolean('Limited Product Loading',
+                                              help="we load all starred products (favorite), all services, recent inventory movements of products, and the most recently updated products.\n"
+                                                   "When the session is open, we keep on loading all remaining products in the background.\n"
+                                                   "In the meantime, you can click on the 'database icon' in the searchbar to load products from database.")
+    limited_products_amount = fields.Integer(default=20000)
+    product_load_background = fields.Boolean()
+    limited_partners_loading = fields.Boolean('Limited Partners Loading',
+                                              help="By default, 100 partners are loaded.\n"
+                                                   "When the session is open, we keep on loading all remaining partners in the background.\n"
+                                                   "In the meantime, you can use the 'Load Customers' button to load partners from database.")
+    limited_partners_amount = fields.Integer(default=100)
+    partner_load_background = fields.Boolean()
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
@@ -722,3 +734,46 @@ class PosConfig(models.Model):
                 pos_config.write({'invoice_journal_id': invoice_journal_id.id})
             else:
                 pos_config.write({'module_account': False})
+
+    def get_limited_products_loading(self):
+        self.env.cr.execute("""
+            WITH pm AS
+            (
+                     SELECT   product_id,
+                              Max(write_date) date
+                     FROM     stock_quant
+                     GROUP BY product_id)
+            SELECT    p.id
+            FROM      product_product p
+            LEFT JOIN product_template t
+            ON        (
+                                product_tmpl_id=t.id)
+            LEFT JOIN pm
+            ON        (
+                                p.id=pm.product_id)
+            WHERE     p.active
+            AND       t.available_in_pos
+            ORDER BY  t.priority DESC,
+                      t.type DESC,
+                      COALESCE(pm.date,p.write_date) DESC limit %s
+        """, [str(self.limited_products_amount)])
+        return self.env.cr.fetchall()
+
+    def get_limited_partners_loading(self):
+        self.env.cr.execute("""
+            WITH pm AS
+            (
+                     SELECT   partner_id,
+                              Count(partner_id) order_count
+                     FROM     pos_order
+                     GROUP BY partner_id)
+            SELECT    id
+            FROM      res_partner AS partner
+            LEFT JOIN pm
+            ON        (
+                                partner.id = pm.partner_id)
+            ORDER BY  COALESCE(pm.order_count, 0) DESC,
+                      NAME limit %s;
+        """, [str(self.limited_partners_amount)])
+        result = self.env.cr.fetchall()
+        return result
