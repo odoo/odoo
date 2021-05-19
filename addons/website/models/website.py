@@ -8,7 +8,7 @@ import hashlib
 import requests
 import re
 
-from lxml import html
+from lxml import etree
 from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
@@ -287,6 +287,9 @@ class Website(models.Model):
         endpoint = website_api_endpoint + route
         return iap_tools.iap_jsonrpc(endpoint, params=params)
 
+    def get_cta_data(self, website_purpose, website_type):
+        return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
+
     @api.model
     def configurator_init(self):
         r = dict()
@@ -348,10 +351,15 @@ class Website(models.Model):
                     result = self.env['website'].new_page(name=feature_id.name, add_menu=True, template=feature_id.page_view_id.key)
                     pages_views[feature_id.iap_page_code] = result['view_id']
 
-            modules._button_immediate_function(lambda self: self.button_install())
+            modules.button_immediate_install()
+
+            # Force to refresh env after install of modules
+            self._cr.commit()
+            api.Environment.reset()
+            self.env = api.Environment(modules._cr, modules._uid, modules._context)
             return pages_views
 
-        def configure_page(page_code, snippet_list, pages_views):
+        def configure_page(page_code, snippet_list, pages_views, cta_data):
             if page_code == 'homepage':
                 page_view_id = website.homepage_id.view_id
             else:
@@ -362,8 +370,7 @@ class Website(models.Model):
                 try:
                     view_id = self.env['website'].with_context(website_id=website.id).viewref(snippet)
                     if view_id:
-                        rendered_snippet = pycompat.to_text(view_id._render())
-                        el = html.fragment_fromstring(rendered_snippet)
+                        el = etree.fromstring(view_id._render(values=cta_data))
 
                         # Add the data-snippet attribute to identify the snippet
                         # for compatibility code
@@ -382,8 +389,7 @@ class Website(models.Model):
                             shape_el = el.xpath("//*[hasclass('o_we_shape')]")
                             if shape_el:
                                 shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
-
-                        rendered_snippet = pycompat.to_text(html.tostring(el))
+                        rendered_snippet = pycompat.to_text(etree.tostring(el))
                         rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)
@@ -433,6 +439,9 @@ class Website(models.Model):
 
         # modules
         pages_views = set_features(kwargs.get('selected_features'))
+        # We need to refresh the environment of website because set_features installed some new module
+        # and we need the overrides of these new menus e.g. for .get_cta_data()
+        website = self.env['website'].browse(website.id)
 
         # Load suggestion from iap for selected pages
         requested_pages = list(pages_views.keys())
@@ -443,10 +452,53 @@ class Website(models.Model):
         }
         custom_resources = self._website_api_rpc('/api/website/1/configurator/custom_resources/%s' % kwargs.get('industry_id'), params)
 
+        # Update CTA
+        cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
+        if cta_data['cta_btn_text']:
+            xpath_view = 'website.snippets'
+            parent_view = self.env['website'].with_context(website_id=website.id).viewref(xpath_view)
+            self.env['ir.ui.view'].create({
+                'name': parent_view.key + ' CTA',
+                'key': parent_view.key + "_cta",
+                'inherit_id': parent_view.id,
+                'website_id': website.id,
+                'type': 'qweb',
+                'priority': 32,
+                'arch_db': """
+                    <data>
+                        <xpath expr="//t[@t-set='cta_btn_href']" position="replace">
+                            <t t-set="cta_btn_href">%s</t>
+                        </xpath>
+                        <xpath expr="//t[@t-set='cta_btn_text']" position="replace">
+                            <t t-set="cta_btn_text">%s</t>
+                        </xpath>
+                    </data>
+                """ % (cta_data['cta_btn_href'], cta_data['cta_btn_text'])
+            })
+            header_ids = [
+                'website.template_header_default_oe_structure_header_default_1',
+                'website.template_header_hamburger_oe_structure_header_hamburger_1',
+                'website.template_header_slogan_oe_structure_header_slogan_2',
+                'website.template_header_boxed_oe_structure_header_boxed_2',
+                'website.template_header_image_oe_structure_header_image_2',
+            ]
+            for header_id in header_ids:
+                try:
+                    view_id = self.env['website'].viewref(header_id)
+                    if view_id:
+                        el = etree.fromstring(view_id.arch_db)
+                        btn_cta_el = el.xpath("//a[hasclass('btn_cta')]")
+                        if btn_cta_el:
+                            btn_cta_el[0].attrib['href'] = cta_data['cta_btn_href']
+                            btn_cta_el[0].text = cta_data['cta_btn_text']
+                        view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(el)})
+                except ValueError as e:
+                    logger.warning(e)
+
         # Update pages
         pages = custom_resources.get('pages', {})
         for page_code, snippet_list in pages.items():
-            configure_page(page_code, snippet_list, pages_views)
+            configure_page(page_code, snippet_list, pages_views, cta_data)
 
         images = custom_resources.get('images', [])
         set_images(images)
