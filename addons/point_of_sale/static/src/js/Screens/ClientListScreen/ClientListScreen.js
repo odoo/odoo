@@ -47,7 +47,6 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             };
             this.updateClientList = debounce(this.updateClientList, 70);
         }
-
         // Lifecycle hooks
         back() {
             if(this.state.detailIsShown) {
@@ -69,11 +68,13 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         }
 
         get clients() {
+            let res;
             if (this.state.query && this.state.query.trim() !== '') {
-                return this.env.pos.db.search_partner(this.state.query.trim());
+                res = this.env.pos.db.search_partner(this.state.query.trim());
             } else {
-                return this.env.pos.db.get_partners_sorted(1000);
+                res = this.env.pos.db.get_partners_sorted(1000);
             }
+            return res.sort(function (a, b) { return a.name.localeCompare(b.name) });
         }
         get isNextButtonVisible() {
             return this.state.selectedClient ? true : false;
@@ -96,7 +97,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
 
         // We declare this event handler as a debounce function in
         // order to lower its trigger rate.
-        updateClientList(event) {
+        async updateClientList(event) {
+            var newClientList = await this.getNewClient();
             this.state.query = event.target.value;
             const clients = this.clients;
             if (event.code === 'Enter' && clients.length === 1) {
@@ -172,6 +174,37 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         }
         cancelEdit() {
             this.deactivateEditMode();
+        }
+        async searchClient() {
+            let result = await this.getNewClient();
+            this.env.pos.db.add_partners(result);
+            if(!result.length) {
+                await this.showPopup('ErrorPopup', {
+                    title: this.env._t(''),
+                    body: this.env._t('No customer found'),
+                });
+            }
+            this.render();
+        }
+        async getNewClient() {
+            var domain = [];
+            if(this.state.query) {
+                domain = [["name", "ilike", this.state.query + "%"]];
+            }
+            var fields = _.find(this.env.pos.models, function(model){ return model.label === 'load_partners'; }).fields;
+            var result = await this.rpc({
+                model: 'res.partner',
+                method: 'search_read',
+                args: [domain, fields],
+                kwargs: {
+                    limit: 10,
+                },
+            },{
+                timeout: 3000,
+                shadow: true,
+            });
+
+            return result;
         }
     }
     ClientListScreen.template = 'ClientListScreen';

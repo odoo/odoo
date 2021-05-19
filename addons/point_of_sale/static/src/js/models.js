@@ -147,6 +147,13 @@ exports.PosModel = Backbone.Model.extend({
 
             return this.connect_to_proxy();
         }
+        if(this.config.limited_products_loading) {
+            await this.env.pos._addProducts(await this.loadProductsFromOffset(0));
+            if(this.config.product_load_background)
+                this.loadProductsBackground();
+        }
+        if(this.config.partner_load_background )
+            this.loadPartnersBackground();
         return Promise.resolve();
     },
     // releases ressources holds by the model at the end of life of the posmodel
@@ -246,16 +253,6 @@ exports.PosModel = Backbone.Model.extend({
             self.uom_unit_id = unit[0].res_id;
         }
     },{
-        model:  'res.partner',
-        label: 'load_partners',
-        fields: ['name','street','city','state_id','country_id','vat','lang',
-                 'phone','zip','mobile','email','barcode','write_date',
-                 'property_account_position_id','property_product_pricelist'],
-        loaded: function(self,partners){
-            self.partners = partners;
-            self.db.add_partners(partners);
-        },
-    },{
         model:  'res.country.state',
         fields: ['name', 'country_id'],
         loaded: function(self,states){
@@ -347,6 +344,27 @@ exports.PosModel = Backbone.Model.extend({
                 self.pos_session.sequence_number = Math.max(self.pos_session.sequence_number, orders[i].data.sequence_number+1);
             }
        },
+    },{
+        model:  'res.partner',
+        label: 'load_partners',
+        fields: ['name','street','city','state_id','country_id','vat','lang',
+                 'phone','zip','mobile','email','barcode','write_date',
+                 'property_account_position_id','property_product_pricelist'],
+        domain: async function(self){
+            if(self.config.limited_partners_loading) {
+                const result = await self.rpc({
+                      model: 'pos.config',
+                      method: 'get_limited_partners_loading',
+                      args: [self.config.id],
+                });
+                return [['id','in', result.map(elem => elem[0])]];
+            }
+            return [];
+        },
+        loaded: function(self,partners){
+            self.partners = partners;
+            self.db.add_partners(partners);
+        },
     },{
       model: 'stock.picking.type',
       fields: ['use_create_lots', 'use_existing_lots'],
@@ -454,6 +472,8 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'product.product',
+        label: 'load_products',
+        condition: function (self) { return !self.config.limited_products_loading; },
         fields: ['display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
                  'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
                  'product_tmpl_id','tracking', 'write_date', 'available_in_pos', 'attribute_line_ids'],
@@ -468,6 +488,7 @@ exports.PosModel = Backbone.Model.extend({
               domain.unshift(['id', '=', self.config.tip_product_id[0]]);
               domain.unshift('|');
             }
+
             return domain;
         },
         context: function(self){ return { display_default_code: false }; },
@@ -663,7 +684,7 @@ exports.PosModel = Backbone.Model.extend({
         var tmp = {}; // this is used to share a temporary state between models loaders
 
         var loaded = new Promise(function (resolve, reject) {
-            function load_model(index) {
+            async function load_model(index) {
                 if (index >= self.models.length) {
                     resolve();
                 } else {
@@ -677,13 +698,13 @@ exports.PosModel = Backbone.Model.extend({
                     }
 
                     var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
-                    var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
+                    var domain =  typeof model.domain === 'function'  ? await model.domain(self,tmp)  : model.domain;
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
                     var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                     var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
                     progress += progress_step;
 
-                    if( model.model ){
+                    if(model.model ){
                         var params = {
                             model: model.model,
                             context: _.extend(context, self.session.user_context || {}),
@@ -845,7 +866,91 @@ exports.PosModel = Backbone.Model.extend({
             this.get('orders').add(orders);
         }
     },
-
+    async _loadMissingProducts(orders) {
+        const missingProductIds = new Set([]);
+        for (const order of orders) {
+            for (const line of order.lines) {
+                const productId = line[2].product_id;
+                if (missingProductIds.has(productId)) continue;
+                if (!this.db.get_product_by_id(productId)) {
+                    missingProductIds.add(productId);
+                }
+            }
+        }
+        const productModel = _.find(this.models, function(model){return model.model === 'product.product';});
+        const fields = productModel.fields;
+        const products = await this.rpc({
+            model: 'product.product',
+            method: 'read',
+            args: [[...missingProductIds], fields],
+            context: Object.assign(this.session.user_context, { display_default_code: false }),
+        });
+        productModel.loaded(this, products);
+    },
+    async _loadMissingPartners(orders) {
+        const missingPartnerIds = new Set([]);
+        for (const order of orders) {
+            const partnerId = order.partner_id;
+            if(missingPartnerIds.has(partnerId)) continue;
+            if (partnerId && !this.db.get_partner_by_id(partnerId)) {
+                missingPartnerIds.add(partnerId);
+            }
+        }
+        const partnerModel = _.find(this.models, function(model){return model.model === 'res.partner';});
+        const fields = partnerModel.fields;
+        if(missingPartnerIds) {
+            const partners = await this.rpc({
+                model: 'res.partner',
+                method: 'read',
+                args: [[...missingPartnerIds], fields],
+                context: Object.assign(this.session.user_context, { display_default_code: false }),
+            });
+            partnerModel.loaded(this, partners);
+        }
+    },
+    loadProductsFromOffset: async function(offset) {
+        let ProductIds = [];
+        let product_model = _.find(this.models, (model) => model.model === 'product.product');
+        ProductIds = await this.rpc({
+            model: 'product.product',
+            method: 'search',
+            args: [product_model.domain(this)],
+            kwargs: {
+                offset: this.env.pos.config.limited_products_amount * offset,
+                limit: this.env.pos.config.limited_products_amount,
+            },
+            context: this.env.session.user_context,
+        });
+        return ProductIds;
+    },
+    loadProductsBackground: async function() {
+        let offset = 0
+        let ProductIds = [];
+        do {
+            ProductIds = await this.loadProductsFromOffset(offset)
+            this.env.pos._addProducts(ProductIds);
+            offset += 1;
+        } while(ProductIds.length);
+    },
+    loadPartnersBackground: async function() {
+        let i = 1;
+        let PartnerIds = [];
+        var fields = _.find(this.env.pos.models, function(model){ return model.label === 'load_partners'; }).fields;
+        do {
+            PartnerIds = await this.rpc({
+                model: 'res.partner',
+                method: 'search_read',
+                args: [[], fields],
+                kwargs: {
+                    limit: this.env.pos.config.limited_partners_amount,
+                    offset: this.env.pos.config.limited_partners_amount * i
+                },
+                context: this.env.session.user_context,
+            });
+            this.env.pos.db.add_partners(PartnerIds);
+            i += 1;
+        } while(PartnerIds.length);
+    },
     set_start_order: function(){
         var orders = this.get('orders').models;
 

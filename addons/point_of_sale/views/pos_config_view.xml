@@ -168,6 +168,27 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="limited_partners_loading"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="limited_partners_loading" string="Limited Partners Loading"/>
+                                <div class="text-muted">
+                                    Only load a limited number of customers at the opening of the PoS.
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible' : [('limited_partners_loading', '=', False)]}">
+                                    <div groups="base.group_no_one">
+                                        <label for="limited_partners_amount" string="Number of Partners Loaded"/>
+                                        <field name="limited_partners_amount" class="oe_inline"/>
+                                    </div>
+                                    <div>
+                                        <field name="partner_load_background" class="oe_inline"/>
+                                        <label for="partner_load_background" string="Load all remaining partners in the background" class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <h2>Connected Devices</h2>
                     <div class="row mt16 o_settings_container" id="posbox_reference">
@@ -566,6 +587,28 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="limited_products_loading"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="limited_products_loading" string="Limited Products Loading"/>
+                                <div class="text-muted">
+                                    Only load most common products at the opening of the PoS.
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible' : [('limited_products_loading', '=', False)]}">
+                                    <div groups="base.group_no_one">
+                                        <label for="limited_products_amount" string="Number of Products Loaded"/>
+                                        <field name="limited_products_amount" class="oe_inline"/>
+                                    </div>
+                                    <div>
+                                        <field name="product_load_background" class="oe_inline"/>
+                                        <label for="product_load_background" string="Load all remaining products in the background" class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <h2>Accounting</h2>
                     <div class="row mt16 o_settings_container" id="accounting_section">

@@ -39,10 +39,15 @@
             <Portal target="'.pos .search-bar-portal'">
                 <div class="search-box">
                     <span class="icon"><i class="fa fa-search"></i></span>
+
                     <span t-on-click="clearSearch" class="clear-icon">
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </span>
+                    <span class="database-icon">
+                        <i class="fa fa-database" t-on-click="loadProductFromDB"/>
+                    </span>
                     <input t-ref="search-word-input" type="text" placeholder="Search Products..." t-on-keyup="updateSearch" />
+
                 </div>
             </Portal>
         </div>

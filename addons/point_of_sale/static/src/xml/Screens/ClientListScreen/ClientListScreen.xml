@@ -44,6 +44,16 @@
                         <input placeholder="Search Customers" size="1" t-on-keyup="updateClientList" />
                         <span class="search-clear-client"></span>
                     </div>
+                    <div class="button back" t-on-click="searchClient()" t-if="!state.detailIsShown">
+                        <span class="database-icon">
+                            <i class="fa fa-database"/>
+                        </span>
+                        <t t-if="!env.isMobile">
+                            <span class="load-customer-search">
+                                Load Customers
+                            </span>
+                        </t>
+                    </div>
                 </div>
                 <section class="full-content">
                     <div class="client-window">
