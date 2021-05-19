@@ -120,19 +120,29 @@ class SendSMS(models.TransientModel):
     def _compute_recipient_single(self):
         for composer in self:
             records = composer._get_records()
-            if not records or not issubclass(type(records), self.pool['mail.thread']) or not composer.comment_single_recipient:
-                composer.recipient_single_description = False
-                composer.recipient_single_number = ''
-                composer.recipient_single_number_itf = ''
-                continue
-            records.ensure_one()
-            res = records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
-            composer.recipient_single_description = res[records.id]['partner'].name or records.display_name
-            composer.recipient_single_number = res[records.id]['number'] or ''
+            usable_records = None
+            is_fallback_partner = False
+            if records and composer.comment_single_recipient and not issubclass(type(records), self.pool['mail.thread']) and hasattr(records, 'partner_id') and records.partner_id:
+                usable_records = records.partner_id
+                is_fallback_partner = True
+            else:
+                if not records or not issubclass(type(records), self.pool['mail.thread']) or not composer.comment_single_recipient:
+                    composer.recipient_single_description = False
+                    composer.recipient_single_number = ''
+                    composer.recipient_single_number_itf = ''
+                    continue
+                else:
+                    usable_records = records
+            usable_records.ensure_one()
+            res = usable_records._sms_get_recipients_info(force_field=composer.number_field_name, partner_fallback=False)
+            composer.recipient_single_description = res[usable_records.id]['partner'].name or usable_records.display_name
+            composer.recipient_single_number = res[usable_records.id]['number'] or ''
             if not composer.recipient_single_number_itf:
-                composer.recipient_single_number_itf = res[records.id]['number'] or ''
+                composer.recipient_single_number_itf = res[usable_records.id]['number'] or ''
             if not composer.number_field_name:
-                composer.number_field_name = res[records.id]['field_store']
+                composer.number_field_name = res[usable_records.id]['field_store']
+            if is_fallback_partner:
+                composer.numbers = composer.recipient_single_number_itf
 
     @api.depends('recipient_single_number', 'recipient_single_number_itf')
     def _compute_recipient_single_valid(self):
