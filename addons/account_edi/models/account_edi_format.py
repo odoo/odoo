@@ -160,7 +160,8 @@ class AccountEdiFormat(models.Model):
 
         :param invoices:    A list of invoices to post.
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
-        * attachment:       The attachment representing the invoice in this edi_format if the edi was successfully posted.
+        * success:          True if the edi was successfully posted.
+        * attachment:       The attachment representing the invoice in this edi_format.
         * error:            An error if the edi was not successfully posted.
         * blocking_level:   (optional) How bad is the error (how should the edi flow be blocked ?)
         """
