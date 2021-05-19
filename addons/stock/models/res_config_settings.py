@@ -59,6 +59,10 @@ class ResConfigSettings(models.TransientModel):
             self.group_stock_multi_locations = True
 
     def set_values(self):
+        if self.module_procurement_jit == '0':
+            self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', True)
+        else:
+            self.env['ir.config_parameter'].sudo().set_param('stock.picking_no_auto_reserve', False)
         warehouse_grp = self.env.ref('stock.group_stock_multi_warehouses')
         location_grp = self.env.ref('stock.group_stock_multi_locations')
         base_user = self.env.ref('base.group_user')
