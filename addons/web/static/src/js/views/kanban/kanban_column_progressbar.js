@@ -89,6 +89,7 @@ var KanbanColumnProgressBar = Widget.extend({
      * Computes the count of each sub group and the total count
      */
     computeCounters() {
+        debugger;
         const subgroupCounts = {};
         for (const key of Object.keys(this.colors)) {
             const subgroupCount = this.columnState.progressBarValues.counts[key] || 0;
@@ -98,7 +99,7 @@ var KanbanColumnProgressBar = Widget.extend({
                     activeFilter: this.activeFilter
                 });
             }
-            subgroupCounts[key] = this.activeFilter.value === key ? this.columnState.count : subgroupCount;
+            subgroupCounts[key] = this.activeFilter.value === key && key === '__false' ? this.columnState.count : subgroupCount;
         }
 
         this.groupCount = this.columnState.count;
@@ -177,6 +178,7 @@ var KanbanColumnProgressBar = Widget.extend({
             $bar.removeClass('o_bar_has_records transition-off');
             window.getComputedStyle($bar[0]).getPropertyValue('width'); // Force reflow so that animations work
             if (count > 0) {
+                debugger;
                 $bar.addClass('o_bar_has_records');
                 // Make sure every bar that has records has some space
                 // and that everything adds up to 100%

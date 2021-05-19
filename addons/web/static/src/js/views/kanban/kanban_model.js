@@ -386,10 +386,12 @@ var KanbanModel = BasicModel.extend({
      * @returns {Promise<Object>}
      */
     async _readProgressBarGroup(list, options) {
+        debugger;
         const groupsDef = this._readGroup(list, options);
         const progressBarDef = this._readProgressBar(list);
         const [groups, progressBar] = await Promise.all([groupsDef, progressBarDef]);
         list.data.forEach(groupId => {
+            debugger;
             const group = this.localData[groupId];
 
             const valuesCount = progressBar[group.value] || {};
