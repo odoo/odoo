@@ -27,6 +27,7 @@ class Project(models.Model):
         compute='_compute_total_timesheet_time',
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
+    is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project')
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
@@ -35,6 +36,29 @@ class Project(models.Model):
     def _compute_allow_timesheets(self):
         without_account = self.filtered(lambda t: not t.analytic_account_id and t._origin)
         without_account.update({'allow_timesheets': False})
+
+    @api.depends('company_id')
+    def _compute_is_internal_project(self):
+        for project in self:
+            project.is_internal_project = bool(project.company_id.internal_project_id)
+
+    @api.model
+    def _search_is_internal_project(self, operator, value):
+        if not isinstance(value, bool):
+            raise ValueError('Invalid value: %s' % (value))
+        if operator not in ['=', '!=']:
+            raise ValueError('Invalid operator: %s' % (operator))
+
+        query = """
+            SELECT C.internal_project_id
+            FROM res_company C
+            WHERE C.internal_project_id IS NOT NULL
+        """
+        if (operator == '=' and value is True) or (operator == '!=' and value is False):
+            operator_new = 'inselect'
+        else:
+            operator_new = 'not inselect'
+        return [('id', operator_new, (query, ()))]
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):
