@@ -488,6 +488,12 @@ class IrHttp(models.AbstractModel):
                     return redirect
                 elif url_lg:
                     request.uid = None
+                    if request.httprequest.path == '/%s/' % url_lg:
+                        # special case for homepage controller, mimick `_postprocess_args()` redirect
+                        path = request.httprequest.path[:-1]
+                        if request.httprequest.query_string:
+                            path += '?' + request.httprequest.query_string.decode('utf-8')
+                        return werkzeug.utils.redirect(path, code=301)
                     path.pop(1)
                     routing_error = None
                     return cls.reroute('/'.join(path) or '/')
