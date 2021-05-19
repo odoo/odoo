@@ -93,8 +93,18 @@ var RecordQuickCreate = Widget.extend({
 
         // destroy the quick create when the user clicks outside
         core.bus.on('click', this, this._onWindowClicked);
+        // added mousedown to check whether to ignore window click or not
+        this._onBodyMousedown = this._onBodyMousedown.bind(this);
+        document.body.addEventListener('mousedown', this._onBodyMousedown);
 
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        document.body.removeEventListener('mousedown', this._onBodyMousedown, true);
     },
     /**
      * Called when the quick create is appended into the DOM.
@@ -260,6 +270,14 @@ var RecordQuickCreate = Widget.extend({
         var mouseDownInside = this.mouseDownInside;
 
         this.mouseDownInside = false;
+        //sometimes in a slow network, quick create widget is destroyed first and then
+        // dialog will be open to creating the m20 record.
+        // since quick create widget is destroyed, it will open the blank dialog.
+        // so, ignore window click if ignoreWindowClick is true.
+        if (this.ignoreWindowClick) {
+            this.ignoreWindowClick = false;
+            return;
+        }
         // ignore clicks if the quick create is not in the dom
         if (!document.contains(this.el)) {
             return;
@@ -305,9 +323,20 @@ var RecordQuickCreate = Widget.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onMouseDown: function(ev){
+    _onMouseDown: function (ev) {
         this.mouseDownInside = true;
-    }
+    },
+    /**
+     * Ignore window click if autocomplete is open and user clicks outside
+     *
+     * @private
+     */
+    _onBodyMousedown: function (ev) {
+        if ($(document.activeElement).hasClass('ui-autocomplete-input')
+            && $(document.activeElement).autocomplete("widget").is(":visible")) {
+            this.ignoreWindowClick = true;
+        }
+    },
 });
 
 return RecordQuickCreate;

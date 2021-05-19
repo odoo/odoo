@@ -1591,6 +1591,61 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record: do not cancel on window click when many2one autocomplete is open', async function (assert) {
+        assert.expect(4);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<kanban quick_create_view="some_view_ref">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,some_view_ref,form': `<form>
+                        <field name="foo"/>
+                        <field name="product_id"/>
+                    </form>`,
+            },
+            groupBy: ['bar'],
+        });
+
+        assert.containsOnce(kanban, '.o_kanban_group:first .o_kanban_record',
+            "first column should contain one record");
+
+        // click to add an element and edit it
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "should have open the quick create widget");
+
+        const $quickCreate = kanban.$('.o_kanban_quick_create');
+        $quickCreate.find('.o_field_many2one input').focus();
+        await testUtils.fields.editAndTrigger($quickCreate.find('.o_field_many2one input'),
+            'Something that does not exist', 'keydown');
+        await testUtils.nextTick();
+
+        // simulate mousedown and then click to avoid closing quick create
+        document.body.dispatchEvent(new MouseEvent('mousedown'));
+        await testUtils.dom.click(kanban.$('.o_kanban_group .o_kanban_record:first'));
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "quick create widget should not have been destroyed");
+
+        // click again and check quick create record should be removed
+        await testUtils.dom.click(kanban.$('.o_kanban_group .o_kanban_record:first'));
+        assert.containsNone(kanban, '.o_kanban_quick_create',
+            "quick create widget should have been removed");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record and edit in grouped mode', async function (assert) {
         assert.expect(6);
 
