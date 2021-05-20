@@ -11,7 +11,6 @@
             <field name="arch" type="xml">
                 <field name="mobile" position="after">
                     <field name="opportunity_count"/>
-                    <field name="meeting_count"/>
                 </field>
                 <xpath expr="//span[hasclass('oe_kanban_partner_links')]" position="inside">
                     <span class="badge badge-pill" t-if="record.opportunity_count.value>0"><i class="fa fa-fw fa-star" aria-label="Favorites" role="img" title="Favorites"/><t t-esc="record.opportunity_count.value"/></span>

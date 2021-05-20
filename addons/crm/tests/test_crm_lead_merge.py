@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
 from odoo.addons.crm.tests.common import TestLeadConvertMassCommon
 from odoo.fields import Datetime
 from odoo.tests.common import tagged, users
 
 
 @tagged('lead_manage')
-class TestLeadMerge(TestLeadConvertMassCommon):
+class TestLeadMergeCommon(TestLeadConvertMassCommon):
     """ During a mixed merge (involving leads and opps), data should be handled a certain way following their type
     (m2o, m2m, text, ...). """
 
     @classmethod
     def setUpClass(cls):
-        super(TestLeadMerge, cls).setUpClass()
+        super(TestLeadMergeCommon, cls).setUpClass()
 
         cls.leads = cls.lead_1 + cls.lead_w_partner + cls.lead_w_contact + cls.lead_w_email + cls.lead_w_partner_company + cls.lead_w_email_lost
         # reset some assigned users to test salesmen assign
@@ -28,6 +30,10 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         cls.lead_w_partner.write({'description': 'lead_w_partner'})
 
         cls.assign_users = cls.user_sales_manager + cls.user_sales_leads_convert + cls.user_sales_salesman
+
+
+@tagged('lead_manage')
+class TestLeadMerge(TestLeadMergeCommon):
 
     def test_initial_data(self):
         """ Ensure initial data to avoid spaghetti test update afterwards """
@@ -160,3 +166,58 @@ class TestLeadMerge(TestLeadConvertMassCommon):
                                    partner_id=self.contact_company_1,
                                    priority='2'):
             leads._merge_opportunity(auto_unlink=False, max_length=None)
+
+    @users('user_sales_manager')
+    def test_merge_method_dependencies(self):
+        """ Test if dependences for leads are not lost while merging leads. In
+        this test leads are ordered as
+
+        lead_w_partner_company ---opp----seq=1 (ID greater)
+        lead_w_contact -----------lead---seq=30
+        lead_w_email -------------lead---seq=3----------------attachments
+        lead_1 -------------------lead---seq=1----------------activity+meeting
+        lead_w_partner -----------lead---seq=False
+        """
+        self.env['crm.lead'].browse(self.lead_w_partner_company.ids).write({'type': 'opportunity'})
+
+        # create side documents
+        attachments = self.env['ir.attachment'].create([
+            {'name': '%02d.txt' % idx,
+             'datas': base64.b64encode(b'Att%02d' % idx),
+             'res_model': 'crm.lead',
+             'res_id': self.lead_w_email.id,
+            } for idx in range(4)
+        ])
+        lead_1 = self.env['crm.lead'].browse(self.lead_1.ids)
+        activity = lead_1.activity_schedule('crm.lead_test_activity_1')
+        calendar_event = self.env['calendar.event'].create({
+            'name': 'Meeting with partner',
+            'activity_ids': [(4, activity.id)],
+            'start': '2021-06-12 21:00:00',
+            'stop': '2021-06-13 00:00:00',
+            'res_model_id': self.env['ir.model']._get('crm.crm_lead').id,
+            'res_id': lead_1.id,
+            'opportunity_id': lead_1.id,
+        })
+
+        # run merge and check documents are moved to the master record
+        merge = self.env['crm.merge.opportunity'].with_context({
+            'active_model': 'crm.lead',
+            'active_ids': self.leads.ids,
+            'active_id': False,
+        }).create({
+            'team_id': self.sales_team_convert.id,
+            'user_id': False,
+        })
+        result = merge.action_merge()
+        master_lead = self.leads.filtered(lambda lead: lead.id == result['res_id'])
+
+        # check result of merge process
+        self.assertEqual(master_lead, self.lead_w_partner_company)
+        # records updated
+        self.assertEqual(calendar_event.opportunity_id, master_lead)
+        self.assertEqual(calendar_event.res_id, master_lead.id)
+        self.assertTrue(all(att.res_id == master_lead.id for att in attachments))
+        # 2many accessors updated
+        self.assertEqual(master_lead.activity_ids, activity)
+        self.assertEqual(master_lead.calendar_event_ids, calendar_event)

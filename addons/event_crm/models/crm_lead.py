@@ -22,3 +22,11 @@ class Lead(models.Model):
     def _compute_registration_count(self):
         for record in self:
             record.registration_count = len(record.registration_ids)
+
+    def _merge_dependences(self, opportunities):
+        super(Lead, self)._merge_dependences(opportunities)
+
+        # merge registrations as sudo, as crm people may not have access to event rights
+        self.sudo().write({
+            'registration_ids': [(4, registration.id) for registration in opportunities.sudo().registration_ids]
+        })

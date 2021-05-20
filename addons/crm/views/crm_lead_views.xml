@@ -30,9 +30,9 @@
                                 context="{'partner_id': partner_id}"
                                 attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <div class="o_stat_info">
-                                    <field name="meeting_count" class="o_stat_value"/>
-                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&lt;', 2)]}"> Meetings</span>
-                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&gt;', 1)]}"> Meeting</span>
+                                    <field name="calendar_event_count" class="o_stat_value"/>
+                                    <span class="o_stat_text" attrs="{'invisible': [('calendar_event_count', '&lt;', 2)]}"> Meetings</span>
+                                    <span class="o_stat_text" attrs="{'invisible': [('calendar_event_count', '&gt;', 1)]}"> Meeting</span>
                                 </div>
                             </button>
                             <button name="action_show_potential_duplicates" type="object"
