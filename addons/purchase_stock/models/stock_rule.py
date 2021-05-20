@@ -156,13 +156,13 @@ class StockRule(models.Model):
         buy_rule.ensure_one()
         supplier_delay = seller[0].delay
         if supplier_delay and not bypass_delay_description:
-            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Vendor Lead Time'), supplier_delay, _('day(s)'))
+            delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', supplier_delay)))
         security_delay = buy_rule.picking_type_id.company_id.po_lead
         if not bypass_delay_description:
-            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Purchase Security Lead Time'), security_delay, _('day(s)'))
+            delay_description.append((_('Purchase Security Lead Time'), _('+ %d day(s)', security_delay)))
         days_to_purchase = buy_rule.company_id.days_to_purchase
         if not bypass_delay_description:
-            delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Days to Purchase'), days_to_purchase, _('day(s)'))
+            delay_description.append((_('Days to Purchase'), _('+ %d day(s)', days_to_purchase)))
         return delay + supplier_delay + security_delay + days_to_purchase, delay_description
 
     @api.model
