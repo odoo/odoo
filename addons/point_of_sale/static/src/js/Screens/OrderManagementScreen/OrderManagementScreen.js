@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.OrderManagementScreen', function (require) {
     'use strict';
 
-    const { useContext } = owl.hooks;
+    const { useContext, useRef } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
     const ControlButtonsMixin = require('point_of_sale.ControlButtonsMixin');
     const NumberBuffer = require('point_of_sale.NumberBuffer');
@@ -27,6 +27,7 @@ odoo.define('point_of_sale.OrderManagementScreen', function (require) {
             OrderFetcher.setComponent(this);
             OrderFetcher.setConfigId(this.env.pos.config_id);
             this.orderManagementContext = useContext(contexts.orderManagement);
+            this.receiptRef = useRef('order-receipt');
         }
         mounted() {
             OrderFetcher.on('update', this, this.render);
