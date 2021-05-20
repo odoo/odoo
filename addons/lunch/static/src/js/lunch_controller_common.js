@@ -7,6 +7,7 @@ odoo.define('lunch.LunchControllerCommon', function (require) {
 
 var session = require('web.session');
 var core = require('web.core');
+const {Markup} = require('web.utils');
 var LunchWidget = require('lunch.LunchWidget');
 var LunchPaymentDialog = require('lunch.LunchPaymentDialog');
 
@@ -59,14 +60,17 @@ var LunchControllerCommon = {
             },
         });
     },
-    _fetchWidgetData: async function () {
-        this.widgetData = await this._rpc({
+    async _fetchWidgetData() {
+        const widgetData = await this._rpc({
             route: '/lunch/infos',
             params: {
                 user_id: this.searchModel.get('userId'),
                 context: this.context,
             },
         });
+        widgetData.wallet = parseFloat(widgetData.wallet).toFixed(2);
+        (widgetData.alerts || []).forEach(alert => { alert.message = Markup(alert.message); });
+        this.widgetData = widgetData;
     },
     /**
      * Renders and appends the lunch banner widget.
@@ -74,12 +78,10 @@ var LunchControllerCommon = {
      * @private
      */
     _renderLunchWidget: function () {
-        var self = this;
         var oldWidget = this.widget;
-        this.widgetData.wallet = parseFloat(this.widgetData.wallet).toFixed(2);
-        this.widget = new LunchWidget(this, _.extend(this.widgetData, {edit: this.editMode}));
-        return this.widget.appendTo(document.createDocumentFragment()).then(function () {
-            self.$('.o_lunch_content').prepend(self.widget.$el);
+        this.widget = new LunchWidget(this, Object.assign(this.widgetData, {edit: this.editMode}));
+        return this.widget.appendTo(document.createDocumentFragment()).then(() => {
+            this.$('.o_lunch_content').prepend(this.widget.$el);
             if (oldWidget) {
                 oldWidget.destroy();
             }
