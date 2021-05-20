@@ -41,7 +41,7 @@ class Track(models.Model):
         index=True, copy=False, default=_get_default_stage_id,
         group_expand='_read_group_stage_ids',
         required=True, tracking=True)
-    is_accepted = fields.Boolean('Is Accepted', related='stage_id.is_accepted', readonly=True)
+    is_visible = fields.Boolean(compute="_compute_is_visible")
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
@@ -162,6 +162,14 @@ class Track(models.Model):
         for track in self:
             if track.id:
                 track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
+
+    @api.depends('stage_id')
+    def _compute_is_visible(self):
+        for track in self:
+            if track.env.user.has_group('event.group_event_registration_desk'):
+                track.is_visible = track.stage_id.visibility != 'unlisted'
+            else:
+                track.is_visible = track.website_published and track.stage_id.visibility == 'public'
 
     # SPEAKER
 
@@ -431,7 +439,6 @@ class Track(models.Model):
                 subtype_id=self.env.ref('website_event_track.mt_event_track').id,
                 **email_values,
             )
-            track._synchronize_with_stage(track.stage_id)
 
         return tracks
 
@@ -440,9 +447,6 @@ class Track(models.Model):
             vals['website_cta_url'] = self.env['res.partner']._clean_website(vals['website_cta_url'])
         if 'stage_id' in vals and 'kanban_state' not in vals:
             vals['kanban_state'] = 'normal'
-        if vals.get('stage_id'):
-            stage = self.env['event.track.stage'].browse(vals['stage_id'])
-            self._synchronize_with_stage(stage)
         res = super(Track, self).write(vals)
         return res
 
@@ -450,12 +454,6 @@ class Track(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         """ Always display all stages """
         return stages.search([], order=order)
-
-    def _synchronize_with_stage(self, stage):
-        if stage.is_done:
-            self.is_published = True
-        elif stage.is_cancel:
-            self.is_published = False
 
     # ------------------------------------------------------------
     # MESSAGING
@@ -611,7 +609,7 @@ class Track(models.Model):
 
         track_candidates = track_candidates.sorted(
             lambda track:
-                (track.is_published,
+                (track.is_visible,
                  track.track_start_remaining == 0  # First get the tracks that started less than 10 minutes ago ...
                  and track.track_start_relative < (10 * 60)
                  and not track.is_track_done,  # ... AND not finished

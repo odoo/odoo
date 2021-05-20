@@ -22,13 +22,13 @@
                         <group>
                             <field name="name"/>
                             <field name="mail_template_id"/>
-                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="visibility"/>
+                            <field name="is_accessible"/>
+                            <field name="is_cancel"/>
                         </group>
                         <group>
+                            <field name="sequence" groups="base.group_no_one"/>
                             <field name="fold"/>
-                            <field name="is_accepted"/>
-                            <field name="is_done"/>
-                            <field name="is_cancel"/>
                             <field name="color" widget="color_picker"/>
                         </group>
                     </group>
@@ -66,8 +66,8 @@
             <tree string="Track Stage">
                 <field name="sequence" widget="handle" groups="event.group_event_manager"/>
                 <field name="name"/>
-                <field name="is_accepted"/>
-                <field name="is_done"/>
+                <field name="visibility"/>
+                <field name="is_accessible"/>
                 <field name="is_cancel"/>
                 <field name="fold"/>
             </tree>

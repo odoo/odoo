@@ -27,10 +27,15 @@ class EventTrackController(http.Controller):
         search_domain_base = [
             ('event_id', '=', event.id),
         ]
-        if not request.env.user.has_group('event.group_event_registration_desk'):
+        if request.env.user.has_group('event.group_event_registration_desk'):
             search_domain_base = expression.AND([
                 search_domain_base,
-                ['|', ('is_published', '=', True), ('is_accepted', '=', True)]
+                [('stage_id.visibility', '!=', 'unlisted')]
+            ])
+        else:
+            search_domain_base = expression.AND([
+                search_domain_base,
+                ['&', ('website_published', '=', True), ('stage_id.visibility', '=', 'public')]
             ])
         return search_domain_base
 
@@ -111,8 +116,8 @@ class EventTrackController(http.Controller):
             for dt in self._get_dt_in_event_tz(tracks_wdate.mapped('date'), event)
         ))
         date_begin_tz_all.sort()
-        tracks_sudo_live = tracks_wdate.filtered(lambda track: track.is_published and track.is_track_live)
-        tracks_sudo_soon = tracks_wdate.filtered(lambda track: track.is_published and not track.is_track_live and track.is_track_soon)
+        tracks_sudo_live = tracks_wdate.filtered(lambda track: track.is_visible and track.is_track_live)
+        tracks_sudo_soon = tracks_wdate.filtered(lambda track: track.is_visible and not track.is_track_live and track.is_track_soon)
         tracks_by_day = []
         for display_date in date_begin_tz_all:
             matching_tracks = tracks_wdate.filtered(lambda track: self._get_dt_in_event_tz([track.date], event)[0].date() == display_date)
@@ -246,10 +251,7 @@ class EventTrackController(http.Controller):
         }
 
     def _event_agenda_get_tracks(self, event):
-        tracks_sudo = event.sudo().track_ids.filtered(lambda track: track.date)
-        if not request.env.user.has_group('event.group_event_manager'):
-            tracks_sudo = tracks_sudo.filtered(lambda track: track.is_published or track.stage_id.is_accepted)
-        return tracks_sudo
+        return event.sudo().track_ids.filtered(lambda track: track.date and track.is_visible)
 
     def _get_locale_time(self, dt_time, lang_code):
         """ Get locale time from datetime object
@@ -475,7 +477,7 @@ class EventTrackController(http.Controller):
             track.check_access_rule('read')
         except exceptions.AccessError:
             track_sudo = track.sudo()
-            if allow_is_accepted and track_sudo.is_accepted:
+            if allow_is_accepted:
                 track = track_sudo
             else:
                 raise Forbidden()

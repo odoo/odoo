@@ -159,11 +159,9 @@
             <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
                 class="mx-1 badge badge-danger rounded-sm">Live
             </small>
-            <small t-if="not track.website_published and is_event_user and track.stage_id.is_accepted"
+            <small t-if="(not track.website_published or track.stage_id.visibility != 'public') and is_event_user"
                    title="Unpublished"
                    class="ml-1 badge badge-danger o_wevent_online_badge_unpublished rounded-sm">Unpublished</small>
-            <small t-if="not track.stage_id.is_accepted" title="Not Accepted"
-                   class="ml-1 badge badge-danger o_wevent_online_badge_unpublished rounded-sm">Not Accepted</small>
             <span t-if="option_track_wishlist">
                 <t t-call="website_event_track.track_widget_reminder">
                     <t t-set="reminder_light" t-value="True"/>
@@ -175,7 +173,7 @@
 
         <div class="o_we_agenda_card_content d-flex flex-column justify-content-center my-1">
             <div class="o_we_agenda_card_title">
-                <t t-if="track.website_published or is_event_user">
+                <t t-if="track.stage_id.is_accessible or is_event_user">
                     <a t-att-href="'/event/%s/track/%s' % (slug(event), slug(track))" class="text-black text-bold">
                         <t t-esc="track.name"/>
                     </a>
