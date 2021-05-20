@@ -94,6 +94,7 @@ class IrActionsReport(models.Model):
     binding_type = fields.Selection(default='report')
     model = fields.Char(required=True, string='Model Name')
     model_id = fields.Many2one('ir.model', string='Model', compute='_compute_model_id', search='_search_model_id')
+    sequence = fields.Integer('Sequence', default=10)
 
     report_type = fields.Selection([
         ('qweb-html', 'HTML'),

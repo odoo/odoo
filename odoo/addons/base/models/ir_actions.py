@@ -125,6 +125,10 @@ class IrActions(models.Model):
         # sort actions by their sequence if sequence available
         if result.get('action'):
             result['action'] = sorted(result['action'], key=lambda vals: vals.get('sequence', 0))
+
+        # sort report actions by their sequence if sequence available
+        if result.get('report'):
+            result['report'] = sorted(result['report'], key=lambda vals: vals.get('sequence', 0))
         return result
 
     @api.model

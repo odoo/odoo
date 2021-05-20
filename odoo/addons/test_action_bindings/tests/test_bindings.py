@@ -28,7 +28,7 @@ class TestActionBindings(common.TransactionCase):
         )
         self.assertItemsEqual(
             bindings['report'],
-            action3.read(['name', 'binding_view_types']),
+            action3.read(['name', 'sequence', 'binding_view_types']),
             "Wrong action bindings",
         )
 
@@ -45,7 +45,7 @@ class TestActionBindings(common.TransactionCase):
         )
         self.assertItemsEqual(
             bindings['report'],
-            action3.read(['name', 'binding_view_types']),
+            action3.read(['name', 'sequence', 'binding_view_types']),
             "Wrong action bindings",
         )
 
