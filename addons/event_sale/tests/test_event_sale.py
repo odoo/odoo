@@ -69,9 +69,7 @@ class EventSaleTest(common.TransactionCase):
 
     def test_01_ticket_price_with_pricelist_and_tax(self):
         self.env.user.partner_id.country_id = False
-        pricelists = self.env['product.pricelist'].search([])
-        pricelist = pricelists[0]
-        (pricelists - pricelist).write({'active': False})
+        pricelist = self.env['product.pricelist'].search([], limit=1)
 
         tax = self.env['account.tax'].create({
             'name': "Tax 10",
@@ -109,8 +107,9 @@ class EventSaleTest(common.TransactionCase):
 
         so = self.env['sale.order'].create({
             'partner_id': self.env.user.partner_id.id,
+            'pricelist_id': pricelist.id,
         })
-        sol = self.env['sale.order.line'].with_context(pricelist=pricelist.id).create({
+        sol = self.env['sale.order.line'].create({
             'name': event.name,
             'product_id': event_product.product_variant_id.id,
             'product_uom_qty': 1,
