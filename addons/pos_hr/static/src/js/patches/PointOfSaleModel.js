@@ -177,6 +177,11 @@ odoo.define('pos_hr.PointOfSaleModel', function (require) {
                 return this._super(...arguments);
             }
         },
+        getOrderJSON(order) {
+            const result = this._super(order);
+            result.employee_id = order.employee_id;
+            return result;
+        },
     });
 
     return PointOfSaleModel;
