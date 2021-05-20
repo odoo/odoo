@@ -12,6 +12,7 @@ import { ComponentAdapter } from "web.OwlCompatibility";
 import { mapDoActionOptionAPI } from "./utils";
 import { setupDebugAction, setupDebugViewForm, setupDebugView } from "./debug_manager";
 import { cleanDomFromBootstrap } from "./utils";
+import { Dialog } from "../core/dialog/dialog";
 
 const { Component, tags } = owl;
 
@@ -93,12 +94,13 @@ class ActionAdapter extends ComponentAdapter {
             this.title.setParts({ [part]: title || null });
         } else if (ev.name === "warning") {
             if (payload.type === "dialog") {
-                class WarningDialog extends Component {}
-                WarningDialog.template = tags.xml`
-            <Dialog title="props.title">
-              <t t-esc="props.message"/>
-            </Dialog>
-            `;
+                class WarningDialog extends Dialog {
+                    setup() {
+                        super.setup();
+                        this.title = this.props.title;
+                    }
+                }
+                WarningDialog.bodyTemplate = tags.xml`<t t-esc="props.message"/>`;
                 this.dialogs.open(WarningDialog, {
                     title: payload.title,
                     message: payload.message,

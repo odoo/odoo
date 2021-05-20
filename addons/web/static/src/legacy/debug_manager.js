@@ -4,6 +4,8 @@ import { editModelDebug } from "../core/debug/debug_service";
 import { json_node_to_xml } from "../views/view_utils";
 import { formatMany2one } from "../fields/format";
 import { parseDateTime, formatDateTime } from "../core/l10n/dates";
+import { Dialog } from "../core/dialog/dialog";
+import { _lt } from "../core/l10n/translation";
 
 const { Component, hooks, tags } = owl;
 const { useState } = hooks;
@@ -168,20 +170,14 @@ export function setupDebugAction(accessRights, env, action) {
     return result;
 }
 
-class FieldViewGetDialog extends Component {
-    constructor() {
-        super(...arguments);
-        this.title = this.env._t("Fields View Get");
-    }
-}
-FieldViewGetDialog.template = tags.xml`
-  <Dialog title="title">
-    <pre t-esc="props.arch"/>
-  </Dialog>`;
+class FieldViewGetDialog extends Dialog {}
+FieldViewGetDialog.props = Object.assign({}, Dialog.props, { arch: { type: String } });
+FieldViewGetDialog.bodyTemplate = tags.xml`<pre t-esc="props.arch"/>`;
+FieldViewGetDialog.title = _lt("Fields View Get");
 
-class GetMetadataDialog extends Component {
+class GetMetadataDialog extends Dialog {
     setup() {
-        this.title = this.env._t("View Metadata");
+        super.setup();
         this.state = useState({});
     }
 
@@ -212,12 +208,12 @@ class GetMetadataDialog extends Component {
         this.state.write_date = formatDateTime(parseDateTime(metadata.write_date));
     }
 }
-GetMetadataDialog.template = "web.DebugManager.GetMetadata";
+GetMetadataDialog.bodyTemplate = "web.DebugManager.getMetadataBody";
+GetMetadataDialog.title = _lt("View Metadata");
 
-class SetDefaultDialog extends Component {
-    constructor() {
-        super(...arguments);
-        this.title = this.env._t("Set Default");
+class SetDefaultDialog extends Dialog {
+    setup() {
+        super.setup();
         this.state = {
             fieldToSet: "",
             condition: "",
@@ -356,7 +352,9 @@ class SetDefaultDialog extends Component {
         this.trigger("dialog-closed");
     }
 }
-SetDefaultDialog.template = "web.DebugManager.SetDefault";
+SetDefaultDialog.bodyTemplate = "web.DebugManager.setDefaultBody";
+SetDefaultDialog.footerTemplate = "web.DebugManager.SetDefaultFooter";
+SetDefaultDialog.title = _lt("Set Default");
 
 export function setupDebugView(accessRights, env, component, action) {
     const viewId = component.props.viewInfo.view_id;

@@ -6,26 +6,22 @@
             <div class="o_dialog">
                 <div role="dialog" class="modal"
                     tabindex="-1"
-                    t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
+                    t-att-class="{ o_technical_modal: technical, o_modal_full: fullscreen }"
                     t-ref="modal"
                     >
-                    <div class="modal-dialog" t-att-class="props.size">
-                        <div class="modal-content" t-att-class="props.contentClass">
-                            <header t-if="props.renderHeader" class="modal-header">
+                    <div class="modal-dialog" t-att-class="size">
+                        <div class="modal-content" t-att-class="contentClass">
+                            <header t-if="renderHeader" class="modal-header">
                                 <h4 class="modal-title">
-                                    <t t-esc="props.title"/>
+                                    <t t-esc="title"/>
                                 </h4>
                                 <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="close">×</button>
                             </header>
                             <main class="modal-body">
-                                <t t-slot="default"/>
+                                <t t-call="{{ constructor.bodyTemplate }}"/>
                             </main>
-                            <footer t-if="props.renderFooter" class="modal-footer">
-                                <t t-slot="buttons">
-                                    <button class="btn btn-primary" t-on-click="close">
-                                        <t>Ok</t>
-                                    </button>
-                                </t>
+                            <footer t-if="renderFooter" class="modal-footer">
+                                <t t-call="{{ constructor.footerTemplate }}" />
                             </footer>
                         </div>
                     </div>
@@ -34,4 +30,9 @@
         </Portal>
     </t>
 
+    <t t-name="web.DialogFooterDefault" owl="1">
+        <button class="btn btn-primary" t-on-click="close">
+            <t>Ok</t>
+        </button>
+    </t>
 </templates>

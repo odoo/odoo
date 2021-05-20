@@ -1,37 +1,30 @@
 /** @odoo-module */
 
-export class ConfirmationDialog extends owl.Component {
-    _close() {
-        this.trigger("dialog-closed");
-    }
+import { Dialog } from "../dialog/dialog";
 
+export class ConfirmationDialog extends Dialog {
+    setup() {
+        super.setup();
+        this.title = this.props.title;
+    }
     _cancel() {
         if (this.props.cancel) {
             this.props.cancel();
         }
-        this._close();
+        this.close();
     }
 
     _confirm() {
         this.props.confirm();
-        this._close();
-    }
-
-    get dialogProps() {
-        const propsArray = Object.entries(this.props).filter(
-            ([k, v]) => !(k in this.constructor.props)
-        );
-
-        const props = {};
-        propsArray.forEach(([k, v]) => {
-            props[k] = v;
-        });
-        return props;
+        this.close();
     }
 }
 ConfirmationDialog.props = {
+    title: String,
+    body: String,
     confirm: Function,
     cancel: Function,
 };
 
-ConfirmationDialog.template = "web.ConfirmationDialog";
+ConfirmationDialog.bodyTemplate = "web.ConfirmationDialogBody";
+ConfirmationDialog.footerTemplate = "web.ConfirmationDialogFooter";

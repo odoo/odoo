@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
+import { Dialog } from "../../core/dialog/dialog";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
-
-const { Component } = owl;
+import { _lt } from "../../core/l10n/translation";
 
 function documentationItem(env) {
     const documentationURL = "https://www.odoo.com/documentation/14.0";
@@ -33,8 +33,9 @@ function supportItem(env) {
     };
 }
 
-class ShortCutsDialog extends Component {}
-ShortCutsDialog.template = "web.UserMenu.ShortCutsDialog";
+class ShortCutsDialog extends Dialog {}
+ShortCutsDialog.bodyTemplate = "web.UserMenu.shortcutsTable";
+ShortCutsDialog.title = _lt("Shortcuts");
 
 function shortCutsItem(env) {
     return {
@@ -42,8 +43,7 @@ function shortCutsItem(env) {
         id: "shortcuts",
         description: env._t("Shortcuts"),
         callback: () => {
-            const title = env._t("Shortcuts");
-            env.services.dialog.open(ShortCutsDialog, { title });
+            env.services.dialog.open(ShortCutsDialog);
         },
         sequence: 30,
     };
