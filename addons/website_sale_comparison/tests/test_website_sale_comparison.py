@@ -141,7 +141,7 @@ class TestUi(odoo.tests.HttpCase):
         self.assertEqual(text_varieties.replace(' ', '').replace('\n', ''), "GrapeVarietiesCabernetSauvignon,Merlot,CabernetFranc,PetitVerdot")
 
         # Case compare page
-        res = self.url_open('/shop/compare/?products=%s' % ','.join(str(id) for id in self.variants_margaux.ids))
+        res = self.url_open('/shop/compare?products=%s' % ','.join(str(id) for id in self.variants_margaux.ids))
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
 

@@ -90,7 +90,7 @@
                 <t t-if="alt_product_variant_id" t-set="id_list" t-value="id_list + [alt_product_variant_id]"/>
             </t>
             <t t-set="ids" t-value="','.join([str(id) for id in id_list])"/>
-            <div><span class='h3'>Suggested alternatives: </span><a t-if="len(id_list) > 1 and is_view_active('website_sale_comparison.add_to_compare')" role="button" class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
+            <div><span class='h3'>Suggested alternatives: </span><a t-if="len(id_list) > 1 and is_view_active('website_sale_comparison.add_to_compare')" role="button" class="btn btn-primary" t-attf-href="/shop/compare?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
         </xpath>
     </template>
 
