@@ -397,8 +397,12 @@ class IrFieldsConverter(models.AbstractModel):
             raise ValueError(
                 _(u"Can not create Many-To-One records indirectly, import the field separately"))
         if len(fieldset) > 1:
-            raise ValueError(
-                _(u"Ambiguous specification for field '%(field)s', only provide one of name, external id or database id"))
+            # Adiciona o .id como preferencia
+            if '.id' in fieldset:
+                fieldset = {'.id'}
+            else:
+                raise ValueError(
+                    _(u"Ambiguous specification for field '%(field)s', only provide one of name, external id or database id"))
 
         # only one field left possible, unpack
         [subfield] = fieldset
