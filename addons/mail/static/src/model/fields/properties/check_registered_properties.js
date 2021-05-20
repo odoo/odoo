@@ -33,6 +33,11 @@ function checkRegisteredProperty({ registeredProperty }) {
                 if (!(value instanceof Set)) {
                     throw new Error(`"excludedProperties" should be a Set`);
                 }
+                for (const propertyName of value) {
+                    if (typeof propertyName !== 'string') {
+                        throw new Error(`"excludedProperties" should only contain strings (which are names of other properties)`);
+                    }
+                }
                 break;
             case 'isInstanceMethodName':
                 if (typeof value !== "boolean") {
@@ -44,6 +49,21 @@ function checkRegisteredProperty({ registeredProperty }) {
                     throw new Error(`"isModelName" should be a boolean`);
                 }
                 break;
+            case 'isArray':
+                if (typeof value !== "boolean") {
+                    throw new Error(`"isArray" should be a boolean`);
+                }
+                break;
+            case 'isArrayOfFieldNames':
+                if (typeof value !== "boolean") {
+                    throw new Error(`"isArrayOfFieldNames" should be a boolean`);
+                }
+                break;
+            case 'isFieldName':
+                if (typeof value !== "boolean") {
+                    throw new Error(`"isFieldName" should be a boolean`);
+                }
+                break;
             case 'isString':
                 if (typeof value !== "boolean") {
                     throw new Error(`"isString" should be a boolean`);
@@ -53,9 +73,21 @@ function checkRegisteredProperty({ registeredProperty }) {
                 if (!(value instanceof Set)) {
                     throw new Error(`"requiredProperties" should be a Set`);
                 }
+                for (const subValue of value) {
+                    if (typeof subValue !== 'string' && !(subValue instanceof Set)) {
+                        throw new Error(`"requiredProperties" should only contain strings (which are names of other properties) or Set of strings`);
+                    }
+                    if (subValue instanceof Set) {
+                        for (const propertyName of subValue) {
+                            if (typeof propertyName !== 'string') {
+                                throw new Error(`"requiredProperties" inner Set should only contain strings (which are names of other properties)`);
+                            }
+                        }
+                    }
+                }
                 break;
             default:
-                throw new Error(`key "${key}" is not allowed. Maybe check for typos? Allowed keys: "excludedProperties", "isInstanceMethodName", "isModelName", "isString", "requiredProperties".`);
+                throw new Error(`key "${key}" is not allowed. Maybe check for typos? Allowed keys: "excludedProperties", "isInstanceMethodName", "isModelName", "isArray", "isArrayOfFieldNames", "isFieldName", "isString", "requiredProperties".`);
         }
     }
 }

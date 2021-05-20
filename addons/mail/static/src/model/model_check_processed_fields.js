@@ -1,9 +1,6 @@
 /** @odoo-module **/
 
 import { InvalidFieldError } from '@mail/model/model_errors';
-import { checkComputeProperty } from '@mail/model/fields/properties/compute/check_compute_property';
-import { checkIsOnChangeProperty } from '@mail/model/fields/properties/is_on_change/check_isonchange_property';
-import { checkRelatedProperty } from '@mail/model/fields/properties/related/check_related_property';
 
 /**
  * @param {Object} param0
@@ -40,19 +37,19 @@ function checkProcessedFieldsOnModel({ Models, env, Model, field }) {
     //         checkRelationField({ Models, Model, field });
     //         break;
     // }
-    if (field.compute) {
-        checkComputeProperty({ Model, field });
-    }
+    // if (field.compute) {
+    //     checkComputeProperty({ Model, field });
+    // }
     // TODO SEB breaking because of dependencies added on non-compute fields
     // if (field.dependencies) {
     //     checkDependenciesProperty({ Models, Model, field });
     // }
-    if (field.isOnChange) {
-        checkIsOnChangeProperty({ Model, field });
-    }
-    if (field.related) {
-        checkRelatedProperty({ Models, Model, field });
-    }
+    // if (field.isOnChange) {
+    //     checkIsOnChangeProperty({ Model, field });
+    // }
+    // if (field.related) {
+    //     checkRelatedProperty({ Models, Model, field });
+    // }
     if (field.compute && field.related) {
         throw new InvalidFieldError({
             modelName: Model.modelName,

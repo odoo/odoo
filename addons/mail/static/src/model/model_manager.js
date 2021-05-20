@@ -620,8 +620,8 @@ class ModelManager {
     _makeInverseRelationField(Model, field) {
         const relFunc =
             (field.isMany2X && field.isX2Many) ? ModelField.many2many
-            : (field.isOne2X && field.isX2Many) ? ModelField.one2many
-            : (field.isMany2X && field.isX2One) ? ModelField.many2one
+            : (field.isMany2X && field.isX2One) ? ModelField.one2many
+            : (field.isOne2X && field.isX2Many) ? ModelField.many2one
             : (field.isOne2X && field.isX2One) ? ModelField.one2one
             : undefined;
         if (!relFunc) {

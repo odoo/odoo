@@ -37,7 +37,7 @@ function checkRegisteredType({ env, registeredType }) {
                     throw new Error(`"nameOfAvailableProperties" should be a Set`);
                 }
                 for (const availableProperty of value) {
-                    if (!env.modelManager.fieldPropertyRegistry.has(availableProperty)) {
+                    if (!env.modelManager.fieldPropertyRegistry.get(availableProperty)) {
                         throw new Error(`Property "${availableProperty}" from "nameOfAvailableProperties" is not registerd. Maybe check for typos? Registered properties: ${[...env.modelManager.fieldPropertyRegistry.keys()].join(", ")}.`);
                     }
                 }
@@ -47,8 +47,8 @@ function checkRegisteredType({ env, registeredType }) {
                     throw new Error(`"nameOfRequiredProperties" should be a Set`);
                 }
                 for (const requiredProperty of value) {
-                    if (!env.modelManager.fieldPropertyRegistry.has(requiredProperty)) {
-                        throw new Error(`Property "${requiredProperty}" from "nameOfAvailableProperties" is not registerd. Maybe check for typos? Registered properties: ${[...env.modelManager.fieldPropertyRegistry.keys()].join(", ")}.`);
+                    if (!env.modelManager.fieldPropertyRegistry.get(requiredProperty)) {
+                        throw new Error(`Property "${requiredProperty}" from "nameOfRequiredProperties" is not registerd. Maybe check for typos? Registered properties: ${[...env.modelManager.fieldPropertyRegistry.keys()].join(", ")}.`);
                     }
                 }
                 break;
