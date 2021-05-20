@@ -12,6 +12,7 @@ class CashOpeningPopup extends PosComponent {
         this.state = useState({
             notes: '',
             buffer: this.env.model.formatValue(this.env.model.backStatement.balance_start || 0),
+            toStartOver: true,
         });
         NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',
