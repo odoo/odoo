@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { InvalidFieldError } from '@mail/model/model_errors';
-
 /**
  * @param {Object} param0
  * @param {Object} param0.Models
@@ -51,66 +49,31 @@ function checkProcessedFieldsOnModel({ Models, env, Model, field }) {
     //     checkRelatedProperty({ Models, Model, field });
     // }
     if (field.compute && field.related) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.properties.fieldName,
-            error: `cannot be a related and compute field at the same time`,
-            suggestion: ``,
-        });
+        throw new Error(`cannot be a related and compute field at the same time`);
     }
     if (!field.to) {
         return;
     }
     // TODO SEB check with x2/2x properties
     // if (!field.relationType) {
-    //     throw new InvalidFieldError({
-    //         modelName: Model.modelName,
-    //         fieldName: field.properties.fieldName,
-    //         error: `must define a relation type in "relationType"`,
-    //         suggestion: ``,
-    //     });
+    //     throw new /         error: `must define a relation type in "relationType"`);
     // }
     // if (!(['one2one', 'one2many', 'many2one', 'many2many'].includes(field.relationType))) {
-    //     throw new InvalidFieldError({
-    //         modelName: Model.modelName,
-    //         fieldName: field.properties.fieldName,
-    //         error: `has invalid relation type "${field.relationType}"`,
-    //         suggestion: ``,
-    //     });
+    //     throw new /         error: `has invalid relation type "${field.relationType}"`);
     // }
     if (!field.inverse) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.properties.fieldName,
-            error: `must define an inverse relation name in "inverse"`,
-            suggestion: ``,
-        });
+        throw new Error(`must define an inverse relation name in "inverse"`);
     }
     const RelatedModel = Models[field.to];
     if (!RelatedModel) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.properties.fieldName,
-            error: `model name does not exist.`,
-            suggestion: ``,
-        });
+        throw new Error(`model name does not exist.`);
     }
     const inverseField = RelatedModel.fields[field.inverse];
     if (!inverseField) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.properties.fieldName,
-            error: `has no inverse field "${RelatedModel.modelName}/${field.inverse}"`,
-            suggestion: ``,
-        });
+        throw new Error(`has no inverse field "${RelatedModel.modelName}/${field.inverse}"`);
     }
     if (inverseField.inverse !== field.fieldName) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.properties.fieldName,
-            error: `inverse field does not match with field name of relation "${RelatedModel.modelName}/${inverseField.inverse}"`,
-            suggestion: ``,
-        });
+        throw new Error(`inverse field does not match with field name of relation "${RelatedModel.modelName}/${inverseField.inverse}"`);
     }
     const allSelfAndParentNames = [];
     let TargetModel = Model;
@@ -119,12 +82,7 @@ function checkProcessedFieldsOnModel({ Models, env, Model, field }) {
         TargetModel = TargetModel.__proto__;
     }
     if (!allSelfAndParentNames.includes(inverseField.to)) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.properties.fieldName,
-            error: `has inverse relation "${RelatedModel.modelName}/${field.inverse}" misconfigured (currently "${inverseField.to}", should instead refer to this model or parented models: ${allSelfAndParentNames.map(name => `"${name}"`).join(', ')}?)`,
-            suggestion: ``,
-        });
+        throw new Error(`has inverse relation "${RelatedModel.modelName}/${field.inverse}" misconfigured (currently "${inverseField.to}", should instead refer to this model or parented models: ${allSelfAndParentNames.map(name => `"${name}"`).join(', ')}?)`);
     }
     // if (
     //     (field.relationType === 'many2many' && inverseField.relationType !== 'many2many') ||
@@ -132,11 +90,6 @@ function checkProcessedFieldsOnModel({ Models, env, Model, field }) {
     //     (field.relationType === 'one2many' && inverseField.relationType !== 'many2one') ||
     //     (field.relationType === 'many2one' && inverseField.relationType !== 'one2many')
     // ) {
-    //     throw new InvalidFieldError({
-    //         modelName: Model.modelName,
-    //         fieldName: field.properties.fieldName,
-    //         error: `Mismatch relations types "${Model.modelName}/${field.fieldName}" (${field.relationType}) and "${RelatedModel.modelName}/${field.inverse}" (${inverseField.relationType})`,
-    //         suggestion: ``,
-    //     });
+    //     throw new /         error: `Mismatch relations types "${Model.modelName}/${field.fieldName}" (${field.relationType}) and "${RelatedModel.modelName}/${field.inverse}" (${inverseField.relationType})`);
     // }
 }

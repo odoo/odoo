@@ -5,7 +5,6 @@ import { checkRegisteredTypes } from '@mail/model/fields/types/check_registered_
 import { checkDeclaredModels } from '@mail/model/model_check_declared_models';
 import { checkProcessedFieldsOnModels } from '@mail/model/model_check_processed_fields';
 import { registry } from '@mail/model/model_core';
-import { InvalidFieldError } from '@mail/model/model_errors';
 import ModelField from '@mail/model/model_field';
 import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
 import { unlinkAll } from '@mail/model/model_field_command';
@@ -294,12 +293,7 @@ class ModelManager {
     _applyModelPatchFields(Model, patchName, patch) {
         for (const [fieldName, field] of Object.entries(patch)) {
             if (Model.fields[fieldName]) {
-                throw new InvalidFieldError({
-                    modelName: Model.modelName,
-                    fieldName,
-                    error: `invalid field patch "${patchName}" because the field already exists`,
-                    suggestion: `don't patch an existing field`,
-                });
+                throw new Error(`Invalid field patch "${patchName}" on "${Model.modelName}/${fieldName}" because the field already exists. Don't patch an existing field.`);
             }
             const deeplyCopiedField = Object.assign({}, field);
             if (deeplyCopiedField.dependencies) {
@@ -514,7 +508,7 @@ class ModelManager {
     /**
      * @private
      * @returns {Object}
-     * @throws {Error|InvalidFieldError} in case it cannot generate models.
+     * @throws {Error} in case it cannot generate models.
      */
     _generateModels() {
         const allNames = Object.keys(registry);
@@ -559,10 +553,6 @@ class ModelManager {
             }
             if (generatedNames.includes(Model.modelName)) {
                 throw new Error(`Duplicate model name "${Model.modelName}" shared on 2 distinct Model classes.`);
-            }
-            // Assign name of fields from Model to fields.
-            for (const [fieldName, field] of Object.entries(Model.fields)) {
-                field.properties.fieldName = fieldName;
             }
             Models[Model.modelName] = Model;
             generatedNames.push(Model.modelName);
@@ -655,11 +645,10 @@ class ModelManager {
         for (const Model of Object.values(Models)) {
             Model.inverseRelations = [];
             // Make fields aware of their field name.
-            for (const fieldDefinition of Object.values(Model.fields)) {
-                const fieldName = fieldDefinition.properties.fieldName;
+            for (const [fieldName, fieldDefinition] of Object.entries(Model.fields)) {
                 Model.fields[fieldName] = new ModelField(Object.assign({}, fieldDefinition.properties, {
                     env: this.env,
-                    modelManager: this,
+                    fieldName,
                 }));
             }
         }

@@ -3,7 +3,6 @@
 import { compute } from '@mail/model/fields/properties/compute/compute';
 import { defaultProperty } from '@mail/model/fields/properties/default/default';
 import { dependencies } from '@mail/model/fields/properties/dependencies/dependencies';
-import { fieldName } from '@mail/model/fields/properties/field_name/field_name';
 import { inverse } from '@mail/model/fields/properties/inverse/inverse';
 import { isCausal } from '@mail/model/fields/properties/is_causal/is_causal';
 import { isMany2X } from '@mail/model/fields/properties/is_many2x/is_many2x';
@@ -24,7 +23,6 @@ export function generateTypicalRegistries() {
             ['compute', compute],
             ['default', defaultProperty],
             ['dependencies', dependencies],
-            ['fieldName', fieldName],
             ['inverse', inverse],
             ['isCausal', isCausal],
             ['isMany2X', isMany2X],

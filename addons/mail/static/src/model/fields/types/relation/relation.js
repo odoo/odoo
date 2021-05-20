@@ -2,7 +2,6 @@
 
 export const relation = new Map([
     ['nameOfAvailableProperties', new Set([
-        'fieldName',
         'compute',
         'default',
         'dependencies',
@@ -18,7 +17,6 @@ export const relation = new Map([
         'to',
     ])],
     ['nameOfRequiredProperties', new Set([
-        'fieldName',
         'to',
     ])],
 ]);

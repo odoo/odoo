@@ -59,11 +59,6 @@ function checkRegisteredProperty({ registeredProperty }) {
                     throw new Error(`"isArrayOfFieldNames" should be a boolean`);
                 }
                 break;
-            case 'isFieldName':
-                if (typeof value !== "boolean") {
-                    throw new Error(`"isFieldName" should be a boolean`);
-                }
-                break;
             case 'isRelationNameDotFieldName':
                 if (typeof value !== "boolean") {
                     throw new Error(`"isRelationNameDotFieldName" should be a boolean`);
@@ -97,7 +92,7 @@ function checkRegisteredProperty({ registeredProperty }) {
                 }
                 break;
             default:
-                throw new Error(`key "${key}" is not allowed. Maybe check for typos? Allowed keys: "excludedProperties", "isInstanceMethodName", "isModelName", "isArray", "isArrayOfFieldNames", "isFieldName", "isRelationNameDotFieldName", "isString", "isStringWithTwoPartsSeparatedByDot", "requiredProperties".`);
+                throw new Error(`key "${key}" is not allowed. Maybe check for typos? Allowed keys: "excludedProperties", "isInstanceMethodName", "isModelName", "isArray", "isArrayOfFieldNames", "isRelationNameDotFieldName", "isString", "isStringWithTwoPartsSeparatedByDot", "requiredProperties".`);
         }
     }
 }

@@ -5,13 +5,9 @@ export const attribute = new Map([
         'compute',
         'default',
         'dependencies',
-        'fieldName',
         'isOnChange',
         'readonly',
         'related',
         'required',
-    ])],
-    ['nameOfRequiredProperties', new Set([
-        'fieldName',
     ])],
 ]);
