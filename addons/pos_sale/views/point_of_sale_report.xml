@@ -9,7 +9,12 @@
                         <t t-set="sale_order" t-value="o.pos_order_ids[0].lines.mapped('sale_order_origin_id')"/>
                         <t t-foreach="sale_order.order_line" t-as="sale_order_line">
                             <t t-if="sale_order_line.product_id != down_payment_product">
-                                <div><span t-esc="sale_order_line.name" style="margin-right:10px"/> <t t-esc="int(sale_order_line.product_uom_qty)"/> x <t t-esc="sale_order_line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></div>
+                                <div>
+                                    <span t-esc="int(sale_order_line.product_uom_qty)" style="margin-right: 5px;"/>
+                                    <span t-esc="sale_order_line.name" />
+                                    <span style="margin: 0px 5px;">:</span>
+                                    <t t-esc="sale_order_line.price_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </div>
                             </t>
                         </t>
                         <div style="font-weight: bold">From <t t-esc="sale_order.name"/> </div>
