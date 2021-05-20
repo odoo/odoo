@@ -149,6 +149,7 @@ function checkAvailabilityOfProperty({ env, fieldDefinition, propertyName }) {
  */
 function checkDeclaredProperty({ env, fieldDefinition, Models, Model, propertyName }) {
     const propertyDefinition = env.modelManager.fieldPropertyRegistry.get(propertyName);
+    const propertyValue = fieldDefinition.properties[propertyName];
     if (propertyDefinition.get('requiredProperties')) {
         checkPresenceOfSiblingProperties({ env, fieldDefinition, propertyName });
     }
@@ -156,25 +157,25 @@ function checkDeclaredProperty({ env, fieldDefinition, Models, Model, propertyNa
         checkAbsenceOfSiblingProperties({ env, fieldDefinition, propertyName });
     }
     if (propertyDefinition.get('isString')) {
-        checkPropertyIsString({ fieldDefinition, propertyName });
+        checkPropertyIsString({ propertyValue });
     }
     if (propertyDefinition.get('isArray')) {
-        checkPropertyIsArray({ fieldDefinition, propertyName });
+        checkPropertyIsArray({ propertyValue });
     }
     if (propertyDefinition.get('isArrayOfFieldNames')) {
-        checkPropertyIsArrayOfFieldNames({ Models, fieldDefinition, Model, propertyName });
+        checkPropertyIsArrayOfFieldNames({ Models, Model, propertyValue });
     }
     if (propertyDefinition.get('isInstanceMethodName')) {
-        checkPropertyIsInstanceMethodName({ fieldDefinition, Model, propertyName });
+        checkPropertyIsInstanceMethodName({ Model, propertyValue });
     }
     if (propertyDefinition.get('isModelName')) {
-        checkPropertyIsModelName({ fieldDefinition, Models, propertyName });
+        checkPropertyIsModelName({ Models, propertyValue });
     }
     if (propertyDefinition.get('isStringWithTwoPartsSeparatedByDot')) {
-        checkPropertyIsStringWithTwoPartsSeparatedByDot({ fieldDefinition, propertyName });
+        checkPropertyIsStringWithTwoPartsSeparatedByDot({ propertyValue });
     }
     if (propertyDefinition.get('isRelationNameDotFieldName')) {
-        checkPropertyIsRelationNameDotFieldName({ fieldDefinition, Models, Model, propertyName });
+        checkPropertyIsRelationNameDotFieldName({ fieldDefinition, Models, Model, propertyValue });
     }
 }
 
@@ -191,7 +192,7 @@ function checkPresenceOfSiblingProperties({ env, fieldDefinition, propertyName }
         const nameOfPossibleProperties = (requiredPropertyName instanceof Set)
             ? [...requiredPropertyName]
             : [requiredPropertyName];
-        if (!nameOfPossibleProperties.some(propertyName => fieldDefinition.properties[propertyName])) {
+        if (!nameOfPossibleProperties.some(name => fieldDefinition.properties[name])) {
             if (nameOfPossibleProperties.length === 1) {
                 throw new Error(`Property "${nameOfPossibleProperties[0]}" is required together with the current property. Add the missing property, or check for typos in its name, or remove the current property.`);
             }
@@ -218,26 +219,24 @@ function checkAbsenceOfSiblingProperties({ env, fieldDefinition, propertyName })
 
 /**
  * @param {Object} param0
- * @param {Object} param0.fieldDefinition field being currently checked
- * @param {string} param0.propertyName name of the property being currently checked
+ * @param {any} param0.propertyValue
  * @throws {Error}
  */
-function checkPropertyIsArray({ fieldDefinition, propertyName }) {
-    if (!Array.isArray(fieldDefinition.properties[propertyName])) {
-        throw new Error(`Value "${fieldDefinition.properties[propertyName]}" should be Array. Check for syntax error.`);
+function checkPropertyIsArray({ propertyValue }) {
+    if (!Array.isArray(propertyValue)) {
+        throw new Error(`Value "${propertyValue}" should be Array. Check for syntax error.`);
     }
 }
 
 /**
  * @param {Object} param0
- * @param {Object} param0.fieldDefinition field being currently checked
  * @param {Object} param0.Models all existing models
  * @param {Object} param0.Model model being currently checked
- * @param {string} param0.propertyName name of the property being currently checked
+ * @param {any} param0.propertyValue
  * @throws {Error}
  */
-function checkPropertyIsArrayOfFieldNames({ Models, fieldDefinition, Model, propertyName }) {
-    for (const fieldName of fieldDefinition.properties[propertyName]) {
+function checkPropertyIsArrayOfFieldNames({ Models, Model, propertyValue }) {
+    for (const fieldName of propertyValue) {
         const fields = getMatchingFieldsDefinitionFromParents({ Models, Model, fieldName });
         if (fields.size === 0) {
             throw new Error(`Element of value "${fieldName}" does not target a field of current model. Ensure only field names of current model are provided, or check for typos.`);
@@ -247,52 +246,48 @@ function checkPropertyIsArrayOfFieldNames({ Models, fieldDefinition, Model, prop
 
 /**
  * @param {Object} param0
- * @param {Object} param0.fieldDefinition field being currently checked
  * @param {Object} param0.Models all existing models
- * @param {string} param0.propertyName name of the property being currently checked
+ * @param {string} param0.propertyValue
  * @throws {Error}
  */
-function checkPropertyIsModelName({ Models, fieldDefinition, propertyName }) {
-    if (!Models[fieldDefinition.properties[propertyName]]) {
-        throw new Error(`Value "${fieldDefinition.properties[propertyName]}" does not target a model name. Target a registered model, or check for typos.`);
+function checkPropertyIsModelName({ Models, propertyValue }) {
+    if (!Models[propertyValue]) {
+        throw new Error(`Value "${propertyValue}" does not target a model name. Target a registered model, or check for typos.`);
     }
 }
 
 /**
  * @param {Object} param0
- * @param {Object} param0.fieldDefinition field being currently checked
- * @param {string} param0.propertyName name of the property being currently checked
+ * @param {any} param0.propertyValue
  * @throws {Error}
  */
-function checkPropertyIsString({ fieldDefinition, propertyName }) {
-    if (typeof fieldDefinition.properties[propertyName] !== 'string') {
-        throw new Error(`Value "${fieldDefinition.properties[propertyName]}" should be string. Check for syntax error.`);
+function checkPropertyIsString({ propertyValue }) {
+    if (typeof propertyValue !== 'string') {
+        throw new Error(`Value "${propertyValue}" should be string. Check for syntax error.`);
     }
 }
 
 /**
  * @param {Object} param0
- * @param {Object} param0.fieldDefinition field being currently checked
  * @param {Object} param0.Model model being currently checked
- * @param {string} param0.propertyName name of the property being currently checked
+ * @param {string} param0.propertyValue
  * @throws {Error}
  */
-function checkPropertyIsInstanceMethodName({ fieldDefinition, Model, propertyName }) {
-    if (!(Model.prototype[fieldDefinition.properties[propertyName]])) {
-        throw new Error(`Value "${fieldDefinition.properties[propertyName]}" targets to unknown method. Ensure the name of an instance method of this model is given, or check for typos.`);
+function checkPropertyIsInstanceMethodName({ Model, propertyValue }) {
+    if (!(Model.prototype[propertyValue])) {
+        throw new Error(`Value "${propertyValue}" targets to unknown method. Ensure the name of an instance method of this model is given, or check for typos.`);
     }
 }
 
 /**
  * @param {Object} param0
- * @param {Object} param0.fieldDefinition field being currently checked
- * @param {string} param0.propertyName name of the property being currently checked
+ * @param {string} param0.propertyValue
  * @throws {Error}
  */
-function checkPropertyIsStringWithTwoPartsSeparatedByDot({ fieldDefinition, propertyName }) {
-    const [part1, part2, part3] = fieldDefinition.properties[propertyName].split('.');
+function checkPropertyIsStringWithTwoPartsSeparatedByDot({ propertyValue }) {
+    const [part1, part2, part3] = propertyValue.split('.');
     if (!part1 || !part2 || part3) {
-        throw new Error(`Value "${fieldDefinition.properties[propertyName]}" should be a 2 parts string separared by a single dot. Follow the expected format, or check for typos`);
+        throw new Error(`Value "${propertyValue}" should be a 2 parts string separared by a single dot. Follow the expected format, or check for typos`);
     }
 }
 
@@ -301,11 +296,11 @@ function checkPropertyIsStringWithTwoPartsSeparatedByDot({ fieldDefinition, prop
  * @param {Object} param0.fieldDefinition field being currently checked
  * @param {Object} param0.Models all existing models
  * @param {Object} param0.Model model being currently checked
- * @param {string} param0.propertyName name of the property being currently checked
+ * @param {string} param0.propertyValue
  * @throws {Error}
  */
-function checkPropertyIsRelationNameDotFieldName({ fieldDefinition, Models, Model, propertyName }) {
-    const [relationName, relatedName] = fieldDefinition.properties[propertyName].split('.');
+function checkPropertyIsRelationNameDotFieldName({ fieldDefinition, Models, Model, propertyValue }) {
+    const [relationName, relatedName] = propertyValue.split('.');
     const relationFields = getMatchingFieldsDefinitionFromParents({ Models, Model, fieldName: relationName });
     if (relationFields.size === 0) {
         throw new Error(`Undefined relation "${relationName}". Target a field on the current model, or check for typos.`);
