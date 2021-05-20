@@ -53,6 +53,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         'phone', 'probability', 'expected_revenue', 'street', 'street2', 'zip',
         'create_date', 'date_action_last', 'email_from', 'email_cc', 'website'
     ]
+    merge_fields = ['description', 'type', 'priority']
 
     @classmethod
     def setUpClass(cls):
@@ -210,6 +211,21 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'zip': '87654',
         })
 
+        # test activities
+        cls.activity_type_1 = cls.env['mail.activity.type'].create({
+            'name': 'Lead Test Activity 1',
+            'summary': 'ACT 1 : Presentation, barbecue, ... ',
+            'res_model_id': cls.env['ir.model']._get('crm.crm_lead').id,
+            'category': 'meeting',
+            'delay_count': 5,
+        })
+        cls.env['ir.model.data'].create({
+            'name': cls.activity_type_1.name.lower().replace(' ', '_'),
+            'module': 'crm',
+            'model': cls.activity_type_1._name,
+            'res_id': cls.activity_type_1.id,
+        })
+
     def _create_leads_batch(self, lead_type='lead', count=10, email_dup_count=0,
                             partner_count=0, partner_ids=None, user_ids=None,
                             country_ids=None, probabilities=None):
@@ -361,12 +377,11 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         self.assertIn(opportunity, leads)
 
         # save opportunity value before being modified by merge process
-        fields_all = self.FIELDS_FIRST_SET + ['description', 'type', 'priority']
-        # ensure tests are synchronized with crm code
-        self.assertTrue(all(field in fields_all for field in CRM_LEAD_FIELDS_TO_MERGE + list(self.env['crm.lead']._merge_get_fields_specific().keys())))
+        fields_all = self.FIELDS_FIRST_SET + self.merge_fields
         original_opp_values = dict(
             (fname, opportunity[fname])
             for fname in fields_all
+            if fname in opportunity
         )
 
         def _find_value(lead, fname):
@@ -390,6 +405,13 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             values = [_find_value(lead, 'priority') for lead in leads]
             return max(values)
 
+        def _aggregate(fname):
+            if isinstance(self.env['crm.lead'][fname], models.BaseModel):
+                values = leads.mapped(fname)
+            else:
+                values = [_find_value(lead, fname) for lead in leads]
+            return values
+
         try:
             # merge process will modify opportunity
             yield
@@ -400,6 +422,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
             # classic fields: first not void wins or specific computation
             for fname in fields_all:
+                if fname not in opportunity:  # not all fields available when doing -u
+                    continue
                 opp_value = opportunity[fname]
                 if fname == 'description':
                     self.assertEqual(opp_value, _get_description())
@@ -407,6 +431,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
                     self.assertEqual(opp_value, _get_type())
                 elif fname == 'priority':
                     self.assertEqual(opp_value, _get_priority())
+                elif fname in ('order_ids', 'visitor_ids'):
+                    self.assertEqual(opp_value, _aggregate(fname))
                 else:
                     self.assertEqual(
                         opp_value if opp_value or not isinstance(opp_value, models.BaseModel) else False,

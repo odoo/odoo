@@ -225,7 +225,8 @@ class Lead(models.Model):
         'crm.lost.reason', string='Lost Reason',
         index=True, ondelete='restrict', tracking=True)
     # Statistics
-    meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
+    calendar_event_ids = fields.One2many('calendar.event', 'opportunity_id', string='Meetings')
+    calendar_event_count = fields.Integer('# Meetings', compute='_compute_calendar_event_count')
     duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead", context={"active_test": False})
     duplicate_lead_count = fields.Integer(compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead Count")
     # UX
@@ -504,7 +505,7 @@ class Lead(models.Model):
         for lead in self:
             lead.recurring_revenue_monthly_prorated = (lead.recurring_revenue_monthly or 0.0) * (lead.probability or 0) / 100.0
 
-    def _compute_meeting_count(self):
+    def _compute_calendar_event_count(self):
         if self.ids:
             meeting_data = self.env['calendar.event'].sudo().read_group([
                 ('opportunity_id', 'in', self.ids)
@@ -513,7 +514,7 @@ class Lead(models.Model):
         else:
             mapped_data = dict()
         for lead in self:
-            lead.meeting_count = mapped_data.get(lead.id, 0)
+            lead.calendar_event_count = mapped_data.get(lead.id, 0)
 
     @api.depends('email_from', 'partner_id', 'contact_name', 'partner_name')
     def _compute_potential_lead_duplicates(self):
@@ -1310,62 +1311,6 @@ class Lead(models.Model):
         message_body = "\n\n".join(message_bodies)
         return self.message_post(body=message_body, subject=subject)
 
-    def _merge_opportunity_history(self, opportunities):
-        """ Move mail.message from the given opportunities to the current one. `self` is the
-            crm.lead record destination for message of `opportunities`.
-
-        :param opportunities: see ``_merge_dependences``
-        """
-        self.ensure_one()
-        for opportunity in opportunities:
-            for message in opportunity.message_ids:
-                if message.subject:
-                    subject = _("From %(source_name)s : %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
-                else:
-                    subject = _("From %(source_name)s", source_name=opportunity.name)
-                message.write({
-                    'res_id': self.id,
-                    'subject': subject,
-                })
-        return True
-
-    def _merge_opportunity_attachments(self, opportunities):
-        """ Move attachments of given opportunities to the current one `self`, and rename
-            the attachments having same name than native ones.
-
-        :param opportunities: see ``_merge_dependences``
-        """
-        self.ensure_one()
-
-        # return attachments of opportunity
-        def _get_attachments(opportunity_id):
-            return self.env['ir.attachment'].search([('res_model', '=', self._name), ('res_id', '=', opportunity_id)])
-
-        first_attachments = _get_attachments(self.id)
-        # counter of all attachments to move. Used to make sure the name is different for all attachments
-        count = 1
-        for opportunity in opportunities:
-            attachments = _get_attachments(opportunity.id)
-            for attachment in attachments:
-                values = {'res_id': self.id}
-                for attachment_in_first in first_attachments:
-                    if attachment.name == attachment_in_first.name:
-                        values['name'] = "%s (%s)" % (attachment.name, count)
-                count += 1
-                attachment.write(values)
-        return True
-
-    def _merge_dependences(self, opportunities):
-        """ Merge dependences (messages, attachments, ...). These dependences will be
-            transfered to `self`, the most important lead.
-
-        :param opportunities : recordset of opportunities to transfer. Does not
-          include `self` which is the target crm.lead being the result of the merge.
-        """
-        self.ensure_one()
-        self._merge_opportunity_history(opportunities)
-        self._merge_opportunity_attachments(opportunities)
-
     def merge_opportunity(self, user_id=False, team_id=False, auto_unlink=True):
         """ Merge opportunities in one. Different cases of merge:
                 - merge leads together = 1 new lead
@@ -1438,6 +1383,88 @@ class Lead(models.Model):
 
     def _merge_get_fields(self):
         return list(CRM_LEAD_FIELDS_TO_MERGE) + list(self._merge_get_fields_specific().keys())
+
+    def _merge_dependences(self, opportunities):
+        """ Merge dependences (messages, attachments,activities, calendar events,
+        ...). These dependences will be transfered to `self` considered as the
+        master lead.
+
+        :param opportunities : recordset of opportunities to transfer. Does not
+          include `self` which is the target crm.lead being the result of the
+          merge;
+        """
+        self.ensure_one()
+        self._merge_dependences_history(opportunities)
+        self._merge_dependences_attachments(opportunities)
+        self._merge_dependences_calendar_events(opportunities)
+
+    def _merge_dependences_history(self, opportunities):
+        """ Move history from the given opportunities to the current one. `self`
+        is the crm.lead record destination for message of `opportunities`.
+
+        This method moves
+          * messages
+          * activities
+
+        :param opportunities: see ``_merge_dependences``
+        """
+        self.ensure_one()
+        for opportunity in opportunities:
+            for message in opportunity.message_ids:
+                if message.subject:
+                    subject = _("From %(source_name)s : %(source_subject)s", source_name=opportunity.name, source_subject=message.subject)
+                else:
+                    subject = _("From %(source_name)s", source_name=opportunity.name)
+                message.write({
+                    'res_id': self.id,
+                    'subject': subject,
+                })
+
+        opportunities.activity_ids.write({
+            'res_id': self.id,
+        })
+
+        return True
+
+    def _merge_dependences_attachments(self, opportunities):
+        """ Move attachments of given opportunities to the current one `self`, and rename
+            the attachments having same name than native ones.
+
+        :param opportunities: see ``_merge_dependences``
+        """
+        self.ensure_one()
+
+        all_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', opportunities.ids)
+        ])
+
+        for opportunity in opportunities:
+            attachments = all_attachments.filtered(lambda attach: attach.res_id == opportunity.id)
+            for attachment in attachments:
+                attachment.write({
+                    'res_id': self.id,
+                    'name': _("%(attach_name)s (from %(lead_name)s)",
+                              attach_name=attachment.name,
+                              lead_name=opportunity.name[:20]
+                             )
+                })
+        return True
+
+    def _merge_dependences_calendar_events(self, opportunities):
+        """ Move calender.event from the given opportunities to the current one. `self` is the
+            crm.lead record destination for event of `opportunities`.
+        :param opportunities: see ``merge_dependences``
+        """
+        self.ensure_one()
+        meetings = self.env['calendar.event'].search([('opportunity_id', 'in', opportunities.ids)])
+        return meetings.write({
+            'res_id': self.id,
+            'opportunity_id': self.id,
+        })
+
+    # CONVERT
+    # ----------------------------------------------------------------------
 
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
