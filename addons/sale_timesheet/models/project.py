@@ -255,6 +255,13 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
+    def _get_default_partner_id(self, project, parent):
+        res = super()._get_default_partner_id(project, parent)
+        if not res and project:
+            if project.pricing_type == 'employee_rate':
+                return project.sale_line_employee_ids.sale_line_id.order_partner_id[:1]
+        return res
+
     # override sale_order_id and make it computed stored field instead of regular field.
     sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False,
     domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
@@ -325,14 +332,6 @@ class ProjectTask(models.Model):
     def _compute_has_multi_sol(self):
         for task in self:
             task.has_multi_sol = task.timesheet_ids and task.timesheet_ids.so_line != task.sale_line_id
-
-    @api.onchange('project_id')
-    def _onchange_project(self):
-        if self.project_id and self.project_id.pricing_type != 'task_rate':
-            if not self.partner_id:
-                self.partner_id = self.project_id.partner_id
-            if not self.sale_line_id:
-                self.sale_line_id = self.project_id.sale_line_id
 
     def _get_last_sol_of_customer(self):
         # Get the last SOL made for the customer in the current task where we need to compute

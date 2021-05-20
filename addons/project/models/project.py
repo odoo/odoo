@@ -178,6 +178,7 @@ class Project(models.Model):
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Phone", readonly=False, store=True, copy=False)
+    commercial_partner_id = fields.Many2one(related="partner_id.commercial_partner_id")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
@@ -530,6 +531,14 @@ class Task(models.Model):
     _mail_post_access = 'read'
     _order = "priority desc, sequence, id desc"
     _check_company_auto = True
+
+    @api.model
+    def _get_default_partner_id(self, project=None, parent=None):
+        if parent and parent.partner_id:
+            return parent.partner_id.id
+        if project and project.partner_id:
+            return project.partner_id.id
+        return False
 
     def _get_default_stage_id(self):
         """ Gives default stage_id """
@@ -1018,6 +1027,18 @@ class Task(models.Model):
         if 'repeat_weekday' in default_fields:
             vals['repeat_weekday'] = self._fields.get('repeat_weekday').selection[week_start][0]
 
+        if 'partner_id' in vals and not vals['partner_id']:
+            # if the default_partner_id=False or no default_partner_id then we search the partner based on the project and parent
+            project_id = vals.get('project_id')
+            parent_id = vals.get('parent_id', self.env.context.get('default_parent_id'))
+            if project_id or parent_id:
+                partner_id = self._get_default_partner_id(
+                    project_id and self.env['project.project'].browse(project_id),
+                    parent_id and self.env['project.task'].browse(parent_id)
+                )
+                if partner_id:
+                    vals['partner_id'] = partner_id
+
         return vals
 
     @api.model_create_multi
@@ -1136,20 +1157,16 @@ class Task(models.Model):
         for task in self:
             task.user_id = task.user_id or task.parent_id.user_id or self.env.uid
 
-    @api.depends('parent_id.partner_id', 'project_id.partner_id')
+    @api.depends('parent_id', 'project_id', 'display_project_id')
     def _compute_partner_id(self):
+        """ Compute the partner_id when the tasks have no partner_id.
+
+            Use the project partner_id if any, or else the parent task partner_id.
         """
-        If a task has no partner_id, use the project partner_id if any, or else the parent task partner_id.
-        Once the task partner_id has been set:
-            1) if the project partner_id changes, the task partner_id is automatically changed also.
-            2) if the parent task partner_id changes, the task partner_id remains the same.
-        """
-        for task in self:
-            if task.partner_id:
-                if task.project_id.partner_id:
-                    task.partner_id = task.project_id.partner_id
-            else:
-                task.partner_id = task.project_id.partner_id or task.parent_id.partner_id
+        for task in self.filtered(lambda task: not task.partner_id):
+            # When the task has a parent task, the display_project_id can be False or the project choose by the user for this task.
+            project = task.display_project_id if task.parent_id and task.display_project_id else task.project_id
+            task.partner_id = self._get_default_partner_id(project, task.parent_id)
 
     @api.depends('partner_id.email', 'parent_id.email_from')
     def _compute_email_from(self):
