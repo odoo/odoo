@@ -257,6 +257,32 @@ QUnit.module("domain", {}, () => {
         assert.notOk(Domain.and([Domain.FALSE, new Domain([["a", "=", 3]])]).contains({ a: 3 }));
     });
 
+    QUnit.test("invalid domains should not succeed", function (assert) {
+        assert.throws(
+            () => new Domain(["|", ["hr_presence_state", "=", "absent"]]),
+            /invalid domain .* \(missing 1 segment/
+        );
+        assert.throws(
+            () =>
+                new Domain([
+                    "|",
+                    "|",
+                    ["hr_presence_state", "=", "absent"],
+                    ["attendance_state", "=", "checked_in"],
+                ]),
+            /invalid domain .* \(missing 1 segment/
+        );
+        assert.throws(
+            () => new Domain(["|", "|", ["hr_presence_state", "=", "absent"]]),
+            /invalid domain .* \(missing 2 segment\(s\)/
+        );
+        assert.throws(
+            () => new Domain(["&", ["composition_mode", "!=", "mass_post"]]),
+            /invalid domain .* \(missing 1 segment/
+        );
+        assert.throws(() => new Domain(["!"]), /invalid domain .* \(missing 1 segment/);
+    });
+
     // ---------------------------------------------------------------------------
     // Normalization
     // ---------------------------------------------------------------------------

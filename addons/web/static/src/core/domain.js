@@ -10,6 +10,8 @@ import { toPyValue } from "./py_js/py_utils";
  * @typedef {DomainListRepr | string | Domain} DomainRepr
  */
 
+class InvalidDomainError extends Error {}
+
 /**
  * Javascript representation of an Odoo domain
  */
@@ -151,18 +153,26 @@ function normalizeDomainAST(domain, op = "&") {
     if (domain.type !== 4 /* List */) {
         throw new Error("Invalid domain AST");
     }
-    let expected = -1;
+    if (domain.value.length === 0) {
+        return domain;
+    }
+    let expected = 1;
     for (let child of domain.value) {
         if (child.type === 1 /* String */ && (child.value === "&" || child.value === "|")) {
-            expected--;
-        } else if (child.type !== 1 /* String */ || child.value !== "!") {
             expected++;
+        } else if (child.type !== 1 /* String */ || child.value !== "!") {
+            expected--;
         }
     }
     let values = domain.value.slice();
-    while (expected > 0) {
-        expected--;
+    while (expected < 0) {
+        expected++;
         values.unshift({ type: 1 /* String */, value: op });
+    }
+    if (expected > 0) {
+        throw new InvalidDomainError(
+            `invalid domain ${formatAST(domain)} (missing ${expected} segment(s))`
+        );
     }
     return { type: 4 /* List */, value: values };
 }
