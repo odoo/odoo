@@ -10,6 +10,7 @@ var FieldChar = require('web.basic_fields').FieldChar;
 var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
 var fieldRegistry = require('web.field_registry');
 var ListFieldText = require('web.basic_fields').ListFieldText;
+const FieldHtml = require('web_editor.field.html');
 var ListRenderer = require('web.ListRenderer');
 
 var SectionAndNoteListRenderer = ListRenderer.extend({
@@ -95,7 +96,8 @@ var SectionAndNoteFieldOne2Many = FieldOne2Many.extend({
 // and a FieldText for the rest (product and note).
 var SectionAndNoteFieldText = function (parent, name, record, options) {
     var isSection = record.data.display_type === 'line_section';
-    var Constructor = isSection ? FieldChar : ListFieldText;
+    var isNote = record.data.display_type === 'line_note';
+    var Constructor = isSection ? FieldChar : isNote ? FieldHtml : ListFieldText;
     return new Constructor(parent, name, record, options);
 };
 

@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.misc import get_lang
 from odoo.osv import expression
-from odoo.tools import float_is_zero, float_compare, float_round
+from odoo.tools import float_is_zero, float_compare, float_round, html_sanitize
 
 
 class SaleOrderLine(models.Model):
@@ -150,10 +150,17 @@ class SaleOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
-            if values.get('display_type', self.default_get(['display_type'])['display_type']):
+            display_value = values.get('display_type', self.default_get(['display_type'])['display_type'])
+            if display_value:
                 values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom=False, customer_lead=0)
 
             values.update(self._prepare_add_missing_fields(values))
+
+            if display_value == "line_note":
+                values['name'] = html_sanitize(
+                    values['name'], sanitize_attributes=True
+                    # The remaining parameters used are the default ones.
+                )
 
         lines = super().create(vals_list)
         for line in lines:

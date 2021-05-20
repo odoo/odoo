@@ -89,7 +89,7 @@
                             % if line.display_type == 'line_section':
                                 <strong>${line.name}</strong>
                             % elif line.display_type == 'line_note':
-                                <i>${line.name}</i>
+                                <i>${line.name|safe}</i>
                             % endif
                         </td>
                     </tr>

@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
-from odoo.tools import float_compare, date_utils, email_split, email_re
+from odoo.tools import float_compare, date_utils, email_split, email_re, html_sanitize
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -3954,6 +3954,12 @@ class AccountMoveLine(models.Model):
                 })
             else:
                 vals['amount_currency'] = vals.get('amount_currency', 0.0)
+
+            if vals.get('display_type', self.default_get(['display_type'])['display_type']) == "line_note":
+                vals['name'] = html_sanitize(
+                    vals['name'], sanitize_attributes=True
+                    # The remaining parameters used are the default ones.
+                )
 
             if move.is_invoice(include_receipts=True):
                 currency = move.currency_id

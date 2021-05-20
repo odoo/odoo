@@ -627,13 +627,17 @@
                                                         </div>
                                                     </div>
                                                 </t>
-                                                <t t-if="record.display_type.raw_value === 'line_section' || record.display_type.raw_value === 'line_note'">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <t t-esc="record.name.value"/>
-                                                        </div>
+                                                <div t-elif="record.display_type.raw_value == 'line_section'"
+                                                    class="row">
+                                                    <div class="col-12"
+                                                        t-esc="record.name.value"/>
+                                                </div>
+                                                <div t-elif="record.display_type.raw_value == 'line_note'"
+                                                    class="row">
+                                                    <div class="col-12">
+                                                        <field name="name" widget="html"/>
                                                     </div>
-                                                </t>
+                                                </div>
                                             </div>
                                         </t>
                                     </templates>

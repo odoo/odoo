@@ -92,16 +92,16 @@
                                             <span class="text-nowrap" t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                         </td>
                                     </t>
-                                    <t t-if="line.display_type == 'line_section'">
+                                    <t t-elif="line.display_type == 'line_section'">
                                         <td colspan="99">
                                             <span t-field="line.name" t-options="{'widget': 'text'}"/>
                                         </td>
                                         <t t-set="current_section" t-value="line"/>
                                         <t t-set="current_subtotal" t-value="0"/>
                                     </t>
-                                    <t t-if="line.display_type == 'line_note'">
+                                    <t t-elif="line.display_type == 'line_note'">
                                         <td colspan="99">
-                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
+                                            <span t-field="line.name" t-options='{"widget": "html"}'/>
                                         </td>
                                     </t>
                                 </tr>
