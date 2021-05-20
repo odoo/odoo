@@ -1,10 +1,10 @@
-odoo.define('pos_restaurant.AbstractOrderManagementScreen', function (require) {
+odoo.define('pos_restaurant.OrderManagementScreen', function (require) {
     'use strict';
 
-    const AbstractOrderManagementScreen = require('point_of_sale.AbstractOrderManagementScreen');
+    const OrderManagementScreen = require('point_of_sale.OrderManagementScreen');
     const { patch } = require('web.utils');
 
-    patch(AbstractOrderManagementScreen.prototype, 'pos_restaurant', {
+    patch(OrderManagementScreen.prototype, 'pos_restaurant', {
         async _onClickOrder(event) {
             const order = event.detail;
             if (
@@ -20,5 +20,5 @@ odoo.define('pos_restaurant.AbstractOrderManagementScreen', function (require) {
         },
     });
 
-    return AbstractOrderManagementScreen;
+    return OrderManagementScreen;
 });

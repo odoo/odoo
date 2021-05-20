@@ -3,14 +3,14 @@
 
     <t t-name="point_of_sale.OrderManagementScreen" owl="1">
         <div class="order-management-screen screen">
+            <t t-set="_order" t-value="getActiveOrder()" />
             <div t-if="!env.isMobile" class="screen-full-width">
                 <div class="leftpane">
-                    <t t-set="_order" t-value="getActiveOrder()" />
                     <OrderDetails order="_order" />
                     <div class="pads">
                         <div class="control-buttons">
                             <InvoiceButton activeOrder="_order" />
-                            <ReprintReceiptButton activeOrder="_order" />
+                            <ReprintReceiptButton activeOrder="_order" orderReceiptRef="hiddenOrderReceiptRef" />
                         </div>
                         <div class="subpads">
                             <ActionpadWidget client="selectedClient" />
@@ -25,7 +25,30 @@
                     </div>
                 </div>
             </div>
-            <MobileOrderManagementScreen t-else="" basicSearchBar="props.basicSearchBar" />
+            <div t-else="" class="screen-full-width">
+                <div t-if="mobileState.showDetails" class="leftpane">
+                    <OrderDetails order="_order" />
+                    <div class="pads">
+                        <div class="control-buttons">
+                            <InvoiceButton activeOrder="_order" />
+                            <ReprintReceiptButton activeOrder="_order" orderReceiptRef="hiddenOrderReceiptRef" />
+                        </div>
+                        <div class="subpads">
+                            <ActionpadWidget client="selectedClient" />
+                            <NumpadWidget />
+                        </div>
+                    </div>
+                    <div class="back-to-list" t-on-click="mobileState.showDetails = false">
+                        <span>Back to list</span>
+                    </div>
+                </div>
+                <div t-else="" class="rightpane">
+                    <div class="flex-container">
+                        <OrderManagementControlPanel />
+                        <OrderList orders="env.model.orderFetcher.ordersToShow" />
+                    </div>
+                </div>
+            </div>
         </div>
     </t>
 
