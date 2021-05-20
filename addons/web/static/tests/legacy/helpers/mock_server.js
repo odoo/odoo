@@ -166,7 +166,15 @@ var MockServer = Class.extend({
             var message = result && result.message;
             var event = result && result.event;
             var errorString = JSON.stringify(message || false);
-            console.warn('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
+            if (debug) {
+                console.warn(
+                    '%c[rpc] response (error) %s%s, during test %s',
+                    'color: orange; font-weight: bold;',
+                    route,
+                    message != null && ` -> ${errorString}`,
+                    JSON.stringify(QUnit.config.current.testName)
+                );
+            }
             return Promise.reject({message: errorString, event: event || $.Event()});
         });
 
