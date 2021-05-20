@@ -116,7 +116,7 @@ QUnit.test('activity simplest layout', async function (assert) {
 });
 
 QUnit.test('activity with note layout', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
@@ -125,11 +125,7 @@ QUnit.test('activity with note layout', async function (assert) {
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in test 'activity simplest layout'
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_note').length,
         1,
@@ -143,7 +139,7 @@ QUnit.test('activity with note layout', async function (assert) {
 });
 
 QUnit.test('activity info layout when planned after tomorrow', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     await this.start();
     const today = new Date();
@@ -156,11 +152,7 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_dueDateText').length,
         1,
@@ -178,7 +170,7 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
 });
 
 QUnit.test('activity info layout when planned tomorrow', async function (assert) {
-    assert.expect(4);
+    assert.expect(2);
 
     await this.start();
     const today = new Date();
@@ -191,16 +183,8 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
-        1,
-        "should have activity delay"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity info layout when planned after tomorrow'
     assert.ok(
         document.querySelector('.o_Activity_dueDateText').classList.contains('o-planned'),
         "activity delay should have the right color modifier class (planned)"
@@ -213,7 +197,7 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
 });
 
 QUnit.test('activity info layout when planned today', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     await this.start();
     const today = new Date();
@@ -224,11 +208,7 @@ QUnit.test('activity info layout when planned today', async function (assert) {
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_dueDateText').length,
         1,
@@ -246,7 +226,7 @@ QUnit.test('activity info layout when planned today', async function (assert) {
 });
 
 QUnit.test('activity info layout when planned yesterday', async function (assert) {
-    assert.expect(4);
+    assert.expect(2);
 
     await this.start();
     const today = new Date();
@@ -259,16 +239,8 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
-        1,
-        "should have activity delay"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity info layout when planned after tomorrow'
     assert.ok(
         document.querySelector('.o_Activity_dueDateText').classList.contains('o-overdue'),
         "activity delay should have the right color modifier class (overdue)"
@@ -281,7 +253,7 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
 });
 
 QUnit.test('activity info layout when planned before yesterday', async function (assert) {
-    assert.expect(4);
+    assert.expect(2);
 
     await this.start();
     const today = new Date();
@@ -294,16 +266,8 @@ QUnit.test('activity info layout when planned before yesterday', async function 
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity_dueDateText').length,
-        1,
-        "should have activity delay"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity info layout when planned after tomorrow'
     assert.ok(
         document.querySelector('.o_Activity_dueDateText').classList.contains('o-overdue'),
         "activity delay should have the right color modifier class (overdue)"
@@ -316,7 +280,7 @@ QUnit.test('activity info layout when planned before yesterday', async function 
 });
 
 QUnit.test('activity with a summary layout', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
@@ -325,11 +289,7 @@ QUnit.test('activity with a summary layout', async function (assert) {
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_summary').length,
         1,
@@ -348,7 +308,7 @@ QUnit.test('activity with a summary layout', async function (assert) {
 });
 
 QUnit.test('activity without summary layout', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
@@ -357,11 +317,7 @@ QUnit.test('activity without summary layout', async function (assert) {
         type: insert({ id: 1, displayName: "Fake type" }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_type').length,
         1,
@@ -385,7 +341,7 @@ QUnit.test('activity without summary layout', async function (assert) {
 });
 
 QUnit.test('activity details toggle', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     await this.start();
     const today = new Date();
@@ -401,11 +357,7 @@ QUnit.test('activity details toggle', async function (assert) {
         type: insert({ id: 1, displayName: "Fake type" }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_details').length,
         0,
@@ -437,7 +389,7 @@ QUnit.test('activity details toggle', async function (assert) {
 });
 
 QUnit.test('activity details layout', async function (assert) {
-    assert.expect(11);
+    assert.expect(9);
 
     await this.start();
     const today = new Date();
@@ -454,21 +406,13 @@ QUnit.test('activity details layout', async function (assert) {
         type: insert({ id: 1, displayName: "Fake type" }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_userAvatar').length,
         1,
         "should have activity user avatar"
     );
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity_detailsButton').length,
-        1,
-        "activity should have a details button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity details toggle'
 
     await afterNextRender(() =>
         document.querySelector('.o_Activity_detailsButton').click()
@@ -516,7 +460,7 @@ QUnit.test('activity details layout', async function (assert) {
 });
 
 QUnit.test('activity with mail template layout', async function (assert) {
-    assert.expect(8);
+    assert.expect(5);
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
@@ -525,21 +469,7 @@ QUnit.test('activity with mail template layout', async function (assert) {
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity_sidebar').length,
-        1,
-        "should have activity sidebar"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity_mailTemplates').length,
-        1,
-        "should have activity mail templates"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_mailTemplate').length,
         1,
@@ -568,7 +498,7 @@ QUnit.test('activity with mail template layout', async function (assert) {
 });
 
 QUnit.test('activity with mail template: preview mail', async function (assert) {
-    assert.expect(10);
+    assert.expect(8);
 
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -614,16 +544,8 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_MailTemplate_preview').length,
-        1,
-        "should have activity mail template name preview button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity with mail template layout'
 
     document.querySelector('.o_MailTemplate_preview').click();
     assert.verifySteps(
@@ -633,7 +555,7 @@ QUnit.test('activity with mail template: preview mail', async function (assert) 
 });
 
 QUnit.test('activity with mail template: send mail', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     await this.start({
         async mockRPC(route, args) {
@@ -657,16 +579,8 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_MailTemplate_send').length,
-        1,
-        "should have activity mail template name send button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity with mail template layout'
 
     document.querySelector('.o_MailTemplate_send').click();
     assert.verifySteps(
@@ -676,7 +590,7 @@ QUnit.test('activity with mail template: send mail', async function (assert) {
 });
 
 QUnit.test('activity upload document is available', async function (assert) {
-    assert.expect(3);
+    assert.expect(1);
 
     await this.start();
     const today = new Date();
@@ -689,16 +603,7 @@ QUnit.test('activity upload document is available', async function (assert) {
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity_uploadButton').length,
-        1,
-        "should have activity upload button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_FileUploader').length,
         1,
@@ -707,7 +612,7 @@ QUnit.test('activity upload document is available', async function (assert) {
 });
 
 QUnit.test('activity click on mark as done', async function (assert) {
-    assert.expect(4);
+    assert.expect(3)
 
     await this.start();
     const today = new Date();
@@ -721,11 +626,7 @@ QUnit.test('activity click on mark as done', async function (assert) {
     });
     await this.createActivityComponent(activity);
 
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_markDoneButton').length,
         1,
@@ -752,7 +653,7 @@ QUnit.test('activity click on mark as done', async function (assert) {
 });
 
 QUnit.test('activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]', async function (assert) {
-    assert.expect(3);
+    assert.expect(1);
 
     await this.start();
     const today = new Date();
@@ -766,16 +667,8 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
     });
     await this.createActivityComponent(activity);
 
-    assert.containsOnce(
-        document.body,
-        '.o_Activity',
-        "should have activity component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Activity_markDoneButton',
-        "should have activity Mark as Done button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity click on mark as done'
 
     await afterNextRender(() => {
         document.querySelector('.o_Activity_markDoneButton').click();
@@ -788,7 +681,7 @@ QUnit.test('activity mark as done popover should focus feedback input on open [R
 });
 
 QUnit.test('activity click on edit', async function (assert) {
-    assert.expect(9);
+    assert.expect(8);
 
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -828,11 +721,7 @@ QUnit.test('activity click on edit', async function (assert) {
         thread: insert({ id: 42, model: 'res.partner' }),
     });
     await this.createActivityComponent(activity);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_editButton').length,
         1,
@@ -847,7 +736,7 @@ QUnit.test('activity click on edit', async function (assert) {
 });
 
 QUnit.test('activity edition', async function (assert) {
-    assert.expect(14);
+    assert.expect(12);
 
     this.data['mail.activity'].records.push({
         can_write: true,
@@ -896,16 +785,8 @@ QUnit.test('activity edition', async function (assert) {
     );
     await this.createActivityComponent(activity);
 
-    assert.containsOnce(
-        document.body,
-        '.o_Activity',
-        "should have activity component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Activity_editButton',
-        "should have activity edit button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity click on edit'
     assert.containsOnce(
         document.body,
         '.o_Activity_icon',
@@ -942,7 +823,7 @@ QUnit.test('activity edition', async function (assert) {
 });
 
 QUnit.test('activity click on cancel', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
     await this.start({
         async mockRPC(route, args) {
@@ -1004,11 +885,7 @@ QUnit.test('activity click on cancel', async function (assert) {
         target: this.widget.el,
     });
 
-    assert.strictEqual(
-        document.querySelectorAll('.o_Activity').length,
-        1,
-        "should have activity component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_cancelButton').length,
         1,
@@ -1032,7 +909,7 @@ QUnit.test('activity click on cancel', async function (assert) {
 QUnit.test('activity mark done popover close on ESCAPE', async function (assert) {
     // This test is not in activity_mark_done_popover_tests.js as it requires the activity mark done
     // component to have a parent in order to allow testing interactions the popover.
-    assert.expect(2);
+    assert.expect(1);
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
@@ -1046,11 +923,7 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
     await afterNextRender(() => {
         document.querySelector('.o_Activity_markDoneButton').click();
     });
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover',
-        "Popover component should be present"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity click on mark as done'
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
@@ -1066,7 +939,7 @@ QUnit.test('activity mark done popover close on ESCAPE', async function (assert)
 QUnit.test('activity mark done popover click on discard', async function (assert) {
     // This test is not in activity_mark_done_popover_tests.js as it requires the activity mark done
     // component to have a parent in order to allow testing interactions the popover.
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
@@ -1079,11 +952,7 @@ QUnit.test('activity mark done popover click on discard', async function (assert
     await afterNextRender(() => {
         document.querySelector('.o_Activity_markDoneButton').click();
     });
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover',
-        "Popover component should be present"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity click on mark as done'
     assert.containsOnce(
         document.body,
         '.o_ActivityMarkDonePopover_discardButton',

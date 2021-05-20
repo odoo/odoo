@@ -87,7 +87,7 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
 });
 
 QUnit.test('activity with force next mark done popover simplest layout', async function (assert) {
-    assert.expect(6);
+    assert.expect(1);
 
     await this.start();
     const activity = this.env.models['mail.activity'].create({
@@ -99,36 +99,13 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover',
-        "Popover component should be present"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover_feedback',
-        "Popover component should contain the feedback textarea"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover_buttons',
-        "Popover component should contain the action buttons"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover_doneScheduleNextButton',
-        "Popover component should contain the done & schedule next button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity mark done popover simplest layout'
     assert.containsNone(
         document.body,
         '.o_ActivityMarkDonePopover_doneButton',
         "Popover component should NOT contain the done button"
     );
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover_discardButton',
-        "Popover component should contain the discard button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'activity mark done popover simplest layout'
 });
 
 QUnit.test('activity mark done popover mark done without feedback', async function (assert) {
