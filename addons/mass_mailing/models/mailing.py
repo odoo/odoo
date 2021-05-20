@@ -77,9 +77,9 @@ class MassMailing(models.Model):
             return False
 
     active = fields.Boolean(default=True, tracking=True)
-    subject = fields.Char('Subject', help='Subject of your Mailing', required=True, translate=True)
+    subject = fields.Char('Subject', help='Subject of your Mailing', required=True, translate=False)
     preview = fields.Char(
-        'Preview', translate=True,
+        'Preview', translate=False,
         help='Catchy preview sentence that encourages recipients to open this email.\n'
              'In most inboxes, this is displayed next to the subject.\n'
              'Keep it empty if you prefer the first characters of your email content to appear instead.')
