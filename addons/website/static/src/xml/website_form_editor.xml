@@ -41,7 +41,7 @@
                      <t t-call="website.form_label_content"/>
                 </label>
                 <div class="col-sm">
-                    <t t-raw="0"/>
+                    <t t-out="0"/>
                     <t t-call="website.form_field_description"/>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                 <label t-attf-class="s_website_form_label #{field.formatInfo.labelPosition == 'none' and 'd-none' or ''}" t-attf-style="width: #{field.formatInfo.labelWidth or '200px'}" t-att-for="field.id">
                      <t t-call="website.form_label_content"/>
                 </label>
-                <t t-raw="0"/>
+                <t t-out="0"/>
                 <t t-call="website.form_field_description"/>
             </t>
         </div>
