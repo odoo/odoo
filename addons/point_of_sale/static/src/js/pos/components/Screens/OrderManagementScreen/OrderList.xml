@@ -19,7 +19,7 @@
                             <t t-esc="env.model.getOrderName(_order)" />
                         </div>
                         <div class="item date">
-                            <t t-esc="_order.date_order" />
+                            <t t-esc="getFormattedDate(_order.date_order)" />
                         </div>
                         <div class="item customer">
                             <t t-esc="env.model.getCustomerName(_order)" />
