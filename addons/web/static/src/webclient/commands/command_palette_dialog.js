@@ -1,17 +1,18 @@
 /** @odoo-module **/
 
+import { Dialog } from "@web/core/dialog/dialog";
 import { CommandPalette } from "./command_palette";
 
-const { Component, hooks } = owl;
-const { useExternalListener, useRef } = hooks;
+const { hooks } = owl;
+const { useExternalListener } = hooks;
 
 /**
  * @typedef {import("./command_service").Command} Command
  */
 
-export class CommandPaletteDialog extends Component {
+export class CommandPaletteDialog extends Dialog {
     setup() {
-        this.dialogRef = useRef("dialogRef");
+        super.setup();
         useExternalListener(window, "mousedown", this.onWindowMouseDown);
     }
 
@@ -20,11 +21,17 @@ export class CommandPaletteDialog extends Component {
      */
     onWindowMouseDown(ev) {
         const element = ev.target.parentElement;
-        const gotClickedInside = this.dialogRef.comp.modalRef.el.contains(element);
+        const gotClickedInside = this.modalRef.el.contains(element);
         if (!gotClickedInside) {
-            this.trigger("dialog-closed");
+            this.close();
         }
     }
 }
-CommandPaletteDialog.template = "web.CommandPaletteDialog";
-CommandPaletteDialog.components = { CommandPalette };
+CommandPaletteDialog.renderHeader = false;
+CommandPaletteDialog.renderFooter = false;
+CommandPaletteDialog.contentClass = "o_command_palette";
+CommandPaletteDialog.bodyTemplate = "web.CommandPaletteDialogBody";
+CommandPaletteDialog.components = Object.assign({}, Dialog.components, { CommandPalette });
+CommandPaletteDialog.props = {
+    commands: { type: Array, element: { type: Object } },
+};

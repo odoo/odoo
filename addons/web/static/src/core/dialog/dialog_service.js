@@ -2,6 +2,7 @@
 
 import { registry } from "../registry";
 import { useService } from "../service_hook";
+import { Dialog } from "./dialog";
 
 const { Component, core, tags, useState } = owl;
 const { EventBus } = core;
@@ -25,6 +26,9 @@ export class DialogContainer extends Component {
     }
 
     addDialog(dialogClass, props, options) {
+        if (!(dialogClass.prototype instanceof Dialog)) {
+            throw new Error(dialogClass.name + " must be a subclass of Dialog");
+        }
         const id = this.dialogId++;
         this.dialogs[id] = {
             id,

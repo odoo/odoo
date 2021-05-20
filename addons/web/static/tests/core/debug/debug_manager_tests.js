@@ -122,7 +122,7 @@ QUnit.module("DebugManager", (hooks) => {
         dialogContainer.classList.add("o_dialog_container");
         target.append(dialogContainer);
         const env = await makeTestEnv(testConfig);
-        const actionDialog = await mount(ActionDialog, { env, target });
+        const actionDialog = await mount(ActionDialog, { env, target, props: {} });
         registerCleanup(() => {
             actionDialog.destroy();
             target.querySelector(".o_dialog_container").remove();

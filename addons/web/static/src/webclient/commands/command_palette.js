@@ -118,7 +118,7 @@ export class CommandPalette extends Component {
 
     executeSelectedCommand() {
         if (this.state.selectedCommand) {
-            this.trigger("dialog-closed");
+            this.props.closeMe();
             this.state.selectedCommand.action();
         }
     }
