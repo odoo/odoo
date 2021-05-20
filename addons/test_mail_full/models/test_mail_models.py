@@ -44,8 +44,7 @@ class MailTestSMSBL(models.Model):
     def _sms_get_partner_fields(self):
         return ['customer_id']
 
-    def _sms_get_number_fields(self):
-        # TDE note: should override _phone_get_number_fields but ok as sms in dependencies
+    def _phone_get_number_fields(self):
         return ['phone_nbr', 'mobile_nbr']
 
 
