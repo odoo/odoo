@@ -204,7 +204,7 @@ odoo.define('web.ControlPanel', function (require) {
     ControlPanel.props = {
         action: Object,
         breadcrumbs: Array,
-        searchModel: ActionModel,
+        searchModel: { type: ActionModel, optional: 1 },
         cp_content: { type: Object, optional: 1 },
         fields: Object,
         pager: { validate: p => typeof p === 'object' || p === null, optional: 1 },
