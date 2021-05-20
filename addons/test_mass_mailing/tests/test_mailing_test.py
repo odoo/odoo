@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import lxml.html
 
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.tests.common import users
@@ -27,6 +28,16 @@ class TestMailingTest(TestMassMailCommon):
 
         with self.mock_mail_gateway():
             mailing_test.send_mail_test()
+
+        # not great but matches send_mail_test, maybe that should be a method
+        # on mailing_test?
+        record = self.env[mailing.mailing_model_real].search([], limit=1)
+        first_child = lxml.html.fromstring(self._mails.pop()['body']).xpath('//body/*[1]')[0]
+        self.assertEqual(first_child.tag, 'div')
+        self.assertIn('display:none', first_child.get('style'),
+                      "the preview node should be hidden")
+        self.assertEqual(first_child.text.strip(), "Preview " + record.name,
+                         "the preview node should contain the preview text")
 
         # Test if bad jinja in the subject raises an error
         mailing.write({'subject': 'Subject ${object.name_id.id}'})
