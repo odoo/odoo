@@ -135,7 +135,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
     def test_cart_update_with_fpos(self):
-        # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart 
+        # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart
         self.env.user.partner_id.country_id = False
         current_website = self.env['website'].get_current_website()
         pricelist = current_website.get_current_pricelist()
