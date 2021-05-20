@@ -327,13 +327,17 @@ class StockRule(models.Model):
         :param product: the product of the procurement
         :type product: :class:`~odoo.addons.product.models.product.ProductProduct`
         :return: the cumulative delay and cumulative delay's description
-        :rtype: tuple
+        :rtype: tuple[int, list[str, str]]
         """
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
         if self.env.context.get('bypass_delay_description'):
-            delay_description = ""
+            delay_description = []
         else:
-            delay_description = ''.join(['<tr><td>%s %s</td><td class="text-right">+ %d %s</td></tr>' % (_('Delay on'), html_escape(rule.name), rule.delay, _('day(s)')) for rule in self if rule.action in ['pull', 'pull_push'] and rule.delay])
+            delay_description = [
+                (_('Delay on %s', rule.name), _('+ %d day(s)', rule.delay))
+                for rule in self
+                if rule.action in ['pull', 'pull_push'] and rule.delay
+            ]
         return delay, delay_description
 
 
