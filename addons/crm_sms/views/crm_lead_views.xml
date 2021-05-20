@@ -11,7 +11,7 @@
             'default_mass_keep_log': True,
             'default_res_ids': active_ids
         }</field>
-        <field name="binding_model_id" ref="model_crm_lead"/>
+        <field name="binding_model_id" ref="crm.model_crm_lead"/>
         <field name="binding_view_types">list</field>
     </record>
     <record id="crm_lead_act_window_sms_composer_multi" model="ir.actions.act_window">
@@ -23,7 +23,7 @@
             'default_composition_mode': 'comment',
             'default_res_id': active_id,
         }</field>
-        <field name="binding_model_id" ref="model_crm_lead"/>
+        <field name="binding_model_id" ref="crm.model_crm_lead"/>
         <field name="binding_view_types">form</field>
     </record>
 
