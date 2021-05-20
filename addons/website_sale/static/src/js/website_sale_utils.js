@@ -29,7 +29,7 @@ const cartHandlerMixin = {
      */
     _addToCartInPage(params) {
         params.force_create = true;
-        this._rpc({
+        return this._rpc({
             route: "/shop/cart/update_json",
             params: params,
         }).then(async data => {

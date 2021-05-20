@@ -538,7 +538,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
 
         params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
         params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
-        this.addToCart(params);
+        return this.addToCart(params);
     },
     /**
      * @private
