@@ -100,7 +100,7 @@ QUnit.test('simplest layout', async function (assert) {
 });
 
 QUnit.test('simplest layout + deletable', async function (assert) {
-    assert.expect(6);
+    assert.expect(3);
 
     await this.start({
         async mockRPC(route, args) {
@@ -126,21 +126,7 @@ QUnit.test('simplest layout + deletable', async function (assert) {
         showExtension: false,
         showFilename: false
     });
-    assert.strictEqual(
-        document.querySelectorAll('.o_Attachment').length,
-        1,
-        "should have attachment component in DOM"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_image`).length,
-        1,
-        "attachment should have an image part"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_details`).length,
-        0,
-        "attachment should not have a details part"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout'
     assert.strictEqual(
         document.querySelectorAll(`.o_Attachment_aside`).length,
         1,
@@ -159,7 +145,7 @@ QUnit.test('simplest layout + deletable', async function (assert) {
 });
 
 QUnit.test('simplest layout + downloadable', async function (assert) {
-    assert.expect(6);
+    assert.expect(1);
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
@@ -175,31 +161,8 @@ QUnit.test('simplest layout + downloadable', async function (assert) {
         showExtension: false,
         showFilename: false
     });
-    assert.strictEqual(
-        document.querySelectorAll('.o_Attachment').length,
-        1,
-        "should have attachment component in DOM"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_image`).length,
-        1,
-        "attachment should have an image part"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_details`).length,
-        0,
-        "attachment should not have a details part"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_aside`).length,
-        1,
-        "attachment should have an aside part"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_asideItem`).length,
-        1,
-        "attachment should have only one aside item"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout'
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout + downloadable'
     assert.strictEqual(
         document.querySelectorAll(`.o_Attachment_asideItemDownload`).length,
         1,
@@ -208,7 +171,7 @@ QUnit.test('simplest layout + downloadable', async function (assert) {
 });
 
 QUnit.test('simplest layout + deletable + downloadable', async function (assert) {
-    assert.expect(8);
+    assert.expect(5);
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
@@ -224,21 +187,7 @@ QUnit.test('simplest layout + deletable + downloadable', async function (assert)
         showExtension: false,
         showFilename: false
     });
-    assert.strictEqual(
-        document.querySelectorAll('.o_Attachment').length,
-        1,
-        "should have attachment component in DOM"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_image`).length,
-        1,
-        "attachment should have an image part"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_details`).length,
-        0,
-        "attachment should not have a details part"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout'
     assert.strictEqual(
         document.querySelectorAll(`.o_Attachment_aside`).length,
         1,
@@ -266,7 +215,7 @@ QUnit.test('simplest layout + deletable + downloadable', async function (assert)
 });
 
 QUnit.test('layout with card details', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
@@ -282,11 +231,6 @@ QUnit.test('layout with card details', async function (assert) {
         showExtension: false,
         showFilename: false
     });
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_image`).length,
-        1,
-        "attachment should have an image part"
-    );
     assert.strictEqual(
         document.querySelectorAll(`.o_Attachment_details`).length,
         0,
@@ -334,7 +278,7 @@ QUnit.test('layout with card details and filename', async function (assert) {
 });
 
 QUnit.test('layout with card details and extension', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
@@ -350,11 +294,7 @@ QUnit.test('layout with card details and extension', async function (assert) {
         showExtension: true,
         showFilename: false
     });
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_details`).length,
-        1,
-        "attachment should have a details part"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'layout with card details and filename'
     assert.strictEqual(
         document.querySelectorAll(`.o_Attachment_filename`).length,
         0,
@@ -368,7 +308,7 @@ QUnit.test('layout with card details and extension', async function (assert) {
 });
 
 QUnit.test('layout with card details and filename and extension', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
@@ -384,11 +324,7 @@ QUnit.test('layout with card details and filename and extension', async function
         showExtension: true,
         showFilename: true
     });
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_details`).length,
-        1,
-        "attachment should have a details part"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'layout with card details and filename'
     assert.strictEqual(
         document.querySelectorAll(`.o_Attachment_filename`).length,
         1,
@@ -402,7 +338,7 @@ QUnit.test('layout with card details and filename and extension', async function
 });
 
 QUnit.test('simplest layout with hover details and filename and extension', async function (assert) {
-    assert.expect(8);
+    assert.expect(6);
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
@@ -430,11 +366,7 @@ QUnit.test('simplest layout with hover details and filename and extension', asyn
         1,
         "attachment should have a details part in the overlay"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_image`).length,
-        1,
-        "attachment should have an image part"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout'
     assert.strictEqual(
         document.querySelectorAll(`.o_Attachment_imageOverlay`).length,
         1,
@@ -455,15 +387,11 @@ QUnit.test('simplest layout with hover details and filename and extension', asyn
         1,
         "attachment should have an actions part"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_aside`).length,
-        0,
-        "attachment should not have an aside element"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout'
 });
 
 QUnit.test('auto layout with image', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     await this.start();
     const attachment = this.env.models['mail.attachment'].create({
@@ -492,11 +420,7 @@ QUnit.test('auto layout with image', async function (assert) {
         1,
         "attachment should have a details part in the overlay"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_image`).length,
-        1,
-        "attachment should have an image part"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout'
     assert.strictEqual(
         document.querySelectorAll(`.o_Attachment_imageOverlay`).length,
         1,
@@ -512,15 +436,11 @@ QUnit.test('auto layout with image', async function (assert) {
         1,
         "attachment should have its extension shown"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Attachment_aside`).length,
-        0,
-        "attachment should not have an aside element"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout'
 });
 
 QUnit.test('view attachment', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start({
         hasDialog: true,
@@ -537,11 +457,7 @@ QUnit.test('view attachment', async function (assert) {
         isDownloadable: false,
         isEditable: false,
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Attachment_image',
-        "attachment should have an image part"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout'
     await afterNextRender(() => document.querySelector('.o_Attachment_image').click());
     assert.containsOnce(
         document.body,
@@ -556,7 +472,7 @@ QUnit.test('view attachment', async function (assert) {
 });
 
 QUnit.test('close attachment viewer', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start({ hasDialog: true });
     const attachment = this.env.models['mail.attachment'].create({
@@ -571,11 +487,7 @@ QUnit.test('close attachment viewer', async function (assert) {
         isDownloadable: false,
         isEditable: false,
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Attachment_image',
-        "attachment should have an image part"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout'
 
     await afterNextRender(() => document.querySelector('.o_Attachment_image').click());
     assert.containsOnce(
@@ -619,8 +531,6 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
     });
 
     await afterNextRender(() => {
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
-        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
         document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
     });
     assert.verifySteps(

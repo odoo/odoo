@@ -77,7 +77,7 @@ QUnit.test('base empty rendering', async function (assert) {
 });
 
 QUnit.test('base non-empty rendering', async function (assert) {
-    assert.expect(6);
+    assert.expect(3);
 
     this.data['ir.attachment'].records.push(
         {
@@ -111,21 +111,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
         ['ir.attachment/search_read'],
         "should have fetched attachments"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox`).length,
-        1,
-        "should have an attachment box"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox_buttonAdd`).length,
-        1,
-        "should have a button add"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_FileUploader_input`).length,
-        1,
-        "should have a file input"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base empty rendering'
     assert.strictEqual(
         document.querySelectorAll(`.o_attachmentBox_attachmentList`).length,
         1,
@@ -134,7 +120,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
 });
 
 QUnit.test('attachment box: drop attachments', async function (assert) {
-    assert.expect(5);
+    assert.expect(3);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -150,11 +136,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
             name: 'text.txt',
         }),
     ];
-    assert.strictEqual(
-        document.querySelectorAll('.o_AttachmentBox').length,
-        1,
-        "should have an attachment box"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base empty rendering'
 
     await afterNextRender(() =>
         dragenterFiles(document.querySelector('.o_AttachmentBox'))
@@ -163,11 +145,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
         document.querySelector('.o_AttachmentBox_dropZone'),
         "should have a drop zone"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_AttachmentBox .o_Attachment`).length,
-        0,
-        "should have no attachment before files are dropped"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base empty rendering'
 
     await afterNextRender(() =>
         dropFiles(
@@ -284,7 +262,7 @@ QUnit.test('view attachments', async function (assert) {
 });
 
 QUnit.test('remove attachment should ask for confirmation', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -297,11 +275,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
         model: 'res.partner',
     });
     await this.createAttachmentBoxComponent(thread);
-    assert.containsOnce(
-        document.body,
-        '.o_Attachment',
-        "should have an attachment",
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base empty rendering'
     assert.containsOnce(
         document.body,
         '.o_Attachment_asideItemUnlink',
