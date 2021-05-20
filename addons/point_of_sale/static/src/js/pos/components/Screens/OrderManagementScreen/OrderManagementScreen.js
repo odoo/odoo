@@ -7,6 +7,7 @@ import InvoiceButton from 'point_of_sale.InvoiceButton';
 import ReprintReceiptButton from 'point_of_sale.ReprintReceiptButton';
 import ActionpadWidget from 'point_of_sale.ActionpadWidget';
 import NumpadWidget from 'point_of_sale.NumpadWidget';
+import OrderReceipt from 'point_of_sale.OrderReceipt';
 import PosComponent from 'point_of_sale.PosComponent';
 import { useListener } from 'web.custom_hooks';
 
@@ -35,6 +36,7 @@ class OrderManagementScreen extends PosComponent {
             searchTerm: this.env.model.data.uiState.OrderManagementScreen.searchTerm,
         });
         this.mobileState = owl.useState({ showDetails: false });
+        this.hiddenOrderReceiptRef = owl.hooks.useRef('hidden-order-receipt-ref');
     }
     mounted() {
         // calculate how many can fit in the screen.
@@ -132,6 +134,7 @@ OrderManagementScreen.components = {
     ReprintReceiptButton,
     ActionpadWidget,
     NumpadWidget,
+    OrderReceipt,
 };
 OrderManagementScreen.template = 'point_of_sale.OrderManagementScreen';
 

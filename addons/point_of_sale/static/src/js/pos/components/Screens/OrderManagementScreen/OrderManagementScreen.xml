@@ -49,6 +49,9 @@
                     </div>
                 </div>
             </div>
+            <div class="hidden-order-receipt" t-ref="hidden-order-receipt-ref">
+                <OrderReceipt t-if="_order" order="_order" />
+            </div>
         </div>
     </t>
 
