@@ -64,9 +64,19 @@ function checkRegisteredProperty({ registeredProperty }) {
                     throw new Error(`"isFieldName" should be a boolean`);
                 }
                 break;
+            case 'isRelationNameDotFieldName':
+                if (typeof value !== "boolean") {
+                    throw new Error(`"isRelationNameDotFieldName" should be a boolean`);
+                }
+                break;
             case 'isString':
                 if (typeof value !== "boolean") {
                     throw new Error(`"isString" should be a boolean`);
+                }
+                break;
+            case 'isStringWithTwoPartsSeparatedByDot':
+                if (typeof value !== "boolean") {
+                    throw new Error(`"isStringWithTwoPartsSeparatedByDot" should be a boolean`);
                 }
                 break;
             case 'requiredProperties':
@@ -87,7 +97,7 @@ function checkRegisteredProperty({ registeredProperty }) {
                 }
                 break;
             default:
-                throw new Error(`key "${key}" is not allowed. Maybe check for typos? Allowed keys: "excludedProperties", "isInstanceMethodName", "isModelName", "isArray", "isArrayOfFieldNames", "isFieldName", "isString", "requiredProperties".`);
+                throw new Error(`key "${key}" is not allowed. Maybe check for typos? Allowed keys: "excludedProperties", "isInstanceMethodName", "isModelName", "isArray", "isArrayOfFieldNames", "isFieldName", "isRelationNameDotFieldName", "isString", "isStringWithTwoPartsSeparatedByDot", "requiredProperties".`);
         }
     }
 }

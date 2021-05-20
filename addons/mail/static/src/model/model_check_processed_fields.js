@@ -58,7 +58,7 @@ function checkProcessedFieldsOnModel({ Models, env, Model, field }) {
             suggestion: ``,
         });
     }
-    if (!field.isRelation) {
+    if (!field.to) {
         return;
     }
     // TODO SEB check with x2/2x properties
@@ -85,14 +85,6 @@ function checkProcessedFieldsOnModel({ Models, env, Model, field }) {
             error: `must define an inverse relation name in "inverse"`,
             suggestion: ``,
         });
-    }
-    if (!field.to) {
-        throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: field.properties.fieldName,
-            error: `must define a model name in "to" (1st positional parameter of relation field helpers`,
-                suggestion: ``,
-            });
     }
     const RelatedModel = Models[field.to];
     if (!RelatedModel) {

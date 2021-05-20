@@ -26,7 +26,6 @@ class ModelField {
         isMany2X,
         isOnChange,
         isOne2X,
-        isRelation,
         isX2Many,
         isX2One,
         readonly = false,
@@ -136,10 +135,6 @@ class ModelField {
          */
         this.isOnChange = isOnChange;
         /**
-         * Determines whether this field relates to other records.
-         */
-        this.isRelation = isRelation;
-        /**
          * Determines whether the field is read only. Read only field
          * can't be updated once the record is created.
          * An exception is made for computed fields (updated when the
@@ -185,7 +180,7 @@ class ModelField {
          */
         this.to = to;
 
-        if (!this.default && this.isRelation) {
+        if (!this.default && this.to) {
             // default value for relational fields is the empty command
             this.default = [];
         }
@@ -270,7 +265,7 @@ class ModelField {
      */
     clear(record, options) {
         let hasChanged = false;
-        if (this.isRelation) {
+        if (this.to) {
             if (this.parseAndExecuteCommands(record, unlinkAll(), options)) {
                 hasChanged = true;
             }
@@ -325,7 +320,7 @@ class ModelField {
                     }
                 }
             }
-            if (this.isRelation) {
+            if (this.to) {
                 return replace(newVal);
             }
             return newVal;
@@ -335,7 +330,7 @@ class ModelField {
             const OtherModel = otherRecord.constructor;
             const otherField = OtherModel.__fieldMap[relatedFieldName];
             const newVal = otherField.get(otherRecord);
-            if (this.isRelation) {
+            if (this.to) {
                 if (newVal) {
                     return replace(newVal);
                 } else {
@@ -344,7 +339,7 @@ class ModelField {
             }
             return newVal;
         }
-        if (this.isRelation) {
+        if (this.to) {
             return unlinkAll();
         }
     }
@@ -360,7 +355,7 @@ class ModelField {
             return [newVal];
         } else if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
             return newVal;
-        } else if (this.isRelation) {
+        } else if (this.to) {
             // Deprecated. Used only to support old syntax: `[...[name, value]]` command
             return newVal.map(([name, value]) => new FieldCommand(name, value));
         } else {
@@ -388,7 +383,7 @@ class ModelField {
      * @returns {any}
      */
     get(record) {
-        if (this.isRelation && this.isX2Many) {
+        if (this.isX2Many) {
             return [...this.read(record)];
         }
         return this.read(record);
@@ -424,7 +419,7 @@ class ModelField {
         for (const command of commandList) {
             const commandName = command.name;
             const newVal = command.value;
-            if (!this.isRelation) {
+            if (!this.to) {
                 switch (commandName) {
                     case 'clear':
                         if (this.clear(record, options)) {
@@ -450,7 +445,7 @@ class ModelField {
                         throw new Error(`Field "${record.constructor.modelName}/${this.fieldName}"(attribute type) does not support command "${commandName}"`);
                 }
             }
-            if (this.isRelation) {
+            if (this.to) {
                 switch (commandName) {
                     case 'clear':
                         if (this.clear(record, options)) {
@@ -532,7 +527,6 @@ class ModelField {
         return {
             fieldType: 'relation',
             properties: Object.assign({}, options, {
-                isRelation: true,
                 to: modelName,
             }),
         };

@@ -16,8 +16,13 @@ import { InvalidFieldError } from '@mail/model/model_errors';
  * @throws {InvalidFieldError} in case some declared fields are not correct.
  */
 export function checkDeclaredModels({ env, Models }) {
-    for (const Model of Object.values(Models)) {
-        checkDeclaredModel({ env, Models, Model });
+    for (const [modelName, Model] of Object.entries(Models)) {
+        try {
+            checkDeclaredModel({ env, Models, Model });
+        } catch (error) {
+            error.message = `Invalid model "${modelName}": ${error.message}`;
+            throw error;
+        }
     }
 }
 
@@ -40,8 +45,13 @@ function checkDeclaredModel({ env, Models, Model }) {
  * @throws {InvalidFieldError} in case some declared fields are not correct.
  */
 function checkDeclaredFields({ env, Models, Model }) {
-    for (const fieldDefinition of Object.values(Model.fields)) {
-        checkDeclaredField({ Models, env, Model, fieldDefinition });
+    for (const [fieldName, fieldDefinition] of Object.entries(Model.fields)) {
+        try {
+            checkDeclaredField({ Models, env, Model, fieldDefinition });
+        } catch (error) {
+            error.message = `Invalid field "${fieldName}": ${error.message}`;
+            throw error;
+        }
     }
 }
 
@@ -115,7 +125,12 @@ function checkDeclaredProperties({ fieldDefinition, env, Models, Model }) {
         if (fieldType.get('nameOfAvailableProperties')) {
             checkAvailabilityOfProperty({ env, fieldDefinition, Model, propertyName });
         }
-        checkDeclaredProperty({ fieldDefinition, env, Models, Model, propertyName });
+        try {
+            checkDeclaredProperty({ fieldDefinition, env, Models, Model, propertyName });
+        } catch (error) {
+            error.message = `Invalid property "${propertyName}": ${error.message}`;
+            throw error;
+        }
     }
 }
 
@@ -131,8 +146,6 @@ function checkAvailabilityOfProperty({ env, fieldDefinition, Model, propertyName
     const fieldType = env.modelManager.fieldTypeRegistry.get(fieldDefinition.fieldType);
     if (!fieldType.get('nameOfAvailableProperties').has(propertyName)) {
         throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: fieldDefinition.properties.fieldName,
             error: `unsupported property "${propertyName}" for field of type "${fieldDefinition.fieldType}"`,
             suggestion: `don't use an unsupported property, or check for typos in property name. Supported properties: ${[...fieldType.get('nameOfAvailableProperties')].join(', ')}.`,
         });
@@ -156,11 +169,8 @@ function checkDeclaredProperty({ env, fieldDefinition, Models, Model, propertyNa
     if (propertyDefinition.get('excludedProperties')) {
         checkAbsenceOfSiblingProperties({ env, fieldDefinition, Model, propertyName });
     }
-    if (propertyDefinition.get('isInstanceMethodName')) {
-        checkPropertyIsInstanceMethodName({ fieldDefinition, Model, propertyName });
-    }
-    if (propertyDefinition.get('isModelName')) {
-    // TODO SEB check
+    if (propertyDefinition.get('isString')) {
+        checkPropertyIsString({ fieldDefinition, Model, propertyName });
     }
     if (propertyDefinition.get('isArray')) {
         checkPropertyIsArray({ fieldDefinition, Model, propertyName });
@@ -168,11 +178,20 @@ function checkDeclaredProperty({ env, fieldDefinition, Models, Model, propertyNa
     if (propertyDefinition.get('isArrayOfFieldNames')) {
         checkPropertyIsArrayOfFieldNames({ Models, fieldDefinition, Model, propertyName });
     }
+    if (propertyDefinition.get('isInstanceMethodName')) {
+        checkPropertyIsInstanceMethodName({ fieldDefinition, Model, propertyName });
+    }
+    if (propertyDefinition.get('isModelName')) {
+        checkPropertyIsModelName({ fieldDefinition, Models, Model, propertyName });
+    }
     if (propertyDefinition.get('isFieldName')) {
         checkPropertyIsFieldName({ Models, fieldDefinition, Model, propertyName });
     }
-    if (propertyDefinition.get('isString')) {
-        checkPropertyIsString({ fieldDefinition, Model, propertyName });
+    if (propertyDefinition.get('isStringWithTwoPartsSeparatedByDot')) {
+        checkPropertyIsStringWithTwoPartsSeparatedByDot({ fieldDefinition, Model, propertyName });
+    }
+    if (propertyDefinition.get('isRelationNameDotFieldName')) {
+        checkPropertyIsRelationNameDotFieldName({ fieldDefinition, Models, Model, propertyName });
     }
 }
 
@@ -192,8 +211,6 @@ function checkPresenceOfSiblingProperties({ env, fieldDefinition, Model, propert
             : [requiredPropertyName];
         if (!nameOfPossibleProperties.some(propertyName => fieldDefinition.properties[propertyName])) {
             throw new InvalidFieldError({
-                modelName: Model.modelName,
-                fieldName: fieldDefinition.properties.fieldName,
                 error: `one property of "${nameOfPossibleProperties.join(', ')}" must be used together with property "${propertyName}"`,
                 suggestion: `add the missing property, or check for typos in its name, or remove the current property`,
             });
@@ -214,8 +231,6 @@ function checkAbsenceOfSiblingProperties({ env, fieldDefinition, Model, property
     for (const excludedPropertyName of propertyDefinition.get('excludedProperties')) {
         if (fieldDefinition.properties[excludedPropertyName]) {
             throw new InvalidFieldError({
-                modelName: Model.modelName,
-                fieldName: fieldDefinition.properties.fieldName,
                 error: `property "${excludedPropertyName}" cannot be used together with property "${propertyName}"`,
                 suggestion: `remove one of the incompatible properties`,
             });
@@ -233,8 +248,6 @@ function checkAbsenceOfSiblingProperties({ env, fieldDefinition, Model, property
 function checkPropertyIsArray({ fieldDefinition, Model, propertyName }) {
     if (!Array.isArray(fieldDefinition.properties[propertyName])) {
         throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: fieldDefinition.properties.fieldName,
             error: `type of "${propertyName}" property should be array instead of "${typeof fieldDefinition.properties[propertyName]}"`,
             suggestion: `check for syntax error`,
         });
@@ -254,8 +267,6 @@ function checkPropertyIsArrayOfFieldNames({ Models, fieldDefinition, Model, prop
         const fields = getMatchingFieldsDefinitionFromParents({ Models, Model, fieldName });
         if (fields.size === 0) {
             throw new InvalidFieldError({
-                modelName: Model.modelName,
-                fieldName: fieldDefinition.properties.fieldName,
                 error: `element "${fieldName}" from "${propertyName}" array does not target a field of current model`,
                 suggestion: `ensure only field names of current model are provided`,
             });
@@ -276,10 +287,26 @@ function checkPropertyIsFieldName({ Models, fieldDefinition, Model, propertyName
     const fields = getMatchingFieldsDefinitionFromParents({ Models, Model, fieldName });
     if (fields.size === 0) {
         throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: fieldDefinition.properties.fieldName,
             error: `"${fieldName}" from "${propertyName}" does not target a field of current model`,
             suggestion: `ensure a field name of current model is provided`,
+        });
+    }
+}
+
+/**
+ * @param {Object} param0
+ * @param {Object} param0.fieldDefinition field being currently checked
+ * @param {Object} param0.Models all existing models
+ * @param {Object} param0.Model model being currently checked
+ * @param {string} param0.propertyName name of the property being currently checked
+ * @throws {InvalidFieldError}
+ */
+function checkPropertyIsModelName({ Models, fieldDefinition, Model, propertyName }) {
+    const modelName = fieldDefinition.properties[propertyName];
+    if (!Models[modelName]) {
+        throw new InvalidFieldError({
+            error: `undefined target model "${modelName}" from "${propertyName}"`,
+            suggestion: `ensure the model name is given and targets an existing model, or check for typos in model name`,
         });
     }
 }
@@ -294,8 +321,6 @@ function checkPropertyIsFieldName({ Models, fieldDefinition, Model, propertyName
 function checkPropertyIsString({ fieldDefinition, Model, propertyName }) {
     if (typeof fieldDefinition.properties[propertyName] !== 'string') {
         throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: fieldDefinition.properties.fieldName,
             error: `type of "${propertyName}" property should be string instead of "${typeof fieldDefinition.properties[propertyName]}"`,
             suggestion: `check for syntax error`,
         });
@@ -312,10 +337,69 @@ function checkPropertyIsString({ fieldDefinition, Model, propertyName }) {
 function checkPropertyIsInstanceMethodName({ fieldDefinition, Model, propertyName }) {
     if (!(Model.prototype[fieldDefinition.properties[propertyName]])) {
         throw new InvalidFieldError({
-            modelName: Model.modelName,
-            fieldName: fieldDefinition.properties.fieldName,
             error: `"${propertyName}" property "${fieldDefinition.properties[propertyName]}" targets to unknown method`,
             suggestion: `ensure the name of an instance method of this model is given, and check for typos`,
         });
+    }
+}
+
+/**
+ * @param {Object} param0
+ * @param {Object} param0.fieldDefinition field being currently checked
+ * @param {Object} param0.Model model being currently checked
+ * @param {string} param0.propertyName name of the property being currently checked
+ * @throws {InvalidFieldError}
+ */
+function checkPropertyIsStringWithTwoPartsSeparatedByDot({ fieldDefinition, Model, propertyName }) {
+    const [part1, part2, part3] = fieldDefinition.properties[propertyName].split('.');
+    if (!part1 || !part2 || part3) {
+        throw new InvalidFieldError({
+            error: `value of "${propertyName}" property should be a 2 parts string separared by a single dot instead of "${fieldDefinition.properties[propertyName]}"`,
+            suggestion: `follow the expected format, or check for typos`,
+        });
+    }
+}
+
+/**
+ * @param {Object} param0
+ * @param {Object} param0.fieldDefinition field being currently checked
+ * @param {Object} param0.Models all existing models
+ * @param {Object} param0.Model model being currently checked
+ * @param {string} param0.propertyName name of the property being currently checked
+ * @throws {InvalidFieldError}
+ */
+function checkPropertyIsRelationNameDotFieldName({ fieldDefinition, Models, Model, propertyName }) {
+    const [relationName, relatedName] = fieldDefinition.properties[propertyName].split('.');
+    const relationFields = getMatchingFieldsDefinitionFromParents({ Models, Model, fieldName: relationName });
+    if (relationFields.size === 0) {
+        throw new InvalidFieldError({
+            error: `undefined relation "${relationName}"`,
+            suggestion: `target a field on the current model, or check for typos`,
+        });
+    }
+    for (const relationField of relationFields) {
+        if (!relationField.properties.to) {
+            throw new InvalidFieldError({
+                error: `invalid field type of relation "${relationName}"`,
+                suggestion: `target a relation field`,
+            });
+        }
+    }
+    const relatedModelName = [...relationFields].find(relationField => relationField.properties.to).properties.to;
+    const relatedFields = getMatchingFieldsDefinitionFromParents({ Models, Model: Models[relatedModelName], fieldName: relatedName });
+    if (relatedFields.size === 0) {
+        throw new InvalidFieldError({
+            error: `unsupported related field "${relatedName}"`,
+            suggestion: `target a field on the relation model, or check for typos`,
+        });
+    }
+    for (const relatedField of relatedFields) {
+        // TODO SEB change this to a list of properties that must match between related
+        if (relatedField.properties.to !== fieldDefinition.properties.to) {
+            throw new InvalidFieldError({
+                error: `related field "${relatedModelName}/${relatedField.properties.fieldName}" has mismatch type`,
+                suggestion: `change the type of either the related field or the target field`,
+            });
+        }
     }
 }

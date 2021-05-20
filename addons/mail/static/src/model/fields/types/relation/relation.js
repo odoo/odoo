@@ -10,7 +10,6 @@ export const relation = new Map([
         'isCausal',
         'isMany2X',
         'isOne2X',
-        'isRelation',
         'isX2Many',
         'isX2One',
         'readonly',
@@ -20,7 +19,6 @@ export const relation = new Map([
     ])],
     ['nameOfRequiredProperties', new Set([
         'fieldName',
-        'isRelation',
         'to',
     ])],
 ]);

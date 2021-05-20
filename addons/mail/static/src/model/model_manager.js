@@ -345,10 +345,8 @@ class ModelManager {
             // Ensure X2many relations are Set initially (other fields can stay undefined).
             for (const field of Model.__fieldList) {
                 record.__values[field.fieldName] = undefined;
-                if (field.isRelation) {
-                    if (field.isX2Many) {
-                        record.__values[field.fieldName] = new Set();
-                    }
+                if (field.isX2Many) {
+                    record.__values[field.fieldName] = new Set();
                 }
             }
             /**
@@ -398,7 +396,7 @@ class ModelManager {
         }
         record._willDelete();
         for (const field of Model.__fieldList) {
-            if (field.isRelation) {
+            if (field.to) {
                 // ensure inverses are properly unlinked
                 field.parseAndExecuteCommands(record, unlinkAll(), { allowWriteReadonly: true });
             }
@@ -670,7 +668,7 @@ class ModelManager {
          */
         for (const Model of Object.values(Models)) {
             for (const field of Object.values(Model.fields)) {
-                if (!field.isRelation) {
+                if (!field.to) {
                     continue;
                 }
                 if (field.inverse) {
