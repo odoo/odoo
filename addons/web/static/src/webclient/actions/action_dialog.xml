@@ -10,23 +10,20 @@
         {"o_act_window": actionType === "ir.actions.act_window"}
       </attribute>
     </xpath>
-    <xpath expr="//t[@t-slot='default']" position="replace">
-      <t t-if="props.ActionComponent" t-component="props.ActionComponent" t-props="props.actionProps" t-ref="actionRef"/>
-    </xpath>
   </t>
 
-  <t t-name="web.LegacyAdaptedActionDialog" t-inherit="web.ActionDialog" t-inherit-mode="primary" owl="1">
-    <xpath expr="//footer[@class='modal-footer']" position="replace">
-      <footer t-if="props.renderFooter" class="modal-footer">
-        <t t-if="!isLegacy">
-          <t t-slot="buttons">
-            <button class="btn btn-primary" t-on-click="_close">
-              <t>Ok</t>
-            </button>
-          </t>
-        </t>
-      </footer>
-    </xpath>
+  <t t-name="web.ActionDialogBody" owl="1">
+    <t t-if="props.ActionComponent" t-component="props.ActionComponent" t-props="props.actionProps" t-ref="actionRef"/>
+  </t>
+
+  <t t-name="web.LegacyAdaptedActionDialogFooter" owl="1">
+    <t t-if="!isLegacy">
+      <t t-slot="buttons">
+        <button class="btn btn-primary" t-on-click="_close">
+          <t>Ok</t>
+        </button>
+      </t>
+    </t>
   </t>
 
 </templates>

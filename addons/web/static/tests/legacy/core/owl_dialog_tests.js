@@ -286,7 +286,12 @@ odoo.define('web.owl_dialog_tests', function (require) {
                     this._super();
                 }
             });
-
+            class WowlDialogSubClass extends WowlDialog{
+                setup(){
+                    super.setup();
+                    this.contentClass = this.props.contentClass;
+                }
+            }
             class Parent extends Component {
                 setup() {
                     super.setup();
@@ -307,11 +312,11 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 </div>`;
             const parent = await mount(Parent, { env, target: getFixture() });
 
-            parent.dialogs.push({ id: 1, class: WowlDialog });
+            parent.dialogs.push({ id: 1, class: WowlDialogSubClass });
             await nextTick();
             parent.dialogs.push({ id: 2, class: Dialog });
             await nextTick();
-            parent.dialogs.push({ id: 3, class: WowlDialog });
+            parent.dialogs.push({ id: 3, class: WowlDialogSubClass });
             await nextTick();
 
             assert.verifySteps([]);

@@ -22,14 +22,16 @@ class ActionDialog extends Dialog {
         const actionProps = this.props && this.props.actionProps;
         const action = actionProps && actionProps.action;
         this.actionType = action && action.type;
+        this.title = "title" in this.props ? this.props.title : this.constructor.title;
     }
 }
 ActionDialog.components = { ...Dialog.components, DebugManager };
 ActionDialog.template = "web.ActionDialog";
+ActionDialog.bodyTemplate = "web.ActionDialogBody";
 ActionDialog.props = {
-    ...Dialog.props,
     ActionComponent: { optional: true },
     actionProps: { optional: true },
+    title: { optional: true },
 };
 
 /**
@@ -37,13 +39,16 @@ ActionDialog.props = {
  * The "ActionDialog" class should get exported from this file when the cleaning will occur.
  */
 class LegacyAdaptedActionDialog extends ActionDialog {
+    constructor(...args) {
+        super(...args);
+    }
     setup() {
         super.setup();
         const actionProps = this.props && this.props.actionProps;
         const action = actionProps && actionProps.action;
         const actionContext = action && action.context;
         const actionDialogSize = actionContext && actionContext.dialog_size;
-        this.props.size = LEGACY_SIZE_CLASSES[actionDialogSize] || (this.props && this.props.size);
+        this.size = LEGACY_SIZE_CLASSES[actionDialogSize] || this.constructor.size;
         const ControllerComponent = this.props && this.props.ActionComponent;
         const Controller = ControllerComponent && ControllerComponent.Component;
         this.isLegacy = Controller && Controller.isLegacy;
@@ -61,6 +66,6 @@ class LegacyAdaptedActionDialog extends ActionDialog {
         }, () => []); // TODO: should this depend on actionRef.comp?
     }
 }
-LegacyAdaptedActionDialog.template = "web.LegacyAdaptedActionDialog";
+LegacyAdaptedActionDialog.footerTemplate = "web.LegacyAdaptedActionDialogFooter";
 
 export { LegacyAdaptedActionDialog as ActionDialog };

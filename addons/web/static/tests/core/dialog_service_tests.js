@@ -11,6 +11,7 @@ import { registerCleanup } from "../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService, makeFakeRPCService } from "../helpers/mock_services";
 import { click, getFixture, makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
+import { Dialog } from "../../src/core/dialog/dialog";
 
 const { Component, mount, tags } = owl;
 
@@ -52,8 +53,8 @@ QUnit.module("DialogManager", {
 });
 QUnit.test("Simple rendering with a single dialog", async (assert) => {
     assert.expect(9);
-    class CustomDialog extends Component {}
-    CustomDialog.template = tags.xml`<Dialog title="'Welcome'"/>`;
+    class CustomDialog extends Dialog {}
+    CustomDialog.title = "Welcome";
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
     assert.containsOnce(target, ".o_dialog_manager");
     assert.containsNone(target, ".o_dialog_manager portal");
@@ -70,8 +71,12 @@ QUnit.test("Simple rendering with a single dialog", async (assert) => {
 });
 QUnit.test("rendering with two dialogs", async (assert) => {
     assert.expect(12);
-    class CustomDialog extends Component {}
-    CustomDialog.template = tags.xml`<Dialog title="props.title"/>`;
+    class CustomDialog extends Dialog {
+        setup() {
+            super.setup();
+            this.title = this.props.title;
+        }
+    }
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
     assert.containsOnce(target, ".o_dialog_manager");
     assert.containsNone(target, ".o_dialog_manager portal");
@@ -97,8 +102,12 @@ QUnit.test("rendering with two dialogs", async (assert) => {
 
 QUnit.test("multiple dialogs can become the UI active element", async (assert) => {
     assert.expect(3);
-    class CustomDialog extends Component {}
-    CustomDialog.template = tags.xml`<Dialog title="props.title"/>`;
+    class CustomDialog extends Dialog {
+        setup() {
+            super.setup();
+            this.title = this.props.title;
+        }
+    }
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
 
     env.services.dialog.open(CustomDialog, { title: "Hello" });
@@ -129,12 +138,13 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
 QUnit.test("dialog component crashes", async (assert) => {
     assert.expect(4);
 
-    class FailingDialog extends Component {
+    class FailingDialog extends Dialog {
         setup() {
+            super.setup();
             throw new Error("Some Error");
         }
     }
-    FailingDialog.template = tags.xml`<Dialog title="'Error'"/>`;
+    FailingDialog.title = "Error";
 
     const prom = makeDeferred();
     patchWithCleanup(ErrorDialog.prototype, {

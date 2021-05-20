@@ -3,11 +3,19 @@
 import { useHotkey } from "../hotkey_hook";
 import { useActiveElement } from "../ui_service";
 
-const { Component, hooks, misc, QWeb } = owl;
+const { Component, hooks, misc } = owl;
 const { useRef, useSubEnv } = hooks;
 const { Portal } = misc;
 
 export class Dialog extends Component {
+    constructor(...args) {
+        super(...args);
+        if (this.constructor === Dialog) {
+            throw new Error(
+                "Dialog should not be used by itself. Please use the dialog service with a Dialog subclass."
+            );
+        }
+    }
     setup() {
         this.modalRef = useRef("modal");
         useActiveElement("modal");
@@ -21,6 +29,14 @@ export class Dialog extends Component {
             { altIsOptional: true }
         );
         useSubEnv({ inDialog: true });
+        this.close = this.close.bind(this);
+        this.contentClass = this.constructor.contentClass;
+        this.fullscreen = this.constructor.fullscreen;
+        this.renderFooter = this.constructor.renderFooter;
+        this.renderHeader = this.constructor.renderHeader;
+        this.size = this.constructor.size;
+        this.technical = this.constructor.technical;
+        this.title = this.constructor.title;
     }
 
     mounted() {
@@ -57,26 +73,13 @@ export class Dialog extends Component {
 }
 
 Dialog.components = { Portal };
-Dialog.props = {
-    contentClass: { type: String, optional: true },
-    fullscreen: Boolean,
-    renderFooter: Boolean,
-    renderHeader: Boolean,
-    size: {
-        type: String,
-        validate: (s) => ["modal-xl", "modal-lg", "modal-md", "modal-sm"].includes(s),
-    },
-    technical: Boolean,
-    title: String,
-};
-Dialog.defaultProps = {
-    fullscreen: false,
-    renderFooter: true,
-    renderHeader: true,
-    size: "modal-lg",
-    technical: true,
-    title: "Odoo",
-};
 Dialog.template = "web.Dialog";
-
-QWeb.registerComponent("Dialog", Dialog);
+Dialog.contentClass = null;
+Dialog.fullscreen = false;
+Dialog.renderFooter = true;
+Dialog.renderHeader = true;
+Dialog.size = "modal-lg";
+Dialog.technical = true;
+Dialog.title = "Odoo";
+Dialog.bodyTemplate = owl.tags.xml`<div/>`;
+Dialog.footerTemplate = "web.DialogFooterDefault";

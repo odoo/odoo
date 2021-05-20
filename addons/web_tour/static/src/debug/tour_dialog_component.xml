@@ -2,18 +2,16 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="web_tour.ToursDialog" owl="1">
-    <Dialog title="dialogTitle">
-        <div>
-            <t t-call="web_tour.ToursDialog.Table">
-                <t t-set="caption">Onboarding tours</t>
-                <t t-set="tours" t-value="onboardingTours"/>
-            </t>
-            <t t-if="testingTours.length" t-call="web_tour.ToursDialog.Table">
-                <t t-set="caption">Testing tours</t>
-                <t t-set="tours" t-value="testingTours"/>
-            </t>
-        </div>
-    </Dialog>
+    <div>
+        <t t-call="web_tour.ToursDialog.Table">
+            <t t-set="caption">Onboarding tours</t>
+            <t t-set="tours" t-value="onboardingTours"/>
+        </t>
+        <t t-if="testingTours.length" t-call="web_tour.ToursDialog.Table">
+            <t t-set="caption">Testing tours</t>
+            <t t-set="tours" t-value="testingTours"/>
+        </t>
+    </div>
 </t>
 
 <t t-name="web_tour.ToursDialog.Table" owl="1">
