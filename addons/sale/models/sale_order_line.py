@@ -220,8 +220,13 @@ class SaleOrderLine(models.Model):
                 % '\n'.join(fields.mapped('field_description'))
             )
 
-        result = super(SaleOrderLine, self).write(values)
-        return result
+        if 'name' in values and any(line.display_type == 'line_note' for line in self):
+            values['name'] = html_sanitize(
+                values['name'], sanitize_attributes=True
+                # The remaining parameters used are the default ones.
+            )
+
+        return super().write(values)
 
     order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
     name = fields.Text(string='Description', required=True)

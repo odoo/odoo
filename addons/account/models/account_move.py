@@ -4042,6 +4042,12 @@ class AccountMoveLine(models.Model):
 
         account_to_write = self.env['account.account'].browse(vals['account_id']) if 'account_id' in vals else None
 
+        if 'name' in vals and any(line.display_type == 'line_note' for line in self):
+            vals['name'] = html_sanitize(
+                vals['name'], sanitize_attributes=True
+                # The remaining parameters used are the default ones.
+            )
+
         # Check writing a deprecated account.
         if account_to_write and account_to_write.deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
