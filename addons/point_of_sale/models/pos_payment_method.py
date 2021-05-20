@@ -20,7 +20,7 @@ class PosPaymentMethod(models.Model):
     _order = "id asc"
 
     def _get_payment_terminal_selection(self):
-        pos_module = self.env['ir.module.module'].search([('name', '=', 'point_of_sale')])
+        pos_module = self.env['ir.module.module'].sudo().search([('name', '=', 'point_of_sale')])
         if pos_module.demo:
             return [('dummy', 'Dummy Terminal')]
         else:
