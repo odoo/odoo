@@ -267,7 +267,9 @@ class PointOfSaleModel extends EventBus {
      */
     async loadPosData() {
         await this._fetchAndProcessPosData();
-        await this._connectToProxy();
+        if (this.getUseProxy()) {
+            await this._connectToProxy();
+        }
         await this.actionHandler({ name: 'actionDoneLoading' });
         await this._afterDoneLoading();
     }
@@ -293,9 +295,6 @@ class PointOfSaleModel extends EventBus {
      * Connect to proxy if necessary.
      */
     async _connectToProxy() {
-        if (!this.getUseProxy()) {
-            return;
-        }
         this.barcodeReader.disconnect_from_proxy();
         await this.actionHandler({ name: 'actionShowSkipButton' });
         try {
