@@ -67,7 +67,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         $(document.body).on('click.product_comparaison_widget', '.o_comparelist_remove', function (ev) {
             self._removeFromComparelist(ev);
             self.guard.exec(function() {
-                var new_link = '/shop/compare/?products=' + self.comparelist_product_ids.toString();
+                var new_link = '/shop/compare?products=' + self.comparelist_product_ids.toString();
                 window.location.href = _.isEmpty(self.comparelist_product_ids) ? '/shop' : new_link;
             });
         });
@@ -236,7 +236,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
             this.$('.o_comparelist_products').addClass('d-md-block');
             if (this.comparelist_product_ids.length >=2) {
                 this.$('.o_comparelist_button').addClass('d-md-block');
-                this.$('.o_comparelist_button a').attr('href', '/shop/compare/?products='+this.comparelist_product_ids.toString());
+                this.$('.o_comparelist_button a').attr('href', '/shop/compare?products='+this.comparelist_product_ids.toString());
             }
         }
     },
