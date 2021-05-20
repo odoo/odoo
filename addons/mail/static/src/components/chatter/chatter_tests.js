@@ -102,33 +102,14 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
 });
 
 QUnit.test('base rendering when chatter has no record', async function (assert) {
-    assert.expect(8);
+    assert.expect(4);
 
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Chatter`).length,
-        1,
-        "should have a chatter"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar`).length,
-        1,
-        "should have a chatter topbar"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
-        0,
-        "should not have an attachment box in the chatter"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Chatter_thread`).length,
-        1,
-        "should have a thread in the chatter"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering when chatter has no attachment'
     assert.ok(
         chatter.thread.isTemporary,
         "thread should have a temporary thread linked to chatter"
@@ -151,6 +132,38 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
 });
 
 QUnit.test('base rendering when chatter has attachments', async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 100 });
+    this.data['ir.attachment'].records.push(
+        {
+            mimetype: 'text/plain',
+            name: 'Blah.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        },
+        {
+            mimetype: 'text/plain',
+            name: 'Blu.txt',
+            res_id: 100,
+            res_model: 'res.partner',
+        }
+    );
+    await this.start();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterComponent({ chatter });
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering when chatter has no attachment'
+    assert.strictEqual(
+        document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
+        0,
+        "should not have an attachment box in the chatter"
+    );
+});
+
+QUnit.test('show attachment box', async function (assert) {
     assert.expect(3);
 
     this.data['res.partner'].records.push({ id: 100 });
@@ -174,57 +187,7 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
         threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Chatter`).length,
-        1,
-        "should have a chatter"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar`).length,
-        1,
-        "should have a chatter topbar"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
-        0,
-        "should not have an attachment box in the chatter"
-    );
-});
-
-QUnit.test('show attachment box', async function (assert) {
-    assert.expect(6);
-
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['ir.attachment'].records.push(
-        {
-            mimetype: 'text/plain',
-            name: 'Blah.txt',
-            res_id: 100,
-            res_model: 'res.partner',
-        },
-        {
-            mimetype: 'text/plain',
-            name: 'Blu.txt',
-            res_id: 100,
-            res_model: 'res.partner',
-        }
-    );
-    await this.start();
-    const chatter = this.env.models['mail.chatter'].create({
-        threadId: 100,
-        threadModel: 'res.partner',
-    });
-    await this.createChatterComponent({ chatter });
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Chatter`).length,
-        1,
-        "should have a chatter"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar`).length,
-        1,
-        "should have a chatter topbar"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering when chatter has no attachment'
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
         1,
@@ -235,11 +198,7 @@ QUnit.test('show attachment box', async function (assert) {
         1,
         "attachments button should have a counter"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
-        0,
-        "should not have an attachment box in the chatter"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering when chatter has attachments'
 
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonAttachments`).click()
@@ -455,7 +414,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
 });
 
 QUnit.test('post message with "META-Enter" keyboard shortcut', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
@@ -464,11 +423,7 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
         threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should not have any message initially in chatter"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'post message with "CTRL-Enter" keyboard shortcut'
 
     await afterNextRender(() =>
         document.querySelector('.o_ChatterTopbar_buttonSendMessage').click()
@@ -492,7 +447,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     // Note that test doesn't assert Enter makes a newline, because this
     // default browser cannot be simulated with just dispatching
     // programmatically crafted events...
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
@@ -501,11 +456,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
         threadModel: 'res.partner',
     });
     await this.createChatterComponent({ chatter });
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "should not have any message initially in chatter"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'post message with "CTRL-Enter" keyboard shortcut'
 
     await afterNextRender(() =>
         document.querySelector('.o_ChatterTopbar_buttonSendMessage').click()
