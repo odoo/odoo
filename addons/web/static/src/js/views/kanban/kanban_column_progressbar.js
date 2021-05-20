@@ -91,6 +91,7 @@ var KanbanColumnProgressBar = Widget.extend({
     computeCounters() {
         debugger;
         const subgroupCounts = {};
+        let allsubgroupCount = 0;
         for (const key of Object.keys(this.colors)) {
             const subgroupCount = this.columnState.progressBarValues.counts[key] || 0;
             if (this.activeFilter.value === key && this.columnState.count === 0 && subgroupCount <= 0) {
@@ -100,6 +101,16 @@ var KanbanColumnProgressBar = Widget.extend({
                 });
             }
             subgroupCounts[key] = this.activeFilter.value === key && key === '__false' ? this.columnState.count : subgroupCount;
+            allsubgroupCount += subgroupCount;
+        }
+
+        const colorValues = _.pick(this.colors, ['planned', 'today', 'overdue']);
+        const subvalueCounts = _.pick(this.columnState.progressBarValues.counts, ['planned', 'today', 'overdue']);
+        let allsubCount = 0;
+        for(const key of Object.keys(colorValues)) {
+            const subvalueCount = subvalueCounts[key] || 0;
+            allsubCount += subvalueCount;
+            // subgroupCounts.__false = allsubgroupCount < allsubCount ? allsubCount - allsubgroupCount : this.columnState.count;
         }
 
         this.groupCount = this.columnState.count;
