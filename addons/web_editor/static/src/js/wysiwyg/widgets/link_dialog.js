@@ -54,6 +54,7 @@ const _DialogLinkWidget = Link.extend({
         }
         this.data.isNewWindow = data.isNewWindow;
         this.final_data = this.data;
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------
@@ -196,15 +197,12 @@ const LinkDialog = Dialog.extend({
      * @override
      */
     save: function () {
-        this.linkWidget.save();
-        if (!this.linkWidget.final_data) {
-            // Invalid form content: do not proceed with save.
-            return;
-        }
-        this.final_data = this.linkWidget.final_data;
-        if (this.final_data) {
-            return this._super(...arguments);
-        }
+        const _super = this._super.bind(this);
+        const saveArguments = arguments;
+        return this.linkWidget.save().then(() => {
+            this.final_data = this.linkWidget.final_data;
+            return _super(...saveArguments);
+        });
     },
 });
 
