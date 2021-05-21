@@ -127,6 +127,11 @@ class pos_order(models.Model):
             if order.company_id._is_accounting_unalterable():
                 raise UserError(_("According to French law, you cannot delet a point of sale order."))
         return super(pos_order, self).unlink()
+    
+    def _export_for_ui(self, order):
+        res = super()._export_for_ui(order)
+        res['l10n_fr_hash'] = order.l10n_fr_hash
+        return res
 
 
 class PosOrderLine(models.Model):
