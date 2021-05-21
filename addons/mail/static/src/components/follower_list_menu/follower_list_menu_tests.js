@@ -80,7 +80,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 });
 
 QUnit.test('base rendering editable', async function (assert) {
-    assert.expect(5);
+    assert.expect(2);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -89,25 +89,12 @@ QUnit.test('base rendering editable', async function (assert) {
     });
     await this.createFollowerListMenuComponent(thread);
 
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu',
-        "should have followers menu component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu_buttonFollowers',
-        "should have followers button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
     assert.notOk(
         document.querySelector('.o_FollowerListMenu_buttonFollowers').disabled,
         "followers button should not be disabled"
     );
-    assert.containsNone(
-        document.body,
-        '.o_FollowerListMenu_dropdown',
-        "followers dropdown should not be opened"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
 
     await afterNextRender(() => {
         document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
@@ -120,7 +107,7 @@ QUnit.test('base rendering editable', async function (assert) {
 });
 
 QUnit.test('click on "add followers" button', async function (assert) {
-    assert.expect(15);
+    assert.expect(12);
 
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -171,16 +158,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
     });
     await this.createFollowerListMenuComponent(thread);
 
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu',
-        "should have followers menu component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu_buttonFollowers',
-        "should have followers button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
     assert.strictEqual(
         document.querySelector('.o_FollowerListMenu_buttonFollowersCount').textContent,
         "0",
@@ -190,11 +168,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
     await afterNextRender(() => {
         document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
     });
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu_dropdown',
-        "followers dropdown should be opened"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
     assert.containsOnce(
         document.body,
         '.o_FollowerListMenu_addFollowersButton',
@@ -234,7 +208,7 @@ QUnit.test('click on "add followers" button', async function (assert) {
 });
 
 QUnit.test('click on remove follower', async function (assert) {
-    assert.expect(6);
+    assert.expect(5);
 
     const self = this;
     await this.start({
@@ -270,11 +244,7 @@ QUnit.test('click on remove follower', async function (assert) {
     await afterNextRender(() => {
         document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Follower',
-        "should have follower component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsOnce(
         document.body,
         '.o_Follower_removeButton',

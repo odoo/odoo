@@ -90,7 +90,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 });
 
 QUnit.test('base rendering editable', async function (assert) {
-    assert.expect(6);
+    assert.expect(2);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -108,26 +108,7 @@ QUnit.test('base rendering editable', async function (assert) {
         isEditable: true,
     });
     await this.createFollowerComponent(follower);
-    assert.containsOnce(
-        document.body,
-        '.o_Follower',
-        "should have follower component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Follower_details',
-        "should display a details part"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Follower_avatar',
-        "should display the avatar of the follower"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Follower_name',
-        "should display the name of the follower"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
     assert.containsOnce(
         document.body,
         '.o_Follower_editButton',
@@ -141,7 +122,7 @@ QUnit.test('base rendering editable', async function (assert) {
 });
 
 QUnit.test('click on partner follower details', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     const openFormDef = makeDeferred();
     const bus = new Bus();
@@ -184,16 +165,7 @@ QUnit.test('click on partner follower details', async function (assert) {
         }),
     });
     await this.createFollowerComponent(follower);
-    assert.containsOnce(
-        document.body,
-        '.o_Follower',
-        "should have follower component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Follower_details',
-        "should display a details part"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
 
     document.querySelector('.o_Follower_details').click();
     await openFormDef;
@@ -204,7 +176,7 @@ QUnit.test('click on partner follower details', async function (assert) {
 });
 
 QUnit.test('click on edit follower', async function (assert) {
-    assert.expect(5);
+    assert.expect(3);
 
     this.data['res.partner'].records.push({ id: 100, message_follower_ids: [2] });
     this.data['mail.followers'].records.push({
@@ -230,16 +202,7 @@ QUnit.test('click on edit follower', async function (assert) {
     });
     await thread.refreshFollowers();
     await this.createFollowerComponent(thread.followers[0]);
-    assert.containsOnce(
-        document.body,
-        '.o_Follower',
-        "should have follower component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Follower_editButton',
-        "should display an edit button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
 
     await afterNextRender(() => document.querySelector('.o_Follower_editButton').click());
     assert.verifySteps(
@@ -254,7 +217,7 @@ QUnit.test('click on edit follower', async function (assert) {
 });
 
 QUnit.test('edit follower and close subtype dialog', async function (assert) {
-    assert.expect(6);
+    assert.expect(4);
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start({
@@ -290,16 +253,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         }),
     });
     await this.createFollowerComponent(follower);
-    assert.containsOnce(
-        document.body,
-        '.o_Follower',
-        "should have follower component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Follower_editButton',
-        "should display an edit button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
 
     await afterNextRender(() => document.querySelector('.o_Follower_editButton').click());
     assert.verifySteps(

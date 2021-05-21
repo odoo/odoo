@@ -104,7 +104,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
 });
 
 QUnit.test('simplest layout of a not followed subtype', async function (assert) {
-    assert.expect(5);
+    assert.expect(3);
 
     await this.start();
 
@@ -134,16 +134,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         follower,
         followerSubtype,
     });
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerSubtype',
-        "should have follower subtype component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerSubtype_label',
-        "should have a label"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'simplest layout of a followed subtype'
     assert.containsOnce(
         document.body,
         '.o_FollowerSubtype_checkbox',
@@ -161,7 +152,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
 });
 
 QUnit.test('toggle follower subtype checkbox', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     await this.start();
 
@@ -191,11 +182,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         follower,
         followerSubtype,
     });
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerSubtype',
-        "should have follower subtype component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsOnce(
         document.body,
         '.o_FollowerSubtype_checkbox',
