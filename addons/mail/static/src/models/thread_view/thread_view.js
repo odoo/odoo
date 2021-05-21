@@ -436,8 +436,6 @@ function factory(dependencies) {
         }),
     };
 
-    ThreadView.modelName = 'mail.thread_view';
-
     return ThreadView;
 }
 

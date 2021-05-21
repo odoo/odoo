@@ -754,8 +754,6 @@ function factory(dependencies) {
         }),
     };
 
-    MessagingNotificationHandler.modelName = 'mail.messaging_notification_handler';
-
     return MessagingNotificationHandler;
 }
 

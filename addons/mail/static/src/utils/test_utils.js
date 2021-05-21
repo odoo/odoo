@@ -6,8 +6,8 @@ import {
     addMessagingToEnv,
     addTimeControlToEnv,
 } from '@mail/env/test_env';
-import { generateTypicalRegistries } from '@mail/model/fields/generate_typical_registries';
 import ModelManager from '@mail/model/model_manager';
+import { populateRegistries } from '@mail/model/populate_registries';
 import ChatWindowService from '@mail/services/chat_window_service/chat_window_service';
 import DialogService from '@mail/services/dialog_service/dialog_service';
 import { nextTick } from '@mail/utils/utils';
@@ -666,8 +666,8 @@ async function start(param0 = {}) {
              */
             await env.session.is_bound;
 
-            const { fieldPropertyRegistry, fieldTypeRegistry } = generateTypicalRegistries();
-            testEnv.modelManager = new ModelManager({ env: testEnv, fieldPropertyRegistry, fieldTypeRegistry });
+            testEnv.modelManager = new ModelManager({ env: testEnv });
+            populateRegistries({ env: testEnv });
             testEnv.modelManager.start();
             /**
              * Create the messaging singleton record.

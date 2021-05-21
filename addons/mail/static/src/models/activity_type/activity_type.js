@@ -30,8 +30,6 @@ function factory(dependencies) {
         }),
     };
 
-    ActivityType.modelName = 'mail.activity_type';
-
     return ActivityType;
 }
 

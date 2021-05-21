@@ -279,8 +279,6 @@ function factory(dependencies) {
         }),
     };
 
-    MessagingInitializer.modelName = 'mail.messaging_initializer';
-
     return MessagingInitializer;
 }
 

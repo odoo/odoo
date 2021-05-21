@@ -70,8 +70,6 @@ function factory(dependencies) {
         partner: many2one('mail.partner'),
     };
 
-    Notification.modelName = 'mail.notification';
-
     return Notification;
 }
 

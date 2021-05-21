@@ -194,8 +194,6 @@ function factory(dependencies) {
         }),
     };
 
-    MessagingMenu.modelName = 'mail.messaging_menu';
-
     return MessagingMenu;
 }
 

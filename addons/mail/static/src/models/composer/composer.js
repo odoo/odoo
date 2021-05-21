@@ -1063,8 +1063,6 @@ function factory(dependencies) {
         }),
     };
 
-    Composer.modelName = 'mail.composer';
-
     return Composer;
 }
 

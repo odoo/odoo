@@ -2260,8 +2260,6 @@ function factory(dependencies) {
         uuid: attr(),
     };
 
-    Thread.modelName = 'mail.thread';
-
     return Thread;
 }
 

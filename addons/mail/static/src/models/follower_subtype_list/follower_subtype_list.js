@@ -11,8 +11,6 @@ function factory(dependencies) {
         follower: many2one('mail.follower'),
     };
 
-    FollowerSubtypeList.modelName = 'mail.follower_subtype_list';
-
     return FollowerSubtypeList;
 }
 

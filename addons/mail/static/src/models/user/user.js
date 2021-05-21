@@ -246,8 +246,6 @@ function factory(dependencies) {
         }),
     };
 
-    User.modelName = 'mail.user';
-
     return User;
 }
 

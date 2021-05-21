@@ -41,8 +41,6 @@ function factory(dependencies) {
 
     }
 
-    ThreadPartnerSeenInfo.modelName = 'mail.thread_partner_seen_info';
-
     ThreadPartnerSeenInfo.fields = {
         /**
          * The id of channel this seen info is related to.

@@ -2,7 +2,7 @@
 
 /**
  * @param {Object} param0
- * @param {Map} param0.fieldPropertyRegistry
+ * @param {Object} param0.env
  * @throws {Error} in case some registered properties are not correctly defined
  */
 export function checkRegisteredProperties({ fieldPropertyRegistry }) {

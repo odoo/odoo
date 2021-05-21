@@ -31,10 +31,8 @@ class ModelManager {
     /*
      * @param {Object} param0
      * @param {Object} param0.env
-     * @param {Map} param0.fieldPropertyRegistry
-     * @param {Map} param0.fieldTypeRegistry
      */
-    constructor({ env, fieldPropertyRegistry, fieldTypeRegistry }) {
+    constructor({ env }) {
         /**
          * Inner separator used inside string to represent dependents.
          * Set as public attribute so that it can be used by model field.
@@ -44,8 +42,9 @@ class ModelManager {
          * The messaging env.
          */
         this.env = env;
-        this.fieldPropertyRegistry = fieldPropertyRegistry;
-        this.fieldTypeRegistry = fieldTypeRegistry;
+        this.modelRegistry = new Map();
+        this.fieldPropertyRegistry = new Map();
+        this.fieldTypeRegistry = new Map();
 
         //----------------------------------------------------------------------
         // Various variables that are necessary to handle an update cycle. The
@@ -105,10 +104,12 @@ class ModelManager {
     /**
      * Called when all JS modules that register or patch models have been
      * done. This launches generation of models.
+     *
+     * @throws {Error}
      */
     start() {
         checkRegisteredProperties({ fieldPropertyRegistry: this.fieldPropertyRegistry });
-        checkRegisteredTypes({ env: this.env, fieldTypeRegistry: this.fieldTypeRegistry });
+        checkRegisteredTypes({ fieldPropertyRegistry: this.fieldPropertyRegistry, fieldTypeRegistry: this.fieldTypeRegistry });
         /**
          * Generate the models.
          */
@@ -516,7 +517,7 @@ class ModelManager {
         const generatedNames = [];
         let toGenerateNames = [...allNames];
         while (toGenerateNames.length > 0) {
-            const generatable = toGenerateNames.map(name => registry[name]).find(entry => {
+            const [modelName, generatable] = toGenerateNames.map(name => [name, registry[name]]).find(([name, entry]) => {
                 let isGenerateable = true;
                 for (const dependencyName of entry.dependencies) {
                     if (!generatedNames.includes(dependencyName)) {
@@ -530,6 +531,7 @@ class ModelManager {
             }
             // Make environment accessible from Model.
             const Model = generatable.factory(Models);
+            Model.modelName = modelName;
             Model.env = this.env;
             /**
             * Contains all records. key is local id, while value is the record.
@@ -547,12 +549,6 @@ class ModelManager {
                         this._applyModelPatchFields(Model, patch.name, patch.patch);
                         break;
                 }
-            }
-            if (!Object.prototype.hasOwnProperty.call(Model, 'modelName')) {
-                throw new Error(`Missing static property "modelName" on Model class "${Model.name}".`);
-            }
-            if (generatedNames.includes(Model.modelName)) {
-                throw new Error(`Duplicate model name "${Model.modelName}" shared on 2 distinct Model classes.`);
             }
             Models[Model.modelName] = Model;
             generatedNames.push(Model.modelName);

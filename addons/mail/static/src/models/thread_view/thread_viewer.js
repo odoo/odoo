@@ -153,8 +153,6 @@ function factory(dependencies) {
         }),
     };
 
-    ThreadViewer.modelName = 'mail.thread_viewer';
-
     return ThreadViewer;
 }
 

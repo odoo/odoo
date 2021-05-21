@@ -118,8 +118,6 @@ function factory(dependencies) {
         })
     };
 
-    NotificationGroup.modelName = 'mail.notification_group';
-
     return NotificationGroup;
 }
 

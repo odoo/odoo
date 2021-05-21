@@ -429,8 +429,6 @@ function factory(dependencies) {
         url: attr(),
     };
 
-    Attachment.modelName = 'mail.attachment';
-
     return Attachment;
 }
 

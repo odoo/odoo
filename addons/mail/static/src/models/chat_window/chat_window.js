@@ -489,8 +489,6 @@ function factory(dependencies) {
         }),
     };
 
-    ChatWindow.modelName = 'mail.chat_window';
-
     return ChatWindow;
 }
 

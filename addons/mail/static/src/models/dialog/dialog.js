@@ -21,8 +21,6 @@ function factory(dependencies) {
         }),
     };
 
-    Dialog.modelName = 'mail.dialog';
-
     return Dialog;
 }
 

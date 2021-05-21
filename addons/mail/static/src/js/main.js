@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { generateTypicalRegistries } from '@mail/model/fields/generate_typical_registries';
 import ModelManager from '@mail/model/model_manager';
+import { populateRegistries } from '@mail/model/populate_registries';
 import MessagingService from '@mail/services/messaging/messaging';
 
 import env from 'web.commonEnv';
@@ -34,6 +34,8 @@ async function createMessaging() {
      */
     await env.session.is_bound;
 
+    populateRegistries(env);
+
     env.modelManager.start();
     /**
      * Create the messaging singleton record.
@@ -55,7 +57,6 @@ const store = new Store({
  * Registry of models.
  */
 env.models = {};
-const { fieldPropertyRegistry, fieldTypeRegistry } = generateTypicalRegistries();
 /**
  * Environment keys used in messaging.
  */
@@ -91,7 +92,7 @@ Object.assign(env, {
      * is an essential condition to make it work.
      */
     messagingCreatedPromise: createMessaging(),
-    modelManager: new ModelManager({ env, fieldPropertyRegistry, fieldTypeRegistry }),
+    modelManager: new ModelManager({ env }),
     store,
 });
 

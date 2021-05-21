@@ -664,8 +664,6 @@ function factory(dependencies) {
         }),
     };
 
-    ThreadCache.modelName = 'mail.thread_cache';
-
     return ThreadCache;
 }
 

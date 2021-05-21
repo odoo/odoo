@@ -41,8 +41,6 @@ function factory(dependencies) {
         }),
     };
 
-    Locale.modelName = 'mail.locale';
-
     return Locale;
 }
 

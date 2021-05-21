@@ -96,8 +96,6 @@ function factory(dependencies) {
         substitution: attr(),
     };
 
-    CannedResponse.modelName = 'mail.canned_response';
-
     return CannedResponse;
 }
 

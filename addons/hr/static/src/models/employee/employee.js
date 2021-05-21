@@ -197,8 +197,6 @@ function factory(dependencies) {
         }),
     };
 
-    Employee.modelName = 'hr.employee';
-
     return Employee;
 }
 

@@ -23,8 +23,6 @@ function factoryAddress(dependencies) {
         }),
     };
 
-    Address.modelName = 'test.address';
-
     return Address;
 }
 
@@ -51,8 +49,6 @@ function factoryContact(dependencies) {
 
     };
 
-    Contact.modelName = 'test.contact';
-
     return Contact;
 }
 
@@ -60,8 +56,6 @@ function factoryHobby(dependencies) {
     class Hobby extends dependencies['mail.model'] {}
 
     Hobby.fields = { description: attr() };
-
-    Hobby.modelName = 'test.hobby';
 
     return Hobby;
 }
@@ -87,8 +81,6 @@ function factoryTask(dependencies) {
             inverse: 'tasks'
         }),
     };
-
-    Task.modelName = 'test.task';
 
     return Task;
 }

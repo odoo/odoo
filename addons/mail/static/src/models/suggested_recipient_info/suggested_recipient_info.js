@@ -105,8 +105,6 @@ function factory(dependencies) {
         }),
     };
 
-    SuggestedRecipientInfo.modelName = 'mail.suggested_recipient_info';
-
     return SuggestedRecipientInfo;
 }
 

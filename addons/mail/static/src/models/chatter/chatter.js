@@ -346,8 +346,6 @@ function factory(dependencies) {
         }),
     };
 
-    Chatter.modelName = 'mail.chatter';
-
     return Chatter;
 }
 

@@ -119,8 +119,6 @@ function factory(dependencies) {
         name: attr(),
     };
 
-    ChannelCommand.modelName = 'mail.channel_command';
-
     return ChannelCommand;
 }
 

@@ -244,13 +244,8 @@ function factory() {
      */
     Model.fields = {};
 
-    /**
-     * Name of the model. Important to refer to appropriate model class
-     * like in relational fields. Name of model classes must be unique.
-     */
-    Model.modelName = 'mail.model';
-
     return Model;
 }
 
+// TODO remove self registry from models definition, move into a new registry actually in model manager
 registerNewModel('mail.model', factory);

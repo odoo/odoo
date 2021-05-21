@@ -70,8 +70,6 @@ function factory(dependencies) {
         sizeClass: attr(),
     };
 
-    Device.modelName = 'mail.device';
-
     return Device;
 }
 

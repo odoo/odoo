@@ -581,8 +581,6 @@ function factory(dependencies) {
         }),
     };
 
-    Discuss.modelName = 'mail.discuss';
-
     return Discuss;
 }
 

@@ -73,8 +73,6 @@ function factory(dependencies) {
         sequence: attr(),
     };
 
-    FollowerSubtype.modelName = 'mail.follower_subtype';
-
     return FollowerSubtype;
 }
 

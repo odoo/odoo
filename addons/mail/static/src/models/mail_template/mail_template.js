@@ -74,8 +74,6 @@ function factory(dependencies) {
         name: attr(),
     };
 
-    MailTemplate.modelName = 'mail.mail_template';
-
     return MailTemplate;
 }
 

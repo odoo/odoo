@@ -244,8 +244,6 @@ function factory(dependencies) {
         }
     }
 
-    MessageSeenIndicator.modelName = 'mail.message_seen_indicator';
-
     MessageSeenIndicator.fields = {
         /**
          * The id of the channel this seen indicator is related to.

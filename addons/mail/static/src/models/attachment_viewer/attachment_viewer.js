@@ -48,8 +48,6 @@ function factory(dependencies) {
         }),
     };
 
-    AttachmentViewer.modelName = 'mail.attachment_viewer';
-
     return AttachmentViewer;
 }
 

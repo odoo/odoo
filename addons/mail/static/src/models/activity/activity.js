@@ -338,8 +338,6 @@ function factory(dependencies) {
         }),
     };
 
-    Activity.modelName = 'mail.activity';
-
     return Activity;
 }
 

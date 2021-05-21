@@ -825,8 +825,6 @@ function factory(dependencies) {
         }),
     };
 
-    Message.modelName = 'mail.message';
-
     return Message;
 }
 

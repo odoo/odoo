@@ -479,8 +479,6 @@ function factory(dependencies) {
         }),
     };
 
-    ChatWindowManager.modelName = 'mail.chat_window_manager';
-
     return ChatWindowManager;
 }
 

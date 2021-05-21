@@ -316,8 +316,6 @@ function factory(dependencies) {
         starred: one2one('mail.thread'),
     };
 
-    Messaging.modelName = 'mail.messaging';
-
     return Messaging;
 }
 

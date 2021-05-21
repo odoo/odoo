@@ -42,8 +42,6 @@ function factory(dependencies) {
         }),
     };
 
-    DialogManager.modelName = 'mail.dialog_manager';
-
     return DialogManager;
 }
 

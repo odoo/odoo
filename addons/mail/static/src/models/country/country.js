@@ -46,8 +46,6 @@ function factory(dependencies) {
         name: attr(),
     };
 
-    Country.modelName = 'mail.country';
-
     return Country;
 }
 

@@ -187,8 +187,6 @@ function factory(dependencies) {
         subtypes: many2many('mail.follower_subtype'),
     };
 
-    Follower.modelName = 'mail.follower';
-
     return Follower;
 }
 

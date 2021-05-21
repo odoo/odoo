@@ -67,8 +67,6 @@ function factory(dependencies) {
         groups: one2many('mail.notification_group'),
     };
 
-    NotificationGroupManager.modelName = 'mail.notification_group_manager';
-
     return NotificationGroupManager;
 }
 
