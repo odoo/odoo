@@ -61,11 +61,11 @@
                                 <hr class="company_invoice_line" />
                             </div>
                             <div name="invoice_address" class="invoice_address">
-                                <t t-raw="address"/>
+                                <t t-out="address"/>
                             </div>
                         </t>
                         <t t-else="fallback_address">
-                            <div name="invoice_address" class="invoice_address" t-raw="fallback_address" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}' />
+                            <div name="invoice_address" class="invoice_address" t-out="fallback_address" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}' />
                         </t>
                         <div class="company_address">
                             <div>
@@ -76,7 +76,7 @@
                                 t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
                             <t t-if="information_block">
                                 <div class="address">
-                                    <t t-raw="information_block"/>
+                                    <t t-out="information_block"/>
                                 </div>
                             </t>
                         </div>
