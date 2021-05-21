@@ -69,6 +69,28 @@ class TestActivityRights(TestActivityCommon):
                 raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
             return DEFAULT
 
+        test_activity = self.env['mail.activity'].with_user(self.user_admin).create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_admin.id,
+            'summary': 'Summary',
+        })
+
+        # cannot read activities if no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.AccessError):
+                searched_activity = self.env['mail.activity'].with_user(self.user_employee).search(
+                    [('id', '=', test_activity.id)])
+                searched_activity.read(['summary'])
+
+        # cannot search_read activities if no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.AccessError):
+                self.env['mail.activity'].with_user(self.user_employee).search_read(
+                    [('id', '=', test_activity.id)],
+                    ['summary'])
+
         # cannot create activities for people that cannot access record
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.UserError):
