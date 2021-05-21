@@ -453,6 +453,67 @@ class MailActivity(models.Model):
                     {'type': 'activity_updated', 'activity_deleted': True})
         return super(MailActivity, self).unlink()
 
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        """ Override that adds specific access rights of mail.activity, to remove
+        ids uid could not see according to our custom rules. Please refer to
+        _filter_access_rules_remaining for more details about those rules.
+
+        The method is inspired by what has been done on mail.message. """
+
+        # Rules do not apply to administrator
+        if self.env.is_superuser():
+            return super(MailActivity, self)._search(
+                args, offset=offset, limit=limit, order=order,
+                count=count, access_rights_uid=access_rights_uid)
+        # Perform a super with count as False, to have the ids, not a counter
+        ids = super(MailActivity, self)._search(
+            args, offset=offset, limit=limit, order=order,
+            count=False, access_rights_uid=access_rights_uid)
+        if not ids and count:
+            return 0
+        elif not ids:
+            return ids
+
+        # check read access rights before checking the actual rules on the given ids
+        super(MailActivity, self.with_user(access_rights_uid or self._uid)).check_access_rights('read')
+
+        self.flush(['res_model', 'res_id'])
+        activities_to_check = []
+        for sub_ids in self._cr.split_for_in_conditions(ids):
+            self._cr.execute("""
+                SELECT DISTINCT activity.id, activity.res_model, activity.res_id
+                FROM "%s" activity
+                WHERE activity.id = ANY (%%(ids)s)""" % self._table, dict(ids=list(sub_ids)))
+            activities_to_check = self._cr.dictfetchall()
+
+        activity_to_documents = {}
+        for activity in activities_to_check:
+            activity_to_documents.setdefault(activity['res_model'], list()).append(activity['res_id'])
+
+        allowed_ids = []
+        for doc_model, doc_ids in activity_to_documents.items():
+            # fall back on related document access right checks. Use the same as defined for mail.thread
+            # if available; otherwise fall back on read
+            if hasattr(self.env[doc_model], '_mail_post_access'):
+                doc_operation = self.env[doc_model]._mail_post_access
+            else:
+                doc_operation = 'read'
+            DocumentModel = self.env[doc_model].with_user(access_rights_uid or self._uid)
+            right = DocumentModel.check_access_rights(doc_operation, raise_exception=False)
+            if right:
+                valid_docs = DocumentModel.browse(doc_ids)._filter_access_rules(doc_operation)
+                allowed_ids += [
+                    activity['id'] for activity in activities_to_check
+                    if activity['res_model'] == doc_model and activity['res_id'] in valid_docs.ids]
+
+        if count:
+            return len(allowed_ids)
+        else:
+            # re-construct a list based on ids, because 'allowed_ids' does not keep the original order
+            id_list = [id for id in ids if id in allowed_ids]
+            return id_list
+
     def name_get(self):
         res = []
         for record in self:
