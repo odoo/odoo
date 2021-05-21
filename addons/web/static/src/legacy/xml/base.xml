@@ -18,7 +18,7 @@
                         <em t-else="" class="text-warning">Unnamed</em>
                     </li>
                     <li class="breadcrumb-item active">
-                        <t t-if="props.title" t-esc="props.title"/>
+                        <span t-attf-class="{{props.breadcrumbs.length ? 'text-muted' : 'text-900' }}" t-if="props.title" t-esc="props.title"/>
                         <em t-else="" class="text-warning">Unnamed</em>
                     </li>
                 </ol>
