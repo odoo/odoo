@@ -65,7 +65,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 });
 
 QUnit.test('base rendering editable', async function (assert) {
-    assert.expect(3);
+    assert.expect(1);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -73,16 +73,7 @@ QUnit.test('base rendering editable', async function (assert) {
         model: 'res.partner',
     });
     await this.createFollowButtonComponent(thread);
-    assert.containsOnce(
-        document.body,
-        '.o_FollowButton',
-        "should have follow button component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowButton_follow',
-        "should have 'Follow' button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
     assert.notOk(
         document.querySelector('.o_FollowButton_follow').disabled,
         "'Follow' button should be disabled"
@@ -90,7 +81,7 @@ QUnit.test('base rendering editable', async function (assert) {
 });
 
 QUnit.test('hover following button', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
     this.data['mail.followers'].records.push({
@@ -108,11 +99,7 @@ QUnit.test('hover following button', async function (assert) {
     });
     thread.follow();
     await this.createFollowButtonComponent(thread);
-    assert.containsOnce(
-        document.body,
-        '.o_FollowButton',
-        "should have follow button component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
     assert.containsOnce(
         document.body,
         '.o_FollowButton_unfollow',
@@ -158,7 +145,7 @@ QUnit.test('hover following button', async function (assert) {
 });
 
 QUnit.test('click on "follow" button', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
     this.data['mail.followers'].records.push({
@@ -184,16 +171,7 @@ QUnit.test('click on "follow" button', async function (assert) {
         model: 'res.partner',
     });
     await this.createFollowButtonComponent(thread);
-    assert.containsOnce(
-        document.body,
-        '.o_FollowButton',
-        "should have follow button component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowButton_follow',
-        "should have button follow"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
 
     await afterNextRender(() => {
         document.querySelector('.o_FollowButton_follow').click();
@@ -215,7 +193,7 @@ QUnit.test('click on "follow" button', async function (assert) {
 });
 
 QUnit.test('click on "unfollow" button', async function (assert) {
-    assert.expect(7);
+    assert.expect(5);
 
     this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
     this.data['mail.followers'].records.push({
@@ -240,21 +218,13 @@ QUnit.test('click on "unfollow" button', async function (assert) {
     });
     thread.follow();
     await this.createFollowButtonComponent(thread);
-    assert.containsOnce(
-        document.body,
-        '.o_FollowButton',
-        "should have follow button component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'base rendering not editable'
     assert.containsNone(
         document.body,
         '.o_FollowButton_follow',
         "should not have button follow"
     );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowButton_unfollow',
-        "should have button unfollow"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'hover following button'
 
     await afterNextRender(() => document.querySelector('.o_FollowButton_unfollow').click());
     assert.verifySteps(['rpc:message_unsubscribe']);
