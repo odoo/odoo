@@ -87,6 +87,24 @@ class TestActivityRights(TestActivityCommon):
                 searched_activity = self.env['mail.activity'].with_user(self.user_employee)._search(
                     [('id', '=', test_activity.id)], count=False)
 
+        # can read_group activities if access to the document
+        read_group_result = self.env['mail.activity'].with_user(self.user_employee).read_group(
+            [('id', '=', test_activity.id)],
+            ['summary'],
+            ['summary'],
+        )
+        self.assertEqual(1, read_group_result[0]['summary_count'])
+        self.assertEqual('Summary', read_group_result[0]['summary'])
+
+        # cannot read_group activities if no access to the document
+        with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            with self.assertRaises(exceptions.AccessError):
+                self.env['mail.activity'].with_user(self.user_employee).read_group(
+                    [('id', '=', test_activity.id)],
+                    ['summary'],
+                    ['summary'],
+                )
+
         # cannot read activities if no access to the document
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):

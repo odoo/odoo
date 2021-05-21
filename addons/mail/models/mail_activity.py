@@ -514,6 +514,32 @@ class MailActivity(models.Model):
             id_list = [id for id in ids if id in allowed_ids]
             return id_list
 
+    @api.model
+    def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """ The base _read_group_raw method implementation computes a where based on a given domain
+        (_where_calc) and manually applies ir rules (_apply_ir_rules).
+
+        Meaning that our custom rules enforcing from '_filter_access_rules' and
+        '_filter_access_rules_python' are bypassed in that case.
+
+        This overrides re-uses the _search implementation to force the read group domain to allowed
+        ids only, that are computed based on our custom rules (see _filter_access_rules_remaining
+        for more details). """
+
+        # Rules do not apply to administrator
+        if not self.env.is_superuser():
+            allowed_ids = self._search(domain, count=False)
+            if allowed_ids:
+                domain = expression.AND([domain, [('id', 'in', allowed_ids)]])
+            else:
+                # force void result if no allowed ids found
+                domain = expression.AND([domain, [(0, '=', 1)]])
+
+        return super(MailActivity, self)._read_group_raw(
+            domain=domain, fields=fields, groupby=groupby, offset=offset,
+            limit=limit, orderby=orderby, lazy=lazy,
+        )
+
     def name_get(self):
         res = []
         for record in self:
