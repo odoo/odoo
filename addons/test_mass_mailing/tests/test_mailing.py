@@ -225,9 +225,16 @@ class TestMassMailing(TestMassMailCommon):
         mailing = self.env['mailing.mailing'].browse(self.mailing_bl.ids)
         recipients = self._create_mailing_test_records(count=5)
 
-        # blacklist records 3 and 4
+        # blacklist records 2, 3, 4
+        self.env['mail.blacklist'].create({'email': recipients[2].email_normalized})
         self.env['mail.blacklist'].create({'email': recipients[3].email_normalized})
         self.env['mail.blacklist'].create({'email': recipients[4].email_normalized})
+
+        # unblacklist record 2
+        self.env['mail.blacklist'].action_remove_with_reason(
+            recipients[2].email_normalized, "human error"
+        )
+        self.env['mail.blacklist'].flush(['active'])
 
         mailing.write({'mailing_domain': [('id', 'in', recipients.ids)]})
         mailing.action_put_in_queue()
