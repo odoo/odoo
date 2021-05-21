@@ -2,6 +2,7 @@ odoo.define("website.tour.edit_megamenu", function (require) {
 "use strict";
 
 const tour = require('web_tour.tour');
+const wTourUtils = require('website.tour_utils');
 
 tour.register('edit_megamenu', {
     test: true,
@@ -37,6 +38,7 @@ tour.register('edit_megamenu', {
         trigger: '.modal-dialog .btn-primary span:contains("Save")',
         run: 'click',
     },
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'a[data-action=edit]'}),
     {
         content: "Menu should have a new megamenu item",
         trigger: '#top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
