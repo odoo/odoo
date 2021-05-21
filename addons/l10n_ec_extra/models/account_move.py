@@ -74,6 +74,16 @@ class AccountMove(models.Model):
         compute='_compute_invoice_witholding_by_group',
         help='Edit Tax amounts if you encounter rounding issues.')
 
+    l10n_ec_sri_payment_id = fields.Many2one('l10n.ec.sri.payment', _("Payment Method (SRI)"))
+    l10n_ec_access_key = fields.Char(_("Authorization"))
+    l10n_ec_auth_type = fields.Selection(related="l10n_latam_document_type_id.l10n_ec_authorization")
+    l10n_ec_is_electronic = fields.Boolean(default=False, compute="_l10n_ec_is_electronic")
+
+    @api.depends('journal_id')
+    def _l10n_ec_is_electronic(self):
+        self.ensure_one()
+        self.l10n_ec_is_electronic = len(self.journal_id.edi_format_ids) > 0
+
     @api.depends('line_ids.price_subtotal', 'line_ids.tax_base_amount', 'line_ids.witholding_tax_ids', 'partner_id', 'currency_id')
     def _compute_invoice_witholding_by_group(self):
         ''' Helper to get the taxes grouped according their account.tax.group.
