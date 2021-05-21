@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class EventBooth(models.Model):
@@ -18,36 +19,41 @@ class EventBooth(models.Model):
     event_id = fields.Many2one('event.event', string='Event', ondelete='cascade', required=True)
     # customer
     partner_id = fields.Many2one('res.partner', string='Renter', tracking=True)
-    partner_name = fields.Char('Renter Name', compute='_compute_partner_name', readonly=False, store=True)
-    partner_email = fields.Char('Renter Email', compute='_compute_partner_email', readonly=False, store=True)
-    partner_phone = fields.Char(string='Renter Phone', compute='_comptue_partner_phone', readonly=False, store=True)
+    contact_name = fields.Char('Renter Name', compute='_compute_contact_name', readonly=False, store=True)
+    contact_email = fields.Char('Renter Email', compute='_compute_contact_email', readonly=False, store=True)
+    contact_mobile = fields.Char('Renter Mobile', compute='_compute_contact_mobile', readonly=False, store=True)
+    contact_phone = fields.Char('Renter Phone', compute='_compute_contact_phone', readonly=False, store=True)
     # state
     state = fields.Selection(
         [('available', 'Available'), ('unavailable', 'Unavailable')],
         string='Status', group_expand='_group_expand_states',
+        default='available', required=True,
         help='Shows the availability of a Booth')
     is_available = fields.Boolean(compute='_compute_is_available', search='_search_is_available')
 
     @api.depends('partner_id')
-    def _compute_partner_name(self):
+    def _compute_contact_name(self):
         for booth in self:
-            if not booth.partner_name:
-                booth.partner_name = booth.partner_id.name or False
+            if not booth.contact_name:
+                booth.contact_name = booth.partner_id.name or False
 
     @api.depends('partner_id')
-    def _compute_partner_email(self):
+    def _compute_contact_email(self):
         for booth in self:
-            if not booth.partner_email:
-                booth.partner_email = booth.partner_id.email or False
+            if not booth.contact_email:
+                booth.contact_email = booth.partner_id.email or False
 
     @api.depends('partner_id')
-    def _comptue_partner_phone(self):
+    def _compute_contact_mobile(self):
         for booth in self:
-            if not booth.partner_phone:
-                booth.partner_phone = booth.partner_id.phone or False
+            if not booth.contact_mobile:
+                booth.contact_mobile = booth.partner_id.mobile or False
 
-    def _group_expand_states(self, states, domain, order):
-        return [key for key, val in type(self).state.selection]
+    @api.depends('partner_id')
+    def _compute_contact_phone(self):
+        for booth in self:
+            if not booth.contact_phone:
+                booth.contact_phone = booth.partner_id.phone or False
 
     @api.depends('state')
     def _compute_is_available(self):
@@ -55,8 +61,15 @@ class EventBooth(models.Model):
             booth.is_available = booth.state == 'available'
 
     def _search_is_available(self, operator, operand):
-        # TDE TODO
-        return []
+        negative = operator in expression.NEGATIVE_TERM_OPERATORS
+        if (negative and operand) or not operand:
+            return [('state', '=', 'unavailable')]
+        return [('state', '=', 'available')]
+
+
+    def _group_expand_states(self, states, domain, order):
+        return [key for key, val in type(self).state.selection]
+
     @api.model_create_multi
     def create(self, vals_list):
         return super(EventBooth, self.with_context(mail_create_nosubscribe=True)).create(vals_list)

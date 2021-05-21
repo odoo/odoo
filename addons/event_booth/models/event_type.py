@@ -14,7 +14,7 @@ class EventType(models.Model):
         readonly=False, store=True)
 
     @api.depends('use_booth')
-    def _compute_event_type_ticket_ids(self):
+    def _compute_event_type_booth_ids(self):
         for template in self:
             if not template.use_booth:
                 template.event_type_booth_ids = [(5, 0)]
