@@ -1,9 +1,6 @@
 /** @odoo-module **/
 
-import { registerClassPatchModel, registerFieldPatchModel, registerInstancePatchModel } from '@mail/model/model_core';
-
 import { classPatchPartner, fieldPatchPartner, instancePatchPartner } from '@hr_holidays/models/partner/partner';
-
 
 /**
  * Populate registries with models, fields, and properties expected by the app.
@@ -12,8 +9,7 @@ import { classPatchPartner, fieldPatchPartner, instancePatchPartner } from '@hr_
  * @param {Object} param0.env
  */
 export function populateRegistries({ env }) {
-    // TODO SEB convert those to modelManager stuff, add them in tests
-    registerClassPatchModel('mail.partner', 'hr_holidays', classPatchPartner);
-    registerFieldPatchModel('mail.partner', 'hr_holidays', fieldPatchPartner);
-    registerInstancePatchModel('mail.partner', 'hr_holidays', instancePatchPartner);
+    env.modelManager.registerClassPatch('mail.partner', 'hr_holidays', classPatchPartner);
+    env.modelManager.registerFieldPatch('mail.partner', 'hr_holidays', fieldPatchPartner);
+    env.modelManager.registerInstancePatch('mail.partner', 'hr_holidays', instancePatchPartner);
 }

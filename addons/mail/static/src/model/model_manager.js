@@ -4,7 +4,6 @@ import { checkRegisteredProperties } from '@mail/model/fields/properties/check_r
 import { checkRegisteredTypes } from '@mail/model/fields/types/check_registered_types';
 import { checkDeclaredModels } from '@mail/model/model_check_declared_models';
 import { checkProcessedFieldsOnModels } from '@mail/model/model_check_processed_fields';
-import { registry } from '@mail/model/model_core';
 import ModelField from '@mail/model/model_field';
 import { patchClassMethods, patchInstanceMethods } from '@mail/utils/utils';
 import { unlinkAll } from '@mail/model/model_field_command';
@@ -42,9 +41,12 @@ class ModelManager {
          * The messaging env.
          */
         this.env = env;
-        this.modelRegistry = new Map();
         this.fieldPropertyRegistry = new Map();
         this.fieldTypeRegistry = new Map();
+        this.modelRegistry = new Map();
+        this.classPatchRegistry = new Map();
+        this.fieldPatchRegistry = new Map();
+        this.instancePatchRegistry = new Map();
 
         //----------------------------------------------------------------------
         // Various variables that are necessary to handle an update cycle. The
@@ -265,6 +267,46 @@ class ModelManager {
         return res;
     }
 
+    registerClassPatch(modelName, patchName, classPatch) {
+        if (!this.classPatchRegistry.has(modelName)) {
+            this.classPatchRegistry.set(modelName, new Map());
+        }
+        const patches = this.classPatchRegistry.get(modelName);
+        if (patches.has(patchName)) {
+            throw new Error(`Model ${modelName} already has class patch ${patchName}.`);
+        }
+        patches.set(patchName, classPatch);
+    }
+
+    registerFieldPatch(modelName, patchName, fieldPatch) {
+        if (!this.fieldPatchRegistry.has(modelName)) {
+            this.fieldPatchRegistry.set(modelName, new Map());
+        }
+        const patches = this.fieldPatchRegistry.get(modelName);
+        if (patches.has(patchName)) {
+            throw new Error(`Model ${modelName} already has field patch ${patchName}.`);
+        }
+        patches.set(patchName, fieldPatch);
+    }
+
+    registerInstancePatch(modelName, patchName, instancePatch) {
+        if (!this.instancePatchRegistry.has(modelName)) {
+            this.instancePatchRegistry.set(modelName, new Map());
+        }
+        const patches = this.instancePatchRegistry.get(modelName);
+        if (patches.has(patchName)) {
+            throw new Error(`Model ${modelName} already has instance patch ${patchName}.`);
+        }
+        patches.set(patchName, instancePatch);
+    }
+
+    registerModel(modelName, factory) {
+        if (this.modelRegistry.has(modelName)) {
+            throw new Error(`Model ${modelName} is already registered.`);
+        }
+        this.modelRegistry.set(modelName, factory);
+    }
+
     /**
      * Process an update on provided record with provided data. Updating
      * a record consists of applying direct updates first (i.e. explicit
@@ -288,13 +330,12 @@ class ModelManager {
     /**
      * @private
      * @param {mail.model} Model class
-     * @param {string} patchName
-     * @param {Object} patch
+     * @param {Object} fieldPatch
      */
-    _applyModelPatchFields(Model, patchName, patch) {
-        for (const [fieldName, field] of Object.entries(patch)) {
+    _applyModelPatchFields(Model, fieldPatch) {
+        for (const [fieldName, field] of Object.entries(fieldPatch)) {
             if (Model.fields[fieldName]) {
-                throw new Error(`Invalid field patch "${patchName}" on "${Model.modelName}/${fieldName}" because the field already exists. Don't patch an existing field.`);
+                throw new Error(`Field ${fieldName} already exists. Don't patch an existing field.`);
             }
             const deeplyCopiedField = Object.assign({}, field);
             if (deeplyCopiedField.dependencies) {
@@ -512,50 +553,51 @@ class ModelManager {
      * @throws {Error} in case it cannot generate models.
      */
     _generateModels() {
-        const allNames = Object.keys(registry);
         const Models = {};
-        const generatedNames = [];
-        let toGenerateNames = [...allNames];
-        while (toGenerateNames.length > 0) {
-            const [modelName, generatable] = toGenerateNames.map(name => [name, registry[name]]).find(([name, entry]) => {
-                let isGenerateable = true;
-                for (const dependencyName of entry.dependencies) {
-                    if (!generatedNames.includes(dependencyName)) {
-                        isGenerateable = false;
-                    }
-                }
-                return isGenerateable;
-            });
-            if (!generatable) {
-                throw new Error(`Cannot generate following Model: ${toGenerateNames.join(', ')}`);
-            }
-            if (!generatable.factory) {
+        for (const [modelName, factory] of this.modelRegistry.entries()) {
+            if (!factory) {
                 throw new Error(`"${modelName}" does not have a factory.`);
             }
+
             // Make environment accessible from Model.
-            const Model = generatable.factory(Models);
+            const Model = factory(Models);
             Model.modelName = modelName;
             Model.env = this.env;
             /**
             * Contains all records. key is local id, while value is the record.
             */
             Model.__records = {};
-            for (const patch of generatable.patches) {
-                switch (patch.type) {
-                    case 'class':
-                        patchClassMethods(Model, patch.name, patch.patch);
-                        break;
-                    case 'instance':
-                        patchInstanceMethods(Model, patch.name, patch.patch);
-                        break;
-                    case 'field':
-                        this._applyModelPatchFields(Model, patch.name, patch.patch);
-                        break;
+            if (this.fieldPatchRegistry.has(modelName)) {
+                for (const [patchName, fieldPatch] of this.fieldPatchRegistry.get(modelName)) {
+                    try {
+                        this._applyModelPatchFields(Model, fieldPatch);
+                    } catch (error) {
+                        error.message = `Invalid field patch "${patchName}" of "${modelName}": ${error.message}`;
+                        throw error;
+                    }
+                }
+            }
+            if (this.classPatchRegistry.has(modelName)) {
+                for (const [patchName, classPatch] of this.classPatchRegistry.get(modelName)) {
+                    try {
+                        patchClassMethods(Model, classPatch);
+                    } catch (error) {
+                        error.message = `Invalid class patch "${patchName}" of "${modelName}": ${error.message}`;
+                        throw error;
+                    }
+                }
+            }
+            if (this.instancePatchRegistry.has(modelName)) {
+                for (const [patchName, instancePatch] of this.instancePatchRegistry.get(modelName)) {
+                    try {
+                        patchInstanceMethods(Model, instancePatch);
+                    } catch (error) {
+                        error.message = `Invalid instance patch "${patchName}" of "${modelName}": ${error.message}`;
+                        throw error;
+                    }
                 }
             }
             Models[Model.modelName] = Model;
-            generatedNames.push(Model.modelName);
-            toGenerateNames = toGenerateNames.filter(name => name !== Model.modelName);
         }
         /**
          * Check that declared model fields are correct.

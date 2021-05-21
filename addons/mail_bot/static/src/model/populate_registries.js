@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
-
 import { instancePatchMessagingInitializer } from '@mail_bot/models/messaging_initializer/messaging_initializer';
 
 /**
@@ -11,6 +9,5 @@ import { instancePatchMessagingInitializer } from '@mail_bot/models/messaging_in
  * @param {Object} param0.env
  */
 export function populateRegistries({ env }) {
-    // TODO SEB convert those to modelManager stuff, add them in tests
-    registerInstancePatchModel('mail.messaging_initializer', 'mail_bot', instancePatchMessagingInitializer);
+    env.modelManager.registerInstancePatch('mail.messaging_initializer', 'mail_bot', instancePatchMessagingInitializer);
 }

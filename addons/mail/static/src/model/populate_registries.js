@@ -16,7 +16,6 @@ import { required } from '@mail/model/fields/properties/required/required';
 import { to } from '@mail/model/fields/properties/to/to';
 import { attribute } from '@mail/model/fields/types/attribute/attribute';
 import { relation } from '@mail/model/fields/types/relation/relation';
-import { registerNewModel } from '@mail/model/model_core';
 import { factoryActivity } from '@mail/models/activity/activity';
 import { factoryActivityType } from '@mail/models/activity_type/activity_type';
 import { factoryAttachment } from '@mail/models/attachment/attachment';
@@ -90,6 +89,7 @@ export function populateRegistries({ env }) {
         env.modelManager.fieldTypeRegistry.set(name, type);
     }
     const models = [
+        ['mail.model', factoryModel], // base model, must be first on the list
         ['mail.activity', factoryActivity],
         ['mail.activity_type', factoryActivityType],
         ['mail.attachment', factoryAttachment],
@@ -116,7 +116,6 @@ export function populateRegistries({ env }) {
         ['mail.messaging_initializer', factoryMessagingInitializer],
         ['mail.messaging_menu', factoryMessagingMenu],
         ['mail.messaging_notification_handler', factoryMessagingNotificationHandler],
-        ['mail.model', factoryModel],
         ['mail.notification', factoryNotification],
         ['mail.notification_group', factoryNotificationGroup],
         ['mail.notification_group_manager', factoryNotificationGroupManager],
@@ -130,8 +129,7 @@ export function populateRegistries({ env }) {
         ['mail.user', factoryUser],
     ];
     for (const [name, model] of models) {
-        registerNewModel(name, model);
-        env.modelManager.modelRegistry.set(name, model);
+        env.modelManager.registerModel(name, model);
     }
 }
 

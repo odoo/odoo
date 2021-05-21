@@ -6,7 +6,6 @@ import {
     addMessagingToEnv,
     addTimeControlToEnv,
 } from '@mail/env/test_env';
-import { registerNewModel } from '@mail/model/model_core';
 import ModelManager from '@mail/model/model_manager';
 import { factoryAddress, factoryContact, factoryHobby, factoryTask } from '@mail/model/tests/test_models';
 import ChatWindowService from '@mail/services/chat_window_service/chat_window_service';
@@ -672,14 +671,10 @@ async function start(param0 = {}) {
             for (const populateRegistries of populateRegistriesFunctions) {
                 populateRegistries({ env: testEnv });
             }
-            testEnv.modelManager.modelRegistry.set('test.address', factoryAddress);
-            testEnv.modelManager.modelRegistry.set('test.contact', factoryContact);
-            testEnv.modelManager.modelRegistry.set('test.hobby', factoryHobby);
-            testEnv.modelManager.modelRegistry.set('test.task', factoryTask);
-            registerNewModel('test.address', factoryAddress);
-            registerNewModel('test.contact', factoryContact);
-            registerNewModel('test.hobby', factoryHobby);
-            registerNewModel('test.task', factoryTask);
+            testEnv.modelManager.registerModel('test.address', factoryAddress);
+            testEnv.modelManager.registerModel('test.contact', factoryContact);
+            testEnv.modelManager.registerModel('test.hobby', factoryHobby);
+            testEnv.modelManager.registerModel('test.task', factoryTask);
 
             testEnv.modelManager.start();
             /**

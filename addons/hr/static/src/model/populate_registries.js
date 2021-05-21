@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { registerFieldPatchModel, registerInstancePatchModel, registerNewModel } from '@mail/model/model_core';
-
 import { factoryEmployee } from '@hr/models/employee/employee';
 import { instancePatchMessaging } from '@hr/models/messaging/messaging';
 import { fieldPatchPartner, instancePatchPartner } from '@hr/models/partner/partner';
@@ -14,11 +12,9 @@ import { fieldPatchUser } from '@hr/models/user/user';
  * @param {Object} param0.env
  */
 export function populateRegistries({ env }) {
-    // TODO SEB convert those to modelManager stuff, add them in tests
-    registerNewModel('hr.employee', factoryEmployee);
-    env.modelManager.modelRegistry.set('hr.employee', factoryEmployee);
-    registerInstancePatchModel('mail.messaging', 'hr', instancePatchMessaging);
-    registerFieldPatchModel('mail.partner', 'hr', fieldPatchPartner);
-    registerInstancePatchModel('mail.partner', 'hr', instancePatchPartner);
-    registerFieldPatchModel('mail.user', 'hr', fieldPatchUser);
+    env.modelManager.registerModel('hr.employee', factoryEmployee);
+    env.modelManager.registerInstancePatch('mail.messaging', 'hr', instancePatchMessaging);
+    env.modelManager.registerFieldPatch('mail.partner', 'hr', fieldPatchPartner);
+    env.modelManager.registerInstancePatch('mail.partner', 'hr', instancePatchPartner);
+    env.modelManager.registerFieldPatch('mail.user', 'hr', fieldPatchUser);
 }

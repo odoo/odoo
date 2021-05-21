@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { registerFieldPatchModel, registerInstancePatchModel } from '@mail/model/model_core';
-
 import { instancePatchMessage } from '@snailmail/models/message/message';
 import { fieldPatchMessaging, instancePatchMessaging } from '@snailmail/models/messaging/messaging';
 import { instancePatchNotificationGroup } from '@snailmail/models/notification_group/notification_group';
@@ -13,9 +11,8 @@ import { instancePatchNotificationGroup } from '@snailmail/models/notification_g
  * @param {Object} param0.env
  */
 export function populateRegistries({ env }) {
-    // TODO SEB convert those to modelManager stuff, add them in tests
-    registerInstancePatchModel('mail.message', 'snailmail', instancePatchMessage);
-    registerInstancePatchModel('mail.messaging', 'snailmail', instancePatchMessaging);
-    registerFieldPatchModel('mail.messaging', 'snailmail', fieldPatchMessaging);
-    registerInstancePatchModel('mail.notification_group', 'snailmail', instancePatchNotificationGroup);
+    env.modelManager.registerInstancePatch('mail.message', 'snailmail', instancePatchMessage);
+    env.modelManager.registerInstancePatch('mail.messaging', 'snailmail', instancePatchMessaging);
+    env.modelManager.registerFieldPatch('mail.messaging', 'snailmail', fieldPatchMessaging);
+    env.modelManager.registerInstancePatch('mail.notification_group', 'snailmail', instancePatchNotificationGroup);
 }

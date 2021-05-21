@@ -1,11 +1,7 @@
 /** @odoo-module **/
 
 import { delay } from 'web.concurrency';
-import {
-    patch as webUtilsPatch,
-    unaccent,
-    unpatch as webUtilsUnpatch,
-} from 'web.utils';
+import { unaccent } from 'web.utils';
 
 //------------------------------------------------------------------------------
 // Public
@@ -90,30 +86,28 @@ async function nextTick() {
  * @param {Object} patch
  * @returns {function} unpatch function
  */
-function patchClassMethods(Class, patchName, patch) {
+function patchClassMethods(Class, classPatch) {
     let metadata = classPatchMap.get(Class);
     if (!metadata) {
         metadata = {
-            origMethods: {},
-            patches: {},
-            current: []
+            origMethods: new Map(),
+            patches: new Set(),
         };
         classPatchMap.set(Class, metadata);
     }
-    if (metadata.patches[patchName]) {
-        throw new Error(`Patch [${patchName}] already exists`);
+    if (metadata.patches.has(classPatch)) {
+        throw new Error(`Patch already exists.`);
     }
-    metadata.patches[patchName] = patch;
-    applyPatch(Class, patch);
-    metadata.current.push(patchName);
+    metadata.patches.add(classPatch);
+    applyPatch(Class, classPatch);
 
     function applyPatch(Class, patch) {
         Object.keys(patch).forEach(function (methodName) {
             const method = patch[methodName];
             if (typeof method === "function") {
                 const original = Class[methodName];
-                if (!(methodName in metadata.origMethods)) {
-                    metadata.origMethods[methodName] = original;
+                if (!(metadata.origMethods.has(methodName))) {
+                    metadata.origMethods.set(methodName, original);
                 }
                 Class[methodName] = function (...args) {
                     const previousSuper = this._super;
@@ -126,17 +120,16 @@ function patchClassMethods(Class, patchName, patch) {
         });
     }
 
-    return () => unpatchClassMethods.bind(Class, patchName);
+    return () => unpatchClassMethods.bind(Class, classPatch);
 }
 
 /**
  * @param {Class} Class
- * @param {string} patchName
- * @param {Object} patch
+ * @param {Object} instancePatch
  * @returns {function} unpatch function
  */
-function patchInstanceMethods(Class, patchName, patch) {
-    return webUtilsPatch(Class.prototype, patchName, patch);
+function patchInstanceMethods(Class, instancePatch) {
+    return patchClassMethods(Class.prototype, instancePatch);
 }
 
 /**
@@ -145,32 +138,32 @@ function patchInstanceMethods(Class, patchName, patch) {
  * @param {Class} Class
  * @param {string} patchName
  */
-function unpatchClassMethods(Class, patchName) {
-    let metadata = classPatchMap.get(Class);
+function unpatchClassMethods(Class, classPatch) {
+    const metadata = classPatchMap.get(Class);
     if (!metadata) {
-        return;
+        throw new Error(`Class was never patched.`);
     }
-    classPatchMap.delete(Class);
-
+    if (!metadata.patches.has(classPatch)) {
+        throw new Error(`Class was never patched with this patch.`);
+    }
+    // remove given patch
+    metadata.patches.delete(classPatch);
     // reset to original
-    for (let k in metadata.origMethods) {
-        Class[k] = metadata.origMethods[k];
+    for (const [methodName, method] in metadata.origMethods.entries()) {
+        Class[methodName] = method;
     }
-
     // apply other patches
-    for (let name of metadata.current) {
-        if (name !== patchName) {
-            patchClassMethods(Class, name, metadata.patches[name]);
-        }
+    for (const patch of metadata.patches) {
+        patchClassMethods(Class, patch, metadata.patches[patch]);
     }
 }
 
 /**
  * @param {Class} Class
- * @param {string} patchName
+ * @param {string} instancePatch
  */
-function unpatchInstanceMethods(Class, patchName) {
-    return webUtilsUnpatch(Class.prototype, patchName);
+function unpatchInstanceMethods(Class, instancePatch) {
+    return unpatchClassMethods(Class.prototype, instancePatch);
 }
 
 //------------------------------------------------------------------------------

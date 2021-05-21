@@ -7,9 +7,19 @@
  * @throws {Error} in case some fields are not correct.
  */
 export function checkProcessedFieldsOnModels({ Models, env }) {
-    for (const Model of Object.values(Models)) {
-        for (const field of Object.values(Model.fields)) {
-            checkProcessedFieldsOnModel({ Models, env, Model, field });
+    for (const [modelName, Model] of Object.entries(Models)) {
+        try {
+            for (const [fieldName, field] of Object.entries(Model.fields)) {
+                try {
+                    checkProcessedFieldsOnModel({ Models, env, Model, field });
+                } catch (error) {
+                    error.message = `Invalid field "${fieldName}": ${error.message}`;
+                    throw error;
+                }
+            }
+        } catch (error) {
+            error.message = `Invalid Model "${modelName}": ${error.message}`;
+            throw error;
         }
     }
 }
