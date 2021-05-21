@@ -4,7 +4,6 @@ odoo.define('wysiwyg.widgets.LinkTools', function (require) {
 const Link = require('wysiwyg.widgets.Link');
 const OdooEditorLib = require('web_editor.odoo-editor');
 
-const nodeSize = OdooEditorLib.nodeSize;
 const setCursor = OdooEditorLib.setCursor;
 
 /**
@@ -20,8 +19,12 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    init: function (parent, options, editable, data, $button, link) {
-        link = link || this.getOrCreateLink(editable);
+    init: function (parent, options, editable, data, $button, node) {
+        if (node && !$(node).is('a')) {
+            $(node).wrap('<a href="#"/>');
+            node = node.parentElement;
+        }
+        const link = node || this.getOrCreateLink(editable);
         this._super(parent, options, editable, data, $button, link);
     },
     /**
