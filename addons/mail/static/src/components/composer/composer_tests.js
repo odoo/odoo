@@ -88,7 +88,7 @@ QUnit.test('composer text input: basic rendering when posting a message', async 
 });
 
 QUnit.test('composer text input: basic rendering when logging note', async function (assert) {
-    assert.expect(5);
+    assert.expect(1);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -97,25 +97,7 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
         model: 'res.partner',
     });
     await this.createComposerComponent(thread.composer);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Composer').length,
-        1,
-        "should have composer in discuss thread"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_Composer_textInput').length,
-        1,
-        "should have text input inside discuss thread composer"
-    );
-    assert.ok(
-        document.querySelector('.o_Composer_textInput').classList.contains('o_ComposerTextInput'),
-        "composer text input of composer should be a ComposerTextIput component"
-    );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_ComposerTextInput_textarea`).length,
-        1,
-        "should have editable part inside composer text input"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'composer text input: basic rendering when posting a message'
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
         "Log an internal note...",
@@ -124,7 +106,7 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
 });
 
 QUnit.test('composer text input: basic rendering when linked thread is a mail.channel', async function (assert) {
-    assert.expect(4);
+    assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
@@ -133,16 +115,7 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
         model: 'mail.channel',
     });
     await this.createComposerComponent(thread.composer);
-    assert.strictEqual(
-        document.querySelectorAll('.o_Composer').length,
-        1,
-        "should have composer in discuss thread"
-    );
-    assert.strictEqual(
-        document.querySelectorAll('.o_Composer_textInput').length,
-        1,
-        "should have text input inside discuss thread composer"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'composer text input: basic rendering when posting a message'
     assert.ok(
         document.querySelector('.o_Composer_textInput').classList.contains('o_ComposerTextInput'),
         "composer text input of composer should be a ComposerTextIput component"
@@ -246,8 +219,7 @@ QUnit.test('add an emoji', async function (assert) {
     );
     // ensure popover is closed
     await nextAnimationFrame();
-    await nextAnimationFrame();
-    await nextAnimationFrame();
+    // TO_REMOVE_TEST_CLEAN_UP: no needed
 });
 
 QUnit.test('add an emoji after some text', async function (assert) {
@@ -283,8 +255,7 @@ QUnit.test('add an emoji after some text', async function (assert) {
     );
     // ensure popover is closed
     await nextAnimationFrame();
-    await nextAnimationFrame();
-    await nextAnimationFrame();
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
 });
 
 QUnit.test('add emoji replaces (keyboard) text selection', async function (assert) {
@@ -325,8 +296,7 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
     );
     // ensure popover is closed
     await nextAnimationFrame();
-    await nextAnimationFrame();
-    await nextAnimationFrame();
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
 });
 
 QUnit.test('display canned response suggestions on typing ":"', async function (assert) {
@@ -632,7 +602,7 @@ QUnit.test('mention a channel', async function (assert) {
 });
 
 QUnit.test('mention a channel after some text', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({
         id: 7,
@@ -672,11 +642,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "should have a channel mention suggestion"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'mention a channel'
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -688,7 +654,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
 });
 
 QUnit.test('add an emoji after a channel mention', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({
         id: 7,
@@ -720,11 +686,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "should have a channel mention suggestion"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'mention a channel'
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -868,7 +830,7 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
 });
 
 QUnit.test('use a command for a specific channel type', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     this.data['mail.channel_command'].records.push(
@@ -885,11 +847,7 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
     });
     await this.createComposerComponent(thread.composer);
 
-    assert.containsNone(
-        document.body,
-        '.o_ComposerSuggestionList_list',
-        "command suggestions list should not be present"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'display command suggestions on typing "/"'
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "",
@@ -950,7 +908,7 @@ QUnit.test("channel with no commands should not prompt any command suggestions o
 });
 
 QUnit.test('command suggestion should only open if command is the first character', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     this.data['mail.channel_command'].records.push(
@@ -966,11 +924,7 @@ QUnit.test('command suggestion should only open if command is the first characte
         model: 'mail.channel',
     });
     await this.createComposerComponent(thread.composer);
-    assert.containsNone(
-        document.body,
-        '.o_ComposerSuggestion',
-        "command suggestions list should not be present"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'display command suggestions on typing "/"'
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "",
@@ -1000,7 +954,7 @@ QUnit.test('command suggestion should only open if command is the first characte
 });
 
 QUnit.test('add an emoji after a command', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({ channel_type: 'channel', id: 20 });
     this.data['mail.channel_command'].records.push(
@@ -1017,11 +971,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
     });
     await this.createComposerComponent(thread.composer);
 
-    assert.containsNone(
-        document.body,
-        '.o_ComposerSuggestion',
-        "command suggestions list should not be present"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'display command suggestions on typing "/"'
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "",
@@ -1178,7 +1128,7 @@ QUnit.test('mention a partner', async function (assert) {
 });
 
 QUnit.test('mention a partner after some text', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['res.partner'].records.push({
         email: "testpartner@odoo.com",
@@ -1231,11 +1181,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "should have a mention suggestion"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'mention a partner'
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1247,7 +1193,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
 });
 
 QUnit.test('add an emoji after a partner mention', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['res.partner'].records.push({
         email: "testpartner@odoo.com",
@@ -1291,11 +1237,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`)
             .dispatchEvent(new window.KeyboardEvent('keyup'));
     });
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "should have a mention suggestion"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'mention a partner'
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
@@ -1516,7 +1458,7 @@ QUnit.test('send message when enter is pressed while holding meta key (this shor
     // Note that test doesn't assert ENTER makes no newline, because this
     // default browser cannot be simulated with just dispatching
     // programmatically crafted events...
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start({
@@ -1537,11 +1479,7 @@ QUnit.test('send message when enter is pressed while holding meta key (this shor
     // Type message
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
     document.execCommand('insertText', false, "test message");
-    assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "test message",
-        "should have inserted text content in editable"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'send message when enter is pressed while holding ctrl key..'
 
     await afterNextRender(() => {
         const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
@@ -1568,7 +1506,7 @@ QUnit.test('send message when enter is pressed while holding meta key (this shor
 });
 
 QUnit.test('composer text input cleared on message post', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     // channel that is expected to be rendered
     // with a random unique id that will be referenced in the test
@@ -1591,11 +1529,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "test message");
     });
-    assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "test message",
-        "should have inserted text content in editable"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'send message when enter is pressed while holding ctrl key..'
 
     // Send message
     await afterNextRender(() =>
@@ -1610,7 +1544,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
 });
 
 QUnit.test('composer inputs cleared on message post in composer of a mailing channel', async function (assert) {
-    assert.expect(10);
+    assert.expect(9);
 
     // channel that is expected to be rendered, with proper mass_mailing
     // value and a random unique id that will be referenced in the test
@@ -1651,11 +1585,7 @@ QUnit.test('composer inputs cleared on message post in composer of a mailing cha
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "test message");
     });
-    assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "test message",
-        "should have inserted text content in editable"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'send message when enter is pressed while holding ctrl key..'
 
     await afterNextRender(() => {
         document.querySelector(`.o_Composer_subjectInput`).focus();
@@ -1940,7 +1870,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
 });
 
 QUnit.test('warning on send with shortcut when attempting to post message with still-uploading attachments', async function (assert) {
-    assert.expect(7);
+    assert.expect(4);
 
     await this.start({
         async mockFetch(resource, init) {
@@ -1988,21 +1918,8 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
             [file]
         )
     );
-    assert.containsOnce(
-        document.body,
-        '.o_Attachment',
-        "should have only one attachment"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Attachment.o-isUploading',
-        "attachment displayed is being uploaded"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Composer_buttonSend',
-        "composer send button should be displayed"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'composer: send button is disabled if
+    // attachment upload is not finished'
 
     // Try to send message
     document
@@ -2015,7 +1932,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
 });
 
 QUnit.test('remove an attachment from composer does not need any confirmation', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     this.data['mail.channel'].records.push({
         id: 20,
@@ -2042,11 +1959,8 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
         '.o_Composer_attachmentList',
         "should have an attachment list"
     );
-    assert.containsOnce(
-        document.body,
-        '.o_Composer .o_Attachment',
-        "should have only one attachment"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'composer: send button is disabled
+    // if attachment upload is not finished'
 
     await afterNextRender(() =>
         document.querySelector('.o_Attachment_asideItemUnlink').click()
@@ -2059,7 +1973,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
 });
 
 QUnit.test('remove an uploading attachment', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['mail.channel'].records.push({
         id: 20,
@@ -2100,11 +2014,8 @@ QUnit.test('remove an uploading attachment', async function (assert) {
         '.o_Composer .o_Attachment',
         "should have only one attachment"
     );
-    assert.containsOnce(
-        document.body,
-        '.o_Attachment.o-isUploading',
-        "should have an uploading attachment"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'composer: send button is disabled
+    // if attachment upload is not finished'
 
     await afterNextRender(() =>
         document.querySelector('.o_Attachment_asideItemUnlink').click());
@@ -2226,7 +2137,7 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
 
     await afterNextRender(() => {
         document.querySelector(`.o_Composer_buttonSend`).click();
-        document.querySelector(`.o_Composer_buttonSend`).click();
+        // TO_REMOVE_TEST_CLEAN_UP: no need to do again
     });
     assert.verifySteps(
         ['message_post'],

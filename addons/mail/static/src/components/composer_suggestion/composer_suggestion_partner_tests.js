@@ -66,7 +66,7 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
 });
 
 QUnit.test('partner mention suggestion correct data', async function (assert) {
-    assert.expect(6);
+    assert.expect(5);
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
@@ -87,11 +87,7 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
         recordLocalId: partner.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Partner mention suggestion should be present"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'partner mention suggestion displayed'
     assert.strictEqual(
         document.querySelectorAll(`.o_PartnerImStatusIcon`).length,
         1,
@@ -120,7 +116,7 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
 });
 
 QUnit.test('partner mention suggestion active', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
@@ -140,11 +136,7 @@ QUnit.test('partner mention suggestion active', async function (assert) {
         recordLocalId: partner.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Partner mention suggestion should be displayed"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',

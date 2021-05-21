@@ -61,7 +61,7 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
 });
 
 QUnit.test('channel mention suggestion correct data', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     this.data['mail.channel'].records.push({
         id: 20,
@@ -79,11 +79,7 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
         recordLocalId: thread.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Channel mention suggestion should be present"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'channel mention suggestion displayed'
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion_part1',
@@ -97,7 +93,7 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
 });
 
 QUnit.test('channel mention suggestion active', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
@@ -112,11 +108,7 @@ QUnit.test('channel mention suggestion active', async function (assert) {
         recordLocalId: thread.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Channel mention suggestion should be displayed"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'channel mention suggestion displayed'
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',

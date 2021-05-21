@@ -66,7 +66,7 @@ QUnit.test('canned response suggestion displayed', async function (assert) {
 });
 
 QUnit.test('canned response suggestion correct data', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
@@ -86,11 +86,7 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
         recordLocalId: cannedResponse.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Canned response suggestion should be present"
-    );
+   // TO_REMOVE_TEST_CLEAN_UP: already in 'canned response suggestion displayed'
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion_part1',
@@ -114,7 +110,7 @@ QUnit.test('canned response suggestion correct data', async function (assert) {
 });
 
 QUnit.test('canned response suggestion active', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
@@ -134,11 +130,7 @@ QUnit.test('canned response suggestion active', async function (assert) {
         recordLocalId: cannedResponse.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Canned response suggestion should be displayed"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'canned response suggestion displayed'
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',

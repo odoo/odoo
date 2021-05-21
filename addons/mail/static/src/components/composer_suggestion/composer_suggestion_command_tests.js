@@ -65,7 +65,7 @@ QUnit.test('command suggestion displayed', async function (assert) {
 });
 
 QUnit.test('command suggestion correct data', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
@@ -84,11 +84,7 @@ QUnit.test('command suggestion correct data', async function (assert) {
         recordLocalId: command.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Command suggestion should be present"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'command suggestion displayed'
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion_part1',
@@ -112,7 +108,7 @@ QUnit.test('command suggestion correct data', async function (assert) {
 });
 
 QUnit.test('command suggestion active', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
@@ -131,11 +127,7 @@ QUnit.test('command suggestion active', async function (assert) {
         recordLocalId: command.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_ComposerSuggestion',
-        "Command suggestion should be displayed"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'command suggestion displayed'
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestion'),
         'active',
