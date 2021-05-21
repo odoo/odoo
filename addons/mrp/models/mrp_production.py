@@ -10,7 +10,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
 from odoo.tools.misc import format_date
 
@@ -692,6 +692,16 @@ class MrpProduction(models.Model):
         else:
             self.workorder_ids = False
 
+    @api.constrains('move_byproduct_ids')
+    def _check_byproducts(self):
+        for order in self:
+            if any(float_compare(move.product_qty, 0.0, precision_rounding=move.product_uom.rounding or move.product_id.uom_id.rounding) <= 0 for move in order.move_byproduct_ids):
+                raise ValidationError(_("The quantity produced of by-products must be positive."))
+            if any(move.cost_share < 0 for move in order.move_byproduct_ids):
+                raise ValidationError(_("By-products cost shares must be positive."))
+            if sum(order.move_byproduct_ids.mapped('cost_share')) > 100:
+                raise ValidationError(_("The total cost share for a manufacturing order's by-products cannot exceed 100."))
+
     def write(self, vals):
         if 'workorder_ids' in self:
             production_to_replan = self.filtered(lambda p: p.is_planned)
@@ -846,7 +856,7 @@ class MrpProduction(models.Model):
             for workorder in production.workorder_ids:
                 workorder.duration_expected = workorder._get_duration_expected()
 
-    def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False):
+    def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False, cost_share=0):
         group_orders = self.procurement_group_id.mrp_production_ids
         move_dest_ids = self.move_dest_ids
         if len(group_orders) > 1:
@@ -874,6 +884,7 @@ class MrpProduction(models.Model):
             'group_id': self.procurement_group_id.id,
             'propagate_cancel': self.propagate_cancel,
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if not byproduct_id],
+            'cost_share': cost_share,
         }
 
     def _get_moves_finished_values(self):
@@ -889,7 +900,7 @@ class MrpProduction(models.Model):
                 qty = byproduct.product_qty * (product_uom_factor / production.bom_id.product_qty)
                 moves.append(production._get_move_finished_values(
                     byproduct.product_id.id, qty, byproduct.product_uom_id.id,
-                    byproduct.operation_id.id, byproduct.id))
+                    byproduct.operation_id.id, byproduct.id, byproduct.cost_share))
         return moves
 
     def _create_update_move_finished(self):

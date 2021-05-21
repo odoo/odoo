@@ -3,8 +3,8 @@
 
 from ast import literal_eval
 
-from odoo import api, fields, models
-from odoo.tools import float_is_zero
+from odoo import fields, models
+from odoo.tools import float_is_zero, float_round
 
 
 class MrpProductionWorkcenterLineTime(models.Model):
@@ -28,7 +28,7 @@ class MrpProduction(models.Model):
         """
         super(MrpProduction, self)._cal_price(consumed_moves)
         work_center_cost = 0
-        finished_move = self.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity_done > 0)
+        finished_move = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id and m.state not in ('done', 'cancel') and m.quantity_done > 0)
         if finished_move:
             finished_move.ensure_one()
             for work_order in self.workorder_ids:
@@ -36,10 +36,19 @@ class MrpProduction(models.Model):
                 duration = sum(time_lines.mapped('duration'))
                 time_lines.write({'cost_already_recorded': True})
                 work_center_cost += (duration / 60.0) * work_order.workcenter_id.costs_hour
+            qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
+            extra_cost = self.extra_cost * qty_done
+            total_cost = (sum(-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()) + work_center_cost + extra_cost)
+            byproduct_moves = self.move_byproduct_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity_done > 0)
+            byproduct_cost_share = 0
+            for byproduct in byproduct_moves:
+                if byproduct.cost_share == 0:
+                    continue
+                byproduct_cost_share += byproduct.cost_share
+                if byproduct.product_id.cost_method in ('fifo', 'average'):
+                    byproduct.price_unit = total_cost * byproduct.cost_share / 100 / byproduct.product_uom._compute_quantity(byproduct.quantity_done, byproduct.product_id.uom_id)
             if finished_move.product_id.cost_method in ('fifo', 'average'):
-                qty_done = finished_move.product_uom._compute_quantity(finished_move.quantity_done, finished_move.product_id.uom_id)
-                extra_cost = self.extra_cost * qty_done
-                finished_move.price_unit = (sum([-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()]) + work_center_cost + extra_cost) / qty_done
+                finished_move.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / qty_done
         return True
 
     def _prepare_wc_analytic_line(self, wc_line):
