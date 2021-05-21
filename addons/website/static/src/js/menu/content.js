@@ -461,7 +461,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
             isNewWindow: data.new_window,
         }, data || {}));
 
-        this.linkWidget.xmlDependencies = ['/website/static/src/xml/website.contentMenu.xml'];
+        this.linkWidget.xmlDependencies = this.linkWidget.xmlDependencies.concat(['/website/static/src/xml/website.contentMenu.xml']);
 
         const oldSave = this.linkWidget.save;
         /**
