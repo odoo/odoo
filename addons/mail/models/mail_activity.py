@@ -408,6 +408,17 @@ class MailActivity(models.Model):
                     {'type': 'activity_updated', 'activity_created': True})
         return activities
 
+    def read(self, fields=None, load='_classic_read'):
+        """ When reading specific fields, read calls _read that manually applies ir rules
+        (_apply_ir_rules), instead of calling check_access_rule.
+
+        Meaning that our custom rules enforcing from '_filter_access_rules' and
+        '_filter_access_rules_python' are bypassed in that case.
+        To make sure we apply our custom security rules, we force a call to 'check_access_rule'. """
+
+        self.check_access_rule('read')
+        return super(MailActivity, self).read(fields=fields, load=load)
+
     def write(self, values):
         if values.get('user_id'):
             user_changes = self.filtered(lambda activity: activity.user_id.id != values.get('user_id'))
