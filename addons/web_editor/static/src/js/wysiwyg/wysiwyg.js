@@ -535,7 +535,7 @@ const Wysiwyg = Widget.extend({
             }
             if (options.forceOpen || !this.linkTools) {
                 const $btn = this.toolbar.$el.find('#create-link');
-                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, {}, $btn, options.link);
+                this.linkTools = new weWidgets.LinkTools(this, {wysiwyg: this}, this.odooEditor.editable, {}, $btn, options.link || this.lastMediaClicked);
                 const _onMousedown = ev => {
                     if (!ev.target.closest('.oe-toolbar') && !ev.target.closest('.ui-autocomplete')) {
                         // Destroy the link tools on click anywhere outside the
