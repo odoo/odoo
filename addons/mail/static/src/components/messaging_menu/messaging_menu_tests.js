@@ -76,17 +76,13 @@ QUnit.test('[technical] no crash on attempting opening messaging menu when messa
      * Messaging menu is not expected to be open on click because state of
      * messaging menu requires messaging being created.
      */
-    assert.expect(2);
+    assert.expect(1);
 
     await this.start({
         messagingBeforeCreationDeferred: new Promise(() => {}), // keep messaging not created
         waitUntilMessagingCondition: 'none',
     });
-    assert.containsOnce(
-        document.body,
-        '.o_MessagingMenu',
-        "should have messaging menu even when messaging is not yet created"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in '[technical] messaging not created then becomes created'
 
     let error;
     try {
@@ -814,7 +810,7 @@ QUnit.test('no code injection in message body preview', async function (assert) 
 });
 
 QUnit.test('no code injection in message body preview from sanitized message', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({ id: 11 });
     this.data['mail.message'].records.push({
@@ -827,11 +823,7 @@ QUnit.test('no code injection in message body preview from sanitized message', a
     await afterNextRender(() => {
         document.querySelector(`.o_MessagingMenu_toggler`).click();
     });
-    assert.containsOnce(
-        document.body,
-        '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
-        "should display a preview",
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsOnce(
         document.body,
         '.o_ThreadPreview_core',
@@ -856,7 +848,7 @@ QUnit.test('no code injection in message body preview from sanitized message', a
 });
 
 QUnit.test('<br/> tags in message body preview are transformed in spaces', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['mail.channel'].records.push({ id: 11 });
     this.data['mail.message'].records.push({
@@ -869,11 +861,7 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
     await afterNextRender(() => {
         document.querySelector(`.o_MessagingMenu_toggler`).click();
     });
-    assert.containsOnce(
-        document.body,
-        '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
-        "should display a preview",
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsOnce(
         document.body,
         '.o_ThreadPreview_core',
