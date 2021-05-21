@@ -3,6 +3,7 @@
 
 import base64
 from collections import OrderedDict
+from datetime import timedelta
 import io
 from PIL import Image
 
@@ -622,6 +623,13 @@ class TestVariantsImages(common.TestProductCommon):
         """Check that on variant, the image used is the image_variant_1920 if set,
         and defaults to the template image otherwise.
         """
+        # Pretend setup happened in an older transaction by updating on the SQL layer and making sure it gets reloaded
+        # Using _write() instead of write() because write() only allows updating log access fields at boot time
+        self.variants._write({
+            'write_date': self.cr.now() - timedelta(milliseconds=1),
+        })
+        self.variants.invalidate_cache(['write_date'], self.variants.ids)
+
         f = io.BytesIO()
         Image.new('RGB', (800, 500), '#000000').save(f, 'PNG')
         f.seek(0)
@@ -629,10 +637,12 @@ class TestVariantsImages(common.TestProductCommon):
 
         images = self.variants.mapped('image_1920')
         self.assertEqual(len(set(images)), 4)
-
         variant_no_image = self.variants[0]
+        old_last_update = variant_no_image['__last_update']
+
         self.assertFalse(variant_no_image.image_1920)
         self.template.image_1920 = image_black
+        new_last_update = variant_no_image['__last_update']
 
         # the first has no image variant, all the others do
         self.assertFalse(variant_no_image.image_variant_1920)
@@ -642,6 +652,9 @@ class TestVariantsImages(common.TestProductCommon):
         self.assertEqual(variant_no_image.image_1920, self.template.image_1920)
         # having changed the template image should not have changed these
         self.assertEqual(images[1:], self.variants.mapped('image_1920')[1:])
+
+        # last update changed for the variant without image
+        self.assertLess(old_last_update, new_last_update)
 
     def test_update_images_with_archived_variants(self):
         """Update images after variants have been archived"""
