@@ -112,10 +112,12 @@ class CompanyLDAP(models.Model):
                 conn.simple_bind_s(dn, to_native(password))
                 conn.unbind()
                 entry = results[0]
-        except ldap.INVALID_CREDENTIALS:
+        except ldap.INVALID_CREDENTIALS as e:
+            _logger.error('User Id or password is incorrect: %s', e)
             return False
         except ldap.LDAPError as e:
-            _logger.error('An LDAP exception occurred: %s', e)
+            _logger.error('LDAP error occurred: %s', e)
+            return False
         return entry
 
     def _query(self, conf, filter, retrieve_attributes=None):
