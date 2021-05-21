@@ -1405,3 +1405,8 @@ $ribbon-padding: 100px;
         display: none;
     }
 }
+
+ul.o_checklist > li.o_checked::after {
+    left: - ($o-checklist-margin-left - $o-checklist-checkmark-width) - 1;
+    top: 0;
+}
