@@ -14,7 +14,7 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.tools import safe_eval
+from odoo.tools import is_html_empty, safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -279,6 +279,7 @@ class MailRenderMixin(models.AbstractModel):
             'format_duration': lambda value: tools.format_duration(value),
             'user': self.env.user,
             'ctx': self._context,
+            'is_html_empty': is_html_empty,
         }
 
     @api.model
