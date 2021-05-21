@@ -133,6 +133,15 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         sale_order_line_id: line,
                     });
 
+                    if (
+                        new_line.get_product().tracking !== 'none' &&
+                        (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots)
+                    ) {
+                        new_line.setPackLotLines({
+                            modifiedPackLotLines: [],
+                            newPackLotLines: (line.lot_names || []).map((name) => ({ lot_name: name })),
+                        });
+                    }
                     new_line.setQuantityFromSOL(line);
                     new_line.set_unit_price(line.price_unit);
                     new_line.set_discount(line.discount);
