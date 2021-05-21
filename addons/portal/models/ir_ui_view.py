@@ -4,6 +4,7 @@
 from odoo import api, models, fields
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.tools import is_html_empty
 
 
 class View(models.Model):
@@ -24,5 +25,6 @@ class View(models.Model):
                 self._context.copy(),
                 languages=[lang for lang in Lang.get_available() if lang[0] in portal_lang_code],
                 url_for=url_for,
+                is_html_empty=is_html_empty,
             ))
         return qcontext

@@ -279,7 +279,7 @@ def is_html_empty(html_content):
     """
     if not html_content:
         return True
-    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)\s*(?:style=\".+\")?/?\s*\>')
+    tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*\>')
     return not bool(re.sub(tag_re, '', html_content).strip())
 
 
