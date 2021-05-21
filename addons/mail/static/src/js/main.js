@@ -34,8 +34,6 @@ async function createMessaging() {
      */
     await env.session.is_bound;
 
-    populateRegistries(env);
-
     env.modelManager.start();
     /**
      * Create the messaging singleton record.
@@ -95,6 +93,8 @@ Object.assign(env, {
     modelManager: new ModelManager({ env }),
     store,
 });
+
+populateRegistries(env);
 
 /**
  * Components cannot use web.bus, because they cannot use

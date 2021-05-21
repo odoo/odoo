@@ -3,9 +3,9 @@
 import { getMatchingFieldsDefinitionFromParents } from '@mail/model/fields/get_matching_fields_definition_from_parents';
 
 /**
- * This module provides an utility function to check the consistency of model
- * fields as they are declared. These checks allow early detection of developer
- * mistakes when writing model fields.
+ * This module provides an utility function to check the consistency of models
+ * that are registered. These checks allow early detection of developer mistakes
+ * when writing models.
  */
 
 /**
@@ -156,14 +156,17 @@ function checkDeclaredProperty({ env, fieldDefinition, Models, Model, propertyNa
     if (propertyDefinition.get('excludedProperties')) {
         checkAbsenceOfSiblingProperties({ env, fieldDefinition, propertyName });
     }
-    if (propertyDefinition.get('isString')) {
-        checkPropertyIsString({ propertyValue });
-    }
     if (propertyDefinition.get('isArray')) {
         checkPropertyIsArray({ propertyValue });
     }
     if (propertyDefinition.get('isArrayOfFieldNames')) {
         checkPropertyIsArrayOfFieldNames({ Models, Model, propertyValue });
+    }
+    if (propertyDefinition.get('isBoolean')) {
+        checkPropertyIsBoolean({ propertyValue });
+    }
+    if (propertyDefinition.get('isString')) {
+        checkPropertyIsString({ propertyValue });
     }
     if (propertyDefinition.get('isInstanceMethodName')) {
         checkPropertyIsInstanceMethodName({ Model, propertyValue });
@@ -253,6 +256,17 @@ function checkPropertyIsArrayOfFieldNames({ Models, Model, propertyValue }) {
 function checkPropertyIsModelName({ Models, propertyValue }) {
     if (!Models[propertyValue]) {
         throw new Error(`Value "${propertyValue}" does not target a model name. Target a registered model, or check for typos.`);
+    }
+}
+
+/**
+ * @param {Object} param0
+ * @param {any} param0.propertyValue
+ * @throws {Error}
+ */
+function checkPropertyIsBoolean({ propertyValue }) {
+    if (typeof propertyValue !== 'boolean') {
+        throw new Error(`Value "${propertyValue}" should be boolean. Check for syntax error.`);
     }
 }
 

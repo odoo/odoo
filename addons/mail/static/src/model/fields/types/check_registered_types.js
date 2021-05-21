@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
 /**
+ * This module provides an utility function to check the consistency of model
+ * field types that are registered. These checks allow early detection of
+ * developer mistakes when writing model field types.
+ */
+
+/**
  * @param {Object} param0
  * @param {Map} param0.fieldPropertyRegistry
  * @param {Map} param0.fieldTypeRegistry

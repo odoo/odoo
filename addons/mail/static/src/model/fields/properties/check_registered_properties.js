@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
 /**
+ * This module provides an utility function to check the consistency of model
+ * field properties that are registered. These checks allow early detection of
+ * developer mistakes when writing model field properties.
+ */
+
+/**
  * @param {Object} param0
  * @param {Object} param0.env
  * @throws {Error} in case some registered properties are not correctly defined
@@ -54,6 +60,11 @@ function checkRegisteredProperty({ registeredProperty }) {
                     throw new Error(`"isArray" should be a boolean`);
                 }
                 break;
+            case 'isBoolean':
+                if (typeof value !== "boolean") {
+                    throw new Error(`"isBoolean" should be a boolean`);
+                }
+                break;
             case 'isArrayOfFieldNames':
                 if (typeof value !== "boolean") {
                     throw new Error(`"isArrayOfFieldNames" should be a boolean`);
@@ -92,7 +103,7 @@ function checkRegisteredProperty({ registeredProperty }) {
                 }
                 break;
             default:
-                throw new Error(`key "${key}" is not allowed. Maybe check for typos? Allowed keys: "excludedProperties", "isInstanceMethodName", "isModelName", "isArray", "isArrayOfFieldNames", "isRelationNameDotFieldName", "isString", "isStringWithTwoPartsSeparatedByDot", "requiredProperties".`);
+                throw new Error(`key "${key}" is not allowed. Use an allowed key, or check for typos.`);
         }
     }
 }

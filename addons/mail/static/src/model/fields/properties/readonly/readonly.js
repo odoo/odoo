@@ -1,3 +1,5 @@
 /** @odoo-module **/
 
-export const readonly = new Map();
+export const readonly = new Map([
+    ['isBoolean', true],
+]);
