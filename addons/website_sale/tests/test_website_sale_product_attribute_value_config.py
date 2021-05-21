@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
 from odoo.tests import tagged
 from odoo.addons.website.tools import MockRequest
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
 
     def test_get_combination_info(self):
         current_website = self.env['website'].get_current_website()
         pricelist = current_website.get_current_pricelist()
 
-        self.computer = self.computer.with_context(website_id=current_website.id)
+        self.computer = self.computer.with_context(website_id=current_website.id).with_user(self.env.user)
 
         # make sure the pricelist has a 10% discount
         self.env['product.pricelist.item'].create({
@@ -70,14 +71,15 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         current_website = self.env['website'].get_current_website()
         pricelist = current_website.get_current_pricelist()
         (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
+        self.env.user.company_ids += current_website.company_id
 
         test_product = self.env['product.template'].create({
             'name': 'Test Product',
             'price': 2000,
-        }).with_context(website_id=current_website.id)
+        }).with_context(website_id=current_website.id).with_company(current_website.company_id)
 
         # Add fixed price for pricelist
-        pricelist.item_ids = self.env['product.pricelist.item'].create({
+        pricelist.item_ids = self.env['product.pricelist.item'].with_company(current_website.company_id).create({
             'applied_on': "1_product",
             'base': "list_price",
             'compute_price': "fixed",
@@ -85,8 +87,8 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
             'product_tmpl_id': test_product.id,
         })
         # Add 15% tax on product
-        tax15 = self.env['account.tax'].create({'name': "Test tax 15", 'amount': 15})
-        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0})
+        tax15 = self.env['account.tax'].with_company(current_website.company_id).create({'name': "Test tax 15", 'amount': 15})
+        tax0 = self.env['account.tax'].with_company(current_website.company_id).create({'name': "Test tax 0", 'amount': 0})
         test_product.taxes_id = tax15
 
         # Enable tax included
@@ -96,12 +98,12 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         group_tax_included.users |= self.env.user
 
         # Create fiscal position for belgium mapping taxes 15% -> 0%
-        fpos = self.env['account.fiscal.position'].create({
+        fpos = self.env['account.fiscal.position'].with_company(current_website.company_id).create({
             'name': 'test',
             'auto_apply': True,
             'country_id': self.env.ref('base.be').id,
         })
-        self.env['account.fiscal.position.tax'].create({
+        self.env['account.fiscal.position.tax'].with_company(current_website.company_id).create({
             'position_id': fpos.id,
             'tax_src_id': tax15.id,
             'tax_dest_id': tax0.id,
@@ -132,8 +134,9 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
         self.assertEqual(round(combination_info['list_price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
 
+
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
+class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart
         self.env.user.partner_id.country_id = False

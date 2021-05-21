@@ -4,12 +4,12 @@
 from unittest.mock import patch
 
 import odoo
-from odoo.tests import tagged
-from odoo.tests.common import HttpCase
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged, HttpCaseCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleMail(HttpCase):
+class TestWebsiteSaleMail(AccountTestInvoicingCommon, HttpCaseCommon):
 
     def test_01_shop_mail_tour(self):
         """The goal of this test is to make sure sending SO by email works."""

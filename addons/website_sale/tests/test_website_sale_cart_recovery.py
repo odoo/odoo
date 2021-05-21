@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import tagged
-from odoo.tests.common import HttpCase, TransactionCase
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.base.tests.common import WithUserPortal
+from odoo.tests import tagged, HttpCaseCommon
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
+class TestWebsiteSaleCartRecovery(WithUserPortal, AccountTestInvoicingCommon, HttpCaseCommon):
 
     def test_01_shop_cart_recovery_tour(self):
         """The goal of this test is to make sure cart recovery works."""
@@ -20,7 +20,7 @@ class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCartRecoveryServer(TransactionCase):
+class TestWebsiteSaleCartRecoveryServer(AccountTestInvoicingCommon):
 
     def setUp(self):
         res = super(TestWebsiteSaleCartRecoveryServer, self).setUp()

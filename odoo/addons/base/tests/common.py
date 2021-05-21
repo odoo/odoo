@@ -4,74 +4,51 @@
 from odoo.tests.common import SavepointCase, TransactionCase, HttpCase
 
 
-class TransactionCaseWithUserDemo(TransactionCase):
-
-    def setUp(self):
-        super(TransactionCaseWithUserDemo, self).setUp()
-
-        self.env.ref('base.partner_admin').write({'name': 'Mitchell Admin'})
-        self.user_demo = self.env['res.users'].search([('login', '=', 'demo')])
-        self.partner_demo = self.user_demo.partner_id
-
-        if not self.user_demo:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            # YTI TODO: This could be factorized between the different classes
-            self.partner_demo = self.env['res.partner'].create({
-                'name': 'Marc Demo',
-                'email': 'mark.brown23@example.com',
-            })
-            self.user_demo = self.env['res.users'].create({
-                'login': 'demo',
-                'password': 'demo',
-                'partner_id': self.partner_demo.id,
-                'groups_id': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
-            })
-
-
-class HttpCaseWithUserDemo(HttpCase):
-
-    def setUp(self):
-        super(HttpCaseWithUserDemo, self).setUp()
-        self.user_admin = self.env.ref('base.user_admin')
-        self.user_admin.write({'name': 'Mitchell Admin'})
-        self.partner_admin = self.user_admin.partner_id
-        self.user_demo = self.env['res.users'].search([('login', '=', 'demo')])
-        self.partner_demo = self.user_demo.partner_id
-
-        if not self.user_demo:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            self.partner_demo = self.env['res.partner'].create({
-                'name': 'Marc Demo',
-                'email': 'mark.brown23@example.com',
-            })
-            self.user_demo = self.env['res.users'].create({
-                'login': 'demo',
-                'password': 'demo',
-                'partner_id': self.partner_demo.id,
-                'groups_id': [(6, 0, [self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
-            })
-
-
-class SavepointCaseWithUserDemo(SavepointCase):
+class PostEnvHook:
+    """Mixin allowing to create mixins adding a feature in the setUp or the setUpClass of a test case."""
 
     @classmethod
     def setUpClass(cls):
-        super(SavepointCaseWithUserDemo, cls).setUpClass()
+        super().setUpClass()
+        if hasattr(cls, 'env'):
+            cls._post_env_hook(cls)
 
-        cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
-        cls.partner_demo = cls.user_demo.partner_id
+    def setUp(self):
+        super().setUp()
+        if not hasattr(type(self), 'env'):
+            self._post_env_hook(self)
 
-        if not cls.user_demo:
-            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            cls.partner_demo = cls.env['res.partner'].create({
+    @classmethod
+    def _post_env_hook(cls, self_or_cls):
+        pass
+
+
+class WithUserDemo(PostEnvHook):
+    @classmethod
+    def _post_env_hook(cls, self_or_cls):
+        super()._post_env_hook(self_or_cls)
+        cls._setup_user_demo(self_or_cls)
+
+    @classmethod
+    def _setup_user_demo(cls, self_or_cls):
+        self_or_cls.user_admin = self_or_cls.env.ref('base.user_admin')
+        self_or_cls.user_admin.write({'name': 'Mitchell Admin'})
+        self_or_cls.partner_admin = self_or_cls.user_admin.partner_id
+        self_or_cls.user_demo = self_or_cls.env['res.users'].search([('login', '=', 'demo')])
+        self_or_cls.partner_demo = self_or_cls.user_demo.partner_id
+
+        if not self_or_cls.user_demo:
+            self_or_cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            # YTI TODO: This could be factorized between the different classes
+            self_or_cls.partner_demo = self_or_cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
             })
-            cls.user_demo = cls.env['res.users'].create({
+            self_or_cls.user_demo = self_or_cls.env['res.users'].create({
                 'login': 'demo',
                 'password': 'demo',
-                'partner_id': cls.partner_demo.id,
-                'groups_id': [(6, 0, [cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
+                'partner_id': self_or_cls.partner_demo.id,
+                'groups_id': [(6, 0, [self_or_cls.env.ref('base.group_user').id, self_or_cls.env.ref('base.group_partner_manager').id])],
             })
 
     @classmethod
@@ -177,22 +154,42 @@ class SavepointCaseWithUserDemo(SavepointCase):
             }
         ])
 
-class HttpCaseWithUserPortal(HttpCase):
+class WithUserPortal(PostEnvHook):
+    @classmethod
+    def _post_env_hook(cls, self_or_cls):
+        super()._post_env_hook(self_or_cls)
+        cls._setup_user_portal(self_or_cls)
 
-    def setUp(self):
-        super(HttpCaseWithUserPortal, self).setUp()
-        self.user_portal = self.env['res.users'].search([('login', '=', 'portal')])
-        self.partner_portal = self.user_portal.partner_id
+    @classmethod
+    def _setup_user_portal(cls, self_or_cls):
+        self_or_cls.user_portal = self_or_cls.env['res.users'].sudo().search([('login', '=', 'portal')])
+        self_or_cls.partner_portal = self_or_cls.user_portal.partner_id
 
-        if not self.user_portal:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            self.partner_portal = self.env['res.partner'].create({
+        if not self_or_cls.user_portal:
+            self_or_cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            self_or_cls.partner_portal = self_or_cls.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
             })
-            self.user_portal = self.env['res.users'].with_context(no_reset_password=True).create({
+            self_or_cls.user_portal = self_or_cls.env['res.users'].with_context(no_reset_password=True).create({
                 'login': 'portal',
                 'password': 'portal',
-                'partner_id': self.partner_portal.id,
-                'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+                'partner_id': self_or_cls.partner_portal.id,
+                'groups_id': [(6, 0, [self_or_cls.env.ref('base.group_portal').id])],
             })
+
+
+class TransactionCaseWithUserDemo(WithUserDemo, TransactionCase):
+    pass
+
+
+class HttpCaseWithUserDemo(WithUserDemo, HttpCase):
+    pass
+
+
+class SavepointCaseWithUserDemo(WithUserDemo, SavepointCase):
+    pass
+
+
+class HttpCaseWithUserPortal(WithUserPortal, HttpCase):
+    pass

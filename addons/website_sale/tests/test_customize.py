@@ -2,23 +2,26 @@
 
 import base64
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.base.tests.common import WithUserDemo
 from odoo.modules.module import get_module_resource
-from odoo.tests import tagged
+from odoo.tests import tagged, HttpCaseCommon
+
 
 @tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
+class TestUi(WithUserDemo, AccountTestInvoicingCommon, HttpCaseCommon):
 
     def setUp(self):
         super(TestUi, self).setUp()
         # create a template
+        self.env = self.env.user.with_company(False).env
         product_template = self.env['product.template'].create({
             'name': 'Test Product',
             'is_published': True,
             'list_price': 750,
         })
 
-        tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 10})
+        tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 10, 'company_id': 1})
         product_template.taxes_id = tax
 
         product_attribute = self.env['product.attribute'].create({
@@ -302,7 +305,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         self.start_tour("/", 'tour_shop_no_variant_attribute', login="demo")
 
     def test_06_admin_list_view_b2c(self):
-        self.env.ref('product.group_product_variant').write({'users': [(4, self.env.ref('base.user_admin').id)]})
+        self.env.ref('product.group_product_variant').write({'users': [(4, self.env.user.id)]})
 
         # activate b2c
         config = self.env['res.config.settings'].create({})
@@ -310,4 +313,4 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         config._onchange_sale_tax()
         config.execute()
 
-        self.start_tour("/", 'shop_list_view_b2c', login="admin")
+        self.start_tour("/", 'shop_list_view_b2c', login='accountman')

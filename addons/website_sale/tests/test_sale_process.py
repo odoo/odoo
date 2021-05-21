@@ -4,13 +4,14 @@
 import odoo.tests
 
 from odoo import api
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.base.tests.common import WithUserDemo
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo):
+class TestUi(WithUserDemo, AccountTestInvoicingCommon, odoo.tests.HttpCaseCommon):
 
     def setUp(self):
         super(TestUi, self).setUp()
@@ -74,6 +75,11 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour("/", 'shop_buy_product', login="demo")
 
     def test_04_admin_website_sale_tour(self):
+        self.env['website'].get_current_website().company_id = self.env.company
+        self.env['payment.acquirer'].sudo().search([('provider', '=', 'transfer')]).copy({
+            'company_id': self.env.company.id,
+            'state': 'enabled',
+        })
         tax_group = self.env['account.tax.group'].create({'name': 'Tax 15%'})
         tax = self.env['account.tax'].create({
             'name': 'Tax 15%',
@@ -102,20 +108,22 @@ class TestUi(HttpCaseWithUserDemo):
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
+class TestWebsiteSaleCheckoutAddress(WithUserDemo, AccountTestInvoicingCommon):
     ''' The goal of this method class is to test the address management on
         the checkout (new/edit billing/shipping, company_id, website_id..).
     '''
 
-    def setUp(self):
-        super(TestWebsiteSaleCheckoutAddress, self).setUp()
-        self.website = self.env.ref('website.default_website')
-        self.country_id = self.env.ref('base.be').id
-        self.WebsiteSaleController = WebsiteSale()
-        self.default_address_values = {
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref('website.default_website')
+        cls.country_id = cls.env.ref('base.be').id
+        cls.WebsiteSaleController = WebsiteSale()
+        cls.default_address_values = {
             'name': 'a res.partner address', 'email': 'email@email.email', 'street': 'ooo',
-            'city': 'ooo', 'zip': '1200', 'country_id': self.country_id, 'submitted': 1,
+            'city': 'ooo', 'zip': '1200', 'country_id': cls.country_id, 'submitted': 1,
         }
+        cls._setUp_multicompany_env()
 
     def _create_so(self, partner_id=None):
         return self.env['sale.order'].create({
@@ -147,27 +155,28 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
             self.assertEqual(self._get_last_address(p).website_id, self.website, "New shipping address should have a website set on it (specific_user_account).")
 
     # TEST COMPANY
-    def _setUp_multicompany_env(self):
+    @classmethod
+    def _setUp_multicompany_env(cls):
         ''' Have 2 companies A & B.
             Have 1 website 1 which company is B
             Have admin on company A
         '''
-        self.company_a = self.env['res.company'].create({
+        cls.company_a = cls.env['res.company'].create({
             'name': 'Company A',
         })
-        self.company_b = self.env['res.company'].create({
+        cls.company_b = cls.env['res.company'].create({
             'name': 'Company B',
         })
-        self.company_c = self.env['res.company'].create({
+        cls.company_c = cls.env['res.company'].create({
             'name': 'Company C',
         })
-        self.website.company_id = self.company_b
-        self.env.user.company_id = self.company_a
+        cls.website.company_id = cls.company_b
+        cls.env.user.company_id = cls.company_a
 
-        self.demo_user = self.user_demo
-        self.demo_user.company_ids += self.company_c
-        self.demo_user.company_id = self.company_c
-        self.demo_partner = self.demo_user.partner_id
+        cls.demo_user = cls.user_demo
+        cls.demo_user.company_ids += cls.company_c
+        cls.demo_user.company_id = cls.company_c
+        cls.demo_partner = cls.demo_user.partner_id
 
     def test_02_demo_address_and_company(self):
         ''' This test ensure that the company_id of the address (partner) is
@@ -176,7 +185,6 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
                 one from the admin, and editing a billing should not change its
                 company.
         '''
-        self._setUp_multicompany_env()
         so = self._create_so(self.demo_partner.id)
 
         env = api.Environment(self.env.cr, self.demo_user.id, {})
@@ -195,7 +203,6 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
 
     def test_03_public_user_address_and_company(self):
         ''' Same as test_02 but with public user '''
-        self._setUp_multicompany_env()
         so = self._create_so(self.website.user_id.partner_id.id)
 
         env = api.Environment(self.env.cr, self.website.user_id.id, {})
