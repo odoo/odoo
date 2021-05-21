@@ -16,6 +16,7 @@ from xmlrpc import client as xmlrpclib
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 
 _logger = logging.getLogger(__name__)
@@ -133,9 +134,20 @@ class FetchmailServer(models.Model):
                 if split_underscore[1] in ['RC', 'NS', 'MC', 'MT', 'EC', 'SE', 'NE', 'DT']:
                     # we have a receipt
                     self._message_receipt_invoice(split_underscore[1], attachment)
-                elif re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", attachment.fname):
-                    # we have a new E-invoice
-                    att_content_data = attachment.content.encode()
+                else:
+                    match = re.search("([A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.(xml.p7m|xml))", attachment.fname)
+                    # If match, we have an invoice.
+                    if match:
+                        # If it's signed, the content has a bytes type and we just remove the signature's envelope
+                        if match.groups()[1] == 'xml.p7m':
+                            att_content_data = remove_signature(attachment.content)
+                            # If the envelope cannot be removed, the remove_signature returns None, so we skip
+                            if not att_content_data:
+                                _logger.warning("E-invoice couldn't be read: %s", attachment.fname)
+                                continue
+                        # Otherwise, it should be an utf-8 encoded XML string
+                        else:
+                            att_content_data = attachment.content.encode()
                     self._create_invoice_from_mail(att_content_data, attachment.fname, from_address)
             else:
                 if split_underscore[1] == 'AT':
