@@ -298,7 +298,7 @@ QUnit.test('as moderator, moderated channel with pending moderation message', as
 });
 
 QUnit.test('as moderator, accept pending moderation message', async function (assert) {
-    assert.expect(12);
+    assert.expect(11);
 
     this.data['mail.channel'].records.push({
         id: 20, // random unique id, will be used to link message and will be referenced in the test
@@ -345,10 +345,7 @@ QUnit.test('as moderator, accept pending moderation message', async function (as
             this.env.messaging.moderation.localId
         }"]
     `);
-    assert.ok(
-        moderationBox,
-        "should display the moderation box"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'as moderator, moderated channel with pending moderation message'
 
     await afterNextRender(() => moderationBox.click());
     assert.ok(
@@ -407,7 +404,7 @@ QUnit.test('as moderator, accept pending moderation message', async function (as
 });
 
 QUnit.test('as moderator, reject pending moderation message (reject with explanation)', async function (assert) {
-    assert.expect(23);
+    assert.expect(21);
 
     this.data['mail.channel'].records.push({
         id: 20, // random unique id, will be used to link message and will be referenced in the test
@@ -465,10 +462,7 @@ QUnit.test('as moderator, reject pending moderation message (reject with explana
             this.env.messaging.moderation.localId
         }"]
     `);
-    assert.ok(
-        moderationBox,
-        "should display the moderation box"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'as moderator, moderated channel with pending moderation message'
 
     await afterNextRender(() => moderationBox.click());
     const pendingMessage = document.querySelector(`
@@ -476,10 +470,7 @@ QUnit.test('as moderator, reject pending moderation message (reject with explana
             this.env.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId
         }"]
     `);
-    assert.ok(
-        pendingMessage,
-        "should display the message to moderate"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'as moderator, accept pending moderation message'
     const rejectButton = pendingMessage.querySelector(':scope .o_Message_moderationAction.o-reject');
     assert.ok(
         rejectButton,
@@ -572,7 +563,7 @@ QUnit.test('as moderator, reject pending moderation message (reject with explana
 });
 
 QUnit.test('as moderator, discard pending moderation message (reject without explanation)', async function (assert) {
-    assert.expect(16);
+    assert.expect(14);
 
     this.data['mail.channel'].records.push({
         id: 20, // random unique id, will be used to link message and will be referenced in the test
@@ -607,10 +598,7 @@ QUnit.test('as moderator, discard pending moderation message (reject without exp
             this.env.messaging.moderation.localId
         }"]
     `);
-    assert.ok(
-        moderationBox,
-        "should display the moderation box"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'a dialog should be prompt to the moderator on click reject'
 
     await afterNextRender(() => moderationBox.click());
     const pendingMessage = document.querySelector(`
@@ -618,10 +606,7 @@ QUnit.test('as moderator, discard pending moderation message (reject without exp
             this.env.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId
         }"]
     `);
-    assert.ok(
-        pendingMessage,
-        "should display the message to moderate"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'a dialog should be prompt to the moderator on click reject'
 
     const discardButton = pendingMessage.querySelector(`
         :scope .o_Message_moderationAction.o-discard
@@ -689,7 +674,7 @@ QUnit.test('as moderator, discard pending moderation message (reject without exp
 });
 
 QUnit.test('as author, send message in moderated channel', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['mail.channel'].records.push({
         id: 20, // random unique id, will be used to link message and will be referenced in the test
@@ -705,10 +690,7 @@ QUnit.test('as author, send message in moderated channel', async function (asser
             }).localId
         }"]
     `);
-    assert.ok(
-        channel,
-        "should display the general channel"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'a dialog should be prompt to the moderator on click reject'
 
     // go to channel 'general'
     await afterNextRender(() => channel.click());
@@ -738,7 +720,7 @@ QUnit.test('as author, send message in moderated channel', async function (asser
 });
 
 QUnit.test('as author, sent message accepted in moderated channel', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     this.data['mail.channel'].records.push({
         id: 20, // random unique id, will be used to link message and will be referenced in the test
@@ -762,10 +744,7 @@ QUnit.test('as author, sent message accepted in moderated channel', async functi
             }).localId
         }"]
     `);
-    assert.ok(
-        channel,
-        "should display the general channel"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'a dialog should be prompt to the moderator on click reject'
 
     await afterNextRender(() => channel.click());
     const messagePending = document.querySelector(`
@@ -812,7 +791,7 @@ QUnit.test('as author, sent message accepted in moderated channel', async functi
 });
 
 QUnit.test('as author, sent message rejected in moderated channel', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['mail.channel'].records.push({
         id: 20, // random unique id, will be used to link message and will be referenced in the test
@@ -836,10 +815,7 @@ QUnit.test('as author, sent message rejected in moderated channel', async functi
             }).localId
         }"]
     `);
-    assert.ok(
-        channel,
-        "should display the general channel"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'a dialog should be prompt to the moderator on click reject'
 
     await afterNextRender(() => channel.click());
     const messagePending = document.querySelector(`

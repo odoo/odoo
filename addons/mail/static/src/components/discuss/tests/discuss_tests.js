@@ -65,7 +65,7 @@ QUnit.test('messaging not initialized', async function (assert) {
 });
 
 QUnit.test('messaging becomes initialized', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     const messagingInitializedProm = makeTestPromise();
 
@@ -79,11 +79,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
         },
         waitUntilMessagingCondition: 'created',
     });
-    assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_messagingNotInitialized').length,
-        1,
-        "should display messaging not initialized"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'messaging not initialized'
 
     await afterNextRender(() => messagingInitializedProm.resolve());
     assert.strictEqual(
@@ -644,7 +640,7 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
 });
 
 QUnit.test('sidebar: basic chat rendering', async function (assert) {
-    assert.expect(11);
+    assert.expect(10);
 
     // expected correspondent, with a random unique id that will be used to link
     // partner to chat and a random name that will be asserted in the test
@@ -657,11 +653,7 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
         public: 'private', // expected value for testing a chat
     });
     await this.start();
-    assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_groupChat .o_DiscussSidebar_item`).length,
-        1,
-        "should have one chat item"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: declared in var
     const chat = document.querySelector(`.o_DiscussSidebar_groupChat .o_DiscussSidebar_item`);
     assert.strictEqual(
         chat.dataset.threadLocalId,
@@ -1613,7 +1605,7 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
 
 QUnit.test('load more messages from channel', async function (assert) {
     // AKU: thread specific test
-    assert.expect(6);
+    assert.expect(4);
 
     // channel expected to be rendered, with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
@@ -1634,20 +1626,7 @@ QUnit.test('load more messages from channel', async function (assert) {
             },
         },
     });
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_separatorDate
-        `).length,
-        1,
-        "should have a single date separator" // to check: may be client timezone dependent
-    );
-    assert.strictEqual(
-        document.querySelector(`
-            .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_separatorLabelDate
-        `).textContent,
-        "April 20, 2019",
-        "should display date day of messages"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'load all messages from channel initially, less than fetch limit (29 < 30)'
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread .o_ThreadView_messageList .o_MessageList_message
@@ -3308,7 +3287,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
 });
 
 QUnit.test('reply to message from inbox (message linked to document)', async function (assert) {
-    assert.expect(19);
+    assert.expect(18);
 
     // message that is expected to be found in Inbox
     this.data['mail.message'].records.push({
@@ -3356,11 +3335,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
             return this._super(...arguments);
         },
     });
-    assert.strictEqual(
-        document.querySelectorAll('.o_Message').length,
-        1,
-        "should display a single message"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelector('.o_Message').dataset.messageLocalId,
         this.env.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId,
@@ -3431,7 +3406,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
 });
 
 QUnit.test('load recent messages from thread (already loaded some old messages)', async function (assert) {
-    assert.expect(6);
+    assert.expect(5);
 
     // channel expected to be found in the sidebar,
     // with a random unique id that will be referenced in the test
@@ -3450,11 +3425,7 @@ QUnit.test('load recent messages from thread (already loaded some old messages)'
         });
     }
     await this.start();
-    assert.strictEqual(
-        document.querySelectorAll('.o_Message').length,
-        1,
-        "Inbox should have a single message initially"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelector('.o_Message').dataset.messageLocalId,
         this.env.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId,
@@ -3692,12 +3663,13 @@ QUnit.test('mark a single message as read should only move this message to "Hist
             },
         },
     });
+    const history = document.querySelector(`
+        .o_DiscussSidebar_item[data-thread-local-id="${
+            this.env.messaging.history.localId
+        }"]
+    `);
     assert.hasClass(
-        document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.messaging.history.localId
-            }"]
-        `),
+        history,
         'o-active',
         "history mailbox should initially be the active thread"
     );
@@ -3707,19 +3679,14 @@ QUnit.test('mark a single message as read should only move this message to "Hist
         "history mailbox should initially be empty"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.messaging.inbox.localId
-            }"]
-        `).click()
-    );
+    const inbox = document.querySelector(`
+        .o_DiscussSidebar_item[data-thread-local-id="${
+            this.env.messaging.inbox.localId
+        }"]
+    `);
+    await afterNextRender(() => inbox.click());
     assert.hasClass(
-        document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.messaging.inbox.localId
-            }"]
-        `),
+        inbox,
         'o-active',
         "inbox mailbox should be active thread after clicking on it"
     );
@@ -3750,19 +3717,9 @@ QUnit.test('mark a single message as read should only move this message to "Hist
         "message still in inbox should be the one not marked as read"
     );
 
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.messaging.history.localId
-            }"]
-        `).click()
-    );
+    await afterNextRender(() => history.click());
     assert.hasClass(
-        document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.messaging.history.localId
-            }"]
-        `),
+        history,
         'o-active',
         "history mailbox should be active after clicking on it"
     );
