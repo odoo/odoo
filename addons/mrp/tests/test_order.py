@@ -1521,6 +1521,61 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_finished_ids.quantity_done, 1)
         self.assertEqual(component.qty_available, 13)
 
+    def test_immediate_validate_uom_2(self):
+        """The rounding precision of a component should be based on the UoM used in the MO for this component,
+        not on the produced product's UoM nor the default UoM of the component"""
+        uom_units = self.env['ir.model.data'].xmlid_to_object('uom.product_uom_unit')
+        uom_L = self.env['ir.model.data'].xmlid_to_object('uom.product_uom_litre')
+        uom_cL = self.env['uom.uom'].create({
+            'name': 'cL',
+            'category_id': uom_L.category_id.id,
+            'uom_type': 'smaller',
+            'factor': 100,
+            'rounding': 1,
+        })
+        uom_units.rounding = 1
+        uom_L.rounding = 0.01
+
+        product = self.env['product.product'].create({
+            'name': 'SuperProduct',
+            'uom_id': uom_units.id,
+        })
+        consumable_component = self.env['product.product'].create({
+            'name': 'Consumable Component',
+            'type': 'consu',
+            'uom_id': uom_cL.id,
+            'uom_po_id': uom_cL.id,
+        })
+        storable_component = self.env['product.product'].create({
+            'name': 'Storable Component',
+            'type': 'product',
+            'uom_id': uom_cL.id,
+            'uom_po_id': uom_cL.id,
+        })
+        self.env['stock.quant']._update_available_quantity(storable_component, self.env.ref('stock.stock_location_stock'), 100)
+
+        for component in [consumable_component, storable_component]:
+            bom = self.env['mrp.bom'].create({
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'bom_line_ids': [(0, 0, {
+                    'product_id': component.id,
+                    'product_qty': 0.2,
+                    'product_uom_id': uom_L.id,
+                })],
+            })
+
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.bom_id = bom
+            mo = mo_form.save()
+            mo.action_confirm()
+            action = mo.button_mark_done()
+            self.assertEqual(action.get('res_model'), 'mrp.immediate.production')
+            wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+            action = wizard.process()
+
+            self.assertEqual(mo.move_raw_ids.product_uom_qty, 0.2)
+            self.assertEqual(mo.move_raw_ids.quantity_done, 0.2)
+
     def test_copy(self):
         """ Check that copying a done production, create all the stock moves"""
         mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
