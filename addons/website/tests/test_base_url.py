@@ -57,12 +57,35 @@ class TestBaseUrl(TestUrlCommon):
         # Test URL is correct for the website itself when no domain is set
         self.assertEqual(self.website.get_base_url(), icp_base_url)
 
+        # Test URL is correctly auto fixed
+        domains = [
+            # trailing /
+            ("https://www.monsite.com/", "https://www.monsite.com"),
+            # no scheme
+            ("www.monsite.com", "https://www.monsite.com"),
+            ("monsite.com", "https://monsite.com"),
+            # respect scheme
+            ("https://www.monsite.com", "https://www.monsite.com"),
+            ("http://www.monsite.com", "http://www.monsite.com"),
+            # respect port
+            ("www.monsite.com:8069", "https://www.monsite.com:8069"),
+            ("www.monsite.com:8069/", "https://www.monsite.com:8069"),
+            # no guess wwww
+            ("monsite.com", "https://monsite.com"),
+            # mix
+            ("www.monsite.com/", "https://www.monsite.com"),
+        ]
+        for (domain, expected) in domains:
+            self.website.domain = domain
+            self.assertEqual(self.website.get_base_url(), expected)
+
     def test_02_canonical_url(self):
-        self._assertCanonical('/', self.domain + '/')
-        self._assertCanonical('/?debug=1', self.domain + '/')
-        self._assertCanonical('/a-page', self.domain + '/a-page')
-        self._assertCanonical('/en_US', self.domain + '/')
-        self._assertCanonical('/fr_FR', self.domain + '/fr/')
+        # test does not work in local due to port
+        self._assertCanonical('/', self.website.get_base_url() + '/')
+        self._assertCanonical('/?debug=1', self.website.get_base_url() + '/')
+        self._assertCanonical('/a-page', self.website.get_base_url() + '/a-page')
+        self._assertCanonical('/en_US', self.website.get_base_url() + '/')
+        self._assertCanonical('/fr_FR', self.website.get_base_url() + '/fr/')
 
 
 @odoo.tests.tagged('-at_install', 'post_install')

@@ -61,8 +61,7 @@ class Website(models.Model):
 
     name = fields.Char('Website Name', required=True)
     sequence = fields.Integer(default=10)
-    domain = fields.Char('Website Domain',
-                         help='Will be prefixed by http in canonical URLs if no scheme is specified')
+    domain = fields.Char('Website Domain', help='E.g. https://www.mydomain.com')
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
                                          string='Country Groups', help='Used when multiple websites have the same domain.')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
@@ -171,7 +170,7 @@ class Website(models.Model):
 
     @api.model
     def create(self, vals):
-        self._handle_favicon(vals)
+        self._handle_create_write(vals)
 
         if 'user_id' not in vals:
             company = self.env['res.company'].browse(vals.get('company_id'))
@@ -191,7 +190,7 @@ class Website(models.Model):
     def write(self, values):
         public_user_to_change_websites = self.env['website']
         original_company = self.company_id
-        self._handle_favicon(values)
+        self._handle_create_write(values)
 
         self.clear_caches()
 
@@ -234,9 +233,21 @@ class Website(models.Model):
         return result
 
     @api.model
+    def _handle_create_write(self, vals):
+        self._handle_favicon(vals)
+        self._handle_domain(vals)
+
+    @api.model
     def _handle_favicon(self, vals):
         if 'favicon' in vals:
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
+
+    @api.model
+    def _handle_domain(self, vals):
+        if 'domain' in vals and vals['domain']:
+            if not vals['domain'].startswith('http'):
+                vals['domain'] = 'https://%s' % vals['domain']
+            vals['domain'] = vals['domain'].rstrip('/')
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_remaining_website(self):
@@ -922,7 +933,7 @@ class Website(models.Model):
                 endpoint.routing['auth'] in ('none', 'public') and
                 endpoint.routing.get('website', False) and
                 all(hasattr(converter, 'generate') for converter in converters)):
-                return False
+            return False
 
         # dont't list routes without argument having no default value or converter
         sign = inspect.signature(endpoint.method.original_func)
