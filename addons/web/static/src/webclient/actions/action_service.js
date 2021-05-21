@@ -847,6 +847,13 @@ function makeActionManager(env) {
      * @param {ActionOptions} options
      */
     async function _executeReportAction(action, options) {
+        const handlers = registry.category("ir.actions.report handlers").getAll();
+        for (const handler of handlers) {
+            const result = await handler(action, options, env);
+            if (result) {
+                return result;
+            }
+        }
         if (action.report_type === "qweb-html") {
             return _executeReportClientAction(action, options);
         } else if (action.report_type === "qweb-pdf") {
