@@ -48,7 +48,7 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
             });
             const data = {
                 id: $menu.data('oe-id'),
-                name: link.text,
+                name: link.content,
                 url: link.url,
             };
             return this._rpc({
@@ -57,7 +57,7 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
                 args: [websiteId, {'data': [data]}],
             }).then(function () {
                 self.$target.attr('href', link.url);
-                $menu.text(link.text);
+                $menu.text(link.content);
             });
         });
         dialog.open();
