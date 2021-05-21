@@ -72,7 +72,7 @@ class Partner(models.Model):
 
             # Keep only valid meeting data based on record rules of events
             events = [row[1] for row in meeting_data]
-            events = self.env['calendar.event'].search([('id', 'in', events)]).ids
+            events = set(self.env['calendar.event'].search([('id', 'in', events)]).ids)
             meeting_data = [m for m in meeting_data if m[1] in events]
 
             # Create a dict {partner_id: event_ids} and fill with events linked to the partner
