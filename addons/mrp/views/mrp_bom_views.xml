@@ -120,6 +120,7 @@
                                     <field name="product_id" context="{'default_type': 'product'}"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom_id" groups="uom.group_uom"/>
+                                    <field name="cost_share" optional="hide"/>
                                     <field name="allowed_operation_ids" invisible="1"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                     <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
@@ -268,13 +269,14 @@
         </record>
 
         <record id="template_open_bom" model="ir.actions.act_window">
-            <field name="context">{'default_product_tmpl_id': active_id, 'search_default_product_tmpl_id': active_id}</field>
+            <field name="context">{'default_product_tmpl_id': active_id}</field>
             <field name="name">Bill of Materials</field>
             <field name="res_model">mrp.bom</field>
+            <field name="domain">['|', ('product_tmpl_id', '=', active_id), ('byproduct_ids.product_id.product_tmpl_id', '=', active_id)]</field>
         </record>
 
         <record id="product_open_bom" model="ir.actions.act_window">
-            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
+            <field name="context">{'default_product_id': active_id}</field>
             <field name="name">Bill of Materials</field>
             <field name="res_model">mrp.bom</field>
             <field name="domain">[]</field> <!-- Force empty -->

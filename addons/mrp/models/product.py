@@ -25,7 +25,7 @@ class ProductTemplate(models.Model):
 
     def _compute_bom_count(self):
         for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count([('product_tmpl_id', '=', product.id)])
+            product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_tmpl_id', '=', product.id), ('byproduct_ids.product_id.product_tmpl_id', '=', product.id)])
 
     def _compute_used_in_bom_count(self):
         for template in self:
@@ -73,7 +73,7 @@ class ProductProduct(models.Model):
 
     def _compute_bom_count(self):
         for product in self:
-            product.bom_count = self.env['mrp.bom'].search_count(['|', ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
+            product.bom_count = self.env['mrp.bom'].search_count(['|', '|', ('byproduct_ids.product_id', '=', product.id), ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product.product_tmpl_id.id)])
 
     def _compute_used_in_bom_count(self):
         for product in self:
@@ -181,12 +181,12 @@ class ProductProduct(models.Model):
     def action_view_bom(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.product_open_bom")
         template_ids = self.mapped('product_tmpl_id').ids
-        # bom specific to this variant or global to template
+        # bom specific to this variant or global to template or that contains the product as a byproduct
         action['context'] = {
             'default_product_tmpl_id': template_ids[0],
             'default_product_id': self.ids[0],
         }
-        action['domain'] = ['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
+        action['domain'] = ['|', '|', ('byproduct_ids.product_id', 'in', self.ids), ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
         return action
 
     def action_view_mos(self):

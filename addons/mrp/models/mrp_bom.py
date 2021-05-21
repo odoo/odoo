@@ -120,6 +120,17 @@ class MrpBom(models.Model):
                         product=ptav.product_tmpl_id.display_name,
                         bom_product=bom_line.parent_product_tmpl_id.display_name
                     ))
+            for byproduct in bom.byproduct_ids:
+                if bom.product_id:
+                    same_product = bom.product_id == byproduct.product_id
+                else:
+                    same_product = bom.product_tmpl_id == byproduct.product_id.product_tmpl_id
+                if same_product:
+                    raise ValidationError(_("By-product %s should not be the same as BoM product.") % bom.display_name)
+                if byproduct.cost_share < 0:
+                    raise ValidationError(_("By-products cost shares must be positive."))
+            if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
+                raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -476,6 +487,10 @@ class MrpByProduct(models.Model):
         domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.")
     sequence = fields.Integer("Sequence")
+    cost_share = fields.Float(
+        "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!
+        help="The percentage of the final production cost for this by-product line (divided between the quantity produced)."
+             "The total of all by-products' cost share must be less than or equal to 100.")
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

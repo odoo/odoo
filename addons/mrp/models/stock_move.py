@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, fields, models, _
-from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 
 
@@ -109,6 +108,9 @@ class StockMove(models.Model):
         help='Technical Field to order moves')
     order_finished_lot_ids = fields.Many2many('stock.production.lot', string="Finished Lot/Serial Number", compute='_compute_order_finished_lot_ids')
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty', digits='Product Unit of Measure')
+    cost_share = fields.Float(
+        "Cost Share (%)", digits=(5, 2),  # decimal = 2 is important for rounding calculations!!
+        help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.")
 
     @api.depends('raw_material_production_id.priority')
     def _compute_priority(self):
@@ -340,9 +342,12 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
-        distinct_fields = super()._prepare_merge_moves_distinct_fields()
-        distinct_fields.append('created_production_id')
-        return distinct_fields
+        return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share']
+
+    def _merge_moves_fields(self):
+        res = super()._merge_moves_fields()
+        res['cost_share'] = sum(self.mapped('cost_share'))
+        return res
 
     @api.model
     def _prepare_merge_move_sort_method(self, move):

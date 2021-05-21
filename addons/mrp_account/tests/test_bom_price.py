@@ -200,3 +200,42 @@ class TestBom(common.TransactionCase):
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
         # Total cost of Dining Table = (718.75) + Total cost of all operations (125 + 10.42) = 854.17
         self.assertEqual(float_compare(self.dining_table.standard_price, 854.17, precision_digits=2), 0, "After computing price from BoM price should be 786.46")
+
+    def test_02_compute_byproduct_price(self):
+        """Test BoM cost when byproducts with cost share"""
+        # byproduct
+        scrap_wood = self._create_product('Scrap Wood', 30)
+
+        # different byproduct line uoms => 20 total units with a total of 75% of cost share
+        self.bom_1.write({
+            'byproduct_ids': [
+                (0, 0, {
+                    'product_id': scrap_wood.id,
+                    'product_uom_id': self.unit.id,
+                    'product_qty': 8,
+                    'bom_id': self.bom_1.id,
+                    'cost_share': 25,
+                }),
+                (0, 0, {
+                    'product_id': scrap_wood.id,
+                    'product_uom_id': self.dozen.id,
+                    'product_qty': 1,
+                    'bom_id': self.bom_1.id,
+                    'cost_share': 50,
+                }),
+            ],
+        }),
+
+        # Cost Breakdown.
+        # -------------------------------------------------------------------------------
+        # Total Cost of BoM = 550 [718.75 if components of Table Head considered] (for 1 Unit)
+        # Dining Table 1 Unit = 1 - (25 + 50) / 100 * 550 = 0.25 * 550 = 137.5
+        # Scrap Wood 1 Unit = (25 + 50) / 100 * 550 / (8 units + 12 units) = 20.625
+        # -------------------------------------------------------------------------------
+
+        self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
+        self.assertEqual(scrap_wood.standard_price, 30, "Initial price of the By-Product should be 30")
+        self.dining_table.button_bom_cost()
+        self.assertEqual(self.dining_table.standard_price, 137.5, "After computing price from BoM price should be 137.5")
+        scrap_wood.button_bom_cost()
+        self.assertEqual(scrap_wood.standard_price, 20.63, "After computing price from BoM price should be 20.63")

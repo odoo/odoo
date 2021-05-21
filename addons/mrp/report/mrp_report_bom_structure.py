@@ -66,6 +66,17 @@ class ReportBomStructure(models.AbstractModel):
         return self.env.ref('mrp.report_mrp_operation_line')._render({'data': values})
 
     @api.model
+    def get_byproducts(self, bom_id=False, qty=0, level=0, total=0):
+        bom = self.env['mrp.bom'].browse(bom_id)
+        lines, dummy = self._get_byproducts_lines(bom, qty, level, total)
+        values = {
+            'bom_id': bom_id,
+            'currency': self.env.company.currency_id,
+            'byproducts': lines,
+        }
+        return self.env.ref('mrp.report_mrp_byproduct_line')._render({'data': values})
+
+    @api.model
     def _get_report_data(self, bom_id, searchQty=0, searchVariant=False):
         lines = {}
         bom = self.env['mrp.bom'].browse(bom_id)
@@ -128,8 +139,14 @@ class ReportBomStructure(models.AbstractModel):
             'operations_time': sum([op['duration_expected'] for op in operations])
         }
         components, total = self._get_bom_lines(bom, bom_quantity, product, line_id, level)
-        lines['components'] = components
         lines['total'] += total
+        lines['components'] = components
+        byproducts, byproduct_cost_portion = self._get_byproducts_lines(bom, bom_quantity, level, lines['total'])
+        lines['byproducts'] = byproducts
+        lines['cost_share'] = float_round(1 - byproduct_cost_portion, precision_rounding=0.0001)
+        lines['bom_cost'] = lines['total'] * lines['cost_share']
+        lines['byproducts_cost'] = sum(byproduct['bom_cost'] for byproduct in byproducts)
+        lines['byproducts_total'] = sum(byproduct['product_qty'] for byproduct in byproducts)
         return lines
 
     def _get_bom_lines(self, bom, bom_quantity, product, line_id, level):
@@ -144,6 +161,9 @@ class ReportBomStructure(models.AbstractModel):
             if line.child_bom_id:
                 factor = line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
                 sub_total = self._get_price(line.child_bom_id, factor, line.product_id)
+                byproduct_cost_share = sum(line.child_bom_id.byproduct_ids.mapped('cost_share'))
+                if byproduct_cost_share:
+                    sub_total *= float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001)
             else:
                 sub_total = price
             sub_total = self.env.company.currency_id.round(sub_total)
@@ -166,6 +186,28 @@ class ReportBomStructure(models.AbstractModel):
             })
             total += sub_total
         return components, total
+
+    def _get_byproducts_lines(self, bom, bom_quantity, level, total):
+        byproducts = []
+        byproduct_cost_portion = 0
+        company = bom.company_id or self.env.company
+        for byproduct in bom.byproduct_ids:
+            line_quantity = (bom_quantity / (bom.product_qty or 1.0)) * byproduct.product_qty
+            cost_share = byproduct.cost_share / 100
+            byproduct_cost_portion += cost_share
+            price = byproduct.product_id.uom_id._compute_price(byproduct.product_id.with_company(company).standard_price, byproduct.product_uom_id) * line_quantity
+            byproducts.append({
+                'product_id': byproduct.product_id,
+                'product_name': byproduct.product_id.display_name,
+                'product_qty': line_quantity,
+                'product_uom': byproduct.product_uom_id.name,
+                'product_cost': company.currency_id.round(price),
+                'parent_id': bom.id,
+                'level': level or 0,
+                'bom_cost': company.currency_id.round(total * cost_share),
+                'cost_share': cost_share,
+            })
+        return byproducts, byproduct_cost_portion
 
     def _get_operation_line(self, product, bom, qty, level):
         operations = []
@@ -204,6 +246,9 @@ class ReportBomStructure(models.AbstractModel):
             if line.child_bom_id:
                 qty = line.product_uom_id._compute_quantity(line.product_qty * factor, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
                 sub_price = self._get_price(line.child_bom_id, qty, line.product_id)
+                byproduct_cost_share = sum(line.child_bom_id.byproduct_ids.mapped('cost_share'))
+                if byproduct_cost_share:
+                    sub_price *= float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001)
                 price += sub_price
             else:
                 prod_qty = line.product_qty * factor
@@ -251,6 +296,26 @@ class ReportBomStructure(models.AbstractModel):
                             'quantity': operation['duration_expected'],
                             'uom': _('minutes'),
                             'bom_cost': operation['total'],
+                            'level': level + 1,
+                        })
+            if data['byproducts']:
+                lines.append({
+                    'name': _('Byproducts'),
+                    'type': 'byproduct',
+                    'uom': False,
+                    'quantity': data['byproducts_total'],
+                    'bom_cost': data['byproducts_cost'],
+                    'level': level,
+                })
+                for byproduct in data['byproducts']:
+                    if unfolded or 'byproduct-' + str(bom.id) in child_bom_ids:
+                        lines.append({
+                            'name': byproduct['product_name'],
+                            'type': 'byproduct',
+                            'quantity': byproduct['product_qty'],
+                            'uom': byproduct['product_uom'],
+                            'prod_cost': byproduct['product_cost'],
+                            'bom_cost': byproduct['bom_cost'],
                             'level': level + 1,
                         })
             return lines
