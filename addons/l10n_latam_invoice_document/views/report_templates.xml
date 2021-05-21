@@ -19,7 +19,7 @@
 
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout" position="after">
             <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-                <t t-if="custom_footer" t-raw="custom_footer"/>
+                <t t-if="custom_footer" t-out="custom_footer"/>
             </div>
         </div>
     </template>
@@ -43,7 +43,7 @@
         </div>
         <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout" position="after">
             <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout">
-                <t t-if="custom_footer" t-raw="custom_footer"/>
+                <t t-if="custom_footer" t-out="custom_footer"/>
             </div>
         </div>
     </template>
@@ -67,7 +67,7 @@
         </div>
         <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout" position="after">
             <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
-                <t t-if="custom_footer" t-raw="custom_footer"/>
+                <t t-if="custom_footer" t-out="custom_footer"/>
             </div>
         </div>
     </template>
@@ -91,7 +91,7 @@
         </div>
         <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer" position="after">
             <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer">
-                <t t-if="custom_footer" t-raw="custom_footer"/>
+                <t t-if="custom_footer" t-out="custom_footer"/>
             </div>
         </div>
     </template>
