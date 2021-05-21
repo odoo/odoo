@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import logging
 from collections import namedtuple
 from unittest.mock import patch
 
 from odoo import tools
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 _logger = logging.getLogger(__name__)
 
@@ -51,7 +53,9 @@ class PecMailServerTests(AccountEdiTestCommon):
         # invoice_filename2 is used for vendor bill tests
         cls.invoice_filename1 = 'IT01234567890_FPR01.xml'
         cls.invoice_filename2 = 'IT01234567890_FPR02.xml'
+        cls.signed_invoice_filename = 'IT01234567890_FPR01.xml.p7m'
         cls.invoice_content = cls._get_test_file_content(cls.invoice_filename1)
+        cls.signed_invoice_content = cls._get_test_file_content(cls.signed_invoice_filename)
         cls.invoice = cls.env['account.move'].create({
             'move_type': 'in_invoice',
             'ref': '01234567890'
@@ -85,6 +89,8 @@ class PecMailServerTests(AccountEdiTestCommon):
     def _create_invoice(self, content, filename):
         """ Create an invoice from given attachment content """
         with patch.object(self.server._cr, 'commit', return_value=None):
+            if filename.endswith(".p7m"):
+                content = remove_signature(content)
             return self.server._create_invoice_from_mail(content, filename, 'fake@address.be')
 
     # -----------------------------
@@ -97,6 +103,15 @@ class PecMailServerTests(AccountEdiTestCommon):
         """ Test a sample e-invoice file from https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml """
         invoices = self._create_invoice(self.invoice_content, self.invoice_filename2)
         self.assertTrue(bool(invoices))
+
+    def test_receive_signed_vendor_bill(self):
+        """ Test a signed (P7M) sample e-invoice file from https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml """
+        invoices = self._create_invoice(self.signed_invoice_content, self.signed_invoice_filename)
+        self.assertRecordValues(invoices, [{
+            'name': 'BILL/2014/12/0001',
+            'date': datetime.date(2014, 12, 18),
+            'ref': '01234567890',
+        }])
 
     def test_receive_same_vendor_bill_twice(self):
         """ Test that the second time we are receiving a PEC mail with the same attachment, the second is discarded """
