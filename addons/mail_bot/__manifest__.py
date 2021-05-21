@@ -21,10 +21,15 @@
     ],
     'assets': {
         'web.assets_backend': [
+            'mail_bot/static/src/model/populate_registries.js',
             'mail_bot/static/src/models/messaging_initializer/messaging_initializer.js',
             'mail_bot/static/src/scss/odoobot_style.scss',
         ],
+        'web.assets_backend_prod_only': [
+            'mail_bot/static/src/main.js',
+        ],
         'web.tests_assets': [
+            'mail_bot/static/src/tests_main.js',
             'mail_bot/static/tests/**/*',
         ],
         'web.qunit_suite_tests': [

@@ -34,12 +34,17 @@ Allows users to send documents by post
             'snailmail/static/src/components/notification_group/notification_group.js',
             'snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.js',
             'snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js',
+            'snailmail/static/src/model/populate_registries.js',
             'snailmail/static/src/models/message/message.js',
             'snailmail/static/src/models/messaging/messaging.js',
             'snailmail/static/src/models/notification_group/notification_group.js',
             'snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.scss',
         ],
+        'web.assets_backend_prod_only': [
+            'snailmail/static/src/main.js',
+        ],
         'web.tests_assets': [
+            'snailmail/static/src/tests_main.js',
             'snailmail/static/tests/**/*',
         ],
         'web.qunit_suite_tests': [

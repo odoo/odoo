@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
-
-registerInstancePatchModel('mail.chat_window', 'im_livechat/static/src/models/chat_window/chat_window.js', {
+export const instancePatchChatWindow = {
 
     /**
      * @override
@@ -20,4 +18,4 @@ registerInstancePatchModel('mail.chat_window', 'im_livechat/static/src/models/ch
         }
         this._super({ notifyServer });
     }
-});
+};

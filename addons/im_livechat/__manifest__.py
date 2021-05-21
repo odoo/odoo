@@ -52,6 +52,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/components/notification_list/notification_list.js',
             'im_livechat/static/src/components/thread_needaction_preview/thread_needaction_preview.js',
             'im_livechat/static/src/components/thread_preview/thread_preview.js',
+            'im_livechat/static/src/model/populate_registries.js',
             'im_livechat/static/src/models/chat_window/chat_window.js',
             'im_livechat/static/src/models/messaging_initializer/messaging_initializer.js',
             'im_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js',
@@ -60,6 +61,9 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/widgets/discuss/discuss.js',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
+        ],
+        'web.tests_assets': [
+            'im_livechat/static/src/tests_main.js',
         ],
         'web.qunit_suite_tests': [
             'im_livechat/static/src/components/chat_window_manager/chat_window_manager_tests.js',

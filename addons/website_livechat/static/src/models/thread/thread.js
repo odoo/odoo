@@ -1,14 +1,9 @@
-odoo.define('website_livechat/static/src/models/thread/thread.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
-    registerClassPatchModel,
-    registerFieldPatchModel,
-} = require('@mail/model/model_core');
-const { many2one } = require('@mail/model/model_field');
-const { insert, unlink } = require('@mail/model/model_field_command');
+import { many2one } from '@mail/model/model_field';
+import { insert, unlink } from '@mail/model/model_field_command';
 
-registerClassPatchModel('mail.thread', 'website_livechat/static/src/models/thread/thread.js', {
+export const classPatchThread = {
 
     //----------------------------------------------------------------------
     // Public
@@ -29,15 +24,13 @@ registerClassPatchModel('mail.thread', 'website_livechat/static/src/models/threa
         return data2;
     },
 
-});
+};
 
-registerFieldPatchModel('mail.thread', 'website_livechat/static/src/models/thread/thread.js', {
+export const fieldPatchThread = {
     /**
      * Visitor connected to the livechat.
      */
     visitor: many2one('website_livechat.visitor', {
         inverse: 'threads',
     }),
-});
-
-});
+};

@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
-
-registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/models/messaging_initializer/messaging_initializer.js', {
+export const instancePatchMessagingInitializer = {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -31,4 +29,4 @@ registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/mo
             this._initializeOdooBot();
         }
     },
-});
+};

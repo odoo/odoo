@@ -35,13 +35,19 @@ Allow website visitors to chat with the collaborators. This module also brings a
             'website_livechat/static/src/components/discuss/discuss.js',
             'website_livechat/static/src/components/visitor_banner/visitor_banner.js',
             'website_livechat/static/src/components/visitor_banner/visitor_banner.scss',
-            'website_livechat/static/src/main.js',
+            'website_livechat/static/src/model/populate_registries.js',
             'website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js',
             'website_livechat/static/src/models/thread/thread.js',
             'website_livechat/static/src/models/visitor/visitor.js',
         ],
+        'web.assets_backend_prod_only': [
+            'website_livechat/static/src/main.js',
+        ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',
+        ],
+        'web.tests_assets': [
+            'website_livechat/static/src/tests_main.js',
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/src/components/discuss/discuss_tests.js',

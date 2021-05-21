@@ -1,17 +1,11 @@
-odoo.define('hr_holidays/static/src/models/partner/partner.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
-    registerClassPatchModel,
-    registerFieldPatchModel,
-    registerInstancePatchModel,
-} = require('@mail/model/model_core');
-const { attr, one2one } = require('@mail/model/model_field');
-const { clear } = require('@mail/model/model_field_command');
+import { attr, one2one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
-const { str_to_datetime } = require('web.time');
+import { str_to_datetime } from 'web.time';
 
-registerClassPatchModel('mail.partner', 'hr_holidays/static/src/models/partner/partner.js', {
+export const classPatchPartner = {
     /**
      * @override
      */
@@ -22,9 +16,9 @@ registerClassPatchModel('mail.partner', 'hr_holidays/static/src/models/partner/p
         }
         return data2;
     },
-});
+};
 
-registerInstancePatchModel('mail.partner', 'hr_holidays/static/src/models/partner/partner.js', {
+export const instancePatchPartner = {
     /**
      * @private
      */
@@ -45,10 +39,9 @@ registerInstancePatchModel('mail.partner', 'hr_holidays/static/src/models/partne
         const formattedDate = date.toLocaleDateString(localeCode, options);
         return _.str.sprintf(this.env._t("Out of office until %s"), formattedDate);
     },
+};
 
-});
-
-registerFieldPatchModel('mail.partner', 'hr/static/src/models/partner/partner.js', {
+export const fieldPatchPartner = {
     /**
      * Serves as compute dependency.
      */
@@ -71,6 +64,4 @@ registerFieldPatchModel('mail.partner', 'hr/static/src/models/partner/partner.js
             'outOfOfficeDateEnd',
         ],
     }),
-});
-
-});
+};

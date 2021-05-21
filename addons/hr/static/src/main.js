@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import { factoryEmployee } from '@hr/models/employee/employee';
+import '@mail/main';
 
-import '@mail/js/main';
-import { registerNewModel } from '@mail/model/model_core';
+import { populateRegistries } from '@hr/model/populate_registries';
 
 import env from 'web.commonEnv';
 
-registerNewModel('hr.employee', factoryEmployee);
-env.modelManager.modelRegistry.set('hr.employee', factoryEmployee);
+populateRegistries({ env });

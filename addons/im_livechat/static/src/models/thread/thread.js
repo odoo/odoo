@@ -1,12 +1,8 @@
 /** @odoo-module **/
 
-import {
-    registerClassPatchModel,
-    registerInstancePatchModel,
-} from '@mail/model/model_core';
 import { insert, link, unlink } from '@mail/model/model_field_command';
 
-registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thread.js', {
+export const classPatchThread = {
 
     //----------------------------------------------------------------------
     // Public
@@ -56,9 +52,9 @@ registerClassPatchModel('mail.thread', 'im_livechat/static/src/models/thread/thr
         }
         return data2;
     },
-});
+};
 
-registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/thread.js', {
+export const instancePatchThread = {
 
     //----------------------------------------------------------------------
     // Private
@@ -92,4 +88,4 @@ registerInstancePatchModel('mail.thread', 'im_livechat/static/src/models/thread/
     _computeIsChatChannel() {
         return this.channel_type === 'livechat' || this._super();
     },
-});
+};

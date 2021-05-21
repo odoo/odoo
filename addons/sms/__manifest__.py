@@ -44,8 +44,15 @@ The service is provided by the In App Purchase Odoo platform.
             'sms/static/src/js/fields_phone_widget.js',
             'sms/static/src/js/fields_sms_widget.js',
             'sms/static/src/components/notification_group/notification_group.js',
+            'sms/static/src/model/populate_registries.js',
             'sms/static/src/models/message/message.js',
             'sms/static/src/models/notification_group/notification_group.js',
+        ],
+        'web.assets_backend_prod_only': [
+            'sms/static/src/main.js',
+        ],
+        'web.tests_assets': [
+            'sms/static/src/tests_main.js',
         ],
         'web.qunit_suite_tests': [
             'sms/static/tests/sms_widget_test.js',

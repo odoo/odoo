@@ -11,6 +11,8 @@
 
 const registry = {};
 
+// TODO SEB need to get rid of this file
+
 //------------------------------------------------------------------------------
 // Private
 //------------------------------------------------------------------------------
@@ -95,9 +97,7 @@ function registerInstancePatchModel(modelName, patchName, patch) {
  */
 function registerNewModel(name, factory) {
     const entry = _getEntryFromModelName(name);
-    const dependencies = (name !== 'mail.model')
-        ? ['mail.model']
-        : [];
+    const dependencies = (name !== 'mail.model') ? ['mail.model'] : [];
     Object.assign(entry, {
         dependencies,
         factory,

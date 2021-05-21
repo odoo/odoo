@@ -262,13 +262,14 @@
             'mail/static/src/widgets/form_renderer/form_renderer.scss',
         ],
         'web.assets_backend_prod_only': [
-            'mail/static/src/js/main.js',
+            'mail/static/src/main.js',
         ],
         'web.assets_tests': [
             'mail/static/tests/tours/**/*',
         ],
         'web.tests_assets': [
             'mail/static/src/env/test_env.js',
+            'mail/static/src/tests_main.js',
             'mail/static/src/utils/test_utils.js',
             'mail/static/tests/helpers/mock_models.js',
             'mail/static/tests/helpers/mock_server.js',

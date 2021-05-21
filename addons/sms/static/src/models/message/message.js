@@ -1,11 +1,6 @@
-odoo.define('sms/static/src/models/message/message.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
-    registerInstancePatchModel,
-} = require('@mail/model/model_core');
-
-registerInstancePatchModel('mail.message', 'sms/static/src/models/message/message.js', {
+export const instancePatchMessage = {
 
     //--------------------------------------------------------------------------
     // Public
@@ -28,6 +23,4 @@ registerInstancePatchModel('mail.message', 'sms/static/src/models/message/messag
             this._super(...arguments);
         }
     },
-});
-
-});
+};

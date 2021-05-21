@@ -1,13 +1,8 @@
-odoo.define('snailmail/static/src/models/messaging/messaging.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
-    registerInstancePatchModel,
-    registerFieldPatchModel,
-} = require('@mail/model/model_core');
 const { attr } = require('@mail/model/model_field');
 
-registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messaging/messaging.js', {
+export const instancePatchMessaging = {
     async fetchSnailmailCreditsUrl() {
         const snailmail_credits_url = await this.async(() => this.env.services.rpc({
             model: 'iap.account',
@@ -28,11 +23,9 @@ registerInstancePatchModel('mail.messaging', 'snailmail/static/src/models/messag
             snailmail_credits_url_trial,
         });
     },
-});
+};
 
-registerFieldPatchModel('mail.messaging', 'snailmail/static/src/models/messaging/messaging.js', {
+export const fieldPatchMessaging = {
     snailmail_credits_url: attr(),
     snailmail_credits_url_trial: attr(),
-});
-
-});
+};

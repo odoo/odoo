@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-const { attr, many2one, one2many } = require('@mail/model/model_field');
-const { insert, link, unlink } = require('@mail/model/model_field_command');
+import { attr, many2one, one2many } from '@mail/model/model_field';
+import { insert, link, unlink } from '@mail/model/model_field_command';
 
 export function factoryVisitor(dependencies) {
 

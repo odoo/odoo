@@ -1,11 +1,6 @@
-odoo.define('snailmail/static/src/models/notification_group/notification_group.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const {
-    registerInstancePatchModel,
-} = require('@mail/model/model_core');
-
-registerInstancePatchModel('mail.notification_group', 'snailmail/static/src/models/notification_group/notification_group.js', {
+export const instancePatchNotificationGroup = {
 
     //--------------------------------------------------------------------------
     // Public
@@ -57,6 +52,4 @@ registerInstancePatchModel('mail.notification_group', 'snailmail/static/src/mode
             this.env.messaging.messagingMenu.close();
         }
     },
-});
-
-});
+};

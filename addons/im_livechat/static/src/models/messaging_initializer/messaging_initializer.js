@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { registerInstancePatchModel } from '@mail/model/model_core';
 import { executeGracefully } from '@mail/utils/utils';
 
-registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src/models/messaging_initializer/messaging_initializer.js', {
+export const instancePatchMessagingInitializer = {
 
     //----------------------------------------------------------------------
     // Private
@@ -27,4 +26,4 @@ registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src
             }
         }));
     },
-});
+};

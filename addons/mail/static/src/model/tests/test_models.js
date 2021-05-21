@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { create } from '@mail/model/model_field_command';
 
@@ -84,9 +83,3 @@ export function factoryTask(dependencies) {
 
     return Task;
 }
-
-registerNewModel('test.address', factoryAddress);
-registerNewModel('test.contact', factoryContact);
-registerNewModel('test.hobby', factoryHobby);
-registerNewModel('test.task', factoryTask);
-
