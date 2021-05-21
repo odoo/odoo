@@ -90,7 +90,7 @@ QUnit.test('rendering when just one has received the message', async function (a
 });
 
 QUnit.test('rendering when everyone have received the message', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -120,11 +120,7 @@ QUnit.test('rendering when everyone have received the message', async function (
         originThread: link(thread),
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
-    assert.containsOnce(
-        document.body,
-        '.o_MessageSeenIndicator',
-        "should display a message seen indicator component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.doesNotHaveClass(
         document.querySelector('.o_MessageSeenIndicator'),
         'o-all-seen',
@@ -138,7 +134,7 @@ QUnit.test('rendering when everyone have received the message', async function (
 });
 
 QUnit.test('rendering when just one has seen the message', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -169,11 +165,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
         originThread: link(thread),
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
-    assert.containsOnce(
-        document.body,
-        '.o_MessageSeenIndicator',
-        "should display a message seen indicator component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.doesNotHaveClass(
         document.querySelector('.o_MessageSeenIndicator'),
         'o-all-seen',
@@ -188,7 +180,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
 });
 
 QUnit.test('rendering when just one has seen & received the message', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -218,11 +210,7 @@ QUnit.test('rendering when just one has seen & received the message', async func
         originThread: link(thread),
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
-    assert.containsOnce(
-        document.body,
-        '.o_MessageSeenIndicator',
-        "should display a message seen indicator component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.doesNotHaveClass(
         document.querySelector('.o_MessageSeenIndicator'),
         'o-all-seen',
@@ -237,7 +225,7 @@ QUnit.test('rendering when just one has seen & received the message', async func
 });
 
 QUnit.test('rendering when just everyone has seen the message', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -269,11 +257,7 @@ QUnit.test('rendering when just everyone has seen the message', async function (
         originThread: link(thread),
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
-    assert.containsOnce(
-        document.body,
-        '.o_MessageSeenIndicator',
-        "should display a message seen indicator component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.hasClass(
         document.querySelector('.o_MessageSeenIndicator'),
         'o-all-seen',

@@ -42,17 +42,13 @@ QUnit.test('openChat: display notification for partner without user', async func
 });
 
 QUnit.test('openChat: display notification for wrong user', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     await this.start();
 
     // user id not in this.data
     await this.env.messaging.openChat({ userId: 14 });
-    assert.containsOnce(
-        document.body,
-        '.toast .o_notification_content',
-        "should display a toast notification after failing to open chat"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'openChat: display notification for partner without user'
     assert.strictEqual(
         document.querySelector('.o_notification_content').textContent,
         "You can only chat with existing users.",

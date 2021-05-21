@@ -198,7 +198,7 @@ QUnit.test('moderation: as moderator, moderated channel with pending moderation 
 });
 
 QUnit.test('Notification Sent', async function (assert) {
-    assert.expect(9);
+    assert.expect(8);
 
     this.data['mail.channel'].records.push({ id: 11 });
     await this.start();
@@ -225,11 +225,7 @@ QUnit.test('Notification Sent', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsOnce(
         document.body,
         '.o_Message_notificationIconClickable',
@@ -277,7 +273,7 @@ QUnit.test('Notification Sent', async function (assert) {
 });
 
 QUnit.test('Notification Error', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     const openResendActionDef = makeDeferred();
     const bus = new Bus();
@@ -320,11 +316,7 @@ QUnit.test('Notification Error', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'basic rendering'
     assert.containsOnce(
         document.body,
         '.o_Message_notificationIconClickable',
@@ -349,7 +341,7 @@ QUnit.test('Notification Error', async function (assert) {
 });
 
 QUnit.test("'channel_fetch' notification received is correctly handled", async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     this.data['res.partner'].records.push({
         display_name: "Recipient",
@@ -384,11 +376,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         threadViewLocalId: threadViewer.threadView.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsNone(
         document.body,
         '.o_MessageSeenIndicator_icon',
@@ -415,6 +403,67 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 });
 
 QUnit.test("'channel_seen' notification received is correctly handled", async function (assert) {
+    assert.expect(2);
+
+    this.data['res.partner'].records.push({
+        display_name: "Recipient",
+        id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 11,
+        members: [this.data.currentPartnerId, 11],
+    });
+    await this.start();
+    const currentPartner = this.env.models['mail.partner'].insert({
+        id: this.env.messaging.currentPartner.id,
+        display_name: "Demo User",
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: link(thread),
+    });
+    const message = this.env.models['mail.message'].create({
+        author: link(currentPartner),
+        body: "<p>Test</p>",
+        id: 100,
+        originThread: link(thread),
+    });
+    await this.createMessageComponent(message, {
+        threadViewLocalId: threadViewer.threadView.localId,
+    });
+
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    assert.containsNone(
+        document.body,
+        '.o_MessageSeenIndicator_icon',
+        "message component should not have any check (V) as message is not yet received"
+    );
+
+    // Simulate received channel seen notification
+    const notifications = [
+        [['myDB', 'mail.channel', 11], {
+            info: 'channel_seen',
+            last_message_id: 100,
+            partner_id: 11,
+        }],
+    ];
+    await afterNextRender(() => {
+        this.widget.call('bus_service', 'trigger', 'notification', notifications);
+    });
+    assert.containsN(
+        document.body,
+        '.o_MessageSeenIndicator_icon',
+        2,
+        "message seen indicator component should contain two checks (V) as message is seen"
+    );
+});
+
+QUnit.test("'channel_fetch' notification then 'channel_seen' received  are correctly handled", async function (assert) {
     assert.expect(3);
 
     this.data['res.partner'].records.push({
@@ -449,76 +498,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         threadViewLocalId: threadViewer.threadView.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsNone(
-        document.body,
-        '.o_MessageSeenIndicator_icon',
-        "message component should not have any check (V) as message is not yet received"
-    );
-
-    // Simulate received channel seen notification
-    const notifications = [
-        [['myDB', 'mail.channel', 11], {
-            info: 'channel_seen',
-            last_message_id: 100,
-            partner_id: 11,
-        }],
-    ];
-    await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
-    });
-    assert.containsN(
-        document.body,
-        '.o_MessageSeenIndicator_icon',
-        2,
-        "message seen indicator component should contain two checks (V) as message is seen"
-    );
-});
-
-QUnit.test("'channel_fetch' notification then 'channel_seen' received  are correctly handled", async function (assert) {
-    assert.expect(4);
-
-    this.data['res.partner'].records.push({
-        display_name: "Recipient",
-        id: 11,
-    });
-    this.data['mail.channel'].records.push({
-        channel_type: 'chat',
-        id: 11,
-        members: [this.data.currentPartnerId, 11],
-    });
-    await this.start();
-    const currentPartner = this.env.models['mail.partner'].insert({
-        id: this.env.messaging.currentPartner.id,
-        display_name: "Demo User",
-    });
-    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
-        id: 11,
-        model: 'mail.channel',
-    });
-    const threadViewer = this.env.models['mail.thread_viewer'].create({
-        hasThreadView: true,
-        thread: link(thread),
-    });
-    const message = this.env.models['mail.message'].create({
-        author: link(currentPartner),
-        body: "<p>Test</p>",
-        id: 100,
-        originThread: link(thread),
-    });
-    await this.createMessageComponent(message, {
-        threadViewLocalId: threadViewer.threadView.localId,
-    });
-
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsNone(
         document.body,
         '.o_MessageSeenIndicator_icon',
@@ -562,7 +542,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
 });
 
 QUnit.test('do not show messaging seen indicator if not authored by me', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     await this.start();
     const author = this.env.models['mail.partner'].create({
@@ -598,11 +578,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
     });
     await this.createMessageComponent(message, { threadViewLocalId: threadViewer.threadView.localId });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsNone(
         document.body,
         '.o_Message_seenIndicator',
@@ -611,7 +587,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
 });
 
 QUnit.test('do not show messaging seen indicator if before last seen by all message', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
@@ -659,11 +635,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         threadViewLocalId: threadViewer.threadView.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsOnce(
         document.body,
         '.o_Message_seenIndicator',
@@ -677,7 +649,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
 });
 
 QUnit.test('only show messaging seen indicator if authored by me, after last seen by all message', async function (assert) {
-    assert.expect(3);
+    assert.expect(1);
 
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
@@ -720,16 +692,8 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         threadViewLocalId: threadViewer.threadView.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_seenIndicator',
-        "message component should have a message seen indicator"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'do not show messaging seen indicator if before last seen by all message'
     assert.containsN(
         document.body,
         '.o_MessageSeenIndicator_icon',
@@ -788,7 +752,7 @@ QUnit.test('allow attachment delete on authored message', async function (assert
 });
 
 QUnit.test('prevent attachment delete on non-authored message', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -803,11 +767,7 @@ QUnit.test('prevent attachment delete on non-authored message', async function (
     });
     await this.createMessageComponent(message);
 
-    assert.containsOnce(
-        document.body,
-        '.o_Attachment',
-        "should have an attachment",
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.containsNone(
         document.body,
         '.o_Attachment_asideItemUnlink',
@@ -816,7 +776,7 @@ QUnit.test('prevent attachment delete on non-authored message', async function (
 });
 
 QUnit.test('subtype description should be displayed if it is different than body', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     await this.start();
     const message = this.env.models['mail.message'].create({
@@ -825,11 +785,7 @@ QUnit.test('subtype description should be displayed if it is different than body
         subtype_description: 'Bonjour',
     });
     await this.createMessageComponent(message);
-    assert.containsOnce(
-        document.body,
-        '.o_Message_content',
-        "message should have content"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     assert.strictEqual(
         document.querySelector(`.o_Message_content`).textContent,
         "HelloBonjour",
@@ -860,7 +816,7 @@ QUnit.test('subtype description should not be displayed if it is similar to body
 });
 
 QUnit.test('data-oe-id & data-oe-model link redirection on click', async function (assert) {
-    assert.expect(7);
+    assert.expect(6);
 
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -887,11 +843,7 @@ QUnit.test('data-oe-id & data-oe-model link redirection on click', async functio
         id: 100,
     });
     await this.createMessageComponent(message);
-    assert.containsOnce(
-        document.body,
-        '.o_Message_content',
-        "message should have content"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'subtype description should not be displayed if it is similar to body'
     assert.containsOnce(
         document.querySelector('.o_Message_content'),
         'a',
@@ -984,7 +936,7 @@ QUnit.test('chat with author should be opened after clicking on his im status ic
 });
 
 QUnit.test('open chat with author on avatar click should be disabled when currently chatting with the author', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     this.data['mail.channel'].records.push({
         channel_type: 'chat',
@@ -1009,11 +961,7 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Message_authorAvatar',
-        "message should have the author avatar"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'chat with author should be opened after clicking on his avatar'
     assert.doesNotHaveClass(
         document.querySelector('.o_Message_authorAvatar'),
         'o_redirect',
