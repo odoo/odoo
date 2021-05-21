@@ -269,4 +269,41 @@ QUnit.module("ActionManager", (hooks) => {
             ui.bus.off("UNBLOCK", webClient);
         }
     );
+
+    QUnit.test("can use custom handlers for report actions", async function (assert) {
+        assert.expect(8);
+        mockDownload((options) => {
+            assert.step(options.url);
+            return Promise.resolve();
+        });
+        const mockRPC = async (route, args) => {
+            assert.step((args && args.method) || route);
+            if (route === "/report/check_wkhtmltopdf") {
+                return "ok";
+            }
+        };
+        const webClient = await createWebClient({ testConfig, mockRPC });
+        let customHandlerCalled = false;
+        registry.category("ir.actions.report handlers").add("custom_handler", async action => {
+            if (action.id === 7 && !customHandlerCalled) {
+                customHandlerCalled = true;
+                assert.step("calling custom handler");
+                return true;
+            }
+            assert.step("falling through to default handler");
+        });
+        await doAction(webClient, 7);
+        assert.step("first doAction finished");
+        await doAction(webClient, 7);
+
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "calling custom handler",
+            "first doAction finished",
+            "falling through to default handler",
+            "/report/check_wkhtmltopdf",
+            "/report/download",
+        ]);
+    });
 });
