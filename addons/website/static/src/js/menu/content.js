@@ -737,7 +737,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             }, menu.fields));
             dialog.on('save', this, link => {
                 _.extend(menu.fields, {
-                    'name': link.text,
+                    'name': link.content,
                     'url': link.url,
                     'new_window': link.isNewWindow,
                 });
