@@ -1,12 +1,10 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { one2one } from '@mail/model/model_field';
 import { executeGracefully } from '@mail/utils/utils';
 import { create, link, insert } from '@mail/model/model_field_command';
 
-
-function factory(dependencies) {
+export function factoryMessagingInitializer(dependencies) {
 
     class MessagingInitializer extends dependencies['mail.model'] {
 
@@ -281,5 +279,3 @@ function factory(dependencies) {
 
     return MessagingInitializer;
 }
-
-registerNewModel('mail.messaging_initializer', factory);

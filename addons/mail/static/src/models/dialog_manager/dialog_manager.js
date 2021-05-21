@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { one2many } from '@mail/model/model_field';
 import { link } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryDialogManager(dependencies) {
 
     class DialogManager extends dependencies['mail.model'] {
 
@@ -44,5 +43,3 @@ function factory(dependencies) {
 
     return DialogManager;
 }
-
-registerNewModel('mail.dialog_manager', factory);

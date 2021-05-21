@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 
-function factory(dependencies) {
+export function factorySuggestedRecipientInfo(dependencies) {
 
     class SuggestedRecipientInfo extends dependencies['mail.model'] {
 
@@ -107,5 +106,3 @@ function factory(dependencies) {
 
     return SuggestedRecipientInfo;
 }
-
-registerNewModel('mail.suggested_recipient_info', factory);

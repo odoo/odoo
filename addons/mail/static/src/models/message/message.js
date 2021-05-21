@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
@@ -8,7 +7,7 @@ import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from
 
 import { str_to_datetime } from 'web.time';
 
-function factory(dependencies) {
+export function factoryMessage(dependencies) {
 
     class Message extends dependencies['mail.model'] {
 
@@ -827,5 +826,3 @@ function factory(dependencies) {
 
     return Message;
 }
-
-registerNewModel('mail.message', factory);

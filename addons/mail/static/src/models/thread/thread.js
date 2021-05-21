@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, create, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import throttle from '@mail/utils/throttle/throttle';
@@ -8,7 +7,7 @@ import Timer from '@mail/utils/timer/timer';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
-function factory(dependencies) {
+export function factoryThread(dependencies) {
 
     class Thread extends dependencies['mail.model'] {
 
@@ -2262,5 +2261,3 @@ function factory(dependencies) {
 
     return Thread;
 }
-
-registerNewModel('mail.thread', factory);

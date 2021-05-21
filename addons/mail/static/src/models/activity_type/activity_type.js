@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2many } from '@mail/model/model_field';
 
-function factory(dependencies) {
+export function factoryActivityType(dependencies) {
 
     class ActivityType extends dependencies['mail.model'] {
 
@@ -32,5 +31,3 @@ function factory(dependencies) {
 
     return ActivityType;
 }
-
-registerNewModel('mail.activity_type', factory);

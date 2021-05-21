@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, create, link, unlink, update } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryChatWindow(dependencies) {
 
     class ChatWindow extends dependencies['mail.model'] {
 
@@ -491,5 +490,3 @@ function factory(dependencies) {
 
     return ChatWindow;
 }
-
-registerNewModel('mail.chat_window', factory);

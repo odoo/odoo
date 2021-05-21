@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one } from '@mail/model/model_field';
 import { insert, link, unlink, unlinkAll } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryFollower(dependencies) {
 
     class Follower extends dependencies['mail.model'] {
 
@@ -189,5 +188,3 @@ function factory(dependencies) {
 
     return Follower;
 }
-
-registerNewModel('mail.follower', factory);

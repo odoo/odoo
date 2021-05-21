@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryCountry(dependencies) {
 
     class Country extends dependencies['mail.model'] {
 
@@ -48,5 +47,3 @@ function factory(dependencies) {
 
     return Country;
 }
-
-registerNewModel('mail.country', factory);

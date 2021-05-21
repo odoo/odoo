@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, insert, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import emojis from '@mail/js/emojis';
@@ -10,7 +9,7 @@ import {
     parseAndTransform,
 } from '@mail/js/utils';
 
-function factory(dependencies) {
+export function factoryComposer(dependencies) {
 
     class Composer extends dependencies['mail.model'] {
 
@@ -1065,5 +1064,3 @@ function factory(dependencies) {
 
     return Composer;
 }
-
-registerNewModel('mail.composer', factory);

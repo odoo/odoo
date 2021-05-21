@@ -4,7 +4,7 @@ import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { create } from '@mail/model/model_field_command';
 
-function factoryAddress(dependencies) {
+export function factoryAddress(dependencies) {
     class Address extends dependencies['mail.model'] {
         static _createRecordLocalId(data) {
             if (data.id) {
@@ -26,7 +26,7 @@ function factoryAddress(dependencies) {
     return Address;
 }
 
-function factoryContact(dependencies) {
+export function factoryContact(dependencies) {
     class Contact extends dependencies['mail.model'] {}
 
     Contact.fields = {
@@ -52,7 +52,7 @@ function factoryContact(dependencies) {
     return Contact;
 }
 
-function factoryHobby(dependencies) {
+export function factoryHobby(dependencies) {
     class Hobby extends dependencies['mail.model'] {}
 
     Hobby.fields = { description: attr() };
@@ -60,7 +60,7 @@ function factoryHobby(dependencies) {
     return Hobby;
 }
 
-function factoryTask(dependencies) {
+export function factoryTask(dependencies) {
     class Task extends dependencies['mail.model'] {
         static _createRecordLocalId(data) {
             if (data.id) {

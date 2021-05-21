@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { many2one } from '@mail/model/model_field';
 
-function factory(dependencies) {
+export function factoryFollowerSubtypeList(dependencies) {
 
     class FollowerSubtypeList extends dependencies['mail.model'] {}
 
@@ -13,5 +12,3 @@ function factory(dependencies) {
 
     return FollowerSubtypeList;
 }
-
-registerNewModel('mail.follower_subtype_list', factory);

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 
 /**
@@ -10,7 +9,7 @@ import { RecordDeletedError } from '@mail/model/model_errors';
  * UI elements (e.g. MessagingMenu, ChatWindow). These instances are called
  * "records", while the classes are called "models".
  */
-function factory() {
+export function factoryModel() {
 
     class Model {
 
@@ -246,6 +245,3 @@ function factory() {
 
     return Model;
 }
-
-// TODO remove self registry from models definition, move into a new registry actually in model manager
-registerNewModel('mail.model', factory);

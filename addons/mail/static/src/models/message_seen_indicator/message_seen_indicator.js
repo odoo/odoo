@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { insert, replace, unlinkAll } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryMessageSeenIndicator(dependencies) {
 
     class MessageSeenIndicator extends dependencies['mail.model'] {
 
@@ -354,5 +353,3 @@ function factory(dependencies) {
 
     return MessageSeenIndicator;
 }
-
-registerNewModel('mail.message_seen_indicator', factory);

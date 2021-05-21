@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
-function factory(dependencies) {
+export function factoryCannedResponse(dependencies) {
 
     class CannedResponse extends dependencies['mail.model'] {
 
@@ -98,5 +97,3 @@ function factory(dependencies) {
 
     return CannedResponse;
 }
-
-registerNewModel('mail.canned_response', factory);

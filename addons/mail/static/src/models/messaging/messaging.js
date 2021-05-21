@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { create, replace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryMessaging(dependencies) {
 
     class Messaging extends dependencies['mail.model'] {
 
@@ -318,5 +317,3 @@ function factory(dependencies) {
 
     return Messaging;
 }
-
-registerNewModel('mail.messaging', factory);

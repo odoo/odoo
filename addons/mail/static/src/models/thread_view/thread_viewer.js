@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { create, insert, link, unlink } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryThreadViewer(dependencies) {
 
     class ThreadViewer extends dependencies['mail.model'] {
 
@@ -155,5 +154,3 @@ function factory(dependencies) {
 
     return ThreadViewer;
 }
-
-registerNewModel('mail.thread_viewer', factory);

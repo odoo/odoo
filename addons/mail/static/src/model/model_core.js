@@ -93,17 +93,13 @@ function registerInstancePatchModel(modelName, patchName, patch) {
  * @param {function} factory
  * @param {string[]} [dependencies=[]]
  */
-function registerNewModel(name, factory, dependencies = []) {
+function registerNewModel(name, factory) {
     const entry = _getEntryFromModelName(name);
-    let entryDependencies = [...dependencies];
-    if (name !== 'mail.model') {
-        entryDependencies = [...new Set(entryDependencies.concat(['mail.model']))];
-    }
-    if (entry.factory) {
-        throw new Error(`Model "${name}" has already been registered!`);
-    }
+    const dependencies = (name !== 'mail.model')
+        ? ['mail.model']
+        : [];
     Object.assign(entry, {
-        dependencies: entryDependencies,
+        dependencies,
         factory,
         name,
     });

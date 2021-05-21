@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one } from '@mail/model/model_field';
 import { clear, insert, link, replace } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryAttachment(dependencies) {
 
     let nextUploadingId = -1;
     function getAttachmentNextUploadingId() {
@@ -431,5 +430,3 @@ function factory(dependencies) {
 
     return Attachment;
 }
-
-registerNewModel('mail.attachment', factory);

@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many } from '@mail/model/model_field';
 
-function factory(dependencies) {
+export function factoryMailTemplate(dependencies) {
 
     class MailTemplate extends dependencies['mail.model'] {
 
@@ -76,5 +75,3 @@ function factory(dependencies) {
 
     return MailTemplate;
 }
-
-registerNewModel('mail.mail_template', factory);

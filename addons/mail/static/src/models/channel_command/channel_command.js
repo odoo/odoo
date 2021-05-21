@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
-function factory(dependencies) {
+export function factoryChannelCommand(dependencies) {
 
     class ChannelCommand extends dependencies['mail.model'] {
 
@@ -121,5 +120,3 @@ function factory(dependencies) {
 
     return ChannelCommand;
 }
-
-registerNewModel('mail.channel_command', factory);

@@ -34,10 +34,11 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'web.assets_backend': [
             'website_livechat/static/src/components/discuss/discuss.js',
             'website_livechat/static/src/components/visitor_banner/visitor_banner.js',
+            'website_livechat/static/src/components/visitor_banner/visitor_banner.scss',
+            'website_livechat/static/src/main.js',
             'website_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js',
             'website_livechat/static/src/models/thread/thread.js',
             'website_livechat/static/src/models/visitor/visitor.js',
-            'website_livechat/static/src/components/visitor_banner/visitor_banner.scss',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',

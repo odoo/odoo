@@ -94,7 +94,7 @@ Object.assign(env, {
     store,
 });
 
-populateRegistries(env);
+populateRegistries({ env });
 
 /**
  * Components cannot use web.bus, because they cannot use

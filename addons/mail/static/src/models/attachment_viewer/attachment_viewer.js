@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one } from '@mail/model/model_field';
 
-function factory(dependencies) {
+export function factoryAttachmentViewer(dependencies) {
 
     class AttachmentViewer extends dependencies['mail.model'] {
 
@@ -50,5 +49,3 @@ function factory(dependencies) {
 
     return AttachmentViewer;
 }
-
-registerNewModel('mail.attachment_viewer', factory);

@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
 import { insert, link, unlinkAll } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
-function factory(dependencies) {
+export function factoryPartner(dependencies) {
 
     class Partner extends dependencies['mail.model'] {
 
@@ -525,5 +524,3 @@ function factory(dependencies) {
 
     return Partner;
 }
-
-registerNewModel('mail.partner', factory);

@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, one2many, one2one } from '@mail/model/model_field';
 
-function factory(dependencies) {
+export function factoryMessagingMenu(dependencies) {
 
     class MessagingMenu extends dependencies['mail.model'] {
 
@@ -196,5 +195,3 @@ function factory(dependencies) {
 
     return MessagingMenu;
 }
-
-registerNewModel('mail.messaging_menu', factory);

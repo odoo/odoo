@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 import { insert, unlinkAll } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryNotification(dependencies) {
 
     class Notification extends dependencies['mail.model'] {
 
@@ -72,5 +71,3 @@ function factory(dependencies) {
 
     return Notification;
 }
-
-registerNewModel('mail.notification', factory);

@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 import { insert } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryThreadPartnerSeenInfo(dependencies) {
 
     class ThreadPartnerSeenInfo extends dependencies['mail.model'] {
 
@@ -105,5 +104,3 @@ function factory(dependencies) {
 
     return ThreadPartnerSeenInfo;
 }
-
-registerNewModel('mail.thread_partner_seen_info', factory);

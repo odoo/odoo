@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { clear, create, link, replace, unlink, unlinkAll, update } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryDiscuss(dependencies) {
 
     class Discuss extends dependencies['mail.model'] {
 
@@ -583,5 +582,3 @@ function factory(dependencies) {
 
     return Discuss;
 }
-
-registerNewModel('mail.discuss', factory);

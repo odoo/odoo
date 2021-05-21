@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, link, unlink } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryThreadView(dependencies) {
 
     class ThreadView extends dependencies['mail.model'] {
 
@@ -438,5 +437,3 @@ function factory(dependencies) {
 
     return ThreadView;
 }
-
-registerNewModel('mail.thread_view', factory);

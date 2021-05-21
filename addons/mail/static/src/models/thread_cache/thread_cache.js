@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryThreadCache(dependencies) {
 
     class ThreadCache extends dependencies['mail.model'] {
 
@@ -666,5 +665,3 @@ function factory(dependencies) {
 
     return ThreadCache;
 }
-
-registerNewModel('mail.thread_cache', factory);

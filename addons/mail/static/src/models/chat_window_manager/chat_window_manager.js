@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { link, replace, unlink } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryChatWindowManager(dependencies) {
 
     const BASE_VISUAL = {
         /**
@@ -481,5 +480,3 @@ function factory(dependencies) {
 
     return ChatWindowManager;
 }
-
-registerNewModel('mail.chat_window_manager', factory);

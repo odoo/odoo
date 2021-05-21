@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { create, insert, link, unlink, update } from '@mail/model/model_field_command';
 
-function factory(dependencies) {
+export function factoryChatter(dependencies) {
 
     const getThreadNextTemporaryId = (function () {
         let tmpId = 0;
@@ -348,5 +347,3 @@ function factory(dependencies) {
 
     return Chatter;
 }
-
-registerNewModel('mail.chatter', factory);
