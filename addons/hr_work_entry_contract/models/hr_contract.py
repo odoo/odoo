@@ -21,7 +21,7 @@ class HrContract(models.Model):
     def _get_default_work_entry_type(self):
         return self.env.ref('hr_work_entry.work_entry_type_attendance', raise_if_not_found=False)
 
-    def _get_leave_work_entry_type_dates(self, leave, date_from, date_to):
+    def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
         return self._get_leave_work_entry_type(leave)
 
     def _get_leave_work_entry_type(self, leave):
@@ -31,24 +31,25 @@ class HrContract(models.Model):
     def _get_more_vals_leave_interval(self, interval, leaves):
         return []
 
-    def _get_bypassing_work_entry_type(self):
-        return self.env['hr.work.entry.type']
+    def _get_bypassing_work_entry_type_codes(self):
+        return []
 
-    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing):
+    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing_codes):
         # returns the work entry time related to the leave that
         # includes the whole interval.
         # Overriden in hr_work_entry_contract_holiday to select the
         # global time off first (eg: Public Holiday > Home Working)
+        self.ensure_one()
         for leave in leaves:
             if interval[0] >= leave[0] and interval[1] <= leave[1] and leave[2]:
                 interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
-                return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop)
+                return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
         return self.env.ref('hr_work_entry_contract.work_entry_type_leave')
 
     def _get_contract_work_entries_values(self, date_start, date_stop):
         contract_vals = []
-        bypassing_work_entry_type = self._get_bypassing_work_entry_type()
+        bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
         for contract in self:
             employee = contract.employee_id
             calendar = contract.resource_calendar_id
@@ -133,7 +134,7 @@ class HrContract(models.Model):
                 # sql constraint error
                 if interval[0] == interval[1]:  # if start == stop
                     continue
-                leave_entry_type = contract._get_interval_leave_work_entry_type(interval, leaves, bypassing_work_entry_type)
+                leave_entry_type = contract._get_interval_leave_work_entry_type(interval, leaves, bypassing_work_entry_type_codes)
                 interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                 contract_vals += [dict([
