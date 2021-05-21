@@ -121,10 +121,11 @@ ul.o_checklist {
     list-style: none;
 
     >li {
+        list-style: none;
         position: relative;
         margin-left: $o-checklist-margin-left;
 
-        &::before {
+        &:not(.oe-nested)::before {
             content: '';
             position: absolute;
             left: - $o-checklist-margin-left;
