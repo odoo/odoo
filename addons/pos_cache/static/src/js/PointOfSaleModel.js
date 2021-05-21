@@ -17,7 +17,7 @@ odoo.define('pos_cache.PointOfSaleModel', function (require) {
     patch(PointOfSaleModel.prototype, 'pos_cache', {
         /**
          * This method will make sense if you are aware that the behavior of
-         * `_load_product_product` method in the backend is modified by pos_cache module.
+         * `_meta_product_product` method in the backend is modified by pos_cache module.
          * Basically, at `_fetchAndProcessPosData`, initial number of products is loaded
          * (100000 products to be exact). This method is called after the UI is ready, which
          * basically performs background tasks to load the remaining products from the backend.
@@ -46,18 +46,24 @@ odoo.define('pos_cache.PointOfSaleModel', function (require) {
             );
         },
         async _getTotalProductsCount() {
+            const productMeta = this.data.loadingMetas['product.product'];
+            const domain = productMeta['domain']
+            const fields = productMeta['fields']
             return await this.uirpc({
                 model: 'pos.session',
                 method: 'get_total_products_count',
-                args: [[odoo.pos_session_id]],
+                args: [[odoo.pos_session_id], domain, fields],
                 context: session.user_context,
             });
         },
         async actionLoadProducts(start, end) {
+            const productMeta = this.data.loadingMetas['product.product'];
+            const domain = productMeta['domain']
+            const fields = productMeta['fields']
             const products = await this.uirpc({
                 model: 'pos.session',
                 method: 'get_cached_products',
-                args: [[odoo.pos_session_id], start, end],
+                args: [[odoo.pos_session_id], domain, fields, start, end],
                 context: session.user_context,
             });
             const productsContainer = this.data.records['product.product'];

@@ -3,20 +3,17 @@
 
 from odoo import models
 from odoo.osv.expression import OR
-from odoo.addons.point_of_sale.models.pos_session import loader
+from odoo.addons.point_of_sale.models.pos_session import pos_loader
 
 
 class PosSession(models.Model):
     _inherit = "pos.session"
 
-    @loader("coupon.program", [])
-    def _load_coupon_program(self, lcontext):
+    @pos_loader.meta("coupon.program")
+    def _meta_coupon_program(self):
         if not self.config_id.program_ids:
             return
-        domain = [("id", "in", self.config_id.program_ids.ids), ("active", "=", True)]
-        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
-        for record in records:
-            lcontext.contents[record["id"]] = record
+        return {'domain': [("id", "in", self.config_id.program_ids.ids), ("active", "=", True)]}
 
     def _get_product_product_domain(self):
         result = super(PosSession, self)._get_product_product_domain()

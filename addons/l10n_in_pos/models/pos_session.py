@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.point_of_sale.models.pos_session import load_fields
+from odoo import models
 
-load_fields("product.product", ["l10n_in_hsn_code"])
+
+class PosSession(models.Model):
+    _inherit = "pos.session"
+
+    def _meta_product_product(self):
+        meta = super()._meta_product_product()
+        meta["fields"].append("l10n_in_hsn_code")
+        return meta

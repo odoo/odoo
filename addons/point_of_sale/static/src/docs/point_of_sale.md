@@ -66,7 +66,7 @@ model name to the list of ids in the order that the records are queried.
 
 **`contents`** : is part of the `data` object. It is the dict of records
 corresponding to the model referred in the decorator. So if the `loader` method
-is decorated with `@loader('product.product')`, then `contents` will contain the
+is decorated with `@pos_loader('product.product')`, then `contents` will contain the
 `product.product` dict keyed by id.
 
 ```py
@@ -101,8 +101,8 @@ argument refers to the `pos.session` record being opened.
 Let's take the loader method of `product.product` as an example:
 
 ```py
-    @loader('product.product', [<list of field names>]) #1
-    def _load_product_product(self, lcontext):  #2
+    @pos_loader('product.product', [<list of field names>]) #1
+    def _meta_product_product(self, lcontext):  #2
         order = "sequence,default_code,name" #3
         domain = self._get_product_product_domain() #4
         records = self.env[lcontext.model].with_context(display_default_code=False).search(domain, order=order).read(lcontext.fields, load=False) #5
@@ -149,7 +149,7 @@ In core `point_of_sale`, the loader methods are already defined. However, when c
 class PosSession(models.Model):
     _inherit = "pos.session"
 
-    @loader("hr.employee", ["name", "id", "user_id"])
+    @pos_loader("hr.employee", ["name", "id", "user_id"])
     def _load_hr_employee(self, lcontext):
         if len(self.config_id.employee_ids) > 0:
             domain = ["&", ("company_id", "=", self.config_id.company_id.id), "|", ("user_id", "=", self.user_id.id), ("id", "in", self.config_id.employee_ids.ids)]
@@ -165,7 +165,7 @@ registers a `loader` method to load `hr.employee` records and we are only
 concerned with `'name'`, `'id'` and `'user_id'` fields.
 
 We can also override the loader method just as we override other model
-methods. Look at `_load_product_product` in `pos_cache` for example.
+methods. Look at `_meta_product_product` in `pos_cache` for example.
 
 ## Extending POS UI
 

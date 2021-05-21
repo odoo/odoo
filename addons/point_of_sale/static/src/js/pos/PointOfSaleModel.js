@@ -278,7 +278,7 @@ class PointOfSaleModel extends EventBus {
      * Fetches the data needed from the backend then process the loaded data.
      */
     async _fetchAndProcessPosData() {
-        const [records, sortedIds, fields] = await this.rpc({
+        const [records, sortedIds, fields, loadingMetas] = await this.rpc({
             model: 'pos.session',
             method: 'load_pos_data',
             args: [[odoo.pos_session_id]],
@@ -286,6 +286,7 @@ class PointOfSaleModel extends EventBus {
         this._assignDataRecords(records);
         this._assignDataSortedIds(sortedIds);
         this._assignDataFields(fields);
+        this.data.loadingMetas = loadingMetas;
         await this._assignTopLevelFields();
         await this._assignDataDerived();
         await this._loadPersistedOrders();
@@ -2660,13 +2661,11 @@ class PointOfSaleModel extends EventBus {
             cancelText: _t('No'),
         });
         if (confirmed) {
-            await this.uirpc({
-                route: '/pos/load_onboarding_data',
-            });
+            await this.uirpc({ route: '/pos/load_onboarding_data' });
             const { products, categories } = await this.uirpc({
                 model: 'pos.session',
                 method: 'get_onboarding_data',
-                args: [],
+                args: [this.data.loadingMetas],
             });
             this.data.records['product.product'] = products;
             this.data.records['pos.category'] = categories;

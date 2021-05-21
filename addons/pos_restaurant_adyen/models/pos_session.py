@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.point_of_sale.models.pos_session import load_fields
+from odoo import models
 
-load_fields("pos.payment.method", ["adyen_merchant_account"])
+
+class PosSession(models.Model):
+    _inherit = "pos.session"
+
+    def _meta_pos_payment_method(self):
+        meta = super()._meta_pos_payment_method()
+        meta["fields"].append("adyen_merchant_account")
+        return meta

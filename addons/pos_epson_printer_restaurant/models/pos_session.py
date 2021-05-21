@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.point_of_sale.models.pos_session import load_fields
+from odoo import models
 
-load_fields("restaurant.printer", ["epson_printer_ip"])
+
+class PosSession(models.Model):
+    _inherit = "pos.session"
+
+    def _meta_restaurant_printer(self):
+        meta = super()._meta_restaurant_printer()
+        if not meta:
+            return
+        meta["fields"].append("epson_printer_ip")
+        return meta

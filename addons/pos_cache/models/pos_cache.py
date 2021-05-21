@@ -66,7 +66,7 @@ class pos_config(models.Model):
 
     def get_products_from_cache(self, fields, domain):
         fields_str = str(fields)
-        domain_str = str(domain)
+        domain_str = str([list(item) if isinstance(item, (list, tuple)) else item for item in domain])
         pos_cache = self.env['pos.cache']
         cache_for_user = pos_cache.search([
             ('id', 'in', self.cache_ids.ids),
