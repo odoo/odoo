@@ -942,15 +942,19 @@ class Website(models.Model):
 
     def _get_http_domain(self):
         """Get the domain of the current website, prefixed by http if no
-        scheme is specified.
+        scheme is specified and withtout trailing /.
 
         Empty string if no domain is specified on the website.
         """
         self.ensure_one()
         if not self.domain:
             return ''
-        res = urls.url_parse(self.domain)
-        return 'http://' + self.domain if not res.scheme else self.domain
+
+        domain = self.domain
+        if not self.domain.startswith('http'):
+            domain = 'http://%s' % domain
+
+        return domain.rstrip('/')
 
     def get_base_url(self):
         self.ensure_one()
