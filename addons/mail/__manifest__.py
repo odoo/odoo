@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
+    'auto_install': True,
     'name': 'Discuss',
     'version': '1.0',
     'category': 'Productivity/Discuss',
