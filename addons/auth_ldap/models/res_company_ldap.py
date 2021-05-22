@@ -119,19 +119,16 @@ class CompanyLDAP(models.Model):
             conn.simple_bind_s(dn, to_text(password))
             conn.unbind()
         except ldap.INVALID_CREDENTIALS as e:
-            _logger.error('User Id or password is incorrect: %s', e)
+            _logger.error('An LDAP User Id or password is incorrect: %s', e)
             return False
         except ldap.TIMEOUT as e:
-            _logger.error('LDAP TIMEOUT occurred: %s', e)
+            _logger.error('An LDAP timeout exception occurred: %s', e)
             return False
         except ldap.SERVER_DOWN as e:
-            _logger.error('LDAP server down exception occurred: %s', e)
+            _logger.error('An LDAP server down exception occurred: %s', e)
             return False
         except ldap.LDAPError as e:
-            _logger.error('LDAP error occurred: %s', e)
-            return False
-        except:
-            _logger.error('LDAP catch all exception occurred')
+            _logger.error('An LDAP exception occurred: %s', e)
             return False
         return entry
 
