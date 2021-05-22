@@ -358,6 +358,8 @@ msgstr "Výrobní objednávka je již hotová nebo zrušena."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Výrobek s kusovníkem typu stavebnice nemůže mít pravidlo pro změnu "
+"objednávky."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -436,6 +438,9 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
+"Přidání vedlejších produktů do kusovníků. Toho lze využít i k získání "
+"několika hotových výrobků. Bez této možnosti můžete pouze: A + B = C. S "
+"touto možností: A + B = C + D."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -447,6 +452,8 @@ msgstr "Přidat ke svým pracovním objednávkám kontroly kvality"
 #, python-format
 msgid "Add some materials to consume before marking this MO as to do."
 msgstr ""
+"Před označením této Výrobní objednávky k výrobě přidejte některé materiály "
+"ke spotřebě."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -465,6 +472,9 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
+"Všechna množství produktů musí být větší nebo rovna 0.\n"
+"Řádky s množstvím 0 lze použít jako volitelné řádky. \n"
+"Pokud chcete spravovat další produkty na kusovníku, měli byste si nainstalovat modul mrp_byproduct !"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_abstract_workorder__use_create_components_lots
@@ -472,7 +482,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__use_create_components_lots
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Allow to create new lot/serial numbers for the components"
-msgstr ""
+msgstr "Umožnit vytvoření nových šarží/sériových čísel pro součástky"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allowed_lots_domain
@@ -1467,7 +1477,7 @@ msgstr "Dokončeno"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__lot_produced_ids
 msgid "Finished Lot/Serial Number"
-msgstr ""
+msgstr "Dokončené výrobní číslo / seriálové číslo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__finished_lots_exist
@@ -4930,6 +4940,14 @@ msgstr ""
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
 #, python-format
 msgid "You have to produce at least one %s."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
 msgstr ""
 
 #. module: mrp

@@ -29,7 +29,6 @@
 # Martin Trigaux, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Luana Andronico <andronicoluana@gmail.com>, 2019
-# Iacopo Simonelli <lsi@odoo.com>, 2020
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2020
 # Mauro Sacchini <sacchini.sf@gmail.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
@@ -5550,7 +5549,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -7964,7 +7963,7 @@ msgstr "Fatture fornitore originali"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Original Currency"
-msgstr ""
+msgstr "Valuta di origine"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -12176,7 +12175,7 @@ msgstr "Nome tipologia"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -13459,6 +13458,9 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"La tipologia del registro scelto non è compatibile con quella della fattura."
+" Le operazioni di vendita devono andare nei registri \"vendite\", quelle di "
+"acquisto in nei registri \"acquisti\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

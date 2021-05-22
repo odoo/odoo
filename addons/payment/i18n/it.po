@@ -127,6 +127,8 @@ msgstr "<p>Questa carta è attualmente collegata ai seguenti record:<p/>"
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<small class=\"text-muted\">(Some fees may apply)</small>"
 msgstr ""
+"<small class=\"text-muted\">(potrebbero essere applicate "
+"commissioni)</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -285,7 +287,7 @@ msgstr "Attivo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Aggiungi commissioni supplementari"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -778,7 +780,7 @@ msgstr "Errore:"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Fee"
-msgstr ""
+msgstr "Commissione"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -789,12 +791,12 @@ msgstr "Imposte"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "Calcolo commissioni supportato"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Importo commissioni; impostato in base al sistema di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
@@ -1170,6 +1172,8 @@ msgid ""
 "This partner has no email, which may cause issues with some payment "
 "acquirers. Setting an email for this partner is advised."
 msgstr ""
+"Il partner non ha un'e-mail, potrebbero esserci dei problemi con alcuni "
+"sistemi di pagamento. È consigliato impostare un'e-mail per il partner."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1412,7 +1416,7 @@ msgstr "Transazioni di pagamento"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr "Procedura di avvio sistema di pagamento"
+msgstr "Procedura di attivazione sistema di pagamento"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__payment_flow__s2s
@@ -1577,7 +1581,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "Modello scheda S2S"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sepa_direct_debit
@@ -1665,7 +1669,7 @@ msgstr "Imposta pagamenti"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name
 msgid "Short name"
-msgstr "Nome corto"
+msgstr "Nome breve"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
@@ -1681,7 +1685,7 @@ msgstr "Stato"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr "Stato della fase di avvio del sistema di pagamento"
+msgstr "Stato della fase di attivazione del sistema di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1925,7 +1929,7 @@ msgstr "Verificato"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__check_validity
 msgid "Verify Card Validity"
-msgstr ""
+msgstr "Verificare validità carta"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
@@ -1980,7 +1984,7 @@ msgstr "Impossibile, al momento, eliminare il metodo di pagamento."
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr ""
+msgstr "Impossibile trovare il pagamento, ma non c'è da preoccuparsi."
 
 #. module: payment
 #. openerp-web
@@ -2034,7 +2038,7 @@ msgstr "È necessario impostare un registro per il sistema di pagamento %s."
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
-msgstr ""
+msgstr "Tra pochi minuti arriverà una conferma di pagamento via e-mail."
 
 #. module: payment
 #. openerp-web
@@ -2165,7 +2169,7 @@ msgstr "CAP"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "and more"
-msgstr ""
+msgstr "e altro ancora"
 
 #. module: payment
 #. openerp-web
