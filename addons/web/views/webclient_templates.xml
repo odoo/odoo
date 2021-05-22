@@ -503,7 +503,7 @@
                             <div class="row">
                                 <div class="col-sm text-center text-sm-left text-muted">
                                     <t t-call="web.debug_icon"/>
-                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; Company name</span>
+                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span></span>
                                 </div>
                                 <div class="col-sm text-center text-sm-right">
                                     <t t-call="web.brand_promotion"/>

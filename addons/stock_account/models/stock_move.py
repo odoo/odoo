@@ -338,15 +338,8 @@ class StockMove(models.Model):
         self = self.with_company(self.company_id)
         accounts_data = self.product_id.product_tmpl_id.get_product_accounts()
 
-        if self.location_id.valuation_out_account_id:
-            acc_src = self.location_id.valuation_out_account_id.id
-        else:
-            acc_src = accounts_data['stock_input'].id
-
-        if self.location_dest_id.valuation_in_account_id:
-            acc_dest = self.location_dest_id.valuation_in_account_id.id
-        else:
-            acc_dest = accounts_data['stock_output'].id
+        acc_src = self._get_src_account(accounts_data)
+        acc_dest = self._get_dest_account(accounts_data)
 
         acc_valuation = accounts_data.get('stock_valuation', False)
         if acc_valuation:
@@ -361,6 +354,12 @@ class StockMove(models.Model):
             raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts_data['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
+
+    def _get_src_account(self, accounts_data):
+        return self.location_id.valuation_out_account_id.id or accounts_data['stock_input'].id
+
+    def _get_dest_account(self, accounts_data):
+        return self.location_dest_id.valuation_in_account_id.id or accounts_data['stock_output'].id
 
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, description):
         """
@@ -466,8 +465,6 @@ class StockMove(models.Model):
             # if the move isn't owned by the company, we don't make any valuation
             return False
 
-        location_from = self.location_id
-        location_to = self.location_dest_id
         company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
         company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
 

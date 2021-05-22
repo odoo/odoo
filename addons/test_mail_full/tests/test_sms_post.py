@@ -91,7 +91,7 @@ class TestSMSPost(TestMailFullCommon, TestRecipients):
 
     def test_message_sms_model_w_partner_only(self):
         with self.with_user('employee'):
-            record = self.env['mail.test.sms.partner'].create({'partner_id': self.partner_1.id})
+            record = self.env['mail.test.sms.partner'].create({'customer_id': self.partner_1.id})
 
             with self.mockSMSGateway():
                 messages = record._message_sms(self._test_body)
@@ -100,13 +100,31 @@ class TestSMSPost(TestMailFullCommon, TestRecipients):
 
     def test_message_sms_model_w_partner_only_void(self):
         with self.with_user('employee'):
-            record = self.env['mail.test.sms.partner'].create({'partner_id': False})
+            record = self.env['mail.test.sms.partner'].create({'customer_id': False})
 
             with self.mockSMSGateway():
                 messages = record._message_sms(self._test_body)
 
         # should not crash but have a failed notification
         self.assertSMSNotification([{'partner': self.env['res.partner'], 'number': False, 'state': 'exception', 'failure_type': 'sms_number_missing'}], self._test_body, messages)
+
+    def test_message_sms_model_w_partner_m2m_only(self):
+        with self.with_user('employee'):
+            record = self.env['mail.test.sms.partner.2many'].create({'customer_ids': [(4, self.partner_1.id)]})
+
+            with self.mockSMSGateway():
+                messages = record._message_sms(self._test_body)
+
+        self.assertSMSNotification([{'partner': self.partner_1}], self._test_body, messages)
+
+        # TDE: should take first found one according to partner ordering
+        with self.with_user('employee'):
+            record = self.env['mail.test.sms.partner.2many'].create({'customer_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]})
+
+            with self.mockSMSGateway():
+                messages = record._message_sms(self._test_body)
+
+        self.assertSMSNotification([{'partner': self.partner_2}], self._test_body, messages)
 
     def test_message_sms_on_field_w_partner(self):
         with self.with_user('employee'), self.mockSMSGateway():

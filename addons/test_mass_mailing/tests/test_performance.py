@@ -90,7 +90,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
             'mailing_domain': [('id', 'in', self.mm_recs.ids)],
         })
 
-        # runbot needs +70 compared to local
+        # runbot needs +63 compared to local
         with self.assertQueryCount(__system__=1992, marketing=1993):  # test_mass_mailing only: 1929 - 1930
             mailing.action_send_mail()
 

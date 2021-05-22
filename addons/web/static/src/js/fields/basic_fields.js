@@ -274,7 +274,7 @@ var InputField = DebouncedField.extend({
             inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
             inputVal = this.value || '';
         } else {
-            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'none'});
+            inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'off'});
             inputVal = this._formatValue(this.value);
         }
 

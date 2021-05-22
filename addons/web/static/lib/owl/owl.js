@@ -3188,13 +3188,10 @@
             }
             ctx.addElse();
             // new component
-            let dynamicFallback = "";
-            if (!value.match(INTERP_REGEXP)) {
-                dynamicFallback = `|| ${ctx.formatExpression(value)}`;
-            }
+            const contextualValue = value.match(INTERP_REGEXP) ? "false" : ctx.formatExpression(value);
             const interpValue = ctx.interpolate(value);
             ctx.addLine(`let componentKey${componentID} = ${interpValue};`);
-            ctx.addLine(`let W${componentID} = context.constructor.components[componentKey${componentID}] || QWeb.components[componentKey${componentID}]${dynamicFallback};`);
+            ctx.addLine(`let W${componentID} = ${contextualValue} || context.constructor.components[componentKey${componentID}] || QWeb.components[componentKey${componentID}];`);
             // maybe only do this in dev mode...
             ctx.addLine(`if (!W${componentID}) {throw new Error('Cannot find the definition of component "' + componentKey${componentID} + '"')}`);
             ctx.addLine(`w${componentID} = new W${componentID}(parent, props${componentID});`);
@@ -5150,6 +5147,7 @@
   `;
 
     const paramRegexp = /\{\{(.*?)\}\}/;
+    const globalParamRegexp = new RegExp(paramRegexp.source, "g");
     class Router {
         constructor(env, routes, options = { mode: "history" }) {
             this.currentRoute = null;
@@ -5171,6 +5169,7 @@
                     this.validateDestination(partialRoute.redirect);
                 }
                 partialRoute.params = partialRoute.path ? findParams(partialRoute.path) : [];
+                partialRoute.extractionRegExp = makeExtractionRegExp(partialRoute.path);
                 this.routes[partialRoute.name] = partialRoute;
                 this.routeIds.push(partialRoute.name);
             }
@@ -5245,19 +5244,12 @@
             }
         }
         routeToPath(route, params) {
-            const path = route.path;
-            const parts = path.split("/");
-            const l = parts.length;
-            for (let i = 0; i < l; i++) {
-                const part = parts[i];
-                const match = part.match(paramRegexp);
-                if (match) {
-                    const key = match[1].split(".")[0];
-                    parts[i] = params[key];
-                }
-            }
             const prefix = this.mode === "hash" ? "#" : "";
-            return prefix + parts.join("/");
+            return (prefix +
+                route.path.replace(globalParamRegexp, (match, param) => {
+                    const [key] = param.split(".");
+                    return params[key];
+                }));
         }
         currentPath() {
             let result = this.mode === "history" ? window.location.pathname : window.location.hash.slice(1);
@@ -5314,42 +5306,46 @@
             if (path.startsWith("#")) {
                 path = path.slice(1);
             }
-            const descrParts = route.path.split("/");
-            const targetParts = path.split("/");
-            const l = descrParts.length;
-            if (l !== targetParts.length) {
+            const paramsMatch = path.match(route.extractionRegExp);
+            if (!paramsMatch) {
                 return false;
             }
             const result = {};
-            for (let i = 0; i < l; i++) {
-                const descr = descrParts[i];
-                let target = targetParts[i];
-                const match = descr.match(paramRegexp);
-                if (match) {
-                    const [key, suffix] = match[1].split(".");
-                    if (suffix === "number") {
-                        target = parseInt(target, 10);
-                    }
-                    result[key] = target;
+            route.params.forEach((param, index) => {
+                const [key, suffix] = param.split(".");
+                const paramValue = paramsMatch[index + 1];
+                if (suffix === "number") {
+                    return (result[key] = parseInt(paramValue, 10));
                 }
-                else if (descr !== target) {
-                    return false;
-                }
-            }
+                return (result[key] = paramValue);
+            });
             return result;
         }
     }
     function findParams(str) {
-        const globalParamRegexp = /\{\{(.*?)\}\}/g;
         const result = [];
         let m;
         do {
             m = globalParamRegexp.exec(str);
             if (m) {
-                result.push(m[1].split(".")[0]);
+                result.push(m[1]);
             }
         } while (m);
         return result;
+    }
+    function escapeRegExp(str) {
+        return str.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    }
+    function makeExtractionRegExp(path) {
+        // replace param strings with capture groups so that we can build a regex to match over the path
+        const extractionString = path
+            .split(paramRegexp)
+            .map((part, index) => {
+            return index % 2 ? "(.*)" : escapeRegExp(part);
+        })
+            .join("");
+        // Example: /home/{{param1}}/{{param2}} => ^\/home\/(.*)\/(.*)$
+        return new RegExp(`^${extractionString}$`);
     }
 
     /**
@@ -5391,9 +5387,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.2.4';
-    __info__.date = '2021-02-10T13:24:25.187Z';
-    __info__.hash = '985e985';
+    __info__.version = '1.2.6';
+    __info__.date = '2021-05-19T10:28:32.429Z';
+    __info__.hash = 'e838781';
     __info__.url = 'https://github.com/odoo/owl';
 
 

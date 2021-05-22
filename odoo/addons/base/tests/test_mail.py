@@ -447,6 +447,76 @@ class EmailConfigCase(SavepointCase):
         )
         self.assertEqual(message["From"], "settings@example.com")
 
+    def test_email_from_rewrite(self):
+        get_email_from = self.env['ir.mail_server']._get_email_from
+        set_param = self.env['ir.config_parameter'].set_param
+
+        # Standard case, no setting
+        set_param('mail.force.smtp.from', False)
+        set_param('mail.dynamic.smtp.from', False)
+        set_param('mail.catchall.domain', 'odoo.example.com')
+
+        email_from, return_path = get_email_from('admin@test.example.com')
+        self.assertEqual(email_from, 'admin@test.example.com')
+        self.assertFalse(return_path)
+
+        email_from, return_path = get_email_from('"Admin" <admin@test.example.com>')
+        self.assertEqual(email_from, '"Admin" <admin@test.example.com>')
+        self.assertFalse(return_path)
+
+        # We always force the email FROM
+        set_param('mail.force.smtp.from', 'email_force@domain.com')
+        set_param('mail.dynamic.smtp.from', False)
+        set_param('mail.catchall.domain', 'odoo.example.com')
+
+        email_from, return_path = get_email_from('admin@test.example.com')
+        self.assertEqual(email_from, '"admin@test.example.com" <email_force@domain.com>')
+        self.assertEqual(return_path, 'email_force@domain.com')
+
+        email_from, return_path = get_email_from('"Admin" <admin@test.example.com>')
+        self.assertEqual(email_from, '"Admin (admin@test.example.com)" <email_force@domain.com>')
+        self.assertEqual(return_path, 'email_force@domain.com')
+
+        # We always force the email FROM (notification email contains a name part)
+        set_param('mail.force.smtp.from', '"Your notification bot" <email_force@domain.com>')
+        set_param('mail.dynamic.smtp.from', False)
+        set_param('mail.catchall.domain', 'odoo.example.com')
+
+        email_from, return_path = get_email_from('"Admin" <admin@test.example.com>')
+        self.assertEqual(email_from, '"Admin (admin@test.example.com)" <email_force@domain.com>',
+                         msg='Should drop the name part of the forced email')
+        self.assertEqual(return_path, 'email_force@domain.com')
+
+        # We dynamically force the email FROM
+        set_param('mail.force.smtp.from', False)
+        set_param('mail.dynamic.smtp.from', 'notification@odoo.example.com')
+        set_param('mail.catchall.domain', 'odoo.example.com')
+
+        email_from, return_path = get_email_from('"Admin" <admin@test.example.com>')
+        self.assertEqual(email_from, '"Admin (admin@test.example.com)" <notification@odoo.example.com>',
+                         msg='Domain is not the same as the catchall domain, we should force the email FROM')
+        self.assertEqual(return_path, 'notification@odoo.example.com')
+
+        email_from, return_path = get_email_from('"Admin" <admin@odoo.example.com>')
+        self.assertEqual(email_from, '"Admin" <admin@odoo.example.com>',
+                         msg='Domain is the same as the catchall domain, we should not force the email FROM')
+        self.assertFalse(return_path)
+
+        # We dynamically force the email FROM (notification email contains a name part)
+        set_param('mail.force.smtp.from', False)
+        set_param('mail.dynamic.smtp.from', '"Your notification bot" <notification@odoo.example.com>')
+        set_param('mail.catchall.domain', 'odoo.example.com')
+
+        email_from, return_path = get_email_from('"Admin" <admin@test.example.com>')
+        self.assertEqual(email_from, '"Admin (admin@test.example.com)" <notification@odoo.example.com>',
+                         msg='Domain is not the same as the catchall domain, we should force the email FROM')
+        self.assertEqual(return_path, 'notification@odoo.example.com')
+
+        email_from, return_path = get_email_from('"Admin" <admin@odoo.example.com>')
+        self.assertEqual(email_from, '"Admin" <admin@odoo.example.com>',
+                         msg='Domain is the same as the catchall domain, we should not force the email FROM')
+        self.assertFalse(return_path)
+
 
 class TestEmailMessage(TransactionCase):
     def test_as_string(self):
