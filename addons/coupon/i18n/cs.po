@@ -73,6 +73,9 @@ msgid ""
 "'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
 "class=\"oe_inline\">%</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('discount_type', '!=', "
+"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
+"class=\"oe_inline\">%</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -768,7 +771,7 @@ msgstr "Program"
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Program Name"
-msgstr ""
+msgstr "Název programu"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
@@ -1064,7 +1067,7 @@ msgstr "Nelze odstranit program v aktivním stavu"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "e.g. 10% Discount"
-msgstr ""
+msgstr "např. 10% sleva"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon

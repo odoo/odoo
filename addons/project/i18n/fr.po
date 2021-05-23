@@ -140,13 +140,13 @@ msgstr "%s Utilisez l'icône %s pour organiser vos activités quotidiennes."
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ %(child_count)s tasks)"
-msgstr ""
+msgstr "(+ %(child_count)s tâches)"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ 1 task)"
-msgstr ""
+msgstr "(+ 1 tâche)"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__10
@@ -553,6 +553,8 @@ msgid ""
 "<span class=\"oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">@</span>\n"
 "                                            <span class=\"oe_edit_only\">@</span>"
 msgstr ""
+"<span class=\"oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">@</span>\n"
+"                                            <span class=\"oe_edit_only\">@</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -624,6 +626,8 @@ msgid ""
 "A sub-task cannot be a recurring task. Please consider making its parent "
 "task, a recurring task."
 msgstr ""
+"Une sous-tâche ne peut pas être une tâche récurrente. Veuillez considérer de"
+" rendre sa tâche parente une tâche récurrente."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -773,6 +777,8 @@ msgid ""
 "Allowed Portal Users will see all the tasks of this project without distinction.<br/>\n"
 "                                                Leave empty to restrict the access to the portal users' own tasks."
 msgstr ""
+"Les utilisateurs portail autorisés verront toutes les tâches de ce projet sans distinction.<br/>\n"
+"                                                Laissez vide pour restreindre l'accès aux propres tâches des utilisateurs portail."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_user_ids
@@ -957,7 +963,7 @@ msgstr "Bloqué"
 #: model:ir.model.fields,field_description:project.field_project_task__depend_on_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Blocked By"
-msgstr ""
+msgstr "Bloquée par"
 
 #. module: project
 #. openerp-web
@@ -980,7 +986,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
 msgid "Child Text"
-msgstr ""
+msgstr "Texte enfant"
 
 #. module: project
 #. openerp-web
@@ -1362,6 +1368,11 @@ msgid ""
 "   Portal users may see project and tasks followed by\n"
 "   them or by someone in their company."
 msgstr ""
+"Définit la visibilité des tâches du projet:\n"
+"- Utilisateurs internes invités: les employés ne voient seulement les projets et tâches auxquels ils sont abonnés\n"
+"- Tous les utilisateurs internes: les employés peuvent voir tous les projets et tâches.\n"
+"- Tous les utilisateurs internes et les utilisateurs portail invités: les employés peuvent tout voir.   Les utilisateurs portail peuvent voir tous les projets et tâches auxquels\n"
+"   ils, ou quelqu'un de leur entreprise, sont abonnés."
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
@@ -1413,7 +1424,7 @@ msgstr "Conception"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Determine the order in which to perform tasks"
-msgstr ""
+msgstr "Déterminez l'ordre dans lequel réaliser vos tâches"
 
 #. module: project
 #. openerp-web

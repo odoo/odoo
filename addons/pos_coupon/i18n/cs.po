@@ -120,7 +120,7 @@ msgstr ""
 #, python-format
 msgid ""
 "A coupon from the same program has already been reserved for this order."
-msgstr ""
+msgstr "Pro tuto objednávku již byl rezervován kupón ze stejného programu."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__promo_barcode
@@ -128,13 +128,15 @@ msgid ""
 "A technical field used as an alternative to the promo_code. This is "
 "automatically generated when promo_code is changed."
 msgstr ""
+"Technické pole používané jako alternativa k promo_code. Je automaticky "
+"generováno při změně promo_code."
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/ActivePrograms.xml:0
 #, python-format
 msgid "Active Programs"
-msgstr ""
+msgstr "Aktivní programy"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__applied_program_ids
@@ -162,7 +164,7 @@ msgstr "Pravidlo čárového kódu"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order__used_coupon_ids
 msgid "Consumed Coupons"
-msgstr ""
+msgstr "Spotřebované kupóny"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_coupon
@@ -176,7 +178,7 @@ msgstr "Kupón"
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Coupon Codes"
-msgstr ""
+msgstr "Kódy kupónů"
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_coupon_program
@@ -193,7 +195,7 @@ msgstr "Kupónové programy"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__coupon_id
 msgid "Coupon that generated this reward."
-msgstr ""
+msgstr "Kupón, který vygeneroval tuto odměnu."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_config__use_coupon_programs
@@ -203,12 +205,13 @@ msgstr "Kupóny a propagace"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_config__program_ids
 msgid "Coupons and Promotions"
-msgstr ""
+msgstr "Kupóny a Promo"
 
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_pos_config_view_form
 msgid "Define the coupon and promotion programs you can use in this PoS."
 msgstr ""
+"Definujte kupónové a propagační programy, které můžete v tomto PoS použít."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_barcode_rule__display_name
@@ -225,14 +228,14 @@ msgstr "Zobrazované jméno"
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/PromoCodeButton.xml:0
 #, python-format
 msgid "Enter Code"
-msgstr ""
+msgstr "Zadejte kód"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/js/ControlButtons/PromoCodeButton.js:0
 #, python-format
 msgid "Enter Promotion or Coupon Code"
-msgstr ""
+msgstr "Zadejte propagační nebo kupónový kód"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__is_program_reward
@@ -351,7 +354,7 @@ msgstr ""
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_pos_config_view_form
 msgid "Promotion & coupon programs to use."
-msgstr ""
+msgstr "Propagační a kupónové programy k použití."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_config__promo_program_ids
@@ -363,7 +366,7 @@ msgstr "Promo programy"
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__program_id
 msgid "Promotion/Coupon Program where this reward line is based."
-msgstr ""
+msgstr "Promo / kuponový program, na kterém je založena tato řada odměn."
 
 #. module: pos_coupon
 #. openerp-web
@@ -378,6 +381,8 @@ msgid ""
 "Technical field. This is set when the order is validated. We normally get "
 "this value thru the `program_id` of the reward lines."
 msgstr ""
+"Technická oblast. To se nastaví při potvrzení objednávky. Obvykle tuto "
+"hodnotu získáme prostřednictvím `program_id` řádků odměn."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_ids
@@ -387,7 +392,7 @@ msgstr ""
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__valid_partner_ids
 msgid "These are the partners that can avail this program."
-msgstr ""
+msgstr "To jsou partneři, kteří mohou tento program využívat."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__valid_product_ids
@@ -426,14 +431,14 @@ msgstr "Platný partner"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__valid_product_ids
 msgid "Valid Product"
-msgstr ""
+msgstr "Platný produkt"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Valid until:"
-msgstr ""
+msgstr "Platnost do:"
 
 #. module: pos_coupon
 #: model:mail.template,report_name:pos_coupon.mail_coupon_template
