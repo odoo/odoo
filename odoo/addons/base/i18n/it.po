@@ -6784,6 +6784,12 @@ msgid ""
 "It adds a timer to a view for time recording purpose\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo implementa un timer.\n"
+"==========================================\n"
+"\n"
+"Aggiunge un timer a una vista al fine di registrare i tempi\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -11500,7 +11506,7 @@ msgid ""
 "'calendar', etc. (Default: tree,form)"
 msgstr ""
 "Elenco delle modalità consentite per la vista, separate da virgola, come: "
-"\"modulo\", \"albero\", \"calendario\" ecc. (predefinito: albero, modulo)"
+"\"scheda\", \"albero\", \"calendario\" ecc. (predefinito: albero, scheda)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__comment
@@ -14837,6 +14843,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"File dal quale ha origine la vista.\n"
+"                                                          Utile per il ripristino (forte) delle viste danneggiate o per leggere, nella modalità dev-xml, l'architettura dal file."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -16379,8 +16387,8 @@ msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
-"Se impostato a vero, nella barra degli strumenti destra di un vista modulo "
-"non viene visualizzata l'azione."
+"Se impostato a vero, non viene visualizzata l'azione nella barra degli "
+"strumenti destra di un vista scheda."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_default__company_id
@@ -19313,7 +19321,7 @@ msgstr "Esito aggiornamento moduli"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
 msgid "Module Upgrade Install"
-msgstr "Installazione di un avanzamento modulo"
+msgstr "Installazione avanzamento modulo"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -21391,6 +21399,10 @@ msgid ""
 "\n"
 "Please exclude them from the selection to continue. It's possible to still retrieve those PDFs by selecting each of the affected records individually, which will avoid merging."
 msgstr ""
+"Odoo non è in grado di unire i PDF allegati ai seguenti record:\n"
+"%s\n"
+"\n"
+"Per proseguire, escluderli dalla selezione. È ancora possibile recuperare tali PDF, evitando l'unione, selezionando singolarmente i record interessati."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
@@ -26501,6 +26513,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"Campo che salva l'attuale `arch_db` prima di effettuare la scrittura.\n"
+"                                                                         Utile per il ripristino (leggero) di una vista danneggiata."
 
 #. module: base
 #: code:addons/image.py:0
@@ -26800,7 +26814,7 @@ msgstr "Gantt per ferie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timer
 msgid "Timer"
-msgstr ""
+msgstr "Timer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_timer
@@ -27629,7 +27643,7 @@ msgstr "Aggiornamenti"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrade"
-msgstr "Aggiorna"
+msgstr "Avanza"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
@@ -28823,6 +28837,8 @@ msgstr "Impossibile attivare il superutente."
 #, python-format
 msgid "You cannot archive a contact linked to a portal or internal user."
 msgstr ""
+"Impossibile archiviare un contatto collegato a un portale o a un utente "
+"interno."
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0

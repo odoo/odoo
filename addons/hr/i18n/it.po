@@ -7,7 +7,6 @@
 # Loris Balsamo <et94@live.it>, 2020
 # Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2020
 # Paolo Valier, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # maiolif <maiolif@mgftools.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Federico Zanuttini <fza@odoo.com>, 2020
@@ -532,7 +531,7 @@ msgstr "Annulla"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 #: model:ir.model.fields,field_description:hr.field_res_users__certificate
 msgid "Certificate Level"
-msgstr "Livello certificato"
+msgstr "Grado diploma"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.res_users_action_my
@@ -853,7 +852,7 @@ msgstr "Divorziato/a"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
 msgid "Doctor"
-msgstr "Dottore"
+msgstr "Dottorato"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1025,7 +1024,7 @@ msgstr "Dipendenti"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr "Organizzazione dei dipendenti"
+msgstr "Organigramma dipendenti"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_list
@@ -1044,8 +1043,8 @@ msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr ""
-"Inserisci l'indirizzo privato del dipendente, non quello collegato alla tua "
-"azienda."
+"Inserire l'indirizzo privato del dipendente, non quello collegato alla "
+"propria azienda."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1171,7 +1170,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
 msgid "Graduate"
-msgstr "Diploma"
+msgstr "Scuola superiore"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1293,7 +1292,7 @@ msgstr "Icona"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare una eccezione attività."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
@@ -1515,7 +1514,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
 msgid "Legal Cohabitant"
-msgstr "Coabitante legale"
+msgstr "Convivente legale"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
@@ -1694,7 +1693,7 @@ msgstr ""
 #: code:addons/hr/models/hr_plan.py:0
 #, python-format
 msgid "No specific user given on activity %s."
-msgstr ""
+msgstr "Non è stato fornito alcun utente specifico per l'attività %s."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1761,8 +1760,8 @@ msgstr "Numero di errori"
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
 msgstr ""
-"Numero di impiegati assunti per la posizione lavorativa durante la fase di "
-"selezione."
+"Numero di dipendenti assunti, per la posizione lavorativa, durante la fase "
+"di selezione."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
@@ -1781,7 +1780,7 @@ msgstr "Numero di messaggi con errore di consegna"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "Numero di dipendenti che si intende assumere."
+msgstr "Numero atteso di nuovi dipendenti da assumere."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_unread_counter
@@ -1797,6 +1796,9 @@ msgid ""
 "                    related to employees by departments: expenses, timesheets,\n"
 "                    leaves, recruitments, etc."
 msgstr ""
+"La struttura a uffici di Odoo è utilizzata per gestire tutti i documenti\n"
+"                    relativi ai dipendenti: spese, fogli ore, permessi,\n"
+"                    assunzioni, ecc."
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_department_kanban_action
@@ -1805,6 +1807,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                time off, recruitments, etc."
 msgstr ""
+"La struttura a uffici di Odoo è utilizzata per gestire tutti i documenti\n"
+"                relativi ai dipendenti: spese, fogli ore, ferie,\n"
+"                assunzioni, ecc."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -1837,7 +1842,7 @@ msgstr "Altro"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Our Product"
-msgstr ""
+msgstr "I nostri prodotti"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -1895,7 +1900,7 @@ msgstr "N. passaporto"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Perfect written English"
-msgstr ""
+msgstr "Ottimo inglese scritto"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1935,17 +1940,17 @@ msgstr "Luogo di nascita"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
 msgid "Plan"
-msgstr "Pianifica"
+msgstr "Piano"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
 msgid "Plan Wizard"
-msgstr ""
+msgstr "Procedura di pianificazione"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_activity_type
 msgid "Plan activity type"
-msgstr "Pianifica tipo di attività"
+msgstr "Tipo di attività pianificazione"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_plan_action
@@ -2472,7 +2477,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di eccezione attività sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_undetermined
@@ -2594,7 +2599,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
 msgid "Widower"
-msgstr "Vedovo"
+msgstr "Vedovo/a"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -2725,7 +2730,7 @@ msgstr "es. Responsabile vendite"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan
 msgid "plan"
-msgstr ""
+msgstr "Piano"
 
 #. module: hr
 #: code:addons/hr/models/models.py:0
