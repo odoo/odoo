@@ -106,6 +106,17 @@ class TestExpression(TransactionCase):
         test('not ilike', 'B', ['0', 'a'])
         test('not like', 'AB', ['0', 'a', 'b', 'a b'])
 
+    def test_09_hierarchy_filtered_domain(self):
+        Partner = self.env['res.partner']
+        p = Partner.create({'name': 'dummy'})
+
+        # hierarchy without parent
+        self.assertFalse(p.parent_id)
+        p2 = self._search(Partner, [('parent_id', 'child_of', p.id)], [('id', '=', p.id)])
+        self.assertEqual(p2, p)
+        p3 = self._search(Partner, [('parent_id', 'parent_of', p.id)], [('id', '=', p.id)])
+        self.assertEqual(p3, p)
+
     def test_10_hierarchy_in_m2m(self):
         Partner = self.env['res.partner']
         Category = self.env['res.partner.category']
