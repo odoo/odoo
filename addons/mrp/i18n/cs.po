@@ -327,6 +327,8 @@ msgstr "Výrobní objednávka je již hotová nebo zrušena."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Výrobek s kusovníkem typu stavebnice nemůže mít pravidlo pro změnu "
+"objednávky."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -388,6 +390,9 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
+"Přidání vedlejších produktů do kusovníků. Toho lze využít i k získání "
+"několika hotových výrobků. Bez této možnosti můžete pouze: A + B = C. S "
+"touto možností: A + B = C + D."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -415,6 +420,9 @@ msgid ""
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
 msgstr ""
+"Všechna množství produktů musí být větší nebo rovna 0.\n"
+"Řádky s množstvím 0 lze použít jako volitelné řádky. \n"
+"Pokud chcete spravovat další produkty na kusovníku, měli byste si nainstalovat modul mrp_byproduct !"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__post_visible
@@ -1253,7 +1261,7 @@ msgstr "Dokončeno"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__lot_produced_id
 msgid "Finished Lot/Serial Number"
-msgstr ""
+msgstr "Dokončené výrobní číslo / seriálové číslo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__finished_lots_exist

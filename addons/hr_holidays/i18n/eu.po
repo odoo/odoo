@@ -11,7 +11,7 @@
 # oihane <oihanecruce@gmail.com>, 2019
 # Esther Martín Menéndez <esthermartin001@gmail.com>, 2019
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2019
-# Naomi Hidalgo <naomihid96@gmail.com>, 2019
+# 61590936fa9bf290362ee306eeabf363_944dd10 <a8bfd5a0b49b9c8455f33fc521764cc3_680674>, 2019
 # Victor Laskurain <blaskurain@binovo.es>, 2019
 # Maialen Rodriguez <maialenrodriguez98@gmail.com>, 2020
 # Miren Maiz <mirenmaizz@gmail.com>, 2020
@@ -105,6 +105,18 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:481
 #, python-format
 msgid "%s on %s : %.2f hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:643
+#, python-format
+msgid "%s on Time Off : %.2f day(s)"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:643
+#, python-format
+msgid "%s on Time Off : %.2f hour(s)"
 msgstr ""
 
 #. module: hr_holidays
@@ -414,6 +426,21 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Leaves</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid ""
+"<span attrs=\"{'invisible': [('holiday_type', '!=', 'employee')]}\">\n"
+"                        The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'department')]}\">\n"
+"                        The department's company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('holiday_type', '!=', 'company')]}\">\n"
+"                        The company has a different timezone than yours! Here dates and times are displayed in the company's timezone\n"
+"                    </span>\n"
+"                    ("
 msgstr ""
 
 #. module: hr_holidays
@@ -1747,6 +1774,12 @@ msgstr ""
 #: selection:hr.employee,current_leave_state:0
 msgid "New"
 msgstr "Berria"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid "New %s Request created by %s from %s to %s"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
