@@ -77,16 +77,26 @@ class ExhibitorController(WebsiteEventController):
         sponsor_types = sponsors_all.mapped('sponsor_type_id')
         sponsor_countries = sponsors_all.mapped('partner_id.country_id').sorted('name')
         # organize sponsors into categories to help display
-        sponsor_categories = dict()
+        sponsor_categories_dict = dict()
+        sponsor_categories = []
+        is_event_user = request.env.user.has_group('event.group_event_registration_desk')
         for sponsor in sponsors:
-            if not sponsor_categories.get(sponsor.sponsor_type_id):
-                sponsor_categories[sponsor.sponsor_type_id] = request.env['event.sponsor'].sudo()
-            sponsor_categories[sponsor.sponsor_type_id] |= sponsor
-        sponsor_categories = [
-            dict({
+            if not sponsor_categories_dict.get(sponsor.sponsor_type_id):
+                sponsor_categories_dict[sponsor.sponsor_type_id] = request.env['event.sponsor'].sudo()
+            sponsor_categories_dict[sponsor.sponsor_type_id] |= sponsor
+
+        for sponsor_category, sponsors in sponsor_categories_dict.items():
+            # To display random published sponsors first and random unpublished sponsors last
+            if is_event_user:
+                published_sponsors = sponsors.filtered(lambda s: s.website_published)
+                unpublished_sponsors = sponsors - published_sponsors
+                random_sponsors = sample(published_sponsors, len(published_sponsors)) + sample(unpublished_sponsors, len(unpublished_sponsors))
+            else:
+                random_sponsors = sample(sponsors, len(sponsors))
+            sponsor_categories.append({
                 'sponsorship': sponsor_category,
-                'sponsors': sample(sponsors, len(sponsors)),
-            }) for sponsor_category, sponsors in sponsor_categories.items()]
+                'sponsors': random_sponsors,
+            })
 
         # return rendering values
         return {
@@ -104,7 +114,7 @@ class ExhibitorController(WebsiteEventController):
             'sponsor_countries': sponsor_countries,
             # environment
             'hostname': request.httprequest.host.split(':')[0],
-            'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
+            'is_event_user': is_event_user,
         }
 
     # ------------------------------------------------------------
@@ -139,6 +149,7 @@ class ExhibitorController(WebsiteEventController):
         current_country = sponsor.partner_id.country_id
 
         sponsors_other = sponsors_other.sorted(key=lambda sponsor: (
+            sponsor.website_published,
             sponsor.is_in_opening_hours,
             sponsor.partner_id.country_id == current_country,
             -1 * sponsor.sponsor_type_id.sequence,

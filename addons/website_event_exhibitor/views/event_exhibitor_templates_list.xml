@@ -156,52 +156,28 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_card" name="Exhibitor Card">
-    <article t-att-class="'h-100 card rounded-0 border-0 shadow-sm o_wesponsor_card %s' % ('o_wesponsor_card_unpublished' if not sponsor.is_published else '')"
+    <article class="h-100 card border-0 shadow-sm o_wesponsor_card"
         itemscope="itemscope" itemtype="http://schema.org/Event">
-        <div class="h-100 row no-gutters">
+        <div class="h-100 row no-gutters" t-att-data-publish="sponsor.website_published and 'on' or 'off'">
             <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
             <header t-att-class="'overflow-hidden col-12 %s' % ('bg-secondary' if not sponsor_image_url else '')">
-                <div class="d-block h-100 w-100 o_wesponsor_js_connect"
-                     t-att-data-sponsor-url="sponsor.website_url"
-                     t-attf-data-register-url="/event/#{slug(event)}/register?from_sponsor_id=#{sponsor.id}"
-                     t-att-data-is-participating="event.is_participating"
-                     t-att-data-sponsor-id="sponsor.id"
-                     t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
-                     t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours"
-                     t-att-data-user-event-manager="is_event_user">
+                <div class="d-block h-100 w-100">
                     <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
                         t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
                         <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
                             <i class="fa fa-ban mr-2"/>Unpublished
                         </small>
-                        <div class="o_wesponsor_connect_button">
-                            <a href="#" class="btn btn-primary h3">
-                                <t t-if="not is_event_user and not sponsor.event_id.is_ongoing and not event.is_participating">
-                                    Register
-                                </t>
-                                <t t-elif="sponsor.exhibitor_type == 'online'">Connect</t>
-                                <t t-else="">More info</t>
-                            </a>
-                        </div>
                         <img class="position-absolute mr-2 mt-2"
                             style="right: 0; top: 0; max-height: 20px;"
                             t-if="sponsor.partner_id.country_id"
                             t-att-src="sponsor.partner_id.country_id.image_url"
                             t-att-alt="sponsor.partner_id.country_id.name"/>
                     </div>
-                    <div t-else="" class="o_wesponsor_gradient card-img-top position-relative"
+                    <div t-else="" class="o_wesponsor_gradient card-img-top"
                         style="padding-top: 50%">
                         <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
                             <i class="fa fa-ban mr-2"/>Unpublished
                         </small>
-                        <div class="o_wesponsor_connect_button">
-                            <a href="#" class="btn btn-primary h3">
-                                <t t-if="not is_event_user and not sponsor.event_id.is_ongoing and not event.is_participating">
-                                    Register
-                                </t>
-                                <t t-else="">Connect</t>
-                            </a>
-                        </div>
                     </div>
                 </div>
             </header>
@@ -218,6 +194,22 @@
                     <span class="text-muted" t-esc="sponsor.subtitle"/>
                 </main>
             </div>
+        </div>
+        <div class="o_wesponsor_connect_button"
+            t-att-data-sponsor-url="sponsor.website_url"
+            t-attf-data-register-url="/event/#{slug(event)}/register?from_sponsor_id=#{sponsor.id}"
+            t-att-data-is-participating="event.is_participating"
+            t-att-data-sponsor-id="sponsor.id"
+            t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
+            t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours"
+            t-att-data-user-event-manager="is_event_user">
+            <a href="#" class="btn btn-primary h3">
+                <t t-if="not is_event_user and not sponsor.event_id.is_ongoing and not event.is_participating">
+                    Register
+                </t>
+                <t t-elif="sponsor.exhibitor_type == 'online'">Connect</t>
+                <t t-else="">More info</t>
+            </a>
         </div>
     </article>
 </template>
