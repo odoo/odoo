@@ -79,7 +79,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
 });
 
 QUnit.test('receive other member typing status "is typing" then "no longer is typing"', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
     this.data['mail.channel'].records.push({
@@ -93,11 +93,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
     });
     await this.createThreadTextualTypingStatusComponent(thread);
 
-    assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "",
-        "Should display no one is currently typing"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'receive other member typing status "is typing"'
 
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
@@ -135,7 +131,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
 });
 
 QUnit.test('assume other member typing status becomes "no longer is typing" after 60 seconds without any updated typing status', async function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
     this.data['mail.channel'].records.push({
@@ -151,11 +147,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
     });
     await this.createThreadTextualTypingStatusComponent(thread);
 
-    assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "",
-        "Should display no one is currently typing"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'receive other member typing status "is typing"'
 
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
@@ -183,7 +175,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
 });
 
 QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer of assuming no longer typing', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
     this.data['mail.channel'].records.push({
@@ -199,11 +191,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     });
     await this.createThreadTextualTypingStatusComponent(thread);
 
-    assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "",
-        "Should display no one is currently typing"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'receive other member typing status "is typing"'
 
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() => {
@@ -249,7 +237,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
 });
 
 QUnit.test('receive several other members typing status "is typing"', async function (assert) {
-    assert.expect(6);
+    assert.expect(5);
 
     this.data['res.partner'].records.push(
         { id: 10, name: 'Other10' },
@@ -267,11 +255,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     });
     await this.createThreadTextualTypingStatusComponent(thread);
 
-    assert.strictEqual(
-        document.querySelector('.o_ThreadTextualTypingStatus').textContent,
-        "",
-        "Should display no one is currently typing"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'receive other member typing status "is typing"'
 
     // simulate receive typing notification from other10 (is typing)
     await afterNextRender(() => {

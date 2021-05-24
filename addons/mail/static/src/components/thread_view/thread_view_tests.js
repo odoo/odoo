@@ -198,7 +198,7 @@ QUnit.test('message list desc order', async function (assert) {
 });
 
 QUnit.test('message list asc order', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     for (let i = 0; i <= 60; i++) {
         this.data['mail.message'].records.push({
@@ -256,11 +256,7 @@ QUnit.test('message list asc order', async function (assert) {
         messageItems[0].classList.contains("o_MessageList_loadMore"),
         "load more link should NOT be after messages"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Message`).length,
-        30,
-        "should have 30 messages at the beginning"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'message list desc order'
 
     // scroll to top
     await this.afterEvent({
@@ -1052,7 +1048,7 @@ QUnit.test("delete all attachments of message without content should no longer d
 });
 
 QUnit.test('delete all attachments of a message with some text content should still keep it displayed', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['ir.attachment'].records.push({
         id: 143,
@@ -1089,11 +1085,8 @@ QUnit.test('delete all attachments of a message with some text content should st
             );
         },
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "there should be 1 message displayed initially"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'delete all attachments of message without content should
+    // no longer display the message'
 
     await afterNextRender(() => {
         document.querySelector(`.o_Attachment[data-attachment-local-id="${
@@ -1111,7 +1104,7 @@ QUnit.test('delete all attachments of a message with some text content should st
 });
 
 QUnit.test('delete all attachments of a message with tracking fields should still keep it displayed', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['ir.attachment'].records.push({
         id: 143,
@@ -1155,11 +1148,8 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
             );
         },
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "there should be 1 message displayed initially"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'delete all attachments of message without content should
+    // no longer display the message'
 
     await afterNextRender(() => {
         document.querySelector(`.o_Attachment[data-attachment-local-id="${
@@ -1366,7 +1356,7 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
 });
 
 QUnit.test('mention a channel with "&" in the name', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['mail.channel'].records.push({
         id: 7,
@@ -1397,11 +1387,7 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
     await afterNextRender(() => {
         document.querySelector('.o_Composer_buttonSend').click();
     });
-    assert.containsOnce(
-        document.querySelector('.o_Message_content'),
-        '.o_channel_redirect',
-        "message should contain a link to the mentioned channel"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'mention a channel with space in the name'
     assert.strictEqual(
         document.querySelector('.o_channel_redirect').textContent,
         '#General & good',
@@ -1410,7 +1396,7 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
 });
 
 QUnit.test('mention a channel on a second line when the first line contains #', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['mail.channel'].records.push({
         id: 7,
@@ -1441,11 +1427,7 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
     await afterNextRender(() => {
         document.querySelector('.o_Composer_buttonSend').click();
     });
-    assert.containsOnce(
-        document.querySelector('.o_Message_content'),
-        '.o_channel_redirect',
-        "message should contain a link to the mentioned channel"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'mention a channel with space in the name'
     assert.strictEqual(
         document.querySelector('.o_channel_redirect').textContent,
         '#General good',
@@ -1454,7 +1436,7 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
 });
 
 QUnit.test('mention a channel when replacing the space after the mention by another char', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     this.data['mail.channel'].records.push({
         id: 7,
@@ -1494,11 +1476,7 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
     await afterNextRender(() => {
         document.querySelector('.o_Composer_buttonSend').click();
     });
-    assert.containsOnce(
-        document.querySelector('.o_Message_content'),
-        '.o_channel_redirect',
-        "message should contain a link to the mentioned channel"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'mention a channel with space in the name'
     assert.strictEqual(
         document.querySelector('.o_channel_redirect').textContent,
         '#General good',

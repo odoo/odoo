@@ -171,7 +171,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
 });
 
 QUnit.test('click on expand from chat window should close the chat window and open the form view', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -213,11 +213,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
             return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
         },
     }));
-    assert.containsOnce(
-        document.body,
-        '.o_ThreadNeedactionPreview',
-        "should have a preview initially"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
     await afterNextRender(() =>
         document.querySelector('.o_ThreadNeedactionPreview').click()
     );
@@ -249,7 +245,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
 QUnit.test('[technical] opening a non-channel chat window should not call channel_fold', async function (assert) {
     // channel_fold should not be called when opening non-channels in chat
     // window, because there is no server sync of fold state for them.
-    assert.expect(3);
+    assert.expect(1);
 
     this.data['mail.message'].records.push({
         id: 21,
@@ -285,16 +281,8 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
             return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
         },
     }));
-    assert.containsOnce(
-        document.body,
-        '.o_ThreadNeedactionPreview',
-        "should have a preview initially"
-    );
-    assert.containsNone(
-        document.body,
-        '.o_ChatWindow',
-        "should have no chat window initially"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'click on preview should mark as read and open the thread'
 
     await afterNextRender(() =>
         document.querySelector('.o_ThreadNeedactionPreview').click()
