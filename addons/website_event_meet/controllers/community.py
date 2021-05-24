@@ -61,7 +61,7 @@ class WebsiteEventMeetController(EventCommunityController):
 
         return {
             # event information
-            "event": event.sudo(),
+            "event": event,
             'main_object': event,
             # rooms
             "meeting_rooms": meeting_rooms,
