@@ -124,7 +124,7 @@ class AccountPaymentRegister(models.TransientModel):
         will be grouped together.
         :return: A python dictionary.
         '''
-        return {
+        res = {
             'partner_id': line.partner_id.id,
             'account_id': line.account_id.id,
             'currency_id': (line.currency_id or line.company_currency_id).id,
@@ -132,6 +132,29 @@ class AccountPaymentRegister(models.TransientModel):
             'partner_type': 'customer' if line.account_internal_type == 'receivable' else 'supplier',
             'payment_type': 'inbound' if line.balance > 0.0 else 'outbound',
         }
+
+        if line.move_id.partner_bank_id and line.move_id.is_inbound():
+            journal = self._search_journal(line.move_id.company_id.id, res['currency_id'], line.move_id.partner_bank_id.id,)
+            if journal:
+                res['journal_id'] = journal.id
+
+        return res
+
+    def _search_journal(self, company_id, currrency_id, partner_bank_id=None):
+        domain = [('company_id', '=', company_id)]
+
+        if partner_bank_id:
+            domain += [('bank_account_id', '=', partner_bank_id), ('type', '=', 'bank')]
+        else:
+            domain += [('type', 'in', ('bank', 'cash'))]
+
+        journal = None
+        if currrency_id:
+            journal = self.env['account.journal'].search(domain + [('currency_id', '=', currrency_id)], limit=1)
+        if not journal:
+            journal = self.env['account.journal'].search(domain, limit=1)
+
+        return journal
 
     def _get_batches(self):
         ''' Group the account.move.line linked to the wizard together.
@@ -177,7 +200,7 @@ class AccountPaymentRegister(models.TransientModel):
         else:
             source_amount_currency = abs(sum(lines.mapped('amount_residual_currency')))
 
-        return {
+        res = {
             'company_id': company.id,
             'partner_id': key_values['partner_id'],
             'partner_type': key_values['partner_type'],
@@ -186,6 +209,9 @@ class AccountPaymentRegister(models.TransientModel):
             'source_amount': source_amount,
             'source_amount_currency': source_amount_currency,
         }
+        if key_values.get('journal_id'):
+            res['journal_id'] = key_values['journal_id']
+        return res
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -243,16 +269,10 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('company_id', 'source_currency_id')
     def _compute_journal_id(self):
         for wizard in self:
-            domain = [
-                ('type', 'in', ('bank', 'cash')),
-                ('company_id', '=', wizard.company_id.id),
-            ]
-            journal = None
-            if wizard.source_currency_id:
-                journal = self.env['account.journal'].search(domain + [('currency_id', '=', wizard.source_currency_id.id)], limit=1)
-            if not journal:
-                journal = self.env['account.journal'].search(domain, limit=1)
-            wizard.journal_id = journal
+            if wizard.journal_id:
+                wizard.journal_id = wizard.journal_id
+            else:
+                wizard.journal_id = self._search_journal(wizard.company_id.id, wizard.source_currency_id.id)
 
     @api.depends('journal_id')
     def _compute_currency_id(self):
