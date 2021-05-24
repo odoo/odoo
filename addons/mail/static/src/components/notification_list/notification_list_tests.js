@@ -85,7 +85,7 @@ QUnit.test('marked as read thread notifications are ordered by last message date
 });
 
 QUnit.test('thread notifications are re-ordered on receiving a new message', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     this.data['mail.channel'].records.push(
         { id: 100, name: "Channel 2019" },
@@ -107,12 +107,7 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
     );
     await this.start();
     await this.createNotificationListComponent({ filter: 'all' });
-    assert.containsN(
-        document.body,
-        '.o_ThreadPreview',
-        2,
-        "there should be two thread previews"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in basic test
 
     await afterNextRender(() => {
         const messageData = {

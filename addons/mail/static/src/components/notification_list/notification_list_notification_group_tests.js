@@ -116,7 +116,7 @@ QUnit.test('notification group basic layout', async function (assert) {
 });
 
 QUnit.test('mark as read', async function (assert) {
-    assert.expect(6);
+    assert.expect(5);
 
     // message that is expected to have a failure
     this.data['mail.message'].records.push({
@@ -153,11 +153,7 @@ QUnit.test('mark as read', async function (assert) {
     });
     await this.start({ env: { bus } });
     await this.createNotificationListComponent();
-    assert.containsOnce(
-        document.body,
-        '.o_NotificationGroup_markAsRead',
-        "should have 1 mark as read button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'notification group basic layout'
 
     document.querySelector('.o_NotificationGroup_markAsRead').click();
     assert.verifySteps(
@@ -169,7 +165,7 @@ QUnit.test('mark as read', async function (assert) {
 QUnit.test('grouped notifications by document', async function (assert) {
     // If some failures linked to a document refers to a same document, a single
     // notification should group all those failures.
-    assert.expect(5);
+    assert.expect(3);
 
     this.data['mail.message'].records.push(
         // first message that is expected to have a failure
@@ -206,16 +202,7 @@ QUnit.test('grouped notifications by document', async function (assert) {
     await this.start({ hasChatWindow: true });
     await this.createNotificationListComponent();
 
-    assert.containsOnce(
-        document.body,
-        '.o_NotificationGroup',
-        "should have 1 notification group"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_NotificationGroup_counter',
-        "should have 1 group counter"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'notification group basic layout'
     assert.strictEqual(
         document.querySelector('.o_NotificationGroup_counter').textContent.trim(),
         "(2)",
@@ -241,7 +228,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
     // If all failures linked to a document model refers to different documents,
     // a single notification should group all failures that are linked to this
     // document model.
-    assert.expect(12);
+    assert.expect(9);
 
     this.data['mail.message'].records.push(
         // first message that is expected to have a failure
@@ -318,21 +305,8 @@ QUnit.test('grouped notifications by document model', async function (assert) {
     await this.start({ env: { bus } });
     await this.createNotificationListComponent();
 
-    assert.containsOnce(
-        document.body,
-        '.o_NotificationGroup',
-        "should have 1 notification group"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_NotificationGroup_counter',
-        "should have 1 group counter"
-    );
-    assert.strictEqual(
-        document.querySelector('.o_NotificationGroup_counter').textContent.trim(),
-        "(2)",
-        "should have 2 notifications in the group"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'notification group basic layout'
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'grouped notifications by document'
 
     document.querySelector('.o_NotificationGroup').click();
     assert.verifySteps(
@@ -420,7 +394,7 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
 });
 
 QUnit.test('multiple grouped notifications by document model, sorted by the most recent message of each group', async function (assert) {
-    assert.expect(9);
+    assert.expect(8);
 
     this.data['mail.message'].records.push(
         // first message that is expected to have a failure
@@ -456,12 +430,7 @@ QUnit.test('multiple grouped notifications by document model, sorted by the most
     );
     await this.start();
     await this.createNotificationListComponent();
-    assert.containsN(
-        document.body,
-        '.o_NotificationGroup',
-        2,
-        "should have 2 notifications group"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'different mail.channel are not grouped'
     const groups = document.querySelectorAll('.o_NotificationGroup');
     assert.containsOnce(
         groups[0],
