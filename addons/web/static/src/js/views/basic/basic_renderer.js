@@ -112,7 +112,9 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         _.each(this.allFieldWidgets[recordID], function (widget) {
             var canBeSaved = self._canWidgetBeSaved(widget);
             if (!canBeSaved) {
-                invalidFields.push(widget.name);
+                if (!(invalidFields.includes(widget.name))){
+                    invalidFields.push(widget.name);
+                }
             }
             if (widget.el) { // widget may not be started yet
                 widget.$el.toggleClass('o_field_invalid', !canBeSaved);
