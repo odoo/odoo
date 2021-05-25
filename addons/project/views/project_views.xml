@@ -272,6 +272,15 @@
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
+                        <field name="currency_id" invisible="1"/>
+                        <button class="oe_stat_button" type="object" name="action_view_analytic_account_entries" icon="fa-usd" attrs="{'invisible': [('analytic_account_id', '=', False)]}" groups="analytic.group_analytic_accounting">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Gross Margin</span>
+                                <span class="o_stat_value">
+                                    <field name="analytic_account_balance" widget='monetary'/>
+                                </span>
+                            </div>
+                        </button>
                         <button class="oe_stat_button" type="action"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks In Progress" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
@@ -335,18 +344,32 @@
                         <group>
                             <field name="label_tasks" string="Name of the tasks"/>
                             <field name="partner_id" widget="res_partner_many2one"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </group>
                         <group>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="active" invisible="1"/>
+                            <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
+                            <label for="date_start" string="Dates"/>
+                            <div name="dates" class="o_row">
+                                <field name="date_start" widget="daterange" options='{"related_end_date": "date"}'/>
+                                <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                                <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('date_start', '=', False), ('date', '=', False)]}"/>
+                                <field name="date" widget="daterange" options='{"related_start_date": "date_start"}'/>
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <notebook>
+                        <page name="description" string="Description">
+                            <field name="description"/>
+                        </page>
                         <page name="settings" string="Settings">
                             <group>
                                 <group>
-                                    <field name="active" invisible="1"/>
-                                    <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
-                                    <field name="date" string="Deadline"/>
+                                    <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
+                                    <field name="privacy_visibility" widget="radio"/>
+                                </group>
+                                <group>
                                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
                                         <field name="alias_enabled" invisible="1"/>
@@ -362,11 +385,6 @@
                                         when the string is deleted. -->
                                     <field name="alias_contact" class="oe_inline" string="Accept Emails From"
                                            attrs="{'invisible': ['|', ('alias_name', '=', ''), ('alias_name', '=', False)]}"/>
-                                </group>
-                                <group>
-                                    <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
-                                    <field name="privacy_visibility" widget="radio"/>
-                                    <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="extra_settings">
                                 </group>
@@ -434,6 +452,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" options="{'post_refresh':True}" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
+                    <field name="activity_ids"/>
                     <field name="message_ids"/>
                 </div>
                 </form>
@@ -482,7 +501,8 @@
                     <field name="privacy_visibility" optional="hide"/>
                     <field name="company_id" optional="show"  groups="base.group_multi_company" options="{'no_create': True, 'no_create_edit': True}"/>
                     <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
-                    <field name="date" optional="hide" string="Deadline" widget="remaining_days"/>
+                    <field name="date_start" string="Start Date" widget="daterange" options="{'related_end_date': 'date'}"/>
+                    <field name="date" string="End Date" widget="daterange" options="{'related_start_date': 'date_start'}"/>
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" invisible="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
@@ -605,8 +625,10 @@
                                                 <span class="o_text_overflow text-muted" t-if="record.partner_id.value">
                                                     <span class="fa fa-user mr-2" aria-label="Partner" title="Partner"></span><t t-esc="record.partner_id.value"/>
                                                 </span>
-                                                <div t-if="record.date.raw_value" class="text-muted">
-                                                    <span class="fa fa-clock-o mr-2" aria-label="Remaining days" title="Remaining days"></span><field name="date" widget="remaining_days"/>
+                                                <div t-if="record.date.raw_value or record.date_start.raw_value" class="text-muted o_row">
+                                                    <span class="fa fa-clock-o mr-2" title="Dates"></span><field name="date_start"/>
+                                                    <i t-if="record.date.raw_value and record.date_start.raw_value" class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow"/>
+                                                    <field name="date"/>
                                                 </div>
                                                 <div t-if="record.alias_name.value and record.alias_domain.value" class="text-muted">
                                                     <span class="fa fa-envelope-o mr-2" aria-label="Domain Alias" title="Domain Alias"></span><t t-esc="record.alias_id.value"/>
@@ -653,7 +675,7 @@
                                             </div>
                                             <div role="menuitem" class="col-4">
                                                 <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action">Share</a>
-                                                <a class="dropdown-item" role="menuitem" type="edit">Edit</a>
+                                                <a class="dropdown-item" role="menuitem" type="object" name="action_view_kanban_project">See More</a>
                                             </div>
                                         </div>
                                     </div>
@@ -674,9 +696,11 @@
                                                 </div>
                                             </a>
                                         </div>
+                                        <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <span t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
+                                        <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>
                                 </div>
                             </div>

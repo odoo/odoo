@@ -140,7 +140,7 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread', 'rating.parent.mixin']
+    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.parent.mixin']
     _order = "sequence, name, id"
     _rating_satisfaction_days = False  # takes all existing ratings
     _check_company_auto = True
@@ -234,6 +234,7 @@ class Project(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", check_company=True,
         help="Analytic account to which this project is linked for financial management. "
              "Use an analytic account to record cost and revenue on your project.")
+    analytic_account_balance = fields.Monetary(related="analytic_account_id.balance")
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
@@ -603,6 +604,33 @@ class Project(models.Model):
             'project.open_view_project_all' if not self.user_has_groups('project.group_project_stages') else
             'project.open_view_project_all_group_stage')
         return action
+
+    def action_view_analytic_account_entries(self):
+        self.ensure_one()
+        return {
+            'res_model': 'account.analytic.line',
+            'type': 'ir.actions.act_window',
+            'name': _("Gross Margin"),
+            'domain': [('account_id', '=', self.analytic_account_id.id)],
+            'views': [(self.env.ref('analytic.view_account_analytic_line_tree').id, 'list'),
+                      (self.env.ref('analytic.view_account_analytic_line_form').id, 'form'),
+                      (self.env.ref('analytic.view_account_analytic_line_graph').id, 'graph'),
+                      (self.env.ref('analytic.view_account_analytic_line_pivot').id, 'pivot')],
+            'view_mode': 'tree,form,graph,pivot',
+            'context': {'search_default_group_date': 1, 'default_account_id': self.analytic_account_id.id}
+        }
+
+    def action_view_kanban_project(self):
+        self.ensure_one()
+        return {
+            'res_model': 'project.project',
+            'type': 'ir.actions.act_window',
+            'name': _("Project"),
+            'res_id': self.id,
+            'views': [(self.env.ref('project.edit_project').id, 'form')],
+            'view_mode': 'form',
+            'context': {'form_view_initial_mode': 'readonly'}
+        }
 
     # ---------------------------------------------
     #  PROJECT UPDATES
