@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ProductInfoPopup" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('extra')]" position="inside">
+            <div class="section-optional-product" t-if="productInfo.optional_products.length > 0">
+                <div class="section-title">
+                    <span>Optional Products</span>
+                    <div class="section-title-line"/>
+                </div>
+                <div class="section-optional-product-body">
+                    <table>
+                        <t t-foreach="productInfo.optional_products" t-as="optional" t-key="optional.name">
+                            <tr>
+                                <td><span class="searchable" t-esc="optional.name" t-on-click="searchProduct(optional.name)"/></td>
+                                <td class="table-value">
+                                    from <t t-esc="env.pos.format_currency(optional.price)"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
