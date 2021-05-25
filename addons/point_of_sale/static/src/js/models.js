@@ -283,7 +283,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'pos.session',
-        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'payment_method_ids', 'cash_register_id', 'state'],
+        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'payment_method_ids', 'cash_register_id', 'state', 'update_stock_at_closing'],
         domain: function(self){
             var domain = [
                 ['state','in',['opening_control','opened']],
@@ -2357,7 +2357,10 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_customer_note: function() {
         return this.customerNote;
-    }
+    },
+    get_total_cost: function() {
+        return this.product.standard_price * this.quantity;
+    },
 });
 
 var OrderlineCollection = Backbone.Collection.extend({
@@ -3405,6 +3408,11 @@ exports.Order = Backbone.Model.extend({
             return true;
         }
         return true;
+    },
+    get_total_cost: function() {
+        return this.orderlines.reduce((function(sum, orderLine) {
+            return sum + orderLine.get_total_cost();
+        }), 0)
     },
     finalize: function(){
         this.destroy();
