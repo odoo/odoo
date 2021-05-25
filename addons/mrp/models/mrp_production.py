@@ -437,7 +437,7 @@ class MrpProduction(models.Model):
         for production in self:
             if not production.state:
                 production.state = 'draft'
-            elif production.move_raw_ids and all(move.state == 'cancel' for move in production.move_raw_ids):
+            elif production.state == 'cancel' or (production.move_raw_ids and all(move.state == 'cancel' for move in production.move_raw_ids)):
                 production.state = 'cancel'
             elif production.state == 'done' or (production.move_raw_ids and all(move.state in ('cancel', 'done') for move in production.move_raw_ids)):
                 production.state = 'done'
