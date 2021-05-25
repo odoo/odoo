@@ -296,6 +296,7 @@ class FSWatcherInotify(FSWatcherBase):
     def stop(self):
         self.started = False
         self.thread.join()
+        del self.watcher  # ensures inotify watches are freed up before reexec
 
 
 #----------------------------------------------------------
