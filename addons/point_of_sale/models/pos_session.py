@@ -1184,8 +1184,8 @@ class PosSession(models.Model):
         product_product_meta = loading_metas['product.product']
         pos_category_meta['ids'] = categories.ids
         product_product_meta['ids'] = products.ids
-        result_categories = self.load_model('pos.category', {}, meta=pos_category_meta)
-        result_products = self.load_model('product.product', {}, meta=product_product_meta)
+        result_categories = self.load_model('pos.category', {}, meta_result=pos_category_meta)
+        result_products = self.load_model('product.product', {}, meta_result=product_product_meta)
         return {
             "categories": result_categories,
             "products": result_products,
@@ -1219,16 +1219,16 @@ class PosSession(models.Model):
         post_method = getattr(self, post["method"])
         post_method(result, **{name: data[model] for (name, model) in post["requires"]})
 
-    def load_model(self, model, data, meta=False, load=False, post=False):
+    def load_model(self, model, data, meta_result=False, load=False, post=False):
         _loader = pos_loader._loaders[model]
-        meta = meta or _loader.get("meta", False)
+        meta = _loader.get("meta", False)
         load = load or _loader.get("load", {"method": "_default_load_method", "requires": []})
         post = post or _loader.get("post", False)
         # 0. Initialize the result, to be populated at 2.
         result = {}
         ordered_ids = False
         # 1. Calculate meta
-        meta_result = meta and self._exec_meta(model, meta, data)
+        meta_result = meta_result or self._exec_meta(model, meta, data)
         if not meta_result:
             return
         # 2. Load the records based on the meta
