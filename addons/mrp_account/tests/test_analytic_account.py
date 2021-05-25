@@ -62,12 +62,13 @@ class TestAnalyticAccount(TransactionCase):
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_id.amount, -50.0)
 
-        # decrease qty_producing to 10.0
+        # increase qty_producing to 10.0
         mo_form = Form(mo)
         mo_form.qty_producing = 10.0
         mo_form.save()
         # Hack to bypass test doing strange things
         mo._set_qty_producing()
+        mo.workorder_ids.button_finish()
         self.assertEqual(mo.state, 'to_close')
         self.assertEqual(mo.move_raw_ids.analytic_account_line_id.amount, -100.0)
 
