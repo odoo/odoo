@@ -87,8 +87,11 @@
         <field name="model">project.task</field>
         <field name="inherit_id" ref="project.view_task_search_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='stage_id']" position="before">
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
+            </xpath>
+            <xpath expr="//search/group/filter[@name='customer']" position="after">
+                <filter string="Sales Order Item" name="sale_order_id" context="{'group_by': 'sale_order_id'}"/>
             </xpath>
         </field>
     </record>

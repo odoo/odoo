@@ -112,7 +112,7 @@
                 <xpath expr="//header" position='inside'>
                     <field name="allow_billable" invisible="1"/>
                 </xpath>
-                <xpath expr="//field[@name='email_cc']" position="after">
+                <xpath expr="//group/field[@name='sequence']" position="before">
                     <field name="analytic_account_id" groups="base.group_no_one"/>
                 </xpath>
             </field>
