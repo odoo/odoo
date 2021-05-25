@@ -375,7 +375,7 @@ class Slide(models.Model):
         if self.datas:
             data = base64.b64decode(self.datas)
             if data.startswith(b'%PDF-'):
-                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False)
+                pdf = PyPDF2.PdfFileReader(io.BytesIO(data), overwriteWarnings=False, strict=False)
                 self.completion_time = (5 * len(pdf.pages)) / 60
             else:
                 self.slide_type = 'infographic'
