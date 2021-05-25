@@ -116,6 +116,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
 
                 }
 
+                let useLoadedLots;
 
                 for (var i = 0; i < lines.length; i++) {
                     let line = lines[i];
@@ -137,10 +138,24 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         new_line.get_product().tracking !== 'none' &&
                         (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots)
                     ) {
-                        new_line.setPackLotLines({
-                            modifiedPackLotLines: [],
-                            newPackLotLines: (line.lot_names || []).map((name) => ({ lot_name: name })),
-                        });
+                        if (line.lot_names.length > 0) {
+                            const { confirmed } =
+                                useLoadedLots === undefined
+                                    ? await this.showPopup('ConfirmPopup', {
+                                          title: this.env._t('Do you want to load the SN/Lots?'),
+                                          body: this.env._t(
+                                              'There are SN/Lots associated in the loaded sale order lines, do you want to use these SN/Lots?'
+                                          ),
+                                      })
+                                    : useLoadedLots;
+                            useLoadedLots = confirmed;
+                            if (useLoadedLots) {
+                                new_line.setPackLotLines({
+                                    modifiedPackLotLines: [],
+                                    newPackLotLines: (line.lot_names || []).map((name) => ({ lot_name: name })),
+                                });
+                            }
+                        }
                     }
                     new_line.setQuantityFromSOL(line);
                     new_line.set_unit_price(line.price_unit);
