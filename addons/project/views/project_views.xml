@@ -744,7 +744,7 @@
                                 attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                                 groups="base.group_no_one"
                             />
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('parent_id', '!=', False)]}" />
+                            <field name="recurring_task" attrs="{'invisible': [('allow_recurring_tasks', '=', False)]}" />
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
