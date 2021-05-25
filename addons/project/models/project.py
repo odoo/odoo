@@ -730,7 +730,7 @@ class Task(models.Model):
         index=True, tracking=True)
     partner_id = fields.Many2one('res.partner',
         string='Customer',
-        compute='_compute_partner_id', recursive=True, store=True, readonly=False,
+        compute='_compute_partner_id', recursive=True, store=True, readonly=False, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
@@ -1491,7 +1491,7 @@ class Task(models.Model):
             'name': 'Tasks in Recurrence',
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
-            'view_mode': 'tree,form',
+            'view_mode': 'tree,form,kanban,calendar,pivot,graph,gantt,activity,map',
             'domain': [('recurrence_id', 'in', self.recurrence_id.ids)],
         }
 

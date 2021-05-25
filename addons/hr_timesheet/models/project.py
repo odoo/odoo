@@ -194,6 +194,9 @@ class Task(models.Model):
             'name': _('Timesheets'),
             'res_model': 'account.analytic.line',
             'view_mode': 'list,form',
+            'context': {
+                'default_project_id': self.project_id.id
+            },
             'domain': [('project_id', '!=', False), ('task_id', 'in', tasks.ids)],
         }
 

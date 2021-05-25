@@ -175,9 +175,9 @@
                             </span>
                             <field name="effective_hours" widget="timesheet_uom" nolabel="1"/>
 
-                            <button name="action_view_subtask_timesheet" type="object" class="o_td_label o_form_label o_form_subtask_button oe_inline oe_link mr-0" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}">
-                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', True)]}">Sub-tasks Hours Spent</span>
-                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', False)]}">Sub-tasks Days Spent</span>
+                            <button name="action_view_subtask_timesheet" type="object" class="o_form_subtask_button oe_inline oe_link" attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}">
+                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', True)]}">Hours Spent on Sub-tasks:</span>
+                                <span class="text-nowrap" attrs="{'invisible' : [('encode_uom_in_days', '=', False)]}">Days Spent on Sub-tasks:</span>
                             </button>
                             <field name="subtask_effective_hours" class="mt-2" widget="timesheet_uom"
                                    attrs="{'invisible' : ['|', ('allow_subtasks', '=', False), ('subtask_effective_hours', '=', 0.0)]}" nolabel="1"/>
@@ -223,9 +223,9 @@
                     <field name="allow_subtasks" invisible="1"/>
                     <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
                     <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
                     <field name="total_hours_spent" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
                     <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user"/>
                 </field>
             </field>
@@ -281,6 +281,9 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_tasks']" position='after'>
+                    <filter string="My Team's Tasks" name="my_team_tasks" domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
+                </xpath>
                 <xpath expr="//filter[@name='late']" position='after'>
                     <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
                 </xpath>
