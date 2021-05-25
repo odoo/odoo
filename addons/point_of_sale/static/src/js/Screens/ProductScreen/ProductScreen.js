@@ -8,6 +8,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { useState } = owl.hooks;
+    const { parse } = require('web.field_utils');
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
         constructor() {
@@ -170,11 +171,12 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     });
                     return;
                 }
+                const parsedInput = parse.float(event.detail.buffer) || 0
                 if(lastId != selectedLine.cid)
                     this._showDecreaseQuantityPopup();
-                else if(currentQuantity < event.detail.buffer)
+                else if(currentQuantity < parsedInput)
                     this._setValue(event.detail.buffer);
-                else if(event.detail.buffer < currentQuantity)
+                else if(parsedInput < currentQuantity)
                     this._showDecreaseQuantityPopup();
             } else {
                 let { buffer } = event.detail;
