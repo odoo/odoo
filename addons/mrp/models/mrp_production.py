@@ -69,7 +69,7 @@ class MrpProduction(models.Model):
 
     @api.model
     def _get_default_is_locked(self):
-        return self.user_has_groups('mrp.group_locked_by_default')
+        return not self.user_has_groups('mrp.group_unlocked_by_default')
 
     name = fields.Char(
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
@@ -501,7 +501,11 @@ class MrpProduction(models.Model):
     @api.depends('state')
     def _compute_show_lock(self):
         for order in self:
-            order.show_lock = self.env.user.has_group('mrp.group_locked_by_default') and order.id is not False and order.state not in {'cancel', 'draft'}
+            order.show_lock = order.state == 'done' or (
+                not self.env.user.has_group('mrp.group_unlocked_by_default')
+                and order.id is not False
+                and order.state not in {'cancel', 'draft'}
+            )
 
     @api.depends('state','move_raw_ids')
     def _compute_show_lot_ids(self):
