@@ -10,7 +10,7 @@ import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 
 import { ClientActionAdapter } from "@web/legacy/action_adapters";
-import { useDebugManager } from "@web/core/debug/debug_menu";
+import { useDebugMenu } from "@web/core/debug/debug_menu";
 import { debugService } from "@web/core/debug/debug_service";
 
 import ControlPanel from "web.ControlPanel";
@@ -101,19 +101,23 @@ QUnit.module("ActionManager", (hooks) => {
 
         patchWithCleanup(ClientActionAdapter.prototype, {
             setup() {
-                useDebugManager((accessRights) => {
-                    assert.step("debugItems executed");
-                    assert.ok(this.widget);
-                    return [];
-                });
+                useDebugMenu("custom", { widget: this });
                 this._super();
             },
         });
 
+        registry
+            .category("debug")
+            .category("custom")
+            .add("item1", ({ widget }) => {
+                assert.step("debugItems executed");
+                assert.ok(widget);
+                return {};
+            });
         registry.category("services").add("debug", debugService);
         testConfig.debug = true;
 
-        const mockRPC = (route, args) => {
+        const mockRPC = (route) => {
             if (route.includes("check_access_rights")) {
                 return true;
             }

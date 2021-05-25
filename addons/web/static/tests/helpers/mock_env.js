@@ -13,6 +13,7 @@ export function clearRegistryWithCleanup(registry) {
         content: {},
         elements: null,
         entries: null,
+        subRegistries: {},
         // Preserve OnUpdate handlers
         subscriptions: { UPDATE: [...registry.subscriptions.UPDATE] },
     };
@@ -24,6 +25,7 @@ function cloneRegistryWithCleanup(registry) {
         content: { ...registry.content },
         elements: null,
         entries: null,
+        subRegistries: {},
         // Preserve OnUpdate handlers
         subscriptions: { UPDATE: [...registry.subscriptions.UPDATE] },
     };

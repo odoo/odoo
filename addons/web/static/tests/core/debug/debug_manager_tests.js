@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { DebugManager, useDebugManager } from "@web/core/debug/debug_menu";
+import { DebugMenu, useDebugMenu } from "@web/core/debug/debug_menu";
 import { regenerateAssets } from "@web/core/debug/debug_menu_items";
 import { registry } from "@web/core/registry";
 import { debugService } from "@web/core/debug/debug_service";
@@ -21,7 +21,7 @@ const debugRegistry = registry.category("debug");
 let target;
 let testConfig;
 
-QUnit.module("DebugManager", (hooks) => {
+QUnit.module("DebugMenu", (hooks) => {
     hooks.beforeEach(async () => {
         target = getFixture();
         registry
@@ -38,61 +38,62 @@ QUnit.module("DebugManager", (hooks) => {
         testConfig = { mockRPC };
     });
     QUnit.test("can be rendered", async (assert) => {
-        debugRegistry.add("item_1", () => {
-            return {
-                type: "item",
-                description: "Item 1",
-                callback: () => {
-                    assert.step("callback item_1");
-                },
-                sequence: 10,
-            };
-        });
-        debugRegistry.add("item_2", () => {
-            return {
-                type: "item",
-                description: "Item 2",
-                callback: () => {
-                    assert.step("callback item_2");
-                },
-                sequence: 5,
-            };
-        });
-        debugRegistry.add("item_3", () => {
-            return {
-                type: "item",
-                description: "Item 3",
-                callback: () => {
-                    assert.step("callback item_3");
-                },
-            };
-        });
-        debugRegistry.add("separator", () => {
-            return {
-                type: "separator",
-                sequence: 20,
-            };
-        });
-        debugRegistry.add("separator_2", () => {
-            return {
-                type: "separator",
-                sequence: 7,
-                hide: true,
-            };
-        });
-        debugRegistry.add("item_4", () => {
-            return {
-                type: "item",
-                description: "Item 4",
-                callback: () => {
-                    assert.step("callback item_4");
-                },
-                hide: true,
-                sequence: 10,
-            };
-        });
+        debugRegistry
+            .add("item_1", () => {
+                return {
+                    type: "item",
+                    description: "Item 1",
+                    callback: () => {
+                        assert.step("callback item_1");
+                    },
+                    sequence: 10,
+                };
+            })
+            .add("item_2", () => {
+                return {
+                    type: "item",
+                    description: "Item 2",
+                    callback: () => {
+                        assert.step("callback item_2");
+                    },
+                    sequence: 5,
+                };
+            })
+            .add("item_3", () => {
+                return {
+                    type: "item",
+                    description: "Item 3",
+                    callback: () => {
+                        assert.step("callback item_3");
+                    },
+                };
+            })
+            .add("separator", () => {
+                return {
+                    type: "separator",
+                    sequence: 20,
+                };
+            })
+            .add("separator_2", () => {
+                return {
+                    type: "separator",
+                    sequence: 7,
+                    hide: true,
+                };
+            })
+            .add("item_4", () => {
+                return {
+                    type: "item",
+                    description: "Item 4",
+                    callback: () => {
+                        assert.step("callback item_4");
+                    },
+                    hide: true,
+                    sequence: 10,
+                };
+            });
         const env = await makeTestEnv(testConfig);
-        const debugManager = await mount(DebugManager, { env, target });
+        const debugManager = await mount(DebugMenu, { env, target });
         registerCleanup(() => debugManager.destroy());
         let debugManagerEl = debugManager.el;
         await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
@@ -117,7 +118,7 @@ QUnit.module("DebugManager", (hooks) => {
         assert.verifySteps(["callback item_2", "callback item_1", "callback item_3"]);
     });
 
-    QUnit.test("Don't display the DebugManager if debug mode is disabled", async (assert) => {
+    QUnit.test("Don't display the DebugMenu if debug mode is disabled", async (assert) => {
         const dialogContainer = document.createElement("div");
         dialogContainer.classList.add("o_dialog_container");
         target.append(dialogContainer);
@@ -132,8 +133,9 @@ QUnit.module("DebugManager", (hooks) => {
     });
 
     QUnit.test(
-        "Display the DebugManager correctly in a ActionDialog if debug mode is enabled",
+        "Display the DebugMenu correctly in a ActionDialog if debug mode is enabled",
         async (assert) => {
+            assert.expect(8);
             const dialogContainer = document.createElement("div");
             dialogContainer.classList.add("o_dialog_container");
             target.append(dialogContainer);
@@ -147,26 +149,33 @@ QUnit.module("DebugManager", (hooks) => {
                     sequence: 0,
                 };
             });
-            const item1 = {
-                type: "item",
-                description: "Item 1",
-                callback: () => {
-                    assert.step("callback item_1");
-                },
-                sequence: 10,
-            };
-            const item2 = {
-                type: "item",
-                description: "Item 2",
-                callback: () => {
-                    assert.step("callback item_2");
-                },
-                sequence: 20,
-            };
+            debugRegistry
+                .category("custom")
+                .add("item1", () => {
+                    return {
+                        type: "item",
+                        description: "Item 1",
+                        callback: () => {
+                            assert.step("callback item_1");
+                        },
+                        sequence: 10,
+                    };
+                })
+                .add("item2", ({ customKey }) => {
+                    return {
+                        type: "item",
+                        description: "Item 2",
+                        callback: () => {
+                            assert.step("callback item_2");
+                            assert.strictEqual(customKey, "abc");
+                        },
+                        sequence: 20,
+                    };
+                });
             class Parent extends Component {
                 setup() {
                     useSubEnv({ inDialog: true });
-                    useDebugManager(() => [item1, item2]);
+                    useDebugMenu("custom", { customKey: "abc" });
                 }
             }
             Parent.components = { ActionDialog };
@@ -224,7 +233,7 @@ QUnit.module("DebugManager", (hooks) => {
         registry.category("services").add("localization", makeFakeLocalizationService());
         debugRegistry.add("regenerateAssets", regenerateAssets);
         const env = await makeTestEnv(testConfig);
-        const debugManager = await mount(DebugManager, { env, target });
+        const debugManager = await mount(DebugMenu, { env, target });
         registerCleanup(() => debugManager.destroy());
         await click(debugManager.el.querySelector("button.o_dropdown_toggler"));
         assert.containsOnce(debugManager.el, "ul.o_dropdown_menu li.o_dropdown_item");

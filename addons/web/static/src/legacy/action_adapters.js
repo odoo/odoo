@@ -1,18 +1,16 @@
 /** @odoo-module **/
 
-import core from "web.core";
 import Context from "web.Context";
-import { useService } from "../core/service_hook";
-import { useEffect } from "../core/effect_hook";
-import { useBus } from "../core/bus_hook";
-import { ViewNotFoundError } from "../webclient/actions/action_service";
-import { useDebugManager } from "../core/debug/debug_menu";
-import { objectToQuery } from "../core/browser/router_service";
+import core from "web.core";
 import { ComponentAdapter } from "web.OwlCompatibility";
-import { mapDoActionOptionAPI } from "./utils";
-import { setupDebugAction, setupDebugViewForm, setupDebugView } from "./debug_manager";
-import { cleanDomFromBootstrap } from "./utils";
+import { objectToQuery } from "../core/browser/router_service";
+import { useBus } from "../core/bus_hook";
+import { useDebugMenu } from "../core/debug/debug_menu";
 import { Dialog } from "../core/dialog/dialog";
+import { useEffect } from "../core/effect_hook";
+import { useService } from "../core/service_hook";
+import { ViewNotFoundError } from "../webclient/actions/action_service";
+import { cleanDomFromBootstrap, mapDoActionOptionAPI } from "./utils";
 
 const { Component, tags } = owl;
 
@@ -154,9 +152,7 @@ class ActionAdapter extends ComponentAdapter {
 export class ClientActionAdapter extends ActionAdapter {
     setup() {
         super.setup();
-        useDebugManager((accessRights) =>
-            setupDebugAction(accessRights, this.wowlEnv, this.props.widgetArgs[0])
-        );
+        useDebugMenu("action", { action: this.props.widgetArgs[0] });
         this.env = Component.env;
     }
 
@@ -231,16 +227,13 @@ export class ViewAdapter extends ActionAdapter {
         this.shouldUpdateWidget = true;
         this.magicReload = useMagicLegacyReload();
         const envWowl = this.env;
-        useDebugManager((accessRights) =>
-            setupDebugAction(accessRights, envWowl, this.props.viewParams.action)
-        );
-        useDebugManager((accessRights) =>
-            setupDebugView(accessRights, envWowl, this, this.props.viewParams.action)
-        );
+        useDebugMenu("action", {
+            action: this.props.viewParams.action,
+            component: this,
+        });
+        useDebugMenu("view");
         if (this.props.viewInfo.type === "form") {
-            useDebugManager((accessRights) =>
-                setupDebugViewForm(envWowl, this, this.props.viewParams.action)
-            );
+            useDebugMenu("form");
         }
         if (!envWowl.inDialog) {
             useBus(envWowl.bus, "ACTION_MANAGER:UPDATE", (info) => {

@@ -3,7 +3,7 @@
 
   <t t-name="web.ActionDialog" t-inherit="web.Dialog" t-inherit-mode="primary" owl="1">
     <xpath expr="//header/h4[contains(concat(' ',normalize-space(@class),' '),' modal-title ')]" position="before">
-      <DebugManager t-if="env.debug" />
+      <DebugMenu t-if="env.debug" />
     </xpath>
     <xpath expr="//main[@class='modal-body']" position="attributes">
       <attribute name="t-att-class">
