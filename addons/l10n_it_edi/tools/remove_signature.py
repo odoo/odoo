@@ -14,7 +14,7 @@ except ImportError:
     _logger.warning("Cannot import library 'OpenSSL' for PKCS#7 envelope extraction.")
 
 
-def remove_signature(content, encoding='utf-8'):
+def remove_signature(content):
     """ Remove the PKCS#7 envelope from given content, making a '.xml.p7m' file content readable as it was '.xml'.
         As OpenSSL may not be installed, in that case a warning is issued and None is returned. """
 

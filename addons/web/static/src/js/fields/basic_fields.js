@@ -2771,6 +2771,27 @@ var BooleanToggle = FieldBoolean.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds the icon fa-check-circle if value is true else adds icon
+     * fa-times-circle
+     *
+     * @override
+     */
+    async _render() {
+        await this._super(...arguments);
+        const classToApply = this.value ? 'fa-check-circle' : 'fa-times-circle';
+        if (this.el.querySelector('i')) {
+            this.el.querySelector('i').remove();
+        }
+        const i = document.createElement("i");
+        i.setAttribute('class', `fa ${classToApply}`);
+        this.el.querySelector('label').appendChild(i);
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -2780,9 +2801,10 @@ var BooleanToggle = FieldBoolean.extend({
      * @private
      * @param {MouseEvent} event
      */
-    _onClick: function (event) {
+    _onClick: async function (event) {
         event.stopPropagation();
-        this._setValue(!this.value);
+        await this._setValue(!this.value);
+        this._render();
     },
 });
 

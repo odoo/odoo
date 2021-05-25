@@ -2638,7 +2638,7 @@ var SnippetsMenu = Widget.extend({
                 },
             }, {
                 text: _t("Install in progress"),
-                icon: 'fa-spin fa-spinner fa-pulse mr8',
+                icon: 'fa-spin fa-circle-o-notch fa-spin mr8',
                 classes: 'btn-primary disabled o_hidden',
             }, {
                 text: _t("Cancel"),
@@ -3010,7 +3010,9 @@ var SnippetsMenu = Widget.extend({
         const range = selection && selection.rangeCount && selection.getRangeAt(0);
         if (!range ||
             !$(range.commonAncestorContainer).parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
-            $(range.commonAncestorContainer).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"])').length
+            $(range.commonAncestorContainer).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"])').length ||
+            (e && $(e.target).closest('.fa, img').length ||
+            this.options.wysiwyg.lastMediaClicked && $(this.options.wysiwyg.lastMediaClicked).is('.fa, img'))
         ) {
             $toolbarContainer.hide();
         } else {
