@@ -7,54 +7,60 @@ import { registry } from "../registry";
 const debugRegistry = registry.category("debug");
 
 const { Component } = owl;
+let debugElementsId = 1;
 
-export class DebugManager extends Component {
+export class DebugMenu extends Component {
     setup() {
-        this.debugFactories = {};
+        const globalContext = { env: this.env };
+        this.activeCategories = new Set();
+        this.contexts = new Map([["global", globalContext]]);
         this.debugService = useService("debug");
+        this.hasAccessRights = false;
         // Defined as arrow to be passed as prop
         // @ts-ignore
         this.beforeOpenDropdown = async () => {
-            if (!this.accessRights) {
-                this.accessRights = await this.debugService.getAccessRights();
+            if (!this.hasAccessRights) {
+                this.hasAccessRights = true;
+                const accessRights = await this.debugService.getAccessRights();
+                Object.assign(globalContext, { accessRights });
             }
         };
-        this.env.bus.on("DEBUG-MANAGER:NEW-ITEMS", this, (payload) => {
-            const { inDialog, elementsId, elementsFactory } = payload;
-            if (this.isInDialog === inDialog) {
-                this.debugFactories[elementsId] = elementsFactory;
+        this.env.bus.on("DEBUG-MANAGER:ADD-CONTEXT", this, (payload) => {
+            const { category, context, inDialog, itemId } = payload;
+            if (this.env.inDialog === inDialog) {
+                this.contexts.set(itemId, context);
+                this.activeCategories.add(category);
             }
         });
-        this.env.bus.on("DEBUG-MANAGER:REMOVE-ITEMS", this, (payload) => {
-            const { inDialog, elementsId } = payload;
-            if (this.isInDialog === inDialog) {
-                delete this.debugFactories[elementsId];
+        this.env.bus.on("DEBUG-MANAGER:REMOVE-CONTEXT", this, (payload) => {
+            const { category, inDialog, itemId } = payload;
+            if (this.env.inDialog === inDialog) {
+                this.contexts.delete(itemId);
+                this.activeCategories.delete(category);
             }
         });
-        if (!this.isInDialog) {
-            this.debugFactories.global = () =>
-                debugRegistry.getAll().map((elFactory) => elFactory(this.env));
-        }
-    }
-
-    get isInDialog() {
-        return this.env.inDialog;
     }
 
     getElements() {
-        if (Object.keys(this.debugFactories).length > 0) {
-            const sortedElements = Object.values(this.debugFactories)
-                .map((factory) => factory(this.accessRights))
-                .reduce((acc, elements) => acc.concat(elements))
-                .sort((x, y) => {
-                    const xSeq = x.sequence ? x.sequence : 1000;
-                    const ySeq = y.sequence ? y.sequence : 1000;
-                    return xSeq - ySeq;
-                });
-            return sortedElements;
-        } else {
-            return [];
+        const factories = [];
+        const context = Object.assign({}, ...this.contexts.values());
+        // If not in dialog => gets root (generic) factories
+        if (!this.env.inDialog) {
+            factories.push(...debugRegistry.getAll());
         }
+        // Retrieves the active categories factories
+        for (const category of this.activeCategories) {
+            factories.push(...debugRegistry.category(category).getAll());
+        }
+        // Builds, filters and sorts all items
+        return factories
+            .map((factory) => factory(context))
+            .filter(Boolean)
+            .sort((x, y) => {
+                const xSeq = x.sequence ? x.sequence : 1000;
+                const ySeq = y.sequence ? y.sequence : 1000;
+                return xSeq - ySeq;
+            });
     }
 
     onDropdownItemSelected(ev) {
@@ -68,20 +74,22 @@ export class DebugManager extends Component {
     }
 }
 
-DebugManager.debugElementsId = 1;
-DebugManager.template = "web.DebugManager";
+DebugMenu.template = "web.DebugMenu";
 
-export function useDebugManager(elementsFactory) {
-    const elementsId = DebugManager.debugElementsId++;
+export function useDebugMenu(category, context = {}) {
     const component = Component.current;
     const env = component.env;
     const payload = {
-        elementsId,
-        elementsFactory,
+        category,
+        context,
         inDialog: env.inDialog,
+        itemId: debugElementsId++,
     };
-    useEffect(() => {
-        env.bus.trigger("DEBUG-MANAGER:NEW-ITEMS", payload);
-        return () => env.bus.trigger("DEBUG-MANAGER:REMOVE-ITEMS", payload);
-    }, () => []);
+    useEffect(
+        () => {
+            env.bus.trigger("DEBUG-MANAGER:ADD-CONTEXT", payload);
+            return () => env.bus.trigger("DEBUG-MANAGER:REMOVE-CONTEXT", payload);
+        },
+        () => []
+    );
 }

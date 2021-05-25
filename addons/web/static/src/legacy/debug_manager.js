@@ -1,35 +1,59 @@
 /** @odoo-module **/
 
 import { editModelDebug } from "../core/debug/debug_service";
-import { json_node_to_xml } from "../views/view_utils";
-import { formatMany2one } from "../fields/format";
-import { parseDateTime, formatDateTime } from "../core/l10n/dates";
 import { Dialog } from "../core/dialog/dialog";
+import { formatDateTime, parseDateTime } from "../core/l10n/dates";
 import { _lt } from "../core/l10n/translation";
+import { registry } from "../core/registry";
+import { formatMany2one } from "../fields/format";
+import { json_node_to_xml } from "../views/view_utils";
 
-const { Component, hooks, tags } = owl;
+const { hooks, tags } = owl;
 const { useState } = hooks;
 
-export function setupDebugAction(accessRights, env, action) {
-    const actionSeparator = {
+// Action items
+
+function actionSeparator() {
+    return {
         type: "separator",
         sequence: 100,
     };
+}
 
-    let description = env._t("Edit Action");
-    const editAction = {
+function accessSeparator({ accessRights, action }) {
+    const { canSeeModelAccess, canSeeRecordRules } = accessRights;
+    if (!action.res_model || (!canSeeModelAccess && !canSeeRecordRules)) {
+        return null;
+    }
+    return {
+        type: "separator",
+        sequence: 200,
+    };
+}
+
+function editAction({ action, env }) {
+    if (!action.id) {
+        return null;
+    }
+    const description = env._t("Edit Action");
+    return {
         type: "item",
-        description: description,
+        description,
         callback: () => {
             editModelDebug(env, description, action.type, action.id);
         },
         sequence: 110,
     };
+}
 
-    description = env._t("View Fields");
-    const viewFields = {
+function viewFields({ action, env }) {
+    if (!action.res_model) {
+        return null;
+    }
+    const description = env._t("View Fields");
+    return {
         type: "item",
-        description: description,
+        description,
         callback: async () => {
             const modelId = (
                 await env.services.orm.search("ir.model", [["model", "=", action.res_model]], {
@@ -52,11 +76,16 @@ export function setupDebugAction(accessRights, env, action) {
         },
         sequence: 120,
     };
+}
 
-    description = env._t("Manage Filters");
-    const manageFilters = {
+function manageFilters({ action, env }) {
+    if (!action.res_model) {
+        return null;
+    }
+    const description = env._t("Manage Filters");
+    return {
         type: "item",
-        description: description,
+        description,
         callback: () => {
             // manage_filters
             env.services.action.doAction({
@@ -75,8 +104,13 @@ export function setupDebugAction(accessRights, env, action) {
         },
         sequence: 130,
     };
+}
 
-    const technicalTranslation = {
+function technicalTranslation({ action, env }) {
+    if (!action.res_model) {
+        return null;
+    }
+    return {
         type: "item",
         description: env._t("Technical Translation"),
         callback: async () => {
@@ -89,16 +123,16 @@ export function setupDebugAction(accessRights, env, action) {
         },
         sequence: 140,
     };
+}
 
-    const accessSeparator = {
-        type: "separator",
-        sequence: 200,
-    };
-
-    description = env._t("View Access Rights");
-    const viewAccessRights = {
+function viewAccessRights({ accessRights, action, env }) {
+    if (!action.res_model || !accessRights.canSeeModelAccess) {
+        return null;
+    }
+    const description = env._t("View Access Rights");
+    return {
         type: "item",
-        description: description,
+        description,
         callback: async () => {
             const modelId = (
                 await env.services.orm.search("ir.model", [["model", "=", action.res_model]], {
@@ -121,9 +155,14 @@ export function setupDebugAction(accessRights, env, action) {
         },
         sequence: 210,
     };
+}
 
-    description = env._t("Model Record Rules");
-    const viewRecordRules = {
+function viewRecordRules({ accessRights, action, env }) {
+    if (!action.res_model || !accessRights.canSeeRecordRules) {
+        return null;
+    }
+    const description = env._t("Model Record Rules");
+    return {
         type: "item",
         description: env._t("View Record Rules"),
         callback: async () => {
@@ -148,26 +187,6 @@ export function setupDebugAction(accessRights, env, action) {
         },
         sequence: 220,
     };
-
-    const result = [actionSeparator];
-    if (action.id) {
-        result.push(editAction);
-    }
-    if (action.res_model) {
-        result.push(viewFields);
-        result.push(manageFilters);
-        result.push(technicalTranslation);
-        if (accessRights.canSeeModelAccess || accessRights.canSeeRecordRules) {
-            result.push(accessSeparator);
-            if (accessRights.canSeeModelAccess) {
-                result.push(viewAccessRights);
-            }
-            if (accessRights.canSeeRecordRules) {
-                result.push(viewRecordRules);
-            }
-        }
-    }
-    return result;
 }
 
 class FieldViewGetDialog extends Dialog {}
@@ -208,7 +227,7 @@ class GetMetadataDialog extends Dialog {
         this.state.write_date = formatDateTime(parseDateTime(metadata.write_date));
     }
 }
-GetMetadataDialog.bodyTemplate = "web.DebugManager.getMetadataBody";
+GetMetadataDialog.bodyTemplate = "web.DebugMenu.getMetadataBody";
 GetMetadataDialog.title = _lt("View Metadata");
 
 class SetDefaultDialog extends Dialog {
@@ -352,78 +371,95 @@ class SetDefaultDialog extends Dialog {
         this.trigger("dialog-closed");
     }
 }
-SetDefaultDialog.bodyTemplate = "web.DebugManager.setDefaultBody";
-SetDefaultDialog.footerTemplate = "web.DebugManager.SetDefaultFooter";
+SetDefaultDialog.bodyTemplate = "web.DebugMenu.setDefaultBody";
+SetDefaultDialog.footerTemplate = "web.DebugMenu.SetDefaultFooter";
 SetDefaultDialog.title = _lt("Set Default");
 
-export function setupDebugView(accessRights, env, component, action) {
-    const viewId = component.props.viewInfo.view_id;
-    const viewSeparator = {
+function viewSeparator() {
+    return {
         type: "separator",
         sequence: 300,
     };
-    const fieldsViewGet = {
+}
+
+function fieldsViewGet({ component, env }) {
+    return {
         type: "item",
         description: env._t("Fields View Get"),
         callback: () => {
             const props = {
-                arch: json_node_to_xml(component.widget.renderer.arch, true, 0),
+                arch: json_node_to_xml(component.props.viewInfo.arch, true, 0),
             };
             env.services.dialog.open(FieldViewGetDialog, props);
         },
         sequence: 340,
     };
+}
+
+export function editView({ accessRights, action, component, env }) {
+    if (!accessRights.canEditView) {
+        return null;
+    }
+    const { viewId, viewType } = component.widget;
     const displayName = action.views
-        .find((v) => v.type === component.widget.viewType)
+        .find((v) => v.type === viewType)
         .name.toString();
-    let description = env._t("Edit View: ") + displayName;
-    const editView = {
+    const description = env._t("Edit View: ") + displayName;
+    return {
         type: "item",
-        description: description,
+        description,
         callback: () => {
             editModelDebug(env, description, "ir.ui.view", viewId);
         },
         sequence: 350,
     };
-    description = env._t("Edit ControlPanelView");
-    const editControlPanelView = {
+}
+
+function editControlPanelView({ accessRights, component, env }) {
+    if (!accessRights.canEditView) {
+        return null;
+    }
+    const description = env._t("Edit ControlPanelView");
+    return {
         type: "item",
-        description: description,
+        description,
         callback: () => {
             editModelDebug(
                 env,
                 description,
                 "ir.ui.view",
-                component.props.viewParams.action.controlPanelFieldsView.view_id
+                component.props.viewInfo.view_id
             );
         },
         sequence: 360,
     };
-    const result = [viewSeparator, fieldsViewGet];
-    if (accessRights.canEditView) {
-        result.push(editView);
-        result.push(editControlPanelView);
-    }
-    return result;
 }
 
-export function setupDebugViewForm(env, component, action) {
-    const setDefaults = {
+// Form view itemss
+
+function setDefaults({ action, component, env }) {
+    return {
         type: "item",
         description: env._t("Set Defaults"),
         callback: () => {
             env.services.dialog.open(SetDefaultDialog, {
                 res_model: action.res_model,
-                component: component,
+                component,
             });
         },
         sequence: 310,
     };
-    const viewMetadata = {
+}
+
+function viewMetadata({ action, component, env }) {
+    const selectedIds = component.widget.getSelectedIds();
+    if (selectedIds.length !== 1) {
+        return null;
+    }
+    return {
         type: "item",
         description: env._t("View Metadata"),
         callback: () => {
-            const selectedIds = component.widget.getSelectedIds();
             env.services.dialog.open(GetMetadataDialog, {
                 res_model: action.res_model,
                 selectedIds,
@@ -431,12 +467,19 @@ export function setupDebugViewForm(env, component, action) {
         },
         sequence: 320,
     };
+}
+
+function manageAttachments({ action, component, env }) {
+    const selectedIds = component.widget.getSelectedIds();
     const description = env._t("Manage Attachments");
-    const manageAttachments = {
+    if (selectedIds.length !== 1) {
+        return null;
+    }
+    return {
         type: "item",
-        description: description,
+        description,
         callback: () => {
-            const selectedId = component.widget.getSelectedIds()[0];
+            const selectedId = selectedIds[0];
             env.services.action.doAction({
                 res_model: "ir.attachment",
                 name: description,
@@ -457,10 +500,30 @@ export function setupDebugViewForm(env, component, action) {
         },
         sequence: 330,
     };
-    const result = [setDefaults];
-    if (component.widget.getSelectedIds().length === 1) {
-        result.push(viewMetadata);
-        result.push(manageAttachments);
-    }
-    return result;
 }
+
+const debugRegistry = registry.category("debug");
+
+debugRegistry
+    .category("action")
+        .add("actionSeparator", actionSeparator)
+        .add("editAction", editAction)
+        .add("viewFields", viewFields)
+        .add("manageFilters", manageFilters)
+        .add("technicalTranslation", technicalTranslation)
+        .add("accessSeparator", accessSeparator)
+        .add("viewAccessRights", viewAccessRights)
+        .add("viewRecordRules", viewRecordRules)
+
+debugRegistry
+    .category("view")
+        .add("viewSeparator", viewSeparator)
+        .add("fieldsViewGet", fieldsViewGet)
+        .add("editView", editView)
+        .add("editControlPanelView", editControlPanelView)
+
+debugRegistry
+    .category("form")
+        .add("setDefaults", setDefaults)
+        .add("viewMetadata", viewMetadata)
+        .add("manageAttachments", manageAttachments);

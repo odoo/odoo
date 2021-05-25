@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Dialog } from "../../core/dialog/dialog";
-import { DebugManager } from "../../core/debug/debug_menu";
+import { DebugMenu } from "../../core/debug/debug_menu";
 import { useEffect } from "../../core/effect_hook";
 
 const { hooks } = owl;
@@ -25,7 +25,7 @@ class ActionDialog extends Dialog {
         this.title = "title" in this.props ? this.props.title : this.constructor.title;
     }
 }
-ActionDialog.components = { ...Dialog.components, DebugManager };
+ActionDialog.components = { ...Dialog.components, DebugMenu };
 ActionDialog.template = "web.ActionDialog";
 ActionDialog.bodyTemplate = "web.ActionDialogBody";
 ActionDialog.props = {
@@ -52,18 +52,21 @@ class LegacyAdaptedActionDialog extends ActionDialog {
         const ControllerComponent = this.props && this.props.ActionComponent;
         const Controller = ControllerComponent && ControllerComponent.Component;
         this.isLegacy = Controller && Controller.isLegacy;
-        useEffect(() => {
-            if (this.isLegacy) {
-                // Retrieve the widget climbing the wrappers
-                const componentController = this.actionRef.comp;
-                const controller = componentController.componentRef.comp;
-                const viewAdapter = controller.controllerRef.comp;
-                const widget = viewAdapter.widget;
-                // Render legacy footer buttons
-                const footer = this.modalRef.el.querySelector("footer");
-                widget.renderButtons($(footer));
-            }
-        }, () => []); // TODO: should this depend on actionRef.comp?
+        useEffect(
+            () => {
+                if (this.isLegacy) {
+                    // Retrieve the widget climbing the wrappers
+                    const componentController = this.actionRef.comp;
+                    const controller = componentController.componentRef.comp;
+                    const viewAdapter = controller.controllerRef.comp;
+                    const widget = viewAdapter.widget;
+                    // Render legacy footer buttons
+                    const footer = this.modalRef.el.querySelector("footer");
+                    widget.renderButtons($(footer));
+                }
+            },
+            () => []
+        ); // TODO: should this depend on actionRef.comp?
     }
 }
 LegacyAdaptedActionDialog.footerTemplate = "web.LegacyAdaptedActionDialogFooter";

@@ -5,13 +5,13 @@ import { registry } from "@web/core/registry";
 import ToursDialog from "@web_tour/debug/tour_dialog_component";
 import utils from "web_tour.utils";
 
-function debugDisableTourItem(env) {
+function disableTours({ env }) {
     if (!env.services.user.isSystem) {
-        return {};
+        return null;
     }
     const activeTours = env.services.tour.getActiveTours();
     if (activeTours.length === 0) {
-        return {};
+        return null;
     }
     return {
         type: "item",
@@ -23,13 +23,13 @@ function debugDisableTourItem(env) {
             }
             browser.location.reload();
         },
-        sequence: 33,
+        sequence: 50,
     };
 }
 
-function debugStartTourItem(env) {
+function startTour({ env }) {
     if (!env.services.user.isSystem) {
-        return {};
+        return null;
     }
     return {
         type: "item",
@@ -37,11 +37,11 @@ function debugStartTourItem(env) {
         callback: async () => {
             env.services.dialog.open(ToursDialog);
         },
-        sequence: 32,
+        sequence: 60,
     };
 }
 
 registry
     .category("debug")
-    .add("web_tour.start_tour", debugStartTourItem)
-    .add("web_tour.disable_tour", debugDisableTourItem);
+    .add("web_tour.startTour", startTour)
+    .add("web_tour.disableTours", disableTours);

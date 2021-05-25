@@ -3,12 +3,13 @@
 import { debugService } from "@web/core/debug/debug_service";
 import { DialogContainer } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
+import { editView } from "@web/legacy/debug_manager";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
-import testUtils from "web.test_utils";
-import ListController from "web.ListController";
 import AbstractView from "web.AbstractView";
-import legacyViewRegistry from "web.view_registry";
 import FormView from "web.FormView";
+import ListController from "web.ListController";
+import testUtils from "web.test_utils";
+import legacyViewRegistry from "web.view_registry";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { makeFakeUserService } from "../../helpers/mock_services";
 import { click, legacyExtraNextTick, nextTick } from "../../helpers/utils";
@@ -2227,8 +2228,9 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(2);
 
         serviceRegistry.add("debug", debugService);
+        registry.category("debug").category("view").add("editView", editView);
         testConfig.debug = "1";
-        const mockRPC = async (route, args) => {
+        const mockRPC = async (route) => {
             if (route.includes("check_access_rights")) {
                 return true;
             }
