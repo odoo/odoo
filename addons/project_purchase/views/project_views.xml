@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_project_form_view_inherited" model="ir.ui.view">
+        <field name="name">project.project.view.inherited</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project" />
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_analytic_account_entries']" position="after">
+                <button class="oe_stat_button" type="object" name="action_view_purchase_orders"
+                    icon="fa-shopping-cart" attrs="{'invisible': [('purchase_order_count', '=', 0)]}">
+                    <field string="Purchase Orders" name="purchase_order_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
