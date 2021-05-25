@@ -63,12 +63,14 @@ class SequenceMixin(models.AbstractModel):
                     or format_values['month'] and format_values['month'] != date.month
                 ):
                     raise ValidationError(_(
-                        "The %(date_field)s (%(date)s) doesn't match the %(sequence_field)s (%(sequence)s).\n"
-                        "You might want to clear the field %(sequence_field)s before proceeding with the change of the date.",
+                        "The %(date_field)s (%(date)s) doesn't match the sequence number of the related %(model)s (%(sequence)s)\n"
+                        "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
+                        "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence.",
                         date=format_date(self.env, date),
                         sequence=sequence,
                         date_field=record._fields[record._sequence_date_field]._description_string(self.env),
                         sequence_field=record._fields[record._sequence_field]._description_string(self.env),
+                        model=self.env['ir.model']._get(record._name).display_name,
                     ))
 
     @api.depends(lambda self: [self._sequence_field])
