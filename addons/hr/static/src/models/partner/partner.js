@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { attr, one2one } = require('@mail/model/model_field');
+import { attr, one2one } from '@mail/model/model_field';
 
 export const instancePatchPartner = {
     //--------------------------------------------------------------------------

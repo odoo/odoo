@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { attr } = require('@mail/model/model_field');
+import { attr } from '@mail/model/model_field';
 
 export const instancePatchMessaging = {
     async fetchSnailmailCreditsUrl() {

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-const { one2one } = require('@mail/model/model_field');
+import one2one from '@mail/model/model_field';
 
 export const fieldPatchUser = {
     /**
