@@ -7,6 +7,11 @@
             <field name="groups_id" eval="[(4, ref('group_project_manager'))]"/>
         </record>
 
+        <!-- Groups : Add subtasks and recurring tasks by default -->
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('group_subtask_project')), (4, ref('group_project_recurring_tasks'))]"/>
+        </record>
+
         <!-- Categories -->
         <record id="project_tags_00" model="project.tags">
             <field name="name">Bug</field>
@@ -875,5 +880,94 @@ Send it ASAP, its urgent.</field>
             <field name="progress" eval="35"/>
             <field name="status">at_risk</field>
         </record>
+
+        <!-- Recurring tasks and subtasks -->
+        <record id="project_task_recurrence_1" model="project.task.recurrence">
+            <field name="recurrence_left">3</field>
+            <field name="repeat_unit">month</field>
+            <field name="repeat_on_month">date</field>
+            <field name="repeat_type">after</field>
+            <field name="repeat_number">4</field>
+            <field name="repeat_day">1</field>
+            <field name="repeat_weekday">mon</field>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+        </record>
+        <record id="project_task_recurrence_1" model="project.task.recurrence">
+            <field name="next_recurrence_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+        </record>
+        <record id="project_task_recurrence_2" model="project.task.recurrence">
+            <field name="recurrence_left">20</field>
+            <field name="mon" eval="True"/>
+            <field name="tue" eval="True"/>
+            <field name="wed" eval="True"/>
+            <field name="thu" eval="True"/>
+            <field name="fri" eval="True"/>
+            <field name="repeat_type">after</field>
+            <field name="repeat_number">20</field>
+        </record>
+        <record id="project_task_recurrence_2" model="project.task.recurrence">
+            <field name="next_recurrence_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+        </record>
+        <record id="project_task_27" model="project.task">
+            <field name="sequence">20</field>
+            <field name="planned_hours">20.0</field>
+            <field name="user_ids" eval="False"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="name">Customer review</field>
+            <field name="stage_id" ref="project_stage_1"/>
+            <field name="recurring_task" eval="True"/>
+            <field name="recurrence_id" ref="project_task_recurrence_1"/>
+            <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
+        </record>
+        <record id="project_task_28" model="project.task">
+            <field name="sequence">20</field>
+            <field name="planned_hours">0.25</field>
+            <field name="user_ids" eval="False"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="parent_id" ref="project.project_task_27"/>
+            <field name="name">Daily stand-up meeting - Send minutes</field>
+            <field name="stage_id" ref="project_stage_1"/>
+            <field name="recurring_task" eval="True"/>
+            <field name="recurrence_id" ref="project_task_recurrence_2"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(weeks=-1)"/>
+        </record>
+        <record id="project_task_29" model="project.task">
+            <field name="sequence">20</field>
+            <field name="planned_hours">8.0</field>
+            <field name="user_ids" eval="False"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="parent_id" ref="project.project_task_27"/>
+            <field name="name">Customer Meeting</field>
+            <field name="stage_id" ref="project_stage_1"/>
+        </record>
+        <record id="project_task_30" model="project.task">
+            <field name="sequence">10</field>
+            <field name="planned_hours">2.0</field>
+            <field name="user_ids" eval="False"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="parent_id" ref="project.project_task_29"/>
+            <field name="name">Daily Meetings summary</field>
+            <field name="stage_id" ref="project_stage_1"/>
+        </record>
+        <record id="project_task_31" model="project.task">
+            <field name="sequence">20</field>
+            <field name="planned_hours">2.0</field>
+            <field name="user_ids" eval="False"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="parent_id" ref="project.project_task_29"/>
+            <field name="name">Preparation</field>
+            <field name="stage_id" ref="project_stage_1"/>
+        </record>
+        <record id="project_task_32" model="project.task">
+            <field name="sequence">30</field>
+            <field name="planned_hours">2.0</field>
+            <field name="user_ids" eval="False"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field name="parent_id" ref="project.project_task_29"/>
+            <field name="name">Minutes</field>
+            <field name="stage_id" ref="project_stage_1"/>
+        </record>
+
+        <function model="project.task.recurrence" name="_cron_create_recurring_tasks"/>
     </data>
 </odoo>
