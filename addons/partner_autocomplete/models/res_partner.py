@@ -5,10 +5,8 @@ import base64
 import json
 import logging
 import requests
-import re
 
 from odoo import api, fields, models, tools, _
-
 
 _logger = logging.getLogger(__name__)
 
@@ -185,82 +183,115 @@ class ResPartner(models.Model):
         return res
 
     def _autocomplete_on_demand(self):
-        for rec in self:
-            rec._do_autocomplete()
-
-    def _do_autocomplete(self):
-        self.ensure_one()
-        if self.vat:
-            vat_data = self.read_by_vat(self.vat)
-            if vat_data:
-                rec = vat_data[0]
-                img = self._iap_replace_logo({'logo': rec['logo']})
-                self.write({
-                    'website': self.website if self.website else rec['website'],
-                    'image_1920': self.image_1920 if self.image_1920 else img.get('image_1920')
-                })
-            else:
-                self.message_post_with_view(
-                    'partner_autocomplete.mail_message_partner_vat_notfound',
-                    subtype_id=self.env.ref('mail.mt_note').id)
-        elif not self.vat and not self.email:
-            name_data = self.autocomplete(self.name)
-            matched = False
-            for rec in name_data:
-                if rec['name'] == self.name:
-                    matched = True
-                    img = self._iap_replace_logo({'logo': rec['logo']})
-                    self.write({
-                        'website': self.website if self.website else rec['website'],
-                        'vat': rec['vat'],
-                        'image_1920': self.image_1920 if self.image_1920 else img.get('image_1920'),
-                    })
-                    break
-            if not matched:
-                self.message_post_with_view(
-                    'partner_autocomplete.mail_message_partner_name_notfound',
-                    subtype_id=self.env.ref('mail.mt_note').id)
-        elif self.email and not self.vat:
-            match = re.match(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$', self.email)
-            if match:
-                company_domain = self.email.split('@')[1]
-                mail_data = self.enrich_company(company_domain, self.partner_gid, '')
-                if mail_data.get('error'):
-                    self.env['bus.bus'].sendone(
-                        (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
-                        {'type': 'simple_notification', 'title': _("Warning"),
-                         'message': _("%s", mail_data.get('error_message'))}
-                    )
-                elif mail_data:
-                    img = self._iap_replace_logo({'logo': mail_data.get('logo')})
-                    if mail_data.get('child_ids'):
-                        rec = mail_data['child_ids'][0]
-                        country = self._iap_replace_location_codes(rec.get('country_id'))
-                        result = {
-                            'name': self.name,
-                            'phone': self.phone if self.phone else rec.get('phone'),
-                            'vat': rec.get('vat'),
-                            'street': self.street if self.street else rec.get('street'),
-                            'city': self.city if self.city else rec.get('city'),
-                            'zip': self.zip if self.zip else rec.get('zip'),
-                            'country_id': self.country_id if self.country_id else country.get('id'),
-                            'image_1920': self.image_1920 if self.image_1920 else img.get('image_1920'),
-                            'additional_info': mail_data.get('additional_info')
-                        }
-                        template_values = json.loads(result.get('additional_info'))
-                        template_values['flavor_text'] = _("Partner created by Odoo Partner Autocomplete Service")
-                        self.message_post_with_view(
-                            'iap_mail.enrich_company',
-                            values=template_values,
-                            subtype_id=self.env.ref('mail.mt_note').id,
-                        )
-                        self.write(result)
+        batches = [self[index:index + 50] for index in range(0, len(self), 50)]
+        partners_with_error = self.env['res.partner']
+        error_message = {}
+        for partners in batches:
+            for partner in partners:
+                if partner.is_company:
+                    vat_data = partner.read_by_vat(partner.vat)
+                    name_data = partner.autocomplete(partner.name)
+                    if vat_data:
+                        for data in vat_data:
+                            if data:
+                                img = partner._iap_replace_logo({'logo': data['logo']})
+                                partner.write({
+                                    'website': partner.website if partner.website else data['website'],
+                                    'image_1920': partner.image_1920 if partner.image_1920 else img.get('image_1920'),
+                                    'vat': partner.vat,
+                                    'phone': partner.phone if partner.phone else data.get('phone'),
+                                    'street': partner.street if partner.street else data.get('street'),
+                                    'city': partner.city if partner.city else data.get('city'),
+                                    'zip': partner.zip if partner.zip else data.get('zip'),
+                                })
                     else:
-                        self.message_post_with_view(
-                            'partner_autocomplete.mail_message_partner_mail_data_notfound',
-                            subtype_id=self.env.ref('mail.mt_note').id)
-            else:
-                self.message_post_with_view(
-                    'partner_autocomplete.mail_message_partner_mail_notfound',
-                    subtype_id=self.env.ref('mail.mt_note').id
-                )
+                        matched = False
+                        for data in name_data:
+                            if data['name'] == partner.name:
+                                matched = True
+                                img = partner._iap_replace_logo({'logo': data['logo']})
+                                partner.write({
+                                    'website': partner.website if partner.website else data['website'],
+                                    'vat': partner.vat if partner.vat else data['vat'],
+                                    'image_1920': partner.image_1920 if partner.image_1920 else img.get('image_1920'),
+                                    'phone': partner.phone if partner.phone else data.get('phone'),
+                                    'street': partner.street if partner.street else data.get('street'),
+                                    'city': partner.city if partner.city else data.get('city'),
+                                    'zip': partner.zip if partner.zip else data.get('zip'),
+                                })
+                                break
+                        if not matched and partner.email:
+                            normalized_email = tools.email_normalize(partner.email)
+                            if normalized_email:
+                                company_domain = normalized_email.split('@')[1]
+                                mail_data = partner.enrich_company(company_domain, partner.partner_gid, '')
+                                if mail_data.get('error'):
+                                    partners_with_error |= partner
+                                    error_message.update({'error_message': mail_data.get('error_message')})
+                                elif mail_data and not mail_data.get('error'):
+                                    img = partner._iap_replace_logo({'logo': mail_data.get('logo')})
+                                    if mail_data.get('child_ids'):
+                                        rec = mail_data['child_ids'][0]
+                                        country = partner._iap_replace_location_codes(rec.get('country_id'))
+                                        result = {
+                                            'name': partner.name,
+                                            'phone': partner.phone if partner.phone else rec.get('phone'),
+                                            'vat': partner.vat if partner.vat else rec.get('vat'),
+                                            'street': partner.street if partner.street else rec.get('street'),
+                                            'city': partner.city if partner.city else rec.get('city'),
+                                            'zip': partner.zip if partner.zip else rec.get('zip'),
+                                            'country_id': partner.country_id if partner.country_id else country.get('id'),
+                                            'image_1920': partner.image_1920 if partner.image_1920 else img.get(
+                                                'image_1920'),
+                                            'additional_info': mail_data.get('additional_info')
+                                        }
+                                        template_values = json.loads(result.get('additional_info'))
+                                        template_values['flavor_text'] = _(
+                                            "Partner created by Odoo Partner Autocomplete Service")
+                                        partner.message_post_with_view(
+                                            'iap_mail.enrich_company',
+                                            values=template_values,
+                                            subtype_id=partner.env.ref('mail.mt_note').id,
+                                        )
+                                        partner.write(result)
+                                    elif not mail_data.get('child_ids') and mail_data.get('additional_info'):
+                                        result = {
+                                            'additional_info': mail_data.get('additional_info'),
+                                            'phone': partner.phone if partner.phone else mail_data.get('phone'),
+                                            'vat': partner.vat if partner.vat else mail_data.get('vat'),
+                                            'street': partner.street if partner.street else mail_data.get('street'),
+                                            'city': partner.city if partner.city else mail_data.get('city'),
+                                            'zip': partner.zip if partner.zip else mail_data.get('zip'),
+                                            'country_id': partner.country_id if partner.country_id else mail_data.get('id'),
+                                            'image_1920': partner.image_1920 if partner.image_1920 else img.get('image_1920'),
+                                        }
+                                        template_values = json.loads(result.get('additional_info'))
+                                        template_values['flavor_text'] = _(
+                                            "Partner created by Odoo Partner Autocomplete Service")
+                                        partner.message_post_with_view(
+                                            'iap_mail.enrich_company',
+                                            values=template_values,
+                                            subtype_id=partner.env.ref('mail.mt_note').id,
+                                        )
+                                        partner.write(result)
+                                else:
+                                    partner.message_post_with_view(
+                                        'partner_autocomplete.mail_message_partner_no_data_found',
+                                        subtype_id=partner.env.ref('mail.mt_note').id
+                                    )
+                            else:
+                                partner.message_post_with_view(
+                                    'partner_autocomplete.mail_message_partner_no_data_found',
+                                    subtype_id=partner.env.ref('mail.mt_note').id
+                                )
+                        elif not matched:
+                            partner.message_post_with_view(
+                                'partner_autocomplete.mail_message_partner_no_data_found',
+                                subtype_id=partner.env.ref('mail.mt_note').id
+                            )
+        if partners_with_error:
+            self.env['bus.bus'].sendone(
+                (self.env.cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                {'type': 'simple_notification', 'title': _("Warning"),
+                 'message': _('%s for %s.', error_message.get('error_message'), ', '.join(partners_with_error.mapped('name')))}
+            )
