@@ -364,6 +364,7 @@ class TestMrpOrder(TestMrpCommon):
         production = production_form.save()
         production.action_confirm()
         production.action_assign()
+        production.is_locked = False
         production_form = Form(production)
         # change the quantity producing and the initial demand
         # in the same transaction
