@@ -153,7 +153,7 @@
 <t t-name="web.DropdownMenu" owl="1">
     <div class="btn-group o_dropdown" t-att-class="{ show: state.open }">
         <button type="button"
-            class="o_dropdown_toggler_btn btn btn-secondary"
+            class="o_dropdown_toggler btn btn-secondary"
             t-attf-class="{{ icon || displayCaret || displayChevron ? 'd-flex align-items-center ' : ''}} {{ displayCaret || displayChevron ? 'pr-1 ' : ''}}"
             t-att-aria-expanded="state.open ? 'true' : 'false'"
             tabindex="-1"

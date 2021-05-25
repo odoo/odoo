@@ -3123,7 +3123,7 @@ QUnit.module('fields', {}, function () {
             let filterMenuCss = '.o_search_options > .o_filter_menu';
             let groupByMenuCss = '.o_search_options > .o_group_by_menu';
 
-            await testUtils.dom.click(document.querySelector(`${filterMenuCss} > .o_dropdown_toggler_btn`));
+            await testUtils.dom.click(document.querySelector(`${filterMenuCss} > .o_dropdown_toggler`));
 
             assert.hasClass(document.querySelector(filterMenuCss), 'show');
             assert.isVisible(document.querySelector(`${filterMenuCss} > .dropdown-menu`),
@@ -3132,7 +3132,7 @@ QUnit.module('fields', {}, function () {
             assert.isNotVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
                 "the Group by dropdown menu should be not visible");
 
-            await testUtils.dom.click(document.querySelector(`${groupByMenuCss} > .o_dropdown_toggler_btn`));
+            await testUtils.dom.click(document.querySelector(`${groupByMenuCss} > .o_dropdown_toggler`));
             assert.hasClass(document.querySelector(groupByMenuCss), 'show');
             assert.isVisible(document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
                 "the group by dropdown menu should be visible");

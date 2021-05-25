@@ -72,12 +72,12 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.clickFirst($(webClient.el).find("input.custom-control-input"));
         assert.isVisible(
             $(webClient.el).find(
-                '.o_cp_action_menus button.o_dropdown_toggler_btn:contains("Print")'
+                '.o_cp_action_menus button.o_dropdown_toggler:contains("Print")'
             )[0]
         );
         assert.isVisible(
             $(webClient.el).find(
-                '.o_cp_action_menus button.o_dropdown_toggler_btn:contains("Action")'
+                '.o_cp_action_menus button.o_dropdown_toggler:contains("Action")'
             )[0]
         );
     });
