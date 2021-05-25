@@ -141,6 +141,7 @@ class AccountMove(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)]},
         copy=False,
+        tracking=True,
         default=fields.Date.context_today
     )
     ref = fields.Char(string='Reference', copy=False, tracking=True)
@@ -2072,6 +2073,8 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         if not self.is_invoice(include_receipts=True):
+            if self.payment_id and 'state' in init_values:
+                self.payment_id.message_track(['state'], {self.payment_id.id: init_values})
             return super(AccountMove, self)._track_subtype(init_values)
 
         if 'payment_state' in init_values and self.payment_state == 'paid':
