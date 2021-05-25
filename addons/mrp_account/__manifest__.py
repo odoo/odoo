@@ -24,6 +24,7 @@ If the automated inventory valuation is active, the necessary accounting entries
         "views/product_views.xml",
         "views/mrp_bom_views.xml",
         "views/mrp_production_views.xml",
+        "views/analytic_account_views.xml",
     ],
     'demo': [
         'data/mrp_account_demo.xml',

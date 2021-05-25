@@ -36,6 +36,7 @@ class MrpWorkorder(models.Model):
             'product_uom_id': self.product_id.uom_id.id,
             'company_id': self.company_id.id,
             'ref': self.production_id.name,
+            'category': 'manufacturing_order',
         }
 
     def _create_or_update_analytic_entry(self):
