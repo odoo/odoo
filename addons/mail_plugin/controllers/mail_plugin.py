@@ -111,11 +111,6 @@ class MailPluginController(http.Controller):
         The method returns an array containing the dicts of the matched contacts.
         """
 
-        #In a multi-company environment, the method may return contacts not belonging to the company that the user
-        #is connected to, this may result in the user not being able to view the contact in Odoo, while this may happen
-        #it is not supported for now and users are encouraged to check if they are connected to the correct company before
-        # clicking on a contact.
-
         normalized_email = tools.email_normalize(search_term)
 
         if normalized_email:
@@ -313,7 +308,10 @@ class MailPluginController(http.Controller):
         else:  # no partner found
             partner_response = {}
 
-        return {'partner': partner_response}
+        return {
+            'partner': partner_response,
+            'user_companies': request.env['res.users'].browse(request.uid).company_ids.ids
+        }
 
     def _mail_content_logging_models_whitelist(self):
         """

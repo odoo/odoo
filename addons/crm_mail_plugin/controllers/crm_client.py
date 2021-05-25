@@ -45,9 +45,6 @@ class CrmClient(http.Controller):
         if not partner:
             return {'error': 'partner_not_found'}
 
-        # In a multi-company environment, we will not be able to create a lead if the user is connected to a different
-        # company then the one linked to the contact, this is not supported, and users are encouraged to check if they
-        # are connected to the right company before performing such operation.
         record = request.env['crm.lead'].create({
             'name': html2plaintext(email_subject),
             'partner_id': partner_id,
