@@ -269,6 +269,7 @@
         ],
         'web.tests_assets': [
             'mail/static/src/env/test_env.js',
+            'mail/static/src/model/tests/test_models.js',
             'mail/static/src/tests_main.js',
             'mail/static/src/utils/test_utils.js',
             'mail/static/tests/helpers/mock_models.js',
@@ -319,7 +320,6 @@
             'mail/static/src/components/thread_preview/thread_preview_tests.js',
             'mail/static/src/components/thread_textual_typing_status/thread_textual_typing_status_tests.js',
             'mail/static/src/components/thread_view/thread_view_tests.js',
-            'mail/static/src/model/tests/test_models.js',
             'mail/static/src/model/tests/model_field_command/clear_tests.js',
             'mail/static/src/model/tests/model_field_command/create_tests.js',
             'mail/static/src/model/tests/model_field_command/insert_and_replace_tests.js',
