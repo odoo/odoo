@@ -149,7 +149,7 @@ var BasicActivity = AbstractField.extend({
      */
     scheduleActivity: function () {
         var callback = this._reload.bind(this, { activity: true, thread: true });
-        return this._openActivityForm(false, callback);
+        return this._openActivityForm(false, false, callback);
     },
 
     //------------------------------------------------------------
@@ -212,10 +212,11 @@ var BasicActivity = AbstractField.extend({
     /**
      * @private
      * @param {integer} id
+     * @param {integer} previousTypeID
      * @param {function} callback
      * @return {Promise}
      */
-    _openActivityForm: function (id, callback) {
+    _openActivityForm: function (id, previousTypeID, callback) {
         var action = {
             type: 'ir.actions.act_window',
             name: _t("Schedule Activity"),
@@ -229,6 +230,9 @@ var BasicActivity = AbstractField.extend({
             },
             res_id: id || false,
         };
+        if (previousTypeID) {
+            action.context.default_activity_type_id = previousTypeID;
+        }
         return this.do_action(action, { on_close: callback });
     },
     /**
@@ -307,7 +311,7 @@ var BasicActivity = AbstractField.extend({
     _onEditActivity: function (ev) {
         ev.preventDefault();
         var activityID = $(ev.currentTarget).data('activity-id');
-        return this._openActivityForm(activityID, this._reload.bind(this, { activity: true, thread: true }));
+        return this._openActivityForm(activityID, false, this._reload.bind(this, { activity: true, thread: true }));
     },
     /**
      * @private
@@ -501,7 +505,8 @@ var BasicActivity = AbstractField.extend({
      */
     _onScheduleActivity: function (ev) {
         ev.preventDefault();
-        return this._openActivityForm(false, this._reload.bind(this));
+        const previousTypeID = parseInt(ev.currentTarget.getAttribute('data-previous-type-id'));
+        return this._openActivityForm(false, previousTypeID, this._reload.bind(this, { activity: true, thread: true }));
     },
 
     /**
@@ -721,6 +726,9 @@ var KanbanActivity = BasicActivity.extend({
                 selection: self.selection,
                 records: _.groupBy(setDelayLabel(activities), 'state'),
                 session: session,
+                typeId: activities.length && self.viewType === 'default'
+                    ? activities[0].activity_type_id[0]
+                    : false,
                 widget: self,
             }));
             self._bindOnUploadAction(activities);
