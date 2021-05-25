@@ -396,6 +396,7 @@ class TestMrpOrder(TestMrpCommon):
         production = production_form.save()
         production.action_confirm()
         production.action_assign()
+        production.is_locked = False
         production_form = Form(production)
         # change the quantity producing and the initial demand
         # in the same transaction
@@ -1027,6 +1028,7 @@ class TestMrpOrder(TestMrpCommon):
 
         mo.bom_id.consumption = 'flexible'  # Because we'll over-consume with a product not defined in the BOM
         mo.action_assign()
+        mo.is_locked = False
 
         mo_form = Form(mo)
         mo_form.qty_producing = 3
