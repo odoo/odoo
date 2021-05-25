@@ -40,6 +40,8 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FOOD</field>
             <field name="can_be_expensed" eval="True"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/food.png"/>
         </record>
         <record id="trans_expense_product" model="product.product">
@@ -49,6 +51,8 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">TRANS</field>
             <field name="can_be_expensed" eval="True"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/transport.png"/>
         </record>
         <record id="mileage_expense_product" model="product.product">
@@ -58,6 +62,8 @@
             <field name="uom_po_id" ref="uom.product_uom_km"/>
             <field name="default_code">MIL</field>
             <field name="can_be_expensed" eval="True"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/mileage.png"/>
         </record>
         <record id="accomodation_expense_product" model="product.product">
@@ -67,6 +73,8 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">ACC</field>
             <field name="can_be_expensed" eval="True"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/accomodation.png"/>
         </record>
         <record id="allowance_expense_product" model="product.product">
@@ -76,6 +84,8 @@
             <field name="uom_po_id" ref="uom.product_uom_day"/>
             <field name="default_code">DAL</field>
             <field name="can_be_expensed" eval="True"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/allowance.png"/>
         </record>
         <record id="other_expense_product" model="product.product">
@@ -85,6 +95,8 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">OTHER</field>
             <field name="can_be_expensed" eval="True"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
             <field name="image_1920" type="base64" file="hr_expense/static/img/other.png"/>
         </record>
 
