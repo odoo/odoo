@@ -146,8 +146,10 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                                           body: this.env._t(
                                               'There are SN/Lots associated in the loaded sale order lines, do you want to use these SN/Lots?'
                                           ),
+                                          confirmText: this.env._t('Yes'),
+                                          cancelText: this.env._t('No'),
                                       })
-                                    : useLoadedLots;
+                                    : { confirmed: useLoadedLots };
                             useLoadedLots = confirmed;
                             if (useLoadedLots) {
                                 new_line.setPackLotLines({
