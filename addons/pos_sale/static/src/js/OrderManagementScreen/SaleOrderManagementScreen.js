@@ -116,6 +116,16 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
 
                 }
 
+                /**
+                 * This variable will have 3 values, `undefined | false | true`.
+                 * Initially, it is `undefined`. When looping thru each sale.order.line,
+                 * when a line comes with lots (`.lot_names`), we use these lot names
+                 * as the pack lot of the generated pos.order.line. We ask the user
+                 * if he wants to use the lots that come with the sale.order.lines to
+                 * be used on the corresponding pos.order.line only once. So, once the
+                 * `useLoadedLots` becomes true, it will be true for the succeeding lines,
+                 * and vice versa.
+                 */
                 let useLoadedLots;
 
                 for (var i = 0; i < lines.length; i++) {
@@ -136,27 +146,27 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
 
                     if (
                         new_line.get_product().tracking !== 'none' &&
-                        (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots)
+                        (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots) &&
+                        line.lot_names.length > 0
                     ) {
-                        if (line.lot_names.length > 0) {
-                            const { confirmed } =
-                                useLoadedLots === undefined
-                                    ? await this.showPopup('ConfirmPopup', {
-                                          title: this.env._t('Do you want to load the SN/Lots?'),
-                                          body: this.env._t(
-                                              'There are SN/Lots associated in the loaded sale order lines, do you want to use these SN/Lots?'
-                                          ),
-                                          confirmText: this.env._t('Yes'),
-                                          cancelText: this.env._t('No'),
-                                      })
-                                    : { confirmed: useLoadedLots };
-                            useLoadedLots = confirmed;
-                            if (useLoadedLots) {
-                                new_line.setPackLotLines({
-                                    modifiedPackLotLines: [],
-                                    newPackLotLines: (line.lot_names || []).map((name) => ({ lot_name: name })),
-                                });
-                            }
+                        // Ask once when `useLoadedLots` is undefined, then reuse it's value on the succeeding lines.
+                        const { confirmed } =
+                            useLoadedLots === undefined
+                                ? await this.showPopup('ConfirmPopup', {
+                                      title: this.env._t('SN/Lots Loading'),
+                                      body: this.env._t(
+                                          'Do you want to load the SN/Lots linked to the Sales Order?'
+                                      ),
+                                      confirmText: this.env._t('Yes'),
+                                      cancelText: this.env._t('No'),
+                                  })
+                                : { confirmed: useLoadedLots };
+                        useLoadedLots = confirmed;
+                        if (useLoadedLots) {
+                            new_line.setPackLotLines({
+                                modifiedPackLotLines: [],
+                                newPackLotLines: (line.lot_names || []).map((name) => ({ lot_name: name })),
+                            });
                         }
                     }
                     new_line.setQuantityFromSOL(line);
