@@ -1800,7 +1800,7 @@ QUnit.module('Views', {
             "create button should be invisible");
         assert.isVisible($(webClient.el).find('.o_list_button_save'), "save button should be visible");
 
-        await testUtils.dom.click($(webClient.el).find('.o_dropdown_toggler_btn:contains("Group By")'));
+        await testUtils.dom.click($(webClient.el).find('.o_dropdown_toggler:contains("Group By")'));
         await testUtils.dom.click($(webClient.el).find('.o_group_by_menu .o_menu_item a:contains("candle")'));
 
         assert.isNotVisible($(webClient.el).find('.o_list_button_add'), "create button should be invisible");
