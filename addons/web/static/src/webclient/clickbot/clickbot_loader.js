@@ -9,7 +9,7 @@ export default async function startClickEverywhere(xmlId, appsMenusOnly) {
     window.clickEverywhere(xmlId, appsMenusOnly);
 }
 
-function runClickTestItem(env) {
+function runClickTestItem({ env }) {
     return {
         type: "item",
         description: env._t("Run Click Everywhere Test"),
