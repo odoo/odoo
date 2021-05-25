@@ -915,7 +915,7 @@ class HolidaysRequest(models.Model):
         # Post a second message, more verbose than the tracking message
         for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
             holiday.message_post(
-                body=_('Your %s planned on %s has been accepted' % (holiday.holiday_status_id.display_name, holiday.date_from)),
+                body=_('Your %s planned on %s has been accepted') % (holiday.holiday_status_id.display_name, holiday.date_from),
                 partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
