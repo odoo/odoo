@@ -1419,8 +1419,9 @@ class Task(models.Model):
 
     @api.constrains('recurring_task')
     def _check_recurring_task(self):
-        if self.filtered(lambda task: task.parent_id and task.recurring_task):
-            raise ValidationError(_("A sub-task cannot be a recurring task. Please consider making its parent task, a recurring task."))
+        # Deprecated method
+        # TODO : Remove me in master
+        return
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
