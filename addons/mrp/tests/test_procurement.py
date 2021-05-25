@@ -467,6 +467,7 @@ class TestProcurement(TestMrpCommon):
 
         self.assertEqual(len(mo), 1, "Manufacture order was not automatically created")
         mo.action_assign()
+        mo.is_locked = False
         self.assertEqual(mo.move_raw_ids.reserved_availability, 0, "No components should be reserved yet")
         self.assertEqual(mo.product_qty, 15, "Quantity to produce should be picking demand + reordering rule max qty")
 
