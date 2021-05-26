@@ -489,7 +489,7 @@ class IrActionsReport(models.Model):
         report_obj = self.env['ir.actions.report']
         conditions = [('report_name', '=', report_name)]
         context = self.env['res.users'].context_get()
-        return report_obj.with_context(context).search(conditions, limit=1)
+        return report_obj.with_context(**context).search(conditions, limit=1)
 
     @api.model
     def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0, quiet=1):
