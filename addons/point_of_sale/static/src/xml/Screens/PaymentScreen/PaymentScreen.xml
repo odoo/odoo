@@ -29,7 +29,7 @@
                         <div class="paymentmethods-container">
                             <PaymentScreenPaymentLines paymentLines="paymentLines" />
                             <div class="paymentmethods">
-                                <t t-foreach="env.pos.payment_methods" t-as="paymentMethod"
+                                <t t-foreach="payment_methods_from_config" t-as="paymentMethod"
                                    t-key="paymentMethod.id">
                                     <PaymentMethodButton paymentMethod="paymentMethod" />
                                 </t>
