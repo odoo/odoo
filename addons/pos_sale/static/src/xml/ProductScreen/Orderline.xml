@@ -11,7 +11,7 @@
                 <table t-if="props.line.get_sale_order().details" class="sale-order-info">
                     <t t-foreach='props.line.get_sale_order().details' t-as='line'>
                         <tr>
-                            <td><t t-esc="line['product_uom_qty']"/></td>
+                            <td><t t-esc="line['product_uom_qty']"/>x</td>
                             <td style="max-width: 275px;">
                                 <t t-esc="line['product_name']" />
                             </td>

@@ -7,7 +7,7 @@
             <div class="pos-receipt-left-padding" t-if="line.productDetails">
                 <table class="sale-order-info">
                     <tr t-foreach='line.productDetails' t-as='line'>
-                        <td><t t-esc="line['product_uom_qty']" /></td>
+                        <td><t t-esc="line['product_uom_qty']" />x</td>
                         <td style="max-width: 200px;">
                             <t t-esc="line['product_name']" />
                         </td>
