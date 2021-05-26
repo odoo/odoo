@@ -18,16 +18,6 @@ function factory(dependencies) {
 
         /**
          * @static
-         * @param {mail.thread} thread
-         * @param {string} threadStringifiedDomain
-         */
-        static checkAll(thread, threadStringifiedDomain) {
-            const threadCache = thread.cache(threadStringifiedDomain);
-            threadCache.update({ checkedMessages: link(threadCache.messages) });
-        }
-
-        /**
-         * @static
          * @param {Object} data
          * @return {Object}
          */
@@ -98,9 +88,6 @@ function factory(dependencies) {
                 }
                 data2.originThread = insert(originThreadData);
             }
-            if ('moderation_status' in data) {
-                data2.moderation_status = data.moderation_status;
-            }
             if ('needaction_partner_ids' in data) {
                 data2.isNeedaction = data.needaction_partner_ids.includes(this.env.messaging.currentPartner.id);
             }
@@ -166,37 +153,15 @@ function factory(dependencies) {
         }
 
         /**
-         * Applies the moderation `decision` on the provided messages.
-         *
-         * @static
-         * @param {mail.message[]} messages
-         * @param {string} decision: 'accept', 'allow', ban', 'discard', or 'reject'
-         * @param {Object|undefined} [kwargs] optional data to pass on
-         *  message moderation. This is provided when rejecting the messages
-         *  for which title and comment give reason(s) for reject.
-         * @param {string} [kwargs.title]
-         * @param {string} [kwargs.comment]
-         */
-        static async moderate(messages, decision, kwargs) {
-            const messageIds = messages.map(message => message.id);
-            await this.env.services.rpc({
-                model: 'mail.message',
-                method: 'moderate',
-                args: [messageIds, decision],
-                kwargs: kwargs,
-            });
-        }
-        /**
          * Performs the `message_fetch` RPC on `mail.message`.
          *
          * @static
          * @param {Array[]} domain
          * @param {integer} [limit]
-         * @param {integer[]} [moderated_channel_ids]
          * @param {Object} [context]
          * @returns {mail.message[]}
          */
-        static async performRpcMessageFetch(domain, limit, moderated_channel_ids, context) {
+        static async performRpcMessageFetch(domain, limit, context) {
             const messagesData = await this.env.services.rpc({
                 model: 'mail.message',
                 method: 'message_fetch',
@@ -204,7 +169,6 @@ function factory(dependencies) {
                     context,
                     domain,
                     limit,
-                    moderated_channel_ids,
                 },
             }, { shadow: true });
             const messages = this.env.models['mail.message'].insert(messagesData.map(
@@ -228,16 +192,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @static
-         * @param {mail.thread} thread
-         * @param {string} threadStringifiedDomain
-         */
-        static uncheckAll(thread, threadStringifiedDomain) {
-            const threadCache = thread.cache(threadStringifiedDomain);
-            threadCache.update({ checkedMessages: unlink(threadCache.messages) });
-        }
-
-        /**
          * Unstar all starred messages of current user.
          */
         static async unstarAll() {
@@ -245,22 +199,6 @@ function factory(dependencies) {
                 model: 'mail.message',
                 method: 'unstar_all',
             });
-        }
-
-        /**
-         * @param {mail.thread} thread
-         * @param {string} threadStringifiedDomain
-         * @returns {boolean}
-         */
-        isChecked(thread, threadStringifiedDomain) {
-            // aku todo
-            const relatedCheckedThreadCache = this.checkedThreadCaches.find(
-                threadCache => (
-                    threadCache.thread === thread &&
-                    threadCache.stringifiedDomain === threadStringifiedDomain
-                )
-            );
-            return !!relatedCheckedThreadCache;
         }
 
         /**
@@ -273,20 +211,6 @@ function factory(dependencies) {
                 method: 'set_message_done',
                 args: [[this.id]]
             }));
-        }
-
-        /**
-         * Applies the moderation `decision` on this message.
-         *
-         * @param {string} decision: 'accept', 'allow', ban', 'discard', or 'reject'
-         * @param {Object|undefined} [kwargs] optional data to pass on
-         *  message moderation. This is provided when rejecting the messages
-         *  for which title and comment give reason(s) for reject.
-         * @param {string} [kwargs.title]
-         * @param {string} [kwargs.comment]
-         */
-        async moderate(decision, kwargs) {
-            await this.async(() => this.constructor.moderate([this], decision, kwargs));
         }
 
         /**
@@ -316,22 +240,6 @@ function factory(dependencies) {
          */
         replyTo() {
             this.env.messaging.discuss.replyToMessage(this);
-        }
-
-        /**
-         * Toggle check state of this message in the context of the provided
-         * thread and its stringifiedDomain.
-         *
-         * @param {mail.thread} thread
-         * @param {string} threadStringifiedDomain
-         */
-        toggleCheck(thread, threadStringifiedDomain) {
-            const threadCache = thread.cache(threadStringifiedDomain);
-            if (threadCache.checkedMessages.includes(this)) {
-                threadCache.update({ checkedMessages: unlink(this) });
-            } else {
-                threadCache.update({ checkedMessages: link(this) });
-            }
         }
 
         /**
@@ -373,14 +281,6 @@ function factory(dependencies) {
             return replace(this.notifications.filter(notifications =>
                 ['exception', 'bounce'].includes(notifications.notification_status)
             ));
-        }
-
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeHasCheckbox() {
-            return this.isModeratedByCurrentPartner;
         }
 
         /**
@@ -454,17 +354,6 @@ function factory(dependencies) {
             );
         }
 
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsModeratedByCurrentPartner() {
-            return (
-                this.moderation_status === 'pending_moderation' &&
-                this.originThread &&
-                this.originThread.isModeratedByCurrentPartner
-            );
-        }
         /**
          * @private
          * @returns {boolean}
@@ -555,9 +444,6 @@ function factory(dependencies) {
             if (this.isStarred) {
                 threads.push(this.env.messaging.starred);
             }
-            if (this.env.messaging.moderation && this.isModeratedByCurrentPartner) {
-                threads.push(this.env.messaging.moderation);
-            }
             if (this.originThread) {
                 threads.push(this.originThread);
             }
@@ -582,10 +468,6 @@ function factory(dependencies) {
         body: attr({
             default: "",
         }),
-        checkedThreadCaches: many2many('mail.thread_cache', {
-            inverse: 'checkedMessages',
-            readonly: true,
-        }),
         /**
          * Determines the date of the message as a moment object.
          */
@@ -603,11 +485,6 @@ function factory(dependencies) {
         failureNotifications: one2many('mail.notification', {
             compute: '_computeFailureNotifications',
             dependencies: ['notificationsStatus'],
-        }),
-        hasCheckbox: attr({
-            compute: '_computeHasCheckbox',
-            default: false,
-            dependencies: ['isModeratedByCurrentPartner'],
         }),
         id: attr({
             required: true,
@@ -660,15 +537,6 @@ function factory(dependencies) {
                 'body',
                 'subtype_description',
                 'tracking_value_ids',
-            ],
-        }),
-        isModeratedByCurrentPartner: attr({
-            compute: '_computeIsModeratedByCurrentPartner',
-            default: false,
-            dependencies: [
-                'moderation_status',
-                'originThread',
-                'originThreadIsModeratedByCurrentPartner',
             ],
         }),
         /**
@@ -753,13 +621,9 @@ function factory(dependencies) {
         messagingInbox: many2one('mail.thread', {
             related: 'messaging.inbox',
         }),
-        messagingModeration: many2one('mail.thread', {
-            related: 'messaging.moderation',
-        }),
         messagingStarred: many2one('mail.thread', {
             related: 'messaging.starred',
         }),
-        moderation_status: attr(),
         notifications: one2many('mail.notification', {
             inverse: 'message',
             isCausal: true,
@@ -773,10 +637,6 @@ function factory(dependencies) {
          */
         originThread: many2one('mail.thread', {
             inverse: 'messagesAsOriginThread',
-        }),
-        originThreadIsModeratedByCurrentPartner: attr({
-            default: false,
-            related: 'originThread.isModeratedByCurrentPartner',
         }),
         /**
          * Serves as compute dependency.
@@ -810,12 +670,10 @@ function factory(dependencies) {
             compute: '_computeThreads',
             dependencies: [
                 'isHistory',
-                'isModeratedByCurrentPartner',
                 'isNeedaction',
                 'isStarred',
                 'messagingHistory',
                 'messagingInbox',
-                'messagingModeration',
                 'messagingStarred',
                 'originThread',
             ],

@@ -162,9 +162,6 @@ function factory(dependencies) {
             if ('is_minimized' in data && 'state' in data) {
                 data2.serverFoldState = data.is_minimized ? data.state : 'closed';
             }
-            if ('is_moderator' in data) {
-                data2.is_moderator = data.is_moderator;
-            }
             if ('is_pinned' in data) {
                 data2.isServerPinned = data.is_pinned;
             }
@@ -183,12 +180,6 @@ function factory(dependencies) {
                     res_id: data2.id,
                 });
                 data2.serverLastMessage = insert(messageData);
-            }
-            if ('mass_mailing' in data) {
-                data2.mass_mailing = data.mass_mailing;
-            }
-            if ('moderation' in data) {
-                data2.moderation = data.moderation;
             }
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
@@ -1205,20 +1196,6 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeIsModeratedByCurrentPartner() {
-            if (!this.messaging) {
-                return false;
-            }
-            if (!this.messaging.currentPartner) {
-                return false;
-            }
-            return this.moderators.includes(this.env.messaging.currentPartner);
-        }
-
-        /**
-         * @private
-         * @returns {boolean}
-         */
         _computeIsPinned() {
             return this.isPendingPinned !== undefined ? this.isPendingPinned : this.isServerPinned;
         }
@@ -1854,13 +1831,6 @@ function factory(dependencies) {
         isLoadingAttachments: attr({
             default: false,
         }),
-        isModeratedByCurrentPartner: attr({
-            compute: '_computeIsModeratedByCurrentPartner',
-            dependencies: [
-                'messagingCurrentPartner',
-                'moderators',
-            ],
-        }),
         /**
          * Determine if there is a pending pin state change, which is a change
          * of pin state requested by the client but not yet confirmed by the
@@ -1894,9 +1864,6 @@ function factory(dependencies) {
             default: false,
         }),
         isTemporary: attr({
-            default: false,
-        }),
-        is_moderator: attr({
             default: false,
         }),
         lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
@@ -2032,15 +1999,6 @@ function factory(dependencies) {
             required: true,
         }),
         model_name: attr(),
-        moderation: attr({
-            default: false,
-        }),
-        /**
-         * Partners that are moderating this thread (only applies to channels).
-         */
-        moderators: many2many('mail.partner', {
-            inverse: 'moderatedChannels',
-        }),
         moduleIcon: attr(),
         name: attr(),
         /**

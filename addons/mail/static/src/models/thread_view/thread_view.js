@@ -198,9 +198,6 @@ function factory(dependencies) {
     }
 
     ThreadView.fields = {
-        checkedMessages: many2many('mail.message', {
-            related: 'threadCache.checkedMessages',
-        }),
         /**
          * List of component hints. Hints contain information that help
          * components make UI/UX decisions based on their UI state.
@@ -430,9 +427,6 @@ function factory(dependencies) {
         threadViewer: one2one('mail.thread_viewer', {
             inverse: 'threadView',
             readonly: true,
-        }),
-        uncheckedMessages: many2many('mail.message', {
-            related: 'threadCache.uncheckedMessages',
         }),
     };
 

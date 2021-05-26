@@ -135,7 +135,6 @@ export class ThreadView extends Component {
             threadCacheIsLoaded: threadCache && threadCache.isLoaded,
             threadCacheHasLoadingFailed: threadCache && threadCache.hasLoadingFailed,
             threadIsTemporary: thread && thread.isTemporary,
-            threadMassMailing: thread && thread.mass_mailing,
             threadModel: thread && thread.model,
             threadTextInputSendShortcuts: thread && thread.textInputSendShortcuts || [],
             threadView,
@@ -167,7 +166,6 @@ Object.assign(ThreadView, {
     defaultProps: {
         composerAttachmentsDetailsMode: 'auto',
         hasComposer: false,
-        hasMessageCheckbox: false,
         hasSquashCloseMessages: false,
         haveMessagesMarkAsReadIcon: false,
         haveMessagesReplyIcon: false,
@@ -207,7 +205,6 @@ Object.assign(ThreadView, {
             type: Boolean,
             optional: true,
         },
-        hasMessageCheckbox: Boolean,
         hasScrollAdjust: {
             type: Boolean,
             optional: true,
