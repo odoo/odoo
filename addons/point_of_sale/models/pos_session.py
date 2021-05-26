@@ -1208,16 +1208,16 @@ class PosSession(models.Model):
 
     def _exec_meta(self, model, meta, data):
         meta_method = getattr(self, meta["method"])
-        result = meta_method(**{name: data[model] for (name, model) in meta["requires"]}) or dict()
-        return {"model": model, **result}
+        result = meta_method(**{name: data.get(model, None) for (name, model) in meta["requires"]})
+        return result and {"model": model, **result}
 
     def _exec_load(self, model, load, meta_result, data):
         load_method = getattr(self, load["method"])
-        return load_method(model, meta_result, **{name: data[model] for (name, model) in load["requires"]})
+        return load_method(model, meta_result, **{name: data.get(model, None) for (name, model) in load["requires"]})
 
     def _exec_post(self, post, result, data):
         post_method = getattr(self, post["method"])
-        post_method(result, **{name: data[model] for (name, model) in post["requires"]})
+        post_method(result, **{name: data.get(model, None) for (name, model) in post["requires"]})
 
     def load_model(self, model, data, meta_result=False, load=False, post=False):
         _loader = pos_loader._loaders[model]
@@ -1249,11 +1249,15 @@ class PosSession(models.Model):
         field_defs = {}
         loading_metas = {}
         for model in pos_loader._sorted_models:
-            loaded_records, ordered_ids, meta_result = self.load_model(model, data)
+            load_model_results = self.load_model(model, data)
+            if not load_model_results:
+                continue
+            loaded_records, ordered_ids, meta_result = load_model_results
             data[model] = loaded_records
-            loading_metas[model] = meta_result
             if ordered_ids:
                 sorted_ids[model] = ordered_ids
+            loading_metas[model] = meta_result
+            field_defs[model] = self.env[model].fields_get(meta_result.get('fields', []))
             logger.info(f"Finished loading '{model}' model.")
 
         for model in ["pos.order", "pos.order.line", "pos.payment", "pos.pack.operation.lot"]:
