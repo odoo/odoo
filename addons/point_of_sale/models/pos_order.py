@@ -166,8 +166,7 @@ class PosOrder(models.Model):
         order_bank_statement_lines= self.env['pos.payment'].search([('pos_order_id', '=', order.id)])
         order_bank_statement_lines.unlink()
         for payments in pos_order['statement_ids']:
-            if not float_is_zero(payments[2]['amount'], precision_digits=prec_acc):
-                order.add_payment(self._payment_fields(order, payments[2]))
+            order.add_payment(self._payment_fields(order, payments[2]))
 
         order.amount_paid = sum(order.payment_ids.mapped('amount'))
 
