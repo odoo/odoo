@@ -748,10 +748,14 @@ class Channel(models.Model):
                     state = 'folded'
                 else:
                     state = 'open'
-            session_state.write({
-                'fold_state': state,
-                'is_minimized': bool(state != 'closed'),
-            })
+            is_minimized = bool(state != 'closed')
+            vals = {}
+            if session_state.fold_state != state:
+                vals['fold_state'] = state
+            if session_state.is_minimized != is_minimized:
+                vals['is_minimized'] = is_minimized
+            if vals:
+                session_state.write(vals)
             self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), session_state.channel_id.channel_info()[0])
 
     @api.model
