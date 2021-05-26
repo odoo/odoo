@@ -4,13 +4,23 @@
 import psycopg2
 
 from odoo import api
-from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.test_mail.tests.common import TestMailCommon
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools import mute_logger
 
 
+@tagged('mail_mail')
 class TestMailMail(TestMailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailMail, cls).setUpClass()
+        cls._init_mail_gateway()
+
+        cls.test_record = cls.env['mail.test.gateway'].with_context(cls._test_context).create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com',
+        }).with_context({})
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_message_notify_from_mail_mail(self):
@@ -24,6 +34,45 @@ class TestMailMail(TestMailCommon):
             mail.send()
         self.assertSentEmail(mail.env.user.partner_id, ['test@example.com'])
         self.assertEqual(len(self._mails), 1)
+
+    def test_mail_mail_return_path(self):
+        # mail without thread-enabled record
+        base_values = {
+            'body_html': '<p>Test</p>',
+            'email_to': 'test@example.com',
+        }
+
+        mail = self.env['mail.mail'].create(base_values)
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s+%d@%s' % (self.alias_bounce, mail.id, self.alias_domain))
+
+        # mail on thread-enabled record
+        mail = self.env['mail.mail'].create(dict(base_values, **{
+            'model': self.test_record._name,
+            'res_id': self.test_record.id,
+        }))
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s+%d-%s-%s@%s' % (self.alias_bounce, mail.id, self.test_record._name, self.test_record.id, self.alias_domain))
+
+        # force static addressing on bounce alias
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', True)
+
+        # mail without thread-enabled record
+        mail = self.env['mail.mail'].create(base_values)
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s@%s' % (self.alias_bounce, self.alias_domain))
+
+        # mail on thread-enabled record
+        mail = self.env['mail.mail'].create(dict(base_values, **{
+            'model': self.test_record._name,
+            'res_id': self.test_record.id,
+        }))
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(self._mails[0]['headers']['Return-Path'], '%s@%s' % (self.alias_bounce, self.alias_domain))
 
 
 class TestMailMailRace(common.TransactionCase):
