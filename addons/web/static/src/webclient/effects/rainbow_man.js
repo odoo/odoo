@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "../../core/browser/browser";
+import { useEffect } from "../../core/effect_hook";
 
 const { Component, hooks } = owl;
 
@@ -28,15 +29,14 @@ export class RainbowMan extends Component {
         const fadeout = "fadeout" in this.props ? this.props.fadeout : "medium";
         const delay = fadeout ? RainbowMan.rainbowFadeouts[fadeout] : false;
         this.delay = typeof delay === "number" ? delay : false;
-        hooks.onMounted(() => {
-            if (this.delay !== false) {
-                browser.setTimeout(() => {
-                    if (this.__owl__.status !== 5 /* DESTROYED */) {
-                        this.el.classList.add("o_reward_fading");
-                    }
+        if (this.delay !== false) {
+            useEffect(() => {
+                const timeout = browser.setTimeout(() => {
+                    this.el.classList.add("o_reward_fading");
                 }, this.delay);
-            }
-        });
+                return () => browser.clearTimeout(timeout);
+            }, () => []);
+        }
     }
 
     onAnimationEnd(ev) {

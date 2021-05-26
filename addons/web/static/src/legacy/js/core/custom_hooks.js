@@ -1,8 +1,8 @@
-odoo.define('web.custom_hooks', function () {
+odoo.define('web.custom_hooks', function (require) {
     "use strict";
 
-    const { Component, hooks } = owl;
-    const { onMounted, onPatched, onWillUnmount } = hooks;
+    const { Component } = owl;
+    const { useEffect } = require("@web/core/effect_hook");
 
     /**
      * Focus a given selector as soon as it appears in the DOM and if it was not
@@ -20,22 +20,19 @@ odoo.define('web.custom_hooks', function () {
             return () => {};
         }
         const selector = params.selector || '[autofocus]';
-        let target = null;
-        function autofocus() {
-            const prevTarget = target;
-            target = comp.el.querySelector(selector);
-            if (target && target !== prevTarget) {
+        let forceFocusCount = 0;
+        useEffect(function autofocus(target) {
+            if (target) {
                 target.focus();
-                if (['INPUT', 'TEXTAREA'].includes(target.tagName)) {
-                    target.selectionStart = target.selectionEnd = target.value.length;
+                if (["INPUT", "TEXTAREA"].includes(target.tagName)) {
+                    const inputEl = target;
+                    inputEl.selectionStart = inputEl.selectionEnd = inputEl.value.length;
                 }
             }
-        }
-        onMounted(autofocus);
-        onPatched(autofocus);
+        }, () => [comp.el.querySelector(selector), forceFocusCount]);
 
         return function focusOnUpdate() {
-            target = null;
+            forceFocusCount++; // force the effect to rerun on next patch
         };
     }
 
@@ -103,12 +100,12 @@ odoo.define('web.custom_hooks', function () {
         } else {
             boundHandler = handler.bind(comp);
         }
-        onMounted(function () {
+        useEffect(() => {
             comp.el.addEventListener(eventName, boundHandler, addEventListenerOptions);
-        });
-        onWillUnmount(function () {
-            comp.el.removeEventListener(eventName, boundHandler, addEventListenerOptions);
-        });
+            return () => {
+                comp.el.removeEventListener(eventName, boundHandler, addEventListenerOptions);
+            };
+        }, () => []);
     }
 
     return {

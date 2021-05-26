@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
-const { onMounted, onPatched, useComponent } = owl.hooks;
+import { useEffect } from "./effect_hook";
+
+const { useComponent } = owl.hooks;
 
 // -----------------------------------------------------------------------------
 // Hook functions
@@ -23,21 +25,18 @@ export function useAutofocus(params = {}) {
         return () => {};
     }
     const selector = params.selector || "[autofocus]";
-    let target = null;
-    function autofocus() {
-        const prevTarget = target;
-        target = comp.el.querySelector(selector);
-        if (target && target !== prevTarget) {
+    let forceFocusCount = 0;
+    useEffect(function autofocus(target) {
+        if (target) {
             target.focus();
             if (["INPUT", "TEXTAREA"].includes(target.tagName)) {
                 const inputEl = target;
                 inputEl.selectionStart = inputEl.selectionEnd = inputEl.value.length;
             }
         }
-    }
-    onMounted(autofocus);
-    onPatched(autofocus);
+    }, () => [comp.el.querySelector(selector), forceFocusCount]);
+
     return function focusOnUpdate() {
-        target = null;
+        forceFocusCount++; // force the effect to rerun on next patch
     };
 }

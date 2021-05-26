@@ -2,12 +2,13 @@
 
 import { useBus } from "../bus_hook";
 import { useService } from "../service_hook";
+import { useEffect } from "../effect_hook";
 import { scrollTo } from "../utils/scrolling";
 import { ParentClosingMode } from "./dropdown_item";
 
 const { Component, core, hooks, useState, QWeb } = owl;
 const { EventBus } = core;
-const { useExternalListener, onMounted, onPatched, onWillStart } = hooks;
+const { useExternalListener, onWillStart } = hooks;
 
 /**
  * @typedef DropdownState
@@ -52,11 +53,11 @@ export class Dropdown extends Component {
                 this.close();
             }
         });
-        onMounted(() => {
+        useEffect(() => {
             Promise.resolve().then(() => {
                 this.myActiveEl = this.ui.activeElement;
             });
-        });
+        }, () => []);
 
         // Set up key navigation -----------------------------------------------
         this.hotkeyService = useService("hotkey");
@@ -124,8 +125,7 @@ export class Dropdown extends Component {
             }
         }
 
-        onMounted(autoSubscribeKeynav.bind(this));
-        onPatched(autoSubscribeKeynav.bind(this));
+        useEffect(autoSubscribeKeynav.bind(this));
     }
 
     // -------------------------------------------------------------------------

@@ -2,10 +2,12 @@
 
 import { registry } from "../core/registry";
 import { useService } from "../core/service_hook";
+import { useBus } from "../core/bus_hook";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
+import { useEffect } from "@web/core/effect_hook";
 
-const { Component, hooks } = owl;
+const { Component } = owl;
 const mainComponentRegistry = registry.category("main_components");
 
 export class WebClient extends Component {
@@ -18,15 +20,15 @@ export class WebClient extends Component {
         useService("legacy_service_provider");
         this.Components = mainComponentRegistry.getEntries();
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
-        hooks.onMounted(() => {
-            this.env.bus.on("ROUTE_CHANGE", this, this.loadRouterState);
-            this.env.bus.on("ACTION_MANAGER:UI-UPDATED", this, (mode) => {
-                if (mode !== "new") {
-                    this.el.classList.toggle("o_fullscreen", mode === "fullscreen");
-                }
-            });
-            this.loadRouterState();
+        useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
+        useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {
+            if (mode !== "new") {
+                this.el.classList.toggle("o_fullscreen", mode === "fullscreen");
+            }
         });
+        useEffect(() => {
+            this.loadRouterState();
+        }, () => []);
     }
 
     mounted() {

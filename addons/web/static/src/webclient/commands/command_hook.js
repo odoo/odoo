@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
 import { useService } from "../../core/service_hook";
-
-const { hooks } = owl;
-const { onMounted, onWillUnmount } = hooks;
+import { useEffect } from "../../core/effect_hook";
 
 /**
  * @typedef {import("./command_service").Command} Command
@@ -17,11 +15,8 @@ const { onMounted, onWillUnmount } = hooks;
  */
 export function useCommand(command) {
     const commandService = useService("command");
-    let token;
-    onMounted(() => {
-        token = commandService.registerCommand(command);
-    });
-    onWillUnmount(() => {
-        commandService.unregisterCommand(token);
-    });
+    useEffect(() => {
+        const token = commandService.registerCommand(command);
+        return () => commandService.unregisterCommand(token);
+    }, () => []);
 }

@@ -2,11 +2,12 @@
 
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "../../core/autofocus_hook";
+import { useEffect } from "../../core/effect_hook";
 import { useHotkey } from "../../core/hotkey_hook";
 import { scrollTo } from "../../core/utils/scrolling";
 
 const { Component, hooks } = owl;
-const { onPatched, useState } = hooks;
+const { useState } = hooks;
 
 const commandCategoryRegistry = registry.category("command_categories");
 /**
@@ -51,7 +52,7 @@ export class CommandPalette extends Component {
         useAutofocus();
 
         this.mouseSelectionActive = false;
-        onPatched(() => {
+        useEffect(() => {
             const index = this.state.commands.indexOf(this.state.selectedCommand);
             const listbox = this.el.querySelector(".o_command_palette_listbox");
             const command = listbox.querySelector(`#o_command_${index}`);
