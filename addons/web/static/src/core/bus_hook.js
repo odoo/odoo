@@ -1,6 +1,6 @@
 /** @odoo-module **/
-
-const { onMounted, onWillUnmount, useComponent } = owl.hooks;
+import { useEffect } from "./effect_hook";
+const { useComponent } = owl.hooks;
 
 /**
  * This file contains various custom hooks.
@@ -30,6 +30,8 @@ const { onMounted, onWillUnmount, useComponent } = owl.hooks;
  */
 export function useBus(bus, eventName, callback) {
     const component = useComponent();
-    onMounted(() => bus.on(eventName, component, callback));
-    onWillUnmount(() => bus.off(eventName, component));
+    useEffect(() => {
+        bus.on(eventName, component, callback);
+        return () => bus.off(eventName, component);
+    }, () => []);
 }

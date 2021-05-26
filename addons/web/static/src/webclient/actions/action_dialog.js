@@ -2,6 +2,7 @@
 
 import { Dialog } from "../../core/dialog/dialog";
 import { DebugManager } from "../../core/debug/debug_menu";
+import { useEffect } from "../../core/effect_hook";
 
 const { hooks } = owl;
 
@@ -46,7 +47,7 @@ class LegacyAdaptedActionDialog extends ActionDialog {
         const ControllerComponent = this.props && this.props.ActionComponent;
         const Controller = ControllerComponent && ControllerComponent.Component;
         this.isLegacy = Controller && Controller.isLegacy;
-        hooks.onMounted(() => {
+        useEffect(() => {
             if (this.isLegacy) {
                 // Retrieve the widget climbing the wrappers
                 const componentController = this.actionRef.comp;
@@ -57,7 +58,7 @@ class LegacyAdaptedActionDialog extends ActionDialog {
                 const footer = this.modalRef.el.querySelector("footer");
                 widget.renderButtons($(footer));
             }
-        });
+        }, () => []); // TODO: should this depend on actionRef.comp?
     }
 }
 LegacyAdaptedActionDialog.template = "web.LegacyAdaptedActionDialog";

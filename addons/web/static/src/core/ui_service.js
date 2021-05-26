@@ -3,10 +3,11 @@
 import { useService } from "./service_hook";
 import { registry } from "./registry";
 import { debounce } from "./utils/timing";
+import { useEffect } from "./effect_hook";
 
 const { Component, core, hooks } = owl;
 const { EventBus } = core;
-const { onMounted, onWillUnmount, useRef } = hooks;
+const { useRef } = hooks;
 
 export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 
@@ -24,12 +25,10 @@ export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 export function useActiveElement(refName = null) {
     const uiService = useService("ui");
     const owner = refName ? useRef(refName) : Component.current;
-    onMounted(() => {
+    useEffect(() => {
         uiService.activateElement(owner.el);
-    });
-    onWillUnmount(() => {
-        uiService.deactivateElement(owner.el);
-    });
+        return () => uiService.deactivateElement(owner.el);
+    }, () => []);
 }
 
 export const uiService = {

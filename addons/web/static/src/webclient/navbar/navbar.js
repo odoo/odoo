@@ -3,22 +3,23 @@
 import { Dropdown } from "../../core/dropdown/dropdown";
 import { DropdownItem } from "../../core/dropdown/dropdown_item";
 import { useService } from "../../core/service_hook";
+import { useEffect } from "../../core/effect_hook";
 import { registry } from "../../core/registry";
 import { debounce } from "../../core/utils/timing";
 
 const { Component, hooks } = owl;
-const { onMounted, useExternalListener } = hooks;
+const { useExternalListener } = hooks;
 const systrayRegistry = registry.category("systray");
 
 export class MenuDropdown extends Dropdown {
     setup() {
         super.setup();
-        onMounted(() => {
+        useEffect(() => {
             if (this.props.xmlid) {
                 const toggler = this.el.querySelector("button.o_dropdown_toggler");
                 toggler.dataset.menuXmlid = this.props.xmlid;
             }
-        });
+        }, () => []);
     }
 }
 MenuDropdown.props.xmlid = {
@@ -29,11 +30,11 @@ MenuDropdown.props.xmlid = {
 export class MenuItem extends DropdownItem {
     setup() {
         super.setup();
-        onMounted(() => {
+        useEffect(() => {
             if (this.props.payload.xmlid) {
                 this.el.dataset.menuXmlid = this.props.payload.xmlid;
             }
-        });
+        }, () => []);
     }
 }
 

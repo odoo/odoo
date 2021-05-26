@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { getScrollPosition, setScrollPosition } from "../../core/utils/scrolling";
+import { useEffect } from "../../core/effect_hook";
 
-const { useComponent, onMounted } = owl.hooks;
+const { useComponent } = owl.hooks;
 
 // -----------------------------------------------------------------------------
 // Action hook
@@ -17,7 +18,7 @@ const scrollSymbol = Symbol("scroll");
 export function useSetupAction(params) {
     const component = useComponent();
 
-    onMounted(() => {
+    useEffect(() => {
         if (component.props.registerCallback) {
             if (params.beforeLeave) {
                 component.props.registerCallback("beforeLeave", params.beforeLeave);
@@ -34,5 +35,5 @@ export function useSetupAction(params) {
         if (component.props.state) {
             setScrollPosition(component, component.props.state[scrollSymbol]);
         }
-    });
+    }, () => []);
 }
