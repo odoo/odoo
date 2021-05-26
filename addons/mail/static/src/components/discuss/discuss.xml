@@ -21,12 +21,6 @@
                         <t t-call="mail.Discuss.content"/>
                     </div>
                 </t>
-                <t t-if="discuss.hasModerationDiscardDialog">
-                    <ModerationDiscardDialog messageLocalIds="discuss.threadView.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationDiscard"/>
-                </t>
-                <t t-if="discuss.hasModerationRejectDialog">
-                    <ModerationRejectDialog messageLocalIds="discuss.threadView.checkedMessages.map(message => message.localId)" t-on-dialog-closed="_onDialogClosedModerationReject"/>
-                </t>
             </t>
         </div>
     </t>
@@ -56,7 +50,6 @@
                 hasComposer="discuss.thread.model !== 'mail.box'"
                 hasComposerCurrentPartnerAvatar="!env.messaging.device.isMobile"
                 hasComposerThreadTyping="true"
-                hasMessageCheckbox="true"
                 hasSquashCloseMessages="discuss.thread.model !== 'mail.box'"
                 haveMessagesMarkAsReadIcon="discuss.thread === env.messaging.inbox"
                 haveMessagesReplyIcon="discuss.thread === env.messaging.inbox"

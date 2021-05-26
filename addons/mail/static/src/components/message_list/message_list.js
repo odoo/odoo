@@ -316,12 +316,6 @@ export class MessageList extends Component {
             return false;
         }
         if (
-            prevMessage.moderation_status === 'pending_moderation' ||
-            message.moderation_status === 'pending_moderation'
-        ) {
-            return false;
-        }
-        if (
             prevMessage.notifications.length > 0 ||
             message.notifications.length > 0
         ) {
@@ -583,7 +577,6 @@ export class MessageList extends Component {
 Object.assign(MessageList, {
     components,
     defaultProps: {
-        hasMessageCheckbox: false,
         hasScrollAdjust: true,
         hasSquashCloseMessages: false,
         haveMessagesMarkAsReadIcon: false,
@@ -599,7 +592,6 @@ Object.assign(MessageList, {
             type: Function,
             optional: true,
         },
-        hasMessageCheckbox: Boolean,
         hasSquashCloseMessages: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,
         haveMessagesReplyIcon: Boolean,

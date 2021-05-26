@@ -407,18 +407,6 @@ function factory(dependencies) {
             related: 'device.isMobile',
         }),
         /**
-         * Determine if the moderation discard dialog is displayed.
-         */
-        hasModerationDiscardDialog: attr({
-            default: false,
-        }),
-        /**
-         * Determine if the moderation reject dialog is displayed.
-         */
-        hasModerationRejectDialog: attr({
-            default: false,
-        }),
-        /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({

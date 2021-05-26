@@ -5,9 +5,6 @@ import { useStore } from '@mail/component_hooks/use_store/use_store';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { AttachmentList } from '@mail/components/attachment_list/attachment_list';
 import { MessageSeenIndicator } from '@mail/components/message_seen_indicator/message_seen_indicator';
-import { ModerationBanDialog } from '@mail/components/moderation_ban_dialog/moderation_ban_dialog';
-import { ModerationDiscardDialog } from '@mail/components/moderation_discard_dialog/moderation_discard_dialog';
-import { ModerationRejectDialog } from '@mail/components/moderation_reject_dialog/moderation_reject_dialog';
 import { NotificationPopover } from '@mail/components/notification_popover/notification_popover';
 import { PartnerImStatusIcon } from '@mail/components/partner_im_status_icon/partner_im_status_icon';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
@@ -24,9 +21,6 @@ const READ_LESS = _lt("read less");
 const components = {
     AttachmentList,
     MessageSeenIndicator,
-    ModerationBanDialog,
-    ModerationDiscardDialog,
-    ModerationRejectDialog,
     NotificationPopover,
     PartnerImStatusIcon,
 };
@@ -39,12 +33,6 @@ export class Message extends Component {
     constructor(...args) {
         super(...args);
         this.state = useState({
-            // Determine if the moderation ban dialog is displayed.
-            hasModerationBanDialog: false,
-            // Determine if the moderation discard dialog is displayed.
-            hasModerationDiscardDialog: false,
-            // Determine if the moderation reject dialog is displayed.
-            hasModerationRejectDialog: false,
             /**
              * Determine whether the message is clicked. When message is in
              * clicked state, it keeps displaying the commands.
@@ -68,11 +56,7 @@ export class Message extends Component {
                 authorImStatus: author && author.im_status,
                 authorNameOrDisplayName: author && author.nameOrDisplayName,
                 correspondent: thread && thread.correspondent,
-                hasMessageCheckbox: message ? message.hasCheckbox : false,
                 isDeviceMobile: this.env.messaging.device.isMobile,
-                isMessageChecked: message && threadView
-                    ? message.isChecked(thread, threadView.stringifiedDomain)
-                    : false,
                 isMessageSelected: message && threadView && threadView.threadViewer
                     ? threadView.threadViewer.selectedMessage === message
                     : false,
@@ -488,13 +472,6 @@ export class Message extends Component {
 
     /**
      * @private
-     */
-    _onChangeCheckbox() {
-        this.message.toggleCheck(this.threadView.thread, this.threadView.stringifiedDomain);
-    }
-
-    /**
-     * @private
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
@@ -564,51 +541,6 @@ export class Message extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickModerationAccept(ev) {
-        ev.preventDefault();
-        this.message.moderate('accept');
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickModerationAllow(ev) {
-        ev.preventDefault();
-        this.message.moderate('allow');
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickModerationBan(ev) {
-        ev.preventDefault();
-        this.state.hasModerationBanDialog = true;
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickModerationDiscard(ev) {
-        ev.preventDefault();
-        this.state.hasModerationDiscardDialog = true;
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickModerationReject(ev) {
-        ev.preventDefault();
-        this.state.hasModerationRejectDialog = true;
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
     _onClickOriginThread(ev) {
         // avoid following dummy href
         ev.preventDefault();
@@ -648,34 +580,11 @@ export class Message extends Component {
             this.message.replyTo();
         }
     }
-
-    /**
-     * @private
-     */
-    _onDialogClosedModerationBan() {
-        this.state.hasModerationBanDialog = false;
-    }
-
-    /**
-     * @private
-     */
-    _onDialogClosedModerationDiscard() {
-        this.state.hasModerationDiscardDialog = false;
-    }
-
-    /**
-     * @private
-     */
-    _onDialogClosedModerationReject() {
-        this.state.hasModerationRejectDialog = false;
-    }
-
 }
 
 Object.assign(Message, {
     components,
     defaultProps: {
-        hasCheckbox: false,
         hasMarkAsReadIcon: false,
         hasReplyIcon: false,
         isSquashed: false,
@@ -686,7 +595,6 @@ Object.assign(Message, {
             optional: true,
             validate: prop => ['auto', 'card', 'hover', 'none'].includes(prop),
         },
-        hasCheckbox: Boolean,
         hasMarkAsReadIcon: Boolean,
         hasReplyIcon: Boolean,
         isSquashed: Boolean,
