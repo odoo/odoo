@@ -8,6 +8,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { useState } = owl.hooks;
+    const { parse } = require('web.field_utils');
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
         constructor() {
@@ -61,11 +62,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 return true;
             return false;
         }
-        async _clickProduct(event) {
-            if (!this.currentOrder) {
-                this.env.pos.add_new_order();
-            }
-            const product = event.detail;
+        async _getAddProductOptions(product) {
             let price_extra = 0.0;
             let draftPackLotLines, weight, description, packLotLinesToEdit;
 
@@ -140,14 +137,18 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
 
+            return { draftPackLotLines, quantity: weight, description, price_extra };
+        }
+        async _clickProduct(event) {
+            if (!this.currentOrder) {
+                this.env.pos.add_new_order();
+            }
+            const product = event.detail;
+            const options = await this._getAddProductOptions(product);
+            // Do not add product if options is undefined.
+            if (!options) return;
             // Add the product after having the extra information.
-            this.currentOrder.add_product(product, {
-                draftPackLotLines,
-                description: description,
-                price_extra: price_extra,
-                quantity: weight,
-            });
-
+            this.currentOrder.add_product(product, options);
             NumberBuffer.reset();
         }
         _setNumpadMode(event) {
@@ -170,11 +171,12 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     });
                     return;
                 }
+                const parsedInput = parse.float(event.detail.buffer) || 0
                 if(lastId != selectedLine.cid)
                     this._showDecreaseQuantityPopup();
-                else if(currentQuantity < event.detail.buffer)
+                else if(currentQuantity < parsedInput)
                     this._setValue(event.detail.buffer);
-                else if(event.detail.buffer < currentQuantity)
+                else if(parsedInput < currentQuantity)
                     this._showDecreaseQuantityPopup();
             } else {
                 let { buffer } = event.detail;
@@ -201,11 +203,31 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
             }
         }
-        _barcodeProductAction(code) {
-            // NOTE: scan_product call has side effect in pos if it returned true.
-            if (!this.env.pos.scan_product(code)) {
-                this._barcodeErrorAction(code);
+        async _barcodeProductAction(code) {
+            const product = this.env.pos.db.get_product_by_barcode(code.base_code)
+            if (!product) {
+                return this._barcodeErrorAction(code);
             }
+            const options = await this._getAddProductOptions(product);
+            // Do not proceed on adding the product when no options is returned.
+            // This is consistent with _clickProduct.
+            if (!options) return;
+
+            // update the options depending on the type of the scanned code
+            if (code.type === 'price') {
+                Object.assign(options, { price: code.value });
+            } else if (code.type === 'weight') {
+                Object.assign(options, {
+                    quantity: code.value,
+                    merge: false,
+                });
+            } else if (code.type === 'discount') {
+                Object.assign(options, {
+                    discount: code.value,
+                    merge: false,
+                });
+            }
+            this.currentOrder.add_product(product,  options)
         }
         _barcodeClientAction(code) {
             const partner = this.env.pos.db.get_partner_by_barcode(code.code);
