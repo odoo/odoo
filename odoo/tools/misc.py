@@ -1392,13 +1392,25 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
     """
     if not value:
         return ''
+    if isinstance(value, str):
+        timestamp = odoo.fields.Datetime.from_string(value)
+    else:
+        timestamp = value
+
+    tz_name = tz or env.user.tz or 'UTC'
+    utc_datetime = pytz.utc.localize(timestamp, is_dst=False)
+    try:
+        context_tz = pytz.timezone(tz_name)
+        localized_datetime = utc_datetime.astimezone(context_tz)
+    except Exception:
+        localized_datetime = utc_datetime
 
     lang = get_lang(env, lang_code)
     locale = babel_locale_parse(lang.code)
     if not time_format:
         time_format = posix_to_ldml(lang.time_format, locale=locale)
 
-    return babel.dates.format_time(value, format=time_format, locale=locale)
+    return babel.dates.format_time(localized_datetime, format=time_format, locale=locale)
 
 
 def _format_time_ago(env, time_delta, lang_code=False, add_direction=True):
