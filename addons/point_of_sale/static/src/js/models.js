@@ -505,9 +505,7 @@ exports.PosModel = Backbone.Model.extend({
     },{
         model:  'pos.payment.method',
         fields: ['name', 'is_cash_count', 'use_payment_terminal'],
-        domain: function(self, tmp) {
-            return [['id', 'in', tmp.payment_method_ids]];
-        },
+        domain: function(self){return ['|',['active', '=', false], ['active', '=', true]]; },
         loaded: function(self, payment_methods) {
             self.payment_methods = payment_methods.sort(function(a,b){
                 // prefer cash payment_method to be first in the list
