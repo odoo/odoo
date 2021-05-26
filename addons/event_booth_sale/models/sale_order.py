@@ -24,10 +24,6 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
             so.order_line._update_event_booths()
-            # if any(line.is_event_booth for line in so.order_line):
-            #     return self.env['ir.actions.act_window']\
-            #         .with_context(default_sale_order_id=so.id)\
-            #         ._for_xml_id('event_booth_sale.event_booth_slot_edit_action')
         return res
 
     def action_view_booth_list(self):

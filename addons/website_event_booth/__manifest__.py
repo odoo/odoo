@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Online Event Booths',
@@ -10,11 +11,12 @@ Display your booths on your website for the users to register.
     """,
     'depends': ['website_event', 'event_booth'],
     'data': [
-        'views/event_views.xml',
+        'views/event_type_views.xml',
+        'views/event_event_views.xml',
         'views/event_booth_templates.xml',
     ],
     'demo': [
-        'data/event_booth_demo.xml',
+        'data/event_demo.xml',
     ],
     'auto_install': True,
     'assets': {

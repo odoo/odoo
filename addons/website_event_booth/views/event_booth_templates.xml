@@ -33,7 +33,7 @@
         <t t-call="website_event_booth.event_booth_layout">
             <t t-if="event.event_booth_ids">
                 <div class="col-lg-9 p-4">
-                    <form method="post" t-attf-action="/event/#{slug(event)}/booths/register/proceed"
+                    <form method="post" t-attf-action="/event/#{slug(event)}/booth/register"
                           id="booth-registration" class="form-horizontal justify-content-center mt32" t-att-data-event-id="event.id">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                         <div class="row form-group justify-content-center">
@@ -100,10 +100,12 @@
         </t>
     </template>
 
-    <template id="event_booth_details" name="Event Booth Details">
+    <template id="event_booth_registration_details" name="Event Booth Details">
         <t t-call="website_event_booth.event_booth_layout">
-            <form method="post" t-attf-action="/event/#{slug(event)}/booths/register/confirm"
-                  class="col-12 px-5 py-2" id="contact_details_form">
+            <form method="post"
+                id="contact_details_form"
+                t-attf-action="/event/#{slug(event)}/booth/confirm"
+                class="col-12 px-5 py-2" >
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="hidden" name="booth_category_id" t-att-value="booth_category_id.id"/>
                 <input type="hidden" name="event_booth_ids" t-att-value="event_booth_ids"/>

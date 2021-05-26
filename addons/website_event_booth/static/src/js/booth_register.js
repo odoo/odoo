@@ -35,7 +35,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         if (this.boothIds[this.activeType] === undefined) {
             var self = this;
             this._rpc({
-                route: '/event/booths',
+                route: '/event/booth_category/get_available_booths',
                 params: {
                     event_id: this.eventId,
                     booth_category_id: this.activeType,
@@ -82,17 +82,21 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         ev.preventDefault();
         let $form = this.$('#booth-registration');
         let params = this._serializeForm($form);
-        if (await this._check_booths_availability(params)) {
+        console.log(params);
+        if (await this._check_booths_availability(params.event_booth_ids)) {
             $form.submit();
         }
     },
 
-    _check_booths_availability(params) {
+    _check_booths_availability(eventBoothIds) {
+        const self = this;
         return this._rpc({
-            route: "/event/booths/check_availability",
-            params: params,
+            route: "/event/booth/check_availability",
+            params: {
+                event_booth_ids: eventBoothIds,
+            },
         }).then(function (result) {
-            if (result.unavailable_booths) {
+            if (result.unavailable_booths.length) {
                 self.$('input[name="event_booth_ids"]').each(function (i, el) {
                     if (result.unavailable_booths.includes(parseInt(el.value))) {
                         $(el).closest('.custom-checkbox').addClass('text-danger');
