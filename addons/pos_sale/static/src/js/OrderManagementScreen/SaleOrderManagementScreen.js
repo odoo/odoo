@@ -70,7 +70,8 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             SaleOrderFetcher.setPage(1);
             SaleOrderFetcher.fetch();
         }
-        async _onClickSaleOrder({ detail: clickedOrder }) {
+        async _onClickSaleOrder(event) {
+            const clickedOrder = event.detail;
             const { confirmed, payload: selectedOption } = await this.showPopup('SelectionPopup',
                 {
                     title: this.env._t('What do you want to do?'),
