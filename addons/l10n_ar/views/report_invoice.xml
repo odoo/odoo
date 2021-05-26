@@ -82,7 +82,7 @@
             <t t-set="pre_printed_report" t-value="report_type == 'pdf' and o.journal_id.l10n_ar_afip_pos_system == 'II_IM'"/>
             <t t-set="document_letter" t-value="o.l10n_latam_document_type_id.l10n_ar_letter"/>
             <t t-set="document_legend" t-value="o.l10n_latam_document_type_id.code and 'Cod. %02d' % int(o.l10n_latam_document_type_id.code) or ''"/>
-            <t t-set="report_name" t-value="o.l10n_latam_document_type_id.report_name"/>
+            <t t-set="report_name" t-value="('es_' not in lang[0:3] and (o.l10n_latam_document_type_id.code == '19' and 'INVOICE' or o.l10n_latam_document_type_id.code == '20' and 'DEBIT NOTE' or o.l10n_latam_document_type_id.code == '21' and 'CREDIT NOTE')) or o.l10n_latam_document_type_id.report_name"/>
             <t t-set="header_address" t-value="o.journal_id.l10n_ar_afip_pos_partner_id"/>
 
             <t t-set="custom_footer">
@@ -252,7 +252,7 @@
             <t t-set="pre_printed_report" t-value="report_type == 'pdf' and o.journal_id.l10n_ar_afip_pos_system == 'II_IM'"/>
             <t t-set="document_letter" t-value="o.l10n_latam_document_type_id.l10n_ar_letter"/>
             <t t-set="document_legend" t-value="o.l10n_latam_document_type_id.code and 'Cod. %02d' % int(o.l10n_latam_document_type_id.code) or ''"/>
-            <t t-set="report_name" t-value="o.l10n_latam_document_type_id.report_name"/>
+            <t t-set="report_name" t-value="('es_' not in lang[0:3] and (o.l10n_latam_document_type_id.code == '19' and 'INVOICE' or o.l10n_latam_document_type_id.code == '20' and 'DEBIT NOTE' or o.l10n_latam_document_type_id.code == '21' and 'CREDIT NOTE')) or o.l10n_latam_document_type_id.report_name"/>
             <t t-set="header_address" t-value="o.journal_id.l10n_ar_afip_pos_partner_id"/>
 
             <t t-set="custom_footer">
