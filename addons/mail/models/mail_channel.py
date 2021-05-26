@@ -45,7 +45,6 @@ class Channel(models.Model):
         string='Channel Type', default='channel')
     is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     description = fields.Text('Description')
-    email_send = fields.Boolean('Send messages by email', default=False)
     image_128 = fields.Image("Image", max_width=128, max_height=128, default=_get_default_image)
     channel_partner_ids = fields.Many2many(
         'res.partner', string='Members',
@@ -244,10 +243,9 @@ class Channel(models.Model):
         # channel_info is called before actually unpinning the channel
         channel_info['is_pinned'] = False
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner.id), channel_info)
-        if not self.email_send:
-            notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', self.id, self.name)
-            # post 'channel left' message as root since the partner just unsubscribed from the channel
-            self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
+        notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', self.id, self.name)
+        # post 'channel left' message as root since the partner just unsubscribed from the channel
+        self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         return result
 
     def _action_add_members(self, partners):
@@ -366,7 +364,6 @@ class Channel(models.Model):
         """
         # get values from msg_vals or from message if msg_vals doen't exists
         msg_sudo = message.sudo()
-        mailing_channels = self.filtered('email_send')
         message_type = msg_vals.get('message_type', 'email') if msg_vals else msg_sudo.message_type
         pids = msg_vals.get('partner_ids', []) if msg_vals else msg_sudo.partner_ids.ids
 
@@ -374,40 +371,14 @@ class Channel(models.Model):
         if message_type not in ('comment', 'email'):
             return []
         # notify only mailing lists or if mentioning recipients
-        if not mailing_channels and not pids:
+        if not pids:
             return []
 
         email_from = tools.email_normalize(msg_vals.get('email_from') or msg_sudo.email_from)
         author_id = msg_vals.get('author_id') or msg_sudo.author_id.id
 
         recipients_data = []
-        if mailing_channels:
-            sql_query = """
-                SELECT DISTINCT ON (partner.id) partner.id
-                  FROM res_partner partner
-             LEFT JOIN mail_channel_partner mcp on partner.id = mcp.partner_id
-             LEFT JOIN mail_channel channel on channel.id = mcp.channel_id
-             LEFT JOIN res_users users on partner.id = users.partner_id
-                 WHERE (users.notification_type != 'inbox' or users.id IS NULL)
-                       AND (partner.email != %s or partner.email IS NULL)
-                       AND channel.id = ANY(%s)
-                       AND partner.id != ANY(%s)"""
-            self.env.cr.execute(
-                sql_query,
-                (email_from, mailing_channels.ids, [author_id] if author_id else [], )
-            )
-            for partner_id, in self._cr.fetchall():
-                # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
-                recipients_data.append({
-                    'id': partner_id,
-                    'share': True,
-                    'active': True,
-                    'notif': 'email',
-                    'type': 'channel_email',
-                    'groups': []
-                })
-        remaining = [pid for pid in pids if pid not in [recipient['id'] for recipient in recipients_data]]
-        if remaining:
+        if pids:
             sql_query = """
                 SELECT DISTINCT ON (partner.id) partner.id,
                        partner.partner_share,
@@ -419,7 +390,7 @@ class Channel(models.Model):
                        AND partner.id = ANY(%s) AND partner.id != ANY(%s)"""
             self.env.cr.execute(
                 sql_query,
-                (email_from, remaining, [author_id] if author_id else [], )
+                (email_from, list(pids), [author_id] if author_id else [], )
             )
             for partner_id, partner_share, notif in self._cr.fetchall():
                 # ocn_client: will add partners to recipient recipient_data. more ocn notifications. We neeed to filter them maybe
@@ -459,17 +430,6 @@ class Channel(models.Model):
             list_to = '"%s" <%s@%s>' % (self.name, self.alias_name, self.alias_domain)
             headers['X-Forge-To'] = list_to
         return headers
-
-    def _notify_email_recipient_values(self, recipient_ids):
-        # Excluded Blacklisted
-        whitelist = self.env['res.partner'].sudo().browse(recipient_ids).filtered(lambda p: not p.is_blacklisted)
-        # real mailing list: multiple recipients (hidden by X-Forge-To)
-        if self.alias_domain and self.alias_name:
-            return {
-                'email_to': ','.join(formataddr((partner.name, partner.email_normalized)) for partner in whitelist if partner.email_normalized),
-                'recipient_ids': [],
-            }
-        return super(Channel, self)._notify_email_recipient_values(whitelist.ids)
 
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
@@ -610,7 +570,6 @@ class Channel(models.Model):
                 'is_minimized': False,
                 'channel_type': channel.channel_type,
                 'public': channel.public,
-                'mass_mailing': channel.email_send,
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
             }
@@ -715,7 +674,6 @@ class Channel(models.Model):
                 'channel_partner_ids': [Command.link(partner_id) for partner_id in partners_to],
                 'public': 'private',
                 'channel_type': 'chat',
-                'email_send': False,
                 'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
             })
             channel._broadcast(partners_to)
@@ -918,7 +876,7 @@ class Channel(models.Model):
     def channel_join_and_get_info(self):
         self.ensure_one()
         added = self.action_follow()
-        if added and self.channel_type == 'channel' and not self.email_send:
+        if added and self.channel_type == 'channel':
             notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', self.id, self.name)
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
 
@@ -938,7 +896,6 @@ class Channel(models.Model):
         new_channel = self.create({
             'name': name,
             'public': privacy,
-            'email_send': False,
         })
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', new_channel.id, new_channel.name)
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
