@@ -375,6 +375,13 @@ class AccountMove(models.Model):
     def action_post(self):
         if self.filtered(lambda x: x.journal_id.post_at_bank_rec).mapped('line_ids.payment_id').filtered(lambda x: x.state != 'reconciled'):
             raise UserError(_("A payment journal entry generated in a journal configured to post entries only when payments are reconciled with a bank statement cannot be manually posted. Those will be posted automatically after performing the bank reconciliation."))
+        invoice_type = self.line_ids.mapped('invoice_id.type')
+        if len(invoice_type) == 1:
+            invoice_account_ids = self.mapped('line_ids.invoice_id.account_id')
+            invoice_type = invoice_type[0]
+            for line in self.line_ids.filtered(lambda x: x.credit != 0.0 if invoice_type in ['in_refund', 'out_invoice'] else x.debit != 0.0):
+                if line.account_id in invoice_account_ids:
+                    raise UserError(_("Almost one line account is equal to invoice account in the counterpart values: please change it with another account."))
         return self.post()
 
     @api.multi
