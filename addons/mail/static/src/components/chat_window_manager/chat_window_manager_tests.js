@@ -1899,7 +1899,6 @@ QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" k
     this.data['mail.channel'].records.push({
         id: 20,
         is_minimized: true,
-        mass_mailing: false,
     });
     await this.start({
         env: {

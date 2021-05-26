@@ -35,7 +35,6 @@ export class DiscussSidebarItem extends Component {
                 threadDisplayName: thread && thread.displayName,
                 threadGroupBasedSubscription: thread && thread.group_based_subscription,
                 threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
-                threadMassMailing: thread && thread.mass_mailing,
                 threadMessageNeedactionCounter: thread && thread.message_needaction_counter,
                 threadModel: thread && thread.model,
             };

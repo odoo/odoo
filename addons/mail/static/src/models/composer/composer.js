@@ -221,9 +221,6 @@ function factory(dependencies) {
                 message_type: 'comment',
                 partner_ids: this.recipients.map(partner => partner.id),
             };
-            if (this.subjectContent) {
-                postData.subject = this.subjectContent;
-            }
             try {
                 let messageId;
                 this.update({ isPostingMessage: true });
@@ -760,7 +757,6 @@ function factory(dependencies) {
                 isLastStateChangeProgrammatic: true,
                 mentionedChannels: unlinkAll(),
                 mentionedPartners: unlinkAll(),
-                subjectContent: "",
                 textInputContent: '',
                 textInputCursorEnd: 0,
                 textInputCursorStart: 0,
@@ -989,12 +985,6 @@ function factory(dependencies) {
          */
         threadSuggestedRecipientInfoListIsSelected: attr({
             related: 'threadSuggestedRecipientInfoList.isSelected',
-        }),
-        /**
-         * Composer subject input content.
-         */
-        subjectContent: attr({
-            default: "",
         }),
         /**
          * States which type of suggestion is currently in progress, if any.

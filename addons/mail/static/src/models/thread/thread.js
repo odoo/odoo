@@ -1168,9 +1168,6 @@ function factory(dependencies) {
             if (this.model !== 'mail.channel') {
                 return false;
             }
-            if (this.mass_mailing) {
-                return false;
-            }
             return ['chat', 'livechat'].includes(this.channel_type);
         }
 
@@ -1797,7 +1794,6 @@ function factory(dependencies) {
             default: false,
             dependencies: [
                 'channel_type',
-                'mass_mailing',
                 'model',
             ],
         }),
@@ -1931,9 +1927,6 @@ function factory(dependencies) {
         }),
         mainCache: one2one('mail.thread_cache', {
             compute: '_computeMainCache',
-        }),
-        mass_mailing: attr({
-            default: false,
         }),
         members: many2many('mail.partner', {
             inverse: 'memberThreads',

@@ -78,8 +78,6 @@ export class MockModels {
                     is_minimized: { string: "isMinimized", type: "boolean", default: false },
                     // In python this belongs to mail.channel.partner. Here for simplicity.
                     is_pinned: { string: "isPinned", type: "boolean", default: true },
-                    // In python: email_send.
-                    mass_mailing: { string: "Send messages by email", type: "boolean", default: false },
                     members: { string: "Members", type: 'many2many', relation: 'res.partner', default() { return [this.currentPartnerId]; } },
                     message_unread_counter: { string: "# unread messages", type: 'integer' },
                     name: { string: "Name", type: "char", required: true },

@@ -114,20 +114,6 @@
     justify-self: center;
 }
 
-.o_Composer_subject {
-    border-top: $border-width solid $border-color;
-    border-right: $border-width solid $border-color;
-    border-left: $border-width solid $border-color;
-    border-radius: $o-mail-rounded-rectangle-border-radius-sm $o-mail-rounded-rectangle-border-radius-sm 0 0;
-}
-
-.o_Composer_subjectInput {
-    display: flex;
-    flex: 1;
-    padding: map-get($spacers, 2) map-get($spacers, 3);
-    border: 0;
-}
-
 .o_Composer_textInput {
     flex: 1 1 auto;
     align-self: stretch;
@@ -212,11 +198,7 @@
 .o_Composer_coreMain:not(.o-composer-is-compact) {
     background: $white;
     border: $border-width solid $border-color;
-
-    // textarea should be all rounded but only when there is no subject field above
-    &:not(.o-composer-is-extended) {
-        border-radius: $o-mail-rounded-rectangle-border-radius-lg;
-    }
+    border-radius: $o-mail-rounded-rectangle-border-radius-lg;
 }
 
 .o_Composer_currentPartnerAvatar {

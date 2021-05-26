@@ -69,7 +69,6 @@ class WebsiteVisitor(models.Model):
                 'livechat_operator_id': self.env.user.partner_id.id,
                 'channel_type': 'livechat',
                 'public': 'private',
-                'email_send': False,
                 'country_id': country.id,
                 'anonymous_name': visitor_name,
                 'name': ', '.join([visitor_name, operator.livechat_username if operator.livechat_username else operator.name]),

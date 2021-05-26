@@ -100,7 +100,6 @@ class Followers(models.Model):
         self.env['res.users'].flush(['notification_type', 'active', 'partner_id', 'groups_id'])
         self.env['res.partner'].flush(['active', 'partner_share'])
         self.env['res.groups'].flush(['users'])
-        self.env['mail.channel'].flush(['email_send', 'channel_type'])
         if records and subtype_id:
             query = """
 SELECT DISTINCT ON (pid) * FROM (

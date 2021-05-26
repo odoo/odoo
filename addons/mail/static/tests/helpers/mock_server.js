@@ -686,7 +686,6 @@ MockServer.include({
         // an existing chat.
         const id = this._mockCreate('mail.channel', {
             channel_type: 'chat',
-            mass_mailing: false,
             is_minimized: true,
             is_pinned: true,
             members: [[6, 0, partners_to]],

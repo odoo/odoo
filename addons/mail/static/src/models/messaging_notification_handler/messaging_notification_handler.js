@@ -205,23 +205,6 @@ function factory(dependencies) {
                 return;
             }
 
-            // Message from mailing channel should not make a notification in
-            // Odoo for users with notification "Handled by Email".
-            // Channel has been marked as read server-side in this case, so
-            // it should not display a notification by incrementing the
-            // unread counter.
-            if (
-                channel.mass_mailing &&
-                this.env.session.notification_type === 'email'
-            ) {
-                this._handleNotificationChannelSeen(channelId, {
-                    last_message_id: messageData.id,
-                    partner_id: this.env.messaging.currentPartner.id,
-                });
-                return;
-            }
-            // In all other cases: update counter and notify if necessary
-
             // Chat from OdooBot is considered disturbing and should only be
             // shown on the menu, but no notification and no thread open.
             const isChatWithOdooBot = (
