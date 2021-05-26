@@ -28,6 +28,9 @@
             '/website_sale_loyalty/static/src/scss/website_sale_loyalty.scss',
             '/website_sale_loyalty/static/src/js/website_sale_loyalty_add_reward_button.js',
         ],
+        'web.assets_tests': [
+            '/website_sale_loyalty/static/tests/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }
