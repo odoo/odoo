@@ -4,19 +4,20 @@ import { browser } from "../../core/browser/browser";
 import { DropdownItem } from "../../core/dropdown/dropdown_item";
 import { useService } from "../../core/service_hook";
 import { registry } from "../../core/registry";
+import { useEffect } from "../../core/effect_hook";
 
-const { Component, hooks } = owl;
+const { Component } = owl;
 
 const userMenuRegistry = registry.category("user_menuitems");
 
 class UserMenuItem extends DropdownItem {
     setup() {
         super.setup();
-        hooks.onMounted(() => {
+        useEffect(() => {
             if (this.props.payload.id) {
                 this.el.dataset.menu = this.props.payload.id;
             }
-        });
+        }, () => []);
     }
 }
 

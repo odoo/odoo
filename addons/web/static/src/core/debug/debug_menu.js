@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
 import { useService } from "../service_hook";
+import { useEffect } from "../effect_hook";
 import { registry } from "../registry";
 
 const debugRegistry = registry.category("debug");
 
-const { Component, hooks } = owl;
+const { Component } = owl;
 
 export class DebugManager extends Component {
     setup() {
@@ -79,10 +80,8 @@ export function useDebugManager(elementsFactory) {
         elementsFactory,
         inDialog: env.inDialog,
     };
-    hooks.onMounted(() => {
+    useEffect(() => {
         env.bus.trigger("DEBUG-MANAGER:NEW-ITEMS", payload);
-    });
-    hooks.onWillUnmount(() => {
-        env.bus.trigger("DEBUG-MANAGER:REMOVE-ITEMS", payload);
-    });
+        return () => env.bus.trigger("DEBUG-MANAGER:REMOVE-ITEMS", payload);
+    }, () => []);
 }

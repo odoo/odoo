@@ -1,12 +1,13 @@
 /** @odoo-module alias=web.PivotRenderer **/
 
+    import { useEffect } from "@web/core/effect_hook";
     import DropdownMenu from 'web.DropdownMenu';
     import DropdownMenuItem from 'web.DropdownMenuItem';
     import OwlAbstractRenderer from '../abstract_renderer_owl';
     import field_utils from 'web.field_utils';
     import { DEFAULT_INTERVAL, INTERVAL_OPTIONS } from 'web.searchUtils';
 
-    const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
+    const { useExternalListener, useState } = owl.hooks;
 
     class PivotCustomGroupByItem extends DropdownMenuItem {
         constructor() {
@@ -146,10 +147,7 @@
             this.hasSearchArchGroupBys = Boolean(searchArchGroupBys && searchArchGroupBys.length);
             this.customGroupBys = new Map();
 
-            onMounted(() => this._updateTooltip());
-
-            onPatched(() => this._updateTooltip());
-
+            useEffect(() => this._updateTooltip());
             useExternalListener(window, 'click', this._resetState);
         }
 

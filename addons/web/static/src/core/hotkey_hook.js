@@ -1,9 +1,7 @@
 /** @odoo-module */
 
 import { useService } from "./service_hook";
-
-const { hooks } = owl;
-const { onMounted, onWillUnmount } = hooks;
+import { useEffect } from "./effect_hook";
 
 /**
  * This hook will register/unregister the given registration
@@ -21,11 +19,8 @@ const { onMounted, onWillUnmount } = hooks;
  */
 export function useHotkey(hotkey, callback, options = {}) {
     const hotkeyService = useService("hotkey");
-    let token;
-    onMounted(() => {
-        token = hotkeyService.registerHotkey(hotkey, callback, options);
-    });
-    onWillUnmount(() => {
-        hotkeyService.unregisterHotkey(token);
-    });
+    useEffect(() => {
+        const token = hotkeyService.registerHotkey(hotkey, callback, options);
+        return () => hotkeyService.unregisterHotkey(token);
+    }, () => []);
 }

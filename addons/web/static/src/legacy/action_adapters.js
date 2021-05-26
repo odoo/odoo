@@ -3,6 +3,8 @@
 import core from "web.core";
 import Context from "web.Context";
 import { useService } from "../core/service_hook";
+import { useEffect } from "../core/effect_hook";
+import { useBus } from "../core/bus_hook";
 import { ViewNotFoundError } from "../webclient/actions/action_service";
 import { useDebugManager } from "../core/debug/debug_menu";
 import { objectToQuery } from "../core/browser/router_service";
@@ -11,7 +13,7 @@ import { mapDoActionOptionAPI } from "./utils";
 import { setupDebugAction, setupDebugViewForm, setupDebugView } from "./debug_manager";
 import { cleanDomFromBootstrap } from "./utils";
 
-const { Component, hooks, tags } = owl;
+const { Component, tags } = owl;
 
 function wrapSuccessOrFail(promise, { on_success, on_fail } = {}) {
     return promise.then(on_success || (() => {})).catch((reason) => {
@@ -38,7 +40,7 @@ class ActionAdapter extends ComponentAdapter {
         // This is protected in legacy (backward compatibility) but should not e supported in Wowl
         this.tempQuery = {};
         let originalUpdateControlPanel;
-        hooks.onMounted(async () => {
+        useEffect(() => {
             this.title.setParts({ action: this.widget.getTitle() });
             const query = objectToQuery(this.widget.getState());
             Object.assign(query, this.tempQuery);
@@ -58,15 +60,14 @@ class ActionAdapter extends ComponentAdapter {
                 this.trigger("controller-title-updated", this.__widget.getTitle());
                 return originalUpdateControlPanel(newProps);
             };
-            await Promise.resolve(); // see https://github.com/odoo/owl/issues/809
             this.trigger("controller-title-updated", this.__widget.getTitle());
-
             core.bus.trigger("DOM_updated");
-        });
-        hooks.onWillUnmount(() => {
-            this.__widget.updateControlPanel = originalUpdateControlPanel;
-            this.wowlEnv.bus.off("ACTION_MANAGER:UPDATE", this);
-        });
+
+            return () => {
+                this.__widget.updateControlPanel = originalUpdateControlPanel;
+                this.wowlEnv.bus.off("ACTION_MANAGER:UPDATE", this);
+            };
+        }, () => []);
     }
 
     _trigger_up(ev) {
@@ -189,7 +190,7 @@ function useMagicLegacyReload() {
     let legacyReloadProm = null;
     const getReloadProm = () => legacyReloadProm;
     let manualReload;
-    hooks.onMounted(() => {
+    useEffect(() => {
         const widget = comp.widget;
         const controllerReload = widget.reload;
         widget.reload = function (...args) {
@@ -216,7 +217,7 @@ function useMagicLegacyReload() {
             });
         };
         widget[magicReloadSymbol] = getReloadProm;
-    });
+    }, () => []);
     return getReloadProm;
 }
 
@@ -240,22 +241,20 @@ export class ViewAdapter extends ActionAdapter {
             );
         }
         if (!envWowl.inDialog) {
-            hooks.onMounted(() => {
-                envWowl.bus.on("ACTION_MANAGER:UPDATE", this, (info) => {
-                    switch (info.type) {
-                        case "OPEN_DIALOG": {
-                            // we are a main action, and a dialog is going to open:
-                            // we should not reload
-                            this.shouldUpdateWidget = false;
-                            break;
-                        }
-                        case "CLOSE_DIALOG": {
-                            this.shouldUpdateWidget = false;
-                            info.closingProms.push(() => this.magicReload());
-                            break;
-                        }
+            useBus(envWowl.bus, "ACTION_MANAGER:UPDATE", (info) => {
+                switch (info.type) {
+                    case "OPEN_DIALOG": {
+                        // we are a main action, and a dialog is going to open:
+                        // we should not reload
+                        this.shouldUpdateWidget = false;
+                        break;
                     }
-                });
+                    case "CLOSE_DIALOG": {
+                        this.shouldUpdateWidget = false;
+                        info.closingProms.push(() => this.magicReload());
+                        break;
+                    }
+                }
             });
         }
         this.env = Component.env;

@@ -3,8 +3,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
 
     const field_utils = require('web.field_utils');
     const { useListener } = require('web.custom_hooks');
-
-    const { onMounted, onPatched } = owl.hooks;
+    const { useEffect } = require('@web/core/effect_hook');
 
     /**
      * This file defines the Owl version of the AbstractField. Specific fields
@@ -71,8 +70,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             useListener('click', this._onClick);
             useListener('keydown', this._onKeydown);
             useListener('navigation-move', this._onNavigationMove);
-            onMounted(() => this._applyDecorations());
-            onPatched(() => this._applyDecorations());
+            useEffect(() => this._applyDecorations());
         }
         /**
          * Hack: studio tries to find the field with a selector base on its

@@ -2,10 +2,10 @@
 
 import { Dialog } from "../core/dialog/dialog";
 import { patch } from "@web/core/utils/patch";
+import { useEffect } from "@web/core/effect_hook";
 import OwlDialog from "web.OwlDialog";
 
 const { hooks } = owl;
-const { onMounted, onWillUnmount } = hooks;
 
 /**
  * This is a patch of the new Dialog class.
@@ -14,11 +14,9 @@ const { onMounted, onWillUnmount } = hooks;
 patch(Dialog.prototype, "Legacy Adapted Dialog", {
     setup() {
         this._super();
-        onMounted(() => {
+        useEffect(() => {
             OwlDialog.display(this);
-        });
-        onWillUnmount(() => {
-            OwlDialog.hide(this);
-        });
+            return () => OwlDialog.hide(this);
+        }, () => []);
     },
 });
