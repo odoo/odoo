@@ -8,7 +8,7 @@ import {
     popoverService,
 } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/service_hook";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { registerCleanup } from "../../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick } from "../../helpers/utils";
@@ -246,7 +246,7 @@ QUnit.test("remove popover when component is unmount", async function (assert) {
 
     class MyComp extends Component {
         setup() {
-            this.popoverService = useService("popover");
+            this.popoverService = usePopover();
         }
         showPopover(key) {
             const params = {
@@ -304,7 +304,7 @@ QUnit.test("service does not try to remove destroyed popover", async function (a
 
     class MyComp extends Component {
         setup() {
-            this.popoverService = useService("popover");
+            this.popoverService = usePopover();
         }
         showPopover() {
             const params = {
@@ -345,7 +345,7 @@ QUnit.test("popover kept on close is removed when component unmount", async func
 
     class MyComp extends Component {
         setup() {
-            this.popoverService = useService("popover");
+            this.popoverService = usePopover();
         }
         showPopover() {
             const params = {

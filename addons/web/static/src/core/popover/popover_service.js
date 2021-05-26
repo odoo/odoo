@@ -7,7 +7,6 @@ import { Popover } from "./popover";
 
 const { Component } = owl;
 const { EventBus } = owl.core;
-const { onWillUnmount } = owl.hooks;
 const { xml } = owl.tags;
 
 export class KeyAlreadyExistsError extends Error {}
@@ -130,36 +129,6 @@ export const popoverService = {
                 bus.trigger("REMOVE", key);
             },
         };
-    },
-    specializeForComponent(component, service) {
-        const keys = new Set();
-        onWillUnmount(function () {
-            for (const key of keys) {
-                service.remove(key);
-            }
-            keys.clear();
-        });
-        return Object.assign(Object.create(service), {
-            add(params) {
-                const newParams = Object.create(params);
-                newParams.onClose = function (key) {
-                    if (!params.keepOnClose) {
-                        // manager will delete the popover if keepOnClose is falsy
-                        keys.delete(key);
-                    }
-                    if (params.onClose && component.__owl__.status !== 5 /* DESTROYED */) {
-                        params.onClose(key);
-                    }
-                };
-                const key = service.add(newParams);
-                keys.add(key);
-                return key;
-            },
-            remove(key) {
-                keys.delete(key);
-                service.remove(key);
-            },
-        });
     },
 };
 

@@ -163,7 +163,7 @@ QUnit.test("rpc initiated from destroyed components throw exception", async (ass
     try {
         await component.rpc("/my/route");
     } catch (e) {
-        assert.strictEqual(e.message, "A destroyed component should never initiate a RPC");
+        assert.strictEqual(e.message, "Component is destroyed");
     }
 });
 

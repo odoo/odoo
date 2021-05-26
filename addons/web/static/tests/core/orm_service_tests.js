@@ -255,7 +255,6 @@ QUnit.test("useModel is specialized for component", async (assert) => {
 
     const target = getFixture();
     const component = await mount(MyComponent, { env, target });
-    assert.strictEqual(component.rpc, component.orm.rpc);
     assert.notStrictEqual(component.orm, env.services.orm);
 });
 

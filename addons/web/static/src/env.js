@@ -47,7 +47,7 @@ export function makeEnv(debug) {
 
 const serviceRegistry = registry.category("services");
 
-export const SPECIAL_METHOD = Symbol("special_method");
+export const SERVICES_METADATA = {};
 
 /**
  * Start all services registered in the service registry, while making sure
@@ -96,8 +96,8 @@ async function _startServices(env, toStart, timeoutId) {
             const entries = (service.dependencies || []).map((dep) => [dep, services[dep]]);
             const dependencies = Object.fromEntries(entries);
             const value = service.start(env, dependencies);
-            if (value && "specializeForComponent" in service) {
-                value[SPECIAL_METHOD] = service.specializeForComponent;
+            if ("async" in service) {
+                SERVICES_METADATA[name] = service.async;
             }
             if (value instanceof Promise) {
                 proms.push(

@@ -96,19 +96,11 @@ function jsonrpc(env, rpcId, url, params, settings = {}) {
 // RPC service
 // -----------------------------------------------------------------------------
 export const rpcService = {
+    async: true,
     start(env) {
         let rpcId = 0;
         return function rpc(route, params = {}, settings) {
             return jsonrpc(env, rpcId++, route, params, settings);
-        };
-    },
-    specializeForComponent(component, rpc) {
-        return async (...args) => {
-            if (component.__owl__.status === 5 /* DESTROYED */) {
-                throw new Error("A destroyed component should never initiate a RPC");
-            }
-            const result = await rpc(...args);
-            return component.__owl__.status === 5 ? new Promise(() => {}) : result;
         };
     },
 };
