@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useService } from "./service_hook";
 import { registry } from "./registry";
 
 /**
@@ -55,22 +54,6 @@ class ORM {
         return this.call(model, "read", [ids, fields], { context: ctx });
     }
 
-    unlink(model, ids, ctx) {
-        return this.call(model, "unlink", [ids], { context: ctx });
-    }
-
-    write(model, ids, data, ctx) {
-        return this.call(model, "write", [ids, data], { context: ctx });
-    }
-
-    search(model, domain, options = {}, ctx = {}) {
-        const kwargs = {
-            context: ctx,
-        };
-        assignOptions(kwargs, options, ["offset", "limit", "order"]);
-        return this.call(model, "search", [domain], kwargs);
-    }
-
     readGroup(model, domain, fields, groupby, options = {}, ctx = {}) {
         const kwargs = {
             domain,
@@ -82,16 +65,32 @@ class ORM {
         return this.call(model, "web_read_group", [], kwargs);
     }
 
+    search(model, domain, options = {}, ctx = {}) {
+        const kwargs = {
+            context: ctx,
+        };
+        assignOptions(kwargs, options, ["offset", "limit", "order"]);
+        return this.call(model, "search", [domain], kwargs);
+    }
+
     searchRead(model, domain, fields, options = {}, ctx = {}) {
         const kwargs = { context: ctx, domain, fields };
         assignOptions(kwargs, options, ["offset", "limit", "order"]);
         return this.call(model, "search_read", [], kwargs);
     }
 
+    unlink(model, ids, ctx) {
+        return this.call(model, "unlink", [ids], { context: ctx });
+    }
+
     webSearchRead(model, domain, fields, options = {}, ctx = {}) {
         const kwargs = { context: ctx, domain, fields };
         assignOptions(kwargs, options, ["offset", "limit", "order"]);
         return this.call(model, "web_search_read", [], kwargs);
+    }
+
+    write(model, ids, data, ctx) {
+        return this.call(model, "write", [ids, data], { context: ctx });
     }
 }
 
@@ -109,12 +108,18 @@ class ORM {
  */
 export const ormService = {
     dependencies: ["rpc", "user"],
+    async: [
+        "call",
+        "create",
+        "read",
+        "readGroup",
+        "search",
+        "searchRead",
+        "unlink",
+        "web_search_read",
+        "write",
+    ],
     start(env, { rpc, user }) {
-        return new ORM(rpc, user);
-    },
-    specializeForComponent() {
-        const rpc = useService("rpc");
-        const user = useService("user");
         return new ORM(rpc, user);
     },
 };
