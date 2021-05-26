@@ -31,7 +31,6 @@ export class ChatWindowHeader extends Component {
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 thread,
                 threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
-                threadMassMailing: thread && thread.mass_mailing,
                 threadModel: thread && thread.model,
             };
         });

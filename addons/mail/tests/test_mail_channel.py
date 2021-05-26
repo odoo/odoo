@@ -150,7 +150,6 @@ class TestChannelInternals(MailCommon):
         cls.test_channel = cls.env['mail.channel'].with_context(cls._test_context).create({
             'name': 'Test',
             'channel_type': 'channel',
-            'email_send': False,
             'description': 'Description',
             'alias_name': 'test',
             'public': 'public',
@@ -216,7 +215,6 @@ class TestChannelInternals(MailCommon):
         """ Posting a message on a chat should not send emails """
         self.test_channel.write({
             'channel_type': 'chat',
-            'email_send': False
         })
         self.test_channel._action_add_members(self.partner_employee | self.partner_admin | self.test_partner)
         with self.mock_mail_gateway():
@@ -228,29 +226,6 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(new_msg.res_id, self.test_channel.id)
         self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
         self.assertEqual(new_msg.notified_partner_ids, self.env['res.partner'])
-
-    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
-    def test_channel_recipients_mailing_list(self):
-        """ Posting a message on a mailing list should send one email to all recipients """
-        self.test_channel.write({'email_send': True})
-        (self.user_admin | self.user_employee).write({'notification_type': 'email'})
-
-        # Subscribe an user without email. We shouldn't try to send email to them.
-        self.test_channel._action_add_members(self.partner_employee | self.partner_admin | self.test_partner | self.partner_employee_nomail)
-        with self.mock_mail_gateway():
-            with self.with_user('employee'):
-                channel = self.env['mail.channel'].browse(self.test_channel.ids)
-                channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
-        self.assertSentEmail(self.partner_employee, [self.partner_admin, self.test_partner])
-
-        # test mailing with with inbox notification type
-        self.user_admin.write({'notification_type': 'inbox'})
-        self.user_admin.flush()
-        with self.mock_mail_gateway():
-            with self.with_user('employee'):
-                channel = self.env['mail.channel'].browse(self.test_channel.ids)
-                channel.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
-        self.assertSentEmail(self.partner_employee, [self.test_partner])
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_channel_recipients_mention(self):
@@ -395,7 +370,6 @@ class TestChannelInternals(MailCommon):
         even if `_action_unfollow()` is called again.
         '''
         channel = self.env['mail.channel'].browse(self.test_channel.id)
-        channel.write({'email_send': False})
         channel._action_add_members(self.test_partner)
 
         # no message should be posted under test_partner's name
@@ -434,71 +408,3 @@ class TestChannelInternals(MailCommon):
                 allowed_company_ids=self.company_admin.ids
             ).channel_get(self.partner_employee_c2.ids)
             self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
-
-    def test_multi_company_message_post_notifications(self):
-        company_1 = self.company_admin
-        company_2 = self.env['res.company'].create({'name': 'Company 2'})
-
-        # Company 1 and notification_type == "inbox"
-        user_1 = self.user_employee
-
-        # Company 1 and notification_type == "email"
-        user_2 = self.user_admin
-        user_2.notification_type = 'email'
-
-        user_3 = mail_new_test_user(
-            self.env, login='user3', email='user3@example.com', groups='base.group_user',
-            company_id=company_2.id, company_ids=[(6, 0, company_2.ids)],
-            name='user3', notification_type='inbox')
-
-        user_4 = mail_new_test_user(
-            self.env, login='user4', email='user4@example.com', groups='base.group_user',
-            company_id=company_2.id, company_ids=[(6, 0, company_2.ids)],
-            name='user4', notification_type='email')
-
-        partner_without_user = self.env['res.partner'].create({
-            'name': 'Partner',
-            'email': 'partner_test_123@example.com',
-        })
-        mail_channel = self.env['mail.channel'].with_user(user_1).create({
-            'name': 'Channel',
-            'channel_partner_ids': [
-                (4, user_1.partner_id.id),
-                (4, user_2.partner_id.id),
-                (4, user_3.partner_id.id),
-                (4, user_4.partner_id.id),
-                (4, partner_without_user.id),
-            ],
-            'email_send': True,
-        })
-
-        mail_channel.invalidate_cache()
-        (user_1 | user_2 | user_3 | user_4).invalidate_cache()
-
-        with self.mock_mail_gateway():
-            mail_channel.with_user(user_1).with_company(company_1).message_post(
-                body='Test body message 1337',
-                message_type='email',
-                subtype_xmlid='mail.mt_comment',
-            )
-
-        self.assertSentEmail(user_1.partner_id, [user_2.partner_id])
-        self.assertSentEmail(user_1.partner_id, [user_4.partner_id])
-        self.assertEqual(len(self._mails), 3, 'Should have send only 3 emails to user 2, user 4 and the partner')
-
-        self.assertBusNotifications([(self.cr.dbname, 'mail.channel', mail_channel.id)])
-
-        # Should not create mail notifications for user 1 & 3
-        self.assertFalse(self.env['mail.notification'].search([('res_partner_id', '=', user_1.partner_id.id)]))
-        self.assertFalse(self.env['mail.notification'].search([('res_partner_id', '=', user_3.partner_id.id)]))
-
-        # Should create mail notifications for user 2 & 4
-        self.assertTrue(self.env['mail.notification'].search([('res_partner_id', '=', user_2.partner_id.id)]))
-        self.assertTrue(self.env['mail.notification'].search([('res_partner_id', '=', user_4.partner_id.id)]))
-
-        # Check that we did not send a "channel_seen" notifications
-        # for the users which receive the notifications by email
-        notification_seen_user_2 = self.env['bus.bus'].search([('create_uid', '=', user_2.id)])
-        self.assertFalse(notification_seen_user_2, 'Should not have sent a notification as user 2')
-        notification_seen_user_4 = self.env['bus.bus'].search([('create_uid', '=', user_4.id)])
-        self.assertFalse(notification_seen_user_4, 'Should not have sent a notification as user 4')

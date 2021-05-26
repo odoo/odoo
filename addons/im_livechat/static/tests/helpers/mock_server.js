@@ -212,7 +212,6 @@ MockServer.include({
             'channel_type': 'livechat',
             'name': membersName.join(' '),
             'public': 'private',
-            'mass_mailing': false, // email_send
         };
     },
     /**

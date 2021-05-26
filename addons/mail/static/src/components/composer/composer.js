@@ -52,12 +52,10 @@ export class Composer extends Component {
                 composerCanPostMessage: composer && composer.canPostMessage,
                 composerHasFocus: composer && composer.hasFocus,
                 composerIsLog: composer && composer.isLog,
-                composerSubjectContent: composer && composer.subjectContent,
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 thread,
                 threadChannelType: thread && thread.channel_type, // for livechat override
                 threadDisplayName: thread && thread.displayName,
-                threadMassMailing: thread && thread.mass_mailing,
                 threadModel: thread && thread.model,
                 threadName: thread && thread.name,
             };
@@ -81,10 +79,6 @@ export class Composer extends Component {
          * Reference of the text input component.
          */
         this._textInputRef = useRef('textInput');
-        /**
-         * Reference of the subject input. Useful to set content.
-         */
-        this._subjectRef = useRef('subject');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }
 
@@ -231,9 +225,6 @@ export class Composer extends Component {
         if (!this.composer) {
             return;
         }
-        if (this._subjectRef.el) {
-            this._subjectRef.el.value = this.composer.subjectContent;
-        }
     }
 
     //--------------------------------------------------------------------------
@@ -338,13 +329,6 @@ export class Composer extends Component {
         if (!this.env.device.isMobile) {
             this.focus();
         }
-    }
-
-    /**
-     * @private
-     */
-    _onInputSubject() {
-        this.composer.update({ subjectContent: this._subjectRef.el.value });
     }
 
     /**
