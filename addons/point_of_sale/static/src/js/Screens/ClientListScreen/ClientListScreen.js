@@ -33,6 +33,8 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             // to Observer proxy. Not sure of the side-effects of making
             // a persistent object, such as pos, into owl.Observer. But it
             // is better to be safe.
+            this.modelFields = ['country_id', 'state_id', 'property_product_pricelist'];
+            this.defaultFields = ['country_id', 'state_id', 'lang'];
             this.state = {
                 query: null,
                 selectedClient: this.props.client,
@@ -42,6 +44,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                     partner: {
                         country_id: this.env.pos.company.country_id,
                         state_id: this.env.pos.company.state_id,
+                        lang: this.env.pos.user.lang,
                     }
                 },
             };
@@ -144,16 +147,28 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 partner: {
                     country_id: this.env.pos.company.country_id,
                     state_id: this.env.pos.company.state_id,
+                    lang: this.env.pos.user.lang,
                 },
             };
             this.render();
         }
         async saveChanges(event) {
+            let changes = Object.assign({}, event.detail.processedChanges);
+            if (this.state.isNewClient) {
+                this.defaultFields.forEach(name => {
+                    if (!changes[name] && this.state.editModeProps.partner[name]) {
+                        changes[name] = this.state.editModeProps.partner[name];
+                        if (this.modelFields.includes(name)) {
+                            changes[name] = changes[name][0];
+                        }
+                    }
+                });
+            }
             try {
                 let partnerId = await this.rpc({
                     model: 'res.partner',
                     method: 'create_from_ui',
-                    args: [event.detail.processedChanges],
+                    args: [changes],
                 });
                 await this.env.pos.load_new_partners();
                 this.state.selectedClient = this.env.pos.db.get_partner_by_id(partnerId);

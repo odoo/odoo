@@ -68,9 +68,10 @@
                         <span class="label">Language</span>
                         <select class="detail client-lang needsclick" name="lang"
                                 t-on-change="captureChange">
+                            <option value="">None</option>
                             <t t-foreach="env.pos.langs" t-as="lang" t-key="lang.id">
                                 <option t-att-value="lang.code"
-                                        t-att-selected="props.partner.lang ? ((lang.code === props.partner.lang) ? true : undefined) : lang.code === env.pos.user.lang? true : undefined">
+                                        t-att-selected="props.partner.lang ? ((lang.code === props.partner.lang) ? true : undefined) : undefined">
                                     <t t-esc="lang.name" />
                                 </option>
                             </t>
