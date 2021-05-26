@@ -44,10 +44,12 @@
         <field name="arch" type="xml">
             <form string="Purchase Agreement Types">
             <sheet>
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <group>
                     <group string="Agreement Type">
                         <field name="name"/>
                         <field name="exclusive" widget="radio"/>
+                        <field name="active" invisible="1"/>
                     </group>
                     <group string="Data for new quotations">
                         <field name="line_copy" widget="radio"/>
@@ -56,6 +58,17 @@
                 </group>
             </sheet>
             </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_purchase_requisition_type_search">
+        <field name="name">purchase.requisition.type.search</field>
+        <field name="model">purchase.requisition.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
         </field>
     </record>
     <record id="tender_type_action" model="ir.actions.act_window">
