@@ -583,6 +583,34 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_bounce_if_static_but_still_has_plus_addressing(self):
+        """Incoming email: bounce using bounce alias without plus addressing: keep old behavior."""
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', True)
+        self.test_message_route_bounce()
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_bounce_if_static_without_plus_addressing(self):
+        """Incoming email: bounce using bounce alias without plus addressing: bounce it."""
+        self.env['ir.config_parameter'].set_param('mail.bounce.alias.static', True)
+        new_recs = self.format_and_process(
+            MAIL_TEMPLATE, self.partner_1.email_formatted,
+            '%s@%s' % (self.alias_bounce, self.alias_domain),
+            subject='Should bounce',
+        )
+        self.assertFalse(new_recs)
+        self.assertEqual(len(self._mails), 0, 'message_process: incoming bounce produces no mails')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_no_bounce_if_not_static_without_plus_addressing(self):
+        """Incoming email: bounce using bounce alias without plus addressing: bounce it."""
+        with self.assertRaises(ValueError):
+            self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email_formatted,
+                '%s@%s' % (self.alias_bounce, self.alias_domain),
+                subject="Should fail because it is not a bounce and there's no alias",
+            )
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_bounce_other_recipients(self):
         """Incoming email: bounce processing: bounce should be computed even if not first recipient """
         new_recs = self.format_and_process(
