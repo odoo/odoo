@@ -50,7 +50,7 @@ class L10nLatamDocumentType(models.Model):
     def _filter_taxes_included(self, taxes):
         """ In argentina we include taxes depending on document letter """
         self.ensure_one()
-        if self.country_id == self.env.ref('base.ar') and self.l10n_ar_letter in ['B', 'C', 'X', 'R']:
+        if self.country_id == self.env.ref('base.ar') and self.l10n_ar_letter in ['B', 'C', 'X', 'R', 'E']:
             return taxes.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)
         return super()._filter_taxes_included(taxes)
 
