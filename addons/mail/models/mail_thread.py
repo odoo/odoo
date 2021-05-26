@@ -2106,9 +2106,6 @@ class MailThread(models.AbstractModel):
          * performs the notification process by calling the various notification
            methods implemented;
 
-        This method cnn be overridden to intercept and postpone notification
-        mechanism like mail.channel moderation.
-
         :param message: mail.message record to notify;
         :param msg_vals: dictionary of values used to create the message. If given
           it is used instead of accessing ``self`` to lessen query count in some

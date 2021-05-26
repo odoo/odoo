@@ -87,16 +87,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         */
-        _computeCheckedMessages() {
-            const messagesWithoutCheckbox = this.checkedMessages.filter(
-                message => !message.hasCheckbox
-            );
-            return unlink(messagesWithoutCheckbox);
-        }
-
-        /**
-         * @private
          * @returns {mail.message[]}
          */
         _computeFetchedMessages() {
@@ -240,16 +230,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.message[]}
-         */
-        _computeUncheckedMessages() {
-            return replace(this.messages.filter(
-                message => message.hasCheckbox && !this.checkedMessages.includes(message)
-            ));
-        }
-
-        /**
-         * @private
          * @param {Array} domain
          * @returns {Array}
          */
@@ -263,8 +243,6 @@ function factory(dependencies) {
                 ]);
             } else if (thread === this.env.messaging.history) {
                 return domain.concat([['needaction', '=', false]]);
-            } else if (thread === this.env.messaging.moderation) {
-                return domain.concat([['moderation_status', '=', 'pending_moderation']]);
             } else {
                 // Avoid to load user_notification as these messages are not
                 // meant to be shown on chatters.
@@ -293,16 +271,12 @@ function factory(dependencies) {
                 domain = extraDomain.concat(domain);
             }
             const context = this.env.session.user_context;
-            const moderated_channel_ids = this.thread.moderation
-                ? [this.thread.id]
-                : undefined;
             let messages;
             try {
                 messages = await this.async(() =>
                     this.env.models['mail.message'].performRpcMessageFetch(
                         domain,
                         limit,
-                        moderated_channel_ids,
                         context,
                     )
                 );
@@ -426,14 +400,6 @@ function factory(dependencies) {
     }
 
     ThreadCache.fields = {
-        checkedMessages: many2many('mail.message', {
-            compute: '_computeCheckedMessages',
-            dependencies: [
-                'checkedMessages',
-                'messagesCheckboxes',
-            ],
-            inverse: 'checkedThreadCaches',
-        }),
         /**
          * List of messages that have been fetched by this cache.
          *
@@ -512,9 +478,6 @@ function factory(dependencies) {
         lastMessage: many2one('mail.message', {
             compute: '_computeLastMessage',
             dependencies: ['orderedMessages'],
-        }),
-        messagesCheckboxes: attr({
-            related: 'messages.hasCheckbox',
         }),
         /**
          * List of messages linked to this cache.
@@ -653,14 +616,6 @@ function factory(dependencies) {
          */
         threadViews: one2many('mail.thread_view', {
             inverse: 'threadCache',
-        }),
-        uncheckedMessages: many2many('mail.message', {
-            compute: '_computeUncheckedMessages',
-            dependencies: [
-                'checkedMessages',
-                'messagesCheckboxes',
-                'messages',
-            ],
         }),
     };
 

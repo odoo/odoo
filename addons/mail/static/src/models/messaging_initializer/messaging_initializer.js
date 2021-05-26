@@ -32,11 +32,6 @@ function factory(dependencies) {
                     model: 'mail.box',
                     name: this.env._t("Inbox"),
                 }),
-                moderation: create({
-                    id: 'moderation',
-                    model: 'mail.box',
-                    name: this.env._t("Moderation"),
-                }),
                 starred: create({
                     id: 'starred',
                     isServerPinned: true,
@@ -76,8 +71,6 @@ function factory(dependencies) {
          * @param {integer} param0.current_user_id
          * @param {Object} [param0.mail_failures={}]
          * @param {Object[]} [param0.mention_partner_suggestions=[]]
-         * @param {Object[]} [param0.moderation_channel_ids=[]]
-         * @param {integer} [param0.moderation_counter=0]
          * @param {integer} [param0.needaction_inbox_counter=0]
          * @param {Object} param0.partner_root
          * @param {Object[]} param0.public_partners
@@ -92,8 +85,6 @@ function factory(dependencies) {
             mail_failures = {},
             mention_partner_suggestions = [],
             menu_id,
-            moderation_channel_ids = [],
-            moderation_counter = 0,
             needaction_inbox_counter = 0,
             partner_root,
             public_partners,
@@ -105,15 +96,12 @@ function factory(dependencies) {
             this._initPartners({
                 current_partner,
                 current_user_id,
-                moderation_channel_ids,
                 partner_root,
                 public_partners,
             });
             // mailboxes after partners and before other initializers that might
             // manipulate threads or messages
             this._initMailboxes({
-                moderation_channel_ids,
-                moderation_counter,
                 needaction_inbox_counter,
                 starred_counter,
             });
@@ -186,25 +174,15 @@ function factory(dependencies) {
         /**
          * @private
          * @param {Object} param0
-         * @param {Object[]} [param0.moderation_channel_ids=[]]
-         * @param {integer} param0.moderation_counter
          * @param {integer} param0.needaction_inbox_counter
          * @param {integer} param0.starred_counter
          */
         _initMailboxes({
-            moderation_channel_ids,
-            moderation_counter,
             needaction_inbox_counter,
             starred_counter,
         }) {
             this.env.messaging.inbox.update({ counter: needaction_inbox_counter });
             this.env.messaging.starred.update({ counter: starred_counter });
-            if (moderation_channel_ids.length > 0) {
-                this.messaging.moderation.update({
-                    counter: moderation_counter,
-                    isServerPinned: true,
-                });
-            }
         }
 
         /**
@@ -239,14 +217,12 @@ function factory(dependencies) {
          * @private
          * @param {Object} current_partner
          * @param {integer} current_user_id
-         * @param {integer[]} moderation_channel_ids
          * @param {Object} partner_root
          * @param {Object[]} [public_partners=[]]
          */
         _initPartners({
             current_partner,
             current_user_id: currentUserId,
-            moderation_channel_ids = [],
             partner_root,
             public_partners = [],
         }) {
@@ -254,12 +230,6 @@ function factory(dependencies) {
                 currentPartner: insert(Object.assign(
                     this.env.models['mail.partner'].convertData(current_partner),
                     {
-                        moderatedChannels: insert(moderation_channel_ids.map(id => {
-                            return {
-                                id,
-                                model: 'mail.channel',
-                            };
-                        })),
                         user: insert({ id: currentUserId }),
                     }
                 )),
