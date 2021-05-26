@@ -415,9 +415,6 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
          * @param {string | number} orderToSelectId
          */
         async actionSetTableWithOrder(table, orderToSelectId) {
-            if (!this.exists('pos.order', orderToSelectId)) {
-                return await this.actionSetTable(table);
-            }
             const orderToSelect = this.getRecord('pos.order', orderToSelectId);
             if (orderToSelect.table_id !== table.id) {
                 throw new Error("Can't select order that doesn't belong to the table.");
@@ -428,6 +425,10 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
             } else if (table !== currentlyActiveTable) {
                 await this._saveTableOrdersToServer(currentlyActiveTable);
                 await this._fetchTableOrdersFromServer(table);
+            }
+            if (!this.exists('pos.order', orderToSelectId)) {
+                this.ui.showNotification(_t('The selected order has been deleted from other device.'), 5000);
+                return await this.actionSetTable(table);
             }
             this.data.uiState.activeTableId = table.id;
             await this.actionSelectOrder(this.getRecord('pos.order', orderToSelectId));
