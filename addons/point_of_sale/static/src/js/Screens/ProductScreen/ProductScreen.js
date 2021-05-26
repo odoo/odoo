@@ -9,7 +9,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { Gui } = require('point_of_sale.Gui');
     const { isRpcError } = require('point_of_sale.utils');
-    const { useState } = owl.hooks;
+    const { useState, onMounted } = owl.hooks;
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
         constructor() {
@@ -34,6 +34,10 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 triggerAtInput: 'update-selected-orderline',
                 useWithBarcode: true,
             });
+            // Call `reset` when the `onMounted` callback in `NumberBuffer.use` is done.
+            // We don't do this in the `mounted` lifecycle method because it is called before
+            // the callbacks in `onMounted` hook.
+            onMounted(() => NumberBuffer.reset());
             this.state = useState({ numpadMode: 'quantity' });
             this.mobile_pane = this.props.mobile_pane || 'right';
         }
