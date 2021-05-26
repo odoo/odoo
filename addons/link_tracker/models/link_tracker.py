@@ -215,6 +215,7 @@ class link_tracker(models.Model):
 class link_tracker_code(models.Model):
     _name = "link.tracker.code"
     _description = 'Link Tracker Code'
+    _rec_name = 'code'
 
     code = fields.Char(string='Short URL Code', store=True)
     link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
