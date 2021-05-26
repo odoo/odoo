@@ -190,8 +190,6 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                     }
                 }
 
-                clickedOrder.productDetails = tab;
-
                 let new_line = new models.Orderline({}, {
                     pos: this.env.pos,
                     order: this.env.pos.get_order(),
@@ -199,6 +197,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                     price: sale_order.amount_total,
                     price_manually_set: true,
                     sale_order_origin_id: clickedOrder,
+                    down_payment_details: tab,
                 });
                 new_line.set_unit_price(sale_order.amount_total);
                 this.env.pos.get_order().add_orderline(new_line);

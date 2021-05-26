@@ -117,3 +117,20 @@ class PosOrderLine(models.Model):
 
     sale_order_origin_id = fields.Many2one('sale.order', string="Linked Sale Order")
     sale_order_line_id = fields.Many2one('sale.order.line', string="Source Sale Order Line")
+    down_payment_details = fields.Text(string="Down Payment Details")
+
+    def _export_for_ui(self, orderline):
+        result = super()._export_for_ui(orderline)
+        # NOTE We are not exporting 'sale_order_line_id' because it is being used in any views in the POS App.
+        result['down_payment_details'] = bool(orderline.down_payment_details) and orderline.down_payment_details
+        result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
+        return result
+
+    def _order_line_fields(self, line, session_id):
+        result = super()._order_line_fields(line, session_id)
+        vals = result[2]
+        if vals.get('sale_order_origin_id', False):
+            vals['sale_order_origin_id'] = vals['sale_order_origin_id']['id']
+        if vals.get('sale_order_line_id', False):
+            vals['sale_order_line_id'] = vals['sale_order_line_id']['id']
+        return result

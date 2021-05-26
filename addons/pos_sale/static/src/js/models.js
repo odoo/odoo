@@ -37,7 +37,6 @@ models.Order = models.Order.extend({
         var json = super_order_model.export_for_printing.apply(this,arguments);
         if (this.sale_order_origin_id) {
             json.so_reference = this.sale_order_origin_id.name;
-            json.productDetails =  this.sale_order_origin_id.productDetails;
         }
         return json;
     },
@@ -47,25 +46,32 @@ var super_order_line_model = models.Orderline.prototype;
 models.Orderline = models.Orderline.extend({
   initialize: function (attributes, options) {
       super_order_line_model.initialize.apply(this, arguments);
-      this.sale_order_origin_id = options.sale_order_origin_id;
-      this.sale_order_line_id = options.sale_order_line_id;
+      // It is possible that this orderline is initialized using `init_from_JSON`,
+      // meaning, it is loaded from localStorage or from export_for_ui. This means
+      // that some fields has already been assigned. Therefore, we only set the options
+      // when the original value is falsy.
+      this.sale_order_origin_id = this.sale_order_origin_id || options.sale_order_origin_id;
+      this.sale_order_line_id = this.sale_order_line_id || options.sale_order_line_id;
+      this.down_payment_details = this.down_payment_details || options.down_payment_details;
   },
   init_from_JSON: function (json) {
       super_order_line_model.init_from_JSON.apply(this, arguments);
       this.sale_order_origin_id = json.sale_order_origin_id;
       this.sale_order_line_id = json.sale_order_line_id;
+      this.down_payment_details = json.down_payment_details && JSON.parse(json.down_payment_details);
   },
   export_as_JSON: function () {
       const json = super_order_line_model.export_as_JSON.apply(this, arguments);
-      json.sale_order_origin_id = this.sale_order_origin_id ? this.sale_order_origin_id.id : false;
-      json.sale_order_line_id = this.sale_order_line_id ?  this.sale_order_line_id.id : false;
+      json.sale_order_origin_id = this.sale_order_origin_id;
+      json.sale_order_line_id = this.sale_order_line_id;
+      json.down_payment_details = this.down_payment_details && JSON.stringify(this.down_payment_details);
       return json;
   },
   get_sale_order: function(){
       if(this.sale_order_origin_id) {
         let value = {
             'name': this.sale_order_origin_id.name,
-            'details': this.sale_order_origin_id.productDetails || false
+            'details': this.down_payment_details || false
         }
 
         return value;
@@ -74,9 +80,9 @@ models.Orderline = models.Orderline.extend({
   },
   export_for_printing: function() {
     var json = super_order_line_model.export_for_printing.apply(this,arguments);
+    json.down_payment_details =  this.down_payment_details;
     if (this.sale_order_origin_id) {
         json.so_reference = this.sale_order_origin_id.name;
-        json.productDetails =  this.sale_order_origin_id.productDetails;
     }
     return json;
   },
