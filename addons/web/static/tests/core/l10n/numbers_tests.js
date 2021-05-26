@@ -1,16 +1,38 @@
 /** @odoo-module **/
 
-import { localization } from "@web/core/l10n/localization";
+import { defaultLocalization } from "@web/../tests/helpers/mock_services";
 import { formatFloat, humanNumber, parseFloat } from "@web/core/l10n/numbers";
-import { patch, unpatch } from "@web/core/utils/patch";
-import { defaultLocalization } from "../../helpers/mock_services";
+import { localization } from "@web/core/l10n/localization";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
-QUnit.module("utils", () => {
+QUnit.module("utils", (hooks) => {
+    hooks.beforeEach(async () => {
+        patchWithCleanup(localization, defaultLocalization);
+    });
+
     QUnit.module("numbers");
 
+    QUnit.test("formatFloat", async (assert) => {
+        assert.expect(5);
+
+        assert.strictEqual(formatFloat(1000000), "1,000,000.00");
+
+        patchWithCleanup(localization, { grouping: [3, 2, -1] });
+        assert.strictEqual(formatFloat(106500), "1,06,500.00");
+
+        patchWithCleanup(localization, { grouping: [1, 2, -1] });
+        assert.strictEqual(formatFloat(106500), "106,50,0.00");
+
+        patchWithCleanup(localization, { grouping: [2, 0], decimalPoint: "!", thousandsSep: "@" });
+        assert.strictEqual(formatFloat(6000), "60@00!00");
+        assert.strictEqual(formatFloat(false), "");
+    });
+
     QUnit.test("humanNumber", async (assert) => {
+        assert.expect(26);
+
         assert.strictEqual(humanNumber(1020, { decimals: 2, minDigits: 1 }), "1.02k");
-        assert.strictEqual(humanNumber(1020000, { decimals: 2, minDigits: 2 }), "1020k");
+        assert.strictEqual(humanNumber(1020000, { decimals: 2, minDigits: 2 }), "1,020k");
         assert.strictEqual(humanNumber(10200000, { decimals: 2, minDigits: 2 }), "10.2M");
         assert.strictEqual(humanNumber(1020, { decimals: 2, minDigits: 1 }), "1.02k");
         assert.strictEqual(humanNumber(1002, { decimals: 2, minDigits: 1 }), "1k");
@@ -23,7 +45,7 @@ QUnit.module("utils", () => {
         assert.strictEqual(humanNumber(1.012e43, { decimals: 2, minDigits: 1 }), "1.01e+43");
         assert.strictEqual(humanNumber(1.012e43, { decimals: 2, minDigits: 2 }), "1.01e+43");
         assert.strictEqual(humanNumber(-1020, { decimals: 2, minDigits: 1 }), "-1.02k");
-        assert.strictEqual(humanNumber(-1020000, { decimals: 2, minDigits: 2 }), "-1020k");
+        assert.strictEqual(humanNumber(-1020000, { decimals: 2, minDigits: 2 }), "-1,020k");
         assert.strictEqual(humanNumber(-10200000, { decimals: 2, minDigits: 2 }), "-10.2M");
         assert.strictEqual(humanNumber(-1020, { decimals: 2, minDigits: 1 }), "-1.02k");
         assert.strictEqual(humanNumber(-1002, { decimals: 2, minDigits: 1 }), "-1k");
@@ -37,33 +59,9 @@ QUnit.module("utils", () => {
         assert.strictEqual(humanNumber(-1.012e43, { decimals: 2, minDigits: 2 }), "-1.01e+43");
     });
 
-    QUnit.test("formatFloat", async (assert) => {
-        patch(localization, "defaultlocalization", defaultLocalization);
-
-        assert.strictEqual(formatFloat(1000000), "1,000,000.00");
-
-        patch(localization, "weirdgrouping", { grouping: [3, 2, -1] });
-        assert.strictEqual(formatFloat(106500), "1,06,500.00");
-        unpatch(localization, "weirdgrouping");
-
-        patch(localization, "weirdgrouping", { grouping: [1, 2, -1] });
-        assert.strictEqual(formatFloat(106500), "106,50,0.00");
-        unpatch(localization, "weirdgrouping");
-
-        patch(localization, "otherlocalization", {
-            grouping: [2, 0],
-            decimalPoint: "!",
-            thousandsSep: "@",
-        });
-        assert.strictEqual(formatFloat(6000), "60@00!00");
-        assert.strictEqual(formatFloat(false), "");
-        unpatch(localization, "otherlocalization");
-
-        unpatch(localization, "defaultlocalization");
-    });
-
     QUnit.test("parseFloat", async (assert) => {
-        patch(localization, "patch1", { grouping: [3, 0], decimalPoint: ".", thousandsSep: "," });
+        assert.expect(10);
+
         assert.strictEqual(parseFloat(""), 0);
         assert.strictEqual(parseFloat("0"), 0);
         assert.strictEqual(parseFloat("100.00"), 100);
@@ -71,16 +69,16 @@ QUnit.module("utils", () => {
         assert.strictEqual(parseFloat("1,000.00"), 1000);
         assert.strictEqual(parseFloat("1,000,000.00"), 1000000);
         assert.strictEqual(parseFloat("1,234.567"), 1234.567);
-        assert.throws(function () {
-            parseFloat("1.000.000");
-        }, "Throw an exception if it's not a valid number");
-        unpatch(localization, "patch1");
+        assert.throws(
+            () => parseFloat("1.000.000"),
+            "Throw an exception if it's not a valid number"
+        );
 
-        patch(localization, "patch2", { grouping: [3, 0], decimalPoint: ",", thousandsSep: "." });
+        patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
         assert.strictEqual(parseFloat("1.234,567"), 1234.567);
-        assert.throws(function () {
-            parseFloat("1,000,000");
-        }, "Throw an exception if it's not a valid number");
-        unpatch(localization, "patch2");
+        assert.throws(
+            () => parseFloat("1,000,000"),
+            "Throw an exception if it's not a valid number"
+        );
     });
 });

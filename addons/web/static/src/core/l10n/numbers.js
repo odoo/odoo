@@ -132,7 +132,11 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
             break;
         }
     }
-    number = sign * number;
-    const { thousandsSep, grouping } = localization;
-    return insertThousandsSep(number, thousandsSep, grouping) + symbol;
+    const { decimalPoint, grouping, thousandsSep } = localization;
+    const [integerPart, decimalPart] = String(number).split(".");
+    const int = insertThousandsSep(sign * Number(integerPart), thousandsSep, grouping);
+    if (!decimalPart) {
+        return int + symbol;
+    }
+    return int + decimalPoint + decimalPart + symbol;
 }
