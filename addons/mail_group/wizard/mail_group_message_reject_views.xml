@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_group_message_reject_form" model="ir.ui.view">
+        <field name="name">mail.group.message.reject.form</field>
+        <field name="model">mail.group.message.reject</field>
+        <field name="arch" type="xml">
+            <form string="Reject">
+                <group>
+                    <field name="mail_group_message_id"/>
+                    <field name="subject"/>
+                    <field name="body"/>
+                </group>
+                <footer>
+                    <button string="Send" name="action_send_mail" type="object" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_group_message_reject_action" model="ir.actions.act_window">
+        <field name="name">Reject Group Message</field>
+        <field name="res_model">mail.group.message.reject</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
