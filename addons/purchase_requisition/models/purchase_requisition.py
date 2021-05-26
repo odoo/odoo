@@ -34,6 +34,7 @@ class PurchaseRequisitionType(models.Model):
     line_copy = fields.Selection([
         ('copy', 'Use lines of agreement'), ('none', 'Do not create RfQ lines automatically')],
         string='Lines', required=True, default='copy')
+    active = fields.Boolean(default=True, help="Set active to false to hide the Purchase Agreement Types without removing it.")
 
 
 class PurchaseRequisition(models.Model):
