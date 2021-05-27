@@ -45,7 +45,7 @@ KanbanRecord.include({
         var self = this;
         var value = Number(this.$target_input.val());
         if (isNaN(value)) {
-            this.do_warn(false, _t("Please enter an integer value"));
+            this.displayNotification({ message: _t("Please enter an integer value"), type: 'danger' });
         } else {
             this.trigger_up('kanban_record_update', {
                 invoiced_target: value,

@@ -152,7 +152,7 @@ var Dashboard = AbstractAction.extend({
             },
         }).then(function (result) {
             if (result.error) {
-                self.do_warn(result.error.title, result.error.message);
+                self.displayNotification({ title: result.error.title, message: result.error.message, type: 'danger' });
                 return;
             }
             self.on_date_range_button('week');

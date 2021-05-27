@@ -589,7 +589,12 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         });
         warnings.unshift('<ul>');
         warnings.push('</ul>');
-        this.do_warn(_t("Invalid fields:"), warnings.join(''));
+        this.displayNotification({
+            title: _t("Invalid fields:"),
+            message: warnings.join(''),
+            type: 'danger',
+            messageIsHtml: true, // dynamic parts of the message are escaped above
+        });
     },
     /**
      * Hook method, called when record(s) has been deleted.

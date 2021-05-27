@@ -21,7 +21,7 @@ var KioskConfirm = AbstractAction.extend({
                     if (result.action) {
                         self.do_action(result.action);
                     } else if (result.warning) {
-                        self.do_warn(result.warning);
+                        self.displayNotification({ title: result.warning, type: 'danger' });
                     }
                 });
         }, 200, true),
@@ -48,7 +48,7 @@ var KioskConfirm = AbstractAction.extend({
                     if (result.action) {
                         self.do_action(result.action);
                     } else if (result.warning) {
-                        self.do_warn(result.warning);
+                        self.displayNotification({ title: result.warning, type: 'danger' });
                         self.$('.o_hr_attendance_PINbox').val('');
                         setTimeout( function() { self.$('.o_hr_attendance_pin_pad_button_ok').removeAttr("disabled"); }, 500);
                     }

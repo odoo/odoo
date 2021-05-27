@@ -174,12 +174,11 @@ QUnit.module('web_editor', {}, function () {
             testUtils.mock.intercept(form, 'call_service', function (ev) {
                 if (ev.data.service === 'notification') {
                     assert.deepEqual(ev.data.args[0], {
-                        "className": undefined,
                         "message": "<ul><li>Header</li></ul>",
-                        "sticky": undefined,
+                        "messageIsHtml": true,
                         "title": "Invalid fields:",
                         "type": "danger"
-                      });
+                    });
                 }
             }, true);
 

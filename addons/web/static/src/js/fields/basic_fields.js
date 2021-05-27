@@ -1881,7 +1881,7 @@ var AbstractFieldBinary = AbstractField.extend({
                 var file = file_node.files[0];
                 if (file.size > this.max_upload_size) {
                     var msg = _t("The selected file exceed the maximum file size of %s.");
-                    this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
+                    this.displayNotification({ title: _t("File upload"), message: _.str.sprintf(msg, utils.human_size(this.max_upload_size)), type: 'danger' });
                     return false;
                 }
                 utils.getDataURLFromFile(file).then(function (data) {
@@ -1897,7 +1897,7 @@ var AbstractFieldBinary = AbstractField.extend({
     },
     on_file_uploaded: function (size, name) {
         if (size === false) {
-            this.do_warn(false, _t("There was a problem while uploading your file"));
+            this.displayNotification({ message: _t("There was a problem while uploading your file"), type: 'danger' });
             // TODO: use crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
@@ -2040,7 +2040,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
         $img.one('error', function () {
             $img.attr('src', self.placeholder);
-            self.do_warn(false, _t("Could not display the selected image"));
+            self.displayNotification({ message: _t("Could not display the selected image"), type: 'danger' });
         });
 
         return this._super.apply(this, arguments);
@@ -2232,7 +2232,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
     },
     on_save_as: function (ev) {
         if (!this.value) {
-            this.do_warn(false, _t("The field is empty, there's nothing to save."));
+            this.displayNotification({ message: _t("The field is empty, there's nothing to save."), type: 'danger' });
             ev.stopPropagation();
         } else if (this.res_id) {
             framework.blockUI();
@@ -3022,7 +3022,7 @@ var FieldProgressBar = AbstractField.extend({
             // Cover all numbers with parseFloat
             parsedValue = field_utils.parse.float($input.val());
         } catch (error) {
-            this.do_warn(false, _t("Please enter a numerical value"));
+            this.displayNotification({ message: _t("Please enter a numerical value"), type: 'danger' });
         }
 
         if (parsedValue !== undefined) {
