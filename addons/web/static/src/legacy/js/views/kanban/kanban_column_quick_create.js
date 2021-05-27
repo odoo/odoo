@@ -201,7 +201,7 @@ var ColumnQuickCreate = Widget.extend({
                 text: _t('Close'),
             }],
             size: "large",
-            title: "Kanban Examples",
+            title: _t("Kanban Examples"),
         }).open();
         dialog.on('closed', this, function () {
             self.$input.focus();
