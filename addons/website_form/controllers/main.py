@@ -3,16 +3,13 @@
 
 import base64
 import json
-import pytz
 
-from datetime import datetime
 from psycopg2 import IntegrityError
 from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID, _
 from odoo.http import request
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.translate import _
+from odoo.tools import plaintext2html
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 
@@ -100,6 +97,9 @@ class WebsiteForm(http.Controller):
     def floating(self, field_label, field_input):
         return float(field_input)
 
+    def html(self, field_label, field_input):
+        return plaintext2html(field_input)
+
     def boolean(self, field_label, field_input):
         return bool(field_input)
 
@@ -115,7 +115,7 @@ class WebsiteForm(http.Controller):
     _input_filters = {
         'char': identity,
         'text': identity,
-        'html': identity,
+        'html': html,
         'date': identity,
         'datetime': identity,
         'many2one': integer,
