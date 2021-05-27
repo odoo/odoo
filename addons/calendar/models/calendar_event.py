@@ -445,8 +445,14 @@ class Meeting(models.Model):
         update_recurrence = recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1
         break_recurrence = values.get('recurrency') is False
 
+        update_alarms = False
         if 'partner_ids' in values:
             values['attendee_ids'] = self._attendees_values(values['partner_ids'])
+            update_alarms = True
+
+        # master arj todo: factorize use of _get_time_fields()
+        if any([values.get(key) for key in self.env['calendar.event']._get_time_fields()]) or 'alarm_ids' in values:
+            update_alarms = True
 
         if (not recurrence_update_setting or recurrence_update_setting == 'self_only' and len(self) == 1) and 'follow_recurrence' not in values:
             if any({field: values.get(field) for field in self.env['calendar.event']._get_time_fields() if field in values}):
@@ -474,7 +480,7 @@ class Meeting(models.Model):
 
         (detached_events & self).active = False
         (detached_events - self).with_context(archive_on_error=True).unlink()
-        if not self.env.context.get('dont_notify'):
+        if not self.env.context.get('dont_notify') and update_alarms:
             self._setup_alarms()
 
         current_attendees = self.filtered('active').attendee_ids
