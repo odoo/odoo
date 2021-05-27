@@ -717,7 +717,7 @@ class MrpProduction(models.Model):
                     production._plan_workorders(replan=True)
             if production.state == 'done' and ('lot_producing_id' in vals or 'qty_producing' in vals):
                 finished_move_lines = production.move_finished_ids.filtered(
-                    lambda move: move.product_id == self.product_id and move.state == 'done').mapped('move_line_ids')
+                    lambda move: move.product_id == production.product_id and move.state == 'done').mapped('move_line_ids')
                 if 'lot_producing_id' in vals:
                     finished_move_lines.write({'lot_id': vals.get('lot_producing_id')})
                 if 'qty_producing' in vals:
