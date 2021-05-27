@@ -37,6 +37,29 @@ def format_time(env, time, tz=False, time_format='medium', lang_code=False):
     except babel.core.UnknownLocaleError:
         return time
 
+def relativedelta_proxy(*args, **kwargs):
+    # dateutil.relativedelta is an old-style class and cannot be directly
+    # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
+    # is needed, apparently
+    return relativedelta.relativedelta(*args, **kwargs)
+
+template_env_globals = {
+    'str': str,
+    'quote': urls.url_quote,
+    'urlencode': urls.url_encode,
+    'datetime': safe_eval.datetime,
+    'len': len,
+    'abs': abs,
+    'min': min,
+    'max': max,
+    'sum': sum,
+    'filter': filter,
+    'reduce': functools.reduce,
+    'map': map,
+    'relativedelta': relativedelta_proxy,
+    'round': round,
+}
+
 try:
     # We use a jinja2 sandboxed environment to render mako templates.
     # Note that the rendering does not cover all the mako syntax, in particular
@@ -58,26 +81,7 @@ try:
         trim_blocks=True,               # do not output newline after blocks
         autoescape=True,                # XML/HTML automatic escaping
     )
-    jinja_template_env.globals.update({
-        'str': str,
-        'quote': urls.url_quote,
-        'urlencode': urls.url_encode,
-        'datetime': safe_eval.datetime,
-        'len': len,
-        'abs': abs,
-        'min': min,
-        'max': max,
-        'sum': sum,
-        'filter': filter,
-        'reduce': functools.reduce,
-        'map': map,
-        'round': round,
-
-        # dateutil.relativedelta is an old-style class and cannot be directly
-        # instanciated wihtin a jinja2 expression, so a lambda "proxy" is
-        # is needed, apparently.
-        'relativedelta': lambda *a, **kw : relativedelta.relativedelta(*a, **kw),
-    })
+    jinja_template_env.globals.update(template_env_globals)
     jinja_safe_template_env = copy.copy(jinja_template_env)
     jinja_safe_template_env.autoescape = False
 except ImportError:
@@ -94,6 +98,8 @@ class MailRenderMixin(models.AbstractModel):
         help="Optional translation language (ISO code) to select when sending out an email. "
              "If not set, the english version will be used. This should usually be a placeholder expression "
              "that provides the appropriate language, e.g. ${object.partner_id.lang}.")
+    # rendering context
+    render_model = fields.Char("Rendering Model", compute='_compute_render_model', store=False)
     # expression builder
     model_object_field = fields.Many2one(
         'ir.model.fields', string="Field", store=False,
@@ -113,6 +119,12 @@ class MailRenderMixin(models.AbstractModel):
     copyvalue = fields.Char(
         'Placeholder Expression', store=False,
         help="Final placeholder expression, to be copy-pasted in the desired template field.")
+
+    def _compute_render_model(self):
+        """ Give the target model for rendering. Void by default as models
+        inheriting from ``mail.render.mixin`` should define how to find this
+        model. """
+        self.render_model = False
 
     @api.onchange('model_object_field', 'sub_model_object_field', 'null_value')
     def _onchange_dynamic_placeholder(self):
@@ -243,38 +255,56 @@ class MailRenderMixin(models.AbstractModel):
     # ------------------------------------------------------------
 
     @api.model
-    def _render_qweb_eval_context(self):
-        """ Prepare qweb evaluation context, containing for all rendering
+    def _get_common_eval_context(self):
+        """ Evaluation context used in all rendering engines. Contains
 
           * ``user``: current user browse record;
           * ``ctx```: current context;
           * various formatting tools;
         """
-        render_context = {
+        return {
             'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
             'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
+            'format_time': lambda time, tz=False, time_format=False, lang_code=False: format_time(self.env, time, tz, time_format, lang_code),
             'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
             'format_duration': lambda value: tools.format_duration(value),
             'user': self.env.user,
             'ctx': self._context,
         }
+
+    @api.model
+    def _render_qweb_eval_context(self):
+        """ Prepare qweb evaluation context, containing common context with
+        some specific values for Qweb. """
+        render_context = self._get_common_eval_context()
+        render_context.update(copy.copy(template_env_globals))
         return render_context
 
     @api.model
-    def _render_template_qweb(self, template_src, model, res_ids, add_context=None):
-        """ Render a QWeb template.
+    def _render_template_qweb_view(self, template_src, model, res_ids,
+                                   add_context=None, options=None):
+        """ Render a QWeb template based on an ir.ui.view content.
+
+        In addition to the generic evaluation context available, some other
+        variables are added:
+          * ``object``: record based on which the template is rendered;
 
         :param str template_src: source QWeb template. It should be a string
-          XmlID allowing to fetch an ir.ui.view;
-        :param str model: see ``MailRenderMixin._render_field)``;
-        :param list res_ids: see ``MailRenderMixin._render_field)``;
+          XmlID allowing to fetch an ``ir.ui.view``;
+        :param str model: see ``MailRenderMixin._render_template()``;
+        :param list res_ids: see ``MailRenderMixin._render_template()``;
 
         :param dict add_context: additional context to give to renderer. It
-          allows to add values to base rendering context generated by
-          ``MailRenderMixin._render_qweb_eval_context()``;
+          allows to add or update values to base rendering context generated
+          by ``MailRenderMixin._render_qweb_eval_context()``;
+        :param dict options: options for rendering (not used currently);
 
         :return dict: {res_id: string of rendered template based on record}
         """
+        # prevent wrong values (rendering on a void record set, ...)
+        if any(r is None for r in res_ids):
+            raise ValueError(_('Template rendering should be called on a valid record IDs.'))
+
         view = self.env.ref(template_src, raise_if_not_found=False) or self.env['ir.ui.view']
         results = dict.fromkeys(res_ids, u"")
         if not view:
@@ -284,56 +314,55 @@ class MailRenderMixin(models.AbstractModel):
         variables = self._render_qweb_eval_context()
         if add_context:
             variables.update(**add_context)
+        safe_eval.check_values(variables)
 
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
                 render_result = view._render(variables, engine='ir.qweb', minimal_qcontext=True)
             except Exception as e:
-                _logger.info("Failed to render template : %s (%d)" % (template_src, view.id), exc_info=True)
-                raise UserError(_("Failed to render template : %s (%d)", template_src, view.id))
+                _logger.info("Failed to render template : %s (%d)", template_src, view.id, exc_info=True)
+                raise UserError(_("Failed to render template : %(xml_id)s (%(view_id)d)",
+                                  xml_id=template_src,
+                                  view_id=view.id))
             results[record.id] = render_result
 
         return results
 
     @api.model
     def _render_jinja_eval_context(self):
-        """ Prepare jinja evaluation context, containing for all rendering
-
-          * ``user``: current user browse record;
-          * ``ctx```: current context, named ctx to avoid clash with jinja
-            internals that already uses context;
-          * various formatting tools;
-        """
-        render_context = {
-            'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
-            'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
-            'format_time': lambda time, tz=False, time_format=False, lang_code=False: format_time(self.env, time, tz, time_format, lang_code),
-            'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
-            'format_duration': lambda value: tools.format_duration(value),
-            'user': self.env.user,
-            'ctx': self._context,
-        }
-        return render_context
+        return self._get_common_eval_context()
 
     @api.model
-    def _render_template_jinja(self, template_txt, model, res_ids, add_context=None):
+    def _render_template_jinja(self, template_txt, model, res_ids,
+                               add_context=None, options=None):
         """ Render a string-based template on records given by a model and a list
         of IDs, using jinja.
 
-        In addition to the generic evaluation context given by _render_jinja_eval_context
-        some new variables are added, depending on each record
-
+        In addition to the generic evaluation context available, some other
+        variables are added:
           * ``object``: record based on which the template is rendered;
 
         :param str template_txt: template text to render
-        :param str model: model name of records on which we want to perform rendering
-        :param list res_ids: list of ids of records (all belonging to same model)
+        :param str model: see ``MailRenderMixin._render_template()``;
+        :param list res_ids: see ``MailRenderMixin._render_template()``;
+
+        :param dict add_context: additional context to give to renderer. It
+          allows to add or update values to base rendering context generated
+          by ``MailRenderMixin._render_jinja_eval_context()``;
+        :param dict options: options for rendering;
 
         :return dict: {res_id: string of rendered template based on record}
         """
-        # TDE FIXME: remove that brol (6dde919bb9850912f618b561cd2141bffe41340c)
-        no_autoescape = self._context.get('safe')
+        # prevent wrong values (rendering on a void record set, ...)
+        if any(r is None for r in res_ids):
+            raise ValueError(_('Template rendering should be called on a valid record IDs.'))
+
+        # TDE note: support 'safe' context key as backward compatibility for 6dde919bb9850912f618b561cd2141bffe41340c
+        if options is None:
+            options = {}
+        no_autoescape = options.get('render_safe') or self._context.get('safe')
+
         results = dict.fromkeys(res_ids, u"")
         if not template_txt:
             return results
@@ -352,17 +381,13 @@ class MailRenderMixin(models.AbstractModel):
             variables.update(**add_context)
         safe_eval.check_values(variables)
 
-        # TDE CHECKME
-        # records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
-        if any(r is None for r in res_ids):
-            raise ValueError(_('Unsuspected None'))
 
         for record in self.env[model].browse(res_ids):
             variables['object'] = record
             try:
                 render_result = template.render(variables)
             except Exception as e:
-                _logger.info("Failed to render template : %s" % e, exc_info=True)
+                _logger.info("Failed to render template : %s", e, exc_info=True)
                 raise UserError(_("Failed to render template : %s", e))
             if render_result == u"False":
                 render_result = u""
@@ -374,50 +399,63 @@ class MailRenderMixin(models.AbstractModel):
     def _render_template_postprocess(self, rendered):
         """ Tool method for post processing. In this method we ensure local
         links ('/shop/Basil-1') are replaced by global links ('https://www.
-        mygardin.com/hop/Basil-1').
+        mygarden.com/shop/Basil-1').
 
-        :param rendered: result of ``_render_template``
+        :param rendered: result of ``_render_template``;
 
-        :return dict: updated version of rendered
+        :return dict: updated version of rendered per record ID;
         """
-        for res_id, html in rendered.items():
-            rendered[res_id] = self._replace_local_links(html)
+        for res_id, rendered_html in rendered.items():
+            rendered[res_id] = self._replace_local_links(rendered_html)
         return rendered
 
     @api.model
-    def _render_template(self, template_src, model, res_ids, engine='jinja', add_context=None, post_process=False):
+    def _render_template(self, template_src, model, res_ids, engine='jinja',
+                         add_context=None, options=None, post_process=False):
         """ Render the given string on records designed by model / res_ids using
         the given rendering engine. Currently only jinja or qweb are supported.
 
-        :param str template_src: template text to render (jinja) or xml id of view (qweb)
-          this could be cleaned but hey, we are in a rush
-        :param str model: model name of records on which we want to perform rendering
-        :param list res_ids: list of ids of records (all belonging to same model)
-        :param string engine: jinja
-        :param post_process: see ``MailRenderMixin._render_field``;
+        :param str template_src: template text to render (jinja) or xml id of
+          view (qweb);
+        :param str model: model name of records on which we want to perform
+          rendering (aka 'crm.lead');
+        :param list res_ids: list of ids of records. All should belong to the
+          Odoo model given by model;
+        :param string engine: jinja or qweb_view;
+
+        :param dict add_context: additional context to give to renderer. It
+          allows to add or update values to base rendering context generated
+          by ``MailRenderMixin._render_<engine>_eval_context()``;
+        :param dict options: options for rendering;
+        :param boolean post_process: perform a post processing on rendered result
+          (notably html links management). See``_render_template_postprocess``;
 
         :return dict: {res_id: string of rendered template based on record}
         """
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(_('Template rendering should be called only using on a list of IDs.'))
-        if engine not in ('jinja', 'qweb'):
+        if engine not in ('jinja', 'qweb_view'):
             raise ValueError(_('Template rendering supports only jinja or qweb.'))
 
-        if engine == 'qweb':
-            rendered = self._render_template_qweb(template_src, model, res_ids, add_context=add_context)
+        if engine == 'qweb_view':
+            rendered = self._render_template_qweb_view(template_src, model, res_ids,
+                                                       add_context=add_context, options=options)
         else:
-            rendered = self._render_template_jinja(template_src, model, res_ids, add_context=add_context)
+            rendered = self._render_template_jinja(template_src, model, res_ids,
+                                                   add_context=add_context, options=options)
         if post_process:
             rendered = self._render_template_postprocess(rendered)
 
         return rendered
 
-    def _render_lang(self, res_ids):
+    def _render_lang(self, res_ids, engine='jinja'):
         """ Given some record ids, return the lang for each record based on
-        lang field of template or through specific context-based key.
+        lang field of template or through specific context-based key. Lang is
+        computed by performing a rendering on res_ids, based on self.render_model.
 
-        :param list res_ids: list of ids of records (all belonging to same model
-          defined by self.model)
+        :param list res_ids: list of ids of records. All should belong to the
+          Odoo model given by model;
+        :param string engine: jinja or qweb_view;
 
         :return dict: {res_id: lang code (i.e. en_US)}
         """
@@ -425,27 +463,30 @@ class MailRenderMixin(models.AbstractModel):
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(_('Template rendering for language should be called with a list of IDs.'))
 
-        if self.env.context.get('template_preview_lang'):
-            return dict((res_id, self.env.context['template_preview_lang']) for res_id in res_ids)
-        else:
-            rendered_langs = self._render_template(self.lang, self.model, res_ids)
-            return dict((res_id, lang)
-                        for res_id, lang in rendered_langs.items())
+        rendered_langs = self._render_template(self.lang, self.render_model, res_ids, engine=engine)
+        return dict(
+            (res_id, lang)
+            for res_id, lang in rendered_langs.items()
+        )
 
-    def _classify_per_lang(self, res_ids):
+    def _classify_per_lang(self, res_ids, engine='jinja'):
         """ Given some record ids, return for computed each lang a contextualized
         template and its subset of res_ids.
 
         :param list res_ids: list of ids of records (all belonging to same model
-          defined by self.model)
+          defined by self.render_model)
+        :param string engine: jinja or qweb_view;
 
         :return dict: {lang: (template with lang=lang_code if specific lang computed
           or template, res_ids targeted by that language}
         """
         self.ensure_one()
 
+        if self.env.context.get('template_preview_lang'):
+            return dict((res_id, self.env.context['template_preview_lang']) for res_id in res_ids)
+
         lang_to_res_ids = {}
-        for res_id, lang in self._render_lang(res_ids).items():
+        for res_id, lang in self._render_lang(res_ids, engine=engine).items():
             lang_to_res_ids.setdefault(lang, []).append(res_id)
 
         return dict(
@@ -453,16 +494,18 @@ class MailRenderMixin(models.AbstractModel):
             for lang, lang_res_ids in lang_to_res_ids.items()
         )
 
-    def _render_field(self, field, res_ids,
+    def _render_field(self, field, res_ids, engine='jinja',
                       compute_lang=False, set_lang=False,
-                      post_process=False):
+                      add_context=None, options=None, post_process=False):
         """ Given some record ids, render a template located on field on all
         records. ``field`` should be a field of self (i.e. ``body_html`` on
         ``mail.template``). res_ids are record IDs linked to ``model`` field
         on self.
 
+        :param field: a field name existing on self;
         :param list res_ids: list of ids of records (all belonging to same model
-          defined by ``self.model``)
+          defined by ``self.render_model``)
+        :param string engine: jinja or qweb_view;
 
         :param boolean compute_lang: compute language to render on translated
           version of the template instead of default (probably english) one.
@@ -470,6 +513,8 @@ class MailRenderMixin(models.AbstractModel):
         :param string set_lang: force language for rendering. It should be a
           valid lang code matching an activate res.lang. Checked only if
           ``compute_lang`` is False;
+        :param dict add_context: additional context to give to renderer;
+        :param dict options: options for rendering;
         :param boolean post_process: perform a post processing on rendered result
           (notably html links management). See``_render_template_postprocess``);
 
@@ -487,7 +532,7 @@ class MailRenderMixin(models.AbstractModel):
             (res_id, rendered)
             for lang, (template, tpl_res_ids) in templates_res_ids.items()
             for res_id, rendered in template._render_template(
-                template[field], template.model, tpl_res_ids,
-                post_process=post_process
+                template[field], template.render_model, tpl_res_ids, engine=engine,
+                add_context=add_context, options=options, post_process=post_process
             ).items()
         )

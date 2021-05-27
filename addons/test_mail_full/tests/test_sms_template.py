@@ -23,6 +23,9 @@ class TestSmsTemplate(TestMailFullCommon, TestMailFullRecipients):
         rendered_body = self.sms_template._render_template(self.sms_template.body, self.sms_template.model, self.test_record.ids)
         self.assertEqual(rendered_body[self.test_record.id], 'Dear %s this is an SMS.' % self.test_record.display_name)
 
+        rendered_body = self.sms_template._render_field('body', self.test_record.ids)
+        self.assertEqual(rendered_body[self.test_record.id], 'Dear %s this is an SMS.' % self.test_record.display_name)
+
     def test_sms_template_lang(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.user_admin.write({'lang': 'en_US'})
