@@ -7528,6 +7528,43 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('kanban with isHtmlEmpty method', async function (assert) {
+        assert.expect(3);
+
+        this.data.product.fields.description = {string: 'Description', type: 'html'};
+        this.data.product.records.push(
+            {id: 11, display_name: "product 11", description: "<span class='text-info'>hello</hello>"},
+            {id: 12, display_name: "product 12", description: "<p class='a'><span style='color:red;'/><br/></p>"},
+        );
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'product',
+            data: this.data,
+            arch: `<kanban>
+                        <field name="description"/>
+                        <templates><t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="display_name"/>
+                                <div class="test" t-if="!widget.isHtmlEmpty(record.description.raw_value)">
+                                    <t t-raw="record.description.raw_value"/>
+                                </div>
+                            </div>
+                        </t></templates>
+                    </kanban>`,
+            domain: [['id', 'in', [11, 12]]],
+
+        });
+        assert.containsOnce(kanban, '.o_kanban_record:first div.test',
+            "the container is displayed if description have actual content");
+        assert.strictEqual(kanban.$('.o_kanban_record:first div.test span.text-info').html().trim(), 'hello',
+            "the inner html content is rendered properly");
+        assert.containsNone(kanban, '.o_kanban_record:last div.test',
+            "the container is not displayed if description just have formatting tags and no actual content");
+
+        kanban.destroy();
+    });
 });
 
 });
