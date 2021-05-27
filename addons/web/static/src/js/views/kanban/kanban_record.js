@@ -88,6 +88,22 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Check if a html content is empty. If there are only formatting tags with
+     * style attributes or a void content. Famous use case is
+     * '<p style="..." class=".."><br></p>' added by some web editor(s).
+     * Note that because the use of this method is limited, we ignore the cases
+     * like there's one <img> tag in the content. In such case, even if it's the
+     * actual content, we consider it empty.
+     *
+     * @param {string} htmlContent
+     * @returns {boolean} true if no content found or if containing only formatting tags
+     */
+    isHtmlEmpty: function (htmlContent) {
+        let div = document.createElement('div');
+        div.innerHTML = htmlContent || "";
+        return div.innerText.trim() === "";
+    },
+    /**
      * Re-renders the record with a new state
      *
      * @param {Object} state
