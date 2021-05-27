@@ -45,10 +45,7 @@ var FieldBinarySignature = AbstractFieldBinary.extend({
      * @override
      */
     isSet: function () {
-        if (this.mode === 'edit') {
-            return this.value;
-        }
-        return true;
+        return this.value;
     },
 
     //--------------------------------------------------------------------------
