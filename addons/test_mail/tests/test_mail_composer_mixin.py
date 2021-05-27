@@ -39,6 +39,7 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
             'name': 'Invite',
             'subject': 'Subject for ${object.name}',
             'body': '<p>Content from ${user.name}</p>',
+            'description': '<p>Description for <t t-esc="object.name"/></p>',
         })
         self.assertEqual(record.subject, 'Subject for ${object.name}')
         self.assertEqual(record.body, '<p>Content from ${user.name}</p>')
@@ -47,3 +48,5 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
         self.assertEqual(subject, 'Subject for %s' % record.name)
         body = record._render_field('body', record.ids)[record.id]
         self.assertEqual(body, '<p>Content from %s</p>' % self.env.user.name)
+        description = record._render_field('description', record.ids)[record.id]
+        self.assertEqual(description, '<p>Description for </p>')
