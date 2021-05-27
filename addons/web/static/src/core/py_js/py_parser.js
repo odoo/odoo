@@ -31,6 +31,8 @@ import { binaryOperators, comparators } from "./py_tokenizer";
  * @typedef { ASTNumber | ASTString | ASTBoolean | ASTNone | ASTList | ASTName | ASTUnaryOperator | ASTBinaryOperator | ASTFunctionCall | ASTAssignment | ASTTuple | ASTDictionary |ASTLookup | ASTIf | ASTBooleanOperator | ASTObjLookup} AST
  */
 
+export class ParserError extends Error {}
+
 // -----------------------------------------------------------------------------
 // Constants and helpers
 // -----------------------------------------------------------------------------
@@ -161,14 +163,14 @@ function parsePrefix(current, tokens) {
                                 isTuple = true;
                                 tokens.shift();
                             } else if (!isSymbol(tokens[0], ")")) {
-                                throw new Error("parsing error");
+                                throw new ParserError("parsing error");
                             }
                         } else {
-                            throw new Error("parsing error");
+                            throw new ParserError("parsing error");
                         }
                     }
                     if (!tokens[0] || !isSymbol(tokens[0], ")")) {
-                        throw new Error("parsing error");
+                        throw new ParserError("parsing error");
                     }
                     tokens.shift();
                     isTuple = isTuple || content.length === 0;
@@ -181,12 +183,12 @@ function parsePrefix(current, tokens) {
                             if (isSymbol(tokens[0], ",")) {
                                 tokens.shift();
                             } else if (!isSymbol(tokens[0], "]")) {
-                                throw new Error("parsing error");
+                                throw new ParserError("parsing error");
                             }
                         }
                     }
                     if (!tokens[0] || !isSymbol(tokens[0], "]")) {
-                        throw new Error("parsing error");
+                        throw new ParserError("parsing error");
                     }
                     tokens.shift();
                     return { type: 4 /* List */, value };
@@ -199,7 +201,7 @@ function parsePrefix(current, tokens) {
                             !tokens[0] ||
                             !isSymbol(tokens[0], ":")
                         ) {
-                            throw new Error("parsing error");
+                            throw new ParserError("parsing error");
                         }
                         tokens.shift();
                         const value = _parse(tokens, 0);
@@ -210,13 +212,13 @@ function parsePrefix(current, tokens) {
                     }
                     // remove the } token
                     if (!tokens.shift()) {
-                        throw new Error("parser error");
+                        throw new ParserError("parsing error");
                     }
                     return { type: 11 /* Dictionary */, value: dict };
                 }
             }
     }
-    throw new Error("boom");
+    throw new ParserError("Token cannot be parsed");
 }
 
 /**
@@ -245,7 +247,7 @@ function parseInfix(left, current, tokens) {
                             key: right.value,
                         };
                     } else {
-                        throw new Error("invalid obj lookup");
+                        throw new ParserError("invalid obj lookup");
                     }
                 }
                 let op = {
@@ -293,7 +295,7 @@ function parseInfix(left, current, tokens) {
                         }
                     }
                     if (!tokens[0] || !isSymbol(tokens[0], ")")) {
-                        throw new Error("parsing error");
+                        throw new ParserError("parsing error");
                     }
                     tokens.shift();
                     return { type: 8 /* FunctionCall */, fn: left, args, kwargs };
@@ -309,7 +311,7 @@ function parseInfix(left, current, tokens) {
                     // lookup in dictionary
                     const key = _parse(tokens);
                     if (!tokens[0] || !isSymbol(tokens[0], "]")) {
-                        throw new Error("parsing error");
+                        throw new ParserError("parsing error");
                     }
                     tokens.shift();
                     return {
@@ -321,7 +323,7 @@ function parseInfix(left, current, tokens) {
                 case "if": {
                     const condition = _parse(tokens);
                     if (!tokens[0] || !isSymbol(tokens[0], "else")) {
-                        throw new Error("parsing error");
+                        throw new ParserError("parsing error");
                     }
                     tokens.shift();
                     const ifFalse = _parse(tokens);
@@ -334,7 +336,7 @@ function parseInfix(left, current, tokens) {
                 }
             }
     }
-    throw new Error("asfdasdfsdf");
+    throw new ParserError("Token cannot be parsed");
 }
 
 /**

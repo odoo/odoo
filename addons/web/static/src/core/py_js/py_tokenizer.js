@@ -18,6 +18,8 @@
  * @typedef {TokenNumber | TokenString | TokenSymbol | TokenName | TokenConstant} Token
  */
 
+export class TokenizerError extends Error {}
+
 // -----------------------------------------------------------------------------
 // Helpers and Constants
 // -----------------------------------------------------------------------------
@@ -81,14 +83,14 @@ function decodeStringLiteral(str, unicode) {
                 if (!unicode) {
                     break;
                 }
-                throw Error("SyntaxError: \\N{} escape not implemented");
+                throw new TokenizerError("SyntaxError: \\N{} escape not implemented");
             case "u":
                 if (!unicode) {
                     break;
                 }
                 var uni = str.slice(i + 2, i + 6);
                 if (!/[0-9a-f]{4}/i.test(uni)) {
-                    throw new Error(
+                    throw new TokenizerError(
                         [
                             "SyntaxError: (unicode error) 'unicodeescape' codec",
                             " can't decode bytes in position ",
@@ -109,15 +111,15 @@ function decodeStringLiteral(str, unicode) {
                     break;
                 }
                 // TODO: String.fromCodePoint
-                throw Error("SyntaxError: \\U escape not implemented");
+                throw new TokenizerError("SyntaxError: \\U escape not implemented");
             case "x":
                 // get 2 hex digits
                 var hex = str.slice(i + 2, i + 4);
                 if (!/[0-9a-f]{2}/i.test(hex)) {
                     if (!unicode) {
-                        throw new Error("ValueError: invalid \\x escape");
+                        throw new TokenizerError("ValueError: invalid \\x escape");
                     }
-                    throw new Error(
+                    throw new TokenizerError(
                         [
                             "SyntaxError: (unicode error) 'unicodeescape'",
                             " codec can't decode bytes in position ",
@@ -249,7 +251,7 @@ export function tokenize(str) {
             if (/^\s+$/.test(str.slice(end))) {
                 break;
             }
-            throw new Error(
+            throw new TokenizerError(
                 "Failed to tokenize <<" +
                     str +
                     ">> at index " +
@@ -260,7 +262,7 @@ export function tokenize(str) {
         }
         if (pseudomatch.index > end) {
             if (str.slice(end, pseudomatch.index).trim()) {
-                throw new Error("Tokenizer error: Invalid expression");
+                throw new TokenizerError("Invalid expression");
             }
         }
         start = pseudomatch.index;
@@ -305,7 +307,7 @@ export function tokenize(str) {
                 value: token,
             });
         } else {
-            throw new Error("aaaaa");
+            throw new TokenizerError("Invalid expression");
         }
     }
     return tokens;

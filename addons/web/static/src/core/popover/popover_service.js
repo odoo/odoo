@@ -10,17 +10,9 @@ const { EventBus } = owl.core;
 const { onWillUnmount } = owl.hooks;
 const { xml } = owl.tags;
 
-export class KeyAlreadyExistsError extends Error {
-    constructor(key) {
-        super(`PopoverManager already contains key "${key}"`);
-    }
-}
+export class KeyAlreadyExistsError extends Error {}
 
-export class KeyNotFoundError extends Error {
-    constructor(key) {
-        super(`PopoverManager does not contain key "${key}"`);
-    }
-}
+export class KeyNotFoundError extends Error {}
 
 export class PopoverManager extends Component {
     setup() {
@@ -43,7 +35,7 @@ export class PopoverManager extends Component {
      */
     addPopover(params) {
         if (params.key in this.popovers) {
-            throw new KeyAlreadyExistsError(params.key);
+            throw new KeyAlreadyExistsError(`PopoverManager already contains key "${params.key}"`);
         }
 
         this.popovers[params.key] = params;
@@ -54,7 +46,7 @@ export class PopoverManager extends Component {
      */
     removePopover(key) {
         if (!(key in this.popovers)) {
-            throw new KeyNotFoundError(key);
+            throw new KeyNotFoundError(`PopoverManager does not contain key "${key}"`);
         }
 
         delete this.popovers[key];

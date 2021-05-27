@@ -3,6 +3,14 @@
 import { parseArgs } from "./py_utils";
 
 // -----------------------------------------------------------------------------
+// Errors
+// -----------------------------------------------------------------------------
+
+export class AssertionError extends Error {}
+export class ValueError extends Error {}
+export class NotSupportedError extends Error {}
+
+// -----------------------------------------------------------------------------
 // helpers
 // -----------------------------------------------------------------------------
 
@@ -30,7 +38,7 @@ function divmod(a, b, fn) {
 
 function assert(bool) {
     if (!bool) {
-        throw new Error("AssertionError");
+        throw new AssertionError("AssertionError");
     }
 }
 
@@ -66,7 +74,7 @@ function daysBeforeMonth(year, month) {
 function ymd2ord(year, month, day) {
     const dim = daysInMonth(year, month);
     if (!(1 <= day && day <= dim)) {
-        throw new Error("ValueError: day must be in 1.." + dim);
+        throw new ValueError(`day must be in 1..${dim}`);
     }
     return daysBeforeYear(year) + daysBeforeMonth(year, month) + day;
 }
@@ -93,7 +101,7 @@ function ord2ymd(n) {
     });
 
     n = n0;
-    var year = n400 * 400 + 1 + n100 * 100 + n4 * 4 + n1;
+    const year = n400 * 400 + 1 + n100 * 100 + n4 * 4 + n1;
     if (n1 == 4 || n100 == 100) {
         assert(n0 === 0);
         return {
@@ -252,7 +260,7 @@ export class PyDate {
                 case "d":
                     return fmt2(this.day);
             }
-            throw new Error("ValueError: No known conversion for " + m);
+            throw new ValueError(`No known conversion for ${m}`);
         });
     }
 }
@@ -343,7 +351,7 @@ export class PyDateTime {
                 case "S":
                     return fmt2(this.second);
             }
-            throw new Error("ValueError: No known conversion for " + m);
+            throw new ValueError(`No known conversion for ${m}`);
         });
     }
 }
@@ -392,7 +400,7 @@ export class PyTime extends PyDate {
                 case "S":
                     return fmt2(this.second);
             }
-            throw new Error("ValueError: No known conversion for " + m);
+            throw new ValueError(`No known conversion for ${m}`);
         });
     }
 }
@@ -417,7 +425,7 @@ export class PyRelativeDelta {
         delta.second = (namedArgs.second || 0) + (namedArgs.seconds || 0);
         delta.day += 7 * (namedArgs.weeks || 0);
         if (namedArgs.weekday) {
-            throw new Error("hmm, not implemented");
+            throw new NotSupportedError("weekday is not supported");
         }
         return delta;
     }
