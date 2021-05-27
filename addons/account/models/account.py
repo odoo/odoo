@@ -68,7 +68,13 @@ class AccountAccountTag(models.Model):
             if record.applicability == 'taxes' and not record.country_id:
                 raise ValidationError(_("A tag defined to be used on taxes must always have a country set."))
 
+    @api.onchange('tax_report_line_ids')
+    def _onchange_tax_report_line_ids(self):
+        for line in self.tax_report_line_ids:
+            if not line.tag_name:
+                raise ValidationError(_("The tax report line '%s' must have a tag name to be used in an Account tag.") % (line.name))
 
+                
 class AccountTaxReportLine(models.Model):
     _name = "account.tax.report.line"
     _description = 'Account Tax Report Line'
