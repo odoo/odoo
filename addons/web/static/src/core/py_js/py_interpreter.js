@@ -12,6 +12,8 @@ import { parseArgs, PY_DICT } from "./py_utils";
  * @typedef { import("./py_parser").AST } AST
  */
 
+export class EvaluationError extends Error {}
+
 // -----------------------------------------------------------------------------
 // Constants and helpers
 // -----------------------------------------------------------------------------
@@ -33,7 +35,7 @@ function applyUnaryOp(ast, context) {
         case "not":
             return !isTrue(expr);
     }
-    throw new Error("error");
+    throw new EvaluationError(`Unknown unary operator: ${ast.op}`);
 }
 
 /**
@@ -54,7 +56,7 @@ function pytypeIndex(val) {
         case "string":
             return 4;
     }
-    throw new Error("hmmm");
+    throw new EvaluationError(`Unknown type: ${typeof val}`);
 }
 
 /**
@@ -163,7 +165,7 @@ function applyBinaryOp(ast, context) {
         case "not in":
             return !isIn(left, right);
     }
-    throw new Error("error");
+    throw new EvaluationError(`Unknown binary operator: ${ast.op}`);
 }
 
 const DICT = {
@@ -206,7 +208,7 @@ export function evaluate(ast, context = {}) {
                 } else if (ast.value in BUILTINS) {
                     return BUILTINS[ast.value];
                 } else {
-                    throw new Error(`Name '${ast.value}' is not defined`);
+                    throw new EvaluationError(`Name '${ast.value}' is not defined`);
                 }
             case 3 /* None */:
                 return null;
@@ -274,7 +276,7 @@ export function evaluate(ast, context = {}) {
                 return left[ast.key];
             }
         }
-        throw new Error("evaluate error");
+        throw new EvaluationError(`AST of type ${ast.type} cannot be evaluated`);
     }
     return _evaluate(ast);
 }
