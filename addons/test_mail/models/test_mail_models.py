@@ -132,6 +132,7 @@ class MailTestComposerMixin(models.Model):
 
     name = fields.Char('Name')
     author_id = fields.Many2one('res.partner')
+    description = fields.Html('Description', render_engine="qweb", render_options={"post_process": True})
 
     def _compute_render_model(self):
         self.render_model = self._name

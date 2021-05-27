@@ -274,20 +274,23 @@ class TestMailRender(common.MailCommon):
         # static xml
         src = '<p class="text-muted"><span>This is a string</span></p>'
         expected = '<p class="text-muted"><span>This is a string</span></p>'
-        for engine in ['jinja']:
+        for engine in ['jinja', 'qweb']:
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
-            self.assertEqual(expected, result)
+            self.assertEqual(expected, result if engine == 'jinja' else result.decode())  # tde: checkme
 
         # code xml
-        src = '<p class="text-muted"><span>This is a string with a number ${13+13}</span></p>'
+        srces = [
+            '<p class="text-muted"><span>This is a string with a number ${13+13}</span></p>',
+            '<p class="text-muted"><span>This is a string with a number <t t-out="13+13"/></span></p>',
+        ]
         expected = '<p class="text-muted"><span>This is a string with a number 26</span></p>'
-        for engine in ['jinja']:
+        for engine, src in zip(['jinja', 'qweb'], srces):
             result = MailRenderMixin._render_template(
                 src, partner._name, partner.ids, engine=engine,
             )[partner.id]
-            self.assertEqual(expected, result)
+            self.assertEqual(expected, result if engine == 'jinja' else result.decode())  # tde: checkme
 
         # condition block xml
         src = """<b>Test</b>
