@@ -124,8 +124,8 @@ function factory(dependencies) {
             if ('subtype_id' in data) {
                 data2.subtype_id = data.subtype_id;
             }
-            if ('tracking_value_ids' in data) {
-                data2.trackingValues = insert(data.tracking_value_ids.map(trackData => 
+            if ('tracking_value_ids' in data && data.tracking_value_ids) {
+                data2.trackingValues = insertAndReplace(data.tracking_value_ids.map(trackData => 
                     this.env.models['mail.message_tracking_value'].convertData(trackData)))
             }
             return data2;
