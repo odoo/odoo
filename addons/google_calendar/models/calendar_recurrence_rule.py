@@ -92,11 +92,11 @@ class RecurrenceRule(models.Model):
             # We can't call _cancel because events without user_id would not be deleted
             (self.calendar_event_ids - base_event_id).google_id = False
             (self.calendar_event_ids - base_event_id).unlink()
-            base_event_id.write(dict(new_event_values, google_id=False, need_sync=False))
+            base_event_id.with_context(dont_notify=True).write(dict(new_event_values, google_id=False, need_sync=False))
             if self.rrule == current_rrule:
                 # if the rrule has changed, it will be recalculated below
                 # There is no detached event now
-                self._apply_recurrence()
+                self.with_context(dont_notify=True)._apply_recurrence()
         else:
             time_fields = (
                     self.env["calendar.event"]._get_time_fields()
@@ -160,10 +160,9 @@ class RecurrenceRule(models.Model):
             return {}
         values = event._google_values()
         values['id'] = self.google_id
-
         if not self._is_allday():
-            values['start']['timeZone'] = self.event_tz
-            values['end']['timeZone'] = self.event_tz
+            values['start']['timeZone'] = self.event_tz or 'Etc/UTC'
+            values['end']['timeZone'] = self.event_tz or 'Etc/UTC'
 
         # DTSTART is not allowed by Google Calendar API.
         # Event start and end times are specified in the start and end fields.
