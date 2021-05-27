@@ -1543,6 +1543,65 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('label tag added for fields have o_form_empty class in readonly mode if field is empty', async function (assert) {
+        assert.expect(8);
+
+        this.data.partner.fields.foo.default = false; // no default value for this test
+        this.data.partner.records[1].foo = false;  // 1 is record with id=2
+        this.data.partner.records[1].trululu = false;  // 1 is record with id=2
+        this.data.partner.fields.int_field.readonly = true;
+        this.data.partner.onchanges.foo = function (obj) {
+            if (obj.foo === "hello") {
+                obj.int_field = false;
+            }
+        };
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <sheet>
+                        <label for="foo" string="Foo"/>
+                        <field name="foo"/>
+                        <label for="trululu" string="Trululu" attrs="{'readonly': [['foo', '=', False]]}"/>
+                        <field name="trululu" attrs="{'readonly': [['foo', '=', False]]}"/>
+                        <label for="int_field" string="IntField" attrs="{'readonly': [['int_field', '=', False]]}"/>
+                        <field name="int_field"/>
+                    </sheet>
+                </form>`,
+            res_id: 2,
+        });
+
+        assert.containsN(form, '.o_field_widget.o_field_empty', 2,
+            "should have 2 empty fields with correct class");
+        assert.containsN(form, '.o_form_label_empty', 2,
+            "should have 2 muted labels (for the empty fieds) in readonly");
+
+        await testUtils.form.clickEdit(form);
+
+        assert.containsOnce(form, '.o_field_empty',
+            "in edit mode, only empty readonly fields should have the o_field_empty class");
+        assert.containsOnce(form, '.o_form_label_empty',
+            "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class");
+
+        await testUtils.fields.editInput(form.$('input[name=foo]'), 'test');
+
+        assert.containsNone(form, '.o_field_empty',
+            "after readonly modifier change, the o_field_empty class should have been removed");
+        assert.containsNone(form, '.o_form_label_empty',
+            "after readonly modifier change, the o_form_label_empty class should have been removed");
+
+        await testUtils.fields.editInput(form.$('input[name=foo]'), 'hello');
+
+        assert.containsOnce(form, '.o_field_empty',
+            "after value changed to false for a readonly field, the o_field_empty class should have been added");
+        assert.containsOnce(form, '.o_form_label_empty',
+            "after value changed to false for a readonly field, the o_form_label_empty class should have been added");
+
+        form.destroy();
+    });
+
     QUnit.test('form view can switch to edit mode', async function (assert) {
         assert.expect(9);
 
