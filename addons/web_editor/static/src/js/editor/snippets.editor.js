@@ -157,7 +157,7 @@ var SnippetEditor = Widget.extend({
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
-        this.displayHandles = false;
+        this.displayOverlayOptions = false;
 
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
@@ -176,6 +176,7 @@ var SnippetEditor = Widget.extend({
         this.isTargetParentEditable = this.$target.parent().is(':o_editable');
         this.isTargetMovable = this.isTargetParentEditable && this.isTargetMovable;
         this.isTargetRemovable = this.isTargetParentEditable && !this.$target.parent().is('[data-oe-type="image"]');
+        this.displayOverlayOptions = this.displayOverlayOptions || this.isTargetMovable || !this.isTargetParentEditable;
 
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
@@ -504,7 +505,7 @@ var SnippetEditor = Widget.extend({
             // sticky class is added/removed when toggling/untoggling
             this.$el.removeClass('o_we_overlay_preview');
             this.$el.toggleClass('o_we_overlay_sticky', show);
-            if (!this.displayHandles) {
+            if (!this.displayOverlayOptions) {
                 this.$el.find('.o_handle').addClass('d-none');
                 this.$el.find('.o_overlay_options_wrap').addClass('o_inside_parent');
             }
@@ -686,8 +687,8 @@ var SnippetEditor = Widget.extend({
                 this.$el.add($optionsSection).find('.oe_snippet_remove').addClass('d-none');
             }
 
-            if (option.displayHandles) {
-                this.displayHandles = true;
+            if (option.displayOverlayOptions) {
+                this.displayOverlayOptions = true;
             }
 
             return option.appendTo(document.createDocumentFragment());
@@ -1732,8 +1733,8 @@ var SnippetsMenu = Widget.extend({
                 // enabled previously by a click
                 if (editorToEnable) {
                     editorToEnable.toggleOverlay(true, previewMode);
-                    if (!previewMode && !editorToEnable.displayHandles) {
-                        const parentEditor = editorToEnableHierarchy.find(ed => ed.displayHandles);
+                    if (!previewMode && !editorToEnable.displayOverlayOptions) {
+                        const parentEditor = editorToEnableHierarchy.find(ed => ed.displayOverlayOptions);
                         if (parentEditor) {
                             parentEditor.toggleOverlay(true, previewMode);
                         }
