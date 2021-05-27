@@ -113,7 +113,7 @@ class MassMailing(models.Model):
         string='Reply To', compute='_compute_reply_to', readonly=False, store=True,
         help='Preferred Reply-To Address')
     # recipients
-    mailing_model_real = fields.Char(string='Recipients Real Model', compute='_compute_model')
+    mailing_model_real = fields.Char(string='Recipients Real Model', compute='_compute_mailing_model_real')
     mailing_model_id = fields.Many2one(
         'ir.model', string='Recipients Model', ondelete='cascade', required=True,
         domain=[('is_mailing_enabled', '=', True)],
@@ -239,9 +239,9 @@ class MassMailing(models.Model):
                 mailing.medium_id = self.env.ref('utm.utm_medium_email').id
 
     @api.depends('mailing_model_id')
-    def _compute_model(self):
-        for record in self:
-            record.mailing_model_real = (record.mailing_model_name != 'mailing.list') and record.mailing_model_name or 'mailing.contact'
+    def _compute_mailing_model_real(self):
+        for mailing in self:
+            mailing.mailing_model_real = (mailing.mailing_model_name != 'mailing.list') and mailing.mailing_model_name or 'mailing.contact'
 
     @api.depends('mailing_model_real')
     def _compute_reply_to_mode(self):
@@ -292,6 +292,12 @@ class MassMailing(models.Model):
 
     def _compute_mail_server_available(self):
         self.mail_server_available = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.outgoing_mail_server')
+
+    # Overrides of mail.render.mixin
+    @api.depends('mailing_model_real')
+    def _compute_render_model(self):
+        for mailing in self:
+            mailing.render_model = mailing.mailing_model_real
 
     # ------------------------------------------------------
     # ORM
