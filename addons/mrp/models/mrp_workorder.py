@@ -60,10 +60,12 @@ class MrpWorkorder(models.Model):
         compute='_compute_is_produced')
     state = fields.Selection([
         ('pending', 'Waiting for another WO'),
+        ('waiting', 'Waiting for components'),
         ('ready', 'Ready'),
         ('progress', 'In Progress'),
         ('done', 'Finished'),
         ('cancel', 'Cancelled')], string='Status',
+        compute='_compute_state', store=True,
         default='pending', copy=False, readonly=True)
     leave_id = fields.Many2one(
         'resource.calendar.leaves',
@@ -142,6 +144,21 @@ class MrpWorkorder(models.Model):
     show_json_popover = fields.Boolean('Show Popover?', compute='_compute_json_popover')
     consumption = fields.Selection(related='production_id.consumption')
 
+    @api.depends('production_availability')
+    def _compute_state(self):
+        # Force the flush of the production_availability, the wo state is modify in the _compute_reservation_state
+        # It is a trick to force that the state of workorder is computed as the end of the
+        # cyclic depends with the mo.state, mo.reservation_state and wo.state
+        for workorder in self:
+            if workorder.state not in ('waiting', 'ready'):
+                continue
+            if workorder.production_id.reservation_state not in ('waiting', 'confirmed', 'assigned'):
+                continue
+            if workorder.production_id.reservation_state == 'assigned' and workorder.state == 'waiting':
+                workorder.state = 'ready'
+            elif workorder.production_id.reservation_state != 'assigned' and workorder.state == 'ready':
+                workorder.state = 'waiting'
+
     @api.depends('production_state', 'date_planned_start', 'date_planned_finished')
     def _compute_json_popover(self):
         previous_wo_data = self.env['mrp.workorder'].read_group(
@@ -161,7 +178,7 @@ class MrpWorkorder(models.Model):
                 wo.show_json_popover = False
                 wo.json_popover = False
                 continue
-            if wo.state in ['pending', 'ready']:
+            if wo.state in ('pending', 'waiting', 'ready'):
                 previous_wo = previous_wo_dict.get(wo.id)
                 prev_start = previous_wo and previous_wo['date_planned_start'] or False
                 prev_finished = previous_wo and previous_wo['date_planned_finished'] or False
@@ -420,10 +437,7 @@ class MrpWorkorder(models.Model):
             moves = production.move_raw_ids | production.move_finished_ids
 
             for workorder in self:
-                if workorder.operation_id.bom_id:
-                    bom = workorder.operation_id.bom_id
-                if not bom:
-                    bom = workorder.production_id.bom_id
+                bom = workorder.operation_id.bom_id or workorder.production_id.bom_id
                 previous_workorder = workorders_by_bom[bom][-1:]
                 previous_workorder.next_work_order_id = workorder.id
                 workorders_by_bom[bom] |= workorder
@@ -454,7 +468,7 @@ class MrpWorkorder(models.Model):
                 if not workorders:
                     continue
                 if workorders[0].state == 'pending':
-                    workorders[0].state = 'ready'
+                    workorders[0].state = 'ready' if workorders[0].production_availability == 'assigned' else 'waiting'
                 for workorder in workorders:
                     workorder._start_nextworkorder()
 
@@ -463,7 +477,7 @@ class MrpWorkorder(models.Model):
 
     def _start_nextworkorder(self):
         if self.state == 'done' and self.next_work_order_id.state == 'pending':
-            self.next_work_order_id.state = 'ready'
+            self.next_work_order_id.state = 'ready' if self.next_work_order_id.production_availability == 'assigned' else 'waiting'
 
     @api.model
     def gantt_unavailability(self, start_date, end_date, scale, group_bys=None, rows=None):
@@ -701,8 +715,8 @@ class MrpWorkorder(models.Model):
             FROM mrp_workorder wo1, mrp_workorder wo2
             WHERE
                 wo1.id IN %s
-                AND wo1.state IN ('pending','ready')
-                AND wo2.state IN ('pending','ready')
+                AND wo1.state IN ('pending', 'waiting', 'ready')
+                AND wo2.state IN ('pending', 'waiting', 'ready')
                 AND wo1.id != wo2.id
                 AND wo1.workcenter_id = wo2.workcenter_id
                 AND (DATE_TRUNC('second', wo2.date_planned_start), DATE_TRUNC('second', wo2.date_planned_finished))
