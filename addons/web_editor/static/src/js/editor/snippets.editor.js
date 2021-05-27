@@ -195,12 +195,14 @@ var SnippetEditor = Widget.extend({
                         }
                         var template = getSnippetEditorThumbnail(this.$target.data('snippet'))
                         if (!template) {
-                            // use the alert snippet template instead
-                            template = $(getSnippetEditorThumbnail('s_text_block')).clone().get(0);
-                            template
-                                .firstChild
-                                .lastElementChild
-                                .innerText = this.$target.data('name') || 'snippet';
+                            // use the s_text_block snippet template instead, real template not found
+                            // find either its node name, its title (column/block) or show 'snippet' otherwise
+                            var thumbName = this.$target.data('name')
+                                || this.$optionsSection.find('we-title').first().text().replaceAll(/[^A-Za-z]/gi, '')
+                                || 'snippet';
+                            // locate the default template and clone it to alter its title
+                            template = $(getSnippetEditorThumbnail('s_text_block')).clone();
+                            template.find('.oe_snippet_thumbnail_title').text(thumbName);
                         }
                         var $clone = $(template).clone().css({
                                 transform: 'rotate(-14deg)',
