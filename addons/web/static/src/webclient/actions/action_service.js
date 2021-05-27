@@ -670,6 +670,14 @@ function makeActionManager(env) {
         if (options.resId) {
             viewOptions.recordId = options.resId;
         }
+        if (options.controllerState) {
+            if (options.controllerState.searchModel) {
+                viewOptions.searchModel = options.controllerState.searchModel;
+            }
+            if (options.controllerState.searchPanel) {
+                viewOptions.searchPanel = options.controllerState.searchPanel;
+            }
+        }
         const controller = {
             jsId: `controller_${++id}`,
             Component: view,

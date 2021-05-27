@@ -10,7 +10,6 @@ import FormView from "web.FormView";
 import ListController from "web.ListController";
 import testUtils from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
-import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
 
@@ -2275,4 +2274,24 @@ QUnit.module("ActionManager", (hooks) => {
             "read_group", // read_group at reload after switch view
         ]);
     });
+
+    QUnit.test(
+        "doAction supports being passed controlletState (searchModel)",
+        async function (assert) {
+            assert.expect(1);
+            const mockRPC = async (route, args) => {
+                if (route === "/web/dataset/search_read") {
+                    assert.deepEqual(args.domain, [["id", "=", 99]]);
+                }
+            };
+
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1, {
+                controllerState: {
+                    searchModel:
+                        '{"ControlPanelModelExtension":{"filters":{"1":{"type":"field","description":"Foo","fieldName":"foo","fieldType":"char","groupId":1,"id":1},"2":{"description":"ID is \\"99\\"","domain":"[[\\"id\\",\\"=\\",99]]","type":"filter","groupId":3,"groupNumber":2,"id":2}},"query":[{"groupId":3,"filterId":2}]}}',
+                },
+            });
+        }
+    );
 });
