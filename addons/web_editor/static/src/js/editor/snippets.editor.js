@@ -188,10 +188,23 @@ var SnippetEditor = Widget.extend({
                     },
                     handle: '.o_move_handle',
                     helper: () => {
-                        var $clone = this.$target.clone().css({
-                            transform: 'rotate(-14deg) scale(0.5)',
-                            border: 0,
-                        });
+                        // var $clone = this.$target.clone().css({
+                        //     transform: 'rotate(-14deg) scale(0.5)',
+                        //     border: 0,
+                        // });
+                        var snippetName = this.$target.data('snippet');
+                        var template = document
+                            .querySelector(`#oe_snippets [data-snippet="${snippetName}"]`)
+                            ?.parentNode
+                            //?.querySelector('.oe_snippet_thumbnail.ui-draggable-handle');
+                        console.log(`found the following template for name '${snippetName}':`, template);
+                        if (!template) {
+                            // use the alert snippet template instead
+                        }
+                        var $clone = $(template).clone().css({
+                                transform: 'rotate(-14deg)',
+                                border: 0,
+                            }); //.addClass('o_we_already_dragging')
                         $clone.appendTo(this.$body).removeClass('d-none');
                         return $clone;
                     },
