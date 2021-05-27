@@ -30,8 +30,11 @@ export const defaultLocalization = {
     weekStart: 7,
 };
 
-export function makeFakeLocalizationService() {
-    patchWithCleanup(localization, defaultLocalization);
+/**
+ * @param {Partial<typeof defaultLocalization>} [config]
+ */
+export function makeFakeLocalizationService(config = {}) {
+    patchWithCleanup(localization, Object.assign({}, defaultLocalization, config));
 
     return {
         name: "localization",
