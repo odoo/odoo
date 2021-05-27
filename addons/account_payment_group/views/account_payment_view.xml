@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- view for payments from payment group, we need edit = true and create = true, we also clean some fields, we could also make and inherited view -->
+<record id="view_account_payment_from_group_tree" model="ir.ui.view">
+    <field name="name">account.payment.tree</field>
+    <field name="model">account.payment</field>
+    <field name="inherit_id" ref="account.view_account_payment_tree"/>
+    <field name="priority">90</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+        <field name="partner_id" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </field>
+    </field>
+</record>
+
+<record id="view_account_payment_form" model="ir.ui.view">
+    <field name="name">account.payment.from payment group.form</field>
+    <field name="model">account.payment</field>
+    <field name="inherit_id" ref="account.view_account_payment_form"/>
+    <field name="arch" type="xml">
+        <form>
+            <field name="payment_group_id" invisible="1"/>
+        </form>
+        <button name="button_open_invoices" position="before">
+            <button name="button_open_payment_group" attrs="{'invisible': [('payment_group_id', '=', False)]}" type="object" class="oe_stat_button" icon="fa-circle" invisible="context.get('payment_group')">
+                Payment Group
+            </button>
+        </button>
+    </field>
+</record>
+
+<record id="view_account_payment_from_group_form" model="ir.ui.view">
+    <field name="name">account.payment.from payment group.form</field>
+    <field name="model">account.payment</field>
+    <field name="inherit_id" ref="account.view_account_payment_form"/>
+    <field name="priority">90</field>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml">
+
+        <button name="action_post" position="attributes">
+            <attribute name="groups">base.group_no_one</attribute>
+            <attribute name="confirm">IMPORTANTE: La validación de la línea de pago se debe hacer desde el recibo. La validación manual de una línea de pago se usa solo para correcciones y usos avanzados. Seguro desea continuar?</attribute>
+        </button>
+
+        <button name="action_draft" position="attributes">
+            <attribute name="groups">base.group_no_one</attribute>
+            <attribute name="confirm">IMPORTANTE: La validación de la línea de pago se debe hacer desde el recibo. La cancelación manual de una línea de pago se usa solo para correcciones y usos avanzados. Seguro desea continuar?</attribute>
+        </button>
+
+        <button name="action_cancel" position="attributes">
+            <attribute name="groups">base.group_no_one</attribute>
+            <attribute name="confirm">IMPORTANTE: La validación de la línea de pago se debe hacer desde el recibo. La cancelación manual de una línea de pago se usa solo para correcciones y usos avanzados. Seguro desea continuar?</attribute>
+        </button>
+
+        <!-- comes from payment_group -->
+        <field name="payment_type" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </field>
+        <field name="partner_id" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </field>
+        <field name="is_internal_transfer" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </field>
+
+    </field>
+</record>
+
+</odoo>
