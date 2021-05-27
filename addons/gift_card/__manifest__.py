@@ -9,7 +9,7 @@
     'version': '1.0',
     'depends': ['sale'],
     'data': [
-        'data/gift_card_template_email.xml',
+        'data/mail_template_data.xml',
         'data/gift_card_data.xml',
         'views/views.xml',
         'views/templates.xml',
