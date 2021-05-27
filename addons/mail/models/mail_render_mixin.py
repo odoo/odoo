@@ -8,6 +8,7 @@ import logging
 import re
 
 import dateutil.relativedelta as relativedelta
+from lxml import html
 from markupsafe import Markup
 from werkzeug import urls
 
@@ -167,6 +168,14 @@ class MailRenderMixin(models.AbstractModel):
         return expression
 
     # ------------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------------
+
+    def _valid_field_parameter(self, field, name):
+        # allow specifying rendering options directly from field when using the render mixin
+        return name in ['render_engine', 'render_options'] or super()._valid_field_parameter(field, name)
+
+    # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
 
@@ -279,6 +288,42 @@ class MailRenderMixin(models.AbstractModel):
         render_context = self._get_common_eval_context()
         render_context.update(copy.copy(template_env_globals))
         return render_context
+
+    @api.model
+    def _render_template_qweb(self, template_src, model, res_ids,
+                              add_context=None, options=None):
+        """ Render a raw QWeb template.
+
+        :param str template_src: raw QWeb template to render;
+        :param str model: see ``MailRenderMixin._render_template()``;
+        :param list res_ids: see ``MailRenderMixin._render_template()``;
+
+        :param dict add_context: additional context to give to renderer. It
+          allows to add or update values to base rendering context generated
+          by ``MailRenderMixin._render_qweb_eval_context()``;
+        :param dict options: options for rendering (not used currently);
+
+        :return dict: {res_id: string of rendered template based on record}
+
+        :notice: Experimental. Use at your own risks only.
+        """
+        results = dict.fromkeys(res_ids, u"")
+
+        # prepare template variables
+        variables = self._render_qweb_eval_context()
+        if add_context:
+            variables.update(**add_context)
+
+        for record in self.env[model].browse(res_ids):
+            variables['object'] = record
+            try:
+                render_result = self.env['ir.qweb']._render(html.fragment_fromstring(template_src), variables)
+            except Exception as e:
+                _logger.info("Failed to render template : %s", template_src, exc_info=True)
+                raise UserError(_("Failed to render QWeb template : %s)", e))
+            results[record.id] = render_result
+
+        return results
 
     @api.model
     def _render_template_qweb_view(self, template_src, model, res_ids,
@@ -434,12 +479,15 @@ class MailRenderMixin(models.AbstractModel):
         """
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(_('Template rendering should be called only using on a list of IDs.'))
-        if engine not in ('jinja', 'qweb_view'):
-            raise ValueError(_('Template rendering supports only jinja or qweb.'))
+        if engine not in ('jinja', 'qweb', 'qweb_view'):
+            raise ValueError(_('Template rendering supports only raw jinja or qweb (view or raw).'))
 
         if engine == 'qweb_view':
             rendered = self._render_template_qweb_view(template_src, model, res_ids,
                                                        add_context=add_context, options=options)
+        elif engine == 'qweb':
+            rendered = self._render_template_qweb(template_src, model, res_ids,
+                                                  add_context=add_context, options=options)
         else:
             rendered = self._render_template_jinja(template_src, model, res_ids,
                                                    add_context=add_context, options=options)
@@ -520,6 +568,9 @@ class MailRenderMixin(models.AbstractModel):
 
         :return dict: {res_id: string of rendered template based on record}
         """
+        if options is None:
+            options = {}
+
         self.ensure_one()
         if compute_lang:
             templates_res_ids = self._classify_per_lang(res_ids)
@@ -527,6 +578,11 @@ class MailRenderMixin(models.AbstractModel):
             templates_res_ids = {set_lang: (self.with_context(lang=set_lang), res_ids)}
         else:
             templates_res_ids = {self._context.get('lang'): (self, res_ids)}
+
+        # rendering options
+        engine = getattr(self._fields[field], 'render_engine', engine)
+        options.update(**getattr(self._fields[field], 'render_options', {}))
+        post_process = options.get('post_process') or post_process
 
         return dict(
             (res_id, rendered)
