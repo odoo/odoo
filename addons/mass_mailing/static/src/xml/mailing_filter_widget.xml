@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- Template for 'mailing_filter' widget, specific for mailing form view -->
+    <t t-name="mass_mailing.FieldMailingFilter" t-extend="FieldMany2One" primary="True">
+        <t t-jquery="div.o_field_many2one_selection" t-operation="append">
+            <div class="o_mass_mailing_filter_container">
+                <div class="o_mass_mailing_save_filter_container pt-1">
+                    <i class="o_mass_mailing_add_filter fa fa-star-o px-3 py-1" data-toggle="dropdown" title="Add to Favorites"/>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <span class="ml-2 text-muted">Create Favorite Filter</span><br/>
+                        <div class="d-inline-flex">
+                            <input type="text" class="o_mass_mailing_filter_name w-auto ml-2" placeholder='e.g. "VIP Customers"'/>
+                            <button class="btn btn-sm btn-primary o_mass_mailing_btn_save_filter mx-2">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_mass_mailing_remove_filter pt-1">
+                    <i class="fa fa-star px-3 py-1" title="Remove from Favorites"/>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

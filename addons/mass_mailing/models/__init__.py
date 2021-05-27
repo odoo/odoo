@@ -7,6 +7,7 @@ from . import mailing_contact
 from . import mailing_list
 from . import mailing_trace
 from . import mailing
+from . import mailing_filter
 from . import mail_mail
 from . import mail_render_mixin
 from . import mail_thread

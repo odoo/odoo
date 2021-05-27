@@ -125,6 +125,11 @@ class MassMailing(models.Model):
     mailing_domain = fields.Char(
         string='Domain', compute='_compute_mailing_domain',
         readonly=False, store=True)
+    mailing_filter_id = fields.Many2one(
+        'mailing.filter', string='Favorite Filter',
+        domain="[('mailing_model_name', '=', mailing_model_name)]",
+        compute='_compute_mailing_filter_id', readonly=False, store=True)
+    mailing_filter_domain = fields.Char('Favorite filter domain', related='mailing_filter_id.mailing_domain')
     mail_server_available = fields.Boolean(
         compute='_compute_mail_server_available',
         help="Technical field used to know if the user has activated the outgoing mail server option in the settings")
@@ -177,6 +182,15 @@ class MassMailing(models.Model):
         'CHECK(ab_testing_pc >= 0 AND ab_testing_pc <= 100)',
         'The A/B Testing Percentage needs to be between 0 and 100%'
     )]
+
+    @api.constrains('mailing_model_id', 'mailing_filter_id')
+    def _check_mailing_filter_model(self):
+        """Check that if the favorite filter is set, it must contain the same recipient model as mailing"""
+        for mailing in self:
+            if mailing.mailing_filter_id and mailing.mailing_model_id != mailing.mailing_filter_id.mailing_model_id:
+                raise ValidationError(
+                    _("The saved filter targets different recipients and is incompatible with this mailing.")
+                )
 
     @api.depends('mail_server_id')
     def _compute_email_from(self):
@@ -289,11 +303,6 @@ class MassMailing(models.Model):
                 mailing.medium_id = self.env.ref('utm.utm_medium_email').id
 
     @api.depends('mailing_model_id')
-    def _compute_mailing_model_real(self):
-        for mailing in self:
-            mailing.mailing_model_real = (mailing.mailing_model_id.model != 'mailing.list') and mailing.mailing_model_id.model or 'mailing.contact'
-
-    @api.depends('mailing_model_id')
     def _compute_reply_to_mode(self):
         """ For main models not really using chatter to gather answers (contacts
         and mailing contacts), set reply-to as email-based. Otherwise answers
@@ -314,13 +323,25 @@ class MassMailing(models.Model):
             elif mailing.reply_to_mode == 'update':
                 mailing.reply_to = False
 
-    @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type')
+    @api.depends('mailing_model_id')
+    def _compute_mailing_model_real(self):
+        for mailing in self:
+            mailing.mailing_model_real = (mailing.mailing_model_id.model != 'mailing.list') and mailing.mailing_model_id.model or 'mailing.contact'
+
+    @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type', 'mailing_filter_id')
     def _compute_mailing_domain(self):
         for mailing in self:
             if not mailing.mailing_model_id:
                 mailing.mailing_domain = ''
+            elif mailing.mailing_filter_id:
+                mailing.mailing_domain = mailing.mailing_filter_id.mailing_domain
             else:
                 mailing.mailing_domain = repr(mailing._get_default_mailing_domain())
+
+    @api.depends('mailing_model_name')
+    def _compute_mailing_filter_id(self):
+        for mailing in self:
+            mailing.mailing_filter_id = False
 
     @api.depends('schedule_type')
     def _compute_schedule_date(self):
