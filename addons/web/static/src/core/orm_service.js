@@ -22,6 +22,50 @@ function assignOptions(kwargs, options, whileList) {
 // ORM
 // -----------------------------------------------------------------------------
 
+/**
+ * One2many and Many2many fields expect a special command to manipulate the
+ * relation they implement.
+ *
+ * Internally, each command is a 3-elements tuple where the first element is a
+ * mandatory integer that identifies the command, the second element is either
+ * the related record id to apply the command on (commands update, delete,
+ * unlink and link) either 0 (commands create, clear and set), the third
+ * element is either the ``values`` to write on the record (commands create
+ * and update) either the new ``ids`` list of related records (command set),
+ * either 0 (commands delete, unlink, link, and clear).
+ */
+export const Commands = {
+    create(virtualID, values) {
+        delete values.id;
+        return [0, virtualID || false, values];
+    },
+
+    update(id, values) {
+        delete values.id;
+        return [1, id, values];
+    },
+
+    delete(id) {
+        return [2, id, false];
+    },
+
+    forget(id) {
+        return [3, id, false];
+    },
+
+    linkTo(id) {
+        return [4, id, false];
+    },
+
+    deleteAll() {
+        return [5, false, false];
+    },
+
+    replaceWith(ids) {
+        return [6, false, ids];
+    },
+};
+
 class ORM {
     constructor(rpc, user) {
         this.rpc = rpc;
