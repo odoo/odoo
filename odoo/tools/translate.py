@@ -151,9 +151,11 @@ TRANSLATED_ATTRS = dict.fromkeys({
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
     'value_label',
 }, lambda e: True)
-TRANSLATED_ATTRS['value'] = lambda e: (e.tag == 'input' and e.attrib.get('type', 'text') == 'text') and 'datetimepicker-input' not in e.attrib['class'].split(' ')
-
-TRANSLATED_ATTRS.update({f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()})
+TRANSLATED_ATTRS.update(
+    value=lambda e: (e.tag == 'input' and e.attrib.get('type', 'text') == 'text') and 'datetimepicker-input' not in e.attrib['class'].split(' '),
+    text=lambda e: (e.tag == 'field' and e.attrib.get('widget', '') == 'url'),
+    **{f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()},
+)
 
 avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
 node_pattern = re.compile(r"<[^>]*>(.*)</[^<]*>", re.DOTALL | re.MULTILINE | re.UNICODE)

@@ -167,7 +167,7 @@ class Project(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    name = fields.Char("Name", index=True, required=True, tracking=True)
+    name = fields.Char("Name", index=True, required=True, tracking=True, translate=True)
     description = fields.Html()
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
