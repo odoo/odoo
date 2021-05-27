@@ -238,42 +238,16 @@ var ServicesMixin = {
      * Displays a notification.
      *
      * @param {Object} options
-     * @param {string} options.title
+     * @param {string} [options.title]
      * @param {string} [options.subtitle]
      * @param {string} [options.message]
      * @param {string} [options.type='warning'] 'info', 'success', 'warning', 'danger' or ''
      * @param {boolean} [options.sticky=false]
      * @param {string} [options.className]
+     * @param {boolean} [options.messageIsHtml=false]
      */
     displayNotification: function (options) {
         return this.call('notification', 'notify', options);
-    },
-    /**
-     * @deprecated will be removed as soon as the notification system is reviewed
-     * @see displayNotification
-     */
-    do_notify: function (title = false, message, sticky, className) {
-        return this.displayNotification({
-            type: 'warning',
-            title: title,
-            message: message,
-            sticky: sticky,
-            className: className,
-        });
-    },
-    /**
-     * @deprecated will be removed as soon as the notification system is reviewed
-     * @see displayNotification
-     */
-    do_warn: function (title = false, message, sticky, className) {
-        console.warn(title, message);
-        return this.displayNotification({
-            type: 'danger',
-            title: title,
-            message: message,
-            sticky: sticky,
-            className: className,
-        });
     },
 };
 

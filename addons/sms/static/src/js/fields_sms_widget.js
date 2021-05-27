@@ -154,7 +154,7 @@ var SmsWidget = FieldTextEmojis.extend({
     _onBlur: function () {
         var content = this._getValue();
         if( !content.trim().length && content.length > 0) {
-            this.do_warn(_t("Your SMS Text Message must include at least one non-whitespace character"));
+            this.displayNotification({ title: _t("Your SMS Text Message must include at least one non-whitespace character"), type: 'danger' });
             this.$input.val(content.trim());
             this._updateSMSInfo();
         }

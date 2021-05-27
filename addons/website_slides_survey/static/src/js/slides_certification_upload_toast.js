@@ -24,9 +24,10 @@ publicWidget.registry.CertificationUploadToast = publicWidget.Widget.extend({
                     title: _t('Certification created'),
                     message: _.str.sprintf(
                         _t('Follow this link to add questions to your certification. <a href="%s">Edit certification</a>'),
-                        url
+                        _.escape(url)
                     ),
                     sticky: true,
+                    messageIsHtml: true, // dynamic parts of the message are escaped above
                 });
                 sessionStorage.removeItem("survey_certification_url");
             }

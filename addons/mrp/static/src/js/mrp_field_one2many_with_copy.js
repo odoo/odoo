@@ -55,7 +55,7 @@ var MrpFieldOne2ManyWithCopy = FieldOne2Many.extend({
         const parentIsNew = parent.state.res_id === undefined;
         const parentHasChanged = parent.state.isDirty();
         if (parentIsNew || parentHasChanged) {
-            this.do_warn(false, _t('Please click on the "save" button first'));
+            this.displayNotification({ message: _t('Please click on the "save" button first'), type: 'danger' });
             return;
         }
         var self = this;

@@ -160,6 +160,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
                                         text: _t("Check your configuration."),
                                     }),
                                 )[0].outerHTML,
+                            messageIsHtml: true, // HTML is built with only safe static parts
                         });
                     }
                     resolve(false);

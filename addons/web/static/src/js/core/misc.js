@@ -187,10 +187,11 @@ function displayNotification(parent, action) {
     let {title='', message='', links=[], type='info', sticky=false, next} = action.params || {};
     links = links.map(({url, label}) => `<a href="${_.escape(url)}" target="_blank">${_.escape(label)}</a>`)
     parent.displayNotification({
-        title: _.escape(title),
+        title, // no escape for the title because it is done in the template
         message: sprintf(_.escape(message), ...links),
         type,
-        sticky
+        sticky,
+        messageIsHtml: true, // dynamic parts of the message are escaped above
     });
     return next;
 }

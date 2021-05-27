@@ -613,7 +613,7 @@ var ListRenderer = BasicRenderer.extend({
             if (node.attrs.options.warn) {
                 $button.on("click", function (e) {
                     e.stopPropagation();
-                    self.do_warn(false, _t('Please click on the "save" button first'));
+                    self.displayNotification({ message: _t('Please click on the "save" button first'), type: 'danger' });
                 });
             } else {
                 $button.prop('disabled', true);

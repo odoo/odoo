@@ -2630,9 +2630,10 @@ var SnippetsMenu = Widget.extend({
                         reason.event.preventDefault();
                         this.close();
                         self.displayNotification({
-                            message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), name),
+                            message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), owl.utils.escape(name)),
                             type: 'danger',
                             sticky: true,
+                            messageIsHtml: true, // dynamic parts of the message are escaped above
                         });
                     });
                 },

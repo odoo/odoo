@@ -730,11 +730,11 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
                     this._setCoverImage(fieldName, autoOpen);
                 } else {
                     var warning = _.str.sprintf(_t('Could not set the cover image: incorrect field ("%s") is provided in the view.'), fieldName);
-                    this.do_warn(warning);
+                    this.displayNotification({ title: warning, type: 'danger' });
                 }
                 break;
             default:
-                this.do_warn(false, _t("Kanban: no action for type: ") + type);
+                this.displayNotification({ message: _t("Kanban: no action for type: ") + type, type: 'danger' });
         }
     },
     /**

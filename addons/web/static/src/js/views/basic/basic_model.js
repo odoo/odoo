@@ -2438,19 +2438,20 @@ var BasicModel = AbstractModel.extend({
                     const modelFieldName = record.fields[modelField].string;
                     const referenceFieldName = record.fields[fieldName].string;
 
-                    this.do_warn(
-                        _.str.sprintf(
+                    this.displayNotification({
+                        title: _.str.sprintf(
                             _t(`'%s' is unsynchronized with '%s'.`),
                             referenceFieldName,
                             modelFieldName,
                         ),
-                        _.str.sprintf(
+                        message: _.str.sprintf(
                             _t(`If you change %s or %s, the synchronization will be reapplied and the data will be modified.`),
                             modelFieldName,
                             referenceFieldName,
                         ),
-                        true,
-                    );
+                        sticky: true,
+                        type: 'danger',
+                    });
                     return false;
                 }
                 return {

@@ -11,11 +11,10 @@
                 <span class="d-inline" aria-hidden="true">×</span>
             </button>
             <div t-if="widget.title" class="font-weight-bold o_notification_title mb-1"
-                 t-raw="widget.title"/>
-            <strong t-if="widget.subtitle" t-raw="widget.subtitle"
+                 t-esc="widget.title"/>
+            <strong t-if="widget.subtitle" t-esc="widget.subtitle"
                 class="o_notification_subtitle mb-2 font-weight-normal text-muted"/>
-            <div t-if="widget.message" t-raw="widget.message"
-                class="o_notification_content"/>
+            <div t-if="widget.message" class="o_notification_content"><t t-if="widget.messageIsHtml" t-raw="widget.message"/><t t-else="" t-esc="widget.message"/></div>
             <div t-if="widget.buttons.length" class="mt-2 o_notification_buttons">
                 <button t-foreach="widget.buttons" t-as="button" type="button"
                         t-attf-class="btn #{button.primary ? 'btn-primary' : 'btn-secondary'}">

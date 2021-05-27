@@ -169,7 +169,7 @@ class FileUploader extends Component {
             if (error || !id) {
                 this.env.services['notification'].notify({
                     type: 'danger',
-                    message: owl.utils.escape(error),
+                    message: error,
                 });
                 const relatedUploadingAttachments = this.env.models['mail.attachment']
                     .find(attachment =>

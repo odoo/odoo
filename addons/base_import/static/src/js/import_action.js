@@ -939,10 +939,10 @@ var DataImport = AbstractAction.extend({
         return prom;
     },
     onimported: function (event, from, to, results) {
-        this.do_notify(false, _.str.sprintf(
+        this.displayNotification({ message: _.str.sprintf(
             _t("%d records successfully imported"),
             results.ids.length
-        ));
+        ) });
         this.exit();
     },
     exit: function () {

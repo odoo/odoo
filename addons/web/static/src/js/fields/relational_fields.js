@@ -1937,7 +1937,7 @@ var One2ManyKanbanRecord = KanbanRecord.extend({
                 if ($button.attr('warn')) {
                     $button.on('click', function (e) {
                         e.stopPropagation();
-                        self.do_warn(false, _t('Please click on the "save" button first'));
+                        self.displayNotification({ message: _t('Please click on the "save" button first'), type: 'danger' });
                     });
                 } else {
                     $button.attr('disabled', 'disabled');
@@ -2508,7 +2508,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         var attachment_ids = this.value.res_ids;
         _.each(files, function (file) {
             if (file.error) {
-                self.do_warn(_t('Uploading Error'), file.error);
+                self.displayNotification({ title: _t('Uploading Error'), message: file.error, type: 'danger' });
             } else {
                 attachment_ids.push(file.id);
                 self.uploadedFiles[file.id] = true;

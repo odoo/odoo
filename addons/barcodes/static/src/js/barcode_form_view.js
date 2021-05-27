@@ -60,7 +60,7 @@ FormController.include({
      */
     _barcodeAddX2MQuantity: function (barcode, activeBarcode) {
         if (this.mode === 'readonly') {
-            this.do_warn(false, _t('Enable edit mode to modify this document'));
+            this.displayNotification({ message: _t('Enable edit mode to modify this document'), type: 'danger' });
             return Promise.reject();
         }
 
@@ -133,7 +133,7 @@ FormController.include({
         const state = this.model.get(this.handle, { raw: true });
         const pagingInfo = this._getPagingInfo(state);
         if (!pagingInfo) {
-            return this.do_warn(false, _t('Pager unavailable'));
+            return this.displayNotification({ message: _t('Pager unavailable'), type: 'danger' });
         }
         const currentMinimum = updater(pagingInfo.currentMinimum, state);
         const limit = pagingInfo.limit;
@@ -330,7 +330,7 @@ FormController.include({
                 }
             }
             if (prefixed && !hasCommand) {
-                self.do_warn(_t('Undefined barcode command'), barcode);
+                self.displayNotification({ title: _t('Undefined barcode command'), message: barcode, type: 'danger' });
             }
             return self.alive(Promise.all(defs)).then(function () {
                 if (!prefixed) {
@@ -366,7 +366,7 @@ FormController.include({
         }
 
         if (!_.compact(_.pluck(barcodeInfos, 'candidate')).length) {
-            return this.do_warn(false, _t('Scan a barcode to set the quantity'));
+            return this.displayNotification({ message: _t('Scan a barcode to set the quantity'), type: 'danger' });
         }
 
         for (var k in this.activeBarcode) {

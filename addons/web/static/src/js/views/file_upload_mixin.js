@@ -222,7 +222,7 @@ const ProgressBarMixin = {
      * @param {XMLHttpRequest} param0.xhr
      */
     _onUploadError({ fileUploadId, xhr }) {
-        this.do_notify(xhr.status, _.str.sprintf(_t('message: %s'), xhr.reponseText), true);
+        this.displayNotification({ title: xhr.status, message: _.str.sprintf(_t('message: %s'), xhr.reponseText), sticky: true });
         this._removeFileUpload(fileUploadId);
     },
 

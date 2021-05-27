@@ -432,10 +432,10 @@ var ModelFieldSelector = Widget.extend({
         this.valid = !!valid;
 
         if (!this.valid) {
-            this.do_warn(
-                false,
-                _t("Invalid field chain. You may have used a non-existing field name or followed a non-relational field.")
-            );
+            this.displayNotification({
+                message: _t("Invalid field chain. You may have used a non-existing field name or followed a non-relational field."),
+                type: 'danger',
+            });
         }
     },
 
@@ -495,10 +495,11 @@ var ModelFieldSelector = Widget.extend({
         var userChainStr = this.$input.val();
         var userChain = userChainStr.split(".");
         if (!this.options.followRelations && userChain.length > 1) {
-            this.do_warn(
-                _t("Relation not allowed"),
-                _t("You cannot follow relations for this field chain construction")
-            );
+            this.displayNotification({
+                title: _t("Relation not allowed"),
+                message: _t("You cannot follow relations for this field chain construction"),
+                type: 'danger',
+            });
             userChain = [userChain[0]];
         }
         this.setChain(userChain).then((function () {

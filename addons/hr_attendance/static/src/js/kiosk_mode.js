@@ -50,7 +50,7 @@ var KioskMode = AbstractAction.extend({
                 if (result.action) {
                     self.do_action(result.action);
                 } else if (result.warning) {
-                    self.do_warn(result.warning);
+                    self.displayNotification({ title: result.warning, type: 'danger' });
                     core.bus.on('barcode_scanned', self, self._onBarcodeScanned);
                 }
             }, function () {

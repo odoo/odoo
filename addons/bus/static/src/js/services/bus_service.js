@@ -71,7 +71,7 @@ var BusService =  CrossTab.extend(ServicesMixin, {
                     this._sendNativeNotification(options.title, options.message, callback);
                 } catch (error) {
                     // Notification without Serviceworker in Chrome Android doesn't works anymore
-                    // So we fallback to do_notify() in this case
+                    // So we fallback to displayNotification() in this case
                     // https://bugs.chromium.org/p/chromium/issues/detail?id=481856
                     if (error.message.indexOf('ServiceWorkerRegistration') > -1) {
                         this.displayNotification(options);

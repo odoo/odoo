@@ -8,8 +8,8 @@ var Widget = require('web.Widget');
  * right of the screen.
  *
  * If you want to display such a notification, you probably do not want to do it
- * by importing this file. The proper way is to use the do_warn or do_notify
- * methods on the Widget class.
+ * by importing this file. The proper way is to use the displayNotification
+ * method on the Widget class.
  */
 var Notification = Widget.extend({
     template: 'Notification',
@@ -26,8 +26,8 @@ var Notification = Widget.extend({
      * @override
      * @param {Widget} parent
      * @param {Object} params
-     * @param {string} params.title
-     * @param {string} params.subtitle
+     * @param {string} [params.title]
+     * @param {string} [params.subtitle]
      * @param {string} [params.message]
      * @param {DOMElement|jQuery} [params.contentEl] element to insert inside the
      *      notification, useful to keep a reference to the notification content
@@ -42,6 +42,10 @@ var Notification = Widget.extend({
      * @param {boolean} [params.buttons[0].primary] display the button as primary
      * @param {string} [params.buttons[0].text] button label
      * @param {string} [params.buttons[0].icon] font-awsome className or image src
+     * @param {boolean} [params.messageIsHtml=false] allows passing an html
+     *  message. Strongly discouraged: other options should be considered before
+     *  enabling this option. The responsibility is on the caller to properly
+     *  escape the message if this option is enabled.
      */
     init: function (parent, params) {
         this._super.apply(this, arguments);
@@ -50,6 +54,7 @@ var Notification = Widget.extend({
         this.contentEl = params.contentEl;
         this.message = params.message || this.contentEl && true;
         this.buttons = params.buttons || [];
+        this.messageIsHtml = !!params.messageIsHtml;
         this.sticky = !!this.buttons.length || !!params.sticky;
         this.type = params.type === undefined ? 'warning' : params.type;
         this.className = params.className || '';

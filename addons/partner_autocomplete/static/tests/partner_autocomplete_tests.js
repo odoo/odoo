@@ -80,8 +80,8 @@ odoo.define('partner_autocomplete.tests', function (require) {
                     _getClearbitSuggestions: function (value) {
                         return this._getOdooSuggestions(value);
                     },
-                    do_notify: function (title, message, sticky, className) {
-                        return this.displayNotification({
+                    displayNotification: function ({ title, message, sticky }) {
+                        return this._super({
                             type: 'warning',
                             title: title,
                             message: message,

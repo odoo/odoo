@@ -410,9 +410,8 @@ function factory(dependencies) {
             } else if (type === 'moderator') {
                 return this._handleNotificationPartnerModerator(data);
             } else if (type === 'simple_notification') {
-                const escapedMessage = owl.utils.escape(data.message);
                 this.env.services['notification'].notify({
-                    message: escapedMessage,
+                    message: data.message,
                     sticky: data.sticky,
                     type: data.warning ? 'warning' : 'danger',
                 });
@@ -479,7 +478,7 @@ function factory(dependencies) {
                 this.env.services['notification'].notify({
                     message: _.str.sprintf(
                         this.env._t("You have been invited to: %s"),
-                        owl.utils.escape(channel.name)
+                        channel.name
                     ),
                     type: 'info',
                 });
@@ -648,12 +647,12 @@ function factory(dependencies) {
                 const correspondent = channel.correspondent;
                 message = _.str.sprintf(
                     this.env._t("You unpinned your conversation with <b>%s</b>."),
-                    owl.utils.escape(correspondent.name)
+                    correspondent.name
                 );
             } else {
                 message = _.str.sprintf(
                     this.env._t("You unsubscribed from <b>%s</b>."),
-                    owl.utils.escape(channel.name)
+                    channel.name
                 );
             }
             // We assume that arriving here the server has effectively
@@ -699,7 +698,6 @@ function factory(dependencies) {
             if (!author) {
                 notificationTitle = this.env._t("New message");
             } else {
-                const escapedAuthorName = owl.utils.escape(author.nameOrDisplayName);
                 if (channel.channel_type === 'channel') {
                     // hack: notification template does not support OWL components,
                     // so we simply use their template to make HTML as if it comes
@@ -708,15 +706,15 @@ function factory(dependencies) {
                         env: this.env,
                         thread: channel,
                     });
-                    const channelName = owl.utils.escape(channel.displayName);
+                    const channelName = channel.displayName;
                     const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = _.str.sprintf(
                         this.env._t("%s from %s"),
-                        escapedAuthorName,
+                        author.nameOrDisplayName,
                         channelNameWithIcon
                     );
                 } else {
-                    notificationTitle = escapedAuthorName;
+                    notificationTitle = author.nameOrDisplayName;
                 }
             }
             const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);

@@ -340,7 +340,7 @@ var ListController = BasicController.extend({
                     _t("Only the first %d records have been deleted (out of %d selected)"),
                     resIds.length, state.count
                 );
-                this.do_notify(false, msg);
+                this.displayNotification({ message: msg });
             }
             this.reload();
         };
@@ -605,7 +605,7 @@ var ListController = BasicController.extend({
                 _t("Of the %d records selected, only the first %d have been archived/unarchived."),
                 state.count, resIds.length
             );
-            this.do_notify(_t('Warning'), msg);
+            this.displayNotification({ title: _t('Warning'), message: msg });
         }
     },
     /**

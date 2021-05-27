@@ -67,7 +67,7 @@ ActionManager.include({
                 var message = _t('A popup window with your report was blocked. You ' +
                                  'may need to change your browser settings to allow ' +
                                  'popup windows for this page.');
-                self.do_warn(_t('Warning'), message, true);
+                self.displayNotification({ title: _t('Warning'), message, sticky: true, type: 'danger' });
             }
         });
     },
@@ -110,7 +110,7 @@ ActionManager.include({
             return this.call('report', 'checkWkhtmltopdf').then(function (state) {
                 // display a notification according to wkhtmltopdf's state
                 if (state in WKHTMLTOPDF_MESSAGES) {
-                    self.do_notify(_t('Report'), WKHTMLTOPDF_MESSAGES[state], true);
+                    self.displayNotification({ title: _t('Report'), message: WKHTMLTOPDF_MESSAGES[state], sticky: true });
                 }
 
                 if (state === 'upgrade' || state === 'ok') {

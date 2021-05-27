@@ -276,7 +276,7 @@ class Discuss extends Component {
         this.env.services['notification'].notify({
             message: _.str.sprintf(
                 this.env._t(`Message posted on "%s"`),
-                owl.utils.escape(this.discuss.replyingToMessage.originThread.displayName)
+                this.discuss.replyingToMessage.originThread.displayName
             ),
             type: 'info',
         });

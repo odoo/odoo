@@ -42,7 +42,7 @@ var DocumentUploadMixin = {
             return filtered;
         }, []);
         if (!attachent_ids.length) {
-            return self.do_notify(false, _t("An error occurred during the upload"));
+            return self.displayNotification({ message: _t("An error occurred during the upload") });
         }
         var myContext =  this.initialState.context
         myContext['isMobile'] =  config.device.isMobile
