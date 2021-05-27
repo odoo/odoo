@@ -11,22 +11,16 @@ export class RPCError extends Error {
         super(...arguments);
         this.name = "RPC_ERROR";
         this.type = "server";
+        this.code = null;
+        this.data = null;
+        this.exceptionName = null;
+        this.subType = null;
     }
 }
 
-export class ConnectionLostError extends Error {
-    constructor() {
-        super(...arguments);
-        this.name = "CONNECTION_LOST_ERROR";
-    }
-}
+export class ConnectionLostError extends Error {}
 
-export class ConnectionAbortedError extends Error {
-    constructor() {
-        super(...arguments);
-        this.name = "CONNECTION_ABORTED_ERROR";
-    }
-}
+export class ConnectionAbortedError extends Error {}
 
 // -----------------------------------------------------------------------------
 // Main RPC method

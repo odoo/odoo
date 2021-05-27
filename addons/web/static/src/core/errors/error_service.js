@@ -22,20 +22,20 @@ export class UncaughtError extends Error {
     }
 }
 
-class UncaughtClientError extends UncaughtError {
+export class UncaughtClientError extends UncaughtError {
     constructor(message = _lt("Uncaught Javascript Error")) {
         super(message, "UncaughtClientError");
     }
 }
 
-class UncaughtPromiseError extends UncaughtError {
+export class UncaughtPromiseError extends UncaughtError {
     constructor(message = _lt("Uncaught Promise")) {
         super(message, "UncaughtPromiseError");
         this.unhandledRejectionEvent = null;
     }
 }
 
-class UncaughtCorsError extends UncaughtError {
+export class UncaughtCorsError extends UncaughtError {
     constructor(message = _lt("Uncaught CORS Error")) {
         super(message, "UncaughtCorsError");
     }
