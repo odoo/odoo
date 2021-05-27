@@ -411,9 +411,6 @@ const Wysiwyg = Widget.extend({
     redo: function () {
         this.odooEditor.historyRedo();
     },
-    focus() {
-        this.odooEditor.resetCursorOnLastHistoryCursor();
-    },
     /**
      * Focus inside the editor.
      *
