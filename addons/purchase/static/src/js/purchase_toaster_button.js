@@ -30,7 +30,7 @@ odoo.define('purchase.ToasterButton', function (require) {
                 args: [[this.id]],
             }).then(res => {
                 if (res) {
-                    this.do_notify(false, res.toast_message);
+                    this.displayNotification({ message: res.toast_message });
                 }
             })
         },

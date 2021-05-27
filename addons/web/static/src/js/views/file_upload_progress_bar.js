@@ -30,7 +30,7 @@ const ProgressBar = Widget.extend({
      * @return {Promise}
      */
     start() {
-        this.xhr.onabort = () => this.do_notify(false, _t("Upload cancelled"));
+        this.xhr.onabort = () => this.displayNotification({ message: _t("Upload cancelled") });
         return this._super(...arguments);
     },
 

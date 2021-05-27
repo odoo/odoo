@@ -141,13 +141,13 @@ var Apps = AbstractAction.extend({
 
                 self.on('message:blockUI', self, function() { framework.blockUI(); });
                 self.on('message:unblockUI', self, function() { framework.unblockUI(); });
-                self.on('message:warn', self, function(m) {self.do_warn(m.title, m.message, m.sticky); });
+                self.on('message:warn', self, function(m) {self.displayNotification({ title: m.title, message: m.message, sticky: m.sticky, type: 'danger' }); });
 
                 self.$ifr.appendTo(self.$('.o_content')).css(css).addClass('apps-client');
 
                 resolve();
             }, function() {
-                self.do_warn(_t('Odoo Apps will be available soon'), _t('Showing locally available modules'), true);
+                self.displayNotification({ title: _t('Odoo Apps will be available soon'), message: _t('Showing locally available modules'), sticky: true, type: 'danger' });
                 return self._rpc({
                     route: '/web/action/load',
                     params: {action_id: self.failback_action_id},

@@ -35,10 +35,10 @@ var QtyTagWidget = Widget.extend({
      */
     _onClickAddQty: function () {
         if (this.quantities.length >= this.MAX_QTY) {
-            this.do_notify(false, _.str.sprintf(
+            this.displayNotification({ message: _.str.sprintf(
                 _t("At most %d quantities can be displayed simultaneously. Remove a selected quantity to add others."),
                 this.MAX_QTY
-            ));
+            ) });
             return;
         }
         const qty = parseInt(this.$('.o_product_qty').val());
@@ -56,7 +56,7 @@ var QtyTagWidget = Widget.extend({
                 });
             }
         } else {
-            this.do_notify(false, _t("Please enter a positive whole number"));
+            this.displayNotification({ message: _t("Please enter a positive whole number") });
         }
     },
     /**

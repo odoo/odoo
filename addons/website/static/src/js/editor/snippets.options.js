@@ -2209,8 +2209,9 @@ options.registry.anchor = options.Class.extend({
             const anchor = decodeURIComponent(this._getAnchorLink());
             this.displayNotification({
               type: 'success',
-              message: _.str.sprintf(_t("Anchor copied to clipboard<br>Link: %s"), anchor),
+              message: _.str.sprintf(_t("Anchor copied to clipboard<br>Link: %s"), owl.utils.escape(anchor)),
               buttons: [{text: _t("Edit"), click: () => this.openAnchorDialog(), primary: true}],
+              messageIsHtml: true, // dynamic parts of the message are escaped above
             });
         });
 

@@ -114,6 +114,7 @@ const PartnerInviteDialog = Dialog.extend({
         this.env.services['notification'].notify({
             message: notification,
             type: 'info',
+            messageIsHtml: true, // dynamic parts of the message are escaped above
         });
     },
 });

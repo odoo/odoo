@@ -545,7 +545,7 @@ var DomainSelector = DomainTree.extend({
 
         // Warn the user if the domain is not valid after rendering
         if (!this._isValid) {
-            this.do_warn(false, _t("Domain not supported"));
+            this.displayNotification({ message: _t("Domain not supported"), type: 'danger' });
         }
     },
     /**
@@ -590,7 +590,7 @@ var DomainSelector = DomainTree.extend({
         try {
             domain = Domain.prototype.stringToArray($(e.currentTarget).val());
         } catch (err) { // If there is a syntax error, just ignore the change
-            this.do_warn(_t("Syntax error"), _t("Domain not properly formed"));
+            this.displayNotification({ title: _t("Syntax error"), message: _t("Domain not properly formed"), type: 'danger' });
             return;
         }
         this._redraw(domain).then((function () {

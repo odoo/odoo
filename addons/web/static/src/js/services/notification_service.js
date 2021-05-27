@@ -14,8 +14,8 @@ var id = 0;
  * the top/right part of the screen.
  *
  * If you want to display such a notification, you probably do not want to do it
- * by using this file. The proper way is to use the do_warn or do_notify
- * methods on the Widget class.
+ * by using this file. The proper way is to use the displayNotification
+ * method on the Widget class.
  */
 var NotificationService = AbstractService.extend({
     custom_events: {
@@ -80,6 +80,10 @@ var NotificationService = AbstractService.extend({
      * @param {Boolean} [params.buttons[0].primary] display the button as primary
      * @param {string} [params.buttons[0].text] button label
      * @param {string} [params.buttons[0].icon] font-awsome className or image src
+     * @param {boolean} [params.messageIsHtml=false] allows passing an html
+     *  message. Strongly discouraged: other options should be considered before
+     *  enabling this option. The responsibility is on the caller to properly
+     *  escape the message if this option is enabled.
      * @returns {Number} notification id
      */
     notify: function (params) {
