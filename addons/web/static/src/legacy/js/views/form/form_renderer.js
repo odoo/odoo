@@ -46,6 +46,7 @@ var FormRenderer = BasicRenderer.extend({
         this.idsForLabels = {};
         this.lastActivatedFieldIndex = -1;
         this.alertFields = {};
+        this.labelsToPostProcess = [];
         // The form renderer doesn't render invsible fields (invisible="1") by
         // default, to speed up the rendering. However, we sometimes have to
         // display them (e.g. in Studio, in "show invisible" mode). This flag
@@ -170,6 +171,7 @@ var FormRenderer = BasicRenderer.extend({
             if (self.$('.o_field_invalid').length) {
                 self.canBeSaved(self.state.id);
             }
+            self._postProcessLabels();
             return resetWidgets;
         });
     },
@@ -460,6 +462,18 @@ var FormRenderer = BasicRenderer.extend({
         if (JSON.parse(node.attrs.default_focus || "0")) {
             this.defaultFocusField = widget;
         }
+    },
+    /**
+     * This function is called once form view is rendered or modifiers are
+     * changed to process labels to add o_form_label_empty.
+     *
+     * @private
+     */
+    _postProcessLabels() {
+        this.labelsToPostProcess.forEach((label) => {
+            label.call();
+        });
+        this.labelsToPostProcess = [];
     },
     /**
      * @private
@@ -959,11 +973,12 @@ var FormRenderer = BasicRenderer.extend({
                 callback: function (element, modifiers, record) {
                     var widgets = self.allFieldWidgets[record.id];
                     var widget = _.findWhere(widgets, {name: fieldName});
+                    const fieldsInfo = record.fieldsInfo[self.viewType];
                     if (!widget) {
-                        return; // FIXME this occurs if the widget is created
-                                // after the label (explicit <label/> tag in the
-                                // arch), so this won't work on first rendering
-                                // only on reevaluation
+                        if (fieldsInfo[fieldName]) {
+                            self.labelsToPostProcess.push(element.callback.bind(self, element, modifiers, record));
+                        }
+                        return;
                     }
                     element.$el.toggleClass('o_form_label_empty', !!( // FIXME condition is evaluated twice (label AND widget...)
                         record.data.id
@@ -1090,6 +1105,7 @@ var FormRenderer = BasicRenderer.extend({
         delete this.defs;
 
         return Promise.all(defs).then(() => this.__renderView()).then(function () {
+            self._postProcessLabels();
             self._updateView($form.contents());
             if (self.state.res_id in self.alertFields) {
                 self.displayTranslationAlert();
