@@ -4,7 +4,7 @@
 import logging
 from contextlib import contextmanager
 from functools import wraps
-import requests
+from requests import HTTPError
 import pytz
 from dateutil.parser import parse
 
@@ -166,6 +166,49 @@ class GoogleSync(models.AbstractModel):
 
         return synced_records
 
+    def _google_error_handling(self, http_error):
+        # We only handle the most problematic errors of sync events.
+        if http_error.response.status_code in (403, 400):
+            response = http_error.response.json()
+            if self._name == 'calendar.event':
+                start = self.start.strftime('%Y-%m-%d at %H:%M')
+                event_ids = self.id
+                name = self.name
+                error_log = "Error while syncing event: "
+                event = self
+            else:
+                # calendar recurrence is triggering the error
+                start = self.base_event_id.start.strftime('%Y-%m-%d at %H:%M')
+                event_ids = _("%(id)s and %(length)s following", id=self.base_event_id.id, length=len(self.calendar_event_ids.ids))
+                name = self.base_event_id.name
+                # prevent to sync other events
+                self.calendar_event_ids.need_sync = False
+                error_log = "Error while syncing recurrence: "
+                event = self.base_event_id
+
+            # We don't have right access on the event or the request paramaters were bad.
+            # https://developers.google.com/calendar/v3/errors#403_forbidden_for_non-organizer
+            if http_error.response.status_code == 403 and "forbiddenForNonOrganizer" in http_error.response.text:
+                reason = _("you don't seem to have permission to modify this event on Google Calendar")
+            else:
+                reason = _("Google gave the following explanation: %s", response['error'].get('message'))
+
+            error_log += "The event (%(id)s - %(name)s at %(start)s) could not be synced. It will not be synced while " \
+                         "it is not updated. Reason: %(reason)s" % {'id': event_ids, 'start': start, 'name': name,
+                                                                    'reason': reason}
+            _logger.error(error_log)
+
+            body = _(
+                "The following event could not be synced with Google Calendar. </br>"
+                "It will not be synced as long at it is not updated.</br>"
+                "%(reason)s", reason=reason)
+
+            event.message_post(
+                body=body,
+                message_type='comment',
+                subtype_xmlid='mail.mt_note',
+            )
+
     @after_commit
     def _google_delete(self, google_service: GoogleCalendarService, google_id, timeout=TIMEOUT):
         with google_calendar_token(self.env.user.sudo()) as token:
@@ -173,13 +216,17 @@ class GoogleSync(models.AbstractModel):
                 google_service.delete(google_id, token=token, timeout=timeout)
                 # When the record has been deleted on our side, we need to delete it on google but we don't want
                 # to raise an error because the record don't exists anymore.
-                self.exists().need_sync = False
+                self.exists().with_context(dont_notify=True).need_sync = False
 
     @after_commit
     def _google_patch(self, google_service: GoogleCalendarService, google_id, values, timeout=TIMEOUT):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
-                google_service.patch(google_id, values, token=token, timeout=timeout)
+                try:
+                    google_service.patch(google_id, values, token=token, timeout=timeout)
+                except HTTPError as e:
+                    if e.response.status_code in (400, 403):
+                        self._google_error_handling(e)
                 self.need_sync = False
 
     @after_commit
@@ -188,11 +235,17 @@ class GoogleSync(models.AbstractModel):
             return
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
-                google_id = google_service.insert(values, token=token, timeout=timeout)
-                self.write({
-                    'google_id': google_id,
-                    'need_sync': False,
-                })
+                try:
+                    google_id = google_service.insert(values, token=token, timeout=timeout)
+                    # Everything went smoothly
+                    self.with_context(dont_notify=True).write({
+                        'google_id': google_id,
+                        'need_sync': False,
+                    })
+                except HTTPError as e:
+                    if e.response.status_code in (400, 403):
+                        self._google_error_handling(e)
+                        self.need_sync = False
 
     def _get_records_to_sync(self, full_sync=False):
         """Return records that should be synced from Odoo to Google

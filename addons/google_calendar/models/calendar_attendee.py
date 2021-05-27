@@ -19,10 +19,25 @@ class Attendee(models.Model):
             if not token:
                 super()._send_mail_to_attendees(mail_template, force_send)
 
-    def write(self, vals):
-        res = super().write(vals)
-        if vals.get('state'):
-            # When the state is changed, the corresponding event must be sync with google
-            google_service = GoogleCalendarService(self.env['google.service'])
-            self.event_id.filtered('google_id')._sync_odoo2google(google_service)
+    def do_tentative(self):
+        # Synchronize event after state change
+        res = super().do_tentative()
+        self._sync_event()
         return res
+
+    def do_accept(self):
+        # Synchronize event after state change
+        res = super().do_accept()
+        self._sync_event()
+        return res
+
+
+    def do_decline(self):
+        # Synchronize event after state change
+        res = super().do_decline()
+        self._sync_event()
+        return res
+
+    def _sync_event(self):
+        google_service = GoogleCalendarService(self.env['google.service'])
+        self.event_id.filtered(lambda e: e.google_id)._sync_odoo2google(google_service)

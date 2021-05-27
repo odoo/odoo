@@ -43,8 +43,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         event._sync_odoo2google(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
-            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
-            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
+            'start': {'dateTime': '2020-01-15T08:00:00', 'timeZone': 'Etc/UTC'},
+            'end': {'dateTime': '2020-01-15T18:00:00', 'timeZone': 'Etc/UTC'},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -272,8 +272,8 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         user.with_user(user).restart_google_synchronization()
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
-            'start': {'dateTime': '2020-01-15T08:00:00+00:00'},
-            'end': {'dateTime': '2020-01-15T18:00:00+00:00'},
+            'start': {'dateTime': '2020-01-15T08:00:00', 'timeZone': 'Etc/UTC'},
+            'end': {'dateTime': '2020-01-15T18:00:00', 'timeZone': 'Etc/UTC'},
             'summary': 'Event',
             'description': '',
             'location': '',
@@ -435,7 +435,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
         self.assertEqual(event.attendee_ids.state, 'needsAction',
                          "The attendee state should be 'needsAction")
 
-        event.attendee_ids.write({'state': 'declined'})
+        event.attendee_ids.do_decline()
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
             'start': {'date': str(event.start_date)},
