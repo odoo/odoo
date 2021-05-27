@@ -38,26 +38,11 @@ function parseActiveIds(ids) {
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
-export class ViewNotFoundError extends Error {
-    constructor() {
-        super(...arguments);
-        this.name = "ViewNotFoundError";
-    }
-}
+export class ViewNotFoundError extends Error {}
 
-export class ControllerNotFoundError extends Error {
-    constructor() {
-        super(...arguments);
-        this.name = "ControllerNotFoundError";
-    }
-}
+export class ControllerNotFoundError extends Error {}
 
-export class InvalidButtonParamsError extends Error {
-    constructor() {
-        super(...arguments);
-        this.name = "InvalidButtonParamsError";
-    }
-}
+export class InvalidButtonParamsError extends Error {}
 
 // -----------------------------------------------------------------------------
 // ActionManager (Service)

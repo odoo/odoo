@@ -151,7 +151,7 @@ function toAST(domain) {
 
 function normalizeDomainAST(domain, op = "&") {
     if (domain.type !== 4 /* List */) {
-        throw new Error("Invalid domain AST");
+        throw new InvalidDomainError("Invalid domain AST");
     }
     if (domain.value.length === 0) {
         return domain;
@@ -234,7 +234,7 @@ function matchCondition(record, condition) {
             }
             return new RegExp(value.replace(/%/g, ".*"), "i").test(fieldValue);
     }
-    throw new Error("could not match domain");
+    throw new InvalidDomainError("could not match domain");
 }
 
 /**

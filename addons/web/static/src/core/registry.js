@@ -6,19 +6,9 @@ const { EventBus } = core;
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
-export class KeyNotFoundError extends Error {
-    constructor() {
-        super(...arguments);
-        this.name = "KeyNotFoundError";
-    }
-}
+export class KeyNotFoundError extends Error {}
 
-export class DuplicatedKeyError extends Error {
-    constructor() {
-        super(...arguments);
-        this.name = "DuplicatedKeyError";
-    }
-}
+export class DuplicatedKeyError extends Error {}
 
 /**
  * Registry
