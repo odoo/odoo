@@ -1741,7 +1741,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
         self.assertEqual(scrap.location_id, mo.location_dest_id, 'Location was not auto-corrected')
 
-    def test_multi_button_plan(self):
+    def test_a_multi_button_plan(self):
         """ Test batch methods (confirm/validate) of the MO with the same bom """
         self.bom_2.type = "normal"  # avoid to get the operation of the kit bom
 
@@ -1753,7 +1753,7 @@ class TestMrpOrder(TestMrpCommon):
 
         mo_3.button_plan()
         self.assertEqual(mo_3.state, 'confirmed')
-        self.assertEqual(mo_3.workorder_ids[0].state, 'ready')
+        self.assertEqual(mo_3.workorder_ids[0].state, 'waiting')
 
         mo_1 = Form(self.env['mrp.production'])
         mo_1.bom_id = self.bom_3
@@ -1772,8 +1772,8 @@ class TestMrpOrder(TestMrpCommon):
         (mo_1 | mo_2).button_plan()  # Confirm and plan in the same "request"
         self.assertEqual(mo_1.state, 'confirmed')
         self.assertEqual(mo_2.state, 'confirmed')
-        self.assertEqual(mo_1.workorder_ids[0].state, 'ready')
-        self.assertEqual(mo_2.workorder_ids[0].state, 'ready')
+        self.assertEqual(mo_1.workorder_ids[0].state, 'waiting')
+        self.assertEqual(mo_2.workorder_ids[0].state, 'waiting')
 
         # produce
         res_dict = (mo_1 | mo_2).button_mark_done()
@@ -1863,3 +1863,52 @@ class TestMrpOrder(TestMrpCommon):
             ('raw_material_production_id', '=', mo_backorder.id)])
         self.assertEqual(sum(move_prod_1_bo.mapped('product_uom_qty')), 60.0)
         self.assertEqual(sum(move_prod_2_bo.mapped('product_uom_qty')), 40.0)
+
+    def test_state_workorders(self):
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_4.id,
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 1})
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'amUgbidhaW1lIHBhcyBsZSBKUw==', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+                (0, 0, {'name': '137 Python', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1, 'sequence': 2}),
+            ],
+        })
+
+        self.env['stock.quant'].create({
+            'location_id': self.stock_location_components.id,
+            'product_id': self.product_2.id,
+            'inventory_quantity': 10
+        }).action_apply_inventory()
+
+        mo = Form(self.env['mrp.production'])
+        mo.bom_id = bom
+        mo = mo.save()
+
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["pending", "pending"])
+
+        mo.action_confirm()
+        mo.action_assign()
+        self.assertEqual(mo.move_raw_ids.state, "assigned")
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready", "pending"])
+        mo.do_unreserve()
+
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting", "pending"])
+
+        mo.workorder_ids[0].unlink()
+
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["waiting"])
+        mo.action_assign()
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["ready"])
+
+        res_dict = mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(list(mo.workorder_ids.mapped("state")), ["done"])
