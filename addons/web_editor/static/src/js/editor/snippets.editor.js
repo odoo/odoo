@@ -198,7 +198,7 @@ var SnippetEditor = Widget.extend({
                             // use the s_text_block snippet template instead, real template not found
                             // find either its node name, its title (column/block) or show 'snippet' otherwise
                             var thumbName = this.$target.data('name')
-                                || this.$optionsSection.find('we-title').first().text().replaceAll(/[^A-Za-z]/gi, '')
+                                || this.$optionsSection.find('we-title > span')[0].textContent
                                 || 'snippet';
                             // locate the default template and clone it to alter its title
                             template = $(getSnippetEditorThumbnail('s_text_block')).clone();
