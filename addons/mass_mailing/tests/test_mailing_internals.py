@@ -8,8 +8,10 @@ from freezegun import freeze_time
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
+from odoo.exceptions import ValidationError
 from odoo.tests.common import users, Form
-from odoo.tools import formataddr, mute_logger
+from odoo.tools import mute_logger
+
 
 class TestMassMailValues(MassMailCommon):
 
@@ -106,6 +108,65 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing.mailing_model_real, 'mail.channel')
         self.assertEqual(mailing.reply_to_mode, 'update')
         self.assertFalse(mailing.reply_to)
+
+    @users('user_marketing')
+    def test_mailing_computed_fields_domain_w_filter(self):
+        """ Test domain update, involving mailing.filters added in 15.1. """
+        # Create on res.partner, with default values for computed fields
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestMailing',
+            'subject': 'Test',
+            'mailing_type': 'mail',
+            'body_html': '<p>Hello <t t-out="object.name"/></p>',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        # default for partner: remove blacklisted
+        self.assertEqual(literal_eval(mailing.mailing_domain), [('is_blacklisted', '=', False)])
+
+        # prepare initial data
+        filter_1, filter_2, filter_3 = self.env['mailing.filter'].create([
+            {'name': 'General channel',
+             'mailing_domain' : [('name', '=', 'general')],
+             'mailing_model_id': self.env['ir.model']._get('mail.channel').id,
+            },
+            {'name': 'LLN City',
+             'mailing_domain' : [('city', 'ilike', 'LLN')],
+             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+            },
+            {'name': 'Email based',
+             'mailing_domain' : [('email', 'ilike', 'info@odoo.com')],
+             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+            }
+        ])
+
+        # check that adding mailing_filter_id updates domain correctly
+        mailing.mailing_filter_id = filter_2
+        self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_2.mailing_domain))
+
+        # cannot set a filter linked to another model
+        with self.assertRaises(ValidationError):
+            mailing.mailing_filter_id = filter_1
+
+        # resetting model should reset domain, even if filter was chosen previously
+        mailing.mailing_model_id = self.env['ir.model']._get('mail.channel').id
+        self.assertEqual(literal_eval(mailing.mailing_domain), [])
+
+        # changing the filter should update the mailing domain correctly
+        mailing.mailing_filter_id = filter_1
+        self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_1.mailing_domain))
+
+        # changing the domain should not empty the mailing_filter_id
+        mailing.mailing_domain = "[('email', 'ilike', 'info_be@odoo.com')]"
+        self.assertEqual(mailing.mailing_filter_id, filter_1, "Filter should not be unset even if domain is changed")
+
+        # deleting the filter record should not delete the domain on mailing
+        mailing.mailing_model_id = self.env['ir.model']._get('res.partner').id
+        mailing.mailing_filter_id = filter_3
+        filter_3_domain = filter_3.mailing_domain
+        self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_3_domain))
+        filter_3.unlink()  # delete the filter record
+        self.assertFalse(mailing.mailing_filter_id, "Should unset filter if it is deleted")
+        self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_3_domain), "Should still have the same domain")
 
     @users('user_marketing')
     def test_mailing_computed_fields_default(self):
