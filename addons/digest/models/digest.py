@@ -121,7 +121,7 @@ class Digest(models.Model):
             'digest.digest_mail_main',
             'digest.digest',
             self.ids,
-            engine='qweb',
+            engine='qweb_view',
             add_context={
                 'title': self.name,
                 'top_button_label': _('Connect'),
