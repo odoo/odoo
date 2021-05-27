@@ -8,6 +8,7 @@
                 <field name="production_id"/>
                 <field name="workcenter_id"/>
                 <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
+                <filter string="Waiting" name="waiting" domain="[('state','=','waiting')]"/>
                 <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
                 <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
@@ -82,7 +83,8 @@
                 <field name="duration_expected" widget="float_time"/>
                 <field name="duration" widget="mrp_time_counter"
                   attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}"/>
-                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" attrs="{'invisible': [('production_state', 'in', ('draft', 'done'))]}"/>
+                <field name="state" widget="badge" decoration-warning="state == 'waiting'" decoration-success="state == 'done'" decoration-info="state not in ('waiting', 'done', 'cancel')" 
+                  attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
                   attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done', 'cancel')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning"
@@ -115,6 +117,9 @@
             <field name="workcenter_id" position="after">
                 <field name="production_id"/>
             </field>
+            <field name="state" position="attributes">
+                <attribute name="attrs">{'invisible': [('production_state', '=', 'draft')]}</attribute>
+            </field>
         </field>
     </record>
 
@@ -127,7 +132,7 @@
             <field name="working_state" invisible="1"/>
             <field name="production_state" invisible="1"/>
             <header>
-                <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
+                <field name="state" widget="statusbar" statusbar_visible="pending,waiting,ready,progress,done"/>
             </header>
                 <div class="oe_button_box" name="button_box">
                     <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
@@ -229,6 +234,7 @@
                 <field name="production_id"/>
                 <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
                 <filter string="Ready" name="ready" domain="[('state', '=', 'ready')]"/>
+                <filter string="Waiting" name="waiting" domain="[('state', '=', 'waiting')]"/>
                 <filter string="Pending" name="pending" domain="[('state', '=', 'pending')]"/>
                 <filter string="Finished" name="finish" domain="[('state', '=', 'done')]"/>
                 <filter string="Available" name="available" domain="[('production_availability', '=', 'assigned')]"/>
@@ -383,7 +389,7 @@
                                 </div>
                                 <div class="o_kanban_manage_button_section">
                                     <h2>
-                                        <span t-attf-class="badge #{['pending'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' :['progress'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['ready'].indexOf(record.state.raw_value) > -1 ? 'badge-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : 'badge-danger'}">
+                                        <span t-attf-class="badge #{['pending', 'waiting'].indexOf(record.state.raw_value) > -1 ? 'badge-warning' :['progress'].indexOf(record.state.raw_value) > -1 ? 'badge-secondary' : ['ready'].indexOf(record.state.raw_value) > -1 ? 'badge-primary' : ['done'].indexOf(record.state.raw_value) > -1 ? 'badge-success' : ['cancel'].indexOf(record.state.raw_value) > -1 ? 'badge-muted' : 'badge-danger'}">
                                             <t t-esc="record.state.value"/>
                                         </span>
                                     </h2>
@@ -416,7 +422,7 @@
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="view_id" ref="mrp_workorder_view_gantt"/>
-        <field name="context">{'search_default_work_center': True, 'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
+        <field name="context">{'search_default_work_center': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No work orders to do!
@@ -435,7 +441,7 @@
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="view_id" ref="workcenter_line_gantt_production"/>
-        <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
+        <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No work orders to do!
@@ -461,7 +467,7 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,gantt</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
-        <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
+        <field name="context">{'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             No work orders to do!
