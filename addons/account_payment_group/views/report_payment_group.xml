@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payment_group_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=lang)" />
+            <div class="page">
+                <div id="informations" class="row mt8 mb8">
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_payment_group">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="account_payment_group.report_payment_group_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+
+    <report
+        string="Receipt / Payment Order"
+        id="action_report_payment_group"
+        model="account.payment.group"
+        report_type="qweb-pdf"
+        name="account_payment_group.report_payment_group"
+        file="account_payment_group.report_payment_group"
+        print_report_name="(object.partner_type == 'supplier' and 'Orden de pago' or 'Recibo') + ' ' + object.document_number"
+    />
+
+</odoo>
