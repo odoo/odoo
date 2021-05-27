@@ -188,23 +188,24 @@ var SnippetEditor = Widget.extend({
                     },
                     handle: '.o_move_handle',
                     helper: () => {
-                        // var $clone = this.$target.clone().css({
-                        //     transform: 'rotate(-14deg) scale(0.5)',
-                        //     border: 0,
-                        // });
-                        var snippetName = this.$target.data('snippet');
-                        var template = document
-                            .querySelector(`#oe_snippets [data-snippet="${snippetName}"]`)
-                            ?.parentNode
-                            //?.querySelector('.oe_snippet_thumbnail.ui-draggable-handle');
-                        console.log(`found the following template for name '${snippetName}':`, template);
+                        const getSnippetEditorThumbnail = (snippet_name) => {
+                            return document
+                            .querySelector(`#oe_snippets [data-snippet="${snippet_name}"]`)
+                            ?.parentNode;
+                        }
+                        var template = getSnippetEditorThumbnail(this.$target.data('snippet'))
                         if (!template) {
                             // use the alert snippet template instead
+                            template = $(getSnippetEditorThumbnail('s_text_block')).clone().get(0);
+                            template
+                                .firstChild
+                                .lastElementChild
+                                .innerText = this.$target.data('name') || 'snippet';
                         }
                         var $clone = $(template).clone().css({
                                 transform: 'rotate(-14deg)',
                                 border: 0,
-                            }); //.addClass('o_we_already_dragging')
+                            });
                         $clone.appendTo(this.$body).removeClass('d-none');
                         return $clone;
                     },
