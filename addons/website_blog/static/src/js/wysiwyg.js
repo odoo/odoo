@@ -23,6 +23,7 @@ Wysiwyg.include({
     async start() {
         await this._super(...arguments);
         $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
+        this.$editable.find('#o_wblog_post_name, #o_wblog_post_subtitle').attr('contentEditable', true)
     },
 
     //--------------------------------------------------------------------------
