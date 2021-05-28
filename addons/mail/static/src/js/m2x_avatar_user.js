@@ -29,7 +29,7 @@ const M2XAvatarMixin = {
         if (!this.supportedModels.includes(this.field.relation)) {
             throw new Error(`This widget is only supported on many2one and many2many fields pointing to ${JSON.stringify(this.supportedModels)}`);
         }
-        this.className += ' o_clickable_m2x_avatar';
+        this.className = `${this.className || ''} o_clickable_m2x_avatar`.trim();
     },
 
     //--------------------------------------------------------------------------
