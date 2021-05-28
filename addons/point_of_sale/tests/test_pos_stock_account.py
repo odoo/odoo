@@ -207,6 +207,8 @@ class TestPoSStock(TestPoSCommon):
         Test order via POS a product having stock owner.
         """
 
+        group_owner = self.env.ref('stock.group_tracking_owner')
+        self.env.user.write({'groups_id': [(4, group_owner.id)]})
         self.product4 = self.create_product('Product 3', self.categ_basic, 30.0, 15.0)
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory adjustment'
