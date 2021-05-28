@@ -400,7 +400,7 @@ actual arch.
                     "Error while validating view:\n\n%(error)s",
                     error=tools.ustr(e),
                 )).with_traceback(e.__traceback__)
-                err.context = None
+                err.context = getattr(e, 'context', None)
                 raise err from None
 
             try:
