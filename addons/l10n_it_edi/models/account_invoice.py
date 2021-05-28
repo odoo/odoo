@@ -164,7 +164,7 @@ class AccountInvoice(models.Model):
                 'name': report_name,
                 'res_id': invoice.id,
                 'res_model': invoice._name,
-                'datas': base64.encodestring(data),
+                'datas': base64.encodebytes(data),
                 'datas_fname': report_name,
                 'description': description,
                 'type': 'binary',
@@ -785,7 +785,7 @@ class ImportInvoiceImportWizard(models.TransientModel):
                 # invoice already exist
                 raise UserError(_('E-invoice already exist: %s') % attachment.name)
             self = self.with_context(default_journal_id= self.journal_id.id)
-            invoice = self.env['account.invoice']._import_xml_invoice(base64.decodestring(attachment.datas), attachment)
+            invoice = self.env['account.invoice']._import_xml_invoice(base64.decodebytes(attachment.datas), attachment)
         else:
             invoice = super(ImportInvoiceImportWizard, self)._create_invoice_from_file(attachment)
         return invoice

@@ -358,7 +358,7 @@ class AccountFrFec(models.TransientModel):
             suffix = '-NONOFFICIAL'
 
         self.write({
-            'fec_data': base64.encodestring(fecvalue),
+            'fec_data': base64.encodebytes(fecvalue),
             # Filename = <siren>FECYYYYMMDD where YYYMMDD is the closing date
             'filename': '%sFEC%s%s.csv' % (company_legal_data['siren'], end_date, suffix),
             })
