@@ -91,6 +91,8 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
     architecture) given by an inheriting view.
 
     :param Element source: a parent architecture to modify
+    :param Element specs_tree: a modifying architecture in an inheriting view
+    :param bool inherit_branding:
     :param pre_locate: function that is executed before locating a node.
                         This function receives an arch as argument.
                         This is required by studio to properly handle group_ids.
