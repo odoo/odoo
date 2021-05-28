@@ -61,6 +61,8 @@ class CRMLeadMiningRequest(models.Model):
     company_size_max = fields.Integer(default=1000)
     country_ids = fields.Many2many('res.country', string='Countries', default=_default_country_ids)
     state_ids = fields.Many2many('res.country.state', string='States')
+    available_state_ids = fields.One2many('res.country.state', compute='_compute_available_state_ids',
+        help="List of available states based on selected countries")
     industry_ids = fields.Many2many('crm.iap.lead.industry', string='Industries')
 
     # Contact Generation Filter
@@ -123,6 +125,36 @@ class CRMLeadMiningRequest(models.Model):
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
             mining.team_id = team.id
 
+    @api.depends('country_ids')
+    def _compute_available_state_ids(self):
+        """ States for some specific countries should not be offered as filtering options because
+        they drastically reduce the amount of IAP reveal results.
+
+        For example, in Belgium, only 11% of companies have a defined state within the
+        reveal service while the rest of them have no state defined at all.
+
+        Meaning specifying states for that country will yield a lot less results than what you could
+        expect, which is not the desired behavior.
+        Obviously all companies are active within a state, it's just a lack of data in the reveal
+        service side.
+
+        To help users create meaningful iap searches, we only keep the states filtering for several
+        whitelisted countries (based on their country code).
+        The complete list and reasons for this change can be found on task-2471703. """
+
+        for lead_mining_request in self:
+            countries = lead_mining_request.country_ids.filtered(lambda country:
+                country.code in iap_tools._STATES_FILTER_COUNTRIES_WHITELIST)
+            lead_mining_request.available_state_ids = self.env['res.country.state'].search([
+                ('country_id', 'in', countries.ids)
+            ])
+
+    @api.onchange('available_state_ids')
+    def _onchange_available_state_ids(self):
+        self.state_ids -= self.state_ids.filtered(
+            lambda state: (state._origin.id or state.id) not in self.available_state_ids.ids
+        )
+
     @api.onchange('lead_number')
     def _onchange_lead_number(self):
         if self.lead_number <= 0:
@@ -167,7 +199,15 @@ class CRMLeadMiningRequest(models.Model):
             payload.update({'company_size_min': self.company_size_min,
                             'company_size_max': self.company_size_max})
         if self.industry_ids:
-            payload['industry_ids'] = self.industry_ids.mapped('reveal_id')
+            # accumulate all reveal_ids (separated by ',') into one list
+            # eg: 3 records with values: "175,176", "177" and "190,191"
+            # will become ['175','176','177','190','191']
+            all_industry_ids = [
+                reveal_id.strip()
+                for reveal_ids in self.mapped('industry_ids.reveal_ids')
+                for reveal_id in reveal_ids.split(',')
+            ]
+            payload['industry_ids'] = all_industry_ids
         if self.search_type == 'people':
             payload.update({'contact_number': self.contact_number,
                             'contact_filter_type': self.contact_filter_type})
