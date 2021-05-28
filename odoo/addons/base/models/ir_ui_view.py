@@ -390,7 +390,7 @@ actual arch.
         for view in self:
             try:
                 # verify the view is valid xml and that the inheritance resolves
-                view_arch = etree.fromstring(view.arch.encode('utf-8'))
+                view_arch = etree.fromstring(view.arch)
                 view._valid_inheritance(view_arch)
                 combined_arch = view._get_combined_arch()
                 if view.type == 'qweb':
@@ -400,7 +400,7 @@ actual arch.
                     "Error while validating view:\n\n%(error)s",
                     error=tools.ustr(e),
                 )).with_traceback(e.__traceback__)
-                err.context = None
+                err.context = getattr(e, 'context', None)
                 raise err from None
 
             try:
