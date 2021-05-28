@@ -508,6 +508,7 @@ function factory(dependencies) {
                 this.env.services['notification'].notify({
                     message: data.message,
                     sticky: data.sticky,
+                    messageIsHtml: data.message_is_html,
                     type: data.warning ? 'warning' : 'danger',
                 });
             } else if (type === 'toggle_star') {
