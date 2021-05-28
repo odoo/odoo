@@ -460,12 +460,16 @@ class TestProjectrecurrence(TransactionCase):
         self.assertEqual(dates[4], datetime(2025, 11, 30))
 
     def test_recurrence_cron_repeat_after_subtasks(self):
+
+        def get_task_and_subtask_counts(domain):
+            tasks = self.env['project.task'].search(domain)
+            return len(tasks), len(tasks.filtered('parent_id'))
+
         parent_task = self.env['project.task'].create({
             'name': 'Parent Task',
             'project_id': self.project_recurring.id
         })
         domain = [('project_id', '=', self.project_recurring.id)]
-        domain_without_parent = [('project_id', '=', self.project_recurring.id), ('parent_id', '!=', False)]
         with Form(parent_task.with_context({'tracking_disable': True})) as task_form:
             with task_form.child_ids.new() as subtask_form:
                 subtask_form.name = 'Test Subtask 1'
@@ -485,28 +489,33 @@ class TestProjectrecurrence(TransactionCase):
             subtask.planned_hours = 2
 
             self.assertEqual(subtask.recurrence_id.next_recurrence_date, date(2020, 1, 15))
-            self.assertEqual(self.env['project.task'].search_count(domain), 2)
-            self.assertEqual(self.env['project.task'].search_count(domain_without_parent), 1)
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            self.assertEqual(project_task_count, 2)
+            self.assertEqual(project_subtask_count, 1)
             self.env['project.task.recurrence']._cron_create_recurring_tasks()
             self.assertEqual(self.env['project.task'].search_count(domain), 2, 'no extra task should be created')
             self.assertEqual(subtask.recurrence_id.recurrence_left, 2)
 
         with freeze_time("2020-01-15"):
-            self.assertEqual(self.env['project.task'].search_count(domain), 2)
-            self.assertEqual(self.env['project.task'].search_count(domain_without_parent), 1)
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            self.assertEqual(project_task_count, 2)
+            self.assertEqual(project_subtask_count, 1)
             self.env['project.task.recurrence']._cron_create_recurring_tasks()
-            self.assertEqual(self.env['project.task'].search_count(domain), 3)
-            self.assertEqual(self.env['project.task'].search_count(domain_without_parent), 2)
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            self.assertEqual(project_task_count, 3)
+            self.assertEqual(project_subtask_count, 2)
             self.assertEqual(subtask.recurrence_id.recurrence_left, 1)
 
         with freeze_time("2020-02-15"):
             self.env['project.task.recurrence']._cron_create_recurring_tasks()
-            self.assertEqual(self.env['project.task'].search_count(domain), 4)
-            self.assertEqual(self.env['project.task'].search_count(domain_without_parent), 3)
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            self.assertEqual(project_task_count, 4)
+            self.assertEqual(project_subtask_count, 3)
             self.assertEqual(subtask.recurrence_id.recurrence_left, 0)
             self.env['project.task.recurrence']._cron_create_recurring_tasks()
-            self.assertEqual(self.env['project.task'].search_count(domain), 4)
-            self.assertEqual(self.env['project.task'].search_count(domain_without_parent), 3)
+            project_task_count, project_subtask_count = get_task_and_subtask_counts(domain)
+            self.assertEqual(project_task_count, 4)
+            self.assertEqual(project_subtask_count, 3)
             self.assertEqual(subtask.recurrence_id.recurrence_left, 0)
 
         tasks = self.env['project.task'].search(domain)
