@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.WebClient" owl="1">
-        <body class="o_web_client">
+        <body class="o_web_client" t-att-class="{'o_is_superuser': user.userId === 1}">
             <NavBar/>
             <ActionContainer/>
             <div class="o_dialog_container"/>

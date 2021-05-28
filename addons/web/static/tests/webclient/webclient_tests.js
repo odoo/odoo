@@ -11,7 +11,7 @@ import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
-import { fakeTitleService } from "../helpers/mock_services";
+import { fakeTitleService, makeFakeUserService } from "../helpers/mock_services";
 import { getFixture } from "../helpers/utils";
 
 const { Component, tags, mount } = owl;
@@ -21,7 +21,7 @@ const serviceRegistry = registry.category("services");
 
 let baseConfig;
 
-QUnit.module("Web Client", {
+QUnit.module("WebClient", {
     async beforeEach() {
         serviceRegistry
             .add("action", actionService)
@@ -55,4 +55,24 @@ QUnit.test("can render a main component", async (assert) => {
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });
     assert.containsOnce(webClient.el, ".chocolate");
+});
+
+QUnit.test("webclient for the superuser", async (assert) => {
+    assert.expect(1);
+    const mockedSessionInfo = { uid: 1 };
+    serviceRegistry.add("user", makeFakeUserService({ session_info: mockedSessionInfo }));
+    const env = await makeTestEnv(baseConfig);
+    const target = getFixture();
+    const webClient = await mount(WebClient, { env, target });
+    assert.hasClass(webClient.el, "o_is_superuser");
+});
+
+QUnit.test("webclient for a non superuser", async (assert) => {
+    assert.expect(1);
+    const mockedSessionInfo = { uid: 2 };
+    serviceRegistry.add("user", makeFakeUserService({ session_info: mockedSessionInfo }));
+    const env = await makeTestEnv(baseConfig);
+    const target = getFixture();
+    const webClient = await mount(WebClient, { env, target });
+    assert.doesNotHaveClass(webClient.el, "o_is_superuser");
 });
