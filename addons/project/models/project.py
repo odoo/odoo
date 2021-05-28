@@ -747,7 +747,7 @@ class Task(models.Model):
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
     is_closed = fields.Boolean(related="stage_id.is_closed", string="Closing Stage", readonly=True, related_sudo=False)
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
-    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", context={'active_test': False})
+    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     child_text = fields.Char(compute="_compute_child_text")
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
@@ -1447,7 +1447,7 @@ class Task(models.Model):
     # If depth == 3, return children to third generation
     # If depth <= 0, return all children without depth limit
     def _get_all_subtasks(self, depth=0):
-        children = self.mapped('child_ids').filtered(lambda children: children.active)
+        children = self.mapped('child_ids')
         if not children:
             return self.env['project.task']
         if depth == 1:
