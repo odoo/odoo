@@ -160,10 +160,17 @@ class MailPluginController(http.Controller):
         return response
 
     @http.route('/mail_plugin/log_mail_content', type="json", auth="outlook", cors="*")
-    def log_mail_content(self, model, res_id, message):
+    def log_mail_content(self, model, res_id, message, attachments=None):
         if model not in self._mail_content_logging_models_whitelist():
             raise Forbidden()
-        request.env[model].browse(res_id).message_post(body=message)
+
+        if attachments:
+            attachments = [
+                (name, base64.b64decode(content))
+                for name, content in attachments
+            ]
+
+        request.env[model].browse(res_id).message_post(body=message, attachments=attachments)
 
     def _iap_enrich(self, domain):
         enriched_data = {}
