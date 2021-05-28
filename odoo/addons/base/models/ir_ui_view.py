@@ -13,6 +13,7 @@ import pprint
 import re
 import time
 import uuid
+import warnings
 
 from dateutil.relativedelta import relativedelta
 
@@ -833,56 +834,41 @@ actual arch.
 
         return combine(self, primary_arch)
 
-    def read_combined(self, fields=None):
-        """
-        Utility function to get a view combined with its inherited views.
-
-        * Gets the top of the view tree if a sub-view is requested
-        * Applies all inherited archs on the root view
-        * Returns the view with all requested fields
-          .. note:: ``arch`` is always added to the fields list even if not
-                    requested (similar to ``id``)
-        """
-        # introduce check_view_ids in context
-        if 'check_view_ids' not in self._context:
-            self = self.with_context(check_view_ids=[])
-
-        check_view_ids = self._context['check_view_ids']
-
-        # if view_id is not a root view, climb back to the top.
+    def _get_combined_arch(self):
+        """ TODO """
         root = self
-        while root.mode != 'primary':
-            # Add inherited views to the list of loading forced views
-            # Otherwise, inherited views could not find elements created in their direct parents if that parent is defined in the same module
-            check_view_ids.append(root.id)
+        view_ids = []
+        while True:
+            view_ids.append(root.id)
+            if not root.inherit_id:
+                break
             root = root.inherit_id
 
-        # arch and model fields are always returned
+        views = self.browse(view_ids)
+
+        # Add inherited views to the list of loading forced views
+        # Otherwise, inherited views could not find elements created in
+        # their direct parents if that parent is defined in the same module
+        # introduce check_view_ids in context
+        if 'check_view_ids' not in views.env.context:
+            views = views.with_context(check_view_ids=[])
+        views.env.context['check_view_ids'].extend(view_ids)
+
+        hierarchy = views._get_inheriting_hierarchy()
+        arch = root._combine(hierarchy)
+        return arch
+
+    def get_combined_arch(self) -> str:
+        """ TODO """
+        return etree.tostring(self._get_combined_arch(), encoding='unicode')
+
+    def read_combined(self, fields=None):
+        warnings.warn("use get_combined_arch() instead", DeprecationWarning)
         if fields:
             fields = list({'arch', 'model'}.union(fields))
-
-        # read the view arch
-        [view_data] = root.read(fields=fields)
-        view_arch = etree.fromstring(view_data['arch'].encode('utf-8'))
-        if not root.inherit_id:
-            if self._context.get('inherit_branding'):
-                view_arch.attrib.update({
-                    'data-oe-model': 'ir.ui.view',
-                    'data-oe-id': str(root.id),
-                    'data-oe-field': 'arch',
-                })
-            arch_tree = view_arch
-        else:
-            if self._context.get('inherit_branding'):
-                root.inherit_branding(view_arch)
-            parent_view = root.inherit_id.read_combined(fields=fields)
-            arch_tree = etree.fromstring(parent_view['arch'])
-            arch_tree = self.browse(parent_view['id']).apply_inheritance_specs(arch_tree, view_arch)
-
-        # and apply inheritance
-        arch = root.apply_view_inheritance(arch_tree, self.model)
-
-        return dict(view_data, arch=etree.tostring(arch, encoding='unicode'))
+        [result] = self.read(fields)
+        result['arch'] = self.get_combined_arch()
+        return result
 
     def _apply_groups(self, node, name_manager, node_info):
         #pylint: disable=unused-argument
