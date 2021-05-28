@@ -199,7 +199,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 }
             }
 
-            this.showScreen(this.nextScreen);
+            this.showTempScreen(this.nextScreen);
 
             // If we succeeded in syncing the current order, and
             // there are still other orders that are left unsynced,

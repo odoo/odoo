@@ -79,10 +79,15 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                     }
                 }
             }
+            confirm() {
+                this.props.resolve({ confirmed: true, payload: null });
+                this.trigger('close-temp-screen');
+            }
             orderDone() {
                 this.currentOrder.finalize();
                 const { name, props } = this.nextScreen;
                 this.showScreen(name, props);
+                this.confirm();
             }
             async printReceipt() {
                 const isPrinted = await this._printReceipt();
