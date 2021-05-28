@@ -199,12 +199,46 @@ class TestViewInheritance(ViewCase):
         self.c = self.makeView('C', arch=self.arch_for("C", 'tree'))
         self.c.write({'priority': 1})
 
-    def test_get_inheriting_views_arch(self):
+    def test_get_inheriting_hierarchy(self):
+        iruiview = self.env['ir.ui.view']
+        vid = self.view_ids
+
+        def vid(name):
+            return self.view_ids[name].id
+
+        views = iruiview.browse([vid('A')])
         self.assertEqual(
-            self.view_ids['A'].get_inheriting_views_arch(self.model),
-            self.view_ids['A1'] | self.view_ids['A2'] | self.view_ids['A12'] | self.view_ids['A21'] | self.view_ids['A22'] | self.view_ids['A221'])
-        self.assertEqual(self.view_ids['A21'].get_inheriting_views_arch(self.model), self.View)
-        self.assertEqual(self.view_ids['A11'].get_inheriting_views_arch(self.model), self.view_ids['A111'])
+            dict(views._get_inheriting_hierarchy()),
+            {
+                vid('A'): [vid('A1'), vid('A2')],
+                vid('A1'): [vid('A12')],
+                vid('A2'): [vid('A21'), vid('A22')],
+                vid('A22'): [vid('A221')],
+            },
+        )
+
+        views = iruiview.browse([vid('A21'), vid('A2'), vid('A')])
+        self.assertEqual(
+            dict(views._get_inheriting_hierarchy()),
+            {
+                vid('A'): [vid('A1'), vid('A2')],
+                vid('A1'): [vid('A12')],
+                vid('A2'): [vid('A21'), vid('A22')],
+                vid('A22'): [vid('A221')],
+            },
+        )
+
+        views = iruiview.browse([vid('A111'), vid('A11'), vid('A1'), vid('A')])
+        self.assertEqual(
+            dict(views._get_inheriting_hierarchy()),
+            {
+                vid('A'): [vid('A1'), vid('A2')],
+                vid('A1'): [vid('A12'), vid('A11')],
+                vid('A11'): [vid('A111')],
+                vid('A2'): [vid('A21'), vid('A22')],
+                vid('A22'): [vid('A221')],
+            },
+        )
 
     def test_default_view(self):
         default = self.View.default_view(model=self.model, view_type='form')

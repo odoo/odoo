@@ -566,12 +566,9 @@ actual arch.
     # Inheritance mecanism
     #------------------------------------------------------
     @api.model
-    def _get_inheriting_views_arch_domain(self, model):
-        return [
-            ['model', '=', model],
-            ['mode', '=', 'extension'],
-            ['active', '=', True],
-        ]
+    def _get_inheriting_hierarchy_domain(self):
+        """ Return a domain to filter the sub-views to inherit from. """
+        return [('active', '=', True)]
 
     @api.model
     def _get_filter_xmlid_query(self):
@@ -581,62 +578,95 @@ actual arch.
                   WHERE res_id IN %(res_ids)s AND model = 'ir.ui.view' AND module IN %(modules)s
                """
 
-    def get_inheriting_views_arch(self, model):
-        """Retrieves the sets of views that should currently be used in the
-           system in the right order. During the module upgrade phase it
-           may happen that a view is present in the database but the fields it relies on are not
-           fully loaded yet. This method only considers views that belong to modules whose code
-           is already loaded. Custom views defined directly in the database are loaded only
-           after the module initialization phase is completely finished.
-
-           :param str model: model identifier of the inheriting views.
-           :return: list of ir.ui.view
+    def _get_inheriting_hierarchy(self):
         """
-        self.ensure_one()
-        self.check_access_rights('read')
+        Determine what are the views that inherit from the current
+        recordset ones, return a hiearchy as a mapping where every
+        parent view is mapped to a list of its child views.
 
-        # retrieve all the views transitively inheriting from view_id
-        domain = self._get_inheriting_views_arch_domain(model)
+        :return: a hierarchy mapping parent views to their children
+        :rtype: collection.abc.Mapping
+        """
+        domain = self._get_inheriting_hierarchy_domain()
         e = expression(domain, self.env['ir.ui.view'])
         from_clause, where_clause, where_params = e.query.get_sql()
-        assert from_clause == '"ir_ui_view"'
-        self.flush(['active'])
-        query = """
+        sub_where_clause = where_clause.replace('ir_ui_view', 'iuv')
+        assert from_clause == '"ir_ui_view"', f"Unexpected from clause: {from_clause}"
+
+        self._flush_search(domain, fields=['inherit_id', 'priority', 'model', 'mode'], order='id')
+        query = f"""
             WITH RECURSIVE ir_ui_view_inherits AS (
-                SELECT id, inherit_id, priority
+                SELECT id, inherit_id, priority, mode, model
                 FROM ir_ui_view
-                WHERE inherit_id = %s AND {where_clause}
+                WHERE id in %s AND {where_clause}
             UNION
-                SELECT iuv.id, iuv.inherit_id, iuv.priority
+                SELECT iuv.id, iuv.inherit_id, iuv.priority, iuv.mode, iuv.model
                 FROM ir_ui_view iuv
                 INNER JOIN ir_ui_view_inherits iuvi ON iuvi.id = iuv.inherit_id
-                WHERE {sub_where_clause}
+                WHERE coalesce(iuv.model, '')=coalesce(iuvi.model, '')
+                      AND iuv.mode='extension'
+                      AND {sub_where_clause}
             )
-            SELECT id
-            FROM ir_ui_view_inherits
-            ORDER BY priority, id;
-        """.format(
-            where_clause=where_clause,
-            sub_where_clause=where_clause.replace('ir_ui_view', 'iuv'),
-        )
-        self.env.cr.execute(query, [self.id] + where_params + where_params)
-        view_ids = [r[0] for r in self.env.cr.fetchall()]
+            SELECT
+                v.id, v.inherit_id,
+                ARRAY(SELECT r.group_id FROM ir_ui_view_group_rel r WHERE r.view_id=v.id)
+            FROM ir_ui_view_inherits v
+            ORDER BY v.mode, v.priority, v.id
+        """
+        # ORDER BY v.mode, v.priority, v.id:
+        # 1/ sort by mode: we want extension views before primary ones
+        #    so the "child extensions of a primary view" are placed
+        #    before the "child primaries of the same primary view" in
+        #    the hierarchy.
+        # 2/ sort by priority: abritrary value set by developers on some
+        #    views to solve "dependency hell" problems and force a view
+        #    to be combined earlier or later. e.g. all views created via
+        #    studio have a priority=99 to be loaded last.
+        # 3/ sort by view id: the order the views were inserted in the
+        #    database. e.g. base views are placed before stock ones.
 
+        self.env.cr.execute(query, [tuple(self.ids)] + where_params + where_params)
+        rows = self.env.cr.fetchall()
+
+        # During an upgrade, we can only use the views that have been
+        # fully upgraded already.
         if self.pool._init and not self._context.get('load_all_views'):
-            # check that all found ids have a corresponding xml_id in a loaded module
-            check_view_ids = self._context.get('check_view_ids') or []
-            ids_to_check = [vid for vid in view_ids if vid not in check_view_ids]
-            if ids_to_check:
-                loaded_modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
-                query = self._get_filter_xmlid_query()
-                self.env.cr.execute(query, {'res_ids': tuple(ids_to_check), 'modules': loaded_modules})
-                valid_view_ids = [r[0] for r in self.env.cr.fetchall()] + check_view_ids
-                view_ids = [vid for vid in view_ids if vid in valid_view_ids]
+            rows = self._filter_loaded_views(rows)
 
-        def accessible(view):
-            return not view.groups_id or (view.groups_id & self.env.user.groups_id)
+        # Parent to children hiearchy mapping, each parent view in the
+        # hierarchy have a (potentially empty) list of child views:
+        #   {parent_view_id: [child_view_id, ...]}.
+        # Each child register itself in its parent list.
+        hierarchy = collections.defaultdict(list)
+        user_groups = set(self.env.user.groups_id.ids)
+        for view_id, inherit_id, group_ids in rows:
+            if not inherit_id:
+                continue
+            if group_ids and user_groups.isdisjoint(group_ids):
+                continue
+            hierarchy[inherit_id].append(view_id)
 
-        return self.browse(view_ids).sudo().filtered(accessible)
+        return hierarchy
+
+    def _filter_loaded_views(self, rows):
+        """
+        During the module upgrade phase it may happen that a view is
+        present in the database but the fields it relies on are not
+        fully loaded yet. This method only considers views that belong
+        to modules whose code is already loaded. Custom views defined
+        directly in the database are loaded only after the module
+        initialization phase is completely finished.
+        """
+        # check that all found ids have a corresponding xml_id in a loaded module
+        check_view_ids = self.env.context['check_view_ids']
+        ids_to_check = [row[0] for row in rows if row[0] not in check_view_ids]
+        if ids_to_check:
+            loaded_modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
+            query = self._get_filter_xmlid_query()
+            self.env.cr.execute(query, {'res_ids': tuple(ids_to_check), 'modules': loaded_modules})
+            valid_view_ids = {r[0] for r in self.env.cr.fetchall()} | set(check_view_ids)
+            rows = [row for row in rows if row[0] in valid_view_ids]
+        return rows
 
     def _check_view_access(self):
         """ Verify that a view is accessible by the current user based on the
@@ -747,29 +777,61 @@ actual arch.
             self.handle_view_error(str(e), specs_tree)
         return source
 
-    def apply_view_inheritance(self, source, model):
-        """ Apply all the (directly and indirectly) inheriting views.
-
-        :param source: a parent architecture to modify (with parent modifications already applied)
-        :param model: the original model for which we create a view (not
-            necessarily the same as the source's model); only the inheriting
-            views with that specific model will be applied.
-        :return: a modified source where all the modifying architecture are applied
+    def _combine(self, hierarchy: dict):
         """
-        inherit_tree = collections.defaultdict(list)
-        for view in self.get_inheriting_views_arch(model):
-            inherit_tree[view.inherit_id].append(view)
-        return self._apply_view_inheritance(source, inherit_tree)
+        Return self's arch combined with its inherited views archs.
 
-    def _apply_view_inheritance(self, source, inherit_tree):
-        # recursively apply inheritance following the given inheritance tree
-        for view in inherit_tree[self]:
-            arch_tree = etree.fromstring(view.arch.encode('utf-8'))
-            if self._context.get('inherit_branding'):
-                view.inherit_branding(arch_tree)
-            source = view.apply_inheritance_specs(source, arch_tree)
-            source = view._apply_view_inheritance(source, inherit_tree)
-        return source
+        :param hierarchy: mapping from parent views to their child views
+        :return: combined architecture
+        :rtype: Element
+        """
+        self.ensure_one()
+
+        # Pay attention to the call stack of this function. We achieve
+        # an pre-order depth-first hierarchy tree traversal.
+        #
+        # https://en.wikipedia.org/wiki/Tree_traversal#Depth-first_search_of_binary_tree
+        #
+        # Exemple:     hierarchy = {
+        #       1        1: [2, 3],
+        #      / \       2: [4, 5],
+        #     2   3      3: [],
+        #    / \         4: [6],
+        #   4   5        5: [7],
+        #  /   /         6: [],
+        # 6   7          7: []}
+        #
+        # Evaluation order (the ``parent_view`` variable):
+        #   1, 2, 4, 6, 5, 7, 3
+        #
+        # Merge order (the ``combined_arch`` variable):
+        #   combined_arch <- child_arch
+        #   (1)           <- 2
+        #   (1+2)         <- 4
+        #   (1+2+4)       <- 6
+        #   (1+2+4+6)     <- 5
+        #   (1+2+4+6+5)   <- 7
+        #   (1+2+6+6+5+7) <- 3
+
+        def combine(parent_view, combined_arch):
+            for child_view in self.browse(hierarchy[parent_view.id]):
+                child_arch = etree.fromstring(child_view.arch.encode('utf-8'))
+                if self.env.context.get('inherit_branding'):
+                    child_view.inherit_branding(child_arch)
+                combined_arch = child_view.apply_inheritance_specs(combined_arch, child_arch)
+                combined_arch = combine(child_view, combined_arch)
+            return combined_arch
+
+        assert self.mode == 'primary'
+        primary_arch = etree.fromstring(self.arch.encode('utf-8'))
+        if self.env.context.get('inherit_branding'):
+            primary_arch.attrib.update({
+                'data-oe-model': 'ir.ui.view',
+                'data-oe-id': str(self.id),
+                'data-oe-field': 'arch',
+            })
+
+        return combine(self, primary_arch)
 
     def read_combined(self, fields=None):
         """
