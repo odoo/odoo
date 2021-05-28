@@ -3,6 +3,7 @@ odoo.define('wysiwyg.widgets.LinkTools', function (require) {
 
 const Link = require('wysiwyg.widgets.Link');
 const OdooEditorLib = require('web_editor.odoo-editor');
+const dom = require('web.dom');
 
 const setCursor = OdooEditorLib.setCursor;
 
@@ -34,7 +35,9 @@ const LinkTools = Link.extend({
         this.options.wysiwyg.odooEditor.observerUnactive();
         this.$link.addClass('oe_edited_link');
         this.$button.addClass('active');
-        return this._super(...arguments);
+        return this._super(...arguments).then(() => {
+            dom.scrollTo(this.$(':visible:last')[0], {duration: 0});
+        });
     },
     destroy: function () {
         $('.oe_edited_link').removeClass('oe_edited_link');
