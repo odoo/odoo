@@ -26,7 +26,7 @@ class MailTemplate(models.Model):
         return res
 
     # description
-    name = fields.Char('Name')
+    name = fields.Char('Name', translate=True)
     model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, help="Subject (placeholders may be used here)")
