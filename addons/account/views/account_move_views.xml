@@ -398,7 +398,7 @@
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <tree string="Journal Entries" sample="1">
+                <tree string="Journal Entries" sample="1" decoration-info="state == 'draft'">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="partner_id" optional="show"/>
@@ -419,6 +419,7 @@
             <field name="arch" type="xml">
                 <tree string="Invoices"
                       js_class="account_tree"
+                      decoration-info="state == 'draft'"
                       sample="1">
                     <header>
                         <button name="action_register_payment" type="object" string="Register Payment"
