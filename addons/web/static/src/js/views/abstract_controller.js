@@ -338,7 +338,10 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     _renderBanner: async function () {
         if (this.bannerRoute !== undefined) {
-            const response = await this._rpc({route: this.bannerRoute});
+            const response = await this._rpc({
+                route: this.bannerRoute,
+                params: {context: session.user_context},
+            });
             if (!response.html) {
                 this.$el.removeClass('o_has_banner');
                 return Promise.resolve();
