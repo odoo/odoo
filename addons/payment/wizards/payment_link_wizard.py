@@ -50,9 +50,9 @@ class PaymentLinkWizard(models.TransientModel):
     )
     acquirer_id = fields.Many2one(
         comodel_name='payment.acquirer',
-        string="Specific Payment Acquirer",
+        string="Force Payment Acquirer",
         domain="[('id', 'in', available_acquirer_ids)]",
-        help="Leave blank to select all acquirers"
+        help="Force the customer to pay via the specified payment acquirer. Leave empty to allow the customer to choose among all acquirers."
     )
     has_multiple_acquirers = fields.Boolean(
         string="Has Multiple Acquirers",
