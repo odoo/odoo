@@ -545,8 +545,9 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order" decoration-bf="message_unread==True"
-                      class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
+                <tree string="Purchase Order" decoration-info="state in ['draft', 'sent']" 
+                decoration-muted="state == 'cancel'" decoration-bf="message_unread==True" 
+                class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
@@ -565,7 +566,7 @@
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>
-                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="1"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary" optional="show" decoration-bf="state in ['purchase', 'done']"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state" optional="show" widget="badge" decoration-success="state == 'purchase' or state == 'done'"
                         decoration-warning="state == 'to approve'" decoration-info="state == 'draft' or state == 'sent'"/>
@@ -579,7 +580,8 @@
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
                 <tree decoration-bf="message_unread==True"
-                    decoration-muted="state=='cancel'"
+                    decoration-muted="state == 'cancel'"
+                    decoration-info="invoice_status == 'to invoice'"
                     string="Purchase Order"
                     class="o_purchase_order"
                     sample="1">

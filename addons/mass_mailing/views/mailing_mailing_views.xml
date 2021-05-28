@@ -30,7 +30,7 @@
             <field name="model">mailing.mailing</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Mailings" sample="1">
+                <tree string="Mailings" sample="1" decoration-info="state in ['draft', 'in_queue']">
                     <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                     <field name="mailing_type" invisible="1"/>
                     <field name="mailing_model_id" string="Recipients"/>

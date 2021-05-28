@@ -190,7 +190,7 @@
         <field name="model">hr.leave.allocation</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <tree string="Allocation Requests" sample="1">
+            <tree string="Allocation Requests" sample="1" decoration-info="state == 'draft'">
                 <field name="employee_id"/>
                 <field name="department_id" optional="hide"/>
                 <field name="holiday_status_id" class="font-weight-bold"/>

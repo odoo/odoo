@@ -118,7 +118,7 @@
             <field name="name">stock.scrap.tree</field>
             <field name="model">stock.scrap</field>
             <field name="arch" type="xml">
-                <tree multi_edit="1" sample="1">
+                <tree multi_edit="1" sample="1" decoration-info="state == 'draft'">
                     <field name="name" decoration-bf="1"/>
                     <field name="date_done"/>
                     <field name="product_id" readonly="1"/>

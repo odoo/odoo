@@ -121,7 +121,7 @@
             <field name="name">stock.landed.cost.tree</field>
             <field name="model">stock.landed.cost</field>
             <field name="arch" type="xml">
-                <tree string="Landed Costs">
+                <tree string="Landed Costs" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
                     <field name="name" decoration-bf="1"/>
                     <field name="date"/>
                     <field name="company_id" groups="base.group_multi_company"/>

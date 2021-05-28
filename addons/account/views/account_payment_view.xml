@@ -8,7 +8,7 @@
             <field name="name">account.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree edit="false" sample="1">
+                <tree edit="false" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
                     <header>
                         <button name="action_post" type="object" string="Confirm"/>
                     </header>
