@@ -67,6 +67,11 @@ _MAIL_DOMAIN_BLACKLIST = set([
     'example.com',
 ])
 
+# List of country codes for which we should offer state filtering when mining new leads.
+# See crm.iap.lead.mining.request#_compute_available_state_ids() or task-2471703 for more details.
+_STATES_FILTER_COUNTRIES_WHITELIST = set([
+    'AR', 'AU', 'BR', 'CA', 'IN', 'MY', 'MX', 'NZ', 'AE', 'US'
+])
 
 #----------------------------------------------------------
 # Helpers for both clients and proxy
