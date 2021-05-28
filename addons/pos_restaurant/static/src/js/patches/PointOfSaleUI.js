@@ -9,6 +9,20 @@ odoo.define('pos_restaurant.PointOfSaleUI', function (require) {
     const BackToFloorButton = require('pos_restaurant.BackToFloorButton');
     const { patch } = require('web.utils');
 
+    patch(PointOfSaleUI.prototype, 'pos_restaurant', {
+        setup() {
+            this._super();
+            // We save the orderIdsToRemove before the app is reloaded or closed.
+            owl.hooks.useExternalListener(window, 'unload', this._saveOrderIdsToRemove);
+        },
+        _saveOrderIdsToRemove() {
+            this.env.model.storage.setItem(
+                `${this.env.model.getStorageKeyPrefix()}/orderIdsToRemove`,
+                JSON.stringify([...this.env.model.orderIdsToRemove])
+            );
+        }
+    })
+
     patch(PointOfSaleUI, 'pos_restaurant', {
         components: {
             ...PointOfSaleUI.components,

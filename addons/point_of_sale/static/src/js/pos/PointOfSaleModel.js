@@ -1890,13 +1890,16 @@ class PointOfSaleModel extends EventBus {
 
     //#region PERSISTENCE OF ORDERS
 
+    getStorageKeyPrefix() {
+        return `odoo-pos-data/${this.config.uuid}/${odoo.pos_session_id}`;
+    }
     /**
      * Returns a string which serves a key to localStorage to save the order.
      * @param {'pos.order'} order
      * @return {string}
      */
     _constructPersistKey(order) {
-        return `odoo-pos-data/${this.config.uuid}/${order.session_id}/${order.id}`;
+        return `${this.getStorageKeyPrefix()}/${order.id}`;
     }
     /**
      * Deconstructs the string created by _constructPersistKey.

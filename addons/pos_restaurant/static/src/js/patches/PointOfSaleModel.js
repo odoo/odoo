@@ -12,6 +12,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
         setup() {
             this._super(...arguments);
             this.ifaceFloorplan = false;
+            this.orderIdsToRemove = new Set([]);
         },
         _initDataDerived() {
             const result = this._super();
@@ -23,7 +24,6 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
             result.activeTableId = false;
             result.activeFloorId = false;
             result.orderIdToTransfer = false;
-            result.orderIdsToRemove = new Set([]);
             result.FloorScreen = {
                 selectedTableId: false,
                 isEditMode: false,
@@ -36,6 +36,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
             this.ifaceFloorplan =
                 this.config.module_pos_restaurant && Boolean(this.getRecords('restaurant.floor').length);
             this.ifacePrinters = this.config.is_order_printer && Boolean(this.getRecords('restaurant.printer').length);
+            this.orderIdsToRemove = new Set(JSON.parse(this.storage.getItem(`${this.getStorageKeyPrefix()}/orderIdsToRemove`)) || []);
         },
         async _assignDataDerived() {
             await this._super();
@@ -740,19 +741,19 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
         _setOrderIdsToRemove(orders) {
             for (const order of orders) {
                 if (!order._extras.server_id) continue;
-                this.data.uiState.orderIdsToRemove.add(order._extras.server_id);
+                this.orderIdsToRemove.add(order._extras.server_id);
             }
         },
         _deleteOrderIdsToRemove(orderIds) {
             for (const orderId of orderIds) {
-                this.data.uiState.orderIdsToRemove.delete(orderId);
+                this.orderIdsToRemove.delete(orderId);
             }
         },
         /**
          * Removes from server the deleted orders.
          */
         async removeDeletedOrdersFromServer() {
-            const orderIds = [...this.data.uiState.orderIdsToRemove];
+            const orderIds = [...this.orderIdsToRemove];
             if (!orderIds.length) return;
             try {
                 const deletedOrderIds = await this.uirpc({
