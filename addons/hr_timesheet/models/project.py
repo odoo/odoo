@@ -157,12 +157,12 @@ class Task(models.Model):
 
     @api.depends('child_ids.effective_hours', 'child_ids.subtask_effective_hours')
     def _compute_subtask_effective_hours(self):
-        for task in self:
+        for task in self.with_context(active_test=False):
             task.subtask_effective_hours = sum(child_task.effective_hours + child_task.subtask_effective_hours for child_task in task.child_ids)
 
     def action_view_subtask_timesheet(self):
         self.ensure_one()
-        tasks = self._get_all_subtasks()
+        tasks = self.with_context(active_test=False)._get_all_subtasks()
         return {
             'type': 'ir.actions.act_window',
             'name': _('Timesheets'),
