@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Channels">
                     <header>
-                        <button name="action_channel_invite" string="Invite" type="object" class="oe_highlight"  attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
+                        <button name="action_channel_invite" string="Invite" type="object" class="oe_highlight" attrs="{'invisible': [('enroll', '!=', 'invite')]}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -207,6 +207,7 @@
             <field name="arch" type="xml">
                 <kanban string="eLearning Overview" class="o_emphasize_colors o_kanban_dashboard o_slide_kanban breadcrumb_item active" edit="false" sample="1">
                     <field name="color"/>
+                    <field name="enroll"/>
                     <field name="website_published"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -231,7 +232,8 @@
                                             <div role="menuitem">
                                                 <a name="action_view_slides" type="object">Lessons</a>
                                             </div>
-                                            <div role="menuitem" name="action_channel_invite">
+                                            <div role="menuitem" name="action_channel_invite"
+                                                attrs="{'invisible': [('enroll', '!=', 'invite')]}">
                                                 <a name="action_channel_invite" type="object">Invite</a>
                                             </div>
                                         </div>

@@ -61,6 +61,8 @@ class SlideChannelInvite(models.TransientModel):
 
         if not self.env.user.email:
             raise UserError(_("Unable to post message, please configure the sender's email address."))
+        if not self.partner_ids:
+            raise UserError(_("Please select at least one recipient."))
 
         mail_values = []
         for partner_id in self.partner_ids:
@@ -68,15 +70,13 @@ class SlideChannelInvite(models.TransientModel):
             if slide_channel_partner:
                 mail_values.append(self._prepare_mail_values(slide_channel_partner))
 
-        # TODO awa: change me to create multi when mail.mail supports it
-        for mail_value in mail_values:
-            self.env['mail.mail'].sudo().create(mail_value)
+        self.env['mail.mail'].sudo().create(mail_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
     def _prepare_mail_values(self, slide_channel_partner):
         """ Create mail specific for recipient """
-        subject = self._render_field('subject', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
+        subject = self._render_field('subject', slide_channel_partner.ids, options={'render_safe': True})[slide_channel_partner.id]
         body = self._render_field('body', slide_channel_partner.ids, post_process=True)[slide_channel_partner.id]
         # post the message
         mail_values = {
