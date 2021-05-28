@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
+from freezegun import freeze_time
+
+from odoo import fields
 from odoo.exceptions import UserError, AccessError
 from odoo.tests import tagged, Form
 from odoo.tools import float_compare
@@ -589,3 +593,107 @@ class TestSaleOrder(TestSaleCommon):
             line.product_packaging_qty = 1.0
         so_form.save()
         self.assertEqual(so.order_line.product_uom_qty, 12)
+
+    def _create_sale_order(self):
+        """Create dummy sale order (without lines)"""
+        return self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+
+    def test_invoicing_terms(self):
+        # Enable invoicing terms
+        self.env['ir.config_parameter'].sudo().set_param('account.use_invoice_terms', True)
+
+        # Plain invoice terms
+        self.env.company.terms_type = 'plain'
+        self.env.company.invoice_terms = "Coin coin"
+        sale_order = self._create_sale_order()
+        self.assertEqual(sale_order.note, "Coin coin")
+
+        # Html invoice terms (/terms page)
+        self.env.company.terms_type = 'html'
+        sale_order = self._create_sale_order()
+        self.assertTrue(sale_order.note.startswith("Terms & Conditions: "))
+
+    def test_validity_days(self):
+        self.env['ir.config_parameter'].sudo().set_param('sale.use_quotation_validity_days', True)
+        self.env.company.quotation_validity_days = 5
+        with freeze_time("2020-05-02"):
+            sale_order = self._create_sale_order()
+
+            self.assertEqual(sale_order.validity_date, fields.Date.today() + timedelta(days=5))
+        self.env.company.quotation_validity_days = 0
+        sale_order = self._create_sale_order()
+        self.assertFalse(
+            sale_order.validity_date,
+            "No validity date must be specified if the company validity duration is 0")
+
+    def test_update_prices(self):
+        """Test prices recomputation on SO's.
+
+        `update_prices` is shown as a button to update
+        prices when the pricelist was changed.
+        """
+        sale_order = self.sale_order
+        so_amount = sale_order.amount_total
+        sale_order.update_prices()
+        self.assertEqual(
+            sale_order.amount_total, so_amount,
+            "Updating the prices of an unmodified SO shouldn't modify the amounts")
+
+        pricelist = sale_order.pricelist_id
+        pricelist.item_ids = [
+            fields.Command.create({
+                'percent_price': 5.0,
+                'compute_price': 'percentage'
+            })
+        ]
+        pricelist.discount_policy = "without_discount"
+        self.env['product.product'].invalidate_cache(['price'])
+        sale_order.update_prices()
+
+        self.assertTrue(all(line.discount == 5 for line in sale_order.order_line))
+        self.assertEqual(sale_order.amount_undiscounted, so_amount)
+        self.assertEqual(sale_order.amount_total, 0.95*so_amount)
+
+        pricelist.discount_policy = "with_discount"
+        self.env['product.product'].invalidate_cache(['price'])
+        sale_order.update_prices()
+
+        self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))
+        self.assertEqual(sale_order.amount_undiscounted, so_amount)
+        self.assertEqual(sale_order.amount_total, 0.95*so_amount)
+
+    def test_so_names(self):
+        """Test custom context key for name_get & name_search.
+
+        Note: this key is used in sale_expense & sale_timesheet modules.
+        """
+        SaleOrder = self.env['sale.order'].with_context(sale_show_partner_name=True)
+
+        res = SaleOrder.name_search(name=self.sale_order.partner_id.name)
+        self.assertEqual(res[0][0], self.sale_order.id)
+
+        self.assertNotIn(self.sale_order.partner_id.name, self.sale_order.display_name)
+        self.assertIn(
+            self.sale_order.partner_id.name,
+            self.sale_order.with_context(sale_show_partner_name=True).name_get()[0][1])
+
+    def test_state_changes(self):
+        """Test some untested state changes methods & logic."""
+        self.sale_order.action_quotation_sent()
+
+        self.assertEqual(self.sale_order.state, 'sent')
+        self.assertIn(self.sale_order.partner_id, self.sale_order.message_follower_ids.partner_id)
+
+        self.env.user.groups_id += self.env.ref('sale.group_auto_done_setting')
+        self.sale_order.action_confirm()
+        self.assertEqual(self.sale_order.state, 'done', "The order wasn't automatically locked at confirmation.")
+        with self.assertRaises(UserError):
+            self.sale_order.action_confirm()
+
+        self.sale_order.action_unlock()
+        self.assertEqual(self.sale_order.state, 'sale')
