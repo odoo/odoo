@@ -106,7 +106,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/dropdown.scss',
             'web/static/src/legacy/scss/tooltip.scss',
             'web/static/src/legacy/scss/switch_company_menu.scss',
-            'web/static/src/legacy/scss/debug_manager.scss',
             'web/static/src/legacy/scss/ace.scss',
             'web/static/src/legacy/scss/control_panel.scss',
             'web/static/src/legacy/scss/fields.scss',
@@ -366,7 +365,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/libs/popper.js',
             'web/static/src/legacy/js/libs/zoomodoo.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
-            'web/static/src/legacy/js/core/keyboard_navigation_mixin.js',
             'web/static/src/legacy/js/core/abstract_service.js',
             'web/static/src/legacy/js/core/abstract_storage_service.js',
             'web/static/src/legacy/js/core/ajax.js',
@@ -400,7 +398,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/crash_manager.js',
             'web/static/src/legacy/js/core/error_utils.js',
             'web/static/src/legacy/js/services/session_storage_service.js',
-            'web/static/src/legacy/js/tools/debug_manager.js',
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
@@ -411,9 +408,7 @@ This module provides the core of the Odoo Web Client.
         # Used during the transition of the web architecture
         'web.frontend_legacy': [
             # Old rainbow man kept for website compatibility
-            'web/static/src/legacy/frontend/rainbowman/**/*',
-            # Old notification kept for website compatiblity
-            'web/static/src/legacy/frontend/notification/**/*',
+            'web/static/src/legacy/frontend/**/*',
         ],
 
         # ---------------------------------------------------------------------

@@ -13,7 +13,7 @@ var QWeb = core.qweb;
  */
 var DebugManager = Widget.extend({
     template: "WebClient.DebugManager",
-    xmlDependencies: ['/web/static/src/legacy/xml/debug.xml'],
+    xmlDependencies: ['/web/static/src/legacy/frontend/debug_manager/debug.xml'],
     events: {
         "click a[data-action]": "perform_callback",
     },
