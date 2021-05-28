@@ -160,10 +160,26 @@ class MailPluginController(http.Controller):
         return response
 
     @http.route('/mail_plugin/log_mail_content', type="json", auth="outlook", cors="*")
-    def log_mail_content(self, model, res_id, message):
+    def log_mail_content(self, model, res_id, message, attachments=None):
+        """Log the email on the given record.
+
+        :param model: Model of the record on which we want to log the email
+        :param res_id: ID of the record
+        :param message: Body of the email
+        :param attachments: List of attachments of the email.
+            List of tuple: (filename, base 64 encoded content)
+        """
         if model not in self._mail_content_logging_models_whitelist():
             raise Forbidden()
-        request.env[model].browse(res_id).message_post(body=message)
+
+        if attachments:
+            attachments = [
+                (name, base64.b64decode(content))
+                for name, content in attachments
+            ]
+
+        request.env[model].browse(res_id).message_post(body=message, attachments=attachments)
+        return True
 
     @http.route('/mail_plugin/get_translations', type="json", auth="outlook", cors="*")
     def get_translations(self):
