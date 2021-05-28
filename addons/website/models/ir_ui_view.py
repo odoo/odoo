@@ -294,8 +294,8 @@ class View(models.Model):
             return view_id if view_id._name == 'ir.ui.view' else self.env['ir.ui.view']
 
     @api.model
-    def _get_inheriting_views_arch_domain(self, model):
-        domain = super(View, self)._get_inheriting_views_arch_domain(model)
+    def _get_inheriting_views_domain(self):
+        domain = super(View, self)._get_inheriting_views_domain()
         current_website = self.env['website'].browse(self._context.get('website_id'))
         website_views_domain = current_website.website_domain()
         # when rendering for the website we have to include inactive views
@@ -305,11 +305,11 @@ class View(models.Model):
         return expression.AND([website_views_domain, domain])
 
     @api.model
-    def get_inheriting_views_arch(self, model):
+    def _get_inheriting_views(self):
         if not self._context.get('website_id'):
-            return super(View, self).get_inheriting_views_arch(model)
+            return super(View, self)._get_inheriting_views()
 
-        views = super(View, self.with_context(active_test=False)).get_inheriting_views_arch(model)
+        views = super(View, self.with_context(active_test=False))._get_inheriting_views()
         # prefer inactive website-specific views over active generic ones
         return views.filter_duplicate().filtered('active')
 

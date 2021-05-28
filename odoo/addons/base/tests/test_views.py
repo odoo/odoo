@@ -176,6 +176,9 @@ class TestViewInheritance(ViewCase):
         self.view_ids[name] = view
         return view
 
+    def get_views(self, names):
+        return self.View.concat(*(self.view_ids[name] for name in names))
+
     def setUp(self):
         super(TestViewInheritance, self).setUp()
 
@@ -200,12 +203,23 @@ class TestViewInheritance(ViewCase):
         self.c = self.makeView('C', arch=self.arch_for("C", 'tree'))
         self.c.write({'priority': 1})
 
-    def test_get_inheriting_views_arch(self):
+    def test_get_inheriting_views(self):
         self.assertEqual(
-            self.view_ids['A'].get_inheriting_views_arch(self.model),
-            self.view_ids['A1'] | self.view_ids['A2'] | self.view_ids['A12'] | self.view_ids['A21'] | self.view_ids['A22'] | self.view_ids['A221'])
-        self.assertEqual(self.view_ids['A21'].get_inheriting_views_arch(self.model), self.View)
-        self.assertEqual(self.view_ids['A11'].get_inheriting_views_arch(self.model), self.view_ids['A111'])
+            self.view_ids['A']._get_inheriting_views(),
+            self.get_views('A A1 A2 A12 A21 A22 A221'.split()),
+        )
+        self.assertEqual(
+            self.view_ids['A21']._get_inheriting_views(),
+            self.get_views(['A21']),
+        )
+        self.assertEqual(
+            self.view_ids['A11']._get_inheriting_views(),
+            self.get_views(['A11', 'A111']),
+        )
+        self.assertEqual(
+            (self.view_ids['A11'] + self.view_ids['A'])._get_inheriting_views(),
+            self.get_views('A A1 A2 A11 A111 A12 A21 A22 A221'.split()),
+        )
 
     def test_default_view(self):
         default = self.View.default_view(model=self.model, view_type='form')
@@ -2801,6 +2815,37 @@ class TestViewCombined(ViewCase):
                 E.a3(),
                 E.a2(),
             ), arch)
+
+    def test_primary_after_extensions(self):
+        # Here is a tricky use-case:                        a*
+        #  - views a and d are primary                     / \
+        #  - views b and c are extensions                 b   c
+        #  - depth-first order is: a, b, d, c             |
+        #  - combination order is: a, b, c, d             d*
+        #
+        # The arch of d has been chosen to fail if d is applied before c.
+        # Because this child of 'b' is primary, it must be applied *after* the
+        # other extensions of a!
+        a = self.View.create({
+            'model': 'a',
+            'arch': '<qweb><a/></qweb>',
+        })
+        b = self.View.create({
+            'model': 'a',
+            'inherit_id': a.id,
+            'arch': '<a position="after"><b/></a>'
+        })
+        c = self.View.create({  # pylint: disable=unused-variable
+            'model': 'a',
+            'inherit_id': a.id,
+            'arch': '<a position="after"><c/></a>'
+        })
+        d = self.View.create({  # pylint: disable=unused-variable
+            'model': 'a',
+            'inherit_id': b.id,
+            'mode': 'primary',
+            'arch': '<a position="replace"/>',
+        })
 
 
 class TestOptionalViews(ViewCase):
