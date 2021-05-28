@@ -1036,7 +1036,16 @@ class PosSession(models.Model):
                 + sum(partially_reconciled_lines.mapped(get_matched_move_lines), partially_reconciled_lines.ids)
                 + cash_move_lines.ids)
 
-        return self.env['account.move.line'].browse(ids).mapped('move_id')
+        res = self.env['account.move.line'].browse(ids).mapped('move_id')
+
+        if self.company_id.anglo_saxon_accounting:
+            anglo_saxon_moves = self.picking_ids.move_lines.filtered(lambda m:
+                m.product_id.type == 'product' and
+                m.product_id.valuation=='real_time'
+            ).mapped('account_move_ids')
+            res += anglo_saxon_moves
+
+        return res
 
     def action_show_payments_list(self):
         return {
