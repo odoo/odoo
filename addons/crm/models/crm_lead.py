@@ -1549,12 +1549,24 @@ class Lead(models.Model):
         return self.with_context(active_test=False).search(domain)
 
     def _sort_by_confidence_level(self, reverse=False):
-        """ Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
-        The confidence level increases with the stage sequence
-        An Opportunity always has higher confidence level than a lead
+        """ Sorting the leads/opps according to the confidence level to it
+        being won. It is sorted following this incremental heuristics :
+
+          * "not lost" first (inactive leads are lost); normally all leads
+            should be active but in case lost one, they are always last.
+            Inactive opportunities are considered as valid;
+          * opportunity is more reliable than a lead which is a pre-stage
+            used mainly for first classification;
+          * stage sequence: the higher the better as it indicates we are moving
+            towards won stage;
+          * ID: the higher the better when all other parameters are equal. We
+            consider newer leads to be more reliable;
         """
         def opps_key(opportunity):
-            return opportunity.type == 'opportunity', opportunity.stage_id.sequence, -opportunity._origin.id
+            return opportunity.type == 'opportunity' or opportunity.active,  \
+                opportunity.type == 'opportunity', \
+                opportunity.stage_id.sequence, \
+                -opportunity._origin.id
 
         return self.sorted(key=opps_key, reverse=reverse)
 
