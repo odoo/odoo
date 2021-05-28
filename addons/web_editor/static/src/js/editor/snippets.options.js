@@ -4216,7 +4216,10 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     /**
      * @see this.selectClass for parameters
      */
-    setQuality(previewMode, widgetValue, params) {
+    async setQuality(previewMode, widgetValue, params) {
+        if (previewMode) {
+            return;
+        }
         this._getImg().dataset.quality = widgetValue;
         return this._applyOptions();
     },
