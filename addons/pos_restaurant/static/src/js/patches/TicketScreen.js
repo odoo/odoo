@@ -17,7 +17,7 @@ odoo.define('pos_restaurant.TicketScreen', function (require) {
         async onClickDiscard() {
             await this._super(...arguments);
             if (!this.env.model.getActiveTable()) {
-                await this.env.model.removeDeletedOrders();
+                await this.env.model.removeDeletedOrdersFromServer();
             }
         },
         get filteredOrderList() {

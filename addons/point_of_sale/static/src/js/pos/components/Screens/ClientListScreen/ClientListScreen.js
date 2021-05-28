@@ -133,9 +133,10 @@ class ClientListScreen extends PosComponent {
             this.state.detailIsShown = false;
         } catch (error) {
             if (error.message.code < 0) {
-                await this.showPopup('OfflineErrorPopup', {
+                this.showPopup('OfflineErrorPopup', {
                     title: this.env._t('Offline'),
                     body: this.env._t('Unable to save changes.'),
+                    show: this.env.model.data.uiState.showOfflineError,
                 });
             } else {
                 throw error;

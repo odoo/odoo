@@ -420,6 +420,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
                 throw new Error("Can't select order that doesn't belong to the table.");
             }
             const currentlyActiveTable = this.getActiveTable();
+            await this.removeDeletedOrdersFromServer();
             if (!currentlyActiveTable) {
                 await this._fetchTableOrdersFromServer(table);
             } else if (table !== currentlyActiveTable) {
@@ -441,6 +442,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
          */
         async actionSetTable(table) {
             this.data.uiState.activeTableId = table.id;
+            await this.removeDeletedOrdersFromServer();
             await this._fetchTableOrdersFromServer(table);
             if (this.data.uiState.orderIdToTransfer) {
                 const orderToTransfer = this.getRecord('pos.order', this.data.uiState.orderIdToTransfer);
@@ -685,9 +687,10 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
             } catch (error) {
                 if (error instanceof Error) throw error;
                 if (error.message.code < 0) {
-                    await this.ui.askUser('OfflineErrorPopup', {
+                    this.ui.askUser('OfflineErrorPopup', {
                         title: _t('Offline'),
                         body: _t('Unable to save changes to the server.'),
+                        show: this.data.uiState.showOfflineError,
                     });
                 }
             }
@@ -705,9 +708,10 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
                 }
             } catch (error) {
                 if (error.message.code < 0) {
-                    await this.ui.askUser('OfflineErrorPopup', {
+                    this.ui.askUser('OfflineErrorPopup', {
                         title: _t('Offline'),
                         body: _t('Unable to get orders count'),
+                        show: this.data.uiState.showOfflineError,
                     });
                 } else {
                     throw error;
@@ -726,6 +730,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
         async actionExitTable(table) {
             if (table) {
                 const floor = this.getRecord('restaurant.floor', table.floor_id);
+                await this.removeDeletedOrdersFromServer();
                 await this._saveTableOrdersToServer(table);
                 await this.actionSetFloor(floor);
             } else {
@@ -743,71 +748,82 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
                 this.data.uiState.orderIdsToRemove.delete(orderId);
             }
         },
-        _getOrderIdsToRemove() {
-            return [...this.data.uiState.orderIdsToRemove];
-        },
-        /**
-         * Save to server given draft orders.
-         * @param {'pos.order'[]} orders
-         */
-        async _saveDraftOrders(orders) {
-            try {
-                if (orders.length) {
-                    await this._pushOrders(orders, true);
-                }
-            } catch (error) {
-                if (error instanceof Error) throw error;
-                if (error.message && error.message && error.message.code < 0) {
-                    console.error(error);
-                }
-            }
-        },
         /**
          * Removes from server the deleted orders.
          */
-        async removeDeletedOrders() {
-            const orderIds = this._getOrderIdsToRemove();
+        async removeDeletedOrdersFromServer() {
+            const orderIds = [...this.data.uiState.orderIdsToRemove];
             if (!orderIds.length) return;
-            const deletedOrderIds = await this.uirpc({
-                model: 'pos.order',
-                method: 'remove_from_ui',
-                args: [orderIds],
-            });
-            this._deleteOrderIdsToRemove(deletedOrderIds);
+            try {
+                const deletedOrderIds = await this.uirpc({
+                    model: 'pos.order',
+                    method: 'remove_from_ui',
+                    args: [orderIds],
+                });
+                this._deleteOrderIdsToRemove(deletedOrderIds);
+            } catch (error) {
+                if (error instanceof Error) throw error;
+                this.ui.askUser('OfflineErrorPopup', {
+                    title: _t('Offline'),
+                    body: _t('Unable to remove orders from the server.'),
+                    show: this.data.uiState.showOfflineError,
+                });
+            }
         },
         /**
          * Saves the orders of the given table to the backend.
-         * @related _fetchTableOrdersFromServer
          * @param {'restaurant.table'} table
          */
         async _saveTableOrdersToServer(table) {
-            // Select the orders in the given table that have has orderlines
-            // or already has server_id (which means that it is already synced).
             const ordersToSave = this.getDraftOrders().filter(
                 (order) => order.table_id === table.id && (order.lines.length || order._extras.server_id)
             );
-            await this._saveDraftOrders(ordersToSave);
-            await this.removeDeletedOrders();
+            try {
+                if (ordersToSave.length) {
+                    await this._pushOrders(ordersToSave, true);
+                }
+                for (const order of ordersToSave) {
+                    order._extras.failedToSync = false;
+                }
+            } catch (error) {
+                if (error instanceof Error) throw error;
+                this.ui.askUser('OfflineErrorPopup', {
+                    title: _t('Offline'),
+                    body: _t('Unable to save orders to the server.'),
+                    show: this.data.uiState.showOfflineError,
+                });
+                for (const order of ordersToSave) {
+                    order._extras.failedToSync = true;
+                }
+            }
         },
         /**
          * Get from the backend the updated orders of the given table.
-         * @related _saveTableOrdersToServer
          * @param {'restaurant.table'} table
          */
         async _fetchTableOrdersFromServer(table) {
-            const data = await this.uirpc({
-                model: 'pos.order',
-                method: 'get_table_draft_orders',
-                args: [table.id],
-            });
-            // Delete the orders that are unvalidated and not-empty.
-            const ordersToDelete = this.getTableOrders(table).filter(
-                (order) => !order._extras.validationDate && order.lines.length
-            );
-            for (const order of ordersToDelete) {
-                this.deleteOrder(order.id);
+            try {
+                const data = await this.uirpc({
+                    model: 'pos.order',
+                    method: 'get_table_draft_orders',
+                    args: [table.id],
+                });
+                // Delete the orders that are unvalidated and not-empty.
+                const ordersToDelete = this.getTableOrders(table).filter(
+                    (order) => !order._extras.validationDate && order.lines.length && !order._extras.failedToSync
+                );
+                for (const order of ordersToDelete) {
+                    this.deleteOrder(order.id);
+                }
+                this._loadOrders(data);
+            } catch (error) {
+                if (error instanceof Error) throw error;
+                this.ui.askUser('OfflineErrorPopup', {
+                    title: _t('Offline'),
+                    body: _t('Unable to load orders from the server.'),
+                    show: this.data.uiState.showOfflineError,
+                });
             }
-            this._loadOrders(data);
         },
         _loadOrders(data) {
             let extras = {};
