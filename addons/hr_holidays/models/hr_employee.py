@@ -220,3 +220,6 @@ class HrEmployee(models.Model):
         for holiday in holidays:
             employee = self.filtered(lambda e: e.id == holiday.employee_id.id)
             employee.current_leave_id = holiday.holiday_status_id.id
+
+    def _get_user_m2o_to_empty_on_archived_employees(self):
+        return super()._get_user_m2o_to_empty_on_archived_employees() + ['leave_manager_id']

@@ -34,6 +34,9 @@ class Employee(models.Model):
             elif not employee.expense_manager_id:
                 employee.expense_manager_id = False
 
+    def _get_user_m2o_to_empty_on_archived_employees(self):
+        return super()._get_user_m2o_to_empty_on_archived_employees() + ['expense_manager_id']
+
 
 class EmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
