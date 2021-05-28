@@ -12,6 +12,7 @@ from odoo.osv.query import Query
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 from odoo.tools.misc import format_date
+from odoo.osv import expression
 
 
 class HrEmployeePrivate(models.Model):
@@ -296,6 +297,12 @@ class HrEmployeePrivate(models.Model):
         super(HrEmployeePrivate, self).unlink()
         return resources.unlink()
 
+    def _get_employee_m2o_to_empty_on_archived_employees(self):
+        return ['parent_id', 'coach_id']
+
+    def _get_user_m2o_to_empty_on_archived_employees(self):
+        return []
+
     def toggle_active(self):
         res = super(HrEmployeePrivate, self).toggle_active()
         unarchived_employees = self.filtered(lambda employee: employee.active)
@@ -306,6 +313,23 @@ class HrEmployeePrivate(models.Model):
         })
         archived_addresses = unarchived_employees.mapped('address_home_id').filtered(lambda addr: not addr.active)
         archived_addresses.toggle_active()
+
+        # Empty links to this employees (example: manager, coach, time off responsible, ...)
+        archived_employees = self.filtered(lambda e: not e.active)
+        if archived_employees:
+            employee_fields_to_empty = self._get_employee_m2o_to_empty_on_archived_employees()
+            user_fields_to_empty = self._get_user_m2o_to_empty_on_archived_employees()
+            employee_domain = [[(field, 'in', archived_employees.ids)] for field in employee_fields_to_empty]
+            user_domain = [[(field, 'in', archived_employees.user_id.ids) for field in user_fields_to_empty]]
+            employees = self.env['hr.employee'].search(expression.OR(employee_domain + user_domain))
+            for employee in employees:
+                for field in employee_fields_to_empty:
+                    if employee[field] in archived_employees:
+                        employee[field] = False
+                for field in user_fields_to_empty:
+                    if employee[field] in archived_employees.user_id:
+                        employee[field] = False
+
         if len(self) == 1 and not self.active:
             return {
                 'type': 'ir.actions.act_window',
