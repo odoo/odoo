@@ -411,7 +411,7 @@ class Cursor(object):
         except Exception:
             self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
             raise
-        else:
+        finally:
             self.execute('RELEASE SAVEPOINT "%s"' % name)
 
     @check
