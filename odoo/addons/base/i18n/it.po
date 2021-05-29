@@ -10,11 +10,11 @@
 # Simone Bernini <simone@aperturelabs.it>, 2020
 # Petra <bop@odoo.com>, 2020
 # Marius Marolla <mariusmarolla@entersys.it>, 2020
+# David Minneci <david@numeko.it>, 2020
 # Giovanni Perteghella <giovanni@perteghella.org>, 2020
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2020
-# David Minneci <david@numeko.it>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2020
@@ -9019,7 +9019,7 @@ msgstr "Aggiungi lingua"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
 msgid "Add OdooBot in discussions"
-msgstr "Aggiunge il bot Odoo nelle discussioni"
+msgstr "Aggiunge OdooBot alle discussioni"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_sepa_direct_debit
@@ -9127,7 +9127,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat_mail_bot
 msgid "Add livechat support for OdooBot"
-msgstr "Aggiunge il supporto per il bot Odoo alla chat dal vivo"
+msgstr "Aggiunge alla chat dal vivo il supporto per OdooBot"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_sale
@@ -12263,7 +12263,7 @@ msgstr "Crea contatti da registrazioni eventi."
 #. module: base
 #: model:ir.module.module,description:base.module_crm_livechat
 msgid "Create new lead with using /lead command in the channel"
-msgstr "Creare un lead con il comando /lead del canale"
+msgstr "Crea un nuovo contatto usando il comando /lead nel canale"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -15063,8 +15063,8 @@ msgid ""
 "For safety reasons, you cannot merge more than 3 contacts together. You can "
 "re-open the wizard several times if needed."
 msgstr ""
-"Per motivi di sicurezza, non è possibile unire più di 3 contatti insieme. È "
-"possibile riaprire la procedura guidata più volte, se necessario."
+"Per motivi di sicurezza non è possibile unire insieme più di 3 contatti. Se "
+"necessario, è possibile riaprire la procedura guidata più volte."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
@@ -21421,12 +21421,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_bot
 msgid "OdooBot"
-msgstr "Bot Odoo"
+msgstr "OdooBot"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat_mail_bot
 msgid "OdooBot for livechat"
-msgstr "Bot Odoo per chat dal vivo"
+msgstr "OdooBot per chat dal vivo"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
@@ -21610,9 +21610,9 @@ msgid ""
 " ask the Administrator if you need to merge several contacts linked to "
 "existing Journal Items."
 msgstr ""
-"Solo il contatto di destinazione può essere collegato agli elementi di "
-"giornale esistenti. Si prega di chiedere all’amministratore se è necessario "
-"unire più contatti collegati agli elementi di giornale esistenti."
+"Ai movimenti contabili esistenti può essere collegato solo il contatto di "
+"destinazione. Se è necessario unire alcuni contatti, chiedere "
+"all'amministratore."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -22213,7 +22213,7 @@ msgstr "Categoria madre"
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_id
 msgid "Parent Company"
-msgstr "Azienda madre"
+msgstr "Azienda principale"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
@@ -25238,7 +25238,7 @@ msgstr "Stato di Palestina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__base_onboarding_company_state
 msgid "State of the onboarding company step"
-msgstr ""
+msgstr "Stato della fase di configurazione azienda"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
@@ -28884,8 +28884,7 @@ msgstr "Impossibile eliminare la lingua impostata come preferita dall'utente."
 #: code:addons/base/wizard/base_partner_merge.py:0
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr ""
-"Non è possibile unire un contatto con uno dei suoi contatti correlati."
+msgstr "Impossibile unire un contatto con uno da cui deriva."
 
 #. module: base
 #: code:addons/models.py:0
