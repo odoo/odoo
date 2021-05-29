@@ -242,7 +242,7 @@ msgstr "<span class=\"o_stat_text\">Perda</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "<span class=\"o_stat_text\">Manufactured</span>"
-msgstr "<span class=\"o_stat_text\">Fabricados</span>"
+msgstr "<span class=\"o_stat_text\">Produzidos</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -427,6 +427,8 @@ msgstr "Uma Ordem de Fabricação já está pronta ou cancelada."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Um produto com uma lista de materiais do tipo kit não pode ter uma regra de "
+"reordenamento."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -2494,14 +2496,14 @@ msgstr "Duração Manual"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_stock_rule
 #, python-format
 msgid "Manufacture"
-msgstr "Fabricar"
+msgstr "Produzir"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__mrp_one_step
 #, python-format
 msgid "Manufacture (1 step)"
-msgstr "Fabricação (1 passo)"
+msgstr "Produção (1 passo)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_mto_pull_id
@@ -2511,41 +2513,41 @@ msgstr "Regra de PSE da Produção"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_pull_id
 msgid "Manufacture Rule"
-msgstr "Regra de Fabricação"
+msgstr "Regra de Produção"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid "Manufacture Security Lead Time"
-msgstr "Tempo de Espera de Segurança da Fabricação"
+msgstr "Tempo de Espera de Segurança da Produção"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__normal
 msgid "Manufacture this product"
-msgstr "Fabricar este produto"
+msgstr "Produzir este produto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_to_resupply
 msgid "Manufacture to Resupply"
-msgstr "Fabricação para Reabastecimento"
+msgstr "Produção para Reabastecimento"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__mrp_product_qty
 #: model:ir.model.fields,field_description:mrp.field_product_template__mrp_product_qty
 msgid "Manufactured"
-msgstr "Fabricados"
+msgstr "Produzidos"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "Manufactured Products"
-msgstr "Produtos Manufaturados"
+msgstr "Produtos Produzidos"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 msgid "Manufactured in the last 365 days"
-msgstr "Fabricado nos últimos 365 dias"
+msgstr "Produzidos nos últimos 365 dias"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -3101,12 +3103,12 @@ msgstr "Escolha os Componentes"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pick components and then manufacture"
-msgstr "Escolha os componentes e fabrique-os"
+msgstr "Escolha os componentes e produza-os"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm
 msgid "Pick components and then manufacture (2 steps)"
-msgstr "Escolha os componentes e fabrique-os (2 passos)"
+msgstr "Escolha os componentes e produza-os (2 passos)"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -3114,7 +3116,7 @@ msgstr "Escolha os componentes e fabrique-os (2 passos)"
 #, python-format
 msgid "Pick components, manufacture and then store products (3 steps)"
 msgstr ""
-"Escolha os componentes, fabrique-os e então armazene os produtos (3 passos)"
+"Escolha os componentes, produza-os e então armazene os produtos (3 passos)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
@@ -3200,7 +3202,7 @@ msgstr "Plástico Laminado"
 #: code:addons/mrp/models/stock_move.py:0
 #, python-format
 msgid "Please delete the Manufacture Order first."
-msgstr ""
+msgstr "Exclua o Pedido de Produção primeiro."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_wood_ply
@@ -4328,8 +4330,8 @@ msgid ""
 "There is no Bill of Material of type manufacture or kit found for the "
 "product %s. Please define a Bill of Material for this product."
 msgstr ""
-"Não foi encontrada nenhuma Lista de Material do tipo fabricação ou kit para "
-"o produto %s. Defina uma Lista de Material para este produto."
+"Não há Lista de Materiais do tipo produção ou kit encontrado para o produto "
+"%s. Defina uma Lista de Materiais para este produto."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -4919,7 +4921,7 @@ msgstr "Quando os componentes da 1ª operação estão disponíveis"
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
 msgstr ""
-"Quando os produtos são fabricados, eles podem ser fabricados neste armazém."
+"Quando os produtos são produzidos, eles podem ser produzidos neste armazém."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -5207,6 +5209,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"Você não pode criar uma lista de materiais do tipo kit para produtos que tem"
+" ao menos uma regra de reordenamento."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5326,6 +5330,8 @@ msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
 msgstr ""
+"Você deve indicar um valor diferente de zero consumido para ao menos um dos "
+"seus componentes"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
