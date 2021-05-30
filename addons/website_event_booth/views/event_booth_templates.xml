@@ -44,9 +44,9 @@
                                         <input type="radio" name="booth_category_id" t-att-value="booth_category.id"
                                                t-att-disabled="booth_category_unavailable"/>
                                         <div>
-                                            <h5><t t-esc="booth_category.name"/></h5>
+                                            <h5 name="booth_category_name" class="m-0" t-esc="booth_category.name"/>
                                             <span class="img img-responsive">
-                                                <img class="img img-fluid" t-att-title="booth_category.name" t-att-src="website.image_url(booth_category, 'image_256')"/>
+                                                <img class="img img-fluid mt-2" t-att-title="booth_category.name" t-att-src="website.image_url(booth_category, 'image_256')"/>
                                             </span>
                                         </div>
                                         <div t-if="booth_category_unavailable" class="o_ribbon_right bg-danger">

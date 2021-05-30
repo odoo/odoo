@@ -42,13 +42,17 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
                 },
             }).then(function (result) {
                 self.boothIds[self.activeType] = result;
-                self._fillBooths();
-                self._showBoothCategoryDescription();
+                self._updateUiAfterBoothCategoryChange();
             });
         } else {
-            this._fillBooths();
-            this._showBoothCategoryDescription();
+            this._updateUiAfterBoothCategoryChange();
         }
+    },
+    
+    _updateUiAfterBoothCategoryChange() {
+        this._fillBooths();
+        this._showBoothCategoryDescription();
+        this._updateUiAfterBoothChange(this._countSelectedBooths());
     },
 
     _showBoothCategoryDescription() {
@@ -73,9 +77,16 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
     _onChangeBooth(ev) {
         $(ev.currentTarget).closest('.custom-checkbox').removeClass('text-danger');
-        let atLeastOneBoothSelected = this.$('.custom-checkbox > input[type="checkbox"]').is(':checked');
+        this._updateUiAfterBoothChange(this._countSelectedBooths());
+    },
+
+    _countSelectedBooths() {
+        return this.$('.custom-checkbox > input[type="checkbox"]:checked').length;
+    },
+
+    _updateUiAfterBoothChange(boothCount) {
         let $button = this.$('button.booth-submit');
-        $button.attr('disabled', !atLeastOneBoothSelected);
+        $button.attr('disabled', !boothCount);
     },
 
     async _onSubmitClick(ev) {
@@ -127,8 +138,5 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     },
 });
 
-    return {
-        boothRegistration: publicWidget.registry.boothRegistration
-    };
-
+return publicWidget.registry.boothRegistration;
 });

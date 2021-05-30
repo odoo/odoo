@@ -11,7 +11,7 @@ from odoo.addons.website_event.controllers.main import WebsiteEventController
 class WebsiteEventBoothController(WebsiteEventController):
 
     @http.route('/event/<model("event.event"):event>/booth', type='http', auth='public', website=True, sitemap=False)
-    def event_booth_main(self, event, **kwargs):
+    def event_booth_main(self, event):
         event_sudo = event.sudo()
         available_booth_ids = event_sudo.event_booth_ids.filtered(lambda booth: booth.is_available)
         available_booth_category_ids = available_booth_ids.mapped('booth_category_id')
@@ -37,7 +37,7 @@ class WebsiteEventBoothController(WebsiteEventController):
                  'event_booth_ids': kwargs.get('event_booth_ids'),
                 }
             )
-        return self.booth_registration_confirm(event, **kwargs)
+        return self.event_booth_registration_confirm(event, **kwargs)
 
     def _booth_registration_details_complete(self, booth_category_id):
         """
