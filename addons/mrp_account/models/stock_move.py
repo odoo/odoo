@@ -22,3 +22,8 @@ class StockMove(models.Model):
             return super()._get_dest_account(accounts_data)
         else:
             return self.location_id.valuation_in_account_id.id or accounts_data['stock_output'].id
+
+    def _filter_anglo_saxon_moves(self, product):
+        res = super(StockMove, self)._filter_anglo_saxon_moves(product)
+        res += self.filtered(lambda m: m.bom_line_id.bom_id.product_tmpl_id.id == product.product_tmpl_id.id)
+        return res
