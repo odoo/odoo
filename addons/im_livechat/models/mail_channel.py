@@ -76,7 +76,7 @@ class MailChannel(models.Model):
         values = super(MailChannel, self).channel_fetch_slot()
         livechat_channels = self.env['mail.channel'].search([
             ('channel_type', '=', 'livechat'),
-            ('channel_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
+            ('channel_last_seen_partner_ids', 'in', self.env['mail.channel.partner'].sudo()._search([
                 ('partner_id', '=', self.env.user.partner_id.id),
                 ('is_pinned', '=', True)])
             ),
