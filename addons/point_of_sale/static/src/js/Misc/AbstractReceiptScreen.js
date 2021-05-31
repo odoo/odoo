@@ -39,13 +39,9 @@ odoo.define('point_of_sale.AbstractReceiptScreen', function (require) {
                 return await this._printWeb();
             }
         }
-        /**
-         * https://stackoverflow.com/questions/21285902/printing-a-part-of-webpage-with-javascript
-         */
         async _printWeb() {
             try {
-                const isPrinted = document.execCommand('print', false, null);
-                if (!isPrinted) window.print();
+                window.print();
                 return true;
             } catch (err) {
                 await this.showPopup('ErrorPopup', {
