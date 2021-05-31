@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "../helpers/mock_env";
-import { makeDeferred, nextTick } from "../helpers/utils";
+import { makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
 
 const serviceRegistry = registry.category("services");
 
@@ -16,6 +16,46 @@ QUnit.test("can start a service", async (assert) => {
     });
     const env = await makeTestEnv();
     assert.strictEqual(env.services.test, 17);
+});
+
+QUnit.test("properly handle crash in service start", async (assert) => {
+    patchWithCleanup(console, {
+        error: () => assert.step("log"),
+    });
+    serviceRegistry.add("test", {
+        start() {
+            return 17;
+        },
+    });
+    serviceRegistry.add("ouch", {
+        start() {
+            throw new Error("boom");
+        },
+    });
+    const env = await makeTestEnv();
+    assert.strictEqual(env.services.test, 17);
+    assert.ok(env.services.ouch instanceof Error);
+    assert.verifySteps(["log"]);
+});
+
+QUnit.test("properly handle crash in async service start", async (assert) => {
+    patchWithCleanup(console, {
+        error: () => assert.step("log"),
+    });
+    serviceRegistry.add("test", {
+        start() {
+            return 17;
+        },
+    });
+    serviceRegistry.add("ouch", {
+        async start() {
+            throw new Error("boom");
+        },
+    });
+    const env = await makeTestEnv();
+    assert.strictEqual(env.services.test, 17);
+    assert.ok(env.services.ouch instanceof Error);
+    assert.verifySteps(["log"]);
 });
 
 QUnit.test("can start an asynchronous service", async (assert) => {

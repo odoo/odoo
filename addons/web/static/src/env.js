@@ -87,7 +87,7 @@ async function _startServices(env, toStart, timeoutId) {
     }
 
     // start as many services in parallel as possible
-    function start() {
+    async function start() {
         let service = null;
         const proms = [];
         while ((service = findNext())) {
@@ -95,22 +95,38 @@ async function _startServices(env, toStart, timeoutId) {
             toStart.delete(service);
             const entries = (service.dependencies || []).map((dep) => [dep, services[dep]]);
             const dependencies = Object.fromEntries(entries);
-            const value = service.start(env, dependencies);
+            let value;
+            try {
+                value = service.start(env, dependencies);
+            } catch (e) {
+                value = e;
+                console.error(e);
+            }
             if ("async" in service) {
                 SERVICES_METADATA[name] = service.async;
             }
             if (value instanceof Promise) {
                 proms.push(
-                    value.then((val) => {
-                        services[name] = val || null;
-                        return start();
+                    new Promise(async (resolve) => {
+                        value
+                            .then((val) => {
+                                services[name] = val || null;
+                            })
+                            .catch((error) => {
+                                services[name] = error;
+                                console.error(error);
+                            })
+                            .finally(resolve);
                     })
                 );
             } else {
                 services[service.name] = value || null;
             }
         }
-        return Promise.all(proms);
+        await Promise.all(proms);
+        if (proms.length) {
+            return start();
+        }
     }
     await start();
     clearTimeout(timeoutId);
