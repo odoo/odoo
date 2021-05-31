@@ -1380,18 +1380,28 @@ class Picking(models.Model):
                     ml.write(vals)
                     new_move_line.write({'product_uom_qty': done_to_keep})
                     move_lines_to_pack |= new_move_line
+            if not package.package_type_id:
+                package_type = move_lines_to_pack.move_id.product_packaging_id.package_type_id
+                if len(package_type) == 1:
+                    package.package_type_id = package_type
+            if len(move_lines_to_pack) == 1:
+                default_dest_location = move_lines_to_pack._get_default_dest_location()
+                move_lines_to_pack.location_dest_id = default_dest_location._get_putaway_strategy(
+                    product=move_lines_to_pack.product_id,
+                    quantity=move_lines_to_pack.product_uom_qty,
+                    package=package)
+            move_lines_to_pack.write({
+                'result_package_id': package.id,
+            })
             if create_package_level:
                 package_level = self.env['stock.package_level'].create({
                     'package_id': package.id,
                     'picking_id': pick.id,
                     'location_id': False,
-                    'location_dest_id': move_line_ids.mapped('location_dest_id').id,
+                    'location_dest_id': move_lines_to_pack.mapped('location_dest_id').id,
                     'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
                     'company_id': pick.company_id.id,
                 })
-            move_lines_to_pack.write({
-                'result_package_id': package.id,
-            })
         return package
 
     def action_put_in_pack(self):
