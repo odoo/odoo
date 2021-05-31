@@ -4,7 +4,7 @@ import base64
 import random
 import re
 
-from odoo import api, fields, models, modules, _
+from odoo import api, Command, fields, models, modules, _
 
 
 class ImLivechatChannel(models.Model):
@@ -114,14 +114,14 @@ class ImLivechatChannel(models.Model):
     def _get_livechat_mail_channel_vals(self, anonymous_name, operator, user_id=None, country_id=None):
         # partner to add to the mail.channel
         operator_partner_id = operator.partner_id.id
-        channel_partner_to_add = [(4, operator_partner_id)]
+        channel_partner_to_add = [Command.create({'partner_id': operator_partner_id, 'is_pinned': False})]
         visitor_user = False
         if user_id:
             visitor_user = self.env['res.users'].browse(user_id)
             if visitor_user and visitor_user.active:  # valid session user (not public)
-                channel_partner_to_add.append((4, visitor_user.partner_id.id))
+                channel_partner_to_add.append(Command.create({'partner_id': visitor_user.partner_id.id}))
         return {
-            'channel_partner_ids': channel_partner_to_add,
+            'channel_last_seen_partner_ids': channel_partner_to_add,
             'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,
