@@ -208,7 +208,14 @@ return AbstractRenderer.extend({
      */
     _filterDataPoints: function () {
         var dataPoints = [];
-        if (_.contains(['bar', 'pie'], this.state.mode)) {
+        if (this.state.compare && this.state.mode == 'bar') {
+            // Keep the pair of points if at least one of them has a positive count
+            var groups = _.zip(..._.values(_.groupBy(this.state.dataPoints, 'originIndex'))).filter(
+                group => _.reduce(group, (memo, dp) => memo + (dp && dp.count || 0), 0)
+            );
+            dataPoints = [].concat(...groups).filter(datapoint => datapoint);
+        }
+        else if (_.contains(['bar', 'pie'], this.state.mode)) {
             dataPoints = this.state.dataPoints.filter(function (dataPt) {
                 return dataPt.count > 0;
             });

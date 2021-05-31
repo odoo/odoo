@@ -1910,6 +1910,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                                 |___||___| ___  ___ |___|
                                  Aug  Sep  Oct  Nov  Dec
 
+        If the flag fill_entire_range is present in the context, this method will
+        add explicit zeroes for missing data in the entire time range defined by
+        the context keys start_fill_range and end_fill_range. In the above example,
+        suppose the time range is the whole year, the result would become:
+                                                                        ___
+                                                    ___                |   |
+                                                   |   |               |   |
+                                                   |   | ___           |   |
+                                                   |   ||   |          |   |
+                ___  ___  ___  ___  ___  ___  ___  |___||___| ___  ___ |___|
+                Jan  Feb  Mar  Apr  May  Jun  Jul   Aug  Sep  Oct  Nov  Dec
+
         :param list data: the data containing groups
         :param list groupby: name of the first group by
         :param list aggregated_fields: list of aggregated fields in the query
@@ -1929,11 +1941,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # existing non null datetimes
         existing = [d[groupby_name] for d in data if d[groupby_name]]
 
-        if len(existing) < 2:
+        if len(existing) < 2 and not self.env.context.get('fill_entire_range'):
             return data
 
         # assumption: existing data is sorted by field 'groupby_name'
-        first, last = existing[0], existing[-1]
+        options = self.env.context.get('fill_entire_range') and self.env.context or {}
+        first = datetime.datetime.strptime(options.get('start_fill_range'), "%Y-%m-%d") if options.get('start_fill_range') else existing[0]
+        last = datetime.datetime.strptime(options.get('end_fill_range'), "%Y-%m-%d") if options.get('start_fill_range') else existing[-1]
 
         empty_item = {'id': False, (groupby_name.split(':')[0] + '_count'): 0}
         empty_item.update({key: False for key in aggregated_fields})
@@ -2319,7 +2333,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
 
-        if self.env.context.get('fill_temporal') and data:
+        if self.env.context.get('fill_temporal') and data or self.env.context.get('fill_entire_range'):
             data = self._read_group_fill_temporal(data, groupby, aggregated_fields,
                                                   annotated_groupbys)
 

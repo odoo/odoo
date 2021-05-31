@@ -206,12 +206,22 @@ return AbstractModel.extend({
 
         var context = _.extend({fill_temporal: true}, this.chart.context);
         var defs = [];
+        var needEntireRange = "timeRangeMenuData" in context && "timeRange" in context["timeRangeMenuData"] && "comparisonTimeRange" in context["timeRangeMenuData"]
 
         domains.forEach(function (domain, originIndex) {
+            var context_extension = {}
+            if (needEntireRange) {
+                var range = originIndex == 0 ? context["timeRangeMenuData"]["timeRange"] : context["timeRangeMenuData"]["comparisonTimeRange"]
+                var start = moment(range[1][2])
+                var end = moment(range[2][2])
+                // end is exclusive in the domain, we need an inclusive value
+                end = end.subtract(1, 's')
+                context_extension = {start_fill_range: start.format("YYYY-MM-DD"), end_fill_range: end.format("YYYY-MM-DD"), fill_entire_range: true}
+            }
             defs.push(self._rpc({
                 model: self.modelName,
                 method: 'read_group',
-                context: context,
+                context: _.extend(context, context_extension),
                 domain: domain,
                 fields: fields,
                 groupBy: groupBy,
