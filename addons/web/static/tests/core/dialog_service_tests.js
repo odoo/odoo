@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { DialogContainer, dialogService } from "@web/core/dialog/dialog_service";
+import { DialogContainer } from "@web/core/dialog/dialog_container";
+import { dialogService } from "@web/core/dialog/dialog_service";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
 import { errorService } from "@web/core/errors/error_service";
 import { registry } from "@web/core/registry";

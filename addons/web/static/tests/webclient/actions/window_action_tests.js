@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { debugService } from "@web/core/debug/debug_service";
-import { DialogContainer } from "@web/core/dialog/dialog_service";
+import { DialogContainer } from "@web/core/dialog/dialog_container";
 import { registry } from "@web/core/registry";
 import { editView } from "@web/legacy/debug_manager";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";

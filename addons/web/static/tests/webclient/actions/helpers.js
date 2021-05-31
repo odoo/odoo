@@ -19,6 +19,7 @@ import { effectService } from "@web/webclient/effects/effect_service";
 import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menu_service";
 import { WebClient } from "@web/webclient/webclient";
+import { DialogContainer } from "@web/core/dialog/dialog_container";
 // This import is needed because of it's sideeffects, for exemple :
 // web.test_utils easyload xml templates at line : 124:130.
 // Also it set the autocomplete delay time for the field Many2One at 0 for the tests at line : 132:137
