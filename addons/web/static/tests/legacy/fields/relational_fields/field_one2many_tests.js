@@ -16,6 +16,8 @@ var testUtils = require('web.test_utils');
 var fieldUtils = require('web.field_utils');
 const { patch, unpatch } = require('web.utils');
 
+const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
+
 const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
 const { FieldOne2Many } = relationalFields;
@@ -8403,6 +8405,8 @@ QUnit.module('fields', {}, function () {
 
         QUnit.test('create and edit on m2o in o2m, and press ESCAPE', async function (assert) {
             assert.expect(4);
+
+            await makeLegacyDialogMappingTestEnv();
 
             var form = await createView({
                 View: FormView,

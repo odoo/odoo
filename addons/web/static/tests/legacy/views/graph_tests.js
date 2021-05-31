@@ -6,6 +6,9 @@ const GraphView = require('web.GraphView');
 const testUtils = require('web.test_utils');
 const { sortBy } = require('web.utils');
 
+const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
+const { createWebClient, doAction, getActionManagerTestConfig } = require('@web/../tests/webclient/actions/helpers');
+
 const { createView } = testUtils;
 const cpHelpers = testUtils.controlPanel;
 const patchDate = testUtils.mock.patchDate;
@@ -72,6 +75,7 @@ function checkLegend(assert, graph, expectedLegendLabels) {
     assert.deepEqual(actualLegendLabels, expectedLegendLabels);
 }
 
+let testConfig;
 QUnit.module('Views', {
     beforeEach: function () {
         this.data = {
@@ -120,6 +124,9 @@ QUnit.module('Views', {
                 }]
             },
         };
+
+        testConfig = getActionManagerTestConfig();
+        Object.assign(testConfig.serverData, {models: this.data});
     }
 }, function () {
 
@@ -786,25 +793,25 @@ QUnit.module('Views', {
     QUnit.test('measure dropdown consistency', async function (assert) {
         assert.expect(2);
 
-        const actionManager = await testUtils.createActionManager({
-            archs: {
-                'foo,false,graph': `
-                    <graph string="Partners" type="bar">
-                        <field name="foo" type="measure"/>
-                    </graph>`,
-                'foo,false,search': `<search/>`,
-                'foo,false,kanban': `
-                    <kanban>
-                        <templates>
-                            <div t-name="kanban-box">
-                                <field name="foo"/>
-                            </div>
-                        </templates>
-                    </kanban>`,
-            },
-            data: this.data,
-        });
-        await actionManager.doAction({
+        testConfig.serverData.views = {
+            'foo,false,graph': `
+                <graph string="Partners" type="bar">
+                    <field name="foo" type="measure"/>
+                </graph>`,
+            'foo,false,search': `<search/>`,
+            'foo,false,kanban': `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+        };
+
+        const webClient = await createWebClient({ testConfig });
+
+        await doAction(webClient, {
             res_model: 'foo',
             type: 'ir.actions.act_window',
             views: [[false, 'graph'], [false, 'kanban']],
@@ -815,18 +822,18 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsOnce(actionManager, '.o_control_panel .o_graph_measures_list',
+        assert.containsOnce(webClient, '.o_control_panel .o_graph_measures_list',
             "Measures dropdown is present at init"
         );
 
-        await cpHelpers.switchView(actionManager, 'kanban');
-        await cpHelpers.switchView(actionManager, 'graph');
+        await cpHelpers.switchView(webClient, 'kanban');
+        await legacyExtraNextTick();
+        await cpHelpers.switchView(webClient, 'graph');
+        await legacyExtraNextTick();
 
-        assert.containsOnce(actionManager, '.o_control_panel .o_graph_measures_list',
+        assert.containsOnce(webClient, '.o_control_panel .o_graph_measures_list',
             "Measures dropdown is present after reload"
         );
-
-        actionManager.destroy();
     });
 
     QUnit.test('graph view crash when moving from search view using Down key', async function (assert) {

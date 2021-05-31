@@ -127,16 +127,13 @@ odoo.define('web.test_utils', async function (require) {
         ajax.loadXML('/web/static/src/legacy/xml/debug.xml', core.qweb),
         ajax.loadXML('/web/static/src/legacy/xml/dialog.xml', core.qweb),
         ajax.loadXML('/web/static/src/legacy/xml/translation_dialog.xml', core.qweb),
+        ajax.loadXML('/web/static/src/legacy/frontend/notification/notification.xml', core.qweb),
     ]);
     setTimeout(function () {
         // jquery autocomplete refines the search in a setTimeout() parameterized
         // with a delay, so we force this delay to 0 s.t. the dropdown is filtered
         // directly on the next tick
         relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
-
-        // this is done with the hope that tests are
-        // only started all together...
-        QUnit.start();
     }, 0);
     return {
         mock: {
@@ -256,10 +253,8 @@ odoo.define('web.test_utils', async function (require) {
             inputFiles: testUtilsFile.inputFiles,
         },
 
-        createActionManager: testUtilsCreate.createActionManager,
         createComponent: testUtilsCreate.createComponent,
         createControlPanel: testUtilsCreate.createControlPanel,
-        createDebugManager: testUtilsCreate.createDebugManager,
         createAsyncView: testUtilsCreate.createView,
         createCalendarView: testUtilsCreate.createCalendarView,
         createView: testUtilsCreate.createView,

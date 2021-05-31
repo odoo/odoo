@@ -37,16 +37,15 @@ This module provides the core of the Odoo Web Client.
         #   > web_editor.assets_wysiwyg = assets needed by components defined in the "web_editor" module.
 
         'web.assets_qweb': [
+            'web/static/src/**/*.xml',
+            ('remove', 'web/static/src/legacy/**/*.xml'),
             'web/static/src/legacy/xml/base.xml',
             'web/static/src/legacy/xml/chart.xml',
             'web/static/src/legacy/xml/fields.xml',
             'web/static/src/legacy/xml/file_upload_progress_bar.xml',
             'web/static/src/legacy/xml/file_upload_progress_card.xml',
             'web/static/src/legacy/xml/kanban.xml',
-            'web/static/src/legacy/xml/menu.xml',
-            'web/static/src/legacy/xml/notification.xml',
             'web/static/src/legacy/xml/pivot.xml',
-            'web/static/src/legacy/xml/rainbow_man.xml',
             'web/static/src/legacy/xml/report.xml',
             'web/static/src/legacy/xml/search_panel.xml',
             'web/static/src/legacy/xml/web_calendar.xml',
@@ -83,11 +82,24 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web._assets_bootstrap'),
 
             'base/static/src/css/modules.css',
+            'base/static/src/js/res_config_settings.js',
 
-            'web/static/src/legacy/scss/webclient_extra.scss',
-            'web/static/src/legacy/scss/webclient_layout.scss',
+            'web/static/src/core/utils/transitions.scss',
+            'web/static/src/core/**/*',
+            'web/static/src/fields/**/*',
+            'web/static/src/views/**/*',
+            'web/static/src/webclient/**/*',
+            ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
+            'web/static/src/env.js',
 
-            'web/static/src/legacy/scss/webclient.scss',
+            'web/static/lib/jquery.scrollTo/jquery.scrollTo.js',
+            'web/static/lib/fuzzy-master/fuzzy.js',
+            'web/static/lib/Chart/Chart.js',  # TODO: lazy load it
+            'web/static/lib/luxon/luxon.js',
+            'web/static/lib/py.js/lib/py.js',
+            'web/static/lib/py.js/lib/py_extras.js',
+            'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
+
             'web/static/src/legacy/scss/domain_selector.scss',
             'web/static/src/legacy/scss/model_field_selector.scss',
             'web/static/src/legacy/scss/progress_bar.scss',
@@ -115,7 +127,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/data_export.scss',
             'base/static/src/scss/onboarding.scss',
             'web/static/src/legacy/scss/attachment_preview.scss',
-            'web/static/src/legacy/scss/notification.scss',
             'web/static/src/legacy/scss/base_document_layout.scss',
             'web/static/src/legacy/scss/special_fields.scss',
             'web/static/src/legacy/scss/ribbon.scss',
@@ -127,13 +138,19 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/list_view_extra.scss',
             'web/static/src/legacy/scss/search_view_extra.scss',
 
-            'base/static/src/js/res_config_settings.js',
-            'web/static/lib/jquery.scrollTo/jquery.scrollTo.js',
-            'web/static/lib/fuzzy-master/fuzzy.js',
-            'web/static/lib/py.js/lib/py.js',
-            'web/static/lib/py.js/lib/py_extras.js',
-            'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
-
+            'web/static/src/legacy/action_adapters.js',
+            'web/static/src/legacy/debug_manager.js',
+            'web/static/src/legacy/legacy_service_provider.js',
+            'web/static/src/legacy/legacy_client_actions.js',
+            'web/static/src/legacy/legacy_dialog.js',
+            'web/static/src/legacy/legacy_views.js',
+            'web/static/src/legacy/legacy_promise_error_handler.js',
+            'web/static/src/legacy/legacy_rpc_error_handler.js',
+            'web/static/src/legacy/root_widget.js',
+            'web/static/src/legacy/systray_menu.js',
+            'web/static/src/legacy/systray_menu_item.js',
+            'web/static/src/legacy/utils.js',
+            'web/static/src/legacy/web_client.js',
             'web/static/src/legacy/js/_deprecated/*',
             'web/static/src/legacy/js/chrome/*',
             'web/static/src/legacy/js/components/*',
@@ -148,12 +165,9 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/fields/*',
             'web/static/src/legacy/js/report/utils.js',
             'web/static/src/legacy/js/report/client_action.js',
-            'web/static/src/legacy/js/services/crash_manager_service.js',
             'web/static/src/legacy/js/services/data_manager.js',
             'web/static/src/legacy/js/services/report_service.js',
             'web/static/src/legacy/js/services/session.js',
-            'web/static/src/legacy/js/tools/test_menus_loader.js',
-            'web/static/src/legacy/js/tools/debug_manager_backend.js',
             'web/static/src/legacy/js/tools/tools.js',
             'web/static/src/legacy/js/views/**/*',
             'web/static/src/legacy/js/widgets/change_password.js',
@@ -163,7 +177,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/widgets/domain_selector.js',
             'web/static/src/legacy/js/widgets/iframe_widget.js',
             'web/static/src/legacy/js/widgets/model_field_selector.js',
-            'web/static/src/legacy/js/widgets/switch_company_menu.js',
             'web/static/src/legacy/js/widgets/pie_chart.js',
             'web/static/src/legacy/js/widgets/ribbon.js',
             'web/static/src/legacy/js/widgets/week_days.js',
@@ -188,17 +201,17 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/base_frontend.scss',
             'web/static/src/legacy/scss/lazyloader.scss',
             'web/static/src/legacy/scss/navbar_mobile.scss',
-            'web/static/src/legacy/scss/notification.scss',
 
             ('include', 'web.assets_frontend_minimal'),
 
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/public/public_env.js',
             'web/static/src/legacy/js/public/public_crash_manager.js',
-            'web/static/src/legacy/js/public/public_notification.js',
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
+
+            ('include', 'web.frontend_legacy'),
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
@@ -206,7 +219,9 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/legacy/js/public/lazyloader.js')
         ],
         'web.assets_backend_prod_only': [
-            'web/static/src/legacy/js/main.js',
+            'web/static/src/main.js',
+            'web/static/src/start.js',
+            'web/static/src/legacy/legacy_setup.js',
         ],
         # Optional Bundle for PDFJS lib
         # Since PDFJS is quite huge (80000≈ lines), please only load it when it is necessary.
@@ -295,7 +310,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/mimetypes.scss',
             'web/static/src/legacy/scss/modal.scss',
             'web/static/src/legacy/scss/animation.scss',
-            'web/static/src/legacy/scss/rainbow.scss',
             'web/static/src/legacy/scss/datepicker.scss',
             'web/static/src/legacy/scss/daterangepicker.scss',
             'web/static/src/legacy/scss/banner.scss',
@@ -384,18 +398,23 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/config.js',
             'web/static/src/legacy/js/services/core.js',
             'web/static/src/legacy/js/services/local_storage_service.js',
-            'web/static/src/legacy/js/services/notification_service.js',
             'web/static/src/legacy/js/services/crash_manager.js',
             'web/static/src/legacy/js/core/error_utils.js',
             'web/static/src/legacy/js/services/session_storage_service.js',
             'web/static/src/legacy/js/tools/debug_manager.js',
             'web/static/src/legacy/js/common_env.js',
             'web/static/src/legacy/js/widgets/name_and_signature.js',
-            'web/static/src/legacy/js/widgets/notification.js',
-            'web/static/src/legacy/js/widgets/rainbow_man.js',
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/js/widgets/colorpicker.js',
             'web/static/src/legacy/js/widgets/translation_dialog.js',
+        ],
+
+        # Used during the transition of the web architecture
+        'web.frontend_legacy': [
+            # Old rainbow man kept for website compatibility
+            'web/static/src/legacy/frontend/rainbowman/**/*',
+            # Old notification kept for website compatiblity
+            'web/static/src/legacy/frontend/notification/**/*',
         ],
 
         # ---------------------------------------------------------------------
@@ -412,6 +431,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/helpers/**/*',
+            ('remove', 'web/static/tests/legacy/helpers/test_utils_tests.js'),
+            'web/static/tests/legacy/legacy_setup.js',
 
             'web/static/lib/fullcalendar/core/main.css',
             'web/static/lib/fullcalendar/daygrid/main.css',
@@ -432,56 +453,48 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/nearest/jquery.nearest.js',
             'web/static/lib/daterangepicker/daterangepicker.js',
             'web/static/lib/stacktracejs/stacktrace.js',
-            'web/static/tests/legacy/main_tests.js',
+
+            # 'web/static/tests/legacy/main_tests.js',
+            'web/static/tests/helpers/**/*.js',
+            'web/static/tests/webclient/**/helpers.js',
+            'web/static/tests/qunit.js',
+            'web/static/tests/main.js',
+            'web/static/tests/setup.js',
+
+            # These 2 lines below are taken from web.assets_frontend
+            # They're required for the web.frontend_legacy to work properly
+            # It is expected to add other lines coming from the web.assets_frontend
+            # if we need to add more and more legacy stuff that would require other scss or js.
+            ('include', 'web._assets_helpers'),
+            'web/static/lib/bootstrap/scss/_variables.scss',
+
+            ('include', 'web.frontend_legacy'),
         ],
         'web.qunit_suite_tests': [
             'base/static/tests/base_settings_tests.js',
-            'web/static/tests/legacy/chrome/**/*.js',
-            'web/static/tests/legacy/components/action_menus_tests.js',
-            'web/static/tests/legacy/components/custom_checkbox_tests.js',
-            'web/static/tests/legacy/components/custom_file_input_tests.js',
-            'web/static/tests/legacy/components/datepicker_tests.js',
-            'web/static/tests/legacy/components/dropdown_menu_tests.js',
-            'web/static/tests/legacy/components/pager_tests.js',
-            'web/static/tests/legacy/control_panel/**/*.js',
-            'web/static/tests/legacy/core/**/*.js',
-            'web/static/tests/legacy/fields/relational_fields/**/*.js',
-            'web/static/tests/legacy/fields/basic_fields_tests.js',
-            'web/static/tests/legacy/fields/field_utils_tests.js',
-            'web/static/tests/legacy/fields/relational_fields_tests.js',
-            'web/static/tests/legacy/fields/signature_tests.js',
-            'web/static/tests/legacy/fields/special_fields_tests.js',
-            'web/static/tests/legacy/fields/upgrade_fields_tests.js',
-            'web/static/tests/legacy/services/**/*.js',
-            'web/static/tests/legacy/tools/**/*.js',
-            'web/static/tests/legacy/views/abstract_controller_tests.js',
-            'web/static/tests/legacy/views/abstract_model_tests.js',
-            'web/static/tests/legacy/views/abstract_view_banner_tests.js',
-            'web/static/tests/legacy/views/abstract_view_tests.js',
-            'web/static/tests/legacy/views/basic_model_tests.js',
-            'web/static/tests/legacy/views/calendar_tests.js',
-            'web/static/tests/legacy/views/form_tests.js',
-            'web/static/tests/legacy/views/graph_tests.js',
-            'web/static/tests/legacy/views/kanban_model_tests.js',
-            'web/static/tests/legacy/views/kanban_tests.js',
-            'web/static/tests/legacy/views/list_tests.js',
-            'web/static/tests/legacy/views/pivot_tests.js',
-            'web/static/tests/legacy/views/qweb_tests.js',
-            'web/static/tests/legacy/views/sample_server_tests.js',
-            'web/static/tests/legacy/views/search_panel_tests.js',
-            'web/static/tests/legacy/views/view_dialogs_tests.js',
-            'web/static/tests/legacy/widgets/**/*.js',
-            'web/static/tests/legacy/report/**/*.js',
-            'web/static/tests/legacy/component_extension_tests.js',
-            'web/static/tests/legacy/mockserver_tests.js',
-            'web/static/tests/legacy/owl_compatibility_tests.js',
-            'web/static/tests/legacy/qweb_tests.js',
+            'web/static/tests/core/**/*.js',
+            'web/static/tests/fields/**/*.js',
+            'web/static/tests/webclient/**/*.js',
+            ('remove', 'web/static/tests/webclient/**/helpers.js'),
+            'web/static/tests/legacy/**/*.js',
+            ('remove', 'web/static/tests/legacy/**/*_mobile_tests.js'),
+            ('remove', 'web/static/tests/legacy/**/*_benchmarks.js'),
+            ('remove', 'web/static/tests/legacy/helpers/**/*.js'),
+            ('remove', 'web/static/tests/legacy/legacy_setup.js'),
+
+            ('include', 'web.frontend_legacy_tests'),
         ],
         'web.qunit_mobile_suite_tests': [
             'web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js',
+
             'web/static/tests/legacy/fields/basic_fields_mobile_tests.js',
             'web/static/tests/legacy/fields/relational_fields_mobile_tests.js',
             'web/static/tests/legacy/components/dropdown_menu_mobile_tests.js',
+        ],
+
+        # Used during the transition of the web architecture
+        'web.frontend_legacy_tests': [
+            'web/static/tests/legacy/frontend/*.js',
         ],
     },
     'bootstrap': True,  # load translations for login screen

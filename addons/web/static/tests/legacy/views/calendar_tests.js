@@ -15,7 +15,10 @@ var testUtils = require('web.test_utils');
 var session = require('web.session');
 const Widget = require('web.Widget');
 
-var createActionManager = testUtils.createActionManager;
+const { patchWithCleanup } = require("@web/../tests/helpers/utils");
+
+const { createWebClient, getActionManagerTestConfig, doAction } = require('@web/../tests/webclient/actions/helpers');
+let testConfig;
 
 CalendarRenderer.include({
     getAvatars: function () {
@@ -41,7 +44,9 @@ function _preventScroll(ev) {
 QUnit.module('Views', {
     beforeEach: function () {
         window.addEventListener('scroll', _preventScroll, true);
-        session.uid = -1; // TO CHECK
+        patchWithCleanup(session, {
+            uid: -1
+        });
         this.data = {
             event: {
                 fields: {
@@ -125,6 +130,11 @@ QUnit.module('Views', {
                 ]
             },
         };
+        testConfig = getActionManagerTestConfig();
+        this.data.event.methods = {
+            check_access_rights: this.data.event.check_access_rights,
+        }
+        Object.assign(testConfig.serverData, {models: this.data});
     },
     afterEach: function () {
         window.removeEventListener('scroll', _preventScroll, true);
@@ -296,12 +306,12 @@ QUnit.module('Views', {
     QUnit.test('breadcrumbs are updated with the displayed period', async function (assert) {
         assert.expect(4);
 
-        var archs = {
+        testConfig.serverData.views = {
             'event,1,calendar': '<calendar date_start="start" date_stop="stop" all_day="allday"/>',
             'event,false,search': '<search></search>',
         };
 
-        var actions = [{
+        testConfig.serverData.actions[1] = {
             id: 1,
             flags: {
                 initialDate: initialDate,
@@ -310,16 +320,10 @@ QUnit.module('Views', {
             res_model: 'event',
             type: 'ir.actions.act_window',
             views: [[1, 'calendar']],
-        }];
+        };
 
-        var actionManager = await createActionManager({
-            actions: actions,
-            archs: archs,
-            data: this.data,
-        });
-
-        await actionManager.doAction(1);
-        await testUtils.nextTick();
+        const webClient = await createWebClient({ testConfig });
+        await doAction(webClient, 1);
 
         // displays month mode by default
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
@@ -339,8 +343,6 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.o_control_panel .o_calendar_button_year'));
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (2016)', "should display the current year");
-
-        actionManager.destroy();
     });
 
     QUnit.test('create and change events', async function (assert) {
@@ -2866,7 +2868,7 @@ QUnit.module('Views', {
     QUnit.test('calendar is configured to have no groupBy menu', async function (assert) {
         assert.expect(1);
 
-        var archs = {
+        testConfig.serverData.views = {
             'event,1,calendar': '<calendar class="o_calendar_test" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
@@ -2874,24 +2876,19 @@ QUnit.module('Views', {
             'event,false,search': '<search></search>',
         };
 
-        var actions = [{
+        testConfig.serverData.actions[1] = {
             id: 1,
             name: 'some action',
             res_model: 'event',
             type: 'ir.actions.act_window',
             views: [[1, 'calendar']]
-        }];
+        };
 
-        var actionManager = await createActionManager({
-            actions: actions,
-            archs: archs,
-            data: this.data,
-        });
+        const webClient = await createWebClient({ testConfig });
 
-        await actionManager.doAction(1);
-        assert.containsNone(actionManager.$('.o_control_panel .o_search_options span.fa.fa-bars'),
+        await doAction(webClient, 1);
+        assert.containsNone($(webClient.el).find('.o_control_panel .o_search_options span.fa.fa-bars'),
             "the control panel has no groupBy menu");
-        actionManager.destroy();
     });
 
     QUnit.test('timezone does not affect current day', async function (assert) {
@@ -3371,31 +3368,25 @@ QUnit.module('Views', {
     QUnit.test('initial_date given in the context', async function (assert) {
         assert.expect(1);
 
-        var archs = {
+        testConfig.serverData.views = {
             'event,1,calendar': '<calendar date_start="start" date_stop="stop" mode="day"/>',
             'event,false,search': '<search></search>',
         };
 
-        var actions = [{
+        testConfig.serverData.actions[1] = {
             id: 1,
             name: 'context initial date',
             res_model: 'event',
             type: 'ir.actions.act_window',
             views: [[1, 'calendar']],
             context: {initial_date: initialDate}
-        }];
+        };
 
-        var actionManager = await createActionManager({
-            actions: actions,
-            archs: archs,
-            data: this.data,
-        });
-
-        await actionManager.doAction(1);
+        const webClient = await createWebClient({ testConfig });
+        await doAction(webClient, 1);
         await testUtils.nextTick();
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'context initial date (December 12, 2016)', "should display day passed in the context");
-        actionManager.destroy();
     });
 
     QUnit.test('default week start (US) month mode', async function (assert) {

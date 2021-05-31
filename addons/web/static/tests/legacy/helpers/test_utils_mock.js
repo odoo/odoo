@@ -51,11 +51,14 @@ const DebouncedField = basic_fields.DebouncedField;
 async function _getMockedOwlEnv(params, mockServer) {
     params.env = params.env || {};
 
+    const database = {parameters: params.translateParameters || {}};
+
     // build the env
     const favoriteFilters = params.favoriteFilters;
     const debug = params.debug;
     const services = {};
     const env = Object.assign({}, params.env, {
+        _t: params.env && params.env._t || Object.assign((s => s), { database }),
         browser: Object.assign({
             fetch: (resource, init) => mockServer.performFetch(resource, init),
         }, params.env.browser),

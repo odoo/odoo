@@ -1,0 +1,98 @@
+.o_main_navbar {
+  background-color: $o-brand-odoo;
+  border-bottom: 1px solid $o-navbar-inverse-link-hover-bg;
+  color: $white;
+  display: grid;
+  height: $o-navbar-height;
+  gap: 0px 0px;
+  grid-template-areas: "apps brand sections systray";
+  grid-template-columns:
+    $o-navbar-height
+    max-content
+    minmax($o-navbar-height, 1fr)
+    fit-content(100%);
+  grid-template-rows: $o-navbar-height;
+  min-width: min-content;
+
+  .o_dropdown_toggler > * {
+    line-height: $o-navbar-height;
+  }
+
+  .o_dropdown_toggler:hover,
+  .o_menu_brand:hover,
+  .o_dropdown_toggler.o_dropdown_active {
+    background-color: darken($o-brand-odoo, 10%);
+  }
+
+  .o_dropdown_item {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .o_dropdown_menu_group {
+    color: $o-main-text-color;
+    line-height: initial;
+    padding: $o-horizontal-padding/2 0;
+    padding-left: $o-dropdown-hpadding;
+  }
+
+  .o_dropdown_menu_group_entry {
+    padding-left: $o-dropdown-hpadding * 1.5;
+  }
+
+  // ------------------------------------
+  // ------- Main Navbar Elements -------
+  // ------------------------------------
+  // Apps Menu
+  .o_navbar_apps_menu {
+    grid-area: apps;
+
+    // Button / toggler to open apps menu
+    button.o_dropdown_toggler {
+      padding: 0;
+      width: 100%;
+    }
+  }
+
+  // Brand (Current App Name)
+  .o_menu_brand {
+    grid-area: brand;
+    cursor: pointer;
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-right: 2rem;
+    padding: 0 $o-horizontal-padding;
+    user-select: none;
+  }
+
+  // Sections (Current App Menu)
+  .o_menu_sections {
+    grid-area: sections;
+    display: flex;
+
+    .o_menu_sections_more .o_dropdown_menu {
+      padding-top: 0;
+
+      .o_more_dropdown_section {
+        background-color: $o-brand-odoo;
+        border-bottom: 1px solid $o-brand-lightsecondary;
+        color: $white;
+        line-height: initial;
+        padding: 0.25rem 1.67rem;
+
+        &.o_more_dropdown_section_group {
+          background-color: lighten($o-brand-odoo, 15%);
+        }
+      }
+    }
+  }
+
+  // Systray
+  .o_menu_systray {
+    grid-area: systray;
+    display: flex;
+  }
+}

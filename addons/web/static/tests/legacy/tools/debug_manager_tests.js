@@ -8,7 +8,7 @@ var createDebugManager = testUtils.createDebugManager;
 
 QUnit.module('DebugManager', {}, function () {
 
-    QUnit.test("list: edit view menu item", async function (assert) {
+    QUnit.skip("list: edit view menu item", async function (assert) {
         assert.expect(3);
 
         var debugManager = await createDebugManager();
@@ -40,7 +40,7 @@ QUnit.module('DebugManager', {}, function () {
         debugManager.destroy();
     });
 
-    QUnit.test("form: Manage Attachments option", async function (assert) {
+    QUnit.skip("form: Manage Attachments option", async function (assert) {
         assert.expect(3);
 
         var debugManager = await createDebugManager({
@@ -91,7 +91,7 @@ QUnit.module('DebugManager', {}, function () {
         debugManager.destroy();
     });
 
-    QUnit.test("Debug: Set defaults with right model", async function (assert) {
+    QUnit.skip("Debug: Set defaults with right model", async function (assert) {
         assert.expect(2);
 
         /*  Click on debug > set default,
