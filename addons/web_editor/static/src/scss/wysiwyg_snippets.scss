@@ -1976,6 +1976,12 @@ body.editor_enable.editor_has_snippets {
                     background-image: url('/web_editor/static/src/img/snippets_options/o_overlay_move_drag.svg');
                     background-position: center;
                     background-repeat: no-repeat;
+                    &:hover {
+                        cursor: move;
+                        cursor: -moz-grab;
+                        cursor: -webkit-grab;
+                        cursor: grab;
+                    }
                 }
                 &:hover {
                     > .o_overlay_move_options, .o_overlay_edit_options {
