@@ -781,6 +781,18 @@ actual arch.
           .. note:: ``arch`` is always added to the fields list even if not
                     requested (similar to ``id``)
         """
+        if fields:
+            fields = list({'arch', 'model'}.union(fields))
+        [result] = self.read(fields)
+        result['arch'] = self.get_combined_arch()
+        return result
+
+    def get_combined_arch(self):
+        """ Return the arch of ``self`` (as a string) combined with its inherited views. """
+        return etree.tostring(self._get_combined_arch(), encoding='unicode')
+
+    def _get_combined_arch(self):
+        """ Return the arch of ``self`` (as an etree) combined with its inherited views. """
         # introduce check_view_ids in context
         if 'check_view_ids' not in self._context:
             self = self.with_context(check_view_ids=[])
@@ -795,13 +807,8 @@ actual arch.
             check_view_ids.append(root.id)
             root = root.inherit_id
 
-        # arch and model fields are always returned
-        if fields:
-            fields = list({'arch', 'model'}.union(fields))
-
         # read the view arch
-        [view_data] = root.read(fields=fields)
-        view_arch = etree.fromstring(view_data['arch'].encode('utf-8'))
+        view_arch = etree.fromstring(root.arch.encode('utf-8'))
         if not root.inherit_id:
             if self._context.get('inherit_branding'):
                 view_arch.attrib.update({
@@ -809,18 +816,15 @@ actual arch.
                     'data-oe-id': str(root.id),
                     'data-oe-field': 'arch',
                 })
-            arch_tree = view_arch
         else:
+            # first apply root on its parent's combined arch
             if self._context.get('inherit_branding'):
                 root.inherit_branding(view_arch)
-            parent_view = root.inherit_id.read_combined(fields=fields)
-            arch_tree = etree.fromstring(parent_view['arch'])
-            arch_tree = self.browse(parent_view['id']).apply_inheritance_specs(arch_tree, view_arch)
+            parent_arch = root.inherit_id._get_combined_arch()
+            view_arch = root.inherit_id.apply_inheritance_specs(parent_arch, view_arch)
 
         # and apply inheritance
-        arch = root.apply_view_inheritance(arch_tree, self.model)
-
-        return dict(view_data, arch=etree.tostring(arch, encoding='unicode'))
+        return root.apply_view_inheritance(view_arch, self.model)
 
     def _apply_groups(self, node, name_manager, node_info):
         #pylint: disable=unused-argument
