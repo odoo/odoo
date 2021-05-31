@@ -270,7 +270,13 @@ class Http(models.AbstractModel):
 
         # redirect withtout trailing /
         if not page and req_page != "/" and req_page.endswith("/"):
-            return request.redirect(req_page[:-1])
+            # mimick `_postprocess_args()` redirect
+            path = request.httprequest.path[:-1]
+            if request.lang != cls._get_default_lang():
+                path = '/' + request.lang.url_code + path
+            if request.httprequest.query_string:
+                path += '?' + request.httprequest.query_string.decode('utf-8')
+            return werkzeug.utils.redirect(path, code=301)
 
         if page:
             # prefetch all menus (it will prefetch website.page too)
