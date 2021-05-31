@@ -12,7 +12,7 @@
 # Goh Gangtai <gangtai.goh@gmail.com>, 2019
 # Link Up링크업 <linkup.way@gmail.com>, 2019
 # Linkup <link-up@naver.com>, 2020
-# JH CHOI <hwangtog@gmail.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4231,7 +4231,7 @@ msgstr "이동할 항목을 추가하십시오."
 #: code:addons/stock/models/stock_quant.py:92
 #, python-format
 msgid "Please check the following serial number (name, id): "
-msgstr ""
+msgstr "다음 일련 번호(이름, ID)를 확인하십시오 :"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -6308,6 +6308,8 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"이 제품은 하나 이상의 재고 이동에 사용되었습니다. 불일치가 발생할 수 있으므로 제품 유형을 변경하지 않는 것이 좋습니다. 더 나은 "
+"솔루션은 제품을 보관하고 대신 새 제품을 만드는 것입니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -6690,6 +6692,7 @@ msgstr "상품 수량 갱신"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button

@@ -17,7 +17,6 @@
 # maiolif <maiolif@mgftools.com>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # David Minneci <david@numeko.it>, 2019
-# Iacopo Simonelli <lsi@odoo.com>, 2020
 # Paolo Valier, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
 # 
@@ -1059,7 +1058,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
@@ -1157,6 +1156,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Con prezzo standard e CMP: valore del prodotto (con CMP è calcolato automaticamente).\n"
+"        Con FIFO: valore dell'ultima unità che lascia la giacenza (calcolato automaticamente).\n"
+"        Utilizzato per dare un valore al prodotto quando il costo di acquisto non è noto (es. rettifica di inventario).\n"
+"        Utilizzato per calcolare i margini negli ordini di vendita."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1345,6 +1348,8 @@ msgid ""
 "Make this attribute value not compatible with other values of the product or"
 " some attribute values of optional and accessory products."
 msgstr ""
+"Rende il valore dell'attributo non compatibile con altri valori del prodotto"
+" o con alcuni valori attributo di prodotti opzionali e accessori."
 
 #. module: product
 #: model:res.groups,name:product.group_stock_packaging
@@ -2037,7 +2042,7 @@ msgstr "Utente responsabile"
 #: model:product.product,name:product.expense_product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
-msgstr "Nota spese ristorante"
+msgstr "Spese ristorante"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2315,6 +2320,9 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr ""
+"Quantità da acquistare per beneficiare del prezzo, espressa nell'unità di "
+"misura prodotto del fornitore. Altrimenti, se non presente, nell'unità di "
+"misura predefinita del prodotto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2330,7 +2338,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
-msgstr ""
+msgstr "Valore %s non definito per l'attributo %s del prodotto %s"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2388,6 +2396,9 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please set a precision between %s and 1."
 msgstr ""
+"La precisione di arrotondamento è maggiore dell'accuratezza decimale (%s cifre).\n"
+"Ciò può comportare inconsistenze nei calcoli.\n"
+"Impostare una precisione tra %s e 1."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -2411,7 +2422,7 @@ msgstr ""
 #: model:product.product,description_sale:product.consu_delivery_01
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Three Seater Sofa with Lounger in Steel Grey Colour"
-msgstr ""
+msgstr "Divano a tre posti con lettino colore grigio scuro"
 
 #. module: product
 #: model:product.product,name:product.consu_delivery_01
@@ -2428,7 +2439,7 @@ msgstr "Attività odierne"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__product_uom_id
@@ -2521,7 +2532,7 @@ msgstr "Numero messaggi non letti"
 #: model:ir.model.fields,field_description:product.field_product_attribute__is_used_on_products
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
 msgid "Used on Products"
-msgstr ""
+msgstr "Usato nel prodotto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
@@ -2543,7 +2554,7 @@ msgstr "Valore"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr ""
+msgstr "Valore prezzo aggiuntivo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -2751,6 +2762,10 @@ msgid ""
 "This may cause inconsistencies in computations.\n"
 "Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
 msgstr ""
+"L'accuratezza decimale impostata è meno precisa di quella delle UdM:\n"
+"%s\n"
+"Ciò può comportare inconsistenze nei calcoli.\n"
+"Incrementare l'arrotondamento delle unità di misura o le cifre dell'accuratezza decimale."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2777,6 +2792,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"Impossibile cambiare la modalità di creazione varianti dell'attributo %s, è utilizzato nei seguenti prodotti:\n"
+"%s"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2793,6 +2810,7 @@ msgstr ""
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
 msgstr ""
+"Impossibile cambiare il prodotto del valore %s impostato sul prodotto %s. "
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
@@ -2858,6 +2876,8 @@ msgid ""
 "You cannot update related variants from the values. Please update related "
 "values from the variants."
 msgstr ""
+"Non è possibile aggiornare le varianti correlate dai valori. Aggiornare i "
+"valori correlati dalle varianti."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -2929,7 +2949,7 @@ msgstr "es. Rivenditori Italiani"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "per"
 
 #. module: product
 #: code:addons/product/models/product.py:0

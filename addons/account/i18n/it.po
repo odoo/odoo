@@ -29,7 +29,6 @@
 # Martin Trigaux, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Luana Andronico <andronicoluana@gmail.com>, 2019
-# Iacopo Simonelli <lsi@odoo.com>, 2020
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2020
 # Mauro Sacchini <sacchini.sf@gmail.com>, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
@@ -2817,7 +2816,7 @@ msgstr "Imposte con criterio di cassa"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr ""
+msgstr "Conto di transizione criterio di cassa"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
@@ -4845,7 +4844,7 @@ msgstr "Atteso un piano dei conti"
 #: model:ir.model.fields.selection,name:account.selection__account_accrual_accounting_wizard__account_type__expense
 #, python-format
 msgid "Expense"
-msgstr "Nota spese"
+msgstr "Spesa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_expense_categ_id
@@ -4870,7 +4869,7 @@ msgstr "Conto ratei passivi"
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Expenses"
-msgstr "Note spese"
+msgstr "Spese"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__reference
@@ -5302,7 +5301,7 @@ msgstr "Dichiarazioni generiche"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_hash_integrity
 msgid "Get hash integrity result as PDF."
-msgstr ""
+msgstr "Acquisizione risultato integrità hash come PDF"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5550,7 +5549,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_icon
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -7964,7 +7963,7 @@ msgstr "Fatture fornitore originali"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Original Currency"
-msgstr ""
+msgstr "Valuta di origine"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -8644,7 +8643,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Posting"
-msgstr ""
+msgstr "In pubblicazione"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__bank_account_code_prefix
@@ -12176,7 +12175,7 @@ msgstr "Nome tipologia"
 #: model:ir.model.fields,help:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_account_payment__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -12376,7 +12375,7 @@ msgstr ""
 "Usato nei rendiconti per valutare se prendere in considerazione tutti i "
 "movimenti o solo quelli dell'anno fiscale. Questa opzione non dovrebbe "
 "essere selezionata per i tipi conto da azzerare ad ogni nuovo esercizio "
-"(come costi, ricavi...)."
+"(come spese, entrate ecc...)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__reference
@@ -13459,6 +13458,9 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"La tipologia del registro scelto non è compatibile con quella della fattura."
+" Le operazioni di vendita devono andare nei registri \"vendite\", quelle di "
+"acquisto in nei registri \"acquisti\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

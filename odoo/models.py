@@ -881,7 +881,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
-                                if val or isinstance(val, bool):
+                                if val or isinstance(val, (int, float)):
                                     current[j] = val
                             # append the other lines at the end
                             lines += lines2[1:]
@@ -5359,6 +5359,9 @@ Fields:
                 result.append(self.browse())
             else:
                 (key, comparator, value) = d
+                if comparator in ('child_of', 'parent_of'):
+                    result.append(self.search([('id', 'in', self.ids), d]))
+                    continue
                 if key.endswith('.id'):
                     key = key[:-3]
                 if key == 'id':
@@ -5375,9 +5378,6 @@ Fields:
                 records_ids = OrderedSet()
                 for rec in self:
                     data = rec.mapped(key)
-                    if comparator in ('child_of', 'parent_of'):
-                        value = data.search([(data._parent_name, comparator, value)]).ids
-                        comparator = 'in'
                     if isinstance(data, BaseModel):
                         v = value
                         if (isinstance(value, list) or isinstance(value, tuple)) and len(value):

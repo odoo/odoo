@@ -1734,7 +1734,7 @@ msgstr "Icona"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_icon
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icona per indicare un'attività di eccezione."
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_id
@@ -1877,7 +1877,7 @@ msgstr "Informativo, non usato per abbinamenti"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "Insufficient Quantity"
-msgstr "Quantità insufficiente"
+msgstr "Quantità non sufficiente"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
@@ -4330,7 +4330,7 @@ msgstr "Tipo di operazione"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo di attività di eccezione sul record."
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4581,7 +4581,7 @@ msgstr "Magazzino"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr "Avviso quantità smontata insufficiente"
+msgstr "Avviso quantità disassemblata non sufficiente"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -5067,6 +5067,14 @@ msgstr ""
 #, python-format
 msgid "You have to produce at least one %s."
 msgstr "Devi produrne almeno uno di %s."
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

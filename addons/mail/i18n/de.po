@@ -23,7 +23,7 @@
 # UteHaus, 2020
 # Flex Keller <flex@divezone.ch>, 2020
 # Florian Pose <fp@igh.de>, 2020
-# JEK Odoo <jek@odoo.com>, 2020
+# Jérôme JEK <jek@odoo.com>, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Antoine Gilard <ang@odoo.com>, 2020
 # Caroline Renson <car@odoo.com>, 2021
@@ -1603,6 +1603,8 @@ msgstr ""
 #, python-format
 msgid "Can not update the message or recipient of a notification."
 msgstr ""
+"Die Nachricht oder der Empfänger der Benachrichtigung kann nicht "
+"aktualisiert werden."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2227,6 +2229,9 @@ msgid ""
 "Error without exception. Probably due do concurrent access update of "
 "notification records. Please see with an administrator."
 msgstr ""
+"Fehler ohne Ausnahme. Wahrscheinlich durch gleichzeitigen Zugriff auf die "
+"Aktualisierung der Benachrichtigungsdaten. Bitte wenden Sie sich an einen "
+"Administrator."
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:0
@@ -3731,7 +3736,7 @@ msgstr "Moderierte Kanäle müssen einen Moderator haben."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_count
 msgid "Moderated emails count"
-msgstr ""
+msgstr "Anzahl moderierter E-Mails"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_moderation_action
@@ -3742,14 +3747,14 @@ msgstr "Moderation"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_tree
 msgid "Moderation Lists"
-msgstr ""
+msgstr "Moderationsliste"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Moderation Queue"
-msgstr ""
+msgstr "Moderation Warteliste"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__moderation_status
@@ -3783,6 +3788,7 @@ msgstr "Moderatoren müssen eine E-Mail Adresse haben."
 #, python-format
 msgid "Moderators should be members of the channel they moderate."
 msgstr ""
+"Moderatoren sollten Mitglieder von dem Kanal sein sein, der moderiert wird."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -4299,7 +4305,7 @@ msgstr "Nur das Kunden-Model kann modifiziert werden."
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "Only mailing lists can be moderated."
-msgstr ""
+msgstr "Nur der E-Mail Versand kann moderiert werden."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_partner__fold_state__open
@@ -4541,14 +4547,14 @@ msgstr "Ausstehende Moderation"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Pending moderation"
-msgstr ""
+msgstr "Anstehende Moderation"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Pending moderation messages appear here."
-msgstr ""
+msgstr "Nachrichten zur anstehenden Moderation erscheinen hier."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__moderation_notify
@@ -5027,7 +5033,7 @@ msgstr "Mail erneut senden"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Resend to selected"
-msgstr ""
+msgstr "Erneut an Ausgewählte senden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
@@ -5246,7 +5252,7 @@ msgstr "Senden"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Send Again"
-msgstr ""
+msgstr "Erneut senden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__send_mail
@@ -5415,7 +5421,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
 msgid "Specific User"
-msgstr ""
+msgstr "Spezifischer Benutzer"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__res_model_id
@@ -5671,7 +5677,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "The partner can not join this channel"
-msgstr ""
+msgstr "Der Partner kann diesem Kanal nicht beitreten"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -5712,7 +5718,7 @@ msgstr "Diese Aktion sendet eine E-Mail."
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__email
 msgid "This field is case insensitive."
-msgstr ""
+msgstr "Das Feld unterscheidet nicht zwischen Groß- und Kleinschreibung"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_address_mixin__email_normalized
@@ -5865,7 +5871,7 @@ msgstr "Typ"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_from
 msgid "Type of delay"
-msgstr ""
+msgstr "Art der Verzögerung"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__state
@@ -6142,14 +6148,14 @@ msgstr "Benutzer Feld Name"
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "User is idle"
-msgstr ""
+msgstr "Benutzer ist inaktiv"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "User is offline"
-msgstr ""
+msgstr "Benutzer ist offline"
 
 #. module: mail
 #. openerp-web

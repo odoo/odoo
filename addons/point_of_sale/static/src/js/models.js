@@ -410,6 +410,7 @@ exports.PosModel = Backbone.Model.extend({
                     product.lst_price = round_pr(product.lst_price * conversion_rate, self.currency.rounding);
                 }
                 product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
+                product.pos = self;
                 return new exports.Product({}, product);
             }));
         },
@@ -1054,9 +1055,8 @@ exports.PosModel = Backbone.Model.extend({
                 timeout: timeout,
                 shadow: true,
             })
-            .then(function (ids) {
-                self.db.set_ids_removed_from_server(server_ids);
-                return server_ids;
+            .then(function (data) {
+                return self._post_remove_from_server(server_ids, data)
             }).catch(function (reason){
                 var error = reason.message;
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
@@ -1068,6 +1068,12 @@ exports.PosModel = Backbone.Model.extend({
                 self.gui.show_sync_error_popup();
                 console.error('Failed to remove orders:', server_ids);
             });
+    },
+
+    // to override
+    _post_remove_from_server(server_ids, data) {
+        this.db.set_ids_removed_from_server(server_ids);
+        return server_ids;
     },
 
     scan_product: function(parsed_code){
@@ -1207,6 +1213,175 @@ exports.PosModel = Backbone.Model.extend({
 
         if (orders.length) {
             this.get('orders').add(orders);
+        }
+    },
+    _compute_all: function(tax, base_amount, quantity, price_exclude) {
+        if(price_exclude === undefined)
+            var price_include = tax.price_include;
+        else
+            var price_include = !price_exclude;
+        if (tax.amount_type === 'fixed') {
+            var sign_base_amount = Math.sign(base_amount) || 1;
+            // Since base amount has been computed with quantity
+            // we take the abs of quantity
+            // Same logic as bb72dea98de4dae8f59e397f232a0636411d37ce
+            return tax.amount * sign_base_amount * Math.abs(quantity);
+        }
+        if (tax.amount_type === 'percent' && !price_include){
+            return base_amount * tax.amount / 100;
+        }
+        if (tax.amount_type === 'percent' && price_include){
+            return base_amount - (base_amount / (1 + tax.amount / 100));
+        }
+        if (tax.amount_type === 'division' && !price_include) {
+            return base_amount / (1 - tax.amount / 100) - base_amount;
+        }
+        if (tax.amount_type === 'division' && price_include) {
+            return base_amount - (base_amount * (tax.amount / 100));
+        }
+        return false;
+    },
+    /**
+     * Mirror JS method of:
+     * compute_all in addons/account/models/account.py
+     *
+     * Read comments in the python side method for more details about each sub-methods.
+     */
+    compute_all: function(taxes, price_unit, quantity, currency_rounding) {
+        var self = this;
+
+        // 1) Flatten the taxes.
+
+        var _collect_taxes = function(taxes, all_taxes){
+            taxes.sort(function (tax1, tax2) {
+                return tax1.sequence - tax2.sequence;
+            });
+            _(taxes).each(function(tax){
+                if(tax.amount_type === 'group')
+                    all_taxes = _collect_taxes(tax.children_tax_ids, all_taxes);
+                else
+                    all_taxes.push(tax);
+            });
+            return all_taxes;
+        }
+        var collect_taxes = function(taxes){
+            return _collect_taxes(taxes, []);
+        }
+
+        taxes = collect_taxes(taxes);
+
+        // 2) Avoid dealing with taxes mixing price_include=False && include_base_amount=True
+        // with price_include=True
+
+        var base_excluded_flag = false; // price_include=False && include_base_amount=True
+        var included_flag = false;      // price_include=True
+        _(taxes).each(function(tax){
+            if(tax.price_include)
+                included_flag = true;
+            else if(tax.include_base_amount)
+                base_excluded_flag = true;
+            if(base_excluded_flag && included_flag)
+                throw new Error('Unable to mix any taxes being price included with taxes affecting the base amount but not included in price.');
+        });
+
+        // 3) Deal with the rounding methods
+
+        var round_tax = this.company.tax_calculation_rounding_method != 'round_globally';
+
+        if(!round_tax)
+            currency_rounding = currency_rounding * 0.00001;
+
+        // 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
+        var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount, prec){
+             return round_pr((base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100, prec);
+        }
+
+        var base = round_pr(price_unit * quantity, currency_rounding);
+
+        var sign = 1;
+        if(base < 0){
+            base = -base;
+            sign = -1;
+        }
+
+        var total_included_checkpoints = {};
+        var i = taxes.length - 1;
+        var store_included_tax_total = true;
+
+        var incl_fixed_amount = 0.0;
+        var incl_percent_amount = 0.0;
+        var incl_division_amount = 0.0;
+
+        var cached_tax_amounts = {};
+
+        _(taxes.reverse()).each(function(tax){
+            if(tax.include_base_amount){
+                base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, currency_rounding);
+                incl_fixed_amount = 0.0;
+                incl_percent_amount = 0.0;
+                incl_division_amount = 0.0;
+                store_included_tax_total = true;
+            }
+            if(tax.price_include){
+                if(tax.amount_type === 'percent')
+                    incl_percent_amount += tax.amount;
+                else if(tax.amount_type === 'division')
+                    incl_division_amount += tax.amount;
+                else if(tax.amount_type === 'fixed')
+                    incl_fixed_amount += quantity * tax.amount
+                else{
+                    var tax_amount = self._compute_all(tax, base, quantity);
+                    incl_fixed_amount += tax_amount;
+                    cached_tax_amounts[i] = tax_amount;
+                }
+                if(store_included_tax_total){
+                    total_included_checkpoints[i] = base;
+                    store_included_tax_total = false;
+                }
+            }
+            i -= 1;
+        });
+
+        var total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, currency_rounding);
+        var total_included = total_excluded;
+
+        // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
+
+        base = total_excluded;
+
+        var taxes_vals = [];
+        i = 0;
+        var cumulated_tax_included_amount = 0;
+        _(taxes.reverse()).each(function(tax){
+            if(tax.price_include && total_included_checkpoints[i] !== undefined){
+                var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
+                cumulated_tax_included_amount = 0;
+            }else
+                var tax_amount = self._compute_all(tax, base, quantity, true);
+
+            tax_amount = round_pr(tax_amount, currency_rounding);
+
+            if(tax.price_include && total_included_checkpoints[i] === undefined)
+                cumulated_tax_included_amount += tax_amount;
+
+            taxes_vals.push({
+                'id': tax.id,
+                'name': tax.name,
+                'amount': sign * tax_amount,
+                'base': sign * round_pr(base, currency_rounding),
+            });
+
+            if(tax.include_base_amount)
+                base += tax_amount;
+
+            total_included += tax_amount;
+            i += 1;
+        });
+
+        return {
+            'taxes': taxes_vals,
+            'total_excluded': sign * round_pr(total_excluded, this.currency.rounding),
+            'total_included': sign * round_pr(total_included, this.currency.rounding),
         }
     },
 
@@ -1407,6 +1582,17 @@ exports.Product = Backbone.Model.extend({
         // pricelist that have base == 'pricelist'.
         return price;
     },
+
+    get_display_price: function(pricelist, quantity) {
+        if (this.pos.config.iface_tax_included === 'total') {
+            var taxes = [];
+            this.taxes_id.forEach(id => taxes.push(this.pos.taxes_by_id[id]));
+            var all_taxes = this.pos.compute_all(taxes, this.get_price(pricelist, quantity), 1, this.pos.currency.rounding);
+            return all_taxes.total_included;
+        } else {
+            return this.get_price(pricelist, quantity);
+        }
+    }
 });
 
 var orderline_id = 1;
@@ -1740,7 +1926,7 @@ exports.Orderline = Backbone.Model.extend({
                 }));
             });
 
-            var all_taxes = this.compute_all(product_taxes, price_unit, 1, this.pos.currency.rounding);
+            var all_taxes = this.pos.compute_all(product_taxes, price_unit, 1, this.pos.currency.rounding);
 
             return round_pr(all_taxes.total_included * (1 - this.get_discount()/100), rounding);
         }
@@ -1825,30 +2011,7 @@ exports.Orderline = Backbone.Model.extend({
      * _compute_amount in addons/account/models/account.py
      */
     _compute_all: function(tax, base_amount, quantity, price_exclude) {
-        if(price_exclude === undefined)
-            var price_include = tax.price_include;
-        else
-            var price_include = !price_exclude;
-        if (tax.amount_type === 'fixed') {
-            var sign_base_amount = Math.sign(base_amount) || 1;
-            // Since base amount has been computed with quantity
-            // we take the abs of quantity
-            // Same logic as bb72dea98de4dae8f59e397f232a0636411d37ce
-            return tax.amount * sign_base_amount * Math.abs(quantity);
-        }
-        if (tax.amount_type === 'percent' && !price_include){
-            return base_amount * tax.amount / 100;
-        }
-        if (tax.amount_type === 'percent' && price_include){
-            return base_amount - (base_amount / (1 + tax.amount / 100));
-        }
-        if (tax.amount_type === 'division' && !price_include) {
-            return base_amount / (1 - tax.amount / 100) - base_amount;
-        }
-        if (tax.amount_type === 'division' && price_include) {
-            return base_amount - (base_amount * (tax.amount / 100));
-        }
-        return false;
+        return this.pos._compute_all(tax, base_amount, quantity, price_exclude)
     },
     /**
      * Mirror JS method of:
@@ -1857,143 +2020,8 @@ exports.Orderline = Backbone.Model.extend({
      * Read comments in the python side method for more details about each sub-methods.
      */
     compute_all: function(taxes, price_unit, quantity, currency_rounding, handle_price_include=true) {
-        var self = this;
+        return this.pos.compute_all(taxes, price_unit, quantity, currency_rounding, handle_price_include)
 
-        // 1) Flatten the taxes.
-
-        var _collect_taxes = function(taxes, all_taxes){
-            taxes.sort(function (tax1, tax2) {
-                return tax1.sequence - tax2.sequence;
-            });
-            _(taxes).each(function(tax){
-                if(tax.amount_type === 'group')
-                    all_taxes = _collect_taxes(tax.children_tax_ids, all_taxes);
-                else
-                    all_taxes.push(tax);
-            });
-            return all_taxes;
-        }
-        var collect_taxes = function(taxes){
-            return _collect_taxes(taxes, []);
-        }
-
-        taxes = collect_taxes(taxes);
-
-        // 2) Avoid dealing with taxes mixing price_include=False && include_base_amount=True
-        // with price_include=True
-
-        var base_excluded_flag = false; // price_include=False && include_base_amount=True
-        var included_flag = false;      // price_include=True
-        _(taxes).each(function(tax){
-            if(tax.price_include)
-                included_flag = true;
-            else if(tax.include_base_amount)
-                base_excluded_flag = true;
-            if(base_excluded_flag && included_flag)
-                throw new Error('Unable to mix any taxes being price included with taxes affecting the base amount but not included in price.');
-        });
-
-        // 3) Deal with the rounding methods
-
-        var round_tax = this.pos.company.tax_calculation_rounding_method != 'round_globally';
-
-        var initial_currency_rounding = currency_rounding;
-        if(!round_tax)
-            currency_rounding = currency_rounding * 0.00001;
-
-        // 4) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
-        var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount){
-             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
-        }
-
-        var base = round_pr(price_unit * quantity, initial_currency_rounding);
-
-        var sign = 1;
-        if(base < 0){
-            base = -base;
-            sign = -1;
-        }
-
-        var total_included_checkpoints = {};
-        var i = taxes.length - 1;
-        var store_included_tax_total = true;
-
-        var incl_fixed_amount = 0.0;
-        var incl_percent_amount = 0.0;
-        var incl_division_amount = 0.0;
-
-        var cached_tax_amounts = {};
-        if (handle_price_include){
-            _(taxes.reverse()).each(function(tax){
-                if(tax.include_base_amount){
-                    base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount);
-                    incl_fixed_amount = 0.0;
-                    incl_percent_amount = 0.0;
-                    incl_division_amount = 0.0;
-                    store_included_tax_total = true;
-                }
-                if(tax.price_include){
-                    if(tax.amount_type === 'percent')
-                        incl_percent_amount += tax.amount;
-                    else if(tax.amount_type === 'division')
-                        incl_division_amount += tax.amount;
-                    else if(tax.amount_type === 'fixed')
-                        incl_fixed_amount += quantity * tax.amount
-                    else{
-                        var tax_amount = self._compute_all(tax, base, quantity);
-                        incl_fixed_amount += tax_amount;
-                        cached_tax_amounts[i] = tax_amount;
-                    }
-                    if(store_included_tax_total){
-                        total_included_checkpoints[i] = base;
-                        store_included_tax_total = false;
-                    }
-                }
-                i -= 1;
-            });
-        }
-
-        var total_excluded = round_pr(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), initial_currency_rounding);
-        var total_included = total_excluded;
-
-        // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
-
-        base = total_excluded;
-
-        var taxes_vals = [];
-        i = 0;
-        var cumulated_tax_included_amount = 0;
-        _(taxes.reverse()).each(function(tax){
-            if(tax.price_include && total_included_checkpoints[i] !== undefined){
-                var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
-                cumulated_tax_included_amount = 0;
-            }else
-                var tax_amount = self._compute_all(tax, base, quantity, true);
-
-            tax_amount = round_pr(tax_amount, currency_rounding);
-
-            if(tax.price_include && total_included_checkpoints[i] === undefined)
-                cumulated_tax_included_amount += tax_amount;
-
-            taxes_vals.push({
-                'id': tax.id,
-                'name': tax.name,
-                'amount': sign * tax_amount,
-                'base': sign * round_pr(base, currency_rounding),
-            });
-
-            if(tax.include_base_amount)
-                base += tax_amount;
-
-            total_included += tax_amount;
-            i += 1;
-        });
-
-        return {
-            'taxes': taxes_vals,
-            'total_excluded': sign * round_pr(total_excluded, this.pos.currency.rounding),
-            'total_included': sign * round_pr(total_included, this.pos.currency.rounding),
-        }
     },
     get_all_prices: function(){
         var self = this;
@@ -2015,8 +2043,8 @@ exports.Orderline = Backbone.Model.extend({
         });
         product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
 
-        var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
-        var all_taxes_before_discount = this.compute_all(product_taxes, this.get_unit_price(), this.get_quantity(), this.pos.currency.rounding);
+        var all_taxes = this.pos.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
+        var all_taxes_before_discount = this.pos.compute_all(product_taxes, this.get_unit_price(), this.get_quantity(), this.pos.currency.rounding);
         _(all_taxes.taxes).each(function(tax) {
             taxtotal += tax.amount;
             taxdetail[tax.id] = tax.amount;
@@ -2053,11 +2081,11 @@ exports.Orderline = Backbone.Model.extend({
 
             if (mapped_included_taxes.length > 0) {
                 if (new_included_taxes.length > 0) {
-                    var price_without_taxes = this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded
-                    return this.compute_all(new_included_taxes, price_without_taxes, 1, order.pos.currency.rounding, false).total_included
+                    var price_without_taxes = this.pos.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded
+                    return this.pos.compute_all(new_included_taxes, price_without_taxes, 1, order.pos.currency.rounding, false).total_included
                 }
                 else{
-                    return this.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
+                    return this.pos.compute_all(mapped_included_taxes, price, 1, order.pos.currency.rounding, true).total_excluded;
                 }
             }
         }

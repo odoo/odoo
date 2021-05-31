@@ -1133,9 +1133,7 @@ class Crawler(HttpCase):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         # Simulate website 2 (that use only generic views)
-        url = base_url + '/website/force_website'
-        json = {'params': {'website_id': website_2.id}}
-        self.opener.post(url=url, json=json)
+        self.url_open(base_url + '/website/force/%s' % website_2.id)
 
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
@@ -1173,9 +1171,7 @@ class Crawler(HttpCase):
         #       | Filter By Country
 
         # Simulate website 1 (that has specific views)
-        url = base_url + '/website/force_website'
-        json = {'params': {'website_id': website_1.id}}
-        self.opener.post(url=url, json=json)
+        self.url_open(base_url + '/website/force/%s' % website_1.id)
 
         # Test controller
         url = base_url + '/website/get_switchable_related_views'

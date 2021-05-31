@@ -138,6 +138,22 @@ class SaleOrder(models.Model):
             """, (list(value),))
             so_ids = self.env.cr.fetchone()[0] or []
             return [('id', 'in', so_ids)]
+        elif operator == '=' and not value:
+            # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
+            #
+            # We cannot just search [('order_line.invoice_lines', '=', False)]
+            # because it returns orders with uninvoiced lines, which is not
+            # same "Invoices is not set" (some lines may have invoices and some
+            # doesn't)
+            #
+            # A solution is making inverted search first ("orders with invoiced
+            # lines") and then invert results ("get all other orders")
+            #
+            # Domain below returns subset of ('order_line.invoice_lines', '!=', False)
+            order_ids = self._search([
+                ('order_line.invoice_lines.move_id.type', 'in', ('out_invoice', 'out_refund'))
+            ])
+            return [('id', 'not in', order_ids)]
         return ['&', ('order_line.invoice_lines.move_id.type', 'in', ('out_invoice', 'out_refund')), ('order_line.invoice_lines.move_id', operator, value)]
 
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
@@ -1011,19 +1027,6 @@ class SaleOrder(models.Model):
     def _get_report_base_filename(self):
         self.ensure_one()
         return '%s %s' % (self.type_name, self.name)
-
-    def _get_share_url(self, redirect=False, signup_partner=False, pid=None):
-        """Override for sales order.
-
-        If the SO is in a state where an action is required from the partner,
-        return the URL with a login token. Otherwise, return the URL with a
-        generic access token (no login).
-        """
-        self.ensure_one()
-        if self.state not in ['sale', 'done']:
-            auth_param = url_encode(self.partner_id.signup_get_auth_param()[self.partner_id.id])
-            return self.get_portal_url(query_string='&%s' % auth_param)
-        return super(SaleOrder, self)._get_share_url(redirect, signup_partner, pid)
 
     def _get_payment_type(self, tokenize=False):
         self.ensure_one()

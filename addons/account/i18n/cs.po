@@ -6,9 +6,8 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2019
 # Ondřej Skuhravý <ondra.sk@volny.cz>, 2019
 # Ondřej Janovský <ondrej.janovsky@alarex.cz>, 2019
-# Martin N <nedbalm@gmail.com>, 2019
-# Ladislav Tomm <tomm@helemik.cz>, 2019
 # Chris <krystof.reklamy13@gmail.com>, 2019
+# Ladislav Tomm <tomm@helemik.cz>, 2019
 # milda dvorak <milda.dvorak@optimal4.cz>, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2019
@@ -17,8 +16,8 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
 # David Kliment <daklime@gmail.com>, 2021
-# trendspotter, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -26,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -611,7 +610,7 @@ msgstr "<span>Číslo faktury</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Bill</span>"
-msgstr "<span>Nová účtenka</span>"
+msgstr "<span>Nová přijata faktura</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -671,7 +670,7 @@ msgstr "<span>Jednotková cena</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Bills</span>"
-msgstr "<span>Nahrát účtenky</span>"
+msgstr "<span>Nahrát přijaté faktury</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -940,6 +939,10 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"Uživatel nemůže mít daňový B2B i daňový B2C. Měli byste přejít do Obecných "
+"nastavení a zvolit zobrazení cen produktů buď v režimu „Zahrnuto do daně“, "
+"nebo v režimu „Vyloučeno z daně“ (nebo přepnout dvakrát režim, pokud již "
+"máte požadovaný režim)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -2215,7 +2218,7 @@ msgstr "Průměrná cena"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "BILL"
-msgstr "ÚČET"
+msgstr "PŘIJATA FAKTURA"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__bad
@@ -2495,18 +2498,18 @@ msgstr "Dávkové platby"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bill"
-msgstr "Účet"
+msgstr "Přijata faktura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Bill Date"
-msgstr "Datum dokladu"
+msgstr "Datum přijaté faktury"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
 msgid "Bill Digitalization"
-msgstr "Digitalizace zákona"
+msgstr "Digitalizace přijaté faktury"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
@@ -2523,28 +2526,28 @@ msgstr "Správce fakturace"
 #: model:ir.ui.menu,name:account.menu_action_move_in_invoice_type
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills"
-msgstr "Účty"
+msgstr "Přijaté faktury"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills Analysis"
-msgstr "Analýza účtů"
+msgstr "Analýza přijatých faktur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Pay"
-msgstr "Účtenky k platbě"
+msgstr "Přijaté faktury na úhradu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "Účty k ověření"
+msgstr "Přijaté faktury k ověření"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Bills to pay"
-msgstr "Účty k zaplacení"
+msgstr "Přijaté faktury na úhradu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__block
@@ -3562,7 +3565,7 @@ msgstr "Vytvořit novou daň"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid "Create a vendor bill"
-msgstr "Vytvořte účet dodavatele"
+msgstr "Vytvořte fakturu dodavatele"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
@@ -3589,7 +3592,7 @@ msgstr "Vytvořte hotovostní výpis"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Create invoice/bill"
-msgstr "Vytvořit fakturu / účet"
+msgstr "Vytvořit fakturu / doklad"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -4460,7 +4463,7 @@ msgstr "Návrh"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Bill"
-msgstr "Návrh zákona"
+msgstr "Návrh přijaté faktury"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4635,7 +4638,7 @@ msgstr "E-mail ve výchozím nastavení"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email your Invoices/Bills"
-msgstr ""
+msgstr "Zašlete e-mailem své faktury / přijaté faktury"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__end_bank_stmt_ids
@@ -6106,7 +6109,7 @@ msgstr "Faktura ověřena"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_date
 msgid "Invoice/Bill Date"
-msgstr "Faktura / datum splatnosti"
+msgstr "Faktura / datum vyúčtování"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -6144,7 +6147,7 @@ msgstr "Faktury"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr "Faktury &amp; účty"
+msgstr "Faktury &amp; přijaté faktury"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -7029,6 +7032,11 @@ msgid ""
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 msgstr ""
+"Ruční: Přijměte platbu v hotovosti, šekem nebo jiným způsobem mimo Odoo.\n"
+"Elektronické: Získejte platbu automaticky prostřednictvím příjemce plateb požadováním transakce na kartě uložené zákazníkem při nákupu nebo online předplatném (platební token).\n"
+"Šek: Zaplaťte účet šekem a vytiskněte jej z Odoo.\n"
+"Hromadný vklad: Zapojte několik šeků zákazníků najednou vygenerováním dávkového vkladu, který odešlete do své banky. Při kódování bankovního výpisu v Odoo se doporučuje sladit transakci s dávkovým vkladem. Chcete-li povolit dávkový vklad, musí být nainstalován modul account_batch_payment.\n"
+"Převod kreditu SEPA: Zaplaťte fakturu ze souboru SEPA Credit Transfer, který odešlete do své banky. Chcete-li povolit přenos kreditu sepa, musí být nainstalován modul account_sepa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__outbound_payment_method_ids
@@ -7037,6 +7045,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Ručně: Zaplaťte účet v hotovosti nebo jiným způsobem mimo Odoo.\n"
+"Šek: Zaplaťte účet šekem a vytiskněte jej z Odoo.\n"
+"Převod kreditu SEPA: Zaplaťte fakturu ze souboru SEPA kreditu, který odešlete do své banky. Povolte tuto možnost z nastavení."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_button
@@ -7088,7 +7099,7 @@ msgstr "Srovnávací regex"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
 msgid "Match existing invoices/bills."
-msgstr "Porovnání stávajících faktur / účtů."
+msgstr "Porovnání stávajících faktur / přijaté faktury."
 
 #. module: account
 #. openerp-web
@@ -7846,13 +7857,13 @@ msgstr "Původ"
 #. module: account
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
 msgid "Original Bills"
-msgstr "Originální směnky"
+msgstr "Přijaté faktury originál"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Original Currency"
-msgstr ""
+msgstr "Původní měna"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -9573,8 +9584,8 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"U deníků zákaznických faktur vyberte možnost Prodej.\n"
-"Pro deníky faktur dodavatelů vyberte možnost Koupit.\n"
+"U deníků přijaté faktur vyberte možnost Prodej.\n"
+"Pro deníky přijatých faktur vyberte možnost Nákup.\n"
 "Pro deníky, které se používají při platbách zákazníků nebo prodejců, vyberte možnost „Hotovost“ nebo „Banka“.\n"
 "Vyberte „Obecné“ pro různé provozní deníky."
 
@@ -9595,7 +9606,7 @@ msgstr "Vyberte partnera nebo vyberte protějšek"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Select an old vendor bill"
-msgstr "Vyberte účet starého dodavatele"
+msgstr "Vyberte pôvodnú faktúru dodavatele"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -11132,6 +11143,8 @@ msgid ""
 "The hash chain is compliant: it is not possible to alter the\n"
 "                                            data without breaking the hash chain for subsequent parts."
 msgstr ""
+"Řetězec hash je v souladu: není možné měnit data bez porušení řetězce hash "
+"pro další části."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12079,7 +12092,7 @@ msgstr "Neznámý partner"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unpaid Invoices"
-msgstr "Neplacené faktury"
+msgstr "Neuhrazené faktury"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -12336,13 +12349,13 @@ msgstr "Dodavatel"
 #: model:ir.model.fields.selection,name:account.selection__account_move__type__in_invoice
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Bill"
-msgstr "Faktura dodavatele"
+msgstr "Přijatá faktura"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill Created"
-msgstr "Účet dodavatele vytvořen"
+msgstr "Přijatá faktura vytvořena"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -13287,6 +13300,9 @@ msgid ""
 " Sales operations should go to 'sale' journals, and purchase operations to "
 "'purchase' ones."
 msgstr ""
+"Vybraný deník má typ, který není kompatibilní s vaším typem faktury. "
+"Prodejní operace by měly jít do „prodejních“ peněžních deníků a nákupní "
+"operace do „nákupních“."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13305,7 +13321,7 @@ msgstr "transakce v"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "unpaid invoices"
-msgstr "nezaplacené faktury"
+msgstr "neuhrazené faktury"
 
 #. module: account
 #. openerp-web
@@ -13319,7 +13335,7 @@ msgstr "nesladěné položky"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "vendor bills"
-msgstr "Přijaté faktury"
+msgstr "přijaté faktury"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form

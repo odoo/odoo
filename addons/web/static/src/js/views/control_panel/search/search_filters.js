@@ -337,7 +337,11 @@ var Integer = Field.extend({
 });
 
 var Id = Integer.extend({
-    operators: [{value: "=", text: _lt("is")}]
+    operators: [
+        {value: "=", text: _lt("is")},
+        {value: "<=", text: _lt("less than or equal to")},
+        {value: ">", text: _lt("greater than")}
+    ]
 });
 
 var Float = Field.extend({

@@ -15,7 +15,7 @@
 # Silmar <pinheirosilmar@gmail.com>, 2019
 # Danilo Rodrigues, 2019
 # Diego Bittencourt <diegomb86@gmail.com>, 2019
-# rogeriojlle <rogerio.s.machado@gmail.com>, 2019
+# Rogerio Scholz Machado <rogerio.s.machado@gmail.com>, 2019
 # Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019
@@ -379,6 +379,8 @@ msgstr "Uma Ordem de Fabricação já está pronta ou cancelada."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
+"Um produto com uma lista de materiais do tipo kit não pode ter uma regra de "
+"reordenamento."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:0
@@ -4906,6 +4908,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
+"Você não pode criar uma lista de materiais do tipo kit para produtos que tem"
+" ao menos uma regra de reordenamento."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5022,6 +5026,16 @@ msgstr ""
 #, python-format
 msgid "You have to produce at least one %s."
 msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"Você deve indicar um valor diferente de zero consumido para ao menos um dos "
+"seus componentes"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0

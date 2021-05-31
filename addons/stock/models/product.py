@@ -95,7 +95,7 @@ class Product(models.Model):
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
-        'company_owned', 'force_company',
+        'company_owned', 'force_company', 'location', 'warehouse',
     )
     def _compute_quantities(self):
         products = self.filtered(lambda p: p.type != 'service')
@@ -622,7 +622,7 @@ class ProductTemplate(models.Model):
         'product_variant_ids.stock_move_ids.product_qty',
         'product_variant_ids.stock_move_ids.state',
     )
-    @api.depends_context('company_owned', 'force_company')
+    @api.depends_context('company_owned', 'force_company', 'location', 'warehouse')
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:

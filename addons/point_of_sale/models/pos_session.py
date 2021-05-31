@@ -545,7 +545,7 @@ class PosSession(models.Model):
         split_cash_receivable_vals = defaultdict(list)
         for payment, amounts in split_receivables_cash.items():
             statement = statements_by_journal_id[payment.payment_method_id.cash_journal_id.id]
-            split_cash_statement_line_vals[statement].append(self._get_statement_line_vals(statement, payment.payment_method_id.receivable_account_id, amounts['amount'], payment.payment_date))
+            split_cash_statement_line_vals[statement].append(self._get_statement_line_vals(statement, payment.payment_method_id.receivable_account_id, amounts['amount'], date=payment.payment_date, partner=payment.pos_order_id.partner_id))
             split_cash_receivable_vals[statement].append(self._get_split_receivable_vals(payment, amounts['amount'], amounts['amount_converted']))
         # handle combine cash payments
         combine_cash_statement_line_vals = defaultdict(list)
@@ -775,13 +775,14 @@ class PosSession(models.Model):
         partial_args = {'account_id': out_account.id, 'move_id': self.move_id.id}
         return self._credit_amounts(partial_args, amount, amount_converted, force_company_currency=True)
 
-    def _get_statement_line_vals(self, statement, receivable_account, amount, date=False):
+    def _get_statement_line_vals(self, statement, receivable_account, amount, date=False, partner=False):
         return {
             'date': fields.Date.context_today(self, timestamp=date),
             'amount': amount,
             'name': self.name,
             'statement_id': statement.id,
             'account_id': receivable_account.id,
+            'partner_id': partner and self.env["res.partner"]._find_accounting_partner(partner).id
         }
 
     def _update_amounts(self, old_amounts, amounts_to_add, date, round=True, force_company_currency=False):

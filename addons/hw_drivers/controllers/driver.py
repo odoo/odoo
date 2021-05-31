@@ -531,8 +531,14 @@ class Manager(Thread):
                         _logger.info('Device %s is now connected', path)
                         d = driverclass(device = updated_devices[path].dev)
                         d.daemon = True
-                        d.start()
                         iot_devices[path] = d
+                        # Start the thread after creating the iot_devices entry so the
+                        # thread can assume the iot_devices entry will exist while it's
+                        # running, at least until the `disconnect` above gets triggered
+                        # when `removed` is not empty. Threads are currently not
+                        # explicitly terminated when that happens, so the results can
+                        # be undefined.
+                        d.start()
                         send_devices = True
                         break
             if send_devices:
@@ -560,19 +566,96 @@ class BtManager(Thread):
 
 class SocketManager(Thread):
 
+    def __init__(self):
+        super(SocketManager, self).__init__()
+        self.open_socket(9000)
+
+    def open_socket(self, port):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind(('', port))
+        self.sock.listen()
+
+    @staticmethod
+    def create_socket_device(dev, addr):
+        """Creates a socket_devices entry that wraps the socket.
+
+        The Manager thread will detect it being added and instantiate a corresponding
+        Driver in iot_devices based on the results of the `supported` call.
+        """
+        _logger.debug("Creating new socket_device")
+        iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
+        socket_devices[addr] = iot_device
+
+    @staticmethod
+    def replace_socket_device(dev, addr):
+        """Replaces an existing socket_devices entry.
+
+        The socket contained in the socket_devices entry is also used by the Driver
+        thread defined in iot_devices that's reading and writing from it. The Driver
+        thread can modify both socket_devices and iot_devices. The Manager thread can
+        update iot_devices based on changes in socket_devices. In order to clean up
+        the existing connection, it'll be necessary to actively close it at the TCP
+        level, wait for the Driver thread to terminate in response to that, and for the
+        Manager to do any iot_devices related cleanup in response.
+
+        After this the new connection can replace the old one.
+        """
+        driver_thread = iot_devices.get(addr)
+
+        if not driver_thread:
+            _logger.warning("Found socket_device entry {} with no corresponding iot_device".format(addr))
+            dev.close()
+            return
+
+        old_dev = socket_devices[addr].dev.dev
+        _logger.debug("Closing socket: {}".format(old_dev))
+        # Actively close the existing connection and do not allow receiving further
+        # data. This will result in a currently blocking recv call returning b'' and
+        # subsequent recv calls raising an OSError about a bad file descriptor.
+        old_dev.shutdown(socket.SHUT_RD)
+        old_dev.close()
+
+        _logger.debug("Waiting for driver thread to finish")
+        driver_thread.join()
+        _logger.debug("Driver thread finished")
+
+        # Shutting down the socket will result in the corresponding IngenicoDriver
+        # thread terminating and removing the corresponding entries in socket_devices
+        # and iot_devices. However, if we create a new socket device too soon,
+        # the `devices` attribute of the Manager thread will not have registered that
+        # the old socket device is gone yet. As a result, the keys of `updated_devices`
+        # and `devices` might be exactly the same, which means no difference will be
+        # detected and no new IngenicoDriver thread will be created. To avoid this, we
+        # wait for `devices` to update first, and only after that do we create a new
+        # socket device.
+        _logger.debug("Waiting for Manager.devices to be updated")
+        while addr in m.devices:
+            time.sleep(1)
+        _logger.debug("Manager.devices is updated")
+
+        SocketManager.create_socket_device(dev, addr)
+
     def run(self):
         while True:
             try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                sock.bind(('', 9000))
-                sock.listen(1)
-                dev, addr = sock.accept()
-                if addr and addr[0] not in socket_devices:
-                    iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
-                    socket_devices[addr[0]] = iot_device
-            except OSError as e:
-                _logger.error(_('Error in SocketManager: %s') % (e.strerror))
+                dev, addr = self.sock.accept()
+                _logger.debug("Accepted new socket connection")
+                if not addr:
+                    _logger.warning("Socket accept returned no address")
+                    continue
+
+                if addr[0] not in socket_devices:
+                    self.create_socket_device(dev, addr[0])
+                else:
+                    # This can happen if the device power cycled or a network cable
+                    # was temporarily unplugged: if the device tries to connect again
+                    # we might still have the old connection open and it needs to be
+                    # cleaned up.
+                    self.replace_socket_device(dev, addr[0])
+            except OSError:
+                pass
+
 
 class MPDManager(Thread):
     def __init__(self):
