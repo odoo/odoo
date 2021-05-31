@@ -18,7 +18,7 @@ import {
     makeFakeNotificationService,
     makeFakeRPCService,
 } from "../../helpers/mock_services";
-import { nextTick, patchWithCleanup } from "../../helpers/utils";
+import { makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
 
 const { Component, tags } = owl;
 const errorDialogRegistry = registry.category("error_dialogs");
@@ -84,7 +84,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
     serviceRegistry.add("dialog", makeFakeDialogService(open), { force: true });
     await makeTestEnv();
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
-    unhandledRejectionCb(errorEvent);
+    await unhandledRejectionCb(errorEvent);
 });
 
 QUnit.test(
@@ -115,7 +115,7 @@ QUnit.test(
         await makeTestEnv();
         errorDialogRegistry.add("strange_error", CustomDialog);
         const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
-        unhandledRejectionCb(errorEvent);
+        await unhandledRejectionCb(errorEvent);
     }
 );
 
@@ -149,7 +149,7 @@ QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
     await makeTestEnv({ mockRPC });
     const error = new ConnectionLostError();
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
-    unhandledRejectionCb(errorEvent);
+    await unhandledRejectionCb(errorEvent);
     await nextTick(); // wait for mocked RPCs
     assert.verifySteps([
         "create (Connection lost. Trying to reconnect...)",
@@ -163,8 +163,8 @@ QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
 });
 
 QUnit.test("will let handlers from the registry handle errors first", async (assert) => {
-    errorHandlerRegistry.add("__test_handler__", (env) => (err) => {
-        assert.strictEqual(err.originalError, error);
+    errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
+        assert.strictEqual(originalError, error);
         assert.strictEqual(env.someValue, 14);
         assert.step("in handler");
     });
@@ -173,7 +173,7 @@ QUnit.test("will let handlers from the registry handle errors first", async (ass
     const error = new Error();
     error.name = "boom";
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
-    unhandledRejectionCb(errorEvent);
+    await unhandledRejectionCb(errorEvent);
     assert.verifySteps(["in handler"]);
 });
 
@@ -186,8 +186,8 @@ QUnit.test("handle uncaught promise errors", async (assert) => {
     function open(dialogClass, props) {
         assert.strictEqual(dialogClass, ClientErrorDialog);
         assert.deepEqual(props, {
-            name: "TestError",
-            message: "This is an error test",
+            name: "UncaughtPromiseError > TestError",
+            message: "Uncaught Promise > This is an error test",
             traceback: error.stack,
         });
     }
@@ -195,7 +195,7 @@ QUnit.test("handle uncaught promise errors", async (assert) => {
     await makeTestEnv();
 
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
-    unhandledRejectionCb(errorEvent);
+    await unhandledRejectionCb(errorEvent);
 });
 
 QUnit.test("handle uncaught client errors", async (assert) => {
@@ -206,7 +206,8 @@ QUnit.test("handle uncaught client errors", async (assert) => {
 
     function open(dialogClass, props) {
         assert.strictEqual(dialogClass, ClientErrorDialog);
-        assert.strictEqual(props.message, "Uncaught Javascript Error");
+        assert.strictEqual(props.name, "UncaughtClientError > TestError");
+        assert.strictEqual(props.message, "Uncaught Javascript Error > This is an error test");
     }
     serviceRegistry.add("dialog", makeFakeDialogService(open), { force: true });
     await makeTestEnv();
@@ -217,7 +218,7 @@ QUnit.test("handle uncaught client errors", async (assert) => {
         lineno: 1,
         filename: "test",
     });
-    errorCb(errorEvent);
+    await errorCb(errorEvent);
 });
 
 QUnit.test("handle uncaught CORS errors", async (assert) => {
@@ -235,5 +236,42 @@ QUnit.test("handle uncaught CORS errors", async (assert) => {
 
     // CORS error event has no colno, no lineno and no filename
     const errorEvent = new ErrorEvent("error", { error });
-    errorCb(errorEvent);
+    await errorCb(errorEvent);
+});
+
+QUnit.test("check retry", async (assert) => {
+    assert.expect(3);
+
+    const def = makeDeferred();
+
+    patchWithCleanup(browser, {
+        setTimeout(fn) {
+            def.then(fn);
+        },
+    });
+
+    serviceRegistry.remove("dialog");
+    const env = await makeTestEnv();
+
+    env.bus.on("ERROR_DISPATCHED", null, () => {
+        assert.step("ERROR_DISPATCHED");
+    });
+
+    class TestError extends Error {}
+    const error = new TestError();
+    error.message = "This is an error test";
+    error.name = "TestError";
+
+    const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
+    await unhandledRejectionCb(errorEvent);
+
+    assert.verifySteps([]);
+
+    serviceRegistry.add("dialog", dialogService);
+    await nextTick();
+
+    await def.resolve();
+    assert.verifySteps(["ERROR_DISPATCHED"]);
+
+    env.bus.off("ERROR_DISPATCHED", null);
 });

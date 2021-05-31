@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { rpcService } from "@web/core/network/rpc_service";
+import { ConnectionAbortedError, rpcService } from "@web/core/network/rpc_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/service_hook";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { makeMockXHR } from "../../helpers/mock_services";
-import { getFixture, makeDeferred, nextTick } from "../../helpers/utils";
+import { getFixture, makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -226,4 +226,15 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
     assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());
     assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
     unpatch(browser, "mock.xhr");
+});
+
+QUnit.test("check connection aborted", async (assert) => {
+    const def = makeDeferred();
+    let MockXHR = makeMockXHR({}, () => {}, def);
+    patchWithCleanup(browser, { XMLHttpRequest: MockXHR }, { pure: true });
+    const env = await makeTestEnv({ serviceRegistry });
+
+    const connection = env.services.rpc();
+    connection.abort();
+    assert.rejects(connection, ConnectionAbortedError);
 });
