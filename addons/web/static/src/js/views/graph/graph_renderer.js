@@ -222,7 +222,7 @@ return AbstractRenderer.extend({
                 counts += dataPt.count;
             });
             // data points with zero count might have been created on purpose
-            // we only remove them if there are no data point with positive countaddons/account/models/__init__.py
+            // we only remove them if there are no data point with positive count
             if (counts === 0) {
                 dataPoints = [];
             }
