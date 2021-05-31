@@ -84,6 +84,31 @@ div.o_boolean_toggle.custom-control.custom-checkbox {
   font-family: $font-family-sans-serif;
 }
 
+// == Extend default border-radius utility classes
+//------------------------------------------------------------------------------
+// Allows to use small and large variations for directional border-radius
+// utility classes (eg. 'rounded-lg-left')
+
+.rounded {
+  $sizes: ('-sm': $border-radius-sm, '-lg': $border-radius-lg);
+
+  @each $size, $radius in $sizes {
+    @each $side in ('left', 'right') {
+      &#{$size}-#{$side} {
+        border-top-#{$side}-radius: $radius !important;
+        border-bottom-#{$side}-radius: $radius !important;
+      }
+    }
+
+    @each $direction in ('top', 'bottom') {
+      &#{$size}-#{$direction} {
+        border-#{$direction}-left-radius: $radius !important;
+        border-#{$direction}-right-radius: $radius !important;
+      }
+    }
+  }
+}
+
 //== Badges
 .badge {
   margin: 1px 2px 1px 0;
