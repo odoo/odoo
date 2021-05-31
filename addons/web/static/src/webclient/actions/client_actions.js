@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { sprintf } from "../../core/utils/strings";
+import { useService } from "@web/core/service_hook";
+import { sprintf } from "@web/core/utils/strings";
 
-const { utils } = owl;
+const { utils, Component } = owl;
 const { escape } = utils;
 
 export const displayNotificationAction = (env, action) => {
@@ -23,3 +24,20 @@ export const displayNotificationAction = (env, action) => {
 };
 
 registry.category("actions").add("display_notification", displayNotificationAction);
+
+class InvalidAction extends Component {
+    setup() {
+        this.notification = useService("notification");
+    }
+
+    mounted() {
+        const message = sprintf(
+            this.env._t("No action with id '%s' could be found"),
+            this.props.actionId
+        );
+        this.notification.create(message, { type: "danger" });
+    }
+}
+InvalidAction.template = owl.tags.xml`<div class="o_invalid_action"></div>`;
+
+registry.category("actions").add("invalid_action", InvalidAction);

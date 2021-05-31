@@ -118,6 +118,13 @@ function makeActionManager(env) {
                 });
             }
             const action = await actionCache[key];
+            if (!action) {
+                return {
+                    type: "ir.actions.client",
+                    tag: "invalid_action",
+                    id: actionRequest,
+                };
+            }
             return Object.assign({}, action);
         }
 
