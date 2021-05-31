@@ -378,7 +378,7 @@ class Http(models.AbstractModel):
                 # There might be 2 cases where the exception code can't be found
                 # in the view, either the error is in a child view or the code
                 # contains branding (<div t-att-data="request.browse('ok')"/>).
-                et = etree.fromstring(view.with_context(inherit_branding=False).read_combined(['arch'])['arch'])
+                et = view.with_context(inherit_branding=False)._get_combined_arch()
                 node = et.xpath(exception.path)
                 line = node is not None and etree.tostring(node[0], encoding='unicode')
                 if line:

@@ -1667,13 +1667,13 @@ class BaseModel(metaclass=MetaModel):
 
         if view_id:
             # read the view with inherited views applied
-            root_view = View.browse(view_id).read_combined(['id', 'name', 'field_parent', 'type', 'model', 'arch'])
-            result['arch'] = root_view['arch']
-            result['name'] = root_view['name']
-            result['type'] = root_view['type']
-            result['view_id'] = root_view['id']
-            result['field_parent'] = root_view['field_parent']
-            result['base_model'] = root_view['model']
+            view = View.browse(view_id)
+            result['arch'] = view.get_combined_arch()
+            result['name'] = view.name
+            result['type'] = view.type
+            result['view_id'] = view.id
+            result['field_parent'] = view.field_parent
+            result['base_model'] = view.model
         else:
             # fallback on default views methods if no ir.ui.view could be found
             try:

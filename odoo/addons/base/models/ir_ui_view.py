@@ -13,6 +13,7 @@ import pprint
 import re
 import time
 import uuid
+import warnings
 
 from dateutil.relativedelta import relativedelta
 
@@ -391,11 +392,9 @@ actual arch.
                 # verify the view is valid xml and that the inheritance resolves
                 view_arch = etree.fromstring(view.arch.encode('utf-8'))
                 view._valid_inheritance(view_arch)
-                view_def = view.read_combined(['arch'])
-                view_arch_utf8 = view_def['arch']
+                combined_arch = view._get_combined_arch()
                 if view.type == 'qweb':
                     continue
-                view_doc = etree.fromstring(view_arch_utf8)
             except ValueError as e:
                 err = ValidationError(_(
                     "Error while validating view:\n\n%(error)s",
@@ -406,13 +405,13 @@ actual arch.
 
             try:
                 # verify that all fields used are valid, etc.
-                view.postprocess_and_fields(view_doc, validate=True)
+                view.postprocess_and_fields(combined_arch, validate=True)
                 # RNG-based validation is not possible anymore with 7.0 forms
-                view_docs = [view_doc]
-                if view_docs[0].tag == 'data':
+                combined_archs = [combined_arch]
+                if combined_archs[0].tag == 'data':
                     # A <data> element is a wrapper for multiple root nodes
-                    view_docs = view_docs[0]
-                for view_arch in view_docs:
+                    combined_archs = combined_archs[0]
+                for view_arch in combined_archs:
                     check = valid_view(view_arch, env=self.env, model=view.model)
                     view_name = ('%s (%s)' % (view.name, view.xml_id)) if view.xml_id else view.name
                     if not check:
@@ -423,7 +422,7 @@ actual arch.
                     if check == "Warning":
                         _logger.warning('Invalid view %s definition in %s \n%s', view_name, view.arch_fs, view.arch)
             except ValueError as e:
-                lines = view_arch_utf8.splitlines(keepends=True)
+                lines = etree.tostring(combined_arch, encoding='unicode').splitlines(keepends=True)
                 fivelines = "".join(lines[max(0, e.context["line"]-3):e.context["line"]+2])
                 err = ValidationError(_(
                     "Error while validating view near:\n\n%(fivelines)s\n%(error)s",
@@ -446,7 +445,7 @@ actual arch.
     @api.constrains('inherit_id')
     def _check_000_inheritance(self):
         # NOTE: constraints methods are check alphabetically. Always ensure this method will be
-        #       called before other constraint metheods to avoid infinite loop in `read_combined`.
+        #       called before other constraint methods to avoid infinite loop in `_get_combined_arch`.
         if not self._check_recursion(parent='inherit_id'):
             raise ValidationError(_('You cannot create recursive inherited views.'))
 
@@ -781,6 +780,7 @@ actual arch.
           .. note:: ``arch`` is always added to the fields list even if not
                     requested (similar to ``id``)
         """
+        warnings.warn("use get_combined_arch() instead", DeprecationWarning, stacklevel=2)
         if fields:
             fields = list({'arch', 'model'}.union(fields))
         [result] = self.read(fields)
@@ -1595,11 +1595,9 @@ actual arch.
                        'tuple(self._context.get(k) for k in self._read_template_keys())'),
     )
     def _read_template(self, view_id):
-        arch = self.browse(view_id).read_combined(['arch'])['arch']
-        arch_tree = etree.fromstring(arch)
+        arch_tree = self.browse(view_id)._get_combined_arch()
         self.distribute_branding(arch_tree)
-        arch = etree.tostring(arch_tree, encoding='unicode')
-        return arch
+        return etree.tostring(arch_tree, encoding='unicode')
 
     @api.model
     def get_view_id(self, template):
