@@ -8562,7 +8562,7 @@ QUnit.module('Views', {
             model: 'daterange',
             data: this.data,
             arch: `
-                <tree multi_edit="1">
+                <tree editable="top" multi_edit="1">
                     <field name="date_start" widget="daterange" options="{'related_end_date': 'date_end'}" />
                     <field name="date_end" widget="daterange" options="{'related_start_date': 'date_start'}"/>
                 </tree>`,
@@ -8574,8 +8574,9 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click(list.$('thead .o_list_record_selector:first input'));
-        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0) .o_field_date_range'));
-        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0) .o_field_date_range'));
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0) span.o_field_date_range'));
+        await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0) input.o_field_date_range'));
 
         // change dates via the daterangepicker
         await testUtils.dom.triggerMouseEvent($('.daterangepicker:first .drp-calendar.left .available:contains("16")'), 'mousedown');
@@ -8583,7 +8584,7 @@ QUnit.module('Views', {
 
 
         const $applyBtn = $('.daterangepicker:first .applyBtn');
-        assert.ok($applyBtn.length === 1 && !$applyBtn.disabled, 'Should only have 1 apply button in the daterangepicker and this button should be enabled.');
+        assert.ok($applyBtn.length === 1 && !$applyBtn.attr('disabled'), 'Should only have 1 apply button in the daterangepicker and this button should be enabled.');
 
         // daterange selected
         const daterange = $('.daterangepicker:first .drp-selected').text();
@@ -8613,7 +8614,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list: multi-edit field with daterange widget, user edits without using daterange picker', async function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
         const list = await createView({
             View: ListView,
@@ -8639,13 +8640,13 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.modal .btn-primary'));
 
         const newDate = moment.utc("2021-04-01", "YYYY-MM-DD");
-        assert.ok(Object.keys(list.model.localData).every(key => {
-            const record = list.model.localData[key];
-            if (record.data.hasOwnProperty('date_start')) {
-                return record.data.date_start.isSame(newDate);
-            }
-            return true; // if the record has no the property than no change for this one.
-        }));
+
+        const dateRangeFields = list.el.querySelectorAll('.o_data_cell .o_field_date_range[name="date_start"]');
+        assert.strictEqual(dateRangeFields.length, 2, 'The number of row containing the date_start field with daterange widget should be equal to 2 in the list view.');
+
+        dateRangeFields.forEach(element => {
+            assert.strictEqual(newDate.format('MM/DD/YYYY'), element.textContent);
+        });
 
         list.destroy();
     });
