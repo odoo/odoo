@@ -470,10 +470,12 @@ class IrModelFields(models.Model):
                 raise UserError(_("Unknown field name '%s' in related field '%s'") % (name, self.related))
             if index < last and not field.relational:
                 raise UserError(_("Non-relational field name '%s' in related field '%s'") % (name, self.related))
+            if self.store and index < last and not field._description_searchable:
+                raise UserError(_("Field %s (%s) cannot be used in stored related field.") % (field.string, field.name))
             model = model[name]
         return field
 
-    @api.constrains('related')
+    @api.constrains('related', 'store')
     def _check_related(self):
         for rec in self:
             if rec.state == 'manual' and rec.related:
