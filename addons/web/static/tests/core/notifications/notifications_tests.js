@@ -40,6 +40,41 @@ QUnit.test("can display a basic notification", async (assert) => {
     assert.hasClass(notif, "bg-warning");
 });
 
+QUnit.test("title and message are escaped by default", async (assert) => {
+    const env = await makeTestEnv({ serviceRegistry });
+    const notifService = env.services.notification;
+    await mount(NotificationContainer, { env, target });
+
+    notifService.create("<i>Some message</i>", { title: "<b>Some title</b>" });
+    await nextTick();
+    assert.containsOnce(target, ".o_notification");
+    const notif = target.querySelector(".o_notification");
+    assert.strictEqual(
+        notif.querySelector(".o_notification_title").textContent,
+        "<b>Some title</b>"
+    );
+    assert.strictEqual(
+        notif.querySelector(".o_notification_content").textContent,
+        "<i>Some message</i>"
+    );
+});
+
+QUnit.test("notification with messageIsHtml option", async (assert) => {
+    const env = await makeTestEnv({ serviceRegistry });
+    const notifService = env.services.notification;
+    await mount(NotificationContainer, { env, target });
+
+    notifService.create("<i>Some message</i>", { messageIsHtml: true });
+    await nextTick();
+    assert.containsOnce(target, ".o_notification");
+    const notif = target.querySelector(".o_notification");
+    assert.strictEqual(notif.querySelector(".o_notification_content").textContent, "Some message");
+    assert.strictEqual(
+        notif.querySelector(".o_notification_content").innerHTML,
+        "<i>Some message</i>"
+    );
+});
+
 QUnit.test("can display a notification of type danger", async (assert) => {
     const env = await makeTestEnv({ serviceRegistry });
     const notifService = env.services.notification;
@@ -144,7 +179,6 @@ QUnit.test("can display a sticky notification", async (assert) => {
     patch(browser, "mock.settimeout.boom", {
         setTimeout: () => {
             throw new Error("Should not register a callback for sticky notifications");
-            return 1;
         },
     });
     const env = await makeTestEnv({ browser, serviceRegistry });

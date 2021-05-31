@@ -42,6 +42,7 @@ Notification.props = {
         optional: true,
         validate: (t) => ["warning", "danger", "success", "info"].includes(t),
     },
+    messageIsHtml: { type: Boolean, optional: true },
     className: { type: String, optional: true },
     buttons: {
         type: Array,
@@ -60,5 +61,6 @@ Notification.props = {
 Notification.defaultProps = {
     buttons: [],
     className: "",
+    messageIsHtml: false,
     type: "warning",
 };

@@ -27,9 +27,10 @@ The `notifications` service provides two methods:
         to draw the notification
     -   `icon (string)`: if no type is given, this string describes a css class that
         will be used. It is meant to use a font awesome class. For example, `fa-cog`
-    -   `className (string)`: string, which describe a css class that will be added to the
+    -   `className (string)`: describes a css class that will be added to the
         notification. It is useful when one needs to add some special style to a
         notification.
+    -   `messageIsHtml (boolean)`: if true, the message won't be escaped (false by default)
 
 -   `close(id: string)`: this method will simply close a notification with a specific `id`,
     if it was not already closed.

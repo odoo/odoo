@@ -206,6 +206,7 @@ export function makeLegacyNotificationService(legacyEnv) {
                 type,
                 className,
                 onClose,
+                messageIsHtml,
             }) {
                 if (subtitle) {
                     title = [title, subtitle].filter(Boolean).join(" ");
@@ -231,6 +232,7 @@ export function makeLegacyNotificationService(legacyEnv) {
                     className,
                     onClose,
                     buttons,
+                    messageIsHtml,
                 });
             }
 
