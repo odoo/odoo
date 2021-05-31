@@ -3,6 +3,7 @@ odoo.define('web.domain_selector_tests', function (require) {
 
 var DomainSelector = require("web.DomainSelector");
 var testUtils = require("web.test_utils");
+const { createWebClient, doAction, getActionManagerTestConfig } = require('@web/../tests/webclient/actions/helpers');
 
 QUnit.module('widgets', {}, function () {
 
@@ -247,31 +248,29 @@ QUnit.module('DomainSelector', {
 
     QUnit.test("inline domain editor in modal", async function (assert) {
         assert.expect(1);
-        const actions = [
-            {
-                id: 5,
-                name: "Partner Form",
-                res_model: "partner",
-                target: "new",
-                type: "ir.actions.act_window",
-                views: [["view_ref", "form"]],
-            },
-        ];
-        const actionManager = await testUtils.createActionManager({
-            actions,
-            archs: {
-                "partner,view_ref,form": `
-                    <form>
-                        <field name="foo" string="Domain" widget="domain" options="{'model': 'partner'}"/>
-                    </form>
-                `,
-            },
-            data: this.data,
-        });
-        await actionManager.doAction(5);
+        const testConfig = getActionManagerTestConfig();
+
+        testConfig.serverData.actions[5] = {
+            id: 5,
+            name: "Partner Form",
+            res_model: "partner",
+            target: "new",
+            type: "ir.actions.act_window",
+            views: [["view_ref", "form"]],
+        };
+
+        testConfig.serverData.views = {
+            "partner,view_ref,form": `
+                <form>
+                    <field name="foo" string="Domain" widget="domain" options="{'model': 'partner'}"/>
+                </form>
+            `,
+        };
+
+        const webClient = await createWebClient({testConfig});
+        await doAction(webClient, 5);
         assert.strictEqual(document.querySelector('div[name="foo"]').closest('.modal-body').style.overflow,
             'visible', "modal should have visible overflow if there is inline domain field widget");
-        actionManager.destroy();
     });
 });
 });

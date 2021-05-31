@@ -5,7 +5,7 @@ var AbstractView = require('web.AbstractView');
 var ajax = require('web.ajax');
 var testUtils = require('web.test_utils');
 
-var createActionManager = testUtils.createActionManager;
+const { createWebClient, doAction, getActionManagerTestConfig } = require('@web/../tests/webclient/actions/helpers');
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
@@ -113,33 +113,34 @@ QUnit.module('Views', {
     QUnit.test('group_by from context can be a string, instead of a list of strings', async function (assert) {
         assert.expect(1);
 
-        var actionManager = await createActionManager({
-            actions: [{
-                id: 1,
-                name: 'Foo',
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[false, 'list']],
-                context: {
-                    group_by: 'bar',
-                },
-            }],
-            archs: {
+        const testConfig = getActionManagerTestConfig();
+        Object.assign(testConfig.serverData, {
+            actions: {
+                1:{
+                    id: 1,
+                    name: 'Foo',
+                    res_model: 'foo',
+                    type: 'ir.actions.act_window',
+                    views: [[false, 'list']],
+                    context: {
+                        group_by: 'bar',
+                    },
+                }
+            },
+            views: {
                 'foo,false,list': '<tree><field name="foo"/><field name="bar"/></tree>',
                 'foo,false,search': '<search></search>',
             },
-            data: this.data,
-            mockRPC: function (route, args) {
-                if (args.method === 'web_read_group') {
-                    assert.deepEqual(args.kwargs.groupby, ['bar']);
-                }
-                return this._super.apply(this, arguments);
-            },
+            models: this.data
         });
 
-        await actionManager.doAction(1);
-
-        actionManager.destroy();
+        const mockRPC = (route, args) => {
+            if (args.method === 'web_read_group') {
+                assert.deepEqual(args.kwargs.groupby, ['bar']);
+            }
+        };
+        const webClient = await createWebClient({testConfig, mockRPC});
+        await doAction(webClient, 1);
     });
 
 });

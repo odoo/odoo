@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.NavBar" owl="1">
+    <header>
+      <nav class="o_main_navbar" t-on-dropdown-item-selected="onNavBarDropdownItemSelection" data-command-category="navbar">
+        <!-- Apps Menu -->
+        <t t-call="web.NavBar.AppsMenu">
+          <t t-set="apps" t-value="menuService.getApps()" />
+        </t>
+
+        <!-- App Brand -->
+        <DropdownItem
+          t-if="currentApp"
+          class="o_menu_brand"
+          payload="currentApp"
+          t-esc="currentApp.name"
+          t-ref="menuBrand"/>
+
+        <!-- Current App Sections -->
+        <t t-call="web.NavBar.SectionsMenu">
+          <t t-set="sections" t-value="currentAppSections" />
+        </t>
+
+        <!-- Systray -->
+        <ul class="o_menu_systray" role="menu">
+          <t t-foreach="systrayItems" t-as="Item" t-key="Item_index">
+            <t t-component="Item" />
+          </t>
+        </ul>
+      </nav>
+    </header>
+  </t>
+
+  <t t-name="web.NavBar.AppsMenu" owl="1">
+    <Dropdown title="'Home Menu'" class="o_navbar_apps_menu">
+      <i class="fa fa-th-large" />
+      <t t-set-slot="menu">
+        <MenuItem
+          t-foreach="apps" t-as="app" t-key="app.id"
+          class="o_app"
+          t-att-class="{ o_dropdown_active: menuService.getCurrentApp() === app }"
+          payload="app"
+          t-esc="app.name" />
+      </t>
+    </Dropdown>
+  </t>
+
+  <t t-name="web.NavBar.SectionsMenu" owl="1">
+    <ul class="o_menu_sections" t-ref="appSubMenus" role="menu">
+
+      <t t-foreach="sections" t-as="section" t-key="section.id">
+        <t t-set="sectionsVisibleCount" t-value="(sections.length - currentAppSectionsExtra.length)" />
+
+        <t t-if="!section.childrenTree.length">
+          <MenuItem title="section.name" payload="section">
+            <span t-esc="section.name" t-att-data-section="section.id" />
+          </MenuItem>
+        </t>
+        <t t-else="">
+          <MenuDropdown title="section.name" xmlid="section.xmlid">
+            <span t-esc="section.name" t-att-data-section="section.id" />
+            <t t-set-slot="menu">
+              <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+                <t t-set="items" t-value="section.childrenTree" />
+              </t>
+            </t>
+          </MenuDropdown>
+        </t>
+      </t>
+
+      <t t-call="web.NavBar.SectionsMenu.MoreDropdown">
+        <t t-set="sections" t-value="currentAppSectionsExtra" />
+      </t>
+
+    </ul>
+  </t>
+
+  <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot" owl="1">
+    <t t-foreach="items" t-as="item" t-key="item.id">
+      <MenuItem t-if="!item.childrenTree.length" payload="item" t-esc="item.name" />
+
+      <t t-else="">
+        <div class="o_dropdown_menu_group" t-esc="item.name" />
+        <MenuItem
+          t-foreach="item.childrenTree"
+          t-as="subItem"
+          t-key="subItem.id"
+          class="o_dropdown_menu_group_entry"
+          payload="subItem"
+          t-esc="subItem.name" />
+      </t>
+    </t>
+  </t>
+
+  <t t-name="web.NavBar.SectionsMenu.MoreDropdown" owl="1">
+    <Dropdown class="o_menu_sections_more d-none" title="'More Menu'">
+      <i class="fa fa-plus"/>
+      <t t-set-slot="menu">
+        <t t-foreach="sections" t-as="section" t-key="section.id">
+
+          <t t-if="!section.childrenTree.length">
+            <MenuItem
+              class="o_more_dropdown_section"
+              payload="section"
+              t-esc="section.name" />
+          </t>
+          <t t-else="">
+            <div
+              class="o_more_dropdown_section o_more_dropdown_section_group"
+              t-esc="section.name" />
+            <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+              <t t-set="items" t-value="section.childrenTree" />
+            </t>
+          </t>
+        </t>
+      </t>
+    </Dropdown>
+  </t>
+
+</templates>

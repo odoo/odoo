@@ -25,7 +25,7 @@ var view_dialogs = require('web.view_dialogs');
 var field_utils = require('web.field_utils');
 var time = require('web.time');
 const {ColorpickerDialog} = require('web.Colorpicker');
-const { hidePDFJSButtons } = require('@web/js/libs/pdfjs');
+const { hidePDFJSButtons } = require('@web/legacy/js/libs/pdfjs');
 
 let FieldBoolean = deprecatedFields.FieldBoolean;
 

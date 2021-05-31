@@ -40,6 +40,7 @@ class Http(models.AbstractModel):
             "db": request.session.db,
             "server_version": version_info.get('server_version'),
             "server_version_info": version_info.get('server_version_info'),
+            "support_url": "https://www.odoo.com/buy",
             "name": user.name,
             "username": user.login,
             "partner_display_name": user.partner_id.display_name,
@@ -51,6 +52,7 @@ class Http(models.AbstractModel):
             'profile_collectors': request.session.profile_collectors,
             'profile_params': request.session.profile_params,
             "max_file_upload_size": max_file_upload_size,
+            "home_action_id": user.action_id.id,
         }
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping
@@ -63,7 +65,9 @@ class Http(models.AbstractModel):
             qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="web.assets_qweb")
             lang = user_context.get("lang")
             translation_hash = request.env['ir.translation'].get_web_translations_hash(mods, lang)
-            menu_json_utf8 = json.dumps(request.env['ir.ui.menu'].load_menus(request.session.debug), default=ustr, sort_keys=True).encode()
+            menus = request.env['ir.ui.menu'].load_menus(request.session.debug)
+            ordered_menus = {str(k): v for k, v in menus.items()}
+            menu_json_utf8 = json.dumps(ordered_menus, default=ustr, sort_keys=True).encode()
             cache_hashes = {
                 "load_menus": hashlib.sha512(menu_json_utf8).hexdigest()[:64], # sha512/256
                 "qweb": qweb_checksum,

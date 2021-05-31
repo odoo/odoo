@@ -24,8 +24,12 @@ var Widget = require('web.Widget');
 
 var _t = core._t;
 const cpHelpers = testUtils.controlPanel;
-var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
+
+const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
+const { createWebClient, doAction, getActionManagerTestConfig, loadState } = require('@web/../tests/webclient/actions/helpers');
+
+let testConfig;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -128,6 +132,9 @@ QUnit.module('Views', {
                 }]
             },
         };
+
+        testConfig = getActionManagerTestConfig();
+        Object.assign(testConfig.serverData, {models: this.data});
     }
 }, function () {
 
@@ -1765,42 +1772,39 @@ QUnit.module('Views', {
     QUnit.test('editable list view: check that controlpanel buttons are updating when groupby applied', async function (assert) {
         assert.expect(4);
 
-        this.data.foo.fields.foo = {string: "Foo", type: "char", required:true};
+        testConfig.serverData.models.foo.fields.foo = {string: "Foo", type: "char", required:true};
 
-        var actionManager = await createActionManager({
-            actions: [{
-               id: 11,
-               name: 'Partners Action 11',
-               res_model: 'foo',
-               type: 'ir.actions.act_window',
-               views: [[3, 'list']],
-               search_view_id: [9, 'search'],
-            }],
-            archs:  {
-               'foo,3,list': '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
+        testConfig.serverData.actions[11] = {
+            id: 11,
+            name: 'Partners Action 11',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[3, 'list']],
+            search_view_id: [9, 'search'],
+        };
+        testConfig.serverData.views = {
+            'foo,3,list': '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
 
-               'foo,9,search': '<search>'+
-                                    '<filter string="candle" name="itsName" context="{\'group_by\': \'foo\'}"/>'  +
-                                    '</search>',
-            },
-            data: this.data,
-        });
+            'foo,9,search': '<search>'+
+                '<filter string="candle" name="itsName" context="{\'group_by\': \'foo\'}"/>'  +
+                '</search>',
+        };
 
-        await actionManager.doAction(11);
-        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+        const webClient = await createWebClient({ testConfig });
 
-        assert.isNotVisible(actionManager.$('.o_list_button_add'),
+        await doAction(webClient, 11);
+        await testUtils.dom.click($(webClient.el).find('.o_list_button_add'));
+
+        assert.isNotVisible($(webClient.el).find('.o_list_button_add'),
             "create button should be invisible");
-        assert.isVisible(actionManager.$('.o_list_button_save'), "save button should be visible");
+        assert.isVisible($(webClient.el).find('.o_list_button_save'), "save button should be visible");
 
-        await testUtils.dom.click(actionManager.$('.o_dropdown_toggler_btn:contains("Group By")'));
-        await testUtils.dom.click(actionManager.$('.o_group_by_menu .o_menu_item a:contains("candle")'));
+        await testUtils.dom.click($(webClient.el).find('.o_dropdown_toggler_btn:contains("Group By")'));
+        await testUtils.dom.click($(webClient.el).find('.o_group_by_menu .o_menu_item a:contains("candle")'));
 
-        assert.isNotVisible(actionManager.$('.o_list_button_add'), "create button should be invisible");
-        assert.isNotVisible(actionManager.$('.o_list_button_save'),
+        assert.isNotVisible($(webClient.el).find('.o_list_button_add'), "create button should be invisible");
+        assert.isNotVisible($(webClient.el).find('.o_list_button_save'),
             "save button should be invisible after applying groupby");
-
-        actionManager.destroy();
     });
 
     QUnit.test('list view not groupable', async function (assert) {
@@ -8667,7 +8671,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('editable list: edit many2one from external link', async function (assert) {
-        assert.expect(2);
+        assert.expect(7);
 
         const list = await createView({
             arch: `
@@ -8688,9 +8692,18 @@ QUnit.module('Views', {
             View: ListView,
         });
 
+        assert.strictEqual(list.mode, "readonly", "is in readonly mode");
         await testUtils.dom.click(list.$('thead .o_list_record_selector:first input'));
         await testUtils.dom.click(list.$('.o_data_row:first .o_data_cell:eq(0)'));
+        assert.strictEqual(list.mode, "edit", "is in edit mode");
         await testUtils.dom.click(list.$('.o_external_button:first'));
+
+        // Clicking somewhere on the form dialog should not close it
+        // and should not leave edit mode
+        assert.containsOnce(document.body, ".modal[role='dialog']");
+        await testUtils.dom.click(document.body.querySelector(".modal[role='dialog']"));
+        assert.containsOnce(document.body, ".modal[role='dialog']");
+        assert.strictEqual(list.mode, "edit", "is still in edit mode");
 
         // Change the M2O value in the Form dialog
         await testUtils.fields.editInput($('.modal input:first'), "OOF");
@@ -8749,7 +8762,7 @@ QUnit.module('Views', {
         // mouseup and click events
         assert.expect(5);
 
-        this.data.bar.fields.m2o = {string: "M2O field", type: "many2one", relation: "foo"};
+        this.data.bar.fields.m2o = { string: "M2O field", type: "many2one", relation: "foo" };
 
         const form = await createView({
             View: FormView,
@@ -9471,59 +9484,57 @@ QUnit.module('Views', {
     QUnit.test('add filter in a grouped list with a pager', async function (assert) {
         assert.expect(11);
 
-        const actionManager = await createActionManager({
-            data: this.data,
-            actions: [{
-                id: 11,
-                name: 'Action 11',
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[3, 'list']],
-                search_view_id: [9, 'search'],
-                flags: {
-                    context: { group_by: ['int_field'] },
-                },
-            }],
-            archs: {
-               'foo,3,list': '<tree groups_limit="3"><field name="foo"/></tree>',
-               'foo,9,search': `
-                    <search>
-                        <filter string="Not Bar" name="not bar" domain="[['bar','=',False]]"/>
-                    </search>`,
+        testConfig.serverData.actions[11] = {
+            id: 11,
+            name: 'Action 11',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[3, 'list']],
+            search_view_id: [9, 'search'],
+            flags: {
+                context: { group_by: ['int_field'] },
             },
-            mockRPC: function (route, args) {
-                if (args.method === 'web_read_group') {
-                    assert.step(JSON.stringify(args.kwargs.domain) + ', ' + args.kwargs.offset);
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
+        };
 
-        await actionManager.doAction(11);
+        testConfig.serverData.views = {
+            'foo,3,list': '<tree groups_limit="3"><field name="foo"/></tree>',
+            'foo,9,search': `
+                <search>
+                    <filter string="Not Bar" name="not bar" domain="[['bar','=',False]]"/>
+                 </search>`,
+        };
 
-        assert.containsOnce(actionManager, '.o_list_view');
-        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '1-3 / 4');
-        assert.containsN(actionManager, '.o_group_header', 3); // page 1
+        const mockRPC = (route, args) =>  {
+            if (args.method === 'web_read_group') {
+                assert.step(JSON.stringify(args.kwargs.domain) + ', ' + args.kwargs.offset);
+            }
+        };
 
-        await testUtils.dom.click(actionManager.$('.o_pager_next')); // switch to page 2
+        const webClient = await createWebClient({testConfig, mockRPC});
+        await doAction(webClient, 11);
 
-        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '4-4 / 4');
-        assert.containsN(actionManager, '.o_group_header', 1); // page 2
+        assert.containsOnce(webClient, '.o_list_view');
+        assert.strictEqual($(webClient.el).find('.o_pager_counter').text().trim(), '1-3 / 4');
+        assert.containsN(webClient, '.o_group_header', 3); // page 1
+
+        await testUtils.dom.click($(webClient.el).find('.o_pager_next')); // switch to page 2
+        await legacyExtraNextTick();
+
+        assert.strictEqual($(webClient.el).find('.o_pager_counter').text().trim(), '4-4 / 4');
+        assert.containsN(webClient, '.o_group_header', 1); // page 2
 
         // toggle a filter -> there should be only one group left (on page 1)
-        await cpHelpers.toggleFilterMenu(actionManager);
-        await cpHelpers.toggleMenuItem(actionManager, 0);
+        await cpHelpers.toggleFilterMenu(webClient);
+        await cpHelpers.toggleMenuItem(webClient, 0);
 
-        assert.strictEqual(actionManager.$('.o_pager_counter').text().trim(), '1-1 / 1');
-        assert.containsN(actionManager, '.o_group_header', 1); // page 1
+        assert.strictEqual($(webClient.el).find('.o_pager_counter').text().trim(), '1-1 / 1');
+        assert.containsN(webClient, '.o_group_header', 1); // page 1
 
         assert.verifySteps([
             '[], undefined',
             '[], 3',
             '[["bar","=",false]], undefined',
         ]);
-
-        actionManager.destroy();
     });
 
     QUnit.test('editable grouped lists', async function (assert) {
@@ -11044,21 +11055,22 @@ QUnit.module('Views', {
     QUnit.test('change the viewType of the current action', async function (assert) {
         assert.expect(25);
 
-        this.actions = [{
+        testConfig.serverData.actions[1] = {
             id: 1,
             name: 'Partners Action 1',
             res_model: 'foo',
             type: 'ir.actions.act_window',
             views: [[1, 'kanban']],
-        }, {
+        };
+        testConfig.serverData.actions[2] = {
             id: 2,
             name: 'Partners',
             res_model: 'foo',
             type: 'ir.actions.act_window',
             views: [[false, 'list'], [1, 'kanban']],
-        }];
+        };
 
-        this.archs = {
+        testConfig.serverData.views = {
             'foo,1,kanban': '<kanban><templates><t t-name="kanban-box">' +
             '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
             '</t></templates></kanban>',
@@ -11071,94 +11083,82 @@ QUnit.module('Views', {
             'foo,false,search': '<search><field name="foo" string="Foo"/></search>',
         };
 
-        var RamStorageService = AbstractStorageService.extend({
-            storage: new RamStorage(),
-        });
+        const webClient = await createWebClient({ testConfig });
 
-        var actionManager = await testUtils.createActionManager({
-            actions: this.actions,
-            archs: this.archs,
-            data: this.data,
-            services: {
-                local_storage: RamStorageService,
-            },
-        });
-        await actionManager.doAction(2);
+        await doAction(webClient, 2);
 
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should have rendered a list view");
 
-        assert.containsN(actionManager, 'th', 3, "should display 3 th (selector + 2 fields)");
+        assert.containsN(webClient, 'th', 3, "should display 3 th (selector + 2 fields)");
 
         // enable optional field
-        await testUtils.dom.click(actionManager.$('table .o_optional_columns_dropdown_toggle'));
-        assert.notOk(actionManager.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
-        assert.ok(actionManager.$('div.o_optional_columns div.dropdown-item [name="o2m"]').is(":checked"));
-        await testUtils.dom.click(actionManager.$('div.o_optional_columns div.dropdown-item:first'));
-        assert.containsN(actionManager, 'th', 4, "should display 4 th (selector + 3 fields)");
-        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+        await testUtils.dom.click($(webClient.el).find('table .o_optional_columns_dropdown_toggle'));
+        assert.notOk($(webClient.el).find('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+        assert.ok($(webClient.el).find('div.o_optional_columns div.dropdown-item [name="o2m"]').is(":checked"));
+        await testUtils.dom.click($(webClient.el).find('div.o_optional_columns div.dropdown-item:first'));
+        assert.containsN(webClient, 'th', 4, "should display 4 th (selector + 3 fields)");
+        assert.ok($(webClient.el).find('th:contains(M2O field)').is(':visible'),
             "should have a visible m2o field"); //m2o field
 
         // switch to kanban view
-        await actionManager.loadState({
+        await loadState(webClient, {
             action: 2,
             view_type: 'kanban',
         });
 
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not display the list view anymore");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should have switched to the kanban view");
 
         // switch back to list view
-        await actionManager.loadState({
+        await loadState(webClient, {
             action: 2,
             view_type: 'list',
         });
 
-        assert.containsNone(actionManager, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_kanban_view',
             "should not display the kanban view anymoe");
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view");
 
-        assert.containsN(actionManager, 'th', 4, "should display 4 th");
-        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+        assert.containsN(webClient, 'th', 4, "should display 4 th");
+        assert.ok($(webClient.el).find('th:contains(M2O field)').is(':visible'),
             "should have a visible m2o field"); //m2o field
-        assert.ok(actionManager.$('th:contains(O2M field)').is(':visible'),
+        assert.ok($(webClient.el).find('th:contains(O2M field)').is(':visible'),
             "should have a visible o2m field"); //m2o field
 
         // disable optional field
-        await testUtils.dom.click(actionManager.$('table .o_optional_columns_dropdown_toggle'));
-        assert.ok(actionManager.$('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
-        assert.ok(actionManager.$('div.o_optional_columns div.dropdown-item [name="o2m"]').is(":checked"));
-        await testUtils.dom.click(actionManager.$('div.o_optional_columns div.dropdown-item:last input'));
-        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+        await testUtils.dom.click($(webClient.el).find('table .o_optional_columns_dropdown_toggle'));
+        assert.ok($(webClient.el).find('div.o_optional_columns div.dropdown-item [name="m2o"]').is(":checked"));
+        assert.ok($(webClient.el).find('div.o_optional_columns div.dropdown-item [name="o2m"]').is(":checked"));
+        await testUtils.dom.click($(webClient.el).find('div.o_optional_columns div.dropdown-item:last input'));
+        assert.ok($(webClient.el).find('th:contains(M2O field)').is(':visible'),
             "should have a visible m2o field"); //m2o field
-        assert.notOk(actionManager.$('th:contains(O2M field)').is(':visible'),
+        assert.notOk($(webClient.el).find('th:contains(O2M field)').is(':visible'),
             "should have a visible o2m field"); //m2o field
-        assert.containsN(actionManager, 'th', 3, "should display 3 th");
+        assert.containsN(webClient, 'th', 3, "should display 3 th");
 
-        await actionManager.doAction(1);
+        await doAction(webClient, 1);
 
-        assert.containsNone(actionManager, '.o_list_view',
+        assert.containsNone(webClient, '.o_list_view',
             "should not display the list view anymore");
-        assert.containsOnce(actionManager, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_kanban_view',
             "should have switched to the kanban view");
 
-        await actionManager.doAction(2);
+        await doAction(webClient, 2);
 
-        assert.containsNone(actionManager, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_kanban_view',
             "should not havethe kanban view anymoe");
-        assert.containsOnce(actionManager, '.o_list_view',
+        assert.containsOnce(webClient, '.o_list_view',
             "should display the list view");
 
-        assert.containsN(actionManager, 'th', 3, "should display 3 th");
-        assert.ok(actionManager.$('th:contains(M2O field)').is(':visible'),
+        assert.containsN(webClient, 'th', 3, "should display 3 th");
+        assert.ok($(webClient.el).find('th:contains(M2O field)').is(':visible'),
             "should have a visible m2o field"); //m2o field
-        assert.notOk(actionManager.$('th:contains(O2M field)').is(':visible'),
+        assert.notOk($(webClient.el).find('th:contains(O2M field)').is(':visible'),
             "should have a visible o2m field"); //m2o field
-
-        actionManager.destroy();
     });
 
     QUnit.test('list view with optional fields rendering and local storage mock', async function (assert) {
@@ -11630,132 +11630,123 @@ QUnit.module('Views', {
     QUnit.test("Auto save: add a record and leave action", async function (assert) {
         assert.expect(4);
 
-        const actionManager = await createActionManager({
-            actions: [{
-                id: 1,
-                name: 'Action 1',
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[2, 'list']],
-                search_view_id: [1, 'search'],
-            }, {
-                id: 2,
-                name: 'Action 2',
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[3, 'list']],
-                search_view_id: [1, 'search'],
-            }],
-            archs:  {
-                'foo,1,search': '<search></search>',
-                'foo,2,list': '<tree editable="top"><field name="foo"/></tree>',
-                'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
-            },
-            data: this.data,
-        });
+        testConfig.serverData.actions[1] = {
+            id: 1,
+            name: 'Action 1',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+            search_view_id: [1, 'search'],
+        };
+        testConfig.serverData.actions[2] = {
+            id: 2,
+            name: 'Action 2',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[3, 'list']],
+            search_view_id: [1, 'search'],
+        };
+        testConfig.serverData.views = {
+            'foo,1,search': '<search></search>',
+            'foo,2,list': '<tree editable="top"><field name="foo"/></tree>',
+            'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
+        };
+        const webClient = await createWebClient({ testConfig });
 
-        await actionManager.doAction(1);
+        await doAction(webClient, 1);
 
-        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
-        assert.containsN(actionManager, '.o_data_row', 4);
+        assert.strictEqual($(webClient.el).find('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
+        assert.containsN(webClient, '.o_data_row', 4);
 
-        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
-        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name="foo"]'), "test");
+        await testUtils.dom.click($(webClient.el).find('.o_list_button_add'));
+        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="foo"]'), "test");
 
         // change action and come back
-        await actionManager.doAction(2);
-        await actionManager.doAction(1, { clear_breadcrumbs: true });
+        await doAction(webClient, 2);
+        await doAction(webClient, 1, { clearBreadcrumbs: true });
 
-        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "yopblipgnapbliptest");
-        assert.containsN(actionManager, '.o_data_row', 5);
-
-        actionManager.destroy();
+        assert.strictEqual($(webClient.el).find('.o_field_cell[name="foo"]').text(), "yopblipgnapbliptest");
+        assert.containsN(webClient, '.o_data_row', 5);
     });
 
     QUnit.test("Auto save: modify a record and leave action", async function (assert) {
         assert.expect(2);
 
-        const actionManager = await createActionManager({
-            actions: [{
-                id: 1,
-                name: 'Action 1',
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[2, 'list']],
-                search_view_id: [1, 'search'],
-            }, {
-                id: 2,
-                name: 'Action 2',
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[3, 'list']],
-                search_view_id: [1, 'search'],
-            }],
-            archs:  {
-                'foo,1,search': '<search></search>',
-                'foo,2,list': '<tree editable="top"><field name="foo"/></tree>',
-                'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
-            },
-            data: this.data,
-        });
+        testConfig.serverData.actions[1] = {
+            id: 1,
+            name: 'Action 1',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+            search_view_id: [1, 'search'],
+        };
+        testConfig.serverData.actions[2] = {
+            id: 2,
+            name: 'Action 2',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[3, 'list']],
+            search_view_id: [1, 'search'],
+        };
+        testConfig.serverData.views = {
+            'foo,1,search': '<search></search>',
+            'foo,2,list': '<tree editable="top"><field name="foo"/></tree>',
+            'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
+        };
+        const webClient = await createWebClient({ testConfig });
 
-        await actionManager.doAction(1);
+        await doAction(webClient, 1);
 
-        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
+        assert.strictEqual($(webClient.el).find('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
 
-        await testUtils.dom.click(actionManager.$('.o_field_cell[name="foo"]:first'));
-        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name="foo"]'), "test");
+        await testUtils.dom.click($(webClient.el).find('.o_field_cell[name="foo"]:first'));
+        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="foo"]'), "test");
 
         // change action and come back
-        await actionManager.doAction(2);
-        await actionManager.doAction(1, { clear_breadcrumbs: true });
+        await doAction(webClient, 2);
+        await doAction(webClient, 1, { clearBreadcrumbs: true });
 
-        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "testblipgnapblip");
-
-        actionManager.destroy();
+        assert.strictEqual($(webClient.el).find('.o_field_cell[name="foo"]').text(), "testblipgnapblip");
     });
 
     QUnit.test("Auto save: modify a record and leave action (reject)", async function (assert) {
         assert.expect(5);
 
-        const actionManager = await createActionManager({
-            actions: [{
-                id: 1,
-                name: 'Action 1',
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[2, 'list']],
-                search_view_id: [1, 'search'],
-            }, {
-                id: 2,
-                name: 'Action 2',
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[3, 'list']],
-                search_view_id: [1, 'search'],
-            }],
-            archs:  {
-                'foo,1,search': '<search></search>',
-                'foo,2,list': '<tree editable="top"><field name="foo" required="1"/></tree>',
-                'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
-            },
-            data: this.data,
-        });
+        testConfig.serverData.actions[1] = {
+            id: 1,
+            name: 'Action 1',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+            search_view_id: [1, 'search'],
+        };
+        testConfig.serverData.actions[2] = {
+            id: 2,
+            name: 'Action 2',
+            res_model: 'foo',
+            type: 'ir.actions.act_window',
+            views: [[3, 'list']],
+            search_view_id: [1, 'search'],
+        };
+        testConfig.serverData.views = {
+            'foo,1,search': '<search></search>',
+            'foo,2,list': '<tree editable="top"><field name="foo" required="1"/></tree>',
+            'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
+        };
+        const webClient = await createWebClient({ testConfig });
 
-        await actionManager.doAction(1);
+        await doAction(webClient,1);
 
-        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
+        assert.strictEqual($(webClient.el).find('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
 
-        await testUtils.dom.click(actionManager.$('.o_field_cell[name="foo"]:first'));
-        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name="foo"]'), "");
+        await testUtils.dom.click($(webClient.el).find('.o_field_cell[name="foo"]:first'));
+        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="foo"]'), "");
 
-        await assert.rejects(actionManager.doAction(2));
+        await assert.rejects(doAction(webClient,2));
 
-        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "blipgnapblip");
-        assert.hasClass(actionManager.$('.o_field_widget[name="foo"]:first'), 'o_field_invalid');
-        assert.containsN(actionManager, '.o_data_row', 4);
-
-        actionManager.destroy();
+        assert.strictEqual($(webClient.el).find('.o_field_cell[name="foo"]').text(), "blipgnapblip");
+        assert.hasClass($(webClient.el).find('.o_field_widget[name="foo"]:first'), 'o_field_invalid');
+        assert.containsN(webClient, '.o_data_row', 4);
     });
 
     QUnit.test("Auto save: add a record and change page", async function (assert) {

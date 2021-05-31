@@ -17,16 +17,17 @@ var ajax = {};
 function _genericJsonRpc (fct_name, params, settings, fct) {
     var shadow = settings.shadow || false;
     delete settings.shadow;
-    if (!shadow) {
-        core.bus.trigger('rpc_request');
-    }
-
     var data = {
         jsonrpc: "2.0",
         method: fct_name,
         params: params,
         id: Math.floor(Math.random() * 1000 * 1000 * 1000)
     };
+
+    if (!shadow) {
+        core.bus.trigger('rpc_request', data.id);
+    }
+
     var xhr = fct(data);
     var result = xhr.then(function(result) {
         core.bus.trigger('rpc:result', data, result);
@@ -61,7 +62,7 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
 
         result.then(function (result) {
             if (!shadow) {
-                core.bus.trigger('rpc_response');
+                core.bus.trigger('rpc_response', data.id);
             }
             resolve(result);
         }, function (reason) {
@@ -71,7 +72,7 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
             var errorThrown = reason.errorThrown;
             if (type === "server") {
                 if (!shadow) {
-                    core.bus.trigger('rpc_response');
+                    core.bus.trigger('rpc_response', data.id);
                 }
                 if (error.code === 100) {
                     core.bus.trigger('invalidate_session');
@@ -79,7 +80,7 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
                 reject({message: error, event: $.Event()});
             } else {
                 if (!shadow) {
-                    core.bus.trigger('rpc_response_failed');
+                    core.bus.trigger('rpc_response_failed', data.id);
                 }
                 var nerror = {
                     code: -32098,

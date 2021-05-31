@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="WebClient.DebugManager">
+    <li class="o_debug_manager" role="menuitem">
+        <t t-set="_devtool_button_title">Open Developer Tools</t>
+        <a role="button" href="#" class="o_debug_mode"
+                         t-att-title="_devtool_button_title + widget.debug_mode_help"
+                         t-att-aria-label="_devtool_button_title + widget.debug_mode_help"
+                         t-att-data-debug-mode="widget.debug_mode"
+                         data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-display="static">
+            <span class="fa fa-bug"/>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right o_debug_dropdown" role="menu"/>
+    </li>
+</t>
+<t t-name="WebClient.DebugManager.Global">
+    <a role="menuitem" href="#" data-action="split_assets" class="dropdown-item o_debug_split_assets">Activate Assets Debugging</a>
+    <a role="menuitem" href="#" data-action="tests_assets" class="dropdown-item">Activate Tests Assets Debugging</a>
+    <a role="menuitem" href="#" data-action="regenerateAssets" class="dropdown-item">Regenerate Assets Bundles</a>
+    <a t-if="manager._is_admin" role="menuitem" href="/web/become" class="dropdown-item">Become Superuser</a>
+    <a role="menuitem" href="#" data-action="leave_debug_mode" class="dropdown-item">Leave the Developer Tools</a>
+</t>
+
+</templates>

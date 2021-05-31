@@ -136,14 +136,8 @@ odoo.define('web.week_days_tests', function (require) {
                         </group>
                     </sheet>
                 </form>`,
-                env: {
-                    _t: {
-                        database: {
-                            parameters: Object.assign(_t.database.parameters,{
-                                week_start: 5,
-                            }),
-                        }
-                    }
+                translateParameters: {
+                    week_start: 5,
                 },
             });
 
