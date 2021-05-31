@@ -56,6 +56,7 @@
             'mass_mailing/static/src/css/email_template.css',
             'mass_mailing/static/src/js/mass_mailing.js',
             'mass_mailing/static/src/js/mass_mailing_widget.js',
+            'mass_mailing/static/src/js/mailing_mailing_view_form_full_width.js',
             'mass_mailing/static/src/js/unsubscribe.js',
         ],
         'mass_mailing.assets_mail_themes': [

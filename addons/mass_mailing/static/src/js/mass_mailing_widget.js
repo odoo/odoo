@@ -335,6 +335,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             'min-height': '100vh',
             width: '100%'
         });
+        this.wysiwyg.$iframeBody.addClass('o_mass_mailing_iframe');
     },
     /**
      * @private
@@ -429,8 +430,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (firstChoice) {
             $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
         }
-
-        this.wysiwyg.$iframeBody.addClass("o_mass_mailing_iframe")
 
         /**
          * Add proposition to install enterprise themes if not installed.
