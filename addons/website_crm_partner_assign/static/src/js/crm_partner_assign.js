@@ -93,7 +93,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     _editContact: function () {
         return this._rpc({
             model: 'crm.lead',
-            method: 'write',
+            method: 'update_contact_details_from_portal',
             args: [[parseInt($('.edit_contact_form .opportunity_id').val())], {
                 partner_name: $('.edit_contact_form .partner_name').val(),
                 phone: $('.edit_contact_form .phone').val(),
