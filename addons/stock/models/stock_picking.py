@@ -668,7 +668,7 @@ class Picking(models.Model):
         return res
 
     def write(self, vals):
-        if vals.get('picking_type_id') and self.state != 'draft':
+        if vals.get('picking_type_id') and any(picking.state != 'draft' for picking in self):
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
         # set partner as a follower and unfollow old partner
         if vals.get('partner_id'):
