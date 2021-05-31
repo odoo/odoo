@@ -56,7 +56,7 @@
         <p t-if="props.message" t-esc="props.message"></p>
       </div>
       <div t-if="state.showTraceback" class="alert alert-danger o_error_detail" role="alert">
-          <pre t-esc="props.traceback"/>
+          <pre t-esc="traceback or props.traceback"/>
       </div>
     </t>
 

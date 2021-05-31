@@ -331,6 +331,11 @@
     });
 
     QUnit.begin(function () {
+        if (odoo.__DEBUG__.services["@web/core/errors/error_utils"]) {
+            const errorUtils = odoo.__DEBUG__.services["@web/core/errors/error_utils"];
+            const { annotateTraceback } = errorUtils;
+            QUnit.annotateTraceback = annotateTraceback;
+        }
         const config = QUnit.config;
         if (config.failfast) {
             QUnit.testDone(function (details) {
