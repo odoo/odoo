@@ -117,3 +117,12 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
         website_2.unlink()
         # .. on unlink ..
         self.assertEqual(attach.get_base_url(), web_base_url, "Cache should be recomputed, no more website for company_1.")
+
+    def test_02_get_base_url_recordsets(self):
+        Attachment = self.env['ir.attachment']
+        web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        self.assertEqual(Attachment.get_base_url(), web_base_url, "Empty recordset should get ICP value.")
+
+        with self.assertRaises(ValueError):
+            # if more than one record, an error we should be raised
+            Attachment.search([], limit=2).get_base_url()
