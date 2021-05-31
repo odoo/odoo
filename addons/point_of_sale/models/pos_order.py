@@ -198,7 +198,7 @@ class PosOrder(models.Model):
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
             .mapped('picking_ids.move_lines')\
-            .filtered(lambda m: m.product_id.id == product.id)\
+            ._filter_anglo_saxon_moves(product)\
             .sorted(lambda x: x.date)
         price_unit = product._compute_average_price(0, quantity, moves)
         return price_unit
