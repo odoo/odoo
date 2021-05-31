@@ -128,13 +128,6 @@ function patchLegacyCoreBus() {
     });
 }
 
-function patchLegacySession() {
-    const userContext = Object.getOwnPropertyDescriptor(session, "user_context");
-    registerCleanup(() => {
-        Object.defineProperty(session, "user_context", userContext);
-    });
-}
-
 function patchOdoo() {
     patchWithCleanup(odoo, {
         debug: "",
@@ -179,7 +172,6 @@ export async function setupTests() {
         forceLocaleAndTimezoneWithCleanup();
         patchBrowserWithCleanup();
         patchLegacyCoreBus();
-        patchLegacySession();
         patchOdoo();
     });
 

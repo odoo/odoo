@@ -23,7 +23,11 @@ import {
     mock,
 } from 'web.test_utils';
 import Widget from 'web.Widget';
-import { createWebClient } from "@web/../tests/webclient/helpers";
+import { createWebClient, getActionManagerServerData } from "@web/../tests/webclient/helpers";
+
+import { ComponentAdapter } from "web.OwlCompatibility";
+import LegacyMockServer from "web.MockServer";
+import LegacyRegistry from "web.Registry";
 
 const {
     addMockEnvironment,
@@ -384,8 +388,8 @@ async function createRootComponent(self, Component, { props = {}, target }) {
  * @param {Object} [param0.env={}]
  * @param {function} [param0.mockFetch]
  * @param {function} [param0.mockRPC]
- * @param {boolean} [param0.hasActionManager=false] if set, use
- *   createActionManager.
+ * @param {boolean} [param0.hasWebClient=false] if set, use
+ *   createWebClient
  * @param {boolean} [param0.hasChatWindow=false] if set, mount chat window
  *   service.
  * @param {boolean} [param0.hasDiscuss=false] if set, mount discuss app.
@@ -441,7 +445,7 @@ async function start(param0 = {}) {
     };
     const {
         env: providedEnv,
-        hasActionManager = false,
+        hasWebClient = false,
         hasChatWindow = false,
         hasDialog = false,
         hasDiscuss = false,
@@ -456,7 +460,7 @@ async function start(param0 = {}) {
         throw Error(`Unknown parameter value ${waitUntilMessagingCondition} for 'waitUntilMessaging'.`);
     }
     delete param0.env;
-    delete param0.hasActionManager;
+    delete param0.hasWebClient;
     delete param0.hasChatWindow;
     delete param0.hasDiscuss;
     delete param0.hasMessagingMenu;
@@ -545,9 +549,14 @@ async function start(param0 = {}) {
                 }
             }
         });
-    } else if (hasActionManager) {
-        let serverData = kwargs.serverData || {};
-        delete kwargs.serverData;
+    } else if (hasWebClient) {
+        let serverData;
+        if (!kwargs.serverData) {
+            serverData = getActionManagerServerData();
+        } else {
+            serverData = kwargs.serverData;
+            delete kwargs.serverData;
+        }
 
         if (kwargs.actions) {
             const actions = {};
@@ -567,9 +576,19 @@ async function start(param0 = {}) {
         const mockRPC = kwargs.mockRPC;
         delete kwargs.mockRPC;
 
+        if (kwargs.services) {
+            const serviceRegistry = kwargs.serviceRegistry = new LegacyRegistry();
+            for (const sname in kwargs.services) {
+                serviceRegistry.add(sname, kwargs.services[sname]);
+            }
+            delete kwargs.services;
+        }
+
         const legacyParams = kwargs;
         legacyParams.withLegacyMockServer = true;
-        const widget = await createWebClient({ serverData, mockRPC, legacyParams });
+        legacyParams.env = env;
+
+        widget = await createWebClient({ serverData, mockRPC, legacyParams });
 
         legacyPatch(widget, {
             destroy() {
