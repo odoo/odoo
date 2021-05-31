@@ -22,8 +22,6 @@ import { WebClient } from "@web/webclient/webclient";
 // web.test_utils easyload xml templates at line : 124:130.
 // Also it set the autocomplete delay time for the field Many2One at 0 for the tests at line : 132:137
 import "web.test_legacy";
-import AbstractAction from "web.AbstractAction";
-import AbstractController from "web.AbstractController";
 import AbstractService from "web.AbstractService";
 import ActionMenus from "web.ActionMenus";
 import basicFields from "web.basic_fields";
@@ -44,6 +42,7 @@ import LegacyMockServer from "web.MockServer";
 import Widget from "web.Widget";
 import { userService } from "@web/core/user_service";
 import { uiService } from "@web/core/ui/ui_service";
+import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 
 const { Component, mount, tags } = owl;
 
@@ -139,7 +138,8 @@ function addLegacyMockEnvironment(env, legacyParams = {}) {
         localSession = { getTZOffset: legacyParams.getTZOffset };
     }
 
-    const legacyEnv = makeTestEnvironment({ dataManager, bus: core.bus, session: localSession });
+    const baseEnv = { dataManager, bus: core.bus, session: localSession };
+    const legacyEnv = makeTestEnvironment(Object.assign(baseEnv, legacyParams.env));
 
     if (legacyParams.serviceRegistry) {
         const legacyServiceMap = core.serviceRegistry.map;
@@ -155,6 +155,13 @@ function addLegacyMockEnvironment(env, legacyParams = {}) {
 
     Component.env = legacyEnv;
     mapLegacyEnvToWowlEnv(legacyEnv, env);
+    function patchLegacySession() {
+        const userContext = Object.getOwnPropertyDescriptor(session, "user_context");
+        registerCleanup(() => {
+            Object.defineProperty(session, "user_context", userContext);
+        });
+    }
+    patchLegacySession();
     serviceRegistry.add("legacy_session", makeLegacySessionService(legacyEnv, session));
     // deploy the legacyActionManagerService (in Wowl env)
     const legacyActionManagerService = makeLegacyActionManagerService(legacyEnv);
@@ -206,16 +213,16 @@ export async function createWebClient(params) {
     // we destroy the webclient and expect every legacy that has been instantiated
     // to be destroyed. We thus need to manually destroy them here.
     const controllers = [];
-    patchWithCleanup(AbstractAction.prototype, {
-        init() {
-            this._super(...arguments);
-            controllers.push(this);
+    patchWithCleanup(ClientActionAdapter.prototype, {
+        mounted() {
+            this._super();
+            controllers.push(this.widget);
         },
     });
-    patchWithCleanup(AbstractController.prototype, {
-        init() {
-            this._super(...arguments);
-            controllers.push(this);
+    patchWithCleanup(ViewAdapter.prototype, {
+        mounted() {
+            this._super();
+            controllers.push(this.widget);
         },
     });
 
