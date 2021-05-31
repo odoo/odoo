@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { NetworkErrorDialog, ServerErrorDialog } from "../errors/error_dialogs";
+import { _lt } from "../l10n/translation";
 
 // -----------------------------------------------------------------------------
 // Content Disposition Library
@@ -363,7 +364,7 @@ function _download(data, filename, mimetype) {
             anchor.href = url;
             anchor.setAttribute("download", fileName);
             anchor.className = "download-js-link";
-            anchor.innerHTML = "downloading...";
+            anchor.innerText = _lt("downloading...");
             anchor.style.display = "none";
             document.body.appendChild(anchor);
             setTimeout(() => {
