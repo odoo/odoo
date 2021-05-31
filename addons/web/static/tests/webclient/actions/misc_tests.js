@@ -6,7 +6,7 @@ import core from "web.core";
 import testUtils from "web.test_utils";
 import Widget from "web.Widget";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { legacyExtraNextTick } from "../../helpers/utils";
+import { legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 
 let testConfig;
@@ -84,6 +84,18 @@ QUnit.module("ActionManager", (hooks) => {
             type: "ir.action_in_handler_registry",
         });
         assert.verifySteps(["ir.action_in_handler_registry"]);
+    });
+
+    QUnit.test("properly handle case when action id does not exist", async (assert) => {
+        assert.expect(2);
+        const webClient = await createWebClient({ testConfig });
+        patchWithCleanup(webClient.env.services.notification, {
+            create(message) {
+                assert.strictEqual(message, "No action with id '4448' could be found");
+            },
+        });
+        await doAction(webClient, 4448);
+        assert.containsOnce(webClient.el, "div.o_invalid_action");
     });
 
     QUnit.test("actions can be cached", async function (assert) {
