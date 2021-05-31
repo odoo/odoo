@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { RPCErrorDialog } from "../core/errors/error_dialogs";
+import { RPCError } from "../core/network/rpc_service";
 
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
@@ -9,7 +10,6 @@ const errorHandlerRegistry = registry.category("error_handlers");
 /**
  * @typedef {import("../env").OdooEnv} OdooEnv
  * @typedef {import("../core/errors/error_service").UncaughtError} UncaughError
- * @typedef {(error: UncaughError) => boolean | void} ErrorHandler
  */
 
 // -----------------------------------------------------------------------------
@@ -18,38 +18,43 @@ const errorHandlerRegistry = registry.category("error_handlers");
 
 /**
  * @param {OdooEnv} env
- * @returns {ErrorHandler}
+ * @param {Error} error
+ * @param {Error} originalError
+ * @returns {boolean}
  */
-function legacyRPCErrorHandler(env) {
-    return (uncaughtError) => {
-        let error = uncaughtError.originalError;
-        if (error && error.legacy && error.message && error.message.name === "RPC_ERROR") {
-            const event = error.event;
-            error = error.message;
-            uncaughtError.unhandledRejectionEvent.preventDefault();
-            if (event.isDefaultPrevented()) {
-                // in theory, here, event was already handled
-                return true;
-            }
-            event.preventDefault();
-            const exceptionName = error.exceptionName;
-            let ErrorComponent = error.Component;
-            if (!ErrorComponent && exceptionName && errorDialogRegistry.contains(exceptionName)) {
-                ErrorComponent = errorDialogRegistry.get(exceptionName);
-            }
-
-            env.services.dialog.open(ErrorComponent || RPCErrorDialog, {
-                traceback: error.traceback || error.stack,
-                message: error.message,
-                name: error.name,
-                exceptionName: error.exceptionName,
-                data: error.data,
-                subType: error.subType,
-                code: error.code,
-                type: error.type,
-            });
+function legacyRPCErrorHandler(env, error, originalError) {
+    if (
+        originalError &&
+        originalError.legacy &&
+        originalError.message &&
+        originalError.message instanceof RPCError
+    ) {
+        const event = originalError.event;
+        originalError = originalError.message;
+        error.unhandledRejectionEvent.preventDefault();
+        if (event.isDefaultPrevented()) {
+            // in theory, here, event was already handled
             return true;
         }
-    };
+        event.preventDefault();
+        const exceptionName = originalError.exceptionName;
+        let ErrorComponent = originalError.Component;
+        if (!ErrorComponent && exceptionName && errorDialogRegistry.contains(exceptionName)) {
+            ErrorComponent = errorDialogRegistry.get(exceptionName);
+        }
+
+        env.services.dialog.open(ErrorComponent || RPCErrorDialog, {
+            traceback: originalError.traceback || originalError.stack,
+            message: originalError.message,
+            name: originalError.name,
+            exceptionName: originalError.exceptionName,
+            data: originalError.data,
+            subType: originalError.subType,
+            code: originalError.code,
+            type: originalError.type,
+        });
+        return true;
+    }
+    return false;
 }
 errorHandlerRegistry.add("legacyRPCErrorHandler", legacyRPCErrorHandler, { sequence: 2 });

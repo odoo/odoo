@@ -14,6 +14,8 @@
 
   global$1 = global$1 && global$1.hasOwnProperty('default') ? global$1['default'] : global$1;
 
+  const debug = odoo.debug;
+
   var window$1 = global$1.window;
   var self$1 = global$1.self;
   var console = global$1.console;
@@ -5338,7 +5340,7 @@
 
       // Odoo Customisation!!!
       // Crappy hack to display traceback with sourcemaps if debug=assets
-      if (lastError && QUnit.annotateTraceback && odoo && odoo.debug && odoo.debug.includes("assets")) {
+      if (lastError && QUnit.annotateTraceback && debug && debug.includes("assets")) {
           const pre = assertLi.querySelector("pre");
 
           QUnit.annotateTraceback(lastError).then(traceback => {
