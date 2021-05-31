@@ -55,8 +55,19 @@ body.editor_enable.editor_has_snippets {
         cursor: -webkit-grabbing;
         cursor: grabbing !important;
 
+        font-size: 12px;
+        text-align: center;
+        width: 84px;
+        height: 91px;
+        line-height: 1.5;
+
         box-shadow: 0 5px 25px -10px black;
         transition: transform 0.3s, box-shadow 0.3s;
+
+        &.oe_snippet_thumbnail_title {
+            padding: 5px;
+            box-sizing: border-box;
+        }
     }
 
     > .oe_snippet_body {
