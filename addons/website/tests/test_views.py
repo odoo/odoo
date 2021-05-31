@@ -235,7 +235,7 @@ class TestViewSaving(TestViewSavingCommon):
         # branding data-oe-* should be stripped
         self.assertIn(
             '<div class="oe_structure" data-test="1" id="oe_structure_test" test="2">hello</div>',
-            view.read_combined(['arch'])['arch'],
+            view.get_combined_arch(),
             'saved element attributes are saved excluding branding ones'
         )
 
@@ -367,7 +367,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(View.search_count([('key', '=', 'website.base_view')]), 1)
         self.assertEqual(View.search_count([('key', '=', 'website.extension_view')]), 1)
 
-        arch = self.base_view.read_combined(['arch'])['arch']
+        arch = self.base_view.get_combined_arch()
         self.assertEqual(arch, '<div>modified content</div>')
 
         # edit on frontend, copy just the leaf
@@ -378,16 +378,16 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == 1)), 1)
 
         # read in backend should be unaffected
-        arch = self.base_view.read_combined(['arch'])['arch']
+        arch = self.base_view.get_combined_arch()
         self.assertEqual(arch, '<div>modified content</div>')
         # read on website should reflect change
-        arch = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        arch = self.base_view.with_context(website_id=1).get_combined_arch()
         self.assertEqual(arch, '<div>website 1 content</div>')
 
         # website-specific inactive view should take preference over active generic one when viewing the website
         # this is necessary to make customize_show=True templates work correctly
         inherit_views.filtered(lambda v: v.website_id.id == 1).write({'active': False})
-        arch = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        arch = self.base_view.with_context(website_id=1).get_combined_arch()
         self.assertEqual(arch, '<div>base content</div>')
 
     def test_cow_root(self):
@@ -410,10 +410,10 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(len(inherit_views), 2)
         self.assertEqual(len(inherit_views.filtered(lambda v: v.website_id.id == 1)), 1)
 
-        arch = generic_base_view.with_context(load_all_views=True).read_combined(['arch'])['arch']
+        arch = generic_base_view.with_context(load_all_views=True).get_combined_arch()
         self.assertEqual(arch, '<div>modified base content, extended content</div>')
 
-        arch = website_specific_base_view.with_context(load_all_views=True, website_id=1).read_combined(['arch'])['arch']
+        arch = website_specific_base_view.with_context(load_all_views=True, website_id=1).get_combined_arch()
         self.assertEqual(arch, '<div>website 1 content, extended content</div>')
 
     # # As there is a new SQL constraint that prevent QWeb views to have an empty `key`, this test won't work
@@ -492,8 +492,8 @@ class TestCowViewSaving(TestViewSavingCommon):
         # 1  | Base      |  Hi     |     /      |     /    |  website.base_view
         # 2  | Extension |  World  |     /      |     1    |  website.extension_view
 
-        arch = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
-        self.assertEqual('Hi World' in arch, True)
+        arch = self.base_view.with_context(website_id=1).get_combined_arch()
+        self.assertIn('Hi World', arch)
 
         self.base_view.write({'arch': '<div>Hello</div>'})
 
@@ -502,8 +502,8 @@ class TestCowViewSaving(TestViewSavingCommon):
         # 1  | Base      |  Hello  |     /      |     /    |  website.base_view
         # 2  | Extension |  World  |     /      |     1    |  website.extension_view
 
-        arch = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
-        self.assertEqual('Hello World' in arch, True)
+        arch = self.base_view.with_context(website_id=1).get_combined_arch()
+        self.assertIn('Hello World', arch)
 
         self.base_view.with_context(website_id=1).write({'arch': '<div>Bye</div>'})
 
@@ -529,7 +529,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         # 2  | Extension |  World  |     /      |     1    |  website.extension_view
         # 4  | Extension |  All    |     1      |     3    |  website.extension_view
 
-        arch = base_specific.with_context(website_id=1).read_combined(['arch'])['arch']
+        arch = base_specific.with_context(website_id=1).get_combined_arch()
         self.assertEqual('Bye All' in arch, True)
 
         self.inherit_view.with_context(website_id=1).write({'arch': '<div position="inside"> Nobody</div>'})
@@ -541,13 +541,13 @@ class TestCowViewSaving(TestViewSavingCommon):
         # 2  | Extension |  World  |     /      |     1    |  website.extension_view
         # 4  | Extension |  Nobody |     1      |     3    |  website.extension_view
 
-        arch = base_specific.with_context(website_id=1).read_combined(['arch'])['arch']
+        arch = base_specific.with_context(website_id=1).get_combined_arch()
         self.assertEqual('Bye Nobody' in arch, True, "Write on generic `inherit_view` should have been diverted to already existing specific view")
 
-        base_arch = self.base_view.read_combined(['arch'])['arch']
-        base_arch_w1 = self.base_view.with_context(website_id=1).read_combined(['arch'])['arch']
+        base_arch = self.base_view.get_combined_arch()
+        base_arch_w1 = self.base_view.with_context(website_id=1).get_combined_arch()
         self.assertEqual('Hello World' in base_arch, True)
-        self.assertEqual(base_arch, base_arch_w1, "Reading a top level view with or without a website_id in the context should render that exact view..")  # ..even if there is a specific view for that one, as read_combined is supposed to render specific inherited view over generic but not specific top level instead of generic top level
+        self.assertEqual(base_arch, base_arch_w1, "Reading a top level view with or without a website_id in the context should render that exact view..")  # ..even if there is a specific view for that one, as get_combined_arch is supposed to render specific inherited view over generic but not specific top level instead of generic top level
 
     def test_cow_cross_inherit(self):
         View = self.env['ir.ui.view']
@@ -584,8 +584,8 @@ class TestCowViewSaving(TestViewSavingCommon):
 
         generic_view = View.with_context(website_id=None).get_view_id('website.main_view')
         specific_view = View.with_context(website_id=1).get_view_id('website.main_view')
-        generic_view_arch = View.browse(generic_view).with_context(load_all_views=True).read_combined(['arch'])['arch']
-        specific_view_arch = View.browse(specific_view).with_context(load_all_views=True, website_id=1).read_combined(['arch'])['arch']
+        generic_view_arch = View.browse(generic_view).with_context(load_all_views=True).get_combined_arch()
+        specific_view_arch = View.browse(specific_view).with_context(load_all_views=True, website_id=1).get_combined_arch()
         self.assertEqual(generic_view_arch, '<body>GENERIC<div>VIEW<span>C</span></div></body>')
         self.assertEqual(specific_view_arch, '<body>SPECIFIC<div>VIEW<span>D</span></div></body>', "Writing on top level view hierarchy with a website in context should write on the view and clone it's inherited views")
 
@@ -781,7 +781,7 @@ class TestCowViewSaving(TestViewSavingCommon):
 
         specific_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product')
         self.assertEqual(self.base_view.key, specific_view.key, "Ensure it is equal as it should be for the rest of the test so we test the expected behaviors")
-        specific_view_arch = specific_view.read_combined(['arch'])['arch']
+        specific_view_arch = specific_view.get_combined_arch()
         self.assertEqual(specific_view.website_id.id, 1, "Ensure we got specific view to perform the checks against")
         self.assertEqual(specific_view_arch, '<p>COMPARE</p>', "When a module creates an inherited view (on a generic tree), it should also create that view in the specific COW'd tree.")
 
@@ -789,7 +789,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'arch': '<div position="replace"><p>COMPARE EDITED</p></div>',
         })])
-        specific_view_arch = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product').read_combined(['arch'])['arch']
+        specific_view_arch = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product').get_combined_arch()
         self.assertEqual(specific_view_arch, '<p>COMPARE EDITED</p>', "When a module updates an inherited view (on a generic tree), it should also update the copies of that view (COW).")
 
         # Test fields that should not be COW'd
