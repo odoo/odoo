@@ -199,7 +199,8 @@ class PosOrder(models.Model):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
             .mapped('picking_ids.move_lines')\
             .sorted(lambda x: x.date)
-        price_unit = product._compute_average_price(0, quantity, moves)
+        product_moves = moves.filtered(lambda m: m.product_id.id == product.id)
+        price_unit = product._compute_average_price(0, quantity, product_moves or moves)
         return price_unit
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
