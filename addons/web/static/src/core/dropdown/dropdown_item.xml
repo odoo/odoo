@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.DropdownItem" owl="1">
+    <li class="o_dropdown_item" t-on-click="onClick" t-att-title="props.title">
+      <span>
+        <t t-slot="default" />
+      </span>
+    </li>
+  </t>
+
+</templates>

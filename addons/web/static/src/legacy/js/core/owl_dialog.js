@@ -3,7 +3,7 @@ odoo.define('web.OwlDialog', function (require) {
 
     const { Component, hooks, misc } = owl;
     const { Portal } = misc;
-    const { useExternalListener, useRef } = hooks;
+    const { useRef } = hooks;
     const SIZE_CLASSES = {
         'extra-large': 'modal-xl',
         'large': 'modal-lg',
@@ -43,8 +43,6 @@ odoo.define('web.OwlDialog', function (require) {
 
             this.modalRef = useRef('modal');
             this.footerRef = useRef('modal-footer');
-
-            useExternalListener(window, 'keydown', this._onKeydown);
         }
 
         mounted() {
@@ -71,9 +69,15 @@ odoo.define('web.OwlDialog', function (require) {
             }
 
             this._removeTooltips();
+
+            // Notifies new webclient to adjust UI active element
+            this.env.bus.trigger("owl_dialog_mounted", this);
         }
 
         willUnmount() {
+            // Notifies new webclient to adjust UI active element
+            this.env.bus.trigger("owl_dialog_willunmount", this);
+
             this.env.bus.off('close_dialogs', this, this._close);
 
             this._removeTooltips();
@@ -176,23 +180,6 @@ odoo.define('web.OwlDialog', function (require) {
             }
         }
 
-        /**
-         * @private
-         * @param {KeyboardEvent} ev
-         */
-        _onKeydown(ev) {
-            if (
-                ev.key === 'Escape' &&
-                !['INPUT', 'TEXTAREA'].includes(ev.target.tagName) &&
-                this.constructor.displayed[this.constructor.displayed.length - 1] === this
-            ) {
-                ev.preventDefault();
-                ev.stopImmediatePropagation();
-                ev.stopPropagation();
-                this._close();
-            }
-        }
-
         //--------------------------------------------------------------------------
         // Static
         //--------------------------------------------------------------------------
@@ -200,14 +187,14 @@ odoo.define('web.OwlDialog', function (require) {
         /**
          * Push the given dialog at the end of the displayed list then set it as
          * active and all the others as passive.
-         * @param {(LegacyDialog|OwlDialog)} dialog
+         * @param {(LegacyDialog|OwlDialog|LegacyAdaptedDialog)} dialog
          */
         static display(dialog) {
             const activeDialog = this.displayed[this.displayed.length - 1];
             if (activeDialog) {
                 // Deactivate previous dialog
-                const activeDialogEl = activeDialog instanceof this ?
-                    // Owl dialog
+                const activeDialogEl = activeDialog.modalRef ?
+                    // Owl dialog | LegacyAdaptedDialog
                     activeDialog.modalRef.el :
                     // Legacy dialog
                     activeDialog.$modal[0];
@@ -222,7 +209,7 @@ odoo.define('web.OwlDialog', function (require) {
         /**
          * Set the given displayed dialog as passive and the last added displayed dialog
          * as active, then remove it from the displayed list.
-         * @param {(LegacyDialog|OwlDialog)} dialog
+         * @param {(LegacyDialog|OwlDialog|LegacyAdaptedDialog)} dialog
          */
         static hide(dialog) {
             // Remove given dialog from the list
@@ -231,8 +218,8 @@ odoo.define('web.OwlDialog', function (require) {
             const lastDialog = this.displayed[this.displayed.length - 1];
             if (lastDialog) {
                 lastDialog.el.focus();
-                const modalEl = lastDialog instanceof this ?
-                    // Owl dialog
+                const modalEl = lastDialog.modalRef ?
+                    // Owl dialog | LegacyAdaptedDialog
                     lastDialog.modalRef.el :
                     // Legacy dialog
                     lastDialog.$modal[0];

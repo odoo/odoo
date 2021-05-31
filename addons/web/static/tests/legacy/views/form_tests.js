@@ -8,7 +8,6 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 const fieldRegistryOwl = require('web.field_registry_owl');
-const FormController = require('web.FormController');
 const FormRenderer = require('web.FormRenderer');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
@@ -23,8 +22,11 @@ var Widget = require('web.Widget');
 var _t = core._t;
 const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
-var createActionManager = testUtils.createActionManager;
 
+const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
+const { createWebClient, doAction, getActionManagerTestConfig } = require('@web/../tests/webclient/actions/helpers');
+
+let testConfig;
 QUnit.module('Views', {
     beforeEach: function () {
         this.data = {
@@ -152,6 +154,15 @@ QUnit.module('Views', {
             type: 'ir.actions.act_window',
             views: [[false, 'kanban'], [false, 'form']],
         }];
+
+        testConfig = getActionManagerTestConfig();
+
+        // map legacy test data
+        const actions = {};
+        this.actions.forEach((act) => {
+          actions[act.xmlId || act.id] = act;
+        });
+        Object.assign(testConfig.serverData, {actions, models: this.data});
     },
 }, function () {
 
@@ -490,77 +501,67 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Form and subview with _view_ref contexts', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
-        this.data.product.fields.partner_type_ids = {string: "one2many field", type: "one2many", relation: "partner_type"},
-        this.data.product.records = [{id: 1, name: 'Tromblon', partner_type_ids: [12,14]}];
-        this.data.partner.records[0].product_id = 1;
+        testConfig.serverData.models.product.fields.partner_type_ids = {string: "one2many field", type: "one2many", relation: "partner_type"},
+        testConfig.serverData.models.product.records = [{id: 1, name: 'Tromblon', partner_type_ids: [12,14]}];
+        testConfig.serverData.models.partner.records[0].product_id = 1;
 
-        var actionManager = await createActionManager({
-            data: this.data,
-            archs: {
-                'product,false,form': '<form>'+
-                                            '<field name="name"/>'+
-                                            '<field name="partner_type_ids" context="{\'tree_view_ref\': \'some_other_tree_view\'}"/>' +
-                                        '</form>',
+        testConfig.serverData.views = {
+            'product,false,form': '<form>'+
+                                        '<field name="name"/>'+
+                                        '<field name="partner_type_ids" context="{\'tree_view_ref\': \'some_other_tree_view\'}"/>' +
+                                    '</form>',
 
-                'partner_type,false,list': '<tree>'+
-                                                '<field name="color"/>'+
-                                            '</tree>',
-                'product,false,search': '<search></search>',
-            },
-            mockRPC: function (route, args) {
-                if (args.method === 'load_views') {
-                    var context = args.kwargs.context;
-                    if (args.model === 'product') {
-                        assert.deepEqual(context, {tree_view_ref: 'some_tree_view'},
-                            'The correct _view_ref should have been sent to the server, first time');
-                    }
-                    if (args.model === 'partner_type') {
-                        assert.deepEqual(context, {
-                            base_model_name: 'product',
-                            tree_view_ref: 'some_other_tree_view',
-                        }, 'The correct _view_ref should have been sent to the server for the subview');
-                    }
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form>' +
+            'partner_type,false,list': '<tree>'+
+                                            '<field name="color"/>'+
+                                        '</tree>',
+            'product,false,search': '<search></search>',
+            'partner,false,form': '<form>' +
                      '<field name="name"/>' +
                      '<field name="product_id" context="{\'tree_view_ref\': \'some_tree_view\'}"/>' +
                   '</form>',
-            res_id: 1,
+            'partner,false,search': '<search></search>',
+        };
 
-            mockRPC: function(route, args) {
-                if (args.method === 'get_formview_action') {
-                    return Promise.resolve({
-                        res_id: 1,
-                        type: 'ir.actions.act_window',
-                        target: 'current',
-                        res_model: args.model,
-                        context: args.kwargs.context,
-                        'view_mode': 'form',
-                        'views': [[false, 'form']],
-                    });
+        const mockRPC = (route, args) => {
+            if (args.method === 'load_views') {
+                var context = args.kwargs.context;
+                if (args.model === 'product') {
+                    assert.strictEqual(context.tree_view_ref, 'some_tree_view',
+                        'The correct _view_ref should have been sent to the server, first time');
                 }
-                return this._super(route, args);
-            },
+                if (args.model === 'partner_type') {
+                    assert.strictEqual(context.base_model_name, 'product',
+                        'The correct base_model_name should have been sent to the server for the subview');
+                    assert.strictEqual(context.tree_view_ref, 'some_other_tree_view',
+                        'The correct _view_ref should have been sent to the server for the subview');
+                }
+            }
+            if (args.method === 'get_formview_action') {
+                return Promise.resolve({
+                    res_id: 1,
+                    type: 'ir.actions.act_window',
+                    target: 'current',
+                    res_model: args.model,
+                    context: args.kwargs.context,
+                    'view_mode': 'form',
+                    'views': [[false, 'form']],
+                });
+            }
+        };
 
-            interceptsPropagate: {
-                do_action: function (ev) {
-                    actionManager.doAction(ev.data.action);
-                },
-            },
+        const webClient = await createWebClient({testConfig, mockRPC});
+        await doAction(webClient, {
+            res_id: 1,
+            type: 'ir.actions.act_window',
+            target: 'current',
+            res_model: 'partner',
+            'view_mode': 'form',
+            'views': [[false, 'form']],
         });
-        await testUtils.dom.click(form.$('.o_field_widget[name="product_id"]'));
-        form.destroy();
-        actionManager.destroy();
+
+        await testUtils.dom.click(webClient.el.querySelector('.o_field_widget[name="product_id"]'));
     });
 
     QUnit.test('invisible fields are properly hidden', async function (assert) {
@@ -6812,10 +6813,10 @@ QUnit.module('Views', {
         _t.database.multi_lang = multi_lang;
     });
 
-    QUnit.test('translation alerts preseved on reverse breadcrumb', async function (assert) {
+    QUnit.test('translation alerts preserved on reverse breadcrumb', async function (assert) {
         assert.expect(2);
 
-        this.data['ir.translation'] = {
+        testConfig.serverData.models['ir.translation'] = {
             fields: {
                 name: { string: "name", type: "char" },
                 source: {string: "Source", type: "char"},
@@ -6824,12 +6825,9 @@ QUnit.module('Views', {
             records: [],
         };
 
-        this.data.partner.fields.foo.translate = true;
+        testConfig.serverData.models.partner.fields.foo.translate = true;
 
-        var multi_lang = _t.database.multi_lang;
-        _t.database.multi_lang = true;
-
-        var archs = {
+        testConfig.serverData.views = {
             'partner,false,form': '<form string="Partners">' +
                     '<sheet>' +
                         '<field name="foo"/>' +
@@ -6844,51 +6842,44 @@ QUnit.module('Views', {
             'ir.translation,false,search': '<search></search>',
         };
 
-        var actions = [{
-            id: 1,
-            name: 'Partner',
-            res_model: 'partner',
-            type: 'ir.actions.act_window',
-            views: [[false, 'form']],
-        }, {
-            id: 2,
-            name: 'Translate',
-            res_model: 'ir.translation',
-            type: 'ir.actions.act_window',
-            views: [[false, 'list']],
-            target: 'current',
-            flags: {'search_view': true, 'action_buttons': true},
-        }];
+        testConfig.serverData.actions = {
+            1: {
+                id: 1,
+                name: 'Partner',
+                res_model: 'partner',
+                type: 'ir.actions.act_window',
+                views: [[false, 'form']],
+            },
+            2: {
+                id: 2,
+                name: 'Translate',
+                res_model: 'ir.translation',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list']],
+                target: 'current',
+                flags: {'search_view': true, 'action_buttons': true},
+            }
+        };
 
-        var actionManager = await createActionManager({
-            actions: actions,
-            archs: archs,
-            data: this.data,
+        const webClient = await createWebClient({ testConfig });
+        patchWithCleanup(_t.database, {
+            multi_lang: true,
         });
+        await doAction(webClient, 1);
+        $(webClient.el).find('input[name="foo"]').val("test").trigger("input");
 
-        await actionManager.doAction(1);
-        actionManager.$('input[name="foo"]').val("test").trigger("input");
-        await testUtils.dom.click(actionManager.$('.o_form_button_save'));
+        await testUtils.dom.click(webClient.el.querySelector('.o_form_button_save'));
+        await legacyExtraNextTick();
 
-        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
+        assert.containsOnce(webClient, '.o_form_view .alert > div',
             "should have a translation alert");
 
-        var currentController = actionManager.getCurrentController().widget;
-        await actionManager.doAction(2, {
-            on_reverse_breadcrumb: function () {
-                if (!_.isEmpty(currentController.renderer.alertFields)) {
-                    currentController.renderer.displayTranslationAlert();
-                }
-                return false;
-            },
-        });
+        await doAction(webClient, 2);
 
         await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
-        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, '.o_form_view .alert > div',
             "should have a translation alert");
-
-        actionManager.destroy();
-        _t.database.multi_lang = multi_lang;
     });
 
     QUnit.test('translate event correctly handled with multiple controllers', async function (assert) {
@@ -8822,32 +8813,29 @@ QUnit.module('Views', {
     QUnit.test('discard after a failed save', async function (assert) {
         assert.expect(2);
 
-        var actionManager = await createActionManager({
-            data: this.data,
-            archs: {
-                'partner,false,form': '<form>' +
-                                        '<field name="date" required="true"/>' +
-                                        '<field name="foo" required="true"/>' +
-                                    '</form>',
-                'partner,false,kanban': '<kanban><templates><t t-name="kanban-box">' +
-                                        '</t></templates></kanban>',
-                'partner,false,search': '<search></search>',
-            },
-            actions: this.actions,
-        });
+        testConfig.serverData.views = {
+            'partner,false,form': '<form>' +
+                                    '<field name="date" required="true"/>' +
+                                    '<field name="foo" required="true"/>' +
+                                '</form>',
+            'partner,false,kanban': '<kanban><templates><t t-name="kanban-box">' +
+                                    '</t></templates></kanban>',
+            'partner,false,search': '<search></search>',
+        };
 
-        await actionManager.doAction(1);
+        const webClient = await createWebClient({ testConfig });
+        await doAction(webClient, 1);
 
         await testUtils.dom.click('.o_control_panel .o-kanban-button-new');
+        await legacyExtraNextTick();
 
         //cannot save because there is a required field
         await testUtils.dom.click('.o_control_panel .o_form_button_save');
+        await legacyExtraNextTick();
         await testUtils.dom.click('.o_control_panel .o_form_button_cancel');
-
-        assert.containsNone(actionManager, '.o_form_view');
-        assert.containsOnce(actionManager, '.o_kanban_view');
-
-        actionManager.destroy();
+        await legacyExtraNextTick();
+        assert.containsNone(webClient, '.o_form_view');
+        assert.containsOnce(webClient, '.o_kanban_view');
     });
 
     QUnit.test("one2many create record dialog shouldn't have a 'remove' button", async function (assert) {
@@ -9728,202 +9716,203 @@ QUnit.module('Views', {
     QUnit.test('Auto save: save when page changed', async function (assert) {
         assert.expect(10);
 
-        const actions = [{
+        testConfig.serverData.actions[1] = {
             id: 1,
             name: 'Partner',
             res_model: 'partner',
             type: 'ir.actions.act_window',
             views: [[false, 'list'], [false, 'form']],
-        }];
+        };
 
-        const actionManager = await createActionManager({
-            actions,
-            data: this.data,
-            archs: {
-                'partner,false,list': `
-                    <tree>
+        testConfig.serverData.views = {
+            'partner,false,list': `
+                <tree>
+                    <field name="name"/>
+                </tree>
+            `,
+            'partner,false,form': `
+                <form>
+                    <group>
                         <field name="name"/>
-                    </tree>
-                `,
-                'partner,false,form': `
-                    <form>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                    </form>
-                `,
-                'partner,false,search': '<search></search>',
-            },
-            mockRPC(route, { args, method }) {
-                if (method === 'write') {
-                    assert.deepEqual(args, [
-                        [1],
-                        { name: "aaa" },
-                    ]);
-                }
-                return this._super(...arguments);
-            },
-        });
-        await actionManager.doAction(1);
+                    </group>
+                </form>
+            `,
+            'partner,false,search': '<search></search>',
+        };
 
-        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnerfirst record');
+        const mockRPC = (route, args) => {
+            if (args.method === 'write') {
+                assert.deepEqual(args.args, [
+                    [1],
+                    { name: "aaa" },
+                ]);
+            }
+        };
 
-        await testUtils.dom.click(actionManager.$('.o_form_button_edit'));
-        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name="name"]'), 'aaa');
+        const webClient = await createWebClient({ testConfig , mockRPC });
 
-        await testUtils.controlPanel.pagerNext(actionManager);
-        assert.containsOnce(actionManager, '.o_form_editable');
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnersecond record');
-        assert.strictEqual(actionManager.$('.o_field_widget[name="name"]').val(), 'name');
+        await doAction(webClient, 1);
 
-        await testUtils.dom.click(actionManager.$('.o_form_button_cancel'));
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnersecond record');
-        assert.strictEqual(actionManager.$('.o_field_widget[name="name"]').text(), 'name');
+        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await legacyExtraNextTick();
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
 
-        await testUtils.controlPanel.pagerPrevious(actionManager);
-        assert.containsOnce(actionManager, '.o_form_readonly');
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnerfirst record');
-        assert.strictEqual(actionManager.$('.o_field_widget[name="name"]').text(), 'aaa');
+        await testUtils.dom.click($(webClient.el).find('.o_form_button_edit'));
+        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="name"]'), 'aaa');
 
-        actionManager.destroy();
+        await testUtils.controlPanel.pagerNext(webClient);
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, '.o_form_editable');
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnersecond record');
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').val(), 'name');
+
+        await testUtils.dom.click($(webClient.el).find('.o_form_button_cancel'));
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnersecond record');
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), 'name');
+
+        await testUtils.controlPanel.pagerPrevious(webClient);
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, '.o_form_readonly');
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), 'aaa');
     });
 
     QUnit.test('Auto save: save when breadcrumb clicked', async function (assert) {
         assert.expect(7);
 
-        const actions = [{
+        testConfig.serverData.actions[1] = {
             id: 1,
             name: 'Partner',
             res_model: 'partner',
             type: 'ir.actions.act_window',
             views: [[false, 'list'], [false, 'form']],
-        }];
+        };
 
-        const actionManager = await createActionManager({
-            actions,
-            data: this.data,
-            archs: {
-                'partner,false,list': `
-                    <tree>
+        testConfig.serverData.views = {
+            'partner,false,list': `
+                <tree>
+                    <field name="name"/>
+                </tree>
+            `,
+            'partner,false,form': `
+                <form>
+                    <group>
                         <field name="name"/>
-                    </tree>
-                `,
-                'partner,false,form': `
-                    <form>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                    </form>
-                `,
-                'partner,false,search': '<search></search>',
-            },
-            mockRPC(route, { args, method }) {
-                if (method === 'write') {
-                    assert.deepEqual(args, [
-                        [1],
-                        { name: "aaa" },
-                    ]);
-                }
-                return this._super(...arguments);
-            },
-        });
-        await actionManager.doAction(1);
+                    </group>
+                </form>
+            `,
+            'partner,false,search': '<search></search>',
+        };
 
-        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnerfirst record');
+        const mockRPC = (route, args) => {
+            if (args.method === 'write') {
+                assert.deepEqual(args.args, [
+                    [1],
+                    { name: "aaa" },
+                ]);
+            }
+        };
 
-        await testUtils.dom.click(actionManager.$('.o_form_button_edit'));
-        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name="name"]'), 'aaa');
+        const webClient = await createWebClient({ testConfig , mockRPC });
 
-        await testUtils.dom.click(actionManager.$('.breadcrumb-item.o_back_button'));
+        await doAction(webClient, 1);
 
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partner');
-        assert.strictEqual(actionManager.$('.o_field_cell[name="name"]:first').text(), 'aaa');
+        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await legacyExtraNextTick();
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
 
-        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
-        assert.containsOnce(actionManager, '.o_form_readonly');
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnerfirst record');
-        assert.strictEqual(actionManager.$('.o_field_widget[name="name"]').text(), 'aaa');
+        await testUtils.dom.click($(webClient.el).find('.o_form_button_edit'));
+        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="name"]'), 'aaa');
 
-        actionManager.destroy();
+        await testUtils.dom.click($(webClient.el).find('.breadcrumb-item.o_back_button'));
+        await legacyExtraNextTick();
+
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partner');
+        assert.strictEqual($(webClient.el).find('.o_field_cell[name="name"]:first').text(), 'aaa');
+
+        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, '.o_form_readonly');
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), 'aaa');
     });
 
     QUnit.test('Auto save: save when action changed', async function (assert) {
         assert.expect(6);
 
-        const actions = [{
+        testConfig.serverData.actions[1] = {
             id: 1,
             name: 'Partner',
             res_model: 'partner',
             type: 'ir.actions.act_window',
             views: [[false, 'list'], [false, 'form']],
-        }, {
+        };
+
+        testConfig.serverData.actions[2] = {
             id: 2,
             name: 'Other action',
             res_model: 'partner',
             type: 'ir.actions.act_window',
             views: [[false, 'kanban']],
-        }];
+        };
 
-        const actionManager = await createActionManager({
-            actions,
-            data: this.data,
-            archs: {
-                'partner,false,list': `
-                    <tree>
+        testConfig.serverData.views = {
+            'partner,false,list': `
+                <tree>
+                    <field name="name"/>
+                </tree>
+            `,
+            'partner,false,form': `
+                <form>
+                    <group>
                         <field name="name"/>
-                    </tree>
-                `,
-                'partner,false,form': `
-                    <form>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                    </form>
-                `,
-                'partner,false,search': '<search></search>',
-                'partner,false,kanban': `
-                    <kanban>
-                        <field name="name"/>
-                        <templates>
-                            <t t-name="kanban-box">
-                                <div></div>
-                            </t>
-                        </templates>
-                    </kanban>
-                `,
-            },
-            mockRPC(route, { args, method }) {
-                if (method === 'write') {
-                    assert.deepEqual(args, [
-                        [1],
-                        { name: "aaa" },
-                    ]);
-                }
-                return this._super(...arguments);
-            },
-        });
-        await actionManager.doAction(1);
+                    </group>
+                </form>
+            `,
+            'partner,false,search': '<search></search>',
+            'partner,false,kanban': `
+                <kanban>
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div></div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        };
 
-        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnerfirst record');
+        const mockRPC = (route, args) => {
+            if (args.method === 'write') {
+                assert.deepEqual(args.args, [
+                    [1],
+                    { name: "aaa" },
+                ]);
+            }
+        };
 
-        await testUtils.dom.click(actionManager.$('.o_form_button_edit'));
-        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name="name"]'), 'aaa');
+        const webClient = await createWebClient({ testConfig , mockRPC });
 
-        await actionManager.doAction(2, { clear_breadcrumbs: true });
+        await doAction(webClient, 1);
 
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Other action');
+        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await legacyExtraNextTick();
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
 
-        await actionManager.doAction(1, { clear_breadcrumbs: true });
+        await testUtils.dom.click($(webClient.el).find('.o_form_button_edit'));
+        await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="name"]'), 'aaa');
 
-        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
-        assert.containsOnce(actionManager, '.o_form_readonly');
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnerfirst record');
-        assert.strictEqual(actionManager.$('.o_field_widget[name="name"]').text(), 'aaa');
+        await doAction(webClient, 2, { clearBreadcrumbs: true });
 
-        actionManager.destroy();
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Other action');
+
+        await doAction(webClient, 1, { clearBreadcrumbs: true });
+
+        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, '.o_form_readonly');
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), 'aaa');
     });
 
     QUnit.test('Auto save: save on closing tab/browser', async function (assert) {
@@ -10028,48 +10017,49 @@ QUnit.module('Views', {
     QUnit.test('Auto save: save on closing tab/browser (detached form)', async function (assert) {
         assert.expect(3);
 
-        const actions = [{
+        testConfig.serverData.actions[1] = {
             id: 1,
             name: 'Partner',
             res_model: 'partner',
             type: 'ir.actions.act_window',
             views: [[false, 'list'], [false, 'form']],
-        }];
+        };
 
-        const actionManager = await createActionManager({
-            actions,
-            data: this.data,
-            archs: {
-                'partner,false,list': `
-                    <tree>
+        testConfig.serverData.views = {
+            'partner,false,list': `
+                <tree>
+                    <field name="display_name"/>
+                </tree>
+            `,
+            'partner,false,form': `
+                <form>
+                    <group>
                         <field name="display_name"/>
-                    </tree>
-                `,
-                'partner,false,form': `
-                    <form>
-                        <group>
-                            <field name="display_name"/>
-                        </group>
-                    </form>
-                `,
-                'partner,false,search': '<search></search>',
-            },
-            mockRPC(route, { args, method }) {
-                if (method === 'write') {
-                    assert.step('save');
-                }
-                return this._super(...arguments);
-            },
-        });
-        await actionManager.doAction(1);
+                    </group>
+                </form>
+            `,
+            'partner,false,search': '<search></search>',
+        };
+
+        const mockRPC = (route, args) => {
+            if (args.method === 'write') {
+                assert.step('save');
+            }
+        };
+
+        const webClient = await createWebClient({ testConfig , mockRPC });
+
+        await doAction(webClient, 1);
 
         // Click on a row to open a record
-        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnerfirst record');
+        await testUtils.dom.click($(webClient.el).find('.o_data_row:first'));
+        await legacyExtraNextTick();
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partnerfirst record');
 
         // Return in the list view to detach the form view
-        await testUtils.dom.click(actionManager.$('.o_back_button'));
-        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partner');
+        await testUtils.dom.click($(webClient.el).find('.o_back_button'));
+        await legacyExtraNextTick();
+        assert.strictEqual($(webClient.el).find('.breadcrumb').text(), 'Partner');
 
         // Simulate tab/browser close in the list
         window.dispatchEvent(new Event("beforeunload"));
@@ -10078,8 +10068,6 @@ QUnit.module('Views', {
         // write rpc should not trigger because form view has been detached
         // and list has nothing to save
         assert.verifySteps([]);
-
-        actionManager.destroy();
     });
 
     QUnit.test('Auto save: save on closing tab/browser (onchanges)', async function (assert) {
