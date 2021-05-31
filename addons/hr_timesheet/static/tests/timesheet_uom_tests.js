@@ -12,7 +12,7 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
     let sessionUserContextBackup;
     let sessionUOMIdsBackup;
     let sessionUIDBackup;
-    hooks.before(function (assert) {
+    hooks.before(async function (assert) {
         env = new SetupTimesheetUOMWidgetsTestEnvironment();
         // Backups session parts that this testing module will alter in order to restore it at the end.
         sessionUserCompaniesBackup = session.user_companies || false;
@@ -20,7 +20,7 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
         sessionUOMIdsBackup = session.uom_ids || false;
         sessionUIDBackup = session.uid || false;
     });
-    hooks.after(function (assert) {
+    hooks.after(async function (assert) {
         // Restores the session
         const sessionToApply = Object.assign(
             { },
@@ -36,7 +36,7 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
             sessionUIDBackup && {
                 uid: sessionUIDBackup,
             } || { });
-        env.triggerAbstractWebClientInit(sessionToApply, true);
+        await env.patchSessionAndStartServices(sessionToApply, true);
     });
     QUnit.module('timesheet_uom', function (hooks) {
         QUnit.module('fieldRegistry', function (hooks) {
@@ -60,11 +60,11 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
                     },
                 });
             });
-            hooks.after(function (hooks) {
+            hooks.after(async function (hooks) {
                 // Restores the widgets and trigger reload in FieldRegistry.
                 TimesheetUOM.FieldTimesheetTime = FieldTimesheetTimeBackup;
                 TimesheetUOM.FieldTimesheetToggle = FieldTimesheetToggleBackup;
-                env.triggerAbstractWebClientInit({ }, true);
+                await env.patchSessionAndStartServices({ }, true);
             });
             QUnit.test('the timesheet_uom widget added to the fieldRegistry is company related', async function (assert) {
                 assert.expect(2);
@@ -108,14 +108,14 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
             QUnit.test('the timesheet_uom_factor usage in formatters and parsers is company related', async function (assert) {
                 assert.expect(4);
 
-                env.triggerAbstractWebClientInit();
+                await env.patchSessionAndStartServices();
                 assert.strictEqual(fieldUtils.format.timesheet_uom(1), '01:00', 'The format is taking the timesheet_uom_factor into account');
                 assert.strictEqual(fieldUtils.parse.timesheet_uom('01:00'), 1, 'The parsing is taking the timesheet_uom_factor into account');
 
                 const sessionToApply = {
                     user_context: env.singleCompanyDayUOMUser,
                 };
-                env.triggerAbstractWebClientInit(sessionToApply);
+                await env.patchSessionAndStartServices(sessionToApply);
                 assert.strictEqual(fieldUtils.format.timesheet_uom(8), '1.00', 'The format is taking the timesheet_uom_factor into account');
                 assert.strictEqual(fieldUtils.parse.timesheet_uom('1.00'), 8, 'The parsing is taking the timesheet_uom_factor into account');
             });
@@ -125,12 +125,12 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
                 let sessionToApply = {
                     user_context: env.multiCompanyHourUOMUser,
                 };
-                env.triggerAbstractWebClientInit(sessionToApply);
+                await env.patchSessionAndStartServices(sessionToApply);
                 assert.strictEqual(fieldUtils.format.timesheet_uom(1), '01:00', 'The format is taking the timesheet_uom_factor into account');
                 assert.strictEqual(fieldUtils.parse.timesheet_uom('01:00'), 1, 'The parsing is taking the timesheet_uom_factor into account');
 
                 sessionToApply.user_context = env.singleCompanyDayUOMUser;
-                env.triggerAbstractWebClientInit(sessionToApply);
+                await env.patchSessionAndStartServices(sessionToApply);
                 assert.strictEqual(fieldUtils.format.timesheet_uom(8), '1.00', 'The format is taking the timesheet_uom_factor into account');
                 assert.strictEqual(fieldUtils.parse.timesheet_uom('1.00'), 8, 'The parsing is taking the timesheet_uom_factor into account');
             });
