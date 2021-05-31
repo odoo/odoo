@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { DialogContainer } from "@web/core/dialog/dialog_service";
+import { DialogContainer } from "@web/core/dialog/dialog_container";
 import { registry } from "@web/core/registry";
 import { NotificationContainer } from "@web/core/notifications/notification_container";
 import testUtils from "web.test_utils";

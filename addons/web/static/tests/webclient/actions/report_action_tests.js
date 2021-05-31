@@ -8,6 +8,7 @@ import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { makeFakeNotificationService, makeFakeUserService } from "../../helpers/mock_services";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 import { mockDownload } from "@web/../tests/helpers/utils";
+import { DialogContainer } from "@web/core/dialog/dialog_container";
 
 let testConfig;
 
@@ -18,6 +19,7 @@ QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         testConfig = getActionManagerTestConfig();
         clearRegistryWithCleanup(mainComponentRegistry);
+        mainComponentRegistry.add("DialogContainer", DialogContainer);
     });
 
     QUnit.module("Report actions");
@@ -284,7 +286,7 @@ QUnit.module("ActionManager", (hooks) => {
         };
         const webClient = await createWebClient({ testConfig, mockRPC });
         let customHandlerCalled = false;
-        registry.category("ir.actions.report handlers").add("custom_handler", async action => {
+        registry.category("ir.actions.report handlers").add("custom_handler", async (action) => {
             if (action.id === 7 && !customHandlerCalled) {
                 customHandlerCalled = true;
                 assert.step("calling custom handler");

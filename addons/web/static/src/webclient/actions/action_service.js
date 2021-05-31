@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { KeyNotFoundError } from "@web/core/registry";
+import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { browser } from "../../core/browser/browser";
 import { useBus } from "../../core/bus_hook";
 import { makeContext } from "../../core/context";
@@ -9,6 +10,7 @@ import { evaluateExpr } from "../../core/py_js/py";
 import { registry } from "../../core/registry";
 import { KeepLast } from "../../core/utils/concurrency";
 import { sprintf } from "../../core/utils/strings";
+import { ActionDialog } from "./action_dialog";
 
 /**
  * @typedef {"current" | "fullscreen" | "new" | "self" | "inline"} ActionMode */
@@ -57,6 +59,7 @@ function makeActionManager(env) {
     let controllerStack = [];
     let dialogCloseProm;
     let actionCache = {};
+    let dialog = {};
 
     // The state action (or default user action if none) is loaded as soon as possible
     // so that the next "doAction" will have its action ready when needed.
@@ -536,6 +539,7 @@ function makeActionManager(env) {
         ControllerComponent.Component = controller.Component;
 
         if (action.target === "new") {
+            cleanDomFromBootstrap();
             const actionDialogProps = {
                 // TODO add size
                 ActionComponent: ControllerComponent,
@@ -544,12 +548,16 @@ function makeActionManager(env) {
             if (action.name) {
                 actionDialogProps.title = action.name;
             }
-            env.bus.trigger("ACTION_MANAGER:UPDATE", {
-                type: "OPEN_DIALOG",
-                id: ++id,
-                props: actionDialogProps,
-                onClose: options.onClose,
-            });
+
+            const { onClose } = dialog;
+            if (dialog.id) {
+                env.services.dialog.close(dialog.id);
+            }
+            const dialogId = env.services.dialog.open(ActionDialog, actionDialogProps);
+            dialog = {
+                id: dialogId,
+                onClose: onClose || options.onClose,
+            };
             return currentActionProm;
         }
 
@@ -571,7 +579,6 @@ function makeActionManager(env) {
         controller.props.breadcrumbs = _getBreadcrumbs(nextStack.slice(0, nextStack.length - 1));
         const closingProm = _executeCloseAction();
         env.bus.trigger("ACTION_MANAGER:UPDATE", {
-            type: "MAIN",
             id: ++id,
             Component: ControllerComponent,
             componentProps: controller.props,
@@ -903,13 +910,20 @@ function makeActionManager(env) {
     }
 
     async function _executeCloseAction(params = {}) {
-        const closingProms = [];
-        env.bus.trigger("ACTION_MANAGER:UPDATE", {
-            type: "CLOSE_DIALOG",
-            closingProms,
-            ...params,
-        });
-        await Promise.all([dialogCloseProm].concat(closingProms.map((fn) => fn())));
+        cleanDomFromBootstrap();
+        let onClose;
+        if (dialog.id) {
+            onClose = dialog.onClose;
+            env.services.dialog.close(dialog.id);
+        } else {
+            onClose = params.onClose;
+        }
+        dialog = {};
+        if (onClose) {
+            await onClose(params.onCloseInfo);
+        }
+
+        return dialogCloseProm;
     }
 
     // ---------------------------------------------------------------------------
