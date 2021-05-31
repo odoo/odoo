@@ -90,3 +90,14 @@ class TestGetMailChannel(TransactionCase):
             self.env['mail.channel'].browse(mail_channel['id']).message_post(body='cc')
 
         return mail_channels
+
+    def test_channel_not_pinned_for_operator_before_first_message(self):
+        public_user = self.env.ref('base.public_user')
+        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='whatever')
+        operator_channel_partner = self.env['mail.channel.partner'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
+        self.assertEqual(len(operator_channel_partner), 1, "operator should be member of channel")
+        self.assertFalse(operator_channel_partner.is_pinned, "channel should not be pinned for operator initially")
+        self.env['mail.channel'].browse(channel_info['id']).message_post(body='cc')
+        self.assertTrue(operator_channel_partner.is_pinned, "channel should be pinned for operator after visitor sent a message")
+        init_channels = self.env['mail.channel'].with_user(operator_channel_partner.partner_id.user_ids[0]).channel_fetch_slot()
+        self.assertIn(channel_info['id'], [init_channel_info['id'] for init_channel_info in init_channels['channel_livechat']], "channel should be fetched by operator on new page")
