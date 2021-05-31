@@ -1316,7 +1316,10 @@ class Picking(models.Model):
         package = False
         for pick in self:
             move_lines_to_pack = self.env['stock.move.line']
-            package = self.env['stock.quant.package'].create({})
+            package_type = move_line_ids.move_id.product_packaging_id.package_type_id
+            package = self.env['stock.quant.package'].create({
+                'package_type_id': package_type.id if len(package_type) == 1 else False,
+            })
 
             precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             if float_is_zero(move_line_ids[0].qty_done, precision_digits=precision_digits):
