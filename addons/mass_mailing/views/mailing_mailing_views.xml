@@ -47,6 +47,7 @@
             </field>
         </record>
 
+        <!-- Main form view for inheriting from -->
         <record model="ir.ui.view" id="view_mail_mass_mailing_form">
             <field name="name">mailing.mailing.form</field>
             <field name="model">mailing.mailing</field>
@@ -65,7 +66,7 @@
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
                     <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
-                        <div attrs="{'invisible': [('ignored', '=', 0)]}">
+                        <div class="o_mails_ignored" attrs="{'invisible': [('ignored', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_ignored"
                                     type="object">
@@ -75,7 +76,7 @@
                                 </strong>
                             </button>
                         </div>
-                        <div attrs="{'invisible': [('scheduled', '=', 0)]}">
+                        <div class="o_mails_scheduled" attrs="{'invisible': [('scheduled', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_scheduled"
                                     type="object">
@@ -85,7 +86,7 @@
                                 </strong>
                             </button>
                         </div>
-                        <div attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test', 'in_queue'))]}">
+                        <div class="o_mails_sent" attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test', 'in_queue'))]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_sent"
                                     type="object">
@@ -95,7 +96,7 @@
                                 </strong>
                             </button>
                         </div>
-                        <div attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
+                        <div class="o_mails_failed" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_failed"
                                     type="object">
@@ -105,7 +106,7 @@
                                 </strong>
                             </button>
                         </div>
-                        <div attrs="{'invisible': [('state', '!=', 'in_queue')]}">
+                        <div class="o_mails_in_queue" attrs="{'invisible': [('state', '!=', 'in_queue')]}">
                             <strong>
                                 <span name="next_departure_text">This mailing is scheduled for </span>
                                 <field name="next_departure" class="oe_inline"/>.
@@ -315,6 +316,80 @@
             </field>
         </record>
 
+        <!-- Inherited form view for mass mailing's form specifically -->
+        <record model="ir.ui.view" id="mailing_mailing_view_form_full_width">
+            <field name="name">mailing.mailing.view.form.full.width</field>
+            <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+            <field name="mode">primary</field>
+            <field name="model">mailing.mailing</field>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">mailing_mailing_view_form_full_width</attribute>
+                    <attribute name="class">o_mass_mailing_mailing_form o_mass_mailing_form_full_width</attribute>
+                </xpath>
+                <field name="state" position="before">
+                    <xpath expr="//div[hasclass('alert-info')]" position="move"/>
+                </field>
+                <xpath expr="//div[hasclass('alert-info')]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('state', '=', 'draft'),'&amp;','&amp;',('state', '!=', 'in_queue'),('scheduled', '=', 0),('failed', '=', 0)]}</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_ignored')]" position="replace"/>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_sent')]" position="replace"/>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_failed')]//span[@name='failed_text']" position="replace">
+                    <span name="failed_text">email(s) not sent.</span>
+                </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_scheduled')]" position="attributes">
+                    <attribute name="attrs">{'invisible': [('state', '!=', 'in_queue')]}</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_scheduled')]/button" position="attributes">
+                    <attribute name="attrs">{'invisible': [('scheduled', '=', 0)]}</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_scheduled')]//span[@name='scheduled_text']" position="replace">
+                    <span name="scheduled_text">email(s) scheduled for </span>
+                </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_scheduled')]/button" position="after">
+                </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong/span[@name='next_departure_text']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('scheduled', '!=', 0)]}</attribute>
+                </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_scheduled')]" position="inside">
+                    <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong" position="move"/>
+                </xpath>
+                <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]" position="replace"/>
+                <xpath expr="//sheet" position="before">
+                    <xpath expr="//div[hasclass('oe_button_box')]" position="move"/>
+                    <xpath expr="//widget[@name='web_ribbon']" position="move"/>
+                    <xpath expr="//group[hasclass('o_mass_mailing_mailing_group')]" position="move"/>
+                    <xpath expr="//notebook" position="move"/>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                    <button name="action_view_traces_sent"
+                        attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
+                        type="object" class="oe_stat_button" icon="fa-paper-plane">
+                        <field name="sent" widget="statinfo" string="Sent"/>
+                    </button>
+                    <button name="action_view_traces_ignored"
+                        attrs="{'invisible': [('state', 'in', ('draft','test'))]}"
+                        type="object" class="oe_stat_button" icon="fa-paper-plane-o">
+                        <field name="ignored" widget="statinfo" string="Ignored"/>
+                    </button>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Chat" name="chat"/>
+                </xpath>
+                <xpath expr="//notebook/page[@name='chat']" position="inside">
+                    <xpath expr="//div[hasclass('oe_chatter')]" position="move"/>
+                </xpath>
+                <xpath expr="//notebook/page[@name='dynamic_placeholder_generator']" position="inside">
+                    <group/>
+                </xpath>
+                <xpath expr="//notebook/page[@name='dynamic_placeholder_generator']/group[2]" position="inside">
+                    <xpath expr="//notebook/page[@name='dynamic_placeholder_generator']/group[1]" position="move"/>
+                </xpath>
+                <xpath expr="//sheet" position="replace"/>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_mail_mass_mailing_kanban">
             <field name="name">mailing.mailing.kanban</field>
             <field name="model">mailing.mailing</field>
@@ -473,6 +548,33 @@
                 send emails<br/> to any contact saved in other Odoo apps.
               </p>
             </field>
+        </record>
+
+        <record id="mailing_mailing_action_mail_fullwidth_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
+        </record>
+        <record id="mailing_mailing_action_mail_fullwidth_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
+        </record>
+        <record id="mailing_mailing_action_mail_fullwidth_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mass_mailing.mailing_mailing_view_form_full_width"/>
+            <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
+        </record>
+        <record id="mailing_mailing_action_mail_fullwidth_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">calendar</field>
+            <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
+        </record>
+        <record id="mailing_mailing_action_mail_fullwidth_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">graph</field>
+            <field name="act_window_id" ref="mass_mailing.mailing_mailing_action_mail"/>
         </record>
 
         <record id="action_view_mass_mailings_from_campaign" model="ir.actions.act_window">
