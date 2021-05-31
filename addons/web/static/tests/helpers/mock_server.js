@@ -108,14 +108,14 @@ var MockServer = Class.extend({
      * Simulates a complete fetch call.
      *
      * @param {string} resource
-     * @param {Object} init
+     * @param {Object} [init]
      * @returns {any}
      */
     async performFetch(resource, init) {
         if (this.debug) {
             console.log(
                 '%c[fetch] request ' + resource, 'color: blue; font-weight: bold;',
-                JSON.parse(JSON.stringify(init))
+                (init) ? JSON.parse(JSON.stringify(init)) : {}
             );
         }
         const res = await this._performFetch(resource, init);
