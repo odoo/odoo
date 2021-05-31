@@ -2,7 +2,7 @@
 
 import core from 'web.core';
 import Widget from 'web.Widget';
-import { hidePDFJSButtons } from '@web/js/libs/pdfjs';
+import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 var QWeb = core.qweb;
 
