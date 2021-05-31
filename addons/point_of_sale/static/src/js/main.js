@@ -1,49 +1,34 @@
-odoo.define('web.web_client', function (require) {
-    'use strict';
+/** @odoo-module */
 
-    const AbstractService = require('web.AbstractService');
-    const env = require('web.env');
-    const WebClient = require('web.AbstractWebClient');
-    const Chrome = require('point_of_sale.Chrome');
-    const Registries = require('point_of_sale.Registries');
-    const { configureGui } = require('point_of_sale.Gui');
+import { startWebClient } from "@web/start";
 
-    owl.config.mode = env.isDebug() ? 'dev' : 'prod';
-    owl.Component.env = env;
+import { ChromeAdapter } from "@point_of_sale/js/chrome_adapter";
+import Registries from "point_of_sale.Registries";
+import { registry } from "@web/core/registry";
 
+// For consistency's sake, we should trigger"WEB_CLIENT_READY" on the bus when PosApp is mounted
+// But we can't since mail and some other poll react on that cue, and we don't want those services started
+class PosApp extends owl.Component {
+    setup() {
+        this.Components = registry.category("main_components").getEntries();
+    }
+}
+PosApp.template = owl.tags.xml`
+  <body>
+    <ChromeAdapter />
+    <div>
+      <t t-foreach="Components" t-as="Component" t-key="Component[0]">
+        <t t-component="Component[1]"/>
+      </t>
+    </div>
+  </body>
+`;
+PosApp.components = { ChromeAdapter };
+
+function startPosApp() {
     Registries.Component.add(owl.misc.Portal);
+    Registries.Component.freeze();
+    startWebClient(PosApp);
+}
 
-    function setupResponsivePlugin(env) {
-        const isMobile = () => window.innerWidth <= 768;
-        env.isMobile = isMobile();
-        const updateEnv = owl.utils.debounce(() => {
-            if (env.isMobile !== isMobile()) {
-                env.isMobile = !env.isMobile;
-                env.qweb.forceUpdate();
-            }
-        }, 15);
-        window.addEventListener("resize", updateEnv);
-    }
-
-    setupResponsivePlugin(owl.Component.env);
-
-    async function startPosApp(webClient) {
-        Registries.Component.freeze();
-        await env.session.is_bound;
-        env.qweb.addTemplates(env.session.owlTemplates);
-        env.bus = new owl.core.EventBus();
-        await owl.utils.whenReady();
-        await webClient.setElement(document.body);
-        await webClient.start();
-        webClient.isStarted = true;
-        const chrome = new (Registries.Component.get(Chrome))(null, { webClient });
-        await chrome.mount(document.querySelector('.o_action_manager'));
-        await chrome.start();
-        configureGui({ component: chrome });
-    }
-
-    AbstractService.prototype.deployServices(env);
-    const webClient = new WebClient();
-    startPosApp(webClient);
-    return webClient;
-});
+startPosApp();

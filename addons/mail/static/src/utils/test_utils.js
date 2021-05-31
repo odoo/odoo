@@ -18,12 +18,17 @@ import AbstractStorageService from 'web.AbstractStorageService';
 import NotificationService from 'web.NotificationService';
 import RamStorage from 'web.RamStorage';
 import {
-    createActionManager,
     createView,
     makeTestPromise,
     mock,
 } from 'web.test_utils';
 import Widget from 'web.Widget';
+import {
+    createWebClient,
+    getActionManagerTestConfig,
+} from "@web/../tests/webclient/actions/helpers";
+import { ComponentAdapter } from "web.OwlCompatibility";
+import LegacyMockServer from "web.MockServer";
 
 const {
     addMockEnvironment,
@@ -546,7 +551,36 @@ async function start(param0 = {}) {
             }
         });
     } else if (hasActionManager) {
-        widget = await createActionManager(kwargs);
+        let testConfig;
+        if (!kwargs.testConfig) {
+            testConfig = getActionManagerTestConfig();
+        } else {
+            testConfig = kwargs.testConfig;
+            delete kwargs.testConfig;
+        }
+
+        if (kwargs.actions) {
+            const actions = {};
+            kwargs.actions.forEach((act) => {
+                actions[act.xml_id || act.id] = act;
+            });
+            Object.assign(testConfig.serverData.actions, actions);
+            delete kwargs.actions;
+        }
+
+        Object.assign(testConfig.serverData.views, kwargs.archs);
+        delete kwargs.archs;
+
+        Object.assign(testConfig.serverData.models, kwargs.data);
+        delete kwargs.data;
+
+        const mockRPC = kwargs.mockRPC;
+        delete kwargs.mockRPC;
+
+        const legacyParams = kwargs;
+        legacyParams.withLegacyMockServer = true;
+        const widget = await createWebClient({ testConfig, mockRPC, legacyParams });
+
         legacyPatch(widget, {
             destroy() {
                 destroyCallbacks.forEach(callback => callback({ widget }));

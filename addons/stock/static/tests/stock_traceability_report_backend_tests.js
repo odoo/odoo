@@ -7,7 +7,9 @@ odoo.define('stock.stock_traceability_report_backend_tests', function (require) 
     const testUtils = require('web.test_utils');
     const { patch, unpatch } = require('web.utils');
 
-    const { createActionManager, dom: domUtils } = testUtils;
+    const { dom: domUtils } = testUtils;
+    const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
+    const { createWebClient, getActionManagerTestConfig, doAction } = require('@web/../tests/webclient/actions/helpers');
 
     /**
      * Helper function to instantiate a stock report action.
@@ -91,49 +93,48 @@ odoo.define('stock.stock_traceability_report_backend_tests', function (require) 
                     this.__superMounted(...arguments);
                 },
             });
+            const models = {
+                partner: {
+                    fields: {
+                        display_name: { string: "Displayed name", type: "char" },
+                    },
+                    records: [
+                        {id: 1, display_name: "Genda Swami"},
+                    ],
+                },
+            };
+            let testConfig = getActionManagerTestConfig();
+            Object.assign(testConfig.serverData, { models });
 
-            const actionManager = await createActionManager({
-                actions: [
-                    {
-                        id: 42,
-                        name: "Stock report",
-                        tag: 'stock_report_generic',
-                        type: 'ir.actions.client',
-                        context: {},
-                        params: {},
-                    },
-                ],
-                archs: {
-                    'partner,false,form': '<form><field name="display_name"/></form>',
-                    'partner,false,search': '<search></search>',
-                },
-                data: {
-                    partner: {
-                        fields: {
-                            display_name: { string: "Displayed name", type: "char" },
-                        },
-                        records: [
-                            {id: 1, display_name: "Genda Swami"},
-                        ],
-                    },
-                },
+            testConfig.serverData.views = {
+                'partner,false,form': '<form><field name="display_name"/></form>',
+                'partner,false,search': '<search></search>',
+            };
+            testConfig.serverData.actions[42] = {
+                id: 42,
+                name: "Stock report",
+                tag: 'stock_report_generic',
+                type: 'ir.actions.client',
+                context: {},
+                params: {},
+            };
+            const webClient = await createWebClient({
+                testConfig,
                 mockRPC: function (route) {
                     if (route === '/web/dataset/call_kw/stock.traceability.report/get_html') {
                         return Promise.resolve({
                             html: '<a class="o_stock_reports_web_action" href="#" data-active-id="1" data-res-model="partner">Go to form view</a>',
                         });
                     }
-                    return this._super.apply(this, arguments);
-                },
-                intercepts: {
-                    do_action: ev => actionManager.doAction(ev.data.action, ev.data.options),
                 },
             });
 
-            await actionManager.doAction(42);
-            await domUtils.click(actionManager.$('.o_stock_reports_web_action'));
-            await domUtils.click(actionManager.$('.breadcrumb-item:first'));
-            actionManager.destroy();
+            await doAction(webClient, 42);
+            await domUtils.click($(webClient.el).find('.o_stock_reports_web_action'));
+            await legacyExtraNextTick();
+            await domUtils.click($(webClient.el).find('.breadcrumb-item:first'));
+            await legacyExtraNextTick();
+            webClient.destroy();
 
             assert.verifySteps([
                 'mounted 1',

@@ -5,7 +5,7 @@ import useShouldUpdateBasedOnProps from '@mail/component_hooks/use_should_update
 import useStore from '@mail/component_hooks/use_store/use_store';
 import { link } from '@mail/model/model_field_command';
 
-import { hidePDFJSButtons } from '@web/js/libs/pdfjs';
+import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 const { Component, QWeb } = owl;
 const { useRef } = owl.hooks;

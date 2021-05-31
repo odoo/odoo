@@ -12,12 +12,12 @@ tour.register('main_flow_tour', {
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"),
 {
 // Add Stockable product
-    trigger: ".o_menu_sections a:contains('Products')",
+    trigger: ".o_menu_sections .o_dropdown_toggler span:contains('Products')",
     extra_trigger: '.o_main_navbar',
     content: _t("Let's create products."),
     position: "bottom",
 }, {
-    trigger: ".o_menu_sections a:has(span:contains('Products'))",
+    trigger: ".o_menu_sections .o_dropdown_item span:contains('Products')",
     content: _t("Let's create products."),
     position: "bottom"
 }, {
@@ -654,29 +654,29 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Overview')"),
 {
     mobile: false,
-    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_stock_config_settings']",
+    trigger: ".o_menu_sections button[data-menu-xmlid='stock.menu_stock_config_settings']",
     extra_trigger: '.o_main_navbar',
     content: _t("Go to Configuration"),
     position: "bottom"
 }, {
     mobile: false,
-    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_reordering_rules_config']",
+    trigger: ".o_menu_sections li[data-menu-xmlid='stock.menu_reordering_rules_config']",
     content: _t("Reordering Rules"),
     position: "bottom"
 }, {
     mobile: true,
-    trigger: ".o_menu_sections a:contains('Configuration')",
+    trigger: ".o_menu_sections button:contains('Configuration')",
     extra_trigger: '.o_main_navbar',
     content: _t("Go to Configuration"),
     position: "bottom"
 }, {
     mobile: true,
-    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_product_in_config_stock']",
+    trigger: ".o_menu_sections button[data-menu-xmlid='stock.menu_product_in_config_stock']",
     content: _t("Click on Product Section"),
     position: "bottom"
 }, {
     mobile: true,
-    trigger: ".o_menu_sections a:contains('Reordering Rules')",
+    trigger: ".o_menu_sections li:contains('Reordering Rules')",
     content: _t("Click on Product Section"),
     position: "bottom"
 }, {
@@ -730,11 +730,11 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
 {
 // Run the schedulers
-    trigger: ".o_menu_sections a:contains('Operations')",
+    trigger: ".o_menu_sections button:contains('Operations')",
     content: _t("Go to Run Schedulers"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_procurement_compute']",
+    trigger: ".o_menu_sections li[data-menu-xmlid='stock.menu_procurement_compute']",
     content: _t("Click on schedulers"),
     position: "bottom"
 }, {
@@ -778,7 +778,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
 {
     trigger: '.o_form_button_edit',
     content: _t('Edit the vendor bill'),
-    extra_trigger: 'body.o_web_client:not(.oe_wait)',
+    extra_trigger: ".o_form_label .o_field_widget:contains('Vendor Bill')",
 }, {
     trigger:".o_field_widget[name=invoice_date] input",
     content: _t('Set the invoice date'),
@@ -800,12 +800,12 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing Orders'), li.breadcrumb-item.active:contains('Work Centers Overview')"),
 {
     mobile: false,
-    trigger: ".o_menu_sections a[data-menu-xmlid='mrp.menu_mrp_manufacturing']",
+    trigger: ".o_menu_sections button[data-menu-xmlid='mrp.menu_mrp_manufacturing']",
     content: _t('Click on Operations menuitem'),
     position: 'bottom',
 }, {
     mobile: false,
-    trigger: ".o_menu_sections a[data-menu-xmlid='mrp.menu_mrp_production_action']",
+    trigger: ".o_menu_sections li[data-menu-xmlid='mrp.menu_mrp_production_action']",
     content: _t('Open manufacturing orders'),
     position: 'bottom',
 }, {
@@ -815,13 +815,13 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     position: 'bottom',
 }, {
     mobile: true,
-    trigger: ".o_menu_sections a:contains('Operations')",
+    trigger: ".o_menu_sections button:contains('Operations')",
     extra_trigger: '.o_main_navbar',
     content: _t("Let's go to manufacturing order."),
     position: "bottom",
 }, {
     mobile: true,
-    trigger: ".o_menu_sections a:has(span:contains('Manufacturing Orders'))",
+    trigger: ".o_menu_sections li:contains('Manufacturing Orders')",
     content: _t("Let's go to manufacturing order."),
     position: "bottom"
 }, {
@@ -833,9 +833,8 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
 },
 ...tour.stepUtils.statusbarButtonsSteps('Check availability', _t("Check availability")),
 {
-    trigger: '.o_form_button_edit',
+    trigger: ".o_form_button_edit:not(:disabled)",
     content: _t('Edit the production order'),
-    extra_trigger: 'body.o_web_client:not(.oe_wait)',
 }, {
     trigger: "input[name=qty_producing]",
     position: 'left',
@@ -852,11 +851,11 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
 ...tour.stepUtils.goToAppSteps('sale.sale_menu_root', _t('Organize your sales activities with the <b>Sales app</b>.')),
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"),
 {
-    trigger: ".o_menu_sections a[data-menu-xmlid='sale.sale_order_menu']",
+    trigger: ".o_menu_sections button[data-menu-xmlid='sale.sale_order_menu']",
     content: _t("Go to Sales menu"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections a[data-menu-xmlid='sale.menu_sale_order']",
+    trigger: ".o_menu_sections li[data-menu-xmlid='sale.menu_sale_order']",
     content: _t("Go to the sales orders"),
     position: "bottom"
 }, {
