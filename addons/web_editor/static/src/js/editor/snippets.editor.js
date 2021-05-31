@@ -2238,9 +2238,10 @@ var SnippetsMenu = Widget.extend({
                     );
                     return dragSnip;
                 },
-                start: function () {
+                start: function (ev) {
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
                     self.$el.find('.oe_snippet_thumbnail').addClass('o_we_already_dragging');
+                    $(ev.target).find('.oe_snippet_thumbnail').addClass("o_we_selected_snippet");
 
                     dropped = false;
                     $snippet = $(this);
@@ -2373,12 +2374,12 @@ var SnippetsMenu = Widget.extend({
                             self.options.wysiwyg.odooEditor.unbreakableStepUnactive();
                             self.options.wysiwyg.odooEditor.historyStep();
 
-                            self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+                            self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging o_we_selected_snippet');
                         });
                     } else {
                         $toInsert.remove();
                         dragAndDropResolve();
-                        self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
+                        self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging o_we_selected_snippet');
                     }
                 },
             },
