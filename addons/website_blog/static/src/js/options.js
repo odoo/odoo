@@ -7,7 +7,7 @@ const options = require('web_editor.snippets.options');
 require('website.editor.snippets.options');
 
 if (!$('.website_blog').length) {
-    return Promise.reject("DOM doesn't contain '.website_blog'");
+    return;
 }
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';
