@@ -25,6 +25,7 @@ class FleetVehicle(models.Model):
     license_plate = fields.Char(tracking=True,
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
+    trailer_hook = fields.Boolean(default=False)
     driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver of the vehicle', copy=False)
     future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
