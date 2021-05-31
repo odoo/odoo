@@ -16,6 +16,16 @@
         action="mail.mail_blacklist_action"
         parent="mass_mailing_configuration"/>
 
+    <!-- Reporting -->
+    <menuitem name="Reporting" id="mass_mailing_menu_report" sequence="99"
+        parent="mass_mailing_menu_root"
+        groups="mass_mailing.group_mass_mailing_user"/>
+
+    <menuitem name="Opt Out" id="mass_mailing_opt_out_report" sequence="99"
+        parent="mass_mailing_menu_report"
+        action="mass_mailing.mailing_opt_out_report_action"
+        groups="mass_mailing.group_mass_mailing_user"/>
+
     <!-- Technical / Mass Mailing -->
     <menuitem id="mailing_mailing_menu_technical"
         name="Mass Mailing"
