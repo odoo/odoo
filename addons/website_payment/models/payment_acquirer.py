@@ -14,7 +14,6 @@ class PaymentAcquirer(models.Model):
     )
 
     def get_base_url(self):
-        self.ensure_one()
         # Give priority to url_root to handle multi-website cases
         if request and request.httprequest.url_root:
             return request.httprequest.url_root

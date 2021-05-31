@@ -3320,7 +3320,8 @@ Fields:
         :rtype: string
 
         """
-        self.ensure_one()
+        if len(self) > 1:
+            raise ValueError("Expected singleton or no record: %s" % self)
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     def _check_concurrency(self):
