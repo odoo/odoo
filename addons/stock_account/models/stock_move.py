@@ -19,6 +19,9 @@ class StockMove(models.Model):
     account_move_ids = fields.One2many('account.move', 'stock_move_id')
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'stock_move_id')
 
+    def _filter_anglo_saxon_moves(self, product):
+        return self.filtered(lambda m: m.product_id.id == product.id)
+
     def action_get_account_moves(self):
         self.ensure_one()
         action_data = self.env['ir.actions.act_window']._for_xml_id('account.action_move_journal_line')

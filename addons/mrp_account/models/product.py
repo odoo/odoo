@@ -54,7 +54,7 @@ class ProductProduct(models.Model):
             bom_line = move.bom_line_id
             bom_line_data = bom_lines[bom_line]
             bom_line_qty = bom_line_data['qty']
-            value += move.product_id._compute_average_price(qty_invoiced * bom_line_qty, qty_to_invoice * bom_line_qty, move)
+            value += bom_line_qty * move.product_id._compute_average_price(qty_invoiced * bom_line_qty, qty_to_invoice * bom_line_qty, move)
         return value
 
     def _compute_bom_price(self, bom, boms_to_recompute=False):
