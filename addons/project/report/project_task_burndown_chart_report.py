@@ -68,6 +68,7 @@ class ReportProjectTaskBurndownChart(models.Model):
             INNER JOIN ir_model_fields imf
                     ON mtv.field = imf.id
                    AND imf.model = 'project.task'
+                   AND imf.name = 'stage_id'
             INNER JOIN project_task_type current_stage
                     ON mtv.old_value_integer = current_stage.id
             INNER JOIN project_task_type next_stage
