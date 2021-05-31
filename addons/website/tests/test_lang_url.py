@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo
 from odoo.addons.http_routing.models.ir_http import url_lang
 from odoo.addons.website.tools import MockRequest
 from odoo.tests import HttpCase, tagged
+from odoo.tests.common import HOST
 
 
 @tagged('-at_install', 'post_install')
@@ -60,3 +62,52 @@ class TestLangUrl(HttpCase):
         r = self.url_open(url)
         self.assertEqual(r.status_code, 200)
         self.assertTrue('lang="fr-FR"' in r.text, "Ensure contactus did not soft crash + loaded in correct lang")
+
+
+@tagged('-at_install', 'post_install')
+class TestControllerRedirect(TestLangUrl):
+    def setUp(self):
+        self.page = self.env['website.page'].create({
+            'name': 'Test View',
+            'type': 'qweb',
+            'arch': '''<t t-call="website.layout">Test View Page</t>''',
+            'key': 'test.test_view',
+            'url': '/page_1',
+            'is_published': True,
+        })
+        super().setUp()
+
+    def test_01_controller_redirect(self):
+        """ Trailing slash URLs should be redirected to non-slash URLs (unless
+            the controller explicitly specifies a trailing slash in the route).
+        """
+
+        def assertUrlRedirect(url, expected_url, msg="", code=301):
+            if expected_url.startswith('/'):
+                expected_url = "http://%s:%s%s" % (HOST, odoo.tools.config['http_port'], expected_url)
+            if not msg:
+                msg = 'Url <%s> differ from <%s>.' % (url, expected_url)
+
+            r = self.url_open(url, head=True)
+            self.assertEqual(r.status_code, code)
+            self.assertEqual(r.headers.get('Location'), expected_url, msg)
+
+        self.authenticate('admin', 'admin')
+
+        # Controllers
+        assertUrlRedirect('/my/', '/my', "Check for basic controller.")
+        assertUrlRedirect('/my/?a=b', '/my?a=b', "Check for basic controller + URL params.")
+        # website.page
+        assertUrlRedirect('/page_1/', '/page_1', "Check for website.page.")
+        assertUrlRedirect('/page_1/?a=b', '/page_1?a=b', "Check for website.page + URL params.")
+
+        # == Same with language ==
+        # Controllers
+        assertUrlRedirect('/fr/my/', '/fr/my', "Check for basic controller with language in URL.")
+        assertUrlRedirect('/fr/my/?a=b', '/fr/my?a=b', "Check for basic controller with language in URL + URL params.")
+        # Homepage (which is a controller)
+        assertUrlRedirect('/fr/', '/fr', "Check for homepage + language.")
+        assertUrlRedirect('/fr/?a=b', '/fr?a=b', "Check for homepage + language + URL params")
+        # website.page
+        assertUrlRedirect('/fr/page_1/', '/fr/page_1', "Check for website.page with language in URL.")
+        assertUrlRedirect('/fr/page_1/?a=b', '/fr/page_1?a=b', "Check for website.page with language in URL + URL params.")
