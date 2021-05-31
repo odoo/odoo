@@ -210,6 +210,7 @@ class ResourceCalendar(models.Model):
         _tz_get, string='Timezone', required=True,
         default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
+    tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char('Explanation', compute="_compute_two_weeks_explanation")
 
@@ -232,6 +233,11 @@ class ResourceCalendar(models.Model):
                 'global_leave_ids': [(5, 0, 0)] + [
                     (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
             })
+
+    @api.depends('tz')
+    def _compute_tz_offset(self):
+        for calendar in self:
+            calendar.tz_offset = datetime.now(timezone(calendar.tz or 'GMT')).strftime('%z')
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
