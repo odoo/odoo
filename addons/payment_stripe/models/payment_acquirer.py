@@ -39,7 +39,7 @@ class PaymentAcquirer(models.Model):
 
         return 1.0
 
-    def _stripe_make_request(self, endpoint, payload=None, method='POST'):
+    def _stripe_make_request(self, endpoint, payload=None, method='POST', offline=False):
         """ Make a request to Stripe API at the specified endpoint.
 
         Note: self.ensure_one()
@@ -47,6 +47,7 @@ class PaymentAcquirer(models.Model):
         :param str endpoint: The endpoint to be reached by the request
         :param dict payload: The payload of the request
         :param str method: The HTTP method of the request
+        :param bool offline: Whether the operation of the transaction being processed is 'offline'
         :return The JSON-formatted content of the response
         :rtype: dict
         :raise: ValidationError if an HTTP error occurs
@@ -63,7 +64,9 @@ class PaymentAcquirer(models.Model):
             # Stripe can send 4XX errors for payment failures (not only for badly-formed requests).
             # Check if an error code is present in the response content and raise only if not.
             # See https://stripe.com/docs/error-codes.
+            # If the request originates from an offline operation, don't raise and return the resp.
             if not response.ok \
+                    and not offline \
                     and 400 <= response.status_code < 500 \
                     and response.json().get('error'):  # The 'code' entry is sometimes missing
                 try:

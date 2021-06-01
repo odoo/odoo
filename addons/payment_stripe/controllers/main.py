@@ -118,7 +118,8 @@ class StripeController(http.Controller):
                     _logger.exception("unable to handle the event data; skipping to acknowledge")
         return ''
 
-    def _include_payment_intent_in_feedback_data(self, payment_intent, data):
+    @staticmethod
+    def _include_payment_intent_in_feedback_data(payment_intent, data):
         data.update({'payment_intent': payment_intent})
         if payment_intent.get('charges', {}).get('total_count', 0) > 0:
             charge = payment_intent['charges']['data'][0]  # Use the latest charge object
@@ -127,7 +128,8 @@ class StripeController(http.Controller):
                 'payment_method': charge.get('payment_method_details'),
             })
 
-    def _include_setup_intent_in_feedback_data(self, setup_intent, data):
+    @staticmethod
+    def _include_setup_intent_in_feedback_data(setup_intent, data):
         data.update({
             'setup_intent': setup_intent,
             'payment_method': setup_intent.get('payment_method')
