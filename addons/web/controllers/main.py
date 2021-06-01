@@ -2046,7 +2046,7 @@ class ReportController(http.Controller):
             # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
             # the user explicitely wants to change the lang, this mechanism overwrites it.
             data['context'] = json.loads(data['context'])
-            if data['context'].get('lang'):
+            if data['context'].get('lang') and not data.get('force_context_lang'):
                 del data['context']['lang']
             context.update(data['context'])
         if converter == 'html':
