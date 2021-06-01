@@ -14,5 +14,16 @@ class Notification(models.Model):
         ('sms_number_missing', 'Missing Number'),
         ('sms_number_format', 'Wrong Number Format'),
         ('sms_credit', 'Insufficient Credit'),
-        ('sms_server', 'Server Error')]
-    )
+        ('sms_server', 'Server Error'),
+        ('sms_acc', 'Unregistered Account'),
+        ('sms_no_info', 'No information available'),
+        ('sms_not_sent', 'Not sent'),
+        ('sms_not_delivered', 'Not delivered'),
+        ('sms_not_allowed', 'Not allowed'), 
+        ('sms_invalid_destination', 'Invalid destination'), 
+        ('sms_invalid_sender', 'Invalid sender'), 
+        ('sms_route_not_available', 'Route not available'), 
+        ('sms_rejected', 'Rejected'), 
+        ('sms_network_error', 'Network error'), 
+        ('sms_expired', 'Expired')
+    ])

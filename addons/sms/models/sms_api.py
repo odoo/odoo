@@ -28,9 +28,12 @@ class SmsApi(models.AbstractModel):
 
         :raises ? TDE FIXME
         """
+        url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', 'False')
         params = {
             'numbers': numbers,
             'message': message,
+            'version': 2.0,
+            'webhook_url': url +'/sms/status'
         }
         return self._contact_iap('/iap/message_send', params)
 
@@ -52,6 +55,11 @@ class SmsApi(models.AbstractModel):
 
         :raises: normally none
         """
+        url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', 'False')
+
+        for sms in messages:
+            sms['webhook_url'] = url +'/sms/status'
+
         params = {
             'messages': messages
         }

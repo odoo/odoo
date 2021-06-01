@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'SMS gateway',
-    'version': '2.0',
-    'category': 'Tools',
+    'version': '2.2',
+    'category': 'Hidden/Tools',
     'summary': 'SMS Text Messaging',
     'description': """
 This module gives a framework for SMS text messaging

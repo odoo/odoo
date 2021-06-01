@@ -42,6 +42,36 @@ class SmsSms(models.Model):
         ('sms_duplicate', 'Duplicate'),
     ], copy=False)
 
+    request_id = fields.Char('request id', help="request id return by sms service")
+    provider_state = fields.Selection([
+        ('no_info', 'No information available'),
+        ('not_sent', 'Not sent'),
+        ('sent', 'sent'), 
+        ('not_delivered', 'Not delivered'), 
+        ('delivered', 'Delivered'), 
+        ('not_allowed', 'Not allowed'), 
+        ('invalid_destination', 'Invalid destination'), 
+        ('invalid_sender', 'Invalid sender'), 
+        ('route_not_available', 'Route not available'), 
+        ('rejected', 'Rejected'), 
+        ('network_error', 'Network error'), 
+        ('expired', 'Expired'), 
+    ])
+
+    def create(self, values):
+        self.env.cr.execute('''
+            SELECT TRUE 
+            FROM information_schema.columns 
+            WHERE table_name='sms_sms' and column_name='provider_state';
+        ''')
+        import pudb; pudb.set_trace()
+
+        if self.env.cr.fetchone():
+            values[0].update({
+                'provider_state': 'no_info',
+            })
+        return super(SmsSms, self).create(values)
+
     def send(self, delete_all=False, auto_commit=False, raise_exception=False):
         """ Main API method to send SMS.
 
@@ -111,10 +141,24 @@ class SmsSms(models.Model):
             self._postprocess_iap_sent_sms(iap_results, delete_all=delete_all)
 
     def _postprocess_iap_sent_sms(self, iap_results, failure_reason=None, delete_all=False):
-        if delete_all:
-            todelete_sms_ids = [item['res_id'] for item in iap_results]
+        todelete_sms_ids = None
+        self.env.cr.execute('''
+            SELECT TRUE 
+            FROM information_schema.columns 
+            WHERE table_name='sms_sms' and column_name='provider_state';
+        ''')
+
+        if self.env.cr.fetchone():
+            for message in iap_results:
+                self.env['sms.sms'].sudo().browse(message['res_id']).write({
+                    'state': 'sent',
+                    'request_id': message['request_id']
+                })
         else:
-            todelete_sms_ids = [item['res_id'] for item in iap_results if item['state'] == 'success']
+            if delete_all:
+                todelete_sms_ids = [item['res_id'] for item in iap_results]
+            else:
+                todelete_sms_ids = [item['res_id'] for item in iap_results if item['state'] == 'success']
 
         for state in self.IAP_TO_SMS_STATE.keys():
             sms_ids = [item['res_id'] for item in iap_results if item['state'] == state]
@@ -127,7 +171,7 @@ class SmsSms(models.Model):
                 notifications = self.env['mail.notification'].sudo().search([
                     ('notification_type', '=', 'sms'),
                     ('sms_id', 'in', sms_ids),
-                    ('notification_status', 'not in', ('sent', 'canceled'))]
+                    ('notification_status', 'not in', ('canceled',))]
                 )
                 if notifications:
                     notifications.write({
