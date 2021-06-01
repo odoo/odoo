@@ -3686,6 +3686,7 @@ QUnit.module('basic_fields', {
                 '</form>',
             res_id: 1,
             session: {
+                // #tzoffset_daterange
                 // Date field should not have an offset as they are ignored. 
                 // However, in the test environement, a UTC timezone is set to run all tests. And if any code does not use the safe timezone method
                 // provided by the framework (which happens in this case inside the date range picker lib), unexpected behavior kicks in as the timezone
