@@ -876,6 +876,24 @@ class Field(MetaField('DummyField', (object,), {})):
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
+<<<<<<< HEAD
+=======
+    def update_db_index(self, model, column):
+        """ Add or remove the index corresponding to ``self``.
+
+            :param model: an instance of the field's model
+            :param column: the column's configuration (dict) if it exists, or ``None``
+        """
+        indexname = '%s_%s_index' % (model._table, self.name)
+        if self.index:
+            try:
+                sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+            except psycopg2.OperationalError:
+                _schema.error("Unable to add index for %s", self)
+        else:
+            sql.drop_index(model._cr, indexname, model._table)
+
+>>>>>>> 1aae03279bf... temp
     def update_db_related(self, model):
         """ Compute a stored related field directly in SQL. """
         comodel = model.env[self.related_field.model_name]
