@@ -12,8 +12,10 @@
             <div id="oe_structure_wesponsor_index_1" class="oe_structure"/>
             <!-- Content -->
             <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
-                <div class="row mb-5 mx-0">
-                    <t t-call="website_event_exhibitor.exhibitor_aside"/>
+                <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not sponsors_other else '')">
+                    <t t-if="sponsors_other">
+                        <t t-call="website_event_exhibitor.exhibitor_aside"/>
+                    </t>
                     <t t-call="website_event_exhibitor.exhibitor_main"/>
                 </div>
             </div>

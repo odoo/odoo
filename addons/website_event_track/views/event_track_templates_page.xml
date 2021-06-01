@@ -11,8 +11,10 @@
             <div id="oe_structure_wesession_track_index_1" class="oe_structure"/>
             <!-- Content -->
             <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
-                <div class="row mb-5 mx-0">
-                    <t t-call="website_event_track.event_track_aside"/>
+                <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not tracks_other else '')">
+                    <t t-if="tracks_other">
+                        <t t-call="website_event_track.event_track_aside"/>
+                    </t>
                     <t t-call="website_event_track.event_track_content"/>
                 </div>
             </div>
