@@ -32,6 +32,7 @@ class MailPluginController(mail_plugin.MailPluginController):
                 {
                     'task_id': task.id,
                     'name': task.name,
+                    'project_name': task.project_id.name,
                 } for task in partner_tasks if task.project_id.id in accessible_projects]
 
             contact_values['tasks'] = tasks_values
