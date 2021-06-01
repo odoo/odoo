@@ -6,12 +6,18 @@ odoo.define('point_of_sale.ReprintReceiptScreen', function (require) {
 
     const ReprintReceiptScreen = (AbstractReceiptScreen) => {
         class ReprintReceiptScreen extends AbstractReceiptScreen {
-            confirm() {
-                this.props.resolve({ confirmed: true, payload: null });
-                this.trigger('close-temp-screen');
+            mounted() {
+                this.tryReprint();
             }
-            tryReprint() {
-                this._printReceipt();
+            confirm() {
+                this.showScreen('OrderManagementScreen');
+            }
+            async tryReprint() {
+                if(this.env.pos.proxy.printer && this.env.pos.config.iface_print_skip_screen) {
+                    let result = await this._printReceipt();
+                    if(result)
+                        this.showScreen('OrderManagementScreen');
+                }
             }
         }
         ReprintReceiptScreen.template = 'ReprintReceiptScreen';
