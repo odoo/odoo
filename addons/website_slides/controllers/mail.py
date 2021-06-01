@@ -33,7 +33,7 @@ class SlidesPortalChatter(PortalChatter):
     @http.route([
         '/slides/mail/update_comment',
         '/mail/chatter_update',
-        ], type='json', auth="user")
+        ], type='json', auth="user", methods=['POST'])
     def mail_update_message(self, res_model, res_id, message, message_id, attachment_ids=None, attachment_tokens=None, **post):
         # keep this mechanism intern to slide currently (saas 12.5) as it is
         # considered experimental
