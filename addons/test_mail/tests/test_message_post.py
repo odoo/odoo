@@ -280,6 +280,17 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertEqual(new_note.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
         self.assertEqual(new_note.notified_partner_ids, self.env['res.partner'])
 
+    def test_post_log_with_view(self):
+        new_note = self.test_record.with_user(self.user_employee)._message_log_with_view(
+            'test_mail.mail_template_simple_test', values={'partner': self.user_employee.partner_id}
+        )
+
+        self.assertEqual(new_note.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertTrue('<p>Hello %s,</p>' % self.user_employee.name in new_note.body)
+        self.assertEqual(new_note.author_id, self.user_employee.partner_id)
+        self.assertEqual(new_note.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(new_note.notified_partner_ids, self.env['res.partner'])
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_notify(self):
         self.user_employee.write({'notification_type': 'inbox'})
