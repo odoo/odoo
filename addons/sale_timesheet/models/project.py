@@ -6,6 +6,8 @@ from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools import format_amount, float_round, float_is_zero
+from odoo.tools.misc import formatLang
 
 
 # YTI PLEASE SPLIT ME
@@ -251,6 +253,84 @@ class Project(models.Model):
         }
         return action_window
 
+    # ----------------------------
+    #  Project Updates
+    # ----------------------------
+
+    def get_panel_data(self):
+        panel_data = super(Project, self).get_panel_data()
+        return {
+            **panel_data,
+            'profitability_items': self._get_profitability_items()
+        }
+
+    def _get_profitability_items(self):
+        if not self.user_has_groups('project.group_project_manager'):
+            return {'data': []}
+        profitability = self.get_profitability_common()
+        data = []
+        if self.allow_timesheets and self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
+            data += [{
+                'name': _("Timesheets"),
+                'value': self.env.ref('sale_timesheet.project_profitability_timesheet_panel')._render({
+                    'timesheet_unit_amount': float_round(profitability['timesheet_unit_amount'], precision_digits=2),
+                    'timesheet_uom': self.env.company._timesheet_uom_text(),
+                    'is_timesheet_uom_hour': self.env.company._is_timesheet_hour_uom(),
+                    'percentage_billable': formatLang(self.env, profitability['timesheet_percentage_billable'], digits=0),
+                }, engine='ir.qweb'),
+            }]
+        if self.allow_billable:
+            margin_color = False
+            if not float_is_zero(profitability['margin'], precision_digits=0):
+                margin_color = profitability['margin'] > 0 and 'green' or 'red'
+            data += [{
+                'name': _("Revenues"),
+                'value': format_amount(self.env, profitability['revenues'], self.env.company.currency_id)
+            }, {
+                'name': _("Costs"),
+                'value': format_amount(self.env, profitability['costs'], self.env.company.currency_id)
+            }, {
+                'name': _("Margin"),
+                'color': margin_color,
+                'value': format_amount(self.env, profitability['margin'], self.env.company.currency_id)
+            }]
+        return {
+            'action': self.allow_billable and self.allow_timesheets and "action_view_timesheet",
+            'allow_billable': self.allow_billable,
+            'data': data,
+        }
+
+    def get_profitability_common(self):
+        self.ensure_one()
+        profitability = self.env['project.profitability.report'].read_group(
+            [('project_id', '=', self.id)],
+            ['project_id',
+             'timesheet_unit_amount',
+             'amount_untaxed_to_invoice',
+             'amount_untaxed_invoiced',
+             'expense_amount_untaxed_to_invoice',
+             'expense_amount_untaxed_invoiced',
+             'other_revenues',
+             'expense_cost',
+             'timesheet_cost',
+             'margin'],
+            ['project_id'])
+        timesheets = self.env['account.analytic.line'].read_group([('project_id', '=', self.id)], ['so_line', 'unit_amount'], ['so_line'])
+        timesheet_billable = timesheet_non_billable = 0.0
+        for timesheet in timesheets:
+            if timesheet['so_line']:
+                timesheet_billable += timesheet['unit_amount']
+            else:
+                timesheet_non_billable += timesheet['unit_amount']
+        return {
+            'costs': profitability and profitability[0]['timesheet_cost'] + profitability[0]['expense_cost'] or 0.0,
+            'margin': profitability and profitability[0]['margin'] or 0.0,
+            'revenues': profitability and (profitability[0]['amount_untaxed_invoiced'] + profitability[0]['amount_untaxed_to_invoice'] +
+                                           profitability[0]['expense_amount_untaxed_invoiced'] + profitability[0]['expense_amount_untaxed_to_invoice'] +
+                                           profitability[0]['other_revenues']) or 0.0,
+            'timesheet_unit_amount': profitability and self._convert_project_uom_to_timesheet_encode_uom(profitability[0]['timesheet_unit_amount']) or 0.0,
+            'timesheet_percentage_billable': timesheet_billable and timesheet_billable / (timesheet_billable + timesheet_non_billable) * 100 or 0.0,
+        }
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
