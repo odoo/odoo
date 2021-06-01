@@ -451,7 +451,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
      */
     destroy() {
         this._super(...arguments);
-        if (!this.noAutohide) {
+        if (!this.noAutohide && this.$topMenu) {
             $(window).off('.autohideMenu');
             dom.destroyAutoMoreMenu(this.$topMenu);
         }
