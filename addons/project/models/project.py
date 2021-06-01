@@ -2,16 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import json
 from collections import defaultdict
 from datetime import timedelta, datetime
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, ValidationError, RedirectWarning
-from odoo.tools.misc import format_date, get_lang
 from odoo.osv.expression import OR
 
 from .project_task_recurrence import DAYS, WEEKS
+from .project_update import STATUS_COLOR
 
 class ProjectTaskType(models.Model):
     _name = 'project.task.type'
@@ -248,6 +249,18 @@ class Project(models.Model):
         ('quarterly', 'Quarterly'),
         ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
+    update_ids = fields.One2many('project.update', 'project_id')
+    last_update_id = fields.Many2one('project.update', string='Last Update')
+    last_update_status = fields.Selection(selection=[
+        ('on_track', 'On Track'),
+        ('at_risk', 'At Risk'),
+        ('off_track', 'Off Track'),
+        ('on_hold', 'On Hold')
+    ], default='on_track', compute='_compute_last_update_status', store=True)
+    last_update_color = fields.Integer(compute='_compute_last_update_color')
+    milestone_ids = fields.One2many('project.milestone', 'project_id')
+    milestone_count = fields.Integer(compute='_compute_milestone_count')
+
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! Project start date must be before project end date.')
     ]
@@ -299,6 +312,23 @@ class Project(models.Model):
         periods = {'daily': 1, 'weekly': 7, 'bimonthly': 15, 'monthly': 30, 'quarterly': 90, 'yearly': 365}
         for project in self:
             project.rating_request_deadline = fields.datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
+
+    @api.depends('last_update_id.status')
+    def _compute_last_update_status(self):
+        for project in self:
+            project.last_update_status = project.last_update_id.status or 'on_track'
+
+    @api.depends('last_update_status')
+    def _compute_last_update_color(self):
+        for project in self:
+            project.last_update_color = STATUS_COLOR[project.last_update_status]
+
+    @api.depends('milestone_ids')
+    def _compute_milestone_count(self):
+        read_group = self.env['project.milestone'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
+        mapped_count = {group['project_id'][0]: group['project_id_count'] for group in read_group}
+        for project in self:
+            project.milestone_count = mapped_count.get(project.id, 0)
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -467,6 +497,89 @@ class Project(models.Model):
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context['search_default_project_id'] = self.id
         return dict(action, context=action_context)
+
+    # ---------------------------------------------
+    #  PROJECT UPDATES
+    # ---------------------------------------------
+
+    def get_last_update_or_default(self):
+        self.ensure_one()
+        labels = dict(self._fields['last_update_status']._description_selection(self.env))
+        return {
+            'status': labels[self.last_update_status],
+            'color': self.last_update_color,
+        }
+
+    def get_panel_data(self):
+        self.ensure_one()
+        return {
+            'user': self._get_user_values(),
+            'tasks_analysis': self._get_tasks_analysis(),
+            'milestones': self._get_milestones(),
+        }
+
+    def _get_user_values(self):
+        return {
+            'is_project_manager': self.user_has_groups('project.group_project_manager'),
+        }
+
+    def _get_tasks_analysis(self):
+        self.ensure_one()
+        counts = self._get_tasks_analysis_counts(updated=True)
+        data = [{
+            'name': _("Open Tasks"),
+            'action': {
+                'action': "project.action_project_task_user_tree",
+                'additional_context': json.dumps({
+                    'search_default_project_id': self.id,
+                    'active_id': self.id,
+                    'search_default_open_tasks': True,
+                    'search_default_Stage': True,
+                    'search_default_User': True
+                }),
+            },
+            'value': counts['open_tasks_count']
+        }, {
+            'name': _("Updated (Last 30 Days)"),
+            'action': {
+                'action': "project.action_project_task_burndown_chart_report",
+                'additional_context': json.dumps({
+                    'search_default_project_id': self.id,
+                    'active_id': self.id,
+                    'search_default_last_month': 1,
+                    'graph_mode': 'bar'
+                }),
+            },
+            'value': counts['updated_tasks_count']
+        }]
+        return {
+            'data': data,
+        }
+
+    def _get_milestones(self):
+        self.ensure_one()
+        return {
+            'data': self.milestone_ids._get_data_list(),
+        }
+
+    def _get_tasks_analysis_counts(self, created=False, updated=False):
+        tasks = self.env['project.task'].search([('display_project_id', '=', self.id)])
+        open_tasks_count = created_tasks_count = updated_tasks_count = 0
+        tasks_count = len(tasks)
+        thirty_days_ago = datetime.combine(fields.Date.context_today(self) + timedelta(days=-30), datetime.min.time())
+        for t in tasks:
+            if not t.stage_id.fold and not t.stage_id.is_closed:
+                open_tasks_count += 1
+            if created and t.create_date > thirty_days_ago:
+                created_tasks_count += 1
+            if updated and t.write_date > thirty_days_ago:
+                updated_tasks_count += 1
+        return dict(
+            open_tasks_count=open_tasks_count,
+            created_tasks_count=created_tasks_count,
+            updated_tasks_count=updated_tasks_count,
+            tasks_count=tasks_count
+        )
 
     # ---------------------------------------------------
     #  Business Methods

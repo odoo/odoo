@@ -315,5 +315,38 @@ Send it ASAP, its urgent.</field>
         <function model="project.task" name="rating_apply" eval="([ref('project.project_task_3')], 5)"/>
         <function model="project.task" name="rating_apply" eval="([ref('project.project_task_24')], 5)"/>
         <function model="project.task" name="rating_apply" eval="([ref('project.project_task_8')], 1)"/>
+
+        <record id="project_milestone_1" model="project.milestone">
+            <field name="is_reached" eval="True"/>
+            <field name="deadline" eval="time.strftime('%Y-%m-10')"/>
+            <field name="name">First Phase</field>
+            <field name="reached_date" eval="time.strftime('%Y-%m-10')"/>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+        <record id="project_milestone_2" model="project.milestone">
+            <field name="is_reached" eval="False"/>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(years=1)).strftime('%Y-%m-15')"/>
+            <field name="name">Second Phase</field>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+        <record id="project_milestone_3" model="project.milestone">
+            <field name="is_reached" eval="False"/>
+            <field name="deadline" eval="(DateTime.now() + relativedelta(years=2)).strftime('%Y-%m-%d')"/>
+            <field name="name">Final Phase</field>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+
+        <record id="project_update_1" model="project.update" context="{'default_project_id': ref('project.project_project_1')}">
+            <field name="name">Review of the situation</field>
+            <field name="user_id" eval="ref('base.user_demo')"/>
+            <field name="progress" eval="15"/>
+            <field name="status">at_risk</field>
+        </record>
+        <record id="project_update_2" model="project.update" context="{'default_project_id': ref('project.project_project_2')}">
+            <field name="name">Weekly review</field>
+            <field name="user_id" eval="ref('base.user_admin')"/>
+            <field name="progress" eval="35"/>
+            <field name="status">at_risk</field>
+        </record>
     </data>
 </odoo>

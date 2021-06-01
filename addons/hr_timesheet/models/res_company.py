@@ -63,3 +63,9 @@ class ResCompany(models.Model):
             }]
         project_ids = self.env['project.project'].create(results)
         return project_ids
+
+    def _is_timesheet_hour_uom(self):
+        return self.timesheet_encode_uom_id and self.timesheet_encode_uom_id == self.env.ref('uom.product_uom_hour')
+
+    def _timesheet_uom_text(self):
+        return self._is_timesheet_hour_uom() and _("hours") or _("days")

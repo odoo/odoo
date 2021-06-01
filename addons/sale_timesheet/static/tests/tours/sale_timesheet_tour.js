@@ -231,6 +231,71 @@ tour.register('sale_timesheet_tour', {
     trigger: 'ul.ui-autocomplete > li:first-child > a',
     content: 'Select the first Sales Order Item in the autocomplete dropdown.',
     run: 'click',
+}, {
+    trigger: 'input[name="name"]',
+    content: 'Set Project name',
+    run: function (actions) {
+        actions.text('Project with employee mapping', this.$anchor);
+    },
+}, {
+    trigger: '.o_form_button_save',
+    content: 'Save Project',
+}, {
+    trigger: 'a[role="menuitem"][data-menu-xmlid="project.menu_projects"]',
+    content: 'Select Projects'
+}, {
+    trigger: 'div.o_kanban_primary_left :contains("Project for Freeman")',
+    content: 'Select Project for Freeman'
+}, {
+    trigger: ".o_project_updates_breadcrumb",
+    content: 'Open Updates'
+}, {
+    trigger: ".o_rightpanel_button a:contains('See Overview')",
+    content: 'See Overview'
+}, {
+    trigger: ".breadcrumb :contains('Overview')",
+    content: 'Check the user sees Overview'
+}, {
+    trigger: ".o_back_button"
+},{
+    trigger: ".o_rightpanel_left_text:eq(0):contains('Timesheets')",
+    content: 'Check the user sees Timesheet stat',
+    run: function () {},
+}, {
+    trigger: ".o_rightpanel_left_text:eq(1):contains('Revenues')",
+    content: 'Check the user sees Revenues stat',
+    run: function () {},
+}, {
+    trigger: ".o_rightpanel_left_text:eq(2):contains('Costs')",
+    content: 'Check the user sees Cost stat',
+    run: function () {},
+}, {
+    trigger: ".o_rightpanel_left_text:eq(3):contains('Margin')",
+    content: 'Check the user sees Margin stat',
+    run: function () {},
+}, {
+    trigger: ".o-kanban-button-new"
+}, {
+    trigger: "input.o_field_widget[name=name]",
+    run: 'text New update'
+}, {
+    trigger: ".o_form_button_save"
+}, {
+    trigger: ".o_field_widget[name=description] :contains('Profitability')",
+    content: 'Check the user sees Profitability section',
+    run: function () {},
+}, {
+    trigger: ".o_field_widget[name=description] :contains('billing rate')",
+    content: 'Check the user sees Profitability section content',
+    run: function () {},
+}, {
+    trigger: ".o_field_widget[name=description] :contains('People')",
+    content: 'Check the user sees People section',
+    run: function () {},
+}, {
+    trigger: ".o_field_widget[name=description] :contains('(new this month)')",
+    content: 'Check the user sees People section content',
+    run: function () {},
 }]);
 
 });

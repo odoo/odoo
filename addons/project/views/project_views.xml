@@ -59,6 +59,7 @@
             <field name="context">{
                 'pivot_row_groupby': ['user_id'],
                 'default_project_id': active_id,
+                'show_project_update': True,
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -261,6 +262,28 @@
                                 Burndown Chart
                             </span>
                         </button>
+                        <button class="oe_stat_button" name="%(project.project_update_all_action)d" type="action" groups="project.group_project_manager">
+                            <div class="pl-4">
+                                <field name="last_update_color" invisible="1"/>
+                                <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager">
+                            <div class="pl-4">
+                                <field name="last_update_color" invisible="1"/>
+                                <field name="last_update_status" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="%(project.project_milestone_all)d" type="action" icon="fa-check-square-o">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="milestone_count" nolabel="1"/>
+                                </span>
+                                <span class="o_stat_text">
+                                    Milestones
+                                </span>
+                            </div>
+                        </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
@@ -399,6 +422,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Project Manager" name="Manager" context="{'group_by': 'user_id'}"/>
                         <filter string="Customer" name="Partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by': 'last_update_status'}"/>
                     </group>
                 </search>
             </field>
@@ -419,6 +443,9 @@
                     <field name="privacy_visibility" optional="hide"/>
                     <field name="label_tasks" optional="hide"/>
                     <field name="company_id" optional="show"  groups="base.group_multi_company"/>
+                    <field name="date" string="Deadline" widget="remaining_days" optional="show"/>
+                    <field name="last_update_color" invisible="1"/>
+                    <field name="last_update_status" string="Status" optional="show" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
                 </tree>
             </field>
         </record>
@@ -521,10 +548,12 @@
                     <field name="date"/>
                     <field name="doc_count"/>
                     <field name="privacy_visibility"/>
+                    <field name="last_update_color"/>
+                    <field name="last_update_status"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
-                                <div class="o_project_kanban_main">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon oe_kanban_content">
+                                <div class="o_project_kanban_main ">
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
@@ -588,14 +617,20 @@
                                     <a class="o_kanban_manage_toggle_button o_left" href="#" groups="base.group_user"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                     <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /></span>
                                 </div>
-
-                                <div class="o_project_kanban_boxes">
-                                    <a class="o_project_kanban_box" name="action_view_tasks" type="object">
-                                        <div>
-                                            <span class="o_value"><t t-esc="record.task_count.value"/></span>
-                                            <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <div class="o_project_kanban_boxes">
+                                            <a class="o_project_kanban_box" name="action_view_tasks" type="object">
+                                                <div>
+                                                    <span class="o_value"><t t-esc="record.task_count.value"/></span>
+                                                    <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
+                                                </div>
+                                            </a>
                                         </div>
-                                    </a>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
+                                    </div>
                                 </div>
                             </div>
                         </t>
@@ -1026,7 +1061,7 @@
             <field name="name">project.task.pivot</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <pivot string="Project Tasks" sample="1">
+                <pivot string="Project Tasks" sample="1" js_class="project_pivot">
                     <field name="project_id" type="row"/>
                     <field name="stage_id" type="col"/>
                     <field name="color" invisible="1"/>
@@ -1038,7 +1073,7 @@
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <graph string="Project Tasks" sample="1">
+                <graph string="Project Tasks" sample="1" js_class="project_graph">
                     <field name="project_id"/>
                     <field name="stage_id"/>
                 </graph>
@@ -1049,7 +1084,7 @@
             <field name="name">project.task.activity</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <activity string="Project Tasks">
+                <activity string="Project Tasks" js_class="project_activity">
                     <field name="user_id"/>
                     <templates>
                         <div t-name="activity-box">
@@ -1223,4 +1258,20 @@
             groups="project.group_project_rating"
             sequence="40"/>
 
+        <record id="project_view_kanban_inherit_project" model="ir.ui.view">
+            <field name="name">project.kanban.inherit.project</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="priority">200</field>
+            <field name="arch" type="xml">
+                <xpath expr="/kanban" position="inside">
+                    <field name="id"/>
+                </xpath>
+                <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
+                    <div role="menuitem" groups="project.group_project_manager">
+                        <a name="%(project.project_update_all_action)d" type="action" t-attf-context="{'active_id': #{record.id.raw_value}}">Project Updates</a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
 </odoo>
