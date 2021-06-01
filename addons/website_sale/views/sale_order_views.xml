@@ -60,6 +60,10 @@
                     class="btn-primary"
                     attrs="{'invisible': ['|', ('is_abandoned_cart', '=', False), ('cart_recovery_email_sent', '=', True)]}"/>
             </xpath>
+            <xpath expr="//button[@name='action_quotation_send' and @states='sent,sale']" position="after">
+                <button name="action_quotation_send" string="Send by Email" type="object"
+                    attrs="{'invisible': ['|', '|', ('is_abandoned_cart', '=', False), ('cart_recovery_email_sent', '=', True), ('state', '!=', 'draft')]}"/>
+            </xpath>
         </field>
     </record>
 
