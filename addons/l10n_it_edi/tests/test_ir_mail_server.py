@@ -44,8 +44,10 @@ class PecMailServerTests(AccountEdiTestCommon):
         super().setUpClass(chart_template_ref='l10n_it.l10n_it_chart_template_generic',
                            edi_format_ref='l10n_it_edi.edi_fatturaPA')
 
+        # Use the company_data_2 to test that the e-invoice is imported for the right company
+        cls.company = cls.company_data_2['company']
+
         # Initialize the company's codice fiscale
-        cls.company = cls.company_data['company']
         cls.company.l10n_it_codice_fiscale = 'IT01234560157'
 
         # Build test data.
@@ -108,6 +110,7 @@ class PecMailServerTests(AccountEdiTestCommon):
         """ Test a signed (P7M) sample e-invoice file from https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml """
         invoices = self._create_invoice(self.signed_invoice_content, self.signed_invoice_filename)
         self.assertRecordValues(invoices, [{
+            'company_id': self.company.id,
             'name': 'BILL/2014/12/0001',
             'date': datetime.date(2014, 12, 18),
             'ref': '01234567890',
