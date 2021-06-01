@@ -187,7 +187,8 @@ def create_index(cr, indexname, tablename, expressions):
     if index_exists(cr, indexname):
         return
     args = ', '.join(expressions)
-    cr.execute('CREATE INDEX "{}" ON "{}" ({})'.format(indexname, tablename, args))
+    with cr.savepoint():
+        cr.execute('CREATE INDEX "{}" ON "{}" ({})'.format(indexname, tablename, args))
     _schema.debug("Table %r: created index %r (%s)", tablename, indexname, args)
 
 def create_unique_index(cr, indexname, tablename, expressions):
