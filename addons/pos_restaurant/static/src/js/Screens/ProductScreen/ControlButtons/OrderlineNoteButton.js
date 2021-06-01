@@ -32,7 +32,7 @@ odoo.define('pos_restaurant.OrderlineNoteButton', function(require) {
     ProductScreen.addControlButton({
         component: OrderlineNoteButton,
         condition: function() {
-            return this.env.pos.config.module_pos_restaurant;
+            return this.env.pos.config.iface_orderline_notes;
         },
     });
 
