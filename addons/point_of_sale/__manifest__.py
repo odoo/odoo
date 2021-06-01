@@ -149,6 +149,7 @@
             'point_of_sale/static/src/js/Popups/OrderImportPopup.js',
             'point_of_sale/static/src/js/Popups/ProductConfiguratorPopup.js',
             'point_of_sale/static/src/js/Popups/CashOpeningPopup.js',
+            'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineCustomerNoteButton.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js',
             'point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.js',
             'point_of_sale/static/src/js/ChromeWidgets/ClientScreenButton.js',

@@ -37,6 +37,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         cls.main_pos_config = env['pos.config'].create({
             'name': 'Shop',
             'barcode_nomenclature_id': env.ref('barcodes.default_barcode_nomenclature').id,
+            'iface_orderline_customer_notes': True,
         })
 
         env['res.partner'].create({

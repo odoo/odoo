@@ -19,7 +19,7 @@ odoo.define('pos_restaurant.OrderlineNoteButton', function(require) {
 
             const { confirmed, payload: inputNote } = await this.showPopup('TextAreaPopup', {
                 startingValue: this.selectedOrderline.get_note(),
-                title: this.env._t('Add Note'),
+                title: this.env._t('Add Internal Note'),
             });
 
             if (confirmed) {
@@ -32,7 +32,7 @@ odoo.define('pos_restaurant.OrderlineNoteButton', function(require) {
     ProductScreen.addControlButton({
         component: OrderlineNoteButton,
         condition: function() {
-            return this.env.pos.config.module_pos_restaurant;
+            return this.env.pos.config.iface_orderline_notes;
         },
     });
 

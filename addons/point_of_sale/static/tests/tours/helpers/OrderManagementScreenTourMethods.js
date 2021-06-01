@@ -102,7 +102,7 @@ odoo.define('point_of_sale.tour.OrderManagementScreenTourMethods', function (req
                 },
             ];
         }
-        orderDetailsHas({ lines, total }) {
+        orderDetailsHas({ lines, total, customerNote }) {
             const steps = [];
             for (let { product, quantity } of lines) {
                 steps.push({
@@ -117,6 +117,13 @@ odoo.define('point_of_sale.tour.OrderManagementScreenTourMethods', function (req
                     trigger: `.order-container .summary .total .value:contains("${total}")`,
                     run: () => {},
                 });
+            }
+            if (customerNote) {
+                steps.push({
+                    content: `order details has a line with a customer note: ${customerNote}`,
+                    trigger: `.orderlines .orderline-note:contains("${customerNote}")`,
+                    run: () => {},
+                })
             }
             return steps;
         }
@@ -170,6 +177,15 @@ odoo.define('point_of_sale.tour.OrderManagementScreenTourMethods', function (req
                 {
                     content: 'order management screen is not hidden',
                     trigger: `.order-management-screen:not(:has(.oe_hidden))`,
+                    run: () => {},
+                }
+            ]
+        }
+        receiptCustomerNoteIs(note) {
+            return [
+                {
+                    content: `receipt has customer note: ${note}`,
+                    trigger: `.orderlines .pos-receipt-left-padding:contains("${note}")`,
                     run: () => {},
                 }
             ]

@@ -46,6 +46,9 @@ odoo.define('point_of_sale.OrderlineDetails', function (require) {
         get pricePerUnit() {
             return ` ${this.unit} at ${this.unitPrice} / ${this.unit}`;
         }
+        get customerNote() {
+            return this.props.line.get_customer_note();
+        }
     }
     OrderlineDetails.template = 'OrderlineDetails';
 

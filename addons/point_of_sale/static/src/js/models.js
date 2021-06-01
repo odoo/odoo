@@ -1634,6 +1634,7 @@ exports.Orderline = Backbone.Model.extend({
         this.full_product_name = '';
         this.id = orderline_id++;
         this.price_manually_set = false;
+        this.customerNote = this.customerNote || '';
 
         if (options.price) {
             this.set_unit_price(options.price);
@@ -1658,6 +1659,7 @@ exports.Orderline = Backbone.Model.extend({
             var pack_lot_line = new exports.Packlotline({}, {'json': _.extend(packlotline, {'order_line':this})});
             this.pack_lot_lines.add(pack_lot_line);
         }
+        this.set_customer_note(json.customer_note);
     },
     clone: function(){
         var orderline = new exports.Orderline({},{
@@ -1673,6 +1675,7 @@ exports.Orderline = Backbone.Model.extend({
         orderline.price = this.price;
         orderline.selected = false;
         orderline.price_manually_set = this.price_manually_set;
+        orderline.customerNote = this.customerNote;
         return orderline;
     },
     getPackLotLinesToEdit: function(isAllowOnlyOneLot) {
@@ -1877,6 +1880,8 @@ exports.Orderline = Backbone.Model.extend({
             return false;
         }else if (this.description !== orderline.description) {
             return false;
+        }else if (orderline.get_customer_note() !== this.get_customer_note()) {
+            return false;
         }else{
             return true;
         }
@@ -1905,6 +1910,7 @@ exports.Orderline = Backbone.Model.extend({
             description: this.description,
             full_product_name: this.get_full_product_name(),
             price_extra: this.get_price_extra(),
+            customer_note: this.get_customer_note(),
         };
     },
     //used to create a json of the ticket, to be sent to the printer
@@ -1928,7 +1934,8 @@ exports.Orderline = Backbone.Model.extend({
             tax:                this.get_tax(),
             product_description:      this.get_product().description,
             product_description_sale: this.get_product().description_sale,
-            pack_lot_lines:      this.get_lot_lines()
+            pack_lot_lines:      this.get_lot_lines(),
+            customer_note:      this.get_customer_note(),
         };
     },
     generate_wrapped_product_name: function() {
@@ -2345,6 +2352,12 @@ exports.Orderline = Backbone.Model.extend({
 
         return !selectedLine ? false : last_id === selectedLine.cid;
     },
+    set_customer_note: function(note) {
+        this.customerNote = note;
+    },
+    get_customer_note: function() {
+        return this.customerNote;
+    }
 });
 
 var OrderlineCollection = Backbone.Collection.extend({

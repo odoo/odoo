@@ -10,7 +10,7 @@ from odoo import api, fields, models
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
-    note = fields.Char('Note added by the waiter.')
+    note = fields.Char('Internal Note added by the waiter.')
     mp_skip = fields.Boolean('Skip line when sending ticket to kitchen printers.')
     mp_dirty = fields.Boolean()
 
@@ -59,6 +59,7 @@ class PosOrder(models.Model):
             'mp_skip',
             'mp_dirty',
             'full_product_name',
+            'customer_note',
         ]
 
     def _get_order_lines(self, orders):

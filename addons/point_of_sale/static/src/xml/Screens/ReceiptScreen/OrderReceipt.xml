@@ -197,6 +197,11 @@
                     </span>
                 </div>
             </t>
+            <t t-if="line.customer_note">
+                <div class="pos-receipt-left-padding pos-receipt-customer-note">
+                    <t t-esc="line.customer_note"/>
+                </div>
+            </t>
             <t t-if="line.pack_lot_lines">
                 <div class="pos-receipt-left-padding">
                     <ul>
