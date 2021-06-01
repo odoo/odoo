@@ -5,7 +5,7 @@
     'name': 'SMS Marketing',
     'summary': 'Design, send and track SMS',
     'description': '',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Marketing/Email Marketing',
     'depends': [
         'portal',

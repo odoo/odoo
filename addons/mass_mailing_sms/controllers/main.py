@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
 
+import werkzeug
+import logging
 from odoo import http, _
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.http import request
+from addons.sms.controller.main import SmsController
+
+_logger = logging.getLogger(__name__)
 
 
 class MailingSMSController(http.Controller):
@@ -103,3 +107,25 @@ class MailingSMSController(http.Controller):
             mailing_trace_id=trace_id
         )
         return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)
+
+class MailingSMSController(SmsController):
+    
+    @http.route('/sms/status', type='json', auth='public', csrf=False)
+    def update_sms_status(self, message):
+        request.env.cr.execute('''
+            SELECT TRUE 
+            FROM information_schema.columns 
+            WHERE table_name='sms_sms' and column_name='provider_state';
+        ''')
+
+        if request.env.cr.fetchone():
+            trace_failure_types = dict(request.env['mailing.trace']._fields['failure_type'].selection)
+            if 'sms_no_info' in trace_failure_types:
+                if message['provider_state'] != 'delivered':
+                    sms = request.env["sms.sms"].sudo().search([('request_id', '=', message['request_id'])])
+                    traces = request.env['mailing.trace'].sudo().search([('sms_sms_id_int', '=', sms.id)])
+                    if traces:
+                        traces.set_failed(failure_type="sms_" + message['provider_state'])
+        else:
+            _logger.warning('Your database is not up to date. If you want to get feedback about your sms please update your database (mass_mailing_sms)')
+        return super(SmsController, self).update_sms_status(message)

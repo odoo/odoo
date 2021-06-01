@@ -33,6 +33,17 @@ class MailingTrace(models.Model):
         # mass mode specific codes
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
+        #new provider feedback system values
+        ('sms_no_info', 'No information available'),
+        ('sms_not_sent', 'Not sent'),
+        ('sms_not_delivered', 'Not delivered'),
+        ('sms_not_allowed', 'Not allowed'), 
+        ('sms_invalid_destination', 'Invalid destination'), 
+        ('sms_invalid_sender', 'Invalid sender'), 
+        ('sms_route_not_available', 'Route not available'), 
+        ('sms_rejected', 'Rejected'), 
+        ('sms_network_error', 'Network error'), 
+        ('sms_expired', 'Expired')
     ])
 
     @api.model_create_multi
@@ -61,7 +72,7 @@ class MailingTrace(models.Model):
 
     def set_failed(self, failure_type):
         for trace in self:
-            trace.write({'exception': fields.Datetime.now(), 'failure_type': failure_type})
+            trace.write({'sent': False, 'exception': fields.Datetime.now(), 'failure_type': failure_type})
 
     def set_sms_sent(self, sms_sms_ids=None):
         statistics = self._get_records_from_sms(sms_sms_ids, [('sent', '=', False)])
