@@ -145,6 +145,7 @@ export class MockServer {
         }
         if (viewId) {
             fvg.view_id = viewId;
+            fvg.name = key;
         }
         return fvg;
     }
