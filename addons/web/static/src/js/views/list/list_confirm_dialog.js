@@ -23,18 +23,17 @@ const ListConfirmDialog = Dialog.extend(WidgetAdapterMixin, {
      * @override
      * @param {Widget} parent
      * @param {Object} record edited record with updated value
-     * @param {Object} changes changes registered by the list controller
-     * @param {Object} changes isDomainSelected true iff the user selected the
+     * @param {Object} params
+     * @param {Object} params.isDomainSelected true iff the user selected the
      *   whole domain
-     * @param {string} changes.fieldLabel label of the changed field
-     * @param {string} changes.fieldName technical name of the changed field
-     * @param {number} changes.nbRecords number of records (total)
-     * @param {number} changes.nbValidRecords number of valid records
+     * @param {string} params.fields list of field names and labels
+     * @param {number} params.nbRecords number of records (total)
+     * @param {number} params.nbValidRecords number of valid records
      * @param {Object} [options]
      */
-    init: function (parent, record, changes, options) {
+    init: function (parent, record, params, options) {
         options = Object.assign({}, options, {
-            $content: $(qweb.render('ListView.confirmModal', { changes })),
+            $content: $(qweb.render('ListView.confirmModal', params)),
             buttons: options.buttons || [{
                 text: _t("Ok"),
                 classes: 'btn-primary',
@@ -52,41 +51,52 @@ const ListConfirmDialog = Dialog.extend(WidgetAdapterMixin, {
 
         this._super(parent, options);
 
-        const Widget = record.fieldsInfo.list[changes.fieldName].Widget;
-        const widgetOptions = {
-            mode: 'readonly',
-            viewType: 'list',
-            noOpen: true,
-        };
-        this.isLegacyWidget = !utils.isComponent(Widget);
-        if (this.isLegacyWidget) {
-            this.fieldWidget = new Widget(this, changes.fieldName, record, widgetOptions);
-        } else {
-            this.fieldWidget = new FieldWrapper(this, Widget, {
-                fieldName: changes.fieldName,
-                record,
-                options: widgetOptions,
-            });
-        }
+        this.fieldWidgets = params.fields.map(({ name }) => {
+            const Widget = record.fieldsInfo.list[name].Widget;
+            const widgetOptions = {
+                mode: 'readonly',
+                viewType: 'list',
+                noOpen: true,
+            };
+            if (!utils.isComponent(Widget)) {
+                return {
+                    isLegacyWidget: true,
+                    fieldWidget: new Widget(this, name, record, widgetOptions),
+                };
+            } else {
+                return {
+                    isLegacyWidget: false,
+                    fieldWidget: new FieldWrapper(this, Widget, {
+                        fieldName: name,
+                        record,
+                        options: widgetOptions,
+                    }),
+                };
+            }
+        });
     },
     /**
      * @override
      */
     willStart: function () {
-        let widgetProm;
-        if (this.isLegacyWidget) {
-            widgetProm = this.fieldWidget._widgetRenderAndInsert(function () {});
-        } else {
-            widgetProm = this.fieldWidget.mount(document.createDocumentFragment());
-        }
-        return Promise.all([widgetProm, this._super.apply(this, arguments)]);
+        const proms = this.fieldWidgets.map(({ isLegacyWidget, fieldWidget }) => {
+            if (isLegacyWidget) {
+                return fieldWidget._widgetRenderAndInsert(function () {});
+            } else {
+                return fieldWidget.mount(document.createDocumentFragment());
+            }
+        });
+        proms.push(this._super.apply(this, arguments));
+        return Promise.all(proms);
     },
     /**
      * @override
      */
     start: function () {
-        this.$content.find('.o_changes_widget').replaceWith(this.fieldWidget.$el);
-        this.fieldWidget.el.style.pointerEvents = 'none';
+        this.fieldWidgets.forEach(({ fieldWidget }) => {
+            this.$content.find(`.o_changes_widget[data-name=${fieldWidget.name}]`).replaceWith(fieldWidget.$el);
+            fieldWidget.el.style.pointerEvents = 'none';
+        });
         return this._super.apply(this, arguments);
     },
     /**

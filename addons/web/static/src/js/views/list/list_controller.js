@@ -476,9 +476,9 @@ var ListController = BasicController.extend({
      * @returns {Promise}
      */
     _saveMultipleRecords: function (recordId, node, changes) {
-        var fieldName = Object.keys(changes)[0];
-        var value = Object.values(changes)[0];
         var recordIds = _.union([recordId], this.selectedRecords);
+        var fieldName = node.attrs.name;
+        var value = changes[fieldName];
         var validRecordIds = recordIds.reduce((result, nextRecordId) => {
             var record = this.model.get(nextRecordId);
             var modifiers = this.renderer._registerModifiers(node, record);
@@ -489,7 +489,7 @@ var ListController = BasicController.extend({
         }, []);
         return new Promise((resolve, reject) => {
             const saveRecords = () => {
-                this.model.saveRecords(this.handle, recordId, validRecordIds, fieldName)
+                this.model.saveRecords(this.handle, recordId, validRecordIds, Object.keys(changes))
                     .then(async () => {
                         this.updateButtons('readonly');
                         const state = this.model.get(this.handle);
@@ -525,14 +525,19 @@ var ListController = BasicController.extend({
                     cancel_callback: discardAndReject,
                 };
                 const record = this.model.get(recordId);
-                const dialogChanges = {
+                const params = {
                     isDomainSelected: this.isDomainSelected,
-                    fieldLabel: node.attrs.string || record.fields[fieldName].string,
-                    fieldName: node.attrs.name,
+                    fields: Object.keys(changes).map((fieldName) => {
+                        let fieldLabel = record.fields[fieldName].string;
+                        if (node.attrs.name === fieldName && node.attrs.string) {
+                            fieldLabel = node.attrs.string;
+                        }
+                        return { name: fieldName, label: fieldLabel };
+                    }),
                     nbRecords: recordIds.length,
                     nbValidRecords: validRecordIds.length,
                 };
-                new ListConfirmDialog(this, record, dialogChanges, dialogOptions)
+                new ListConfirmDialog(this, record, params, dialogOptions)
                     .open({ shouldFocusButtons: true });
             } else {
                 Dialog.alert(this, _t("No valid record to save"), {
