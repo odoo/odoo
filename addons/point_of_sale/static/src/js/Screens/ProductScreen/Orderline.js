@@ -16,6 +16,9 @@ odoo.define('point_of_sale.Orderline', function(require) {
                 selected: this.props.line.selected,
             };
         }
+        get customerNote() {
+            return this.props.line.get_customer_note();
+        }
     }
     Orderline.template = 'Orderline';
 

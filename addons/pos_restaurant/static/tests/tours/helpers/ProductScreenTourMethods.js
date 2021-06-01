@@ -25,7 +25,7 @@ odoo.define('pos_restaurant.tour.ProductScreenTourMethods', function (require) {
             return [
                 {
                     content: 'click note button',
-                    trigger: '.control-buttons .control-button span:contains("Note")',
+                    trigger: '.control-buttons .control-button span:contains("Internal Note")',
                 },
             ];
         }
