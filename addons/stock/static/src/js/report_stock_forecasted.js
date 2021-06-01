@@ -52,7 +52,7 @@ const ReplenishReport = clientAction.extend({
                 this.active_warehouse = this.warehouses[0];
                 this.context.warehouse = this.active_warehouse.id;
             }
-            this.report_url += `?context=${JSON.stringify(this.context)}`;
+            this.report_url += `?context=${JSON.stringify(this.context)}&force_context_lang=1`;
         });
         return Promise.all([
             this._super.apply(this, arguments),
