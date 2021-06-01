@@ -587,12 +587,13 @@ class PosSession(models.Model):
             invoice_receivable_vals[commercial_partner].append(self._get_invoice_receivable_vals(account_id, amounts['amount'], amounts['amount_converted'], partner=commercial_partner))
         for commercial_partner, vals in invoice_receivable_vals.items():
             account_id = commercial_partner.property_account_receivable_id.id
-            receivable_line = MoveLine.create(vals)
-            if (not receivable_line.reconciled):
-                if account_id not in invoice_receivable_lines:
-                    invoice_receivable_lines[account_id] = receivable_line
-                else:
-                    invoice_receivable_lines[account_id] |= receivable_line
+            receivable_lines = MoveLine.create(vals)
+            for receivable_line in receivable_lines:
+                if (not receivable_line.reconciled):
+                    if account_id not in invoice_receivable_lines:
+                        invoice_receivable_lines[account_id] = receivable_line
+                    else:
+                        invoice_receivable_lines[account_id] |= receivable_line
 
         data.update({'invoice_receivable_lines': invoice_receivable_lines})
         return data
