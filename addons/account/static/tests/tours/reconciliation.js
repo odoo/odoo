@@ -28,7 +28,7 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "select the right line to match",
-            trigger: '.o_reconciliation_line:nth-child(4) .o_notebook .cell_label:contains("' + currentYear + '/0001")'
+            trigger: '.o_reconciliation_line:nth-child(4) .o_notebook .line_amount:contains("4,610.00")'
         },
         {
             content: "click on partial reconcile",
