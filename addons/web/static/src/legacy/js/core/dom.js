@@ -545,11 +545,17 @@ var dom = {
      * @param {number} [options.forcedOffset]
      *      offset used instead of the automatic one (extraOffset will be
      *      ignored too)
+     * @param {JQuery} [options.$scrollable] the $element to scroll
      * @return {Promise}
      */
     scrollTo(el, options = {}) {
         const $el = $(el);
-        const $scrollable = $el.parent().closestScrollable();
+        const $scrollable = options.$scrollable || $el.parent().closestScrollable();
+        // If $scrollable and $el are not in the same document, we can safely
+        // assume $el is in an $iframe. We retrieve it by filtering the list of
+        // iframes in $scrollable to keep only the one that contains $el.
+        const isInOneDocument = $scrollable[0].ownerDocument === $el[0].ownerDocument;
+        const $iframe = !isInOneDocument && $scrollable.find('iframe').filter((i, node) => $(node).contents().has($el));
         const $topLevelScrollable = $().getScrollingElement();
         const isTopScroll = $scrollable.is($topLevelScrollable);
 
@@ -560,7 +566,10 @@ var dom = {
                 offsetTop = $el.offset().top;
                 el.classList.add('d-none');
             }
-            const elPosition = $scrollable[0].scrollTop + (offsetTop - $scrollable.offset().top);
+            let elPosition = $scrollable[0].scrollTop + (offsetTop - $scrollable.offset().top);
+            if (!isInOneDocument && $iframe.length) {
+                elPosition += $iframe.offset().top;
+            }
             let offset = options.forcedOffset;
             if (offset === undefined) {
                 offset = (isTopScroll ? dom.scrollFixedOffset() : 0) + (options.extraOffset || 0);

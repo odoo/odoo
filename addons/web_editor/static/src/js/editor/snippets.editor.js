@@ -161,6 +161,9 @@ var SnippetEditor = Widget.extend({
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
+        if (!this.$scrollingElement[0]) {
+            this.$scrollingElement = $(this.ownerDocument).find('.o_editable');
+        }
         this.displayOverlayOptions = false;
 
         this.__isStarted = new Promise(resolve => {
@@ -209,7 +212,10 @@ var SnippetEditor = Widget.extend({
                     },
                 },
             });
-            this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $().getScrollingElement(this.ownerDocument), smoothScrollOptions);
+            const $scrollable = (this.options.wysiwyg.snippetsMenu && this.options.wysiwyg.snippetsMenu.$scrollable)
+                || (this.$scrollingElement.length && this.$scrollingElement)
+                || $().getScrollingElement(this.ownerDocument);
+            this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $scrollable, smoothScrollOptions);
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
             $customize.find('.oe_snippet_clone').addClass('d-none');
@@ -329,8 +335,8 @@ var SnippetEditor = Widget.extend({
         // be outside of the viewport (the whole header during an effect for
         // example).
         const rect = targetEl.getBoundingClientRect();
-        const vpWidth = window.innerWidth || document.documentElement.clientWidth;
-        const vpHeight = window.innerHeight || document.documentElement.clientHeight;
+        const vpWidth = targetEl.ownerDocument.defaultView.innerWidth || document.documentElement.clientWidth;
+        const vpHeight = targetEl.ownerDocument.defaultView.innerHeight || document.documentElement.clientHeight;
         const isInViewport = (
             rect.bottom > -0.1 &&
             rect.right > -0.1 &&
@@ -831,7 +837,9 @@ var SnippetEditor = Widget.extend({
 
         // If a modal is open, the scroll target must be that modal
         const $openModal = self.$editable.find('.modal:visible');
-        self.draggableComponent.$scrollTarget = $openModal.length ? $openModal : self.$scrollingElement;
+        if ($openModal.length) {
+            self.draggableComponent.$scrollTarget = $openModal;
+        }
 
         // Trigger a scroll on the draggable element so that jQuery updates
         // the position of the drop zones.
@@ -1294,6 +1302,9 @@ var SnippetsMenu = Widget.extend({
         // Hide the active overlay when scrolling.
         // Show it again and recompute all the overlays after the scroll.
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
+        if (!this.$scrollingElement[0]) {
+            this.$scrollingElement = $(this.ownerDocument).find('.o_editable');
+        }
         this._onScrollingElementScroll = _.throttle(() => {
             for (const editor of this.snippetEditors) {
                 editor.toggleOverlayVisibility(false);
@@ -2229,7 +2240,10 @@ var SnippetsMenu = Widget.extend({
         var $toInsert, dropped, $snippet;
 
         let dragAndDropResolve;
-        const $scrollingElement = $().getScrollingElement(this.ownerDocument);
+        let $scrollingElement = $().getScrollingElement(this.ownerDocument);
+        if (!$scrollingElement[0]) {
+            $scrollingElement = $(this.ownerDocument).find('.o_editable');
+        }
 
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
@@ -2306,7 +2320,9 @@ var SnippetsMenu = Widget.extend({
 
                     // If a modal is open, the scroll target must be that modal
                     const $openModal = self.getEditableArea().find('.modal:visible');
-                    self.draggableComponent.$scrollTarget = $openModal.length ? $openModal : $scrollingElement;
+                    if ($openModal.length) {
+                        self.draggableComponent.$scrollTarget = $openModal;
+                    }
 
                     // Trigger a scroll on the draggable element so that jQuery updates
                     // the position of the drop zones.
@@ -2361,7 +2377,7 @@ var SnippetsMenu = Widget.extend({
                         }
 
                         var $target = $toInsert;
-                        await self._scrollToSnippet($target);
+                        await self._scrollToSnippet($target, self.$scrollable);
 
                         _.defer(async function () {
                             self._disableUndroppableSnippets();
@@ -2446,10 +2462,11 @@ var SnippetsMenu = Widget.extend({
      *
      * @private
      * @param {jQuery} $el - snippet to scroll to
+     * @param {jQuery} [$scrollable] - $element to scroll
      * @return {Promise}
      */
-    async _scrollToSnippet($el) {
-        return dom.scrollTo($el[0], {extraOffset: 50});
+    async _scrollToSnippet($el, $scrollable) {
+        return dom.scrollTo($el[0], {extraOffset: 50, $scrollable: $scrollable});
     },
     /**
      * @private

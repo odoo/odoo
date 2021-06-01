@@ -209,7 +209,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _toggleCodeView: function ($codeview, $codeviewButton) {
         this.wysiwyg.odooEditor.observerUnactive();
-        $codeview.height(this.$content.height())
+        $codeview.height(this.$content.height());
         $codeview.toggleClass('d-none');
         this.$content.toggleClass('d-none');
         if ($codeview.hasClass('d-none')) {
@@ -309,6 +309,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                 }
                 self.$content = $('#iframe_target', self.$iframe[0].contentWindow.document.body);
                 resolver();
+                self.trigger_up('iframe_updated', { $iframe: self.$iframe });
             };
 
             this.$iframe.on('load', function onLoad() {
