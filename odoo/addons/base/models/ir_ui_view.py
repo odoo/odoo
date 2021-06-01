@@ -74,18 +74,25 @@ def transfer_node_to_modifiers(node, modifiers, context=None, current_node_path=
         else:
             modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
 
-    for a in ('invisible', 'readonly', 'required'):
-        if node.get(a):
-            v = bool(safe_eval.safe_eval(node.get(a), {'context': context or {}}))
+    for attr in ('invisible', 'readonly', 'required'):
+        value_str = node.get(attr)
+        if value_str:
+            # most (~95%) elements are 0/1/True/False
+            if value_str == '1' or value_str == 'True':
+                value = True
+            elif value_str == '0' or value_str == 'False':
+                value = False
+            else:
+                value = bool(safe_eval.safe_eval(value_str, {'context': context or {}}))
             node_path = current_node_path or ()
-            if 'tree' in node_path and 'header' not in node_path and a == 'invisible':
+            if 'tree' in node_path and 'header' not in node_path and attr == 'invisible':
                 # Invisible in a tree view has a specific meaning, make it a
                 # new key in the modifiers attribute.
-                modifiers['column_invisible'] = v
-            elif v or (a not in modifiers or not isinstance(modifiers[a], list)):
+                modifiers['column_invisible'] = value
+            elif value or (attr not in modifiers or not isinstance(modifiers[attr], list)):
                 # Don't set the attribute to False if a dynamic value was
                 # provided (i.e. a domain from attrs or states).
-                modifiers[a] = v
+                modifiers[attr] = value
 
 
 def simplify_modifiers(modifiers):
