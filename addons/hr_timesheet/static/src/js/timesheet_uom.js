@@ -91,6 +91,7 @@ const FieldTimesheetTime = basicFields.FieldFloatTime.extend(TimesheetUOMMultiCo
 });
 
 const timesheetUomService = {
+    dependencies: ["legacy_session"],
     start() {
         const timesheetUomInfo = {
             widget: null,
