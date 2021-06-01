@@ -33,6 +33,13 @@ const ReplenishReport = clientAction.extend({
         this.actionMethod = `action_product_${isTemplate ? 'tmpl_' : ''}forecast_report`;
         const reportName = `report_product_${isTemplate ? 'template' : 'product'}_replenishment`;
         this.report_url = `/report/html/stock.${reportName}/${this.productId}`;
+<<<<<<< HEAD
+=======
+        if (this.context.warehouse) {
+            this.active_warehouse = {id: this.context.warehouse};
+        }
+        this.report_url += `?context=${JSON.stringify(this.context)}&force_context_lang=1`;
+>>>>>>> f9a02c56b44... temp
         this._title = action.name;
     },
 
