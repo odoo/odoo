@@ -1273,14 +1273,11 @@ class StockMove(models.Model):
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         self.ensure_one()
-        # apply putaway
-        location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity or 0, packaging=self.product_packaging_id).id
         vals = {
             'move_id': self.id,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
             'location_id': self.location_id.id,
-            'location_dest_id': location_dest_id,
             'picking_id': self.picking_id.id,
             'company_id': self.company_id.id,
         }
@@ -1293,14 +1290,19 @@ class StockMove(models.Model):
                 vals = dict(vals, product_uom_qty=uom_quantity)
             else:
                 vals = dict(vals, product_uom_qty=quantity, product_uom_id=self.product_id.uom_id.id)
+        package = None
         if reserved_quant:
+            package = reserved_quant.package_id
             vals = dict(
                 vals,
                 location_id=reserved_quant.location_id.id,
                 lot_id=reserved_quant.lot_id.id or False,
-                package_id=reserved_quant.package_id.id or False,
+                package_id=package.id or False,
                 owner_id =reserved_quant.owner_id.id or False,
             )
+        # apply putaway
+        location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id, quantity=quantity or 0, package=package, packaging=self.product_packaging_id).id
+        vals['location_dest_id'] = location_dest_id
         return vals
 
     def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
