@@ -769,7 +769,7 @@ class WebsiteSlides(WebsiteProfile):
             'can_create': can_create,
         }
 
-    @http.route('/slides/category/add', type="http", website=True, auth="user")
+    @http.route('/slides/category/add', type="http", website=True, auth="user", methods=['POST'])
     def slide_category_add(self, channel_id, name):
         """ Adds a category to the specified channel. Slide is added at the end
         of slide list based on sequence. """
