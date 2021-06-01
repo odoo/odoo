@@ -109,6 +109,18 @@ class AccountEdiFormat(models.Model):
                 invoice = self.env['account.move']
             first_run = False
 
+            # Type must be present in the context to get the right behavior of the _default_journal method (account.move).
+            # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
+            elements = tree.xpath('//CessionarioCommittente//IdCodice')
+            company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
+            if not company:
+                elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
+                company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
+                if not company:
+                    # Only invoices with a correct VAT or Codice Fiscale can be imported
+                    _logger.warning('No company found with VAT or Codice Fiscale like %r.', elements[0].text)
+                    continue
+
             # Refund type.
             # TD01 == invoice
             # TD02 == advance/down payment on invoice
@@ -123,32 +135,14 @@ class AccountEdiFormat(models.Model):
                 move_type = 'in_refund'
             elif elements and elements[0].text and elements[0].text != 'TD01':
                 _logger.info('Document type not managed: %s. Invoice type is set by default.', elements[0].text)
-            invoice_ctx = invoice.with_context(default_move_type=move_type)
 
-            # type must be present in the context to get the right behavior of the _default_journal method (account.move).
-            # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
-
-            elements = tree.xpath('//CessionarioCommittente//IdCodice')
-            company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
-            if not company:
-                elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
-                company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
-
-            if company:
-                invoice_ctx = invoice_ctx.with_context(company_id=company.id)
-            else:
-                company = self.env.company
-                if elements:
-                    _logger.info('No company found with codice fiscale: %s. The user\'s company is set by default.', elements[0].text)
-                else:
-                    _logger.info('Company not found. The user\'s company is set by default.')
-
-            if not self.env.is_superuser():
-                if self.env.company != company:
-                    raise UserError(_("You can only import invoice concern your current company: %s", self.env.company.display_name))
+            # Setup the context for the Invoice Form
+            invoice_ctx = invoice.with_company(company) \
+                                 .with_context(default_move_type=move_type,
+                                               account_predictive_bills_disable_prediction=True)
 
             # move could be a single record (editing) or be empty (new).
-            with Form(invoice_ctx.with_context(account_predictive_bills_disable_prediction=True)) as invoice_form:
+            with Form(invoice_ctx) as invoice_form:
                 message_to_log = []
 
                 # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
