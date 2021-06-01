@@ -15,6 +15,7 @@ class ResConfigSettings(models.TransientModel):
     ], string='Inventory Availability', default='never')
     available_threshold = fields.Float(string='Availability Threshold')
     website_warehouse_id = fields.Many2one('stock.warehouse', related='website_id.warehouse_id', domain="[('company_id', '=', website_company_id)]", readonly=False)
+    website_stock_location_ids = fields.Many2many('stock.location', related='website_id.stock_location_ids', domain="[('company_id', '=', website_company_id)]", readonly=False)
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
@@ -34,3 +35,6 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_website_company_id(self):
         if self.website_warehouse_id.company_id != self.website_company_id:
             return {'value': {'website_warehouse_id': False}}
+        # Checking against first location is enough, as website_stock_location_ids can't have different companies (forced domain)
+        if self.website_stock_location_ids and self.website_stock_location_ids[0].company_id != self.website_company_id:
+            return {'value': {'website_stock_location_ids': False}}
