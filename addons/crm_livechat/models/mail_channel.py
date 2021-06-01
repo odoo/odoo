@@ -39,7 +39,7 @@ class MailChannel(models.Model):
         # anonymous user whatever the participants. Otherwise keep only share
         # partners (no user or portal user) to link to the lead.
         customers = self.env['res.partner']
-        for customer in channel_partners.partner_id.filtered('partner_share'):
+        for customer in channel_partners.partner_id.filtered('partner_share').with_context(active_test=False):
             if customer.user_ids and all(user._is_public() for user in customer.user_ids):
                 customers = self.env['res.partner']
                 break

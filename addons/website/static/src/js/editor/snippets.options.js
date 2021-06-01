@@ -997,6 +997,14 @@ options.registry.OptionsTab = options.Class.extend({
         });
         return aceEditor;
     },
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        uiFragment.querySelectorAll('we-colorpicker').forEach(el => {
+            el.dataset.lazyPalette = 'true';
+        });
+    },
 });
 
 options.registry.ThemeColors = options.registry.OptionsTab.extend({
@@ -1062,6 +1070,8 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             }
             uiFragment.appendChild(collapseEl);
         }
+
+        await this._super(...arguments);
     },
 });
 

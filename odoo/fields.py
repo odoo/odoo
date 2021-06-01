@@ -2650,7 +2650,10 @@ class Many2one(_Relational):
             # value is either a pair (id, name), or a tuple of ids
             id_ = value[0] if value else None
         elif isinstance(value, dict):
-            id_ = record.env[self.comodel_name].new(value).id
+            # return a new record (with the given field 'id' as origin)
+            comodel = record.env[self.comodel_name]
+            origin = comodel.browse(value.get('id'))
+            id_ = comodel.new(value, origin=origin).id
         else:
             id_ = None
 
