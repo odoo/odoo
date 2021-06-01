@@ -4,7 +4,6 @@ import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/service_hook";
 import { makeTestEnv } from "../helpers/mock_env";
-import { makeFakeUserService } from "../helpers/mock_services";
 import { getFixture } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
@@ -13,7 +12,6 @@ const serviceRegistry = registry.category("services");
 
 QUnit.module("ORM Service", {
     async beforeEach() {
-        serviceRegistry.add("user", makeFakeUserService());
         serviceRegistry.add("orm", ormService);
     },
 });
@@ -41,7 +39,6 @@ QUnit.test("add user context to a simple read request", async (assert) => {
         args: [[3], ["id", "descr"]],
         kwargs: {
             context: {
-                allowed_company_ids: [1],
                 lang: "en",
                 tz: "taht",
                 uid: 7,
@@ -62,7 +59,6 @@ QUnit.test("context is combined with user context in read request", async (asser
         args: [[3], ["id", "descr"]],
         kwargs: {
             context: {
-                allowed_company_ids: [1],
                 lang: "en",
                 tz: "taht",
                 uid: 7,
@@ -84,7 +80,6 @@ QUnit.test("basic method call of model", async (assert) => {
         args: [],
         kwargs: {
             context: {
-                allowed_company_ids: [1],
                 lang: "en",
                 tz: "taht",
                 uid: 7,
@@ -110,7 +105,6 @@ QUnit.test("create method", async (assert) => {
         ],
         kwargs: {
             context: {
-                allowed_company_ids: [1],
                 lang: "en",
                 tz: "taht",
                 uid: 7,
@@ -131,7 +125,6 @@ QUnit.test("unlink method", async (assert) => {
         args: [[43]],
         kwargs: {
             context: {
-                allowed_company_ids: [1],
                 lang: "en",
                 tz: "taht",
                 uid: 7,
@@ -152,7 +145,6 @@ QUnit.test("write method", async (assert) => {
         args: [[43, 14], { active: false }],
         kwargs: {
             context: {
-                allowed_company_ids: [1],
                 lang: "en",
                 tz: "taht",
                 uid: 7,
@@ -182,7 +174,6 @@ QUnit.test("readGroup method", async (assert) => {
             fields: ["amount_total:sum"],
             groupby: ["date_order"],
             context: {
-                allowed_company_ids: [1],
                 lang: "en",
                 uid: 7,
                 tz: "taht",
@@ -204,7 +195,6 @@ QUnit.test("searchRead method", async (assert) => {
         args: [],
         kwargs: {
             context: {
-                allowed_company_ids: [1],
                 lang: "en",
                 tz: "taht",
                 uid: 7,
@@ -227,7 +217,6 @@ QUnit.test("webSearchRead method", async (assert) => {
         args: [],
         kwargs: {
             context: {
-                allowed_company_ids: [1],
                 lang: "en",
                 tz: "taht",
                 uid: 7,

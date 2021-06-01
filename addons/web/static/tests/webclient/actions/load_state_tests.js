@@ -8,7 +8,7 @@ import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { makeFakeRouterService, makeFakeUserService } from "../../helpers/mock_services";
+import { makeFakeRouterService } from "../../helpers/mock_services";
 import { getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerTestConfig, loadState } from "./helpers";
 
@@ -99,9 +99,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("fallback on home action if no action found", async (assert) => {
         assert.expect(2);
-        serviceRegistry.add("user", makeFakeUserService({ home_action_id: 1001 }), {
-            force: true,
-        });
+        patchWithCleanup(odoo.session_info, { home_action_id: 1001 });
 
         const wc = await createWebClient({ testConfig });
         await testUtils.nextTick(); // wait for the navbar to be updated

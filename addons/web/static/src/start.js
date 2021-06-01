@@ -27,7 +27,7 @@ export async function startWebClient(Webclient) {
     odoo.isReady = false;
 
     // setup environment
-    const env = makeEnv(odoo.debug);
+    const env = makeEnv();
     const [, templates] = await Promise.all([
         startServices(env),
         odoo.loadTemplatesPromise.then(processTemplates),

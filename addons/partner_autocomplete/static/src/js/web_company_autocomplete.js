@@ -3,11 +3,11 @@
 import { registry } from "@web/core/registry";
 
 export const companyAutocompleteService = {
-    dependencies: ["orm", "user"],
+    dependencies: ["orm", "company"],
 
-    start(env, { orm, user }) {
+    start(env, { orm, company }) {
         if (odoo.session_info.iap_company_enrich) {
-            const currentCompanyId = user.current_company.id;
+            const currentCompanyId = company.currentCompany.id;
             orm.silent.call("res.company", "iap_enrich_auto", [currentCompanyId], {});
         }
     },

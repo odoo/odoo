@@ -6,7 +6,7 @@ import { uiService } from "@web/core/ui_service";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { LoadingIndicator } from "@web/webclient/loading_indicator/loading_indicator";
 import { makeTestEnv } from "../helpers/mock_env";
-import { getFixture, nextTick } from "../helpers/utils";
+import { getFixture, nextTick, patchWithCleanup } from "../helpers/utils";
 
 const { mount } = owl;
 const serviceRegistry = registry.category("services");
@@ -45,7 +45,8 @@ QUnit.test("displays the loading indicator in non debug mode", async (assert) =>
 });
 
 QUnit.test("displays the loading indicator for one rpc in debug mode", async (assert) => {
-    const env = await makeTestEnv(Object.assign(baseConfig, { debug: "1" }));
+    patchWithCleanup(odoo, { debug: "1" });
+    const env = await makeTestEnv({ ...baseConfig });
     await mount(LoadingIndicator, { env, target });
     let loadingIndicator = target.querySelector(".o_loading");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");
@@ -65,7 +66,8 @@ QUnit.test("displays the loading indicator for one rpc in debug mode", async (as
 });
 
 QUnit.test("displays the loading indicator for multi rpc in debug mode", async (assert) => {
-    const env = await makeTestEnv(Object.assign(baseConfig, { debug: "1" }));
+    patchWithCleanup(odoo, { debug: "1" });
+    const env = await makeTestEnv({ ...baseConfig });
     await mount(LoadingIndicator, { env, target });
     let loadingIndicator = target.querySelector(".o_loading");
     assert.strictEqual(loadingIndicator, null, "the loading indicator should not be displayed");

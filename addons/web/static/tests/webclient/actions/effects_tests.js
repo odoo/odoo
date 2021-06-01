@@ -5,14 +5,12 @@ import { NotificationContainer } from "@web/core/notifications/notification_cont
 import { EffectContainer } from "@web/webclient/effects/effect_container";
 import testUtils from "web.test_utils";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
-import { makeFakeUserService } from "../../helpers/mock_services";
-import { click, legacyExtraNextTick, nextTick } from "../../helpers/utils";
+import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 
 let testConfig;
 
 const mainComponentRegistry = registry.category("main_components");
-const serviceRegistry = registry.category("services");
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
@@ -23,9 +21,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("rainbowman integrated to webClient", async function (assert) {
         assert.expect(10);
-        serviceRegistry.add("user", makeFakeUserService({ showEffect: true }), {
-            force: true,
-        });
+        patchWithCleanup(odoo.session_info, { show_effect: true });
         clearRegistryWithCleanup(mainComponentRegistry);
         mainComponentRegistry.add("EffectContainer", {
             Component: EffectContainer,
@@ -77,9 +73,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("on close with effect from server", async function (assert) {
         assert.expect(1);
-        serviceRegistry.add("user", makeFakeUserService({ showEffect: true }), {
-            force: true,
-        });
+        patchWithCleanup(odoo.session_info, { show_effect: true });
         const mockRPC = async (route, args) => {
             if (route === "/web/dataset/call_button") {
                 return Promise.resolve({
@@ -112,9 +106,7 @@ QUnit.module("ActionManager", (hooks) => {
       </header>
       <field name="display_name"/>
     </form>`;
-        serviceRegistry.add("user", makeFakeUserService({ showEffect: true }), {
-            force: true,
-        });
+        patchWithCleanup(odoo.session_info, { show_effect: true });
         const mockRPC = async (route, args) => {
             if (route === "/web/dataset/call_button") {
                 return Promise.resolve(false);

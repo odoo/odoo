@@ -11,8 +11,8 @@ import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
-import { fakeTitleService, makeFakeUserService } from "../helpers/mock_services";
-import { getFixture } from "../helpers/utils";
+import { fakeTitleService } from "../helpers/mock_services";
+import { getFixture, patchWithCleanup } from "../helpers/utils";
 
 const { Component, tags, mount } = owl;
 const { xml } = tags;
@@ -59,8 +59,7 @@ QUnit.test("can render a main component", async (assert) => {
 
 QUnit.test("webclient for the superuser", async (assert) => {
     assert.expect(1);
-    const mockedSessionInfo = { uid: 1 };
-    serviceRegistry.add("user", makeFakeUserService({ session_info: mockedSessionInfo }));
+    patchWithCleanup(odoo.session_info, { uid: 1 });
     const env = await makeTestEnv(baseConfig);
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });
@@ -69,8 +68,7 @@ QUnit.test("webclient for the superuser", async (assert) => {
 
 QUnit.test("webclient for a non superuser", async (assert) => {
     assert.expect(1);
-    const mockedSessionInfo = { uid: 2 };
-    serviceRegistry.add("user", makeFakeUserService({ session_info: mockedSessionInfo }));
+    patchWithCleanup(odoo.session_info, { uid: 2 });
     const env = await makeTestEnv(baseConfig);
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });

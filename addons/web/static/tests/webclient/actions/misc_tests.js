@@ -174,7 +174,6 @@ QUnit.module("ActionManager", (hooks) => {
         let action = await loadAction(3, actionParams);
         assert.verifySteps(["server loaded"]);
         const baseContext = {
-            allowed_company_ids: [1],
             lang: "en",
             tz: "taht",
             uid: 7,

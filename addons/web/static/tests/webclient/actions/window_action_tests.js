@@ -11,8 +11,7 @@ import ListController from "web.ListController";
 import testUtils from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
-import { makeFakeUserService } from "../../helpers/mock_services";
-import { click, legacyExtraNextTick, nextTick } from "../../helpers/utils";
+import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerTestConfig, loadState } from "./helpers";
 
 let testConfig;
@@ -704,13 +703,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("requests for execute_action of type object are handled", async function (assert) {
         assert.expect(11);
-        serviceRegistry.add(
-            "user",
-            makeFakeUserService({
-                context: Object.assign({}, { some_key: 2 }),
-            }),
-            { force: true }
-        );
+        patchWithCleanup(odoo.session_info.user_context, { some_key: 2 });
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
             if (route === "/web/dataset/call_button") {
@@ -718,7 +711,14 @@ QUnit.module("ActionManager", (hooks) => {
                     args,
                     {
                         args: [[1]],
-                        kwargs: { context: { some_key: 2 } },
+                        kwargs: {
+                            context: {
+                                lang: "en",
+                                uid: 7,
+                                tz: "taht",
+                                some_key: 2,
+                            },
+                        },
                         method: "object",
                         model: "partner",
                     },
@@ -1600,7 +1600,6 @@ QUnit.module("ActionManager", (hooks) => {
                 lang: "en",
                 uid: 7,
                 tz: "taht",
-                allowed_company_ids: [1],
             },
         };
         const sessionStorage = testConfig.browser.sessionStorage;
@@ -1630,7 +1629,6 @@ QUnit.module("ActionManager", (hooks) => {
                     lang: "en",
                     uid: 7,
                     tz: "taht",
-                    allowed_company_ids: [1],
                     active_model: "partner",
                     active_id: 1,
                     active_ids: [1],
@@ -2231,7 +2229,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         serviceRegistry.add("debug", debugService);
         registry.category("debug").category("view").add("editView", editView);
-        testConfig.debug = "1";
+        patchWithCleanup(odoo, { debug: "1" });
         const mockRPC = async (route) => {
             if (route.includes("check_access_rights")) {
                 return true;

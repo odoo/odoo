@@ -5,7 +5,7 @@ odoo.define("web.SessionOverrideForTests", (require) => {
     // So if a test does a session_reload, it will merge the odoo global of that test
     // into the session, and will alter every subsequent test of the suite.
     // Obviously, we don't want that, ever.
-    const initialOdoo = odoo;
+    const initialOdoo = Object.assign({}, odoo);
     const Session = require("web.Session");
     const { patch } = require("@web/core/utils/patch");
     patch(Session.prototype, "web.SessionTestPatch", {

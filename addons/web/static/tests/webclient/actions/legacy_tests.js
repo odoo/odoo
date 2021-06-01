@@ -119,7 +119,7 @@ QUnit.module("ActionManager", (hooks) => {
                 return {};
             });
         registry.category("services").add("debug", debugService);
-        testConfig.debug = true;
+        patchWithCleanup(odoo, { debug: true });
 
         const mockRPC = (route) => {
             if (route.includes("check_access_rights")) {

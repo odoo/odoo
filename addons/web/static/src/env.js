@@ -23,15 +23,14 @@ import { registry } from "./core/registry";
 /**
  * Return a value Odoo Env object
  *
- * @param {string} debug
  * @returns {OdooEnv}
  */
-export function makeEnv(debug) {
+export function makeEnv() {
     return {
         qweb: new owl.QWeb(),
         bus: new owl.core.EventBus(),
         services: {},
-        debug,
+        debug: odoo.debug,
         _t: () => {
             throw new Error("Translations are not ready yet. Maybe use _lt instead?");
         },

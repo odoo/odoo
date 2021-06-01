@@ -180,7 +180,7 @@ QUnit.module("DebugMenu", (hooks) => {
             }
             Parent.components = { ActionDialog };
             Parent.template = tags.xml`<ActionDialog/>`;
-            testConfig.debug = "1";
+            patchWithCleanup(odoo, { debug: "1" });
             const env = await makeTestEnv(testConfig);
             const actionDialog = await mount(Parent, { env, target });
             registerCleanup(() => {
