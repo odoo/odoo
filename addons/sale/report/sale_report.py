@@ -21,6 +21,7 @@ class SaleReport(models.Model):
     product_id = fields.Many2one('product.product', 'Product Variant', readonly=True)
     product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
+    qty_to_deliver = fields.Float('Qty To Deliver', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
     qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
     qty_invoiced = fields.Float('Qty Invoiced', readonly=True)
@@ -67,6 +68,7 @@ class SaleReport(models.Model):
             t.uom_id as product_uom,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as product_uom_qty,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_delivered / u.factor * u2.factor) ELSE 0 END as qty_delivered,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM((l.product_uom_qty - l.qty_delivered) / u.factor * u2.factor) ELSE 0 END as qty_to_deliver,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_invoiced / u.factor * u2.factor) ELSE 0 END as qty_invoiced,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.qty_to_invoice / u.factor * u2.factor) ELSE 0 END as qty_to_invoice,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.price_total / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) ELSE 0 END as price_total,
