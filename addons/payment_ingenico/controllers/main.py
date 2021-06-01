@@ -23,7 +23,7 @@ class OgoneController(http.Controller):
         '/payment/ogone/decline', '/payment/ogone/test/decline',
         '/payment/ogone/exception', '/payment/ogone/test/exception',
         '/payment/ogone/cancel', '/payment/ogone/test/cancel',
-    ], type='http', auth='public', csrf=False, method=['GET', 'POST'])
+    ], type='http', auth='public', csrf=False)
     def ogone_form_feedback(self, **post):
         """ Handle both redirection from Ingenico (GET) and s2s notification (POST/GET) """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
