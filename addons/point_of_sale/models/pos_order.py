@@ -197,6 +197,18 @@ class PosOrder(models.Model):
             'product_uom_id': order_line.product_uom_id.id,
         }
 
+    def _prepare_invoice_lines(self):
+        invoice_lines = []
+        for line in self.lines:
+            invoice_lines.append((0, None, self._prepare_invoice_line(line)))
+            if line.customer_note:
+                invoice_lines.append((0, None, {
+                    'name': line.customer_note,
+                    'display_type': 'line_note',
+                }))
+
+        return invoice_lines
+
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
             .mapped('picking_ids.move_lines')\
@@ -483,7 +495,7 @@ class PosOrder(models.Model):
             'invoice_user_id': self.user_id.id,
             'invoice_date': self.date_order.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
-            'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
+            'invoice_line_ids': self._prepare_invoice_lines(),
             'invoice_cash_rounding_id': self.config_id.rounding_method.id
             if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
             else False
@@ -766,6 +778,7 @@ class PosOrderLine(models.Model):
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
+    customer_note = fields.Char('Customer Note', help='This is a note destined to the customer')
 
     def _prepare_refund_data(self, refund_order, PosOrderLineLot):
         """
@@ -869,6 +882,7 @@ class PosOrderLine(models.Model):
             'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
             'id': orderline.id,
             'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
+            'customer_note': orderline.customer_note,
         }
 
     def export_for_ui(self):

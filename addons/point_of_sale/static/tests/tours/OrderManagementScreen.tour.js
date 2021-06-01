@@ -20,7 +20,7 @@ odoo.define('point_of_sale.tour.OrderManagementScreen', function (require) {
 
     // make one order and check if it can be seen from the management screen.
     // order 0001
-    makeFullOrder({ orderlist: [['Whiteboard Pen', '5', '6']], payment: ['Cash', '30'] });
+    makeFullOrder({ orderlist: [['Whiteboard Pen', '5', '6']], payment: ['Cash', '30'], customerNote: 'Customer Note' });
     Chrome.do.clickOrderManagementButton();
     OrderManagementScreen.check.isShown();
     OrderManagementScreen.check.orderlistHas({ orderName: '-0001', total: '30' });
@@ -108,7 +108,14 @@ odoo.define('point_of_sale.tour.OrderManagementScreen', function (require) {
     OrderManagementScreen.check.orderDetailsHas({
         lines: [{ product: 'Whiteboard Pen', quantity: '5' }],
         total: '30',
+        customerNote: 'Customer Note',
     });
+    //verify the customer note in the receipt
+    OrderManagementScreen.do.clickPrintReceiptButton();
+    OrderManagementScreen.check.reprintReceiptIsShown();
+    OrderManagementScreen.check.receiptCustomerNoteIs('Customer Note');
+    OrderManagementScreen.do.closeReceipt();
+
 
     // Select a paid order then invoice it. The selected order should remain selected
     // and will contain a new customer. After invoice, the current customer should be removed.

@@ -48,6 +48,7 @@
                                 <field name="full_product_name"/>
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                 <field name="qty"/>
+                                <field name="customer_note" optional="hide"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
                                 <field name="price_unit" widget="monetary"/>
                                 <field name="discount" string="Disc.%" widget="monetary"/>
