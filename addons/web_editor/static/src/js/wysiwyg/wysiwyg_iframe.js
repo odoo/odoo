@@ -123,9 +123,9 @@ Wysiwyg.include({
                 const $codeview = $('<textarea class="o_codeview d-none"/>');
                 self.$editable.addClass('o_editable oe_structure');
 
+                $iframeTarget.append($codeview);
                 $iframeTarget.append($iframeWrapper);
                 $iframeTarget.append($utilsZone);
-                $iframeWrapper.append($codeview);
                 $iframeWrapper.append(self.$editable);
 
                 self.options.toolbarHandler = $('#web_editor-top-edit', self.$iframe[0].contentWindow.document);
