@@ -32,19 +32,22 @@ class TestMassMailing(models.TransientModel):
         mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout')
 
         record = self.env[mailing.mailing_model_real].search([], limit=1)
-        body = mailing._prepend_preview(mailing.body_html, mailing.preview)
-        subject = mailing.subject
 
         # If there is atleast 1 record for the model used in this mailing, then we use this one to render the template
         # Downside: Jinja syntax is only tested when there is atleast one record of the mailing's model
         if record:
             # Returns a proper error if there is a syntax error with jinja
-            body = self.env['mail.render.mixin']._render_template(body, mailing.mailing_model_real, record.ids, post_process=True)[record.id]
-            subject = self.env['mail.render.mixin']._render_template(subject, mailing.mailing_model_real, record.ids)[record.id]
+            body = mailing._render_field('body_html', record.ids, post_process=True)[record.id]
+            preview = mailing._render_field('preview', record.ids, post_process=True)[record.id]
+            full_body = mailing._prepend_preview(body, preview)
+            subject = mailing._render_field('subject', record.ids)[record.id]
+        else:
+            full_body = mailing._prepend_preview(mailing.body_html, mailing.preview)
+            subject = mailing.subject
 
         # Convert links in absolute URLs before the application of the shortener
-        body = self.env['mail.render.mixin']._replace_local_links(body)
-        body = tools.html_sanitize(body, sanitize_attributes=True, sanitize_style=True)
+        full_body = self.env['mail.render.mixin']._replace_local_links(full_body)
+        full_body = tools.html_sanitize(full_body, sanitize_attributes=True, sanitize_style=True)
 
         for valid_email in valid_emails:
             mail_values = {
@@ -52,7 +55,7 @@ class TestMassMailing(models.TransientModel):
                 'reply_to': mailing.reply_to,
                 'email_to': valid_email,
                 'subject': subject,
-                'body_html': mass_mail_layout._render({'body': body}, engine='ir.qweb', minimal_qcontext=True),
+                'body_html': mass_mail_layout._render({'body': full_body}, engine='ir.qweb', minimal_qcontext=True),
                 'notification': True,
                 'mailing_id': mailing.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],

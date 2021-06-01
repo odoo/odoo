@@ -15,6 +15,7 @@ emails_split = re.compile(r"[;,\n\r]+")
 
 class SurveyInvite(models.TransientModel):
     _name = 'survey.invite'
+    _inherit = 'mail.composer.mixin'
     _description = 'Survey Invitation Wizard'
 
     @api.model
@@ -28,14 +29,9 @@ class SurveyInvite(models.TransientModel):
         return self.env.user.partner_id
 
     # composer content
-    subject = fields.Char('Subject', compute='_compute_subject', readonly=False, store=True)
-    body = fields.Html('Contents', sanitize_style=True, compute='_compute_body', readonly=False, store=True)
     attachment_ids = fields.Many2many(
         'ir.attachment', 'survey_mail_compose_message_ir_attachments_rel', 'wizard_id', 'attachment_id',
         string='Attachments')
-    template_id = fields.Many2one(
-        'mail.template', 'Use template', index=True,
-        domain="[('model', '=', 'survey.user_input')]")
     # origin
     email_from = fields.Char('From', default=_get_default_from, help="Email address of the sender.")
     author_id = fields.Many2one(
@@ -106,6 +102,11 @@ class SurveyInvite(models.TransientModel):
         for invite in self:
             invite.survey_start_url = werkzeug.urls.url_join(base_url, invite.survey_id.get_start_url()) if invite.survey_id else False
 
+    # Overrides of mail.composer.mixin
+    @api.depends('survey_id')  # fake trigger otherwise not computed in new mode
+    def _compute_render_model(self):
+        self.render_model = 'survey.user_input'
+
     @api.onchange('emails')
     def _onchange_emails(self):
         if self.emails and (self.survey_users_login_required and not self.survey_id.users_can_signup):
@@ -137,22 +138,6 @@ class SurveyInvite(models.TransientModel):
                         'The following recipients have no user account: %s. You should create user accounts for them or allow external signup in configuration.',
                         ', '.join(invalid_partners.mapped('name'))
                     ))
-
-    @api.depends('template_id')
-    def _compute_subject(self):
-        for invite in self:
-            if invite.template_id:
-                invite.subject = invite.template_id.subject
-            elif not invite.subject:
-                invite.subject = False
-
-    @api.depends('template_id')
-    def _compute_body(self):
-        for invite in self:
-            if invite.template_id:
-                invite.body = invite.template_id.body_html
-            elif not invite.body:
-                invite.body = False
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -210,8 +195,8 @@ class SurveyInvite(models.TransientModel):
 
     def _send_mail(self, answer):
         """ Create mail specific for recipient containing notably its access token """
-        subject = self.env['mail.render.mixin'].with_context(safe=True)._render_template(self.subject, 'survey.user_input', answer.ids, post_process=True)[answer.id]
-        body = self.env['mail.render.mixin']._render_template(self.body, 'survey.user_input', answer.ids, post_process=True)[answer.id]
+        subject = self._render_field('subject', answer.ids, options={'render_safe': True})[answer.id]
+        body = self._render_field('body', answer.ids, post_process=True)[answer.id]
         # post the message
         mail_values = {
             'email_from': self.email_from,

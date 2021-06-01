@@ -11,9 +11,11 @@
                             <field name="partner_ids"
                                 widget="many2many_tags_email"
                                 placeholder="Add existing contacts..."
-                                context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"/>
+                                required="1"
+                                context="{'force_email':True, 'show_email':True, 'no_create_edit': True, 'no_quick_create': True}"/>
                         </group>
                         <group col="2">
+                            <field name="render_model" invisible="1"/>
                             <field name="subject" placeholder="Subject..."/>
                         </group>
                         <field name="body" options="{'style-inline': true}"/>

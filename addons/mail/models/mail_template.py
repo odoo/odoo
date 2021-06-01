@@ -67,6 +67,16 @@ class MailTemplate(models.Model):
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
 
+    # Overrides of mail.render.mixin
+    @api.depends('model')
+    def _compute_render_model(self):
+        for template in self:
+            template.render_model = template.model
+
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
@@ -163,9 +173,9 @@ class MailTemplate(models.Model):
         results = dict()
         for lang, (template, template_res_ids) in self._classify_per_lang(res_ids).items():
             for field in fields:
-                template = template.with_context(safe=(field == 'subject'))
                 generated_field_values = template._render_field(
                     field, template_res_ids,
+                    options={'render_safe': field == 'subject'},
                     post_process=(field == 'body_html')
                 )
                 for res_id, field_value in generated_field_values.items():
