@@ -514,6 +514,10 @@ def route(route=None, **kw):
             else:
                 routes = [route]
             routing['routes'] = routes
+            wrong = routing.pop('method', None)
+            if wrong:
+                kw.setdefault('methods', wrong)
+                _logger.warning("<function %s.%s> defined with invalid routing parameter 'method', assuming 'methods'", f.__module__, f.__name__)
 
         @functools.wraps(f)
         def response_wrap(*args, **kw):
