@@ -9,7 +9,7 @@
                     <div class="pads">
                         <div class="control-buttons">
                             <t t-foreach="controlButtons" t-as="cb" t-key="cb.name">
-                                <t t-component="cb.component" t-key="cb.name" hiddenOrderReceipt="receiptRef"/>
+                                <t t-component="cb.component" t-key="cb.name" />
                             </t>
                         </div>
                         <div class="subpads">
@@ -26,9 +26,6 @@
                 </div>
             </div>
             <MobileOrderManagementScreen t-else="" />
-            <div class="order-receipt-hidden">
-                <OrderReceipt t-if="orderManagementContext.selectedOrder" order="orderManagementContext.selectedOrder" t-ref="order-receipt" />
-            </div>
         </div>
     </t>
 
