@@ -5,9 +5,9 @@ import { registry } from "@web/core/registry";
 import { EffectContainer } from "@web/webclient/effects/effect_container";
 import { effectService } from "@web/webclient/effects/effect_service";
 import { RainbowMan } from "@web/webclient/effects/rainbow_man";
+import { userService } from "@web/core/user_service";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { makeFakeUserService } from "../../helpers/mock_services";
-import { click, getFixture, nextTick } from "../../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
 
 const { Component, mount, tags } = owl;
 const serviceRegistry = registry.category("services");
@@ -31,8 +31,8 @@ QUnit.module("RainbowMan", (hooks) => {
             fadeout: "nextTick",
         };
         target = getFixture();
-        const user = makeFakeUserService({ showEffect: true });
-        serviceRegistry.add("user", user);
+        patchWithCleanup(odoo.session_info, { show_effect: true });
+        serviceRegistry.add("user", userService);
         serviceRegistry.add("effect", effectService);
         serviceRegistry.add("notification", notificationService);
     });

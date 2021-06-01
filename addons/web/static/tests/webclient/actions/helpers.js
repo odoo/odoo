@@ -39,13 +39,13 @@ import {
     makeFakeLocalizationService,
     makeFakeRouterService,
     makeFakeUIService,
-    makeFakeUserService,
 } from "../../helpers/mock_services";
 import { getFixture, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import session from "web.session";
 import { ComponentAdapter } from "web.OwlCompatibility";
 import LegacyMockServer from "web.MockServer";
 import Widget from "web.Widget";
+import { userService } from "@web/core/user_service";
 
 const { Component, mount, tags } = owl;
 
@@ -263,7 +263,6 @@ export function getActionManagerTestConfig() {
 
     // need activateMockServer or something like that for odoo.browser.fetch !!! something is bad
     const fakeLocalizationService = makeFakeLocalizationService();
-    const fakeUserService = makeFakeUserService();
     const fakeUIService = makeFakeUIService();
     const fakeRouterService = makeFakeRouterService();
 
@@ -280,7 +279,7 @@ export function getActionManagerTestConfig() {
     serviceRegistry.add("router", fakeRouterService);
     serviceRegistry.add("title", fakeTitleService);
     serviceRegistry.add("ui", fakeUIService);
-    serviceRegistry.add("user", fakeUserService);
+    serviceRegistry.add("user", userService);
     serviceRegistry.add("view", viewService);
 
     // additional basic client action

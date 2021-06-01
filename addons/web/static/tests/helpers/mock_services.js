@@ -6,11 +6,12 @@ import { localization } from "@web/core/l10n/localization";
 import { translatedTerms } from "@web/core/l10n/translation";
 import { rpcService } from "@web/core/network/rpc_service";
 import { SIZES } from "@web/core/ui_service";
-import { computeAllowedCompanyIds, makeSetCompanies } from "@web/core/user_service";
+import { userService } from "@web/core/user_service";
 import { effectService } from "@web/webclient/effects/effect_service";
-import { objectToUrlEncodedString } from "../../src/core/utils/urls";
+import { objectToUrlEncodedString } from "@web/core/utils/urls";
 import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
+import { companyService } from "@web/webclient/company_service";
 
 const { Component } = owl;
 
@@ -42,57 +43,6 @@ export function makeFakeLocalizationService(config = {}) {
             const _t = (str) => translatedTerms[str] || str;
             env._t = _t;
             env.qweb.translateFn = _t;
-        },
-    };
-}
-
-/**
- * Simulate a fake user service.
- */
-export function makeFakeUserService(values) {
-    const sessionInfo = {};
-    Object.assign(sessionInfo, odoo.session_info, values && values.session_info);
-    const { uid, name, username, is_admin, user_companies, partner_id, user_context } = sessionInfo;
-    return {
-        name: "user",
-        start() {
-            let allowedCompanies = computeAllowedCompanyIds();
-            const setCompanies = makeSetCompanies(() => allowedCompanies);
-            const context = {
-                ...user_context,
-                get allowed_company_ids() {
-                    return allowedCompanies;
-                },
-            };
-            const result = {
-                context,
-                userId: uid,
-                name: name,
-                userName: username,
-                isAdmin: is_admin,
-                partnerId: partner_id,
-                allowed_companies: user_companies.allowed_companies,
-                get current_company() {
-                    return user_companies.allowed_companies[allowedCompanies[0]];
-                },
-                lang: user_context.lang,
-                tz: "Europe/Brussels",
-                get db() {
-                    const res = {
-                        name: sessionInfo.db,
-                    };
-                    if ("dbuuid" in sessionInfo) {
-                        res.uuid = sessionInfo.dbuuid;
-                    }
-                    return res;
-                },
-                showEffect: false,
-                setCompanies(mode, companyId) {
-                    allowedCompanies = setCompanies(mode, companyId);
-                },
-            };
-            Object.assign(result, values);
-            return result;
         },
     };
 }
@@ -176,12 +126,13 @@ export function makeMockFetch(mockRPC) {
     };
 }
 
-export function makeMockLocation() {
+function makeMockLocation() {
     const locationLink = Object.assign(document.createElement("a"), {
         href: window.location.origin + window.location.pathname,
         assign(url) {
             this.href = url;
         },
+        reload() {},
     });
     return new Proxy(locationLink, {
         get(target, p) {
@@ -280,6 +231,14 @@ export function makeFakeUIService(values = {}) {
     };
 }
 
+export function makeFakeCompanyService() {
+    const mockLocation = makeMockLocation();
+    patchWithCleanup(browser, {
+        location: mockLocation,
+    });
+    return companyService;
+}
+
 export const fakeCookieService = {
     start() {
         const cookie = {};
@@ -338,13 +297,14 @@ export function makeFakeNotificationService(createMock, closeMock) {
 }
 
 export const mocks = {
+    company: makeFakeCompanyService,
     cookie: () => fakeCookieService,
     effect: () => effectService, // BOI The real service ? Is this what we want ?
     localization: makeFakeLocalizationService,
-    ui: makeFakeUIService,
     notifications: makeFakeNotificationService,
     router: makeFakeRouterService,
     rpc: makeFakeRPCService,
     title: () => fakeTitleService,
-    user: makeFakeUserService,
+    ui: makeFakeUIService,
+    user: () => userService,
 };

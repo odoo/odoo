@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { manageMessages } from "@mail/js/tools/debug_manager";
-import { click, legacyExtraNextTick } from "@web/../tests/helpers/utils";
+import { click, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import {
     createWebClient,
     doAction,
@@ -15,9 +15,8 @@ QUnit.module("DebugMenu");
 QUnit.test("Manage Messages", async function (assert) {
     assert.expect(6);
 
-    const testConfig = Object.assign(getActionManagerTestConfig(), {
-        debug: "1",
-    });
+    patchWithCleanup(odoo, { debug: "1" });
+    const testConfig = getActionManagerTestConfig();
 
     // Add fake "mail.message" model and arch
     testConfig.serverData.models["mail.message"] = {

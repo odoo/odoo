@@ -5,7 +5,8 @@ import { uiService } from "@web/core/ui_service";
 import testUtils from "web.test_utils";
 import ReportClientAction from "report.client_action";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
-import { makeFakeNotificationService, makeFakeUserService } from "../../helpers/mock_services";
+import { makeFakeNotificationService } from "../../helpers/mock_services";
+import { patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
 import { mockDownload } from "@web/../tests/helpers/utils";
 import { DialogContainer } from "@web/core/dialog/dialog_container";
@@ -168,8 +169,8 @@ QUnit.module("ActionManager", (hooks) => {
                 "/web/action/load",
                 "/report/check_wkhtmltopdf",
                 "notify",
-                // context={"lang":'en',"uid":7,"tz":'taht', allowed_company_ids: [1]}
-                "/report/html/some_report?context=%7B%22lang%22%3A%22en%22%2C%22uid%22%3A7%2C%22tz%22%3A%22taht%22%2C%22allowed_company_ids%22%3A%5B1%5D%7D",
+                // context={"lang":'en',"uid":7,"tz":'taht'}
+                "/report/html/some_report?context=%7B%22lang%22%3A%22en%22%2C%22uid%22%3A7%2C%22tz%22%3A%22taht%22%7D",
             ]);
             testUtils.mock.unpatch(ReportClientAction);
         }
@@ -191,9 +192,7 @@ QUnit.module("ActionManager", (hooks) => {
             ),
             { force: true }
         );
-        serviceRegistry.add("user", makeFakeUserService({ context: { some_key: 2 } }), {
-            force: true,
-        });
+        patchWithCleanup(odoo.session_info.user_context, { some_key: 2 });
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
             if (route.includes("/report/html/some_report")) {
@@ -218,8 +217,8 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
-            // context={"some_key":2}
-            "/report/html/some_report?context=%7B%22some_key%22%3A2%7D",
+            // context={"lang":'en',"uid":7,"tz":'taht',"some_key":2}
+            "/report/html/some_report?context=%7B%22lang%22%3A%22en%22%2C%22uid%22%3A7%2C%22tz%22%3A%22taht%22%2C%22some_key%22%3A2%7D",
         ]);
         testUtils.mock.unpatch(ReportClientAction);
     });

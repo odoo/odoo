@@ -8,9 +8,10 @@ import { patch, unpatch } from "@web/core/utils/patch";
 import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";
 import { preferencesItem } from "@web/webclient/user_menu/user_menu_items";
+import { userService } from "@web/core/user_service";
 import { makeTestEnv } from "../helpers/mock_env";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { click, getFixture } from "../helpers/utils";
+import { makeFakeLocalizationService } from "../helpers/mock_services";
+import { click, getFixture, patchWithCleanup } from "../helpers/utils";
 
 const { mount } = owl;
 const serviceRegistry = registry.category("services");
@@ -21,7 +22,8 @@ let userMenu;
 
 QUnit.module("UserMenu", {
     async beforeEach() {
-        serviceRegistry.add("user", makeFakeUserService({ name: "Sauron" }));
+        patchWithCleanup(odoo.session_info, { name: "Sauron" });
+        serviceRegistry.add("user", userService);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
         target = getFixture();
@@ -124,7 +126,8 @@ QUnit.test("can be rendered", async (assert) => {
 });
 
 QUnit.test("display the correct name in debug mode", async (assert) => {
-    env = await makeTestEnv({ debug: "1" });
+    patchWithCleanup(odoo, { debug: "1" });
+    env = await makeTestEnv();
     userMenu = await mount(UserMenu, { env, target });
     let userMenuEl = userMenu.el;
     assert.containsOnce(userMenuEl, "img.o_user_avatar");

@@ -6,7 +6,7 @@ import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { legacyProm } from "web.test_legacy";
 import { registerCleanup } from "./helpers/cleanup";
-import { prepareRegistriesWithCleanup, setTestOdooWithCleanup } from "./helpers/mock_env";
+import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
 
 const { whenReady, loadFile } = owl.utils;
 
@@ -61,14 +61,50 @@ function patchLegacySession() {
     });
 }
 
+function patchOdoo() {
+    patchWithCleanup(odoo, {
+        debug: "",
+        session_info: {
+            cache_hashes: {
+                load_menus: "161803",
+                translations: "314159",
+            },
+            currencies: {
+                1: { name: "USD", digits: [69, 2], position: "before", symbol: "$" },
+                2: { name: "EUR", digits: [69, 2], position: "after", symbol: "€" },
+            },
+            user_context: {
+                lang: "en",
+                uid: 7,
+                tz: "taht",
+            },
+            qweb: "owl",
+            uid: 7,
+            name: "Mitchell",
+            username: "The wise",
+            is_admin: true,
+            partner_id: 7,
+            // Commit: 3e847fc8f499c96b8f2d072ab19f35e105fd7749
+            // to see what user_companies is
+            user_companies: {
+                allowed_companies: { 1: { id: 1, name: "Hermit" } },
+                current_company: 1,
+            },
+            db: "test",
+            server_version: "1.0",
+            server_version_info: ["1.0"],
+        },
+    });
+}
+
 export async function setupTests() {
     QUnit.testStart(() => {
-        setTestOdooWithCleanup();
         prepareRegistriesWithCleanup();
         forceLocaleAndTimezoneWithCleanup();
         patchBrowserWithCleanup();
         patchLegacyCoreBus();
         patchLegacySession();
+        patchOdoo();
     });
 
     const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}?bundle=web.assets_qweb`;

@@ -5,20 +5,21 @@ import { registry } from "../../core/registry";
 
 export class SwitchCompanyMenu extends owl.Component {
     static isDisplayed(env) {
-        const allowedCompanies = env.services.user.allowed_companies;
-        return Object.keys(allowedCompanies).length > 1 && !env.isSmall;
+        const { availableCompanies } = env.services.company;
+        return Object.keys(availableCompanies).length > 1 && !env.isSmall;
     }
 
     setup() {
-        this.user = useService("user");
+        this.companyService = useService("company");
+        this.currentCompany = this.companyService.currentCompany;
     }
 
     toggleCompany(companyId) {
-        this.user.setCompanies("toggle", companyId);
+        this.companyService.setCompanies("toggle", companyId);
     }
 
     logIntoCompany(companyId) {
-        this.user.setCompanies("loginto", companyId);
+        this.companyService.setCompanies("loginto", companyId);
     }
 }
 SwitchCompanyMenu.template = "web.SwitchCompanyMenu";

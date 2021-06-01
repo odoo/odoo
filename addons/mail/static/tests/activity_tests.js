@@ -4,10 +4,9 @@ import ActivityView from '@mail/js/views/activity/activity_view';
 import testUtils from 'web.test_utils';
 import { createWebClient } from "@web/../tests/webclient/actions/helpers";
 
-import { legacyExtraNextTick } from "@web/../tests/helpers/utils";
+import { legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerTestConfig } from "@web/../tests/webclient/actions/helpers";
 import { registry } from "@web/core/registry";
-import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
 
 let testConfig;
 
@@ -392,15 +391,7 @@ QUnit.test("activity view: no group_by_menu and no comparison_menu", async funct
         }
     };
 
-    registry.category("services").add(
-        "user",
-        makeFakeUserService({
-            session_info: {
-                user_context: { lang: "zz_ZZ" },
-            },
-        }),
-        { force: true }
-    );
+    patchWithCleanup(odoo.session_info.user_context, { lang: "zz_ZZ" });
 
     const webClient = await createWebClient({ testConfig, mockRPC , legacyParams: {withLegacyMockServer: true}});
 
