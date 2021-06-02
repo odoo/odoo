@@ -30,7 +30,7 @@ def _mocked_check_move_configuration_fail(edi_format, move):
     return ['Fake error (mocked)']
 
 
-def _mocked_post(edi_format, invoices, test_mode):
+def _mocked_post(edi_format, invoices):
     res = {}
     for invoice in invoices:
         attachment = edi_format.env['ir.attachment'].create({
@@ -42,7 +42,7 @@ def _mocked_post(edi_format, invoices, test_mode):
     return res
 
 
-def _mocked_post_two_steps(edi_format, invoices, test_mode):
+def _mocked_post_two_steps(edi_format, invoices):
     # For this test, we use the field ref to know if the first step is already done or not.
     # Typically, a technical field for the reference of the upload to the web-service will
     # be saved on the invoice.
@@ -64,11 +64,11 @@ def _mocked_post_two_steps(edi_format, invoices, test_mode):
         raise ValueError('wrong use of "_mocked_post_two_steps"')
 
 
-def _mocked_cancel_success(edi_format, invoices, test_mode):
+def _mocked_cancel_success(edi_format, invoices):
     return {invoice: {'success': True} for invoice in invoices}
 
 
-def _mocked_cancel_failed(edi_format, invoices, test_mode):
+def _mocked_cancel_failed(edi_format, invoices):
     return {invoice: {'error': 'Faked error (mocked)'} for invoice in invoices}
 
 
@@ -134,7 +134,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
             pass
 
     def edi_cron(self):
-        self.env['account.edi.document'].sudo().with_context(edi_test_mode=True).search([('state', 'in', ('to_send', 'to_cancel'))])._process_documents_web_services(with_commit=False)
+        self.env['account.edi.document'].sudo().search([('state', 'in', ('to_send', 'to_cancel'))])._process_documents_web_services(with_commit=False)
 
     def _create_empty_vendor_bill(self):
         invoice = self.env['account.move'].create({
@@ -203,7 +203,7 @@ class AccountEdiTestCommon(AccountTestInvoicingCommon):
         the formats we want to return the files for (in case we want to test specific formats).
         Other formats will still generate documents, they simply won't be returned.
         """
-        moves.edi_document_ids.with_context(edi_test_mode=True)._process_documents_web_services(with_commit=False)
+        moves.edi_document_ids._process_documents_web_services(with_commit=False)
 
         documents_to_return = moves.edi_document_ids
         if formats_to_return != None:

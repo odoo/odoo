@@ -52,10 +52,10 @@ class AccountEdiFormat(models.Model):
             return super()._is_compatible_with_journal(journal)
         return journal.type == 'sale' and journal.country_code == 'BE'
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         self.ensure_one()
         if self.code != 'efff_1':
-            return super()._post_invoice_edi(invoices, test_mode=test_mode)
+            return super()._post_invoice_edi(invoices)
         res = {}
         for invoice in invoices:
             attachment = self._export_efff(invoice)

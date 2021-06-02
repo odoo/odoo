@@ -154,11 +154,10 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         return []
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         """ Create the file content representing the invoice (and calls web services if necessary).
 
         :param invoices:    A list of invoices to post.
-        :param test_mode:   A flag indicating the EDI should only simulate the EDI without sending data.
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * attachment:       The attachment representing the invoice in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
@@ -168,11 +167,10 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return {}
 
-    def _cancel_invoice_edi(self, invoices, test_mode=False):
+    def _cancel_invoice_edi(self, invoices):
         """Calls the web services to cancel the invoice of this document.
 
         :param invoices:    A list of invoices to cancel.
-        :param test_mode:   A flag indicating the EDI should only simulate the EDI without sending data.
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * success:          True if the invoice was successfully cancelled.
         * error:            An error if the edi was not successfully cancelled.
@@ -182,11 +180,10 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return {invoice: {'success': True} for invoice in invoices}  # By default, cancel succeeds doing nothing.
 
-    def _post_payment_edi(self, payments, test_mode=False):
+    def _post_payment_edi(self, payments):
         """ Create the file content representing the payment (and calls web services if necessary).
 
         :param payments:   The payments to post.
-        :param test_mode:   A flag indicating the EDI should only simulate the EDI without sending data.
         :returns:           A dictionary with the payment as key and as value, another dictionary:
         * attachment:       The attachment representing the payment in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
@@ -196,11 +193,10 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return {}
 
-    def _cancel_payment_edi(self, payments, test_mode=False):
+    def _cancel_payment_edi(self, payments):
         """Calls the web services to cancel the payment of this document.
 
         :param payments:  A list of payments to cancel.
-        :param test_mode: A flag indicating the EDI should only simulate the EDI without sending data.
         :returns:         A dictionary with the payment as key and as value, another dictionary:
         * success:        True if the payment was successfully cancelled.
         * error:          An error if the edi was not successfully cancelled.

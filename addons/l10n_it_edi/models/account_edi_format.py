@@ -45,10 +45,10 @@ class AccountEdiFormat(models.Model):
         # Determine on which invoices the Mexican CFDI must be generated.
         return invoice.is_sale_document() and invoice.l10n_it_send_state not in ['sent', 'delivered', 'delivered_accepted'] and invoice.country_code == 'IT'
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         # OVERRIDE
         self.ensure_one()
-        edi_result = super()._post_invoice_edi(invoices, test_mode=test_mode)
+        edi_result = super()._post_invoice_edi(invoices)
         if self.code != 'fattura_pa':
             return edi_result
 

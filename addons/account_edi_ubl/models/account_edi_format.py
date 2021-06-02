@@ -246,11 +246,11 @@ class AccountEdiFormat(models.Model):
             return super()._is_enabled_by_default_on_journal(journal)
         return False
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         # OVERRIDE
         self.ensure_one()
         if self.code != 'ubl_2_1':
-            return super()._post_invoice_edi(invoices, test_mode=test_mode)
+            return super()._post_invoice_edi(invoices)
         res = {}
         for invoice in invoices:
             attachment = self._export_ubl(invoice)

@@ -157,8 +157,6 @@ class AccountEdiDocument(models.Model):
             # supposed to have any traceability from the user.
             attachments_to_unlink.unlink()
 
-        test_mode = self._context.get('edi_test_mode', False)
-
         documents.edi_format_id.ensure_one()  # All account.edi.document of a job should have the same edi_format_id
         documents.move_id.company_id.ensure_one()  # All account.edi.document of a job should be from the same company
         if len(set(doc.state for doc in documents)) != 1:
@@ -168,18 +166,18 @@ class AccountEdiDocument(models.Model):
         state = documents[0].state
         if doc_type == 'invoice':
             if state == 'to_send':
-                edi_result = edi_format._post_invoice_edi(documents.move_id, test_mode=test_mode)
+                edi_result = edi_format._post_invoice_edi(documents.move_id)
                 _postprocess_post_edi_results(documents, edi_result)
             elif state == 'to_cancel':
-                edi_result = edi_format._cancel_invoice_edi(documents.move_id, test_mode=test_mode)
+                edi_result = edi_format._cancel_invoice_edi(documents.move_id)
                 _postprocess_cancel_edi_results(documents, edi_result)
 
         elif doc_type == 'payment':
             if state == 'to_send':
-                edi_result = edi_format._post_payment_edi(documents.move_id, test_mode=test_mode)
+                edi_result = edi_format._post_payment_edi(documents.move_id)
                 _postprocess_post_edi_results(documents, edi_result)
             elif state == 'to_cancel':
-                edi_result = edi_format._cancel_payment_edi(documents.move_id, test_mode=test_mode)
+                edi_result = edi_format._cancel_payment_edi(documents.move_id)
                 _postprocess_cancel_edi_results(documents, edi_result)
 
     def _process_documents_no_web_services(self):
