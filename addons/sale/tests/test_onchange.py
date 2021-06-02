@@ -158,7 +158,7 @@ class TestOnchangeProductId(TransactionCase):
         })
 
         # force compute uom and prices
-        order_line.product_id_change()
+        order_line._onchange_product_id()
         order_line.product_uom_change()
         order_line._onchange_discount()
         self.assertEqual(order_line.price_subtotal, 90, "Christmas discount pricelist rule not applied")
@@ -216,7 +216,7 @@ class TestOnchangeProductId(TransactionCase):
         })
 
         # force compute uom and prices
-        order_line.product_id_change()
+        order_line._onchange_product_id()
         order_line._onchange_discount()
         self.assertEqual(order_line.price_subtotal, 81, "Second pricelist rule not applied")
         self.assertEqual(order_line.discount, 19, "Second discount not applied")
@@ -273,7 +273,7 @@ class TestOnchangeProductId(TransactionCase):
         })
 
         # force compute uom and prices
-        order_line.product_id_change()
+        order_line._onchange_product_id()
         self.assertEqual(order_line.price_unit, 180, "First pricelist rule not applied")
         order_line.product_uom = new_uom
         order_line.product_uom_change()
@@ -321,7 +321,7 @@ class TestOnchangeProductId(TransactionCase):
             'order_id': sale_order.id,
             'product_id': product_with_warning.id,
         })
-        warning = sale_order_line.product_id_change()
+        warning = sale_order_line._onchange_product_id()
         self.assertDictEqual(warning, {
             'warning': {
                 'title': "Warning for Test Product",
@@ -330,7 +330,7 @@ class TestOnchangeProductId(TransactionCase):
         })
 
         sale_order_line.product_id = product_with_block_warning
-        warning = sale_order_line.product_id_change()
+        warning = sale_order_line._onchange_product_id()
 
         self.assertDictEqual(warning, {
             'warning': {

@@ -99,6 +99,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
+        super()._onchange_product_id()
         # We reset the event when keeping it would lead to an inconstitent state.
         # We need to do it this way because the only relation between the product and the event is through the corresponding tickets.
         if self.event_id and (not self.product_id or self.product_id.id not in self.event_id.mapped('event_ticket_ids.product_id.id')):
@@ -118,7 +119,7 @@ class SaleOrderLine(models.Model):
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
         # we call this to force update the default name
-        self.product_id_change()
+        self._onchange_product_id()
 
     def get_sale_order_line_multiline_description_sale(self, product):
         """ We override this method because we decided that:

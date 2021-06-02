@@ -50,8 +50,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'price_unit': self.product_order_timesheet2.list_price,
             'order_id': sale_order.id,
         })
-        so_line_ordered_project_only.product_id_change()
-        so_line_ordered_global_project.product_id_change()
+        so_line_ordered_project_only._onchange_product_id()
+        so_line_ordered_global_project._onchange_product_id()
         sale_order.action_confirm()
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_ordered_global_project.id)])
         project_serv1 = self.env['project.project'].search([('sale_line_id', '=', so_line_ordered_project_only.id)])
@@ -188,8 +188,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': sale_order.id,
         })
-        so_line_deliver_global_project.product_id_change()
-        so_line_deliver_task_project.product_id_change()
+        so_line_deliver_global_project._onchange_product_id()
+        so_line_deliver_task_project._onchange_product_id()
 
         # confirm SO
         sale_order.action_confirm()
@@ -415,8 +415,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': sale_order.id,
         })
-        so_line_deliver_global_project.product_id_change()
-        so_line_deliver_task_project.product_id_change()
+        so_line_deliver_global_project._onchange_product_id()
+        so_line_deliver_task_project._onchange_product_id()
 
         # confirm SO
         sale_order.action_confirm()

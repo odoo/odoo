@@ -207,5 +207,5 @@ class TestEventSale(TestEventSaleCommon):
             'event_id': event.id,
             'event_ticket_id': event_ticket.id,
         })
-        sol.product_id_change()
+        sol._onchange_product_id()
         self.assertEqual(so.amount_total, 660.0, "Ticket is $1000 but the event product is on a pricelist 10 -> 6. So, $600 + a 10% tax.")

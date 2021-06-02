@@ -178,8 +178,8 @@ class SaleOrderLine(models.Model):
 
     # Take the description on the order template if the product is present in it
     @api.onchange('product_id')
-    def product_id_change(self):
-        domain = super(SaleOrderLine, self).product_id_change()
+    def _onchange_product_id(self):
+        domain = super()._onchange_product_id()
         if self.product_id and self.order_id.sale_order_template_id:
             for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
                 if line.product_id == self.product_id:

@@ -141,7 +141,7 @@ class SaleOrderLine(models.Model):
         onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
             line = self.new(values)
-            line.product_id_change()
+            line._onchange_product_id()
             for field in onchange_fields:
                 if field not in values:
                     res[field] = line._fields[field].convert_to_write(line[field], line)
@@ -588,7 +588,7 @@ class SaleOrderLine(models.Model):
         return max(base_price, final_price)
 
     @api.onchange('product_id')
-    def product_id_change(self):
+    def _onchange_product_id(self):
         if not self.product_id:
             return
         valid_values = self.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids

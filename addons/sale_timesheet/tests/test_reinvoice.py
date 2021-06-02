@@ -58,7 +58,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'price_unit': self.company_data['product_order_cost'].list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line1.product_id_change()
+        sale_order_line1._onchange_product_id()
         sale_order_line2 = self.env['sale.order.line'].create({
             'name': self.company_data['product_delivery_cost'].name,
             'product_id': self.company_data['product_delivery_cost'].id,
@@ -67,7 +67,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'price_unit': self.company_data['product_delivery_cost'].list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line2.product_id_change()
+        sale_order_line2._onchange_product_id()
 
         self.sale_order._onchange_partner_id()
         self.sale_order._compute_tax_id()
@@ -161,7 +161,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'price_unit': self.company_data['product_delivery_sales_price'].list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line1.product_id_change()
+        sale_order_line1._onchange_product_id()
         sale_order_line2 = self.env['sale.order.line'].create({
             'name': self.company_data['product_order_sales_price'].name,
             'product_id': self.company_data['product_order_sales_price'].id,
@@ -171,7 +171,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'price_unit': self.company_data['product_order_sales_price'].list_price,
             'order_id': self.sale_order.id,
         })
-        sale_order_line2.product_id_change()
+        sale_order_line2._onchange_product_id()
         self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
