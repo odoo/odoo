@@ -1342,7 +1342,7 @@ exports.PosModel = Backbone.Model.extend({
             i -= 1;
         });
 
-        var total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, currency_rounding);
+        var total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, this.currency.rounding);
         var total_included = total_excluded;
 
         // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
