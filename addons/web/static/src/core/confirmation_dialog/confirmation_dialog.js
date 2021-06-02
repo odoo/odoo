@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { Dialog } from "../dialog/dialog";
+import { _lt } from "../l10n/translation";
 
 export class ConfirmationDialog extends Dialog {
     setup() {
@@ -15,17 +16,42 @@ export class ConfirmationDialog extends Dialog {
     }
 
     _confirm() {
-        this.props.confirm();
+        if (this.props.confirm) {
+            this.props.confirm();
+        }
         this.close();
     }
 }
 ConfirmationDialog.props = {
-    title: String,
+    title: {
+        validate: (m) => {
+            return (
+                typeof m === "string" || (typeof m === "object" && typeof m.toString === "function")
+            );
+        },
+    },
     body: String,
-    confirm: Function,
-    cancel: Function,
+    confirm: { type: Function, optional: true },
+    cancel: { type: Function, optional: true },
     close: Function,
 };
 
 ConfirmationDialog.bodyTemplate = "web.ConfirmationDialogBody";
 ConfirmationDialog.footerTemplate = "web.ConfirmationDialogFooter";
+
+export class AlertDialog extends ConfirmationDialog {
+    setup() {
+        super.setup();
+        if ("contentClass" in this.props) {
+            this.contentClass = this.props.contentClass;
+        }
+    }
+}
+AlertDialog.size = "modal-sm";
+AlertDialog.props = Object.assign(Object.create(ConfirmationDialog.props), {
+    contentClass: { type: String, optional: true },
+});
+
+AlertDialog.defaultProps = {
+    title: _lt("Alert"),
+};

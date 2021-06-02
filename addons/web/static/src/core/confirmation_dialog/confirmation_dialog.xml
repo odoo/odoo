@@ -9,7 +9,7 @@
     <button class="btn btn-primary" t-on-click="_confirm">
       Ok
     </button>
-    <button class="btn btn-secondary" t-on-click="_cancel">
+    <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel">
       Cancel
     </button>
   </t>
