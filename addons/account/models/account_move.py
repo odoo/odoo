@@ -762,7 +762,7 @@ class AccountMove(models.Model):
                 'amount_currency': diff_amount_currency,
                 'partner_id': self.partner_id.id,
                 'move_id': self.id,
-                'currency_id': self.currency_id if self.currency_id != self.company_id.currency_id else False,
+                'currency_id': self.currency_id.id if self.currency_id != self.company_id.currency_id else False,
                 'company_id': self.company_id.id,
                 'company_currency_id': self.company_id.currency_id.id,
                 'is_rounding_line': True,
