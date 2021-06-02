@@ -194,6 +194,7 @@ class PosOrder(models.Model):
             'name': order_line.product_id.display_name,
             'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
+            'customer_note': order_line.customer_note,
         }
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
@@ -772,6 +773,7 @@ class PosOrderLine(models.Model):
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
+    customer_note = fields.Char('Customer Note', help='This is a note destined to the customer')
 
     def _prepare_refund_data(self, refund_order, PosOrderLineLot):
         """
@@ -875,6 +877,7 @@ class PosOrderLine(models.Model):
             'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
             'id': orderline.id,
             'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
+            'customer_note': orderline.customer_note,
         }
 
     def export_for_ui(self):

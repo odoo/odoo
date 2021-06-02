@@ -1,4 +1,4 @@
-odoo.define('pos_restaurant.tour.TextAreaPopupTourMethods', function (require) {
+odoo.define('point_of_sale.tour.TextAreaPopupTourMethods', function (require) {
     'use strict';
 
     const { createTourMethods } = require('point_of_sale.tour.utils');

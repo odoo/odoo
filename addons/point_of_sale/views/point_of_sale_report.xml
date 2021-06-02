@@ -28,4 +28,14 @@
 
     <template id="report_invoice" inherit_id="account.report_invoice" primary="True"/>
 
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <tr name="account_invoice_line_row" position="after">
+            <tr class="font-italic o_line_note" t-if="line.customer_note">
+                <td colspan="99">
+                    <span t-field="line.customer_note" t-options="{'widget': 'text'}"/>
+                </td>
+            </tr>
+        </tr>
+    </template>
+
 </odoo>

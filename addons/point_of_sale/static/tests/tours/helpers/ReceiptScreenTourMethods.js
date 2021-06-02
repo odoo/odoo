@@ -67,6 +67,14 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
                 },
             ];
         }
+
+        customerNoteIsThere(note) {
+            return [
+                {
+                    trigger: `.receipt-screen .orderlines .pos-receipt-left-padding:contains("${note}")`
+                }
+            ]
+        }
     }
 
     class Execute {
