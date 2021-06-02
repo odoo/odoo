@@ -16,7 +16,7 @@ class TestExpenses(TestExpenseCommon):
             payment_register = self.env['account.payment.register'].with_context(**ctx).create({
                 'amount': amount,
                 'journal_id': self.company_data['default_journal_bank'].id,
-                'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+                'payment_method_id': self.inbound_payment_method.id,
             })
             return payment_register._create_payments()
 

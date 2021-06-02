@@ -15,13 +15,6 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         cls.payment_method_check = cls.env.ref("account_check_printing.account_payment_method_check")
 
-        cls.company_data['default_journal_bank'].write({
-            'outbound_payment_method_ids': [(6, 0, (
-                cls.env.ref('account.account_payment_method_manual_out').id,
-                cls.payment_method_check.id,
-            ))],
-        })
-
     def test_in_invoice_check_manual_sequencing(self):
         ''' Test the check generation for vendor bills. '''
         nb_invoices_to_test = INV_LINES_PER_STUB + 1

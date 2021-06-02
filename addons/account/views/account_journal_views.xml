@@ -15,8 +15,6 @@
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide"/>
                     <field name="code" optional="show"/>
                     <field name="default_account_id" optional="show"/>
-                    <field name="payment_debit_account_id" optional="hide"/>
-                    <field name="payment_credit_account_id" optional="hide"/>
                     <field name="active" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 </tree>
@@ -89,23 +87,42 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="journal_entries" string="Payments Configuration" attrs="{'invisible': [('type', 'in', ['sale', 'purchase', 'general'])]}">
-                                <group>
-                                    <group string="Incoming Payments">
-                                        <field name="payment_debit_account_id"
-                                               attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
+                            <page id="inbound_payment_settings" string="Incoming Payments" attrs="{'invisible': [('type', 'not in', ['cash', 'bank'])]}">
+                                <field name="available_payment_method_ids" invisible="1"/>
+                                <field name="inbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'inbound'}">
+                                    <tree string="Payment Methods" editable="bottom">
+                                        <field name="available_payment_method_ids" invisible="1"/>
+                                        <field name="payment_type" invisible="1"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="name"/>
+                                        <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
+                                        <field name="payment_account_id"
+                                               placeholder="Let empty to use the default outstanding account"
+                                               string="Outstanding Receipts accounts"
+                                               optional="show"
                                                groups="account.group_account_readonly"/>
-                                        <field name="inbound_payment_method_ids" string="Methods" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
-                                    </group>
-                                    <group string="Outgoing Payments">
-                                        <field name="id" invisible="1"/>
-                                        <field name="payment_credit_account_id"
-                                               attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
-                                               groups="account.group_account_readonly"/>
-                                        <field name="outbound_payment_method_ids" string="Methods" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
-                                    </group>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page id="outbound_payment_settings" string="Outgoing Payments" attrs="{'invisible': [('type', 'not in', ['cash', 'bank'])]}">
+                                    <field name="outbound_payment_method_line_ids" nolabel="1" context="{'default_payment_type': 'outbound'}">
+                                        <tree string="Payment Methods" editable="bottom" nolabel="1">
+                                            <field name="available_payment_method_ids" invisible="1"/>
+                                            <field name="payment_type" invisible="1"/>
+                                            <field name="company_id" invisible="1"/>
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="payment_account_id"
+                                                   placeholder="Let empty to use the default outstanding account"
+                                                   string="Outstanding Payments accounts"
+                                                   optional="show"
+                                                   groups="account.group_account_readonly"/>
+                                        </tree>
+                                    </field>
+                                    <field name="selected_payment_method_codes" invisible="1"/>
                                     <group name="outgoing_payment" />
-                                </group>
                             </page>
                             <page name="advanced_settings" string="Advanced Settings">
                                 <group>

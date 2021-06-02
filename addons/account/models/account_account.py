@@ -131,22 +131,57 @@ class AccountAccount(models.Model):
         self.env['account.journal'].flush([
             'currency_id',
             'default_account_id',
-            'payment_debit_account_id',
-            'payment_credit_account_id',
             'suspense_account_id',
         ])
+        self.env['account.payment.method'].flush(['payment_type'])
+        self.env['account.payment.method.line'].flush(['payment_method_id', 'payment_account_id'])
+
         self._cr.execute('''
-            SELECT account.id, journal.id
-            FROM account_account account
-            JOIN res_company company ON company.id = account.company_id
-            JOIN account_journal journal ON
-                journal.default_account_id = account.id
-            WHERE account.id IN %s
-            AND journal.type IN ('bank', 'cash')
-            AND journal.currency_id IS NOT NULL
+            SELECT 
+                account.id, 
+                journal.id
+            FROM account_journal journal
+            JOIN res_company company ON company.id = journal.company_id
+            JOIN account_account account ON account.id = journal.default_account_id
+            WHERE journal.currency_id IS NOT NULL
             AND journal.currency_id != company.currency_id
             AND account.currency_id != journal.currency_id
-        ''', [tuple(self.ids)])
+            AND account.id IN %(accounts)s
+            
+            UNION ALL
+            
+            SELECT 
+                account.id, 
+                journal.id
+            FROM account_journal journal
+            JOIN res_company company ON company.id = journal.company_id
+            JOIN account_payment_method_line apml ON apml.journal_id = journal.id
+            JOIN account_payment_method apm on apm.id = apml.payment_method_id
+            JOIN account_account account ON account.id = COALESCE(apml.payment_account_id, company.account_journal_payment_debit_account_id)
+            WHERE journal.currency_id IS NOT NULL
+            AND journal.currency_id != company.currency_id
+            AND account.currency_id != journal.currency_id
+            AND apm.payment_type = 'inbound'
+            AND account.id IN %(accounts)s
+            
+            UNION ALL
+            
+            SELECT 
+                account.id, 
+                journal.id
+            FROM account_journal journal
+            JOIN res_company company ON company.id = journal.company_id
+            JOIN account_payment_method_line apml ON apml.journal_id = journal.id
+            JOIN account_payment_method apm on apm.id = apml.payment_method_id
+            JOIN account_account account ON account.id = COALESCE(apml.payment_account_id, company.account_journal_payment_credit_account_id)
+            WHERE journal.currency_id IS NOT NULL
+            AND journal.currency_id != company.currency_id
+            AND account.currency_id != journal.currency_id
+            AND apm.payment_type = 'outbound'
+            AND account.id IN %(accounts)s
+        ''', {
+            'accounts': tuple(self.ids)
+        })
         res = self._cr.fetchone()
         if res:
             account = self.env['account.account'].browse(res[0])
@@ -200,14 +235,18 @@ class AccountAccount(models.Model):
             return
 
         self.flush(['reconcile'])
+        self.env['account.payment.method.line'].flush(['journal_id', 'payment_account_id'])
+
         self._cr.execute('''
             SELECT journal.id
             FROM account_journal journal
-            WHERE journal.payment_credit_account_id in %(credit_account)s
-            OR journal.payment_debit_account_id in %(debit_account)s ;
+            JOIN res_company company on journal.company_id = company.id
+            LEFT JOIN account_payment_method_line apml ON journal.id = apml.journal_id
+            WHERE company.account_journal_payment_credit_account_id in %(accounts)s
+            OR company.account_journal_payment_debit_account_id in %(accounts)s
+            OR apml.payment_account_id in %(accounts)s
         ''', {
-            'credit_account': tuple(accounts.ids),
-            'debit_account': tuple(accounts.ids)
+            'accounts': tuple(accounts.ids),
         })
 
         rows = self._cr.fetchall()

@@ -65,3 +65,9 @@ class PaymentAcquirer(models.Model):
                 'author_id': self.create_uid.partner_id.id,
             }
             self.env['mail.mail'].sudo().create(mail_values).send()
+
+    def _get_default_payment_method(self):
+        self.ensure_one()
+        if self.provider != 'paypal':
+            return super()._get_default_payment_method()
+        return self.env.ref('payment_paypal.payment_method_paypal').id

@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import patch
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.tests import tagged
 from odoo.exceptions import UserError, ValidationError
 
@@ -82,3 +85,49 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         # Assigning both should be allowed
         self.company_data['default_journal_misc'].account_control_ids = \
             self.company_data['default_account_revenue'] + self.company_data['default_account_expense']
+
+    def test_account_journal_add_new_payment_method_unique(self):
+        """
+        Test the automatic creation of payment method lines with the mode set to unique
+        """
+        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
+
+        def _get_payment_method_information(self):
+            res = Method_get_payment_method_information(self)
+            res['unique'] = {'mode': 'unique', 'domain': [('type', '=', 'bank')]}
+            return res
+
+        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
+            self.env['account.payment.method'].create({
+                'name': 'Unique method',
+                'code': 'unique',
+                'payment_type': 'inbound'
+            })
+
+            journals = self.env['account.journal'].search([('inbound_payment_method_line_ids.code', '=', 'unique')])
+
+            # Only one of the bank journals has been set
+            self.assertEqual(len(journals), 1)
+
+    def test_account_journal_add_new_payment_method_multi(self):
+        """
+        Test the automatic creation of payment method lines with the mode set to multi
+        """
+        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
+
+        def _get_payment_method_information(self):
+            res = Method_get_payment_method_information(self)
+            res['multi'] = {'mode': 'multi', 'domain': [('type', '=', 'bank')]}
+            return res
+
+        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
+            self.env['account.payment.method'].create({
+                'name': 'Multi method',
+                'code': 'multi',
+                'payment_type': 'inbound'
+            })
+
+            journals = self.env['account.journal'].search([('inbound_payment_method_line_ids.code', '=', 'multi')])
+
+            # The two bank journals have been set
+            self.assertEqual(len(journals), 2)

@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-
+from unittest.mock import patch
+from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.fields import Command
 
 from odoo.addons.payment.tests.utils import PaymentTestUtils
@@ -14,6 +15,13 @@ class PaymentCommon(PaymentTestUtils):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
+
+        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
+
+        def _get_payment_method_information(self):
+            res = Method_get_payment_method_information(self)
+            res['none'] = {'mode': 'multi', 'domain': [('type', '=', 'bank')]}
+            return res
 
         cls.currency_euro = cls._prepare_currency('EUR')
         cls.currency_usd = cls._prepare_currency('USD')
@@ -68,6 +76,13 @@ class PaymentCommon(PaymentTestUtils):
             'type': 'qweb',
             'arch': arch,
         })
+
+        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
+            cls.env['account.payment.method'].create({
+                'name': 'Dummy method',
+                'code': 'none',
+                'payment_type': 'inbound'
+            })
         cls.dummy_acquirer = cls.env['payment.acquirer'].create({
             'name': "Dummy Acquirer",
             'provider': 'none',

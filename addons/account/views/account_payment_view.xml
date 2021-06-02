@@ -165,7 +165,7 @@
                     </div>
                     <div class="alert alert-warning text-center" role="alert" attrs="{
                             'invisible': ['|', '|', ('is_internal_transfer','=',False), ('require_partner_bank_account', '=', False), ('partner_bank_id', '!=', False)]}">
-                        The selected payment method requires a bank account but none is set on 
+                        The selected payment method requires a bank account but none is set on
                         <button class="oe_link alert-link" type="object" name="action_open_destination_journal" style="padding: 0; vertical-align: baseline;">the destination journal</button>.
                     </div>
                     <sheet>
@@ -237,7 +237,7 @@
                         <group>
                             <group name="group1">
                                 <field name="is_internal_transfer" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="payment_type" widget="radio" options="{'horizontal': True}" 
+                                <field name="payment_type" widget="radio" options="{'horizontal': True}"
                                         attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
@@ -265,7 +265,7 @@
                                 <field name="journal_id"
                                        domain="[('type', 'in', ('bank', 'cash'))]"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="payment_method_id" required="1" options="{'no_open': True, 'no_create': True}"
+                                <field name="payment_method_id" required="1" options="{'no_create': True, 'no_open': True}"
                                        attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('hide_payment_method', '=', True)]}"/>
 
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Customer Bank Account"
