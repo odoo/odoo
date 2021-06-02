@@ -3,6 +3,7 @@
 const { useState } = owl.hooks;
 import { useAutoFocusToLast } from 'point_of_sale.custom_hooks';
 import EditListInput from 'point_of_sale.EditListInput';
+import { _t } from 'web.core';
 
 /**
  * Given a array of { id, text }, we show the user this popup to be able to modify this given array.
@@ -93,8 +94,8 @@ class EditListPopup extends owl.Component {
 EditListPopup.components = { EditListInput };
 EditListPopup.template = 'point_of_sale.EditListPopup';
 EditListPopup.defaultProps = {
-    confirmText: 'Ok',
-    cancelText: 'Cancel',
+    confirmText: _t('Ok'),
+    cancelText: _t('Cancel'),
     array: [],
     isSingleItem: false,
 };

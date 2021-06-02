@@ -1,6 +1,7 @@
 /** @odoo-module alias=point_of_sale.ErrorTracebackPopup **/
 
 import ErrorPopup from 'point_of_sale.ErrorPopup';
+import { _t } from 'web.core';
 
 class ErrorTracebackPopup extends ErrorPopup {
     onExitButtonClick() {
@@ -30,12 +31,12 @@ class ErrorTracebackPopup extends ErrorPopup {
 }
 ErrorTracebackPopup.template = 'point_of_sale.ErrorTracebackPopup';
 ErrorTracebackPopup.defaultProps = {
-    confirmText: 'Ok',
-    cancelText: 'Cancel',
-    title: 'Error with Traceback',
+    confirmText: _t('Ok'),
+    cancelText: _t('Cancel'),
+    title: _t('Error with Traceback'),
     body: '',
     exitButtonIsShown: false,
-    exitButtonText: 'Exit Pos',
+    exitButtonText: _t('Exit Pos'),
 };
 
 export default ErrorTracebackPopup;

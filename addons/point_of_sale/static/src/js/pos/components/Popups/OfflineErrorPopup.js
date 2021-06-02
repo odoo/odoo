@@ -1,6 +1,7 @@
 /** @odoo-module alias=point_of_sale.OfflineErrorPopup **/
 
 import ErrorPopup from 'point_of_sale.ErrorPopup';
+import { _t } from 'web.core';
 
 /**
  * This is a special kind of error popup as it introduces
@@ -14,10 +15,10 @@ class OfflineErrorPopup extends ErrorPopup {
 }
 OfflineErrorPopup.template = 'point_of_sale.OfflineErrorPopup';
 OfflineErrorPopup.defaultProps = {
-    confirmText: 'Ok',
-    cancelText: 'Cancel',
-    title: 'Offline Error',
-    body: 'Either the server is inaccessible or browser is not connected online.',
+    confirmText: _t('Ok'),
+    cancelText: _t('Cancel'),
+    title: _t('Offline Error'),
+    body: _t('Either the server is inaccessible or browser is not connected online.'),
 };
 
 export default OfflineErrorPopup;

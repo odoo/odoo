@@ -2,6 +2,7 @@
 
 const { useState, useExternalListener } = owl.hooks;
 import PosComponent from 'point_of_sale.PosComponent';
+import { _t } from 'web.core';
 
 /**
  * This is a simple configurable search bar component. It has search fields
@@ -104,7 +105,7 @@ SearchBar.defaultProps = {
             options: [],
         },
     },
-    placeholder: 'Search ...',
+    placeholder: _t('Search ...'),
 };
 
 export default SearchBar;

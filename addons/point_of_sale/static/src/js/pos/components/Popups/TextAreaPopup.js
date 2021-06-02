@@ -2,6 +2,7 @@
 
 import PosComponent from 'point_of_sale.PosComponent';
 import Draggable from 'point_of_sale.Draggable';
+import { _t } from 'web.core';
 const { useState, useRef } = owl.hooks;
 
 class TextAreaPopup extends PosComponent {
@@ -21,8 +22,8 @@ class TextAreaPopup extends PosComponent {
 TextAreaPopup.components = { Draggable };
 TextAreaPopup.template = 'point_of_sale.TextAreaPopup';
 TextAreaPopup.defaultProps = {
-    confirmText: 'Ok',
-    cancelText: 'Cancel',
+    confirmText: _t('Ok'),
+    cancelText: _t('Cancel'),
     title: '',
     body: '',
     startingValue: '',

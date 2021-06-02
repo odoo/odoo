@@ -4,6 +4,7 @@ const { useState } = owl;
 import NumberBuffer from 'point_of_sale.NumberBuffer';
 import { useListener } from 'web.custom_hooks';
 import Draggable from 'point_of_sale.Draggable';
+import { _t } from 'web.core';
 
 class NumberPopup extends owl.Component {
     /**
@@ -60,9 +61,9 @@ class NumberPopup extends owl.Component {
 NumberPopup.components = { Draggable };
 NumberPopup.template = 'point_of_sale.NumberPopup';
 NumberPopup.defaultProps = {
-    confirmText: 'Ok',
-    cancelText: 'Cancel',
-    title: 'Confirm ?',
+    confirmText: _t('Ok'),
+    cancelText: _t('Cancel'),
+    title: _t('Confirm ?'),
     cheap: false,
     startingValue: null,
     isPassword: false,
