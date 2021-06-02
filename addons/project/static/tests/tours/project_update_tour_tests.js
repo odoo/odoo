@@ -108,7 +108,12 @@ tour.register('project_update_tour', {
     trigger: ".o_back_button"
 }, {
     trigger: ".o_open_milestone:eq(1) .o_milestone_detail span:eq(0)",
-    extra_trigger: ".o_add_milestone a"
+    extra_trigger: ".o_add_milestone a",
+    run: function () {
+        setTimeout(() => {
+            this.$anchor.click();
+        }, 500);
+    },
 }, {
     trigger: "input.datetimepicker-input[name=deadline]",
     run: 'text 12/12/2100'
