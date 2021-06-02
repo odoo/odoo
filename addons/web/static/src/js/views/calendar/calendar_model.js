@@ -521,6 +521,7 @@ return AbstractModel.extend({
             var self = this;
             _.each(events, function (event) {
                 var value = event.record[fieldName];
+<<<<<<< HEAD
                 var filter = self.loadParams.filters[fieldName];
                 var color = filter && _.map(filter.filters, f => f.value) || value;
                 var everyoneFilter = filter && (_.find(filter.filters, f => f.value === "all") || {}).active || false;
@@ -530,6 +531,9 @@ return AbstractModel.extend({
                     color = value.includes(self.getSession().partner_id) ? self.getSession().partner_id : value
                 }
                 event.color_index = _.isArray(color) ? self._getColorIndex(value, color[0]) : color;
+=======
+                event.color_index = _.isArray(value) ? value[0] % 30 : value % 30;
+>>>>>>> 71dc50ddc7a... temp
             });
             this.model_color = this.fields[fieldName].relation || element.model;
         }
@@ -665,7 +669,7 @@ return AbstractModel.extend({
                 _.each(data, function (_value) {
                     var value = _.isArray(_value) ? _value[0] : _value;
                     var f = {
-                        'color_index': self.model_color === (field.relation || element.model) ? value : false,
+                        'color_index': self.model_color === (field.relation || element.model) ? value % 30 : false,
                         'value': value,
                         'label': fieldUtils.format[field.type](_value, field) || _t("Undefined"),
                         'avatar_model': field.relation || element.model,
