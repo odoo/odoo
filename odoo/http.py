@@ -322,8 +322,7 @@ class WebRequest(object):
         if self.endpoint.routing['type'] != self._request_type:
             msg = "%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'"
             params = (self.endpoint.original, self.httprequest.path, self.endpoint.routing['type'], self._request_type)
-            _logger.info(msg, *params)
-            raise werkzeug.exceptions.BadRequest(msg % params)
+            _logger.warning(msg, *params)
 
         if self.endpoint_arguments:
             kwargs.update(self.endpoint_arguments)
