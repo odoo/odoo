@@ -1535,15 +1535,17 @@ class MrpProduction(models.Model):
         if self.env.context.get('mo_ids_to_backorder'):
             productions_to_backorder = self.browse(self.env.context['mo_ids_to_backorder'])
             productions_not_to_backorder = self - productions_to_backorder
+            close_mo = False
         else:
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
+            close_mo = True
 
         self.workorder_ids.button_finish()
 
+        backorders = productions_to_backorder._generate_backorder_productions(close_mo=close_mo)
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
         productions_to_backorder._post_inventory(cancel_backorder=False)
-        backorders = productions_to_backorder._generate_backorder_productions()
 
         # if completed products make other confirmed/partially_available moves available, assign them
         done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')
