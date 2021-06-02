@@ -4,13 +4,13 @@ import testUtils from "web.test_utils";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import { legacyExtraNextTick } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
-let testConfig;
+let serverData;
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
-        testConfig = getActionManagerTestConfig();
+        serverData = getActionManagerServerData();
     });
 
     QUnit.module('Actions in target="new"');
@@ -20,7 +20,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 5);
         assert.containsOnce(
             document.body,
@@ -51,7 +51,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.strictEqual(closeInfo, "smallCandle");
             assert.step("Close Action");
         }
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 5, { onClose });
         // a target=new action shouldn't activate the on_close
         await doAction(webClient, 5);
@@ -63,14 +63,14 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("footer buttons are moved to the dialog footer", async function (assert) {
         assert.expect(3);
-        testConfig.serverData.views["partner,false,form"] = `
+        serverData.views["partner,false,form"] = `
       <form>
         <field name="display_name"/>
         <footer>
           <button string="Create" type="object" class="infooter"/>
         </footer>
       </form>`;
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 5);
         assert.containsNone(
             $(".o_technical_modal .modal-body")[0],
@@ -91,7 +91,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("Button with `close` attribute closes dialog", async function (assert) {
         assert.expect(19);
-        testConfig.serverData.views = {
+        serverData.views = {
             "partner,false,form": `
         <form>
           <header>
@@ -108,14 +108,14 @@ QUnit.module("ActionManager", (hooks) => {
       `,
             "partner,false,search": "<search></search>",
         };
-        testConfig.serverData.actions[4] = {
+        serverData.actions[4] = {
             id: 4,
             name: "Partners Action 4",
             res_model: "partner",
             type: "ir.actions.act_window",
             views: [[false, "form"]],
         };
-        testConfig.serverData.actions[5] = {
+        serverData.actions[5] = {
             id: 5,
             name: "Create a Partner",
             res_model: "partner",
@@ -132,7 +132,7 @@ QUnit.module("ActionManager", (hooks) => {
                 };
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         assert.verifySteps(["/web/webclient/load_menus"]);
         await doAction(webClient, 4);
         assert.verifySteps([
@@ -177,7 +177,7 @@ QUnit.module("ActionManager", (hooks) => {
             },
         });
         core.action_registry.add("test", ClientAction);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, {
             tag: "test",
             target: "new",
@@ -191,14 +191,14 @@ QUnit.module("ActionManager", (hooks) => {
         'footer buttons are updated when having another action in target "new"',
         async function (assert) {
             assert.expect(9);
-            testConfig.serverData.views["partner,false,form"] =
+            serverData.views["partner,false,form"] =
                 "<form>" +
                 '<field name="display_name"/>' +
                 "<footer>" +
                 '<button string="Create" type="object" class="infooter"/>' +
                 "</footer>" +
                 "</form>";
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 5);
             assert.containsNone(
                 webClient.el,
@@ -234,7 +234,7 @@ QUnit.module("ActionManager", (hooks) => {
                 },
             });
             core.action_registry.add("test", ClientAction);
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, {
                 tag: "test",
                 target: "new",
@@ -254,7 +254,7 @@ QUnit.module("ActionManager", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            testConfig.serverData.actions[999] = {
+            serverData.actions[999] = {
                 id: 999,
                 name: "A window action",
                 res_model: "partner",
@@ -262,11 +262,11 @@ QUnit.module("ActionManager", (hooks) => {
                 type: "ir.actions.act_window",
                 views: [[999, "form"]],
             };
-            testConfig.serverData.views["partner,999,form"] = `
+            serverData.views["partner,999,form"] = `
             <form>
                 <button name="method" string="Call method" type="object" confirm="Are you sure?"/>
             </form>`;
-            testConfig.serverData.views["partner,1000,form"] = `<form>Another action</form>`;
+            serverData.views["partner,1000,form"] = `<form>Another action</form>`;
 
             const mockRPC = (route, args) => {
                 if (args.method === "method") {
@@ -280,7 +280,7 @@ QUnit.module("ActionManager", (hooks) => {
                     });
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
 
             await doAction(webClient, 999);
 
@@ -305,7 +305,7 @@ QUnit.module("ActionManager", (hooks) => {
             const mockRPC = async (route, args) => {
                 assert.step(args.method || route);
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 6);
             assert.containsOnce(
                 webClient,
@@ -323,9 +323,9 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("breadcrumbs and actions with target inline", async function (assert) {
         assert.expect(4);
-        testConfig.serverData.actions[4].views = [[false, "form"]];
-        testConfig.serverData.actions[4].target = "inline";
-        const webClient = await createWebClient({ testConfig });
+        serverData.actions[4].views = [[false, "form"]];
+        serverData.actions[4].target = "inline";
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         assert.containsNone(webClient, ".o_control_panel");
         await doAction(webClient, 1, { clearBreadcrumbs: true });
@@ -343,8 +343,8 @@ QUnit.module("ActionManager", (hooks) => {
         'correctly execute act_window actions in target="fullscreen"',
         async function (assert) {
             assert.expect(3);
-            testConfig.serverData.actions[1].target = "fullscreen";
-            const webClient = await createWebClient({ testConfig });
+            serverData.actions[1].target = "fullscreen";
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
             assert.containsOnce(
                 webClient.el,
@@ -358,11 +358,11 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test('fullscreen on action change: back to a "current" action', async function (assert) {
         assert.expect(3);
-        testConfig.serverData.actions[1].target = "fullscreen";
-        testConfig.serverData.views[
+        serverData.actions[1].target = "fullscreen";
+        serverData.views[
             "partner,false,form"
         ] = `<form><button name="1" type="action" class="oe_stat_button" /></form>`;
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
         assert.isVisible(webClient.el.querySelector(".o_main_navbar"));
         await testUtils.dom.click($(webClient.el).find("button[name=1]"));
@@ -375,11 +375,11 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test('fullscreen on action change: all "fullscreen" actions', async function (assert) {
         assert.expect(3);
-        testConfig.serverData.actions[6].target = "fullscreen";
-        testConfig.serverData.views[
+        serverData.actions[6].target = "fullscreen";
+        serverData.views[
             "partner,false,form"
         ] = `<form><button name="1" type="action" class="oe_stat_button" /></form>`;
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
         assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
         await testUtils.dom.click($(webClient.el).find("button[name=1]"));
@@ -394,14 +394,14 @@ QUnit.module("ActionManager", (hooks) => {
         'fullscreen on action change: back to another "current" action',
         async function (assert) {
             assert.expect(8);
-            testConfig.serverData.menus = {
+            serverData.menus = {
                 root: { id: "root", children: [1], name: "root", appID: "root" },
                 1: { id: 1, children: [], name: "MAIN APP", appID: 1, actionID: 6 },
             };
-            testConfig.serverData.actions[1].target = "fullscreen";
-            testConfig.serverData.views["partner,false,form"] =
+            serverData.actions[1].target = "fullscreen";
+            serverData.views["partner,false,form"] =
                 '<form><button name="24" type="action" class="oe_stat_button"/></form>';
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await testUtils.nextTick(); // wait for the load state (default app)
             await legacyExtraNextTick();
             assert.containsOnce(webClient, "nav .o_menu_brand");

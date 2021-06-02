@@ -1,16 +1,12 @@
 /** @odoo-module alias="web.search_bar_tests" **/
 
 import testUtils from "web.test_utils";
-import {
-    createWebClient,
-    doAction,
-    getActionManagerTestConfig,
-} from "@web/../tests/webclient/actions/helpers";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { Model } from "web.Model";
 import Registry from "web.Registry";
 import SearchBar from "web.SearchBar";
 
-let testConfig;
+let serverData;
 
 // legacy stuff
 let cpHelpers;
@@ -20,10 +16,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         cpHelpers = testUtils.controlPanel;
     });
     hooks.beforeEach(() => {
-        testConfig = getActionManagerTestConfig();
-    });
-    hooks.beforeEach(() => {
-        const serverData = {
+        serverData = {
             models: {
                 partner: {
                     fields: {
@@ -67,13 +60,12 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 },
             },
         };
-        testConfig.serverData = serverData;
     });
 
         QUnit.test("basic rendering", async function (assert) {
             assert.expect(1);
 
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
 
             assert.strictEqual(
@@ -86,7 +78,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test("navigation with facets", async function (assert) {
             assert.expect(4);
 
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
 
             // add a facet
@@ -113,7 +105,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             let searchReadCount = 0;
 
             const webClient = await createWebClient({
-                testConfig,
+                serverData,
                 legacyParams: {
                     getTZOffset() {
                         return 360;
@@ -171,7 +163,6 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test("autocomplete menu clickout interactions", async function (assert) {
             assert.expect(9);
 
-            const { serverData } = testConfig;
             const data = serverData.models;
             const fields = serverData.models.partner.fields;
 
@@ -234,7 +225,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
             let searchReadCount = 0;
             const webClient = await createWebClient({
-                testConfig,
+                serverData,
                 mockRPC: (route, args) => {
                     if (route === '/web/dataset/search_read') {
                         switch (searchReadCount) {
@@ -267,7 +258,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             let searchReadCount = 0;
             const firstLoading = testUtils.makeTestPromise();
             const webClient = await createWebClient({
-                testConfig,
+                serverData,
                 mockRPC: (route, args) => {
                     if (route === '/web/dataset/search_read') {
                         switch (searchReadCount) {
@@ -323,8 +314,8 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
             // Switch to pivot to ensure that the event comes from the control panel
             // (pivot does not have a handler on "reload" event).
-            testConfig.serverData.actions[1].views = [[false, "pivot"]];
-            testConfig.serverData.views['partner,false,pivot'] = `
+            serverData.actions[1].views = [[false, "pivot"]];
+            serverData.views['partner,false,pivot'] = `
                 <pivot>
                     <field name="foo" type="row"/>
                 </pivot>
@@ -332,7 +323,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
             let rpcs;
             const webClient = await createWebClient({
-                testConfig,
+                serverData,
                 mockRPC: () => { rpcs++; },
             });
             await doAction(webClient, 1);
@@ -348,7 +339,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test('selecting (no result) triggers a re-render', async function (assert) {
             assert.expect(3);
 
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
 
             const searchInput = webClient.el.querySelector('.o_searchview_input');
@@ -377,7 +368,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             // not handled but are triggered to ensure they do not interfere.
             const TEST = "TEST";
             const テスト = "テスト";
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
 
             const searchInput = webClient.el.querySelector('.o_searchview_input');
@@ -450,7 +441,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test('open search view autocomplete on paste value using mouse', async function (assert) {
             assert.expect(1);
 
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
 
             // Simulate paste text through the mouse.
@@ -467,7 +458,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test('select autocompleted many2one', async function (assert) {
             assert.expect(5);
 
-            testConfig.serverData.views['partner,false,search'] = `
+            serverData.views['partner,false,search'] = `
                 <search>
                     <field name="foo"/>
                     <field name="birthday"/>
@@ -477,7 +468,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             `;
 
             const webClient = await createWebClient({
-                testConfig,
+                serverData,
                 mockRPC: (route, { domain }) => {
                     if (route === '/web/dataset/search_read') {
                         assert.step(JSON.stringify(domain));
@@ -508,7 +499,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             assert.expect(4);
 
             const webClient = await createWebClient({
-                testConfig,
+                serverData,
                 mockRPC: (route, { domain }) => {
                     if (route === '/web/dataset/search_read') {
                         assert.step(JSON.stringify(domain));
@@ -536,12 +527,12 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test('autocompletion with a boolean field', async function (assert) {
             assert.expect(11);
 
-            testConfig.serverData.views['partner,false,search'] = `
+            serverData.views['partner,false,search'] = `
                 <search><field name="bool"/></search>
             `;
 
             const webClient = await createWebClient({
-                testConfig,
+                serverData,
                 mockRPC: (route, { domain }) => {
                     if (route === '/web/dataset/search_read') {
                         assert.step(JSON.stringify(domain));
@@ -581,11 +572,11 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test('autocompletion with a selection field', async function (assert) {
             assert.expect(5);
 
-            testConfig.serverData.views['partner,false,search'] = `
+            serverData.views['partner,false,search'] = `
                 <search><field name="status"/></search>
             `;
 
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
 
             await cpHelpers.editSearch(webClient, "n");
@@ -600,20 +591,20 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
         QUnit.test("reference fields are supported in search view", async function (assert) {
             assert.expect(7);
 
-            const partnerModel = testConfig.serverData.models.partner;
+            const partnerModel = serverData.models.partner;
 
             partnerModel.fields.ref = { type: 'reference', string: "Reference" };
             partnerModel.records.forEach((record, i) => {
                 record.ref = `ref${String(i).padStart(3, "0")}`;
             });
-            testConfig.serverData.views["partner,false,search"] = `
+            serverData.views["partner,false,search"] = `
                 <search>
                     <field name="ref"/>
                 </search>
             `;
 
             const webClient = await createWebClient({
-                testConfig,
+                serverData,
                 mockRPC: (route, { domain }) => {
                     if (route === '/web/dataset/search_read') {
                         assert.step(JSON.stringify(domain));

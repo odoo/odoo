@@ -6,14 +6,12 @@ import core from "web.core";
 import * as LegacyRegistry from "web.Registry";
 import { registerCleanup } from "../../helpers/cleanup";
 import { nextTick, patchWithCleanup } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerTestConfig } from "../../webclient/actions/helpers";
+import { createWebClient, doAction } from "../../webclient/helpers";
 
-let testConfig;
 let legacyParams;
 
 QUnit.module("Service Provider Adapter Notification", (hooks) => {
   hooks.beforeEach(() => {
-    testConfig = getActionManagerTestConfig();
     legacyParams = {
       serviceRegistry: new LegacyRegistry(),
     };
@@ -56,7 +54,7 @@ QUnit.module("Service Provider Adapter Notification", (hooks) => {
         delete core.action_registry.map.NotifyTestLeg;
         delete core.action_registry.map.CloseTestLeg;
       });
-      const webClient = await createWebClient({ testConfig, legacyParams });
+      const webClient = await createWebClient({ legacyParams });
       await doAction(webClient, "NotifyTestLeg");
       await nextTick();
       assert.containsOnce(document.body, ".o_notification");

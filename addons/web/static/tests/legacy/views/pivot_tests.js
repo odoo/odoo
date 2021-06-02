@@ -7,7 +7,7 @@ const PivotController = require("web.PivotController");
 var testUtils = require('web.test_utils');
 var testUtilsDom = require('web.test_utils_dom');
 
-const { createWebClient, doAction, getActionManagerTestConfig } = require('@web/../tests/webclient/actions/helpers');
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
 var _t = core._t;
 const cpHelpers = testUtils.controlPanel;
@@ -27,7 +27,7 @@ var getCurrentValues = function (pivot) {
 };
 
 
-let testConfig;
+let serverData;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -114,8 +114,7 @@ QUnit.module('Views', {
             },
         };
 
-        testConfig = getActionManagerTestConfig();
-        Object.assign(testConfig.serverData, {models: this.data});
+        serverData = { models: this.data };
     },
 }, function () {
     QUnit.module('PivotView');
@@ -2723,8 +2722,8 @@ QUnit.module('Views', {
     QUnit.test('Navigation list view for a group and back with breadcrumbs', async function (assert) {
         assert.expect(16);
         // create a webClient to test the interactions with the search view
-        
-        testConfig.serverData.views = {
+
+        serverData.views = {
             'partner,false,pivot': '<pivot>' +
                     '<field name="customer" type="row"/>' +
               '</pivot>',
@@ -2754,7 +2753,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({testConfig, mockRPC});
+        const webClient = await createWebClient({serverData, mockRPC});
 
         await doAction(webClient, {
             res_model: 'partner',

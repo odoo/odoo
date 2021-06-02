@@ -5,10 +5,7 @@ import * as BusService from "bus.BusService";
 import * as RamStorage from "web.RamStorage";
 import * as AbstractStorageService from "web.AbstractStorageService";
 
-import {
-    createWebClient,
-    getActionManagerTestConfig,
-} from "@web/../tests/webclient/actions/helpers";
+import { createWebClient } from "@web/../tests/webclient/helpers";
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";
 import { click, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { NotificationContainer } from "@web/core/notifications/notification_container";
@@ -24,13 +21,11 @@ const serviceRegistry = registry.category("services");
 
 QUnit.module("Calendar Notification", (hooks) => {
     let legacyServicesRegistry;
-    let testConfig;
     hooks.beforeEach(() => {
         legacyServicesRegistry = new legacyRegistry();
         legacyServicesRegistry.add("bus_service", BusService);
         legacyServicesRegistry.add("local_storage", LocalStorageService);
 
-        testConfig = getActionManagerTestConfig();
         serviceRegistry.add("calendarNotification", calendarNotificationService);
 
         clearRegistryWithCleanup(mainComponentRegistry);
@@ -83,7 +78,6 @@ QUnit.module("Calendar Notification", (hooks) => {
             };
 
             const webClient = await createWebClient({
-                testConfig,
                 legacyParams: { serviceRegistry: legacyServicesRegistry },
                 mockRPC,
             });
@@ -154,7 +148,6 @@ QUnit.module("Calendar Notification", (hooks) => {
             serviceRegistry.add("action", fakeActionService, { force: true });
 
             const webClient = await createWebClient({
-                testConfig,
                 legacyParams: { serviceRegistry: legacyServicesRegistry },
                 mockRPC,
             });
@@ -213,7 +206,6 @@ QUnit.module("Calendar Notification", (hooks) => {
             };
 
             const webClient = await createWebClient({
-                testConfig,
                 legacyParams: { serviceRegistry: legacyServicesRegistry },
                 mockRPC,
             });

@@ -2,13 +2,12 @@
 
 import ActivityView from '@mail/js/views/activity/activity_view';
 import testUtils from 'web.test_utils';
-import { createWebClient } from "@web/../tests/webclient/actions/helpers";
 
 import { legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { doAction, getActionManagerTestConfig } from "@web/../tests/webclient/actions/helpers";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
 
-let testConfig;
+let serverData;
 
 var createView = testUtils.createView;
 
@@ -113,8 +112,7 @@ QUnit.module('activity view', {
                 ],
             },
         };
-        testConfig = getActionManagerTestConfig();
-        Object.assign(testConfig.serverData.models, this.data);
+        serverData = { models: this.data };
     }
 });
 
@@ -361,15 +359,17 @@ QUnit.test('activity view: activity widget', async function (assert) {
 QUnit.test("activity view: no group_by_menu and no comparison_menu", async function (assert) {
     assert.expect(4);
 
-    testConfig.serverData.actions[1] = {
-        id: 1,
-        name: "Task Action",
-        res_model: "task",
-        type: "ir.actions.act_window",
-        views: [[false, "activity"]],
+    serverData.actions = {
+        1: {
+            id: 1,
+            name: "Task Action",
+            res_model: "task",
+            type: "ir.actions.act_window",
+            views: [[false, "activity"]],
+        },
     };
 
-    testConfig.serverData.views = {
+    serverData.views = {
         "task,false,activity":
             '<activity string="Task">' +
             "<templates>" +
@@ -393,7 +393,7 @@ QUnit.test("activity view: no group_by_menu and no comparison_menu", async funct
 
     patchWithCleanup(odoo.session_info.user_context, { lang: "zz_ZZ" });
 
-    const webClient = await createWebClient({ testConfig, mockRPC , legacyParams: {withLegacyMockServer: true}});
+    const webClient = await createWebClient({ serverData, mockRPC , legacyParams: {withLegacyMockServer: true}});
 
     await doAction(webClient, 1);
 
@@ -479,15 +479,17 @@ QUnit.test('activity view: search more to schedule an activity for a record of a
 QUnit.test("Activity view: discard an activity creation dialog", async function (assert) {
     assert.expect(2);
 
-    testConfig.serverData.actions[1] = {
-        id: 1,
-        name: "Task Action",
-        res_model: "task",
-        type: "ir.actions.act_window",
-        views: [[false, "activity"]],
+    serverData.actions = {
+        1: {
+            id: 1,
+            name: "Task Action",
+            res_model: "task",
+            type: "ir.actions.act_window",
+            views: [[false, "activity"]],
+        },
     };
 
-    testConfig.serverData.views = {
+    serverData.views = {
         "task,false,activity": `
         <activity string="Task">
             <templates>
@@ -512,7 +514,7 @@ QUnit.test("Activity view: discard an activity creation dialog", async function 
         }
     };
 
-    const webClient = await createWebClient({ testConfig, mockRPC, legacyParams: {withLegacyMockServer: true} });
+    const webClient = await createWebClient({ serverData, mockRPC, legacyParams: {withLegacyMockServer: true} });
     await doAction(webClient, 1);
 
     await testUtils.dom.click(

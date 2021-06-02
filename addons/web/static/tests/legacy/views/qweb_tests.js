@@ -2,8 +2,7 @@ odoo.define('web.qweb_view_tests', function (require) {
 "use strict";
 
 const utils = require('web.test_utils');
-const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
-const { createWebClient, doAction, getActionManagerTestConfig } = require('@web/../tests/webclient/actions/helpers');
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
 QUnit.module("Views", {
 
@@ -11,17 +10,18 @@ QUnit.module("Views", {
     QUnit.module("QWeb");
     QUnit.test("basic", async function (assert) {
         assert.expect(14);
-        const testConfig = getActionManagerTestConfig();
 
-        testConfig.serverData.models = {
-            test: {
-                fields: {},
-                records: [],
-            }
-        };
-        testConfig.serverData.views = {
-            'test,5,qweb': '<div id="xxx"><t t-esc="ok"/></div>',
-            'test,false,search': '<search/>'
+        const serverData = {
+            models: {
+                test: {
+                    fields: {},
+                    records: [],
+                }
+            },
+            views: {
+                'test,5,qweb': '<div id="xxx"><t t-esc="ok"/></div>',
+                'test,false,search': '<search/>'
+            },
         };
 
         const mockRPC = (route, args) => {
@@ -46,7 +46,7 @@ QUnit.module("Views", {
             }
         };
 
-        const webClient = await createWebClient({testConfig, mockRPC});
+        const webClient = await createWebClient({serverData, mockRPC});
 
         let resolved = false;
         const doActionProm = doAction(webClient, {
@@ -64,7 +64,7 @@ QUnit.module("Views", {
         await utils.dom.click(content.querySelector('[type=toggle]'));
         assert.equal(content.querySelector('div#sub').textContent, 'ok', 'should have unfolded the sub-item');
         await utils.dom.click(content.querySelector('[type=toggle]'));
-        assert.containsNone(content, "div#sub")
+        assert.containsNone(content, "div#sub");
         await utils.dom.click(content.querySelector('[type=toggle]'));
 
         assert.verifySteps(['fetch', 'unfold', 'unfold']);

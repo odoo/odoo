@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
-let testConfig;
+let serverData;
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
-        testConfig = getActionManagerTestConfig();
+        serverData = getActionManagerServerData();
     });
 
     QUnit.module("Server actions");
@@ -20,7 +20,7 @@ QUnit.module("ActionManager", (hooks) => {
                 return Promise.resolve(1); // execute action 1
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 2);
         assert.containsOnce(webClient, ".o_control_panel", "should have rendered a control panel");
         assert.containsOnce(webClient, ".o_kanban_view", "should have rendered a kanban view");
@@ -42,7 +42,7 @@ QUnit.module("ActionManager", (hooks) => {
                 return Promise.resolve(false);
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         // execute an action in target="new"
         function onClose() {
             assert.step("close handler");

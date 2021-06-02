@@ -10,7 +10,7 @@ const SearchPanel = require("web.searchPanel");
 const cpHelpers = testUtils.controlPanel;
 const createView = testUtils.createView;
 
-const { createWebClient, doAction, getActionManagerTestConfig, loadState } = require('@web/../tests/webclient/actions/helpers');
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
 
 /**
@@ -38,7 +38,7 @@ function toggleFold(widget, text) {
     return testUtils.dom.click(target);
 }
 
-let testConfig;
+let serverData;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -121,14 +121,16 @@ QUnit.module('Views', {
                 </search>`,
         };
 
-        testConfig = getActionManagerTestConfig();
-
         // map legacy test data
         const actions = {};
         this.actions.forEach((act) => {
           actions[act.xmlId || act.id] = act;
         });
-        Object.assign(testConfig.serverData, {actions, models: this.data, views: this.archs});
+        serverData = {
+            actions,
+            models: this.data,
+            views: this.archs,
+        };
     },
 }, function () {
 
@@ -2333,7 +2335,7 @@ QUnit.module('Views', {
     QUnit.test('search panel is available on list and kanban by default', async function (assert) {
         assert.expect(8);
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 1);
 
@@ -2359,7 +2361,7 @@ QUnit.module('Views', {
     QUnit.test('search panel with view_types attribute', async function (assert) {
         assert.expect(6);
 
-        testConfig.serverData.views['partner,false,search'] =
+        serverData.views['partner,false,search'] =
             `<search>
                 <searchpanel view_types="kanban,pivot">
                     <field name="company_id" enable_counters="1"/>
@@ -2368,7 +2370,7 @@ QUnit.module('Views', {
             </search>`;
 
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
 
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_kanban_view');
@@ -2394,7 +2396,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ testConfig , mockRPC });
+        const webClient = await createWebClient({ serverData , mockRPC });
 
         await doAction(webClient, 1);
 
@@ -2441,7 +2443,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ testConfig , mockRPC });
+        const webClient = await createWebClient({ serverData , mockRPC });
         await doAction(webClient, 1);
 
         assert.containsNone(webClient, '.o_search_panel_filter_value input:checked');
@@ -2487,7 +2489,7 @@ QUnit.module('Views', {
     QUnit.test('search panel filters are kept when switching to a view with no search panel', async function (assert) {
         assert.expect(13);
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
 
         assert.containsOnce(webClient, '.o_content.o_controller_with_searchpanel .o_kanban_view');
@@ -2520,7 +2522,7 @@ QUnit.module('Views', {
     QUnit.test('after onExecuteAction, selects "All" as default category value', async function (assert) {
         assert.expect(4);
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 2);
 
         await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains("multi view")'));
@@ -2536,8 +2538,8 @@ QUnit.module('Views', {
     QUnit.test('search panel is not instantiated if stated in context', async function (assert) {
         assert.expect(2);
 
-        testConfig.serverData.actions[2].context = {search_panel: false};
-        const webClient = await createWebClient({ testConfig });
+        serverData.actions[2].context = {search_panel: false};
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 2);
 
         await testUtils.dom.click($(webClient.el).find('.o_form_view button:contains("multi view")'));
@@ -2556,7 +2558,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
 
         await cpHelpers.switchView(webClient, 'list');
@@ -2577,10 +2579,10 @@ QUnit.module('Views', {
         SearchPanel.scrollDebounce = 0;
 
         for (var i = 10; i < 20; i++) {
-            testConfig.serverData.models.category.records.push({id: i, name: "Cat " + i});
+            serverData.models.category.records.push({id: i, name: "Cat " + i});
         }
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         webClient.el.querySelector('.o_action_manager').style.maxHeight = "300px";
 
         await doAction(webClient, 1);

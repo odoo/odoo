@@ -126,61 +126,17 @@ export function makeMockFetch(mockRPC) {
     };
 }
 
-function makeMockLocation() {
-    const locationLink = Object.assign(document.createElement("a"), {
-        href: window.location.origin + window.location.pathname,
-        assign(url) {
-            this.href = url;
-        },
-        reload() {},
-    });
-    return new Proxy(locationLink, {
-        get(target, p) {
-            return target[p];
-        },
-        set(target, p, value) {
-            target[p] = value;
-            if (p === "hash") {
-                window.dispatchEvent(new HashChangeEvent("hashchange"));
-            }
-            return true;
-        },
-    });
-}
-
 /**
  * @param {Object} [params={}]
- * @param {Object} [params.initialRoute] initial route object
- * @param {Object} [params.onPushState] hook on the "pushState" method
- * @param {Object} [params.onReplaceState] hook on the "onReplaceState" method
  * @param {Object} [params.onRedirect] hook on the "redirect" method
  * @returns {typeof routerService}
  */
 export function makeFakeRouterService(params = {}) {
-    const mockLocation = makeMockLocation();
-    Object.assign(mockLocation, params.initialRoute);
-    patchWithCleanup(browser, {
-        location: mockLocation,
-        history: {
-            pushState(state, title, url) {
-                mockLocation.assign(url);
-                if (params.onPushState) {
-                    params.onPushState(url);
-                }
-            },
-            replaceState(state, title, url) {
-                mockLocation.assign(url);
-                if (params.onReplaceState) {
-                    params.onReplaceState(url);
-                }
-            },
-        },
-    });
     return {
         start({ bus }) {
             const router = routerService.start(...arguments);
             bus.on("test:hashchange", null, (hash) => {
-                mockLocation.hash = objectToUrlEncodedString(hash);
+                browser.location.hash = objectToUrlEncodedString(hash);
             });
             registerCleanup(router.cancelPushes);
             patchWithCleanup(router, {

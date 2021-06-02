@@ -9,7 +9,7 @@ odoo.define('stock.stock_traceability_report_backend_tests', function (require) 
 
     const { dom: domUtils } = testUtils;
     const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
-    const { createWebClient, getActionManagerTestConfig, doAction } = require('@web/../tests/webclient/actions/helpers');
+    const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
     /**
      * Helper function to instantiate a stock report action.
@@ -93,33 +93,35 @@ odoo.define('stock.stock_traceability_report_backend_tests', function (require) 
                     this.__superMounted(...arguments);
                 },
             });
-            const models = {
-                partner: {
-                    fields: {
-                        display_name: { string: "Displayed name", type: "char" },
+            const serverData = {
+                models: {
+                    partner: {
+                        fields: {
+                            display_name: { string: "Displayed name", type: "char" },
+                        },
+                        records: [
+                            {id: 1, display_name: "Genda Swami"},
+                        ],
                     },
-                    records: [
-                        {id: 1, display_name: "Genda Swami"},
-                    ],
+                },
+                views: {
+                    'partner,false,form': '<form><field name="display_name"/></form>',
+                    'partner,false,search': '<search></search>',
+                },
+                actions: {
+                    42: {
+                        id: 42,
+                        name: "Stock report",
+                        tag: 'stock_report_generic',
+                        type: 'ir.actions.client',
+                        context: {},
+                        params: {},
+                    },
                 },
             };
-            let testConfig = getActionManagerTestConfig();
-            Object.assign(testConfig.serverData, { models });
 
-            testConfig.serverData.views = {
-                'partner,false,form': '<form><field name="display_name"/></form>',
-                'partner,false,search': '<search></search>',
-            };
-            testConfig.serverData.actions[42] = {
-                id: 42,
-                name: "Stock report",
-                tag: 'stock_report_generic',
-                type: 'ir.actions.client',
-                context: {},
-                params: {},
-            };
             const webClient = await createWebClient({
-                testConfig,
+                serverData,
                 mockRPC: function (route) {
                     if (route === '/web/dataset/call_kw/stock.traceability.report/get_html') {
                         return Promise.resolve({

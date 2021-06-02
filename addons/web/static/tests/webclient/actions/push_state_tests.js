@@ -1,28 +1,27 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/service_hook";
 import testUtils from "web.test_utils";
-import { makeFakeRouterService } from "../../helpers/mock_services";
-import { click, legacyExtraNextTick, nextTick } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
+import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 const { Component, tags } = owl;
 
-let testConfig;
+let serverData;
 const actionRegistry = registry.category("actions");
-const serviceRegistry = registry.category("services");
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
-        testConfig = getActionManagerTestConfig();
+        serverData = getActionManagerServerData();
     });
 
     QUnit.module("Push State");
 
     QUnit.test("basic action as App", async (assert) => {
         assert.expect(5);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         let urlState = webClient.env.services.router.current;
         assert.deepEqual(urlState.hash, {});
         await click(webClient.el, ".o_navbar_apps_menu button");
@@ -41,7 +40,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("do action keeps menu in url", async (assert) => {
         assert.expect(9);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         let urlState = webClient.env.services.router.current;
         assert.deepEqual(urlState.hash, {});
         await click(webClient.el, ".o_navbar_apps_menu button");
@@ -83,7 +82,7 @@ QUnit.module("ActionManager", (hooks) => {
         ClientAction_<t t-esc="props.params and props.params.description" />
       </div>`;
         actionRegistry.add("client_action_pushes", ClientActionPushes);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         let urlState = webClient.env.services.router.current;
         assert.deepEqual(urlState.hash, {});
         await doAction(webClient, "client_action_pushes");
@@ -112,7 +111,7 @@ QUnit.module("ActionManager", (hooks) => {
         ClientAction_<t t-esc="props.params and props.params.description" />
       </div>`;
         actionRegistry.add("client_action_pushes", ClientActionPushes);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         let urlState = webClient.env.services.router.current;
         assert.deepEqual(urlState.hash, {});
         await doAction(webClient, "client_action_pushes");
@@ -142,7 +141,7 @@ QUnit.module("ActionManager", (hooks) => {
         ClientAction_<t t-esc="props.params and props.params.description" />
       </div>`;
         actionRegistry.add("client_action_pushes", ClientActionPushes);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         let urlState = webClient.env.services.router.current;
         assert.deepEqual(urlState.hash, {});
         await doAction(webClient, "client_action_pushes");
@@ -158,24 +157,22 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("action in target new do not push state", async (assert) => {
         assert.expect(1);
-        testConfig.serverData.actions[1001].target = "new";
-        serviceRegistry.add(
-            "router",
-            makeFakeRouterService({
-                onPushState() {
+        serverData.actions[1001].target = "new";
+        patchWithCleanup(browser, {
+            history: Object.assign({}, browser.history, {
+                pushState() {
                     throw new Error("should not push state");
                 },
             }),
-            { force: true }
-        );
-        const webClient = await createWebClient({ testConfig });
+        });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1001);
         assert.containsOnce(webClient, ".modal .test_client_action");
     });
 
     QUnit.test("properly push state", async function (assert) {
         assert.expect(3);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 4,
@@ -206,7 +203,7 @@ QUnit.module("ActionManager", (hooks) => {
                 await def;
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         doAction(webClient, 4);
         await testUtils.nextTick();
         await legacyExtraNextTick();
@@ -228,7 +225,7 @@ QUnit.module("ActionManager", (hooks) => {
                 return Promise.reject();
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 8);
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 8,

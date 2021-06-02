@@ -9,16 +9,12 @@ var ListRenderer = require('web.ListRenderer');
 var pyUtils = require('web.py_utils');
 
 const cpHelpers = testUtils.controlPanel;
-const {
-    createWebClient,
-    doAction,
-    getActionManagerTestConfig,
-} = require("@web/../tests/webclient/actions/helpers");
+const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
 var createView = testUtils.createView;
 
 const patchDate = testUtils.mock.patchDate;
 
-let testConfig;
+let serverData;
 QUnit.module('Dashboard', {
     beforeEach: function () {
         this.data = {
@@ -53,9 +49,8 @@ QUnit.module('Dashboard', {
                 }],
             },
         };
-        testConfig = getActionManagerTestConfig();
-        // map legacy test data
-        Object.assign(testConfig.serverData, { models: this.data });
+
+        serverData = { models: this.data };
     },
 });
 
@@ -717,9 +712,9 @@ QUnit.test("save actions to dashboard", async function (assert) {
         },
     });
 
-    testConfig.serverData.models["partner"].fields.foo.sortable = true;
+    serverData.models.partner.fields.foo.sortable = true;
 
-    testConfig.serverData.views = {
+    serverData.views = {
         "partner,false,list": '<list><field name="foo"/></list>',
         "partner,false,search": "<search></search>",
     };
@@ -752,7 +747,7 @@ QUnit.test("save actions to dashboard", async function (assert) {
         }
     };
 
-    const webClient = await createWebClient({ testConfig, mockRPC });
+    const webClient = await createWebClient({ serverData, mockRPC });
 
     await doAction(webClient, {
         id: 1,
@@ -785,7 +780,7 @@ QUnit.test("save two searches to dashboard", async function (assert) {
     // the second search saved should not be influenced by the first
     assert.expect(2);
 
-    testConfig.serverData.views = {
+    serverData.views = {
         "partner,false,list": '<list><field name="foo"/></list>',
         "partner,false,search": "<search></search>",
     };
@@ -812,7 +807,7 @@ QUnit.test("save two searches to dashboard", async function (assert) {
         }
     };
 
-    const webClient = await createWebClient({ testConfig, mockRPC });
+    const webClient = await createWebClient({ serverData, mockRPC });
 
     await doAction(webClient, {
         id: 1,
@@ -863,7 +858,7 @@ QUnit.test("save a action domain to dashboard", async function (assert) {
     // The filter domain already contains the view domain, but is always added by dashboard..,
     var expected_domain = ["&", view_domain, "&", view_domain, filter_domain];
 
-    testConfig.serverData.views = {
+    serverData.views = {
         "partner,false,list": '<list><field name="foo"/></list>',
         "partner,false,search": "<search></search>",
     };
@@ -875,7 +870,7 @@ QUnit.test("save a action domain to dashboard", async function (assert) {
         }
     };
 
-    const webClient = await createWebClient({ testConfig, mockRPC });
+    const webClient = await createWebClient({ serverData, mockRPC });
 
     await doAction(webClient, {
         id: 1,
@@ -1065,13 +1060,13 @@ QUnit.test(
 
         const unpatchDate = patchDate(2020, 6, 1, 11, 0, 0);
 
-        testConfig.serverData.models.partner.fields.date = {
+        serverData.models.partner.fields.date = {
             string: "Date",
             type: "date",
             sortable: true,
         };
 
-        testConfig.serverData.views = {
+        serverData.views = {
             "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
             "partner,false,search": '<search><filter name="Date" date="date"/></search>',
         };
@@ -1095,7 +1090,7 @@ QUnit.test(
             }
         };
 
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
 
         await doAction(webClient, {
             id: 1,

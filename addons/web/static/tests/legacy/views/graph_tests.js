@@ -7,7 +7,7 @@ const testUtils = require('web.test_utils');
 const { sortBy } = require('web.utils');
 
 const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
-const { createWebClient, doAction, getActionManagerTestConfig } = require('@web/../tests/webclient/actions/helpers');
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
 const { createView } = testUtils;
 const cpHelpers = testUtils.controlPanel;
@@ -75,7 +75,7 @@ function checkLegend(assert, graph, expectedLegendLabels) {
     assert.deepEqual(actualLegendLabels, expectedLegendLabels);
 }
 
-let testConfig;
+let serverData;
 QUnit.module('Views', {
     beforeEach: function () {
         this.data = {
@@ -125,8 +125,7 @@ QUnit.module('Views', {
             },
         };
 
-        testConfig = getActionManagerTestConfig();
-        Object.assign(testConfig.serverData, {models: this.data});
+        serverData = { models: this.data };
     }
 }, function () {
 
@@ -793,7 +792,7 @@ QUnit.module('Views', {
     QUnit.test('measure dropdown consistency', async function (assert) {
         assert.expect(2);
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'foo,false,graph': `
                 <graph string="Partners" type="bar">
                     <field name="foo" type="measure"/>
@@ -809,7 +808,7 @@ QUnit.module('Views', {
                 </kanban>`,
         };
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, {
             res_model: 'foo',

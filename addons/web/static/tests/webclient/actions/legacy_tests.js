@@ -7,7 +7,7 @@ import testUtils from "web.test_utils";
 import ListController from "web.ListController";
 import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
-import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 import { ClientActionAdapter } from "@web/legacy/action_adapters";
 import { useDebugMenu } from "@web/core/debug/debug_menu";
@@ -17,13 +17,13 @@ import ControlPanel from "web.ControlPanel";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 
-let testConfig;
+let serverData;
 
 const mainComponentRegistry = registry.category("main_components");
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
-        testConfig = getActionManagerTestConfig();
+        serverData = getActionManagerServerData();
     });
 
     QUnit.module("Legacy tests (to eventually drop)");
@@ -43,7 +43,7 @@ QUnit.module("ActionManager", (hooks) => {
         mainComponentRegistry.add("NotificationContainer", {
             Component: NotificationContainer,
         });
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.containsOnce(webClient, ".o_list_view");
         list.trigger_up("warning", {
@@ -73,7 +73,7 @@ QUnit.module("ActionManager", (hooks) => {
             Component: DialogContainer,
         });
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.containsOnce(webClient, ".o_list_view");
         list.trigger_up("warning", {
@@ -127,7 +127,7 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
 
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, "customLegacy");
         assert.containsOnce(webClient, ".custom-action");
         assert.verifySteps([]);
@@ -175,7 +175,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         core.action_registry.add("customLegacy", LegacyAction);
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
         await doAction(webClient, "customLegacy");
         await click(webClient.el.querySelectorAll(".breadcrumb-item")[0]);
