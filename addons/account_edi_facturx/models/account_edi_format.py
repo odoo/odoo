@@ -23,10 +23,10 @@ DEFAULT_FACTURX_DATE_FORMAT = '%Y%m%d'
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         self.ensure_one()
         if self.code != 'facturx_1_0_05':
-            return super()._post_invoice_edi(invoices, test_mode=test_mode)
+            return super()._post_invoice_edi(invoices)
         res = {}
         for invoice in invoices:
             attachment = self._export_facturx(invoice)
