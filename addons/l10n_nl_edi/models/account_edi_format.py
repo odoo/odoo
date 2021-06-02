@@ -120,10 +120,10 @@ class AccountEdiFormat(models.Model):
             return super()._is_compatible_with_journal(journal)
         return journal.type == 'sale' and journal.country_code == 'NL'
 
-    def _post_invoice_edi(self, invoices, test_mode=False):
+    def _post_invoice_edi(self, invoices):
         self.ensure_one()
         if self.code != 'nlcius_1':
-            return super()._post_invoice_edi(invoices, test_mode=test_mode)
+            return super()._post_invoice_edi(invoices)
 
         invoice = invoices  # no batch ensure that there is only one invoice
         attachment = self._export_nlcius(invoice)
