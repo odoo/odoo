@@ -489,7 +489,13 @@ class Registry(Mapping):
         for key, val in self._foreign_keys.items():
             table1, column1 = key
             table2, column2, ondelete, model, module = val
-            conname = '%s_%s_fkey' % key
+            # postgresql limits the constraint names to 63 characters
+            # in the case of foreign keys, it tries to keep the most of the table name and column name
+            # 63 - len('_fkey') - len('_') = 57 characters left to assign
+            # 57 / 2 (table and column) = 28.5. 29 characters for the table name and 28 characters for the column name
+            # if either the column name uses less characters than what it can, the table name can then use it
+            # and the other way around.
+            conname = '%s_%s_fkey' % (table1[:29 + max(0, 28 - len(column1))], column1[:28 + max(0, 29 - len(table1))])
             deltype = sql._CONFDELTYPES[ondelete.upper()]
             spec = existing.get(key)
             if spec is None:
