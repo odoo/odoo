@@ -836,7 +836,7 @@ class PosOrderLine(models.Model):
                 self.product_id, self.qty or 1.0, self.order_id.partner_id)
             self.tax_ids = self.product_id.taxes_id.filtered(lambda r: not self.company_id or r.company_id == self.company_id)
             tax_ids_after_fiscal_position = self.order_id.fiscal_position_id.map_tax(self.tax_ids)
-            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(price, self.product_id.taxes_id, tax_ids_after_fiscal_position, self.company_id)
+            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(price, self.tax_ids, tax_ids_after_fiscal_position, self.company_id)
             self._onchange_qty()
 
     @api.onchange('qty', 'discount', 'price_unit', 'tax_ids')
