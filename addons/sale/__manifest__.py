@@ -26,7 +26,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/sale_data.xml',
         'wizard/sale_make_invoice_advance_views.xml',
         'views/sale_views.xml',
-        'views/sales_team_views.xml',
+        'views/crm_team_views.xml',
         'views/res_partner_views.xml',
         'views/mail_activity_views.xml',
         'views/variant_templates.xml',
