@@ -1,13 +1,15 @@
-openerp.mass_mailing = function (instance) {
-    var _t = instance.web._t;
+odoo.define('mass_mailing.mass_mailing', function (require) {
+"use strict";
 
-    openerp.web_kanban.KanbanRecord.include({
-        on_card_clicked: function (event) {
-            if (this.view.dataset.model === 'mail.mass_mailing.campaign') {
-                this.$('.oe_mailings').click();
-            } else {
-                this._super.apply(this, arguments);
-            }
-        },
-    });
-};
+var KanbanColumn = require('web.KanbanColumn');
+
+KanbanColumn.include({
+    init: function () {
+        this._super.apply(this, arguments);
+        if (this.modelName === 'mailing.mailing') {
+            this.draggable = false;
+        }
+    },
+});
+
+});

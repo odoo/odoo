@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="setup_financial_year_opening_form" model="ir.ui.view">
+            <field name="name">account.financial.year.op.setup.wizard.form</field>
+            <field name="model">account.financial.year.op</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Fiscal Years">
+                                <field name="opening_move_posted" invisible="1"/>
+                                <field name="opening_date" attrs="{'readonly': [('opening_move_posted', '=', True)]}"/>
+
+                                <label for="fiscalyear_last_month" string="Fiscal Year End"/>
+                                <div>
+                                    <field name="fiscalyear_last_day"/>
+                                    <field name="fiscalyear_last_month"/>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_save_onboarding_fiscal_year" string="Apply"
+                               class="oe_highlight" type="object" />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="setup_bank_account_wizard" model="ir.ui.view">
+            <field name="name">account.online.sync.res.partner.bank.setup.form</field>
+            <field name="model">account.setup.bank.manual.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="num_journals_without_account" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="linked_journal_id" invisible="1"/>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="new_journal_name" placeholder="e.g Checking account" class="oe_inline"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="acc_number" placeholder="e.g BE15001559627230"/>
+                                <field name="bank_id" placeholder="e.g Bank of America"/>
+                                <field name="new_journal_code"/>
+                            </group>
+                            <group>
+                                <field name="related_acc_type" attrs="{'invisible': [('acc_number','=',False)]}"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible': [('num_journals_without_account', '&lt;', 2)]}">
+                           <group>
+                            <field name="linked_journal_id" attrs="{'required': [('num_journals_without_account','!=',0)]}" domain="[('type','=','bank'), ('bank_account_id', '=', False)]"/>
+                          </group>
+                          <group>
+                               <span class="text-muted">Only journals not yet linked to a bank account are proposed</span>
+                           </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Create" class="oe_highlight" type="object" name="validate"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="init_accounts_tree" model="ir.ui.view">
+            <field name="name">account.setup.opening.move.line.tree</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <tree editable="top" create="1" delete="1" decoration-muted="opening_debit == 0 and opening_credit == 0">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="user_type_id"/>
+                    <field name="reconcile" widget="boolean_toggle"/>
+                    <field name="opening_debit"/>
+                    <field name="opening_credit"/>
+                    <button name="action_read_account" type="object" icon="fa-expand" title="Open" aria-label="Open" class="float-right"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

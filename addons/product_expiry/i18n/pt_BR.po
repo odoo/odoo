@@ -1,19 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_expiry
+# 	* product_expiry
 # 
 # Translators:
-# danimaribeiro <danimaribeiro@gmail.com>, 2015
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# grazziano <g.negocios@outlook.com.br>, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2019
+# danimaribeiro <danimaribeiro@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Mateus Lopes <mateus1@gmail.com>, 2019
+# Luiz Fernando Gondin <lfpsgs@outlook.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-07-09 16:18+0000\n"
-"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Luiz Fernando Gondin <lfpsgs@outlook.com>, 2020\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,45 +24,63 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Alerta de Expiração</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days</span>"
+msgstr "<span>dias</span>"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
 msgid "Alert Date"
 msgstr "Data de Alerta"
 
 #. module: product_expiry
-#: field:stock.production.lot,use_date:0
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
+msgstr "Data do Alerta foi Alcançada"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
 msgid "Best before Date"
 msgstr "Data \"Melhor antes de\""
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_pain_product_template
-msgid "Bread"
-msgstr "Pão"
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
+msgid ""
+"Date to determine the expired lots and serial numbers using the filter "
+"\"Expiration Alerts\"."
+msgstr ""
+"Data que determina a expiração de lotes e números de série usando o filtro "
+"\"Alertas de Expiração\""
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr "Leite de vaca"
-
-#. module: product_expiry
-#: view:product.template:product_expiry.view_product_form_expiry
-#: view:stock.production.lot:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
 msgstr "Datas"
 
 #. module: product_expiry
-#: field:stock.production.lot,life_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
 msgid "End of Life Date"
 msgstr "Data de Fim de Vida"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camembert"
-msgstr "Queijo Francês Camembert"
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
+msgstr "Alertas de Expiração"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "Presunto"
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr "A Validade foi alertada"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -67,17 +88,68 @@ msgid "Lot/Serial"
 msgstr "Lote/Serie"
 
 #. module: product_expiry
-#: field:product.template,alert_time:0
+#: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+"Número de dias antes que um alerta seja criado no lote/número de série."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+"Número de dias antes que os produtos possam se tornar perigosos e não devem "
+"ser consumidos. Este número será computado no Lote/Número de Serie."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+"Número de dias antes que os produtos devam ser retirados do estoque. Este "
+"número será computado no Lote/Número de Serie."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed using the lot/serial number."
+msgstr ""
+"Número de dias antes que os produtos comecem a se deteriorar, mas antes que "
+"se tornem perigosos. Este número será computado no Lote/Número de Serie."
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr "Grupo de Aquisição"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Product Alert Time"
 msgstr "Hora do Alerta do Produto"
 
 #. module: product_expiry
-#: field:product.template,life_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "Product Expiry Alert"
+msgstr "Alerta de Validade de Produto"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
 msgid "Product Life Time"
 msgstr "Tempo de Vida do Produto"
 
 #. module: product_expiry
-#: field:product.template,removal_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 msgid "Product Removal Time"
 msgstr "Hora de Remoção do Produto"
 
@@ -87,7 +159,8 @@ msgid "Product Template"
 msgstr "Modelo de Produto"
 
 #. module: product_expiry
-#: field:product.template,use_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Product Use Time"
 msgstr "Hora de Uso do Produto"
 
@@ -97,62 +170,47 @@ msgid "Quants"
 msgstr "Quants"
 
 #. module: product_expiry
-#: field:stock.production.lot,removal_date:0 field:stock.quant,removal_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 msgid "Removal Date"
 msgstr "Data de Remoção"
 
 #. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid ""
-"This is the date on which an alert should be notified about the goods with "
-"this Serial Number."
-msgstr "Esta é a data em que um alerta deve ser notificado sobre as mercadorias com este número de série."
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "The Alert Date has been reached."
+msgstr "A Data do Alerta foi Alcançada."
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
+#: code:addons/product_expiry/models/production_lot.py:0
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
+msgstr "A Data do alerta foi alcançada para este Lote/Número de Série"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
-msgstr "Esta é a data em que as mercadorias com este número de série podem se tornar perigoso e não deve ser consumido."
+msgstr ""
+"Esta é a data em que as mercadorias com este número de série podem se tornar"
+" perigoso e não deve ser consumido."
 
 #. module: product_expiry
-#: help:stock.production.lot,removal_date:0
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr "Esta é a data em que as mercadorias com este Número de Série devem ser removidas do estoque."
+"removed from the stock. This date will be used in FEFO removal strategy."
+msgstr ""
+"Esta é a data na qual os produtos com este Número de Série devem ser "
+"removidos do estoque. Esta data será utilizada na estratégia FEFO ( First "
+"Expiry First Out )."
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
-msgstr "Esta é a data em que as mercadorias com este número de série começam a deteriorar-se, sem ser perigoso ainda."
-
-#. module: product_expiry
-#: help:product.template,alert_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr "Quando um Número Serial é emitido, este é o número de dias antes em que um alerta seja notificado."
-
-#. module: product_expiry
-#: help:product.template,life_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr "Quando um novo número de série é emitido, este é o número de dias antes de que as mercadorias possam se tornar perigosas e não devem ser consumidas."
-
-#. module: product_expiry
-#: help:product.template,removal_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr "Quando um novo Número de Série é emitido, este é o número de dias antes das mercadorias serem removidas do estoque."
-
-#. module: product_expiry
-#: help:product.template,use_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr "Quando um novo número de série é emitido, este é o número de dias antes de que as mercadorias começam a se deteriorar, sem ser perigosas."
+msgstr ""
+"Esta é a data em que as mercadorias com este número de série começam a "
+"deteriorar-se, sem ser perigoso ainda."

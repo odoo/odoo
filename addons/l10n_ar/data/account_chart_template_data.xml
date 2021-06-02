@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record model="account.chart.template" id="l10nar_base_chart_template">
+        <field name="name">Plan Contable Genérico Argentina Monotributista / Base</field>
+        <field name="currency_id" ref="base.ARS"/>
+        <field name="bank_account_code_prefix">1.1.1.02.</field>
+        <field name="cash_account_code_prefix">1.1.1.01.</field>
+        <field name="code_digits">12</field>
+        <field name="transfer_account_code_prefix">6.0.00.00.</field>
+    </record>
+
+    <record id="l10nar_ex_chart_template" model="account.chart.template">
+        <field name="name">Plan Contable Genérico Argentina para Exentos</field>
+        <field name="parent_id" ref="l10nar_base_chart_template"/>
+        <field name="currency_id" ref="base.ARS"/>
+        <field name="bank_account_code_prefix">1.1.1.02.</field>
+        <field name="cash_account_code_prefix">1.1.1.01.</field>
+        <field name="code_digits">12</field>
+        <field name="transfer_account_code_prefix">6.0.00.00.</field>
+    </record>
+
+    <record id="l10nar_ri_chart_template" model="account.chart.template">
+        <field name="name">Plan Contable Genérico Argentina para Responsables Inscriptos</field>
+        <field name="parent_id" ref="l10nar_ex_chart_template"/>
+        <field name="currency_id" ref="base.ARS"/>
+        <field name="bank_account_code_prefix">1.1.1.02.</field>
+        <field name="cash_account_code_prefix">1.1.1.01.</field>
+        <field name="code_digits">12</field>
+        <field name="transfer_account_code_prefix">6.0.00.00.</field>
+    </record>
+
+</odoo>

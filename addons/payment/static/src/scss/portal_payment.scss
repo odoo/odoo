@@ -1,0 +1,61 @@
+input#cc_number {
+    background-repeat: no-repeat;
+    background-position: center right calc(2.7em);
+}
+
+div.card_placeholder {
+    background-image: url("/website_payment/static/src/img/placeholder.png");
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 20px;
+    position: absolute;
+    top: 8px;
+    right: 20px;
+    -webkit-transition: 0.4s cubic-bezier(0.455,0.03,0.515,0.955);
+    transition: 0.4s cubic-bezier(0.455,0.03,0.515,0.955);
+    pointer-events: none;
+}
+
+/* if s2s form not in bootstrap_formatting */
+div.o_card_brand_detail {
+    position: relative;
+
+    div.card_placeholder {
+        right: 5px;
+    }
+}
+
+div.amex {
+    background-image: url("/website_payment/static/src/img/amex.png");
+    background-repeat: no-repeat;
+}
+
+div.diners {
+    background-image: url("/website_payment/static/src/img/diners.png");
+    background-repeat: no-repeat;
+}
+
+div.discover {
+    background-image: url("/website_payment/static/src/img/discover.png");
+    background-repeat: no-repeat;
+}
+
+div.jcb {
+    background-image: url("/website_payment/static/src/img/jcb.png");
+    background-repeat: no-repeat;
+}
+
+div.mastercard {
+    background-image: url("/website_payment/static/src/img/mastercard.png");
+    background-repeat: no-repeat;
+}
+
+div.visa {
+    background-image: url("/website_payment/static/src/img/visa.png");
+    background-repeat: no-repeat;
+}
+
+ul.payment_method_list img.rounded {
+    max-width: 100px;
+    max-height: 40px;
+}

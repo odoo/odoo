@@ -1,48 +1,86 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_adyen
+# 	* payment_adyen
 # 
 # Translators:
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
+# Miroslav Fic <mirko.fic@gmail.com>, 2019
+# Jan Prokop, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-18 11:34+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Jan Prokop, 2019\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: payment_adyen
-#: model:payment.acquirer,pre_msg:payment_adyen.payment_acquirer_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "; nájdená viacnásobná objednávka"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; nenájdená žiadna objednávka"
+
+#. module: payment_adyen
+#: model:ir.model.fields.selection,name:payment_adyen.selection__payment_acquirer__provider__adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: feedback error"
+msgstr "Adyen: problém so spätnou väzbou"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: invalid merchantSig, received %s, computed %s"
+msgstr "Adyen: nesprávne merchantSig, obdržané %s, vyrátané %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
+msgid "Adyen: received data for reference %s"
+msgstr "Adyen: prijaté dáta pre referenciu %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
+#, python-format
 msgid ""
-"<p>You will be redirected to the Adyen website after clicking on the payment"
-" button.</p>"
+"Adyen: received data with missing reference (%s) or missing pspReference "
+"(%s)"
 msgstr ""
+"Adyen: prijaté dáta s chýbajúcou referenciou (%s) alebo chýbajucou "
+"pspReferenciou (%s)"
 
 #. module: payment_adyen
-#: field:payment.transaction,adyen_psp_reference:0
-msgid "Adyen PSP Reference"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+msgid "How to configure your Adyen account?"
+msgstr "Ako konfigurovať váš Adyen účet?"
 
 #. module: payment_adyen
-#: view:payment.transaction:payment_adyen.transaction_form_adyen
-msgid "Adyen TX Details"
-msgstr ""
-
-#. module: payment_adyen
-#: field:payment.acquirer,adyen_merchant_account:0
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
 msgid "Merchant Account"
 msgstr "Účet obchodníka"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Nadobúdateľ platby "
+msgstr "Príjemca platby "
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
@@ -50,11 +88,16 @@ msgid "Payment Transaction"
 msgstr "Platobná transakcia"
 
 #. module: payment_adyen
-#: field:payment.acquirer,adyen_skin_code:0
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Poskytovateľ"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_code
 msgid "Skin Code"
 msgstr "Skin kód"
 
 #. module: payment_adyen
-#: field:payment.acquirer,adyen_skin_hmac_key:0
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_hmac_key
 msgid "Skin HMAC Key"
 msgstr "Skin HMAC kľúč"

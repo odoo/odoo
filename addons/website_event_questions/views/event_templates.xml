@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="registration_attendee_details_questions" inherit_id="website_event.registration_attendee_details" name="Registration Attendee Details with questions">
+    <!-- Attendee specific questions -->
+    <xpath expr="//t[@name='attendee_loop']//*[hasclass('modal-body')]" position="inside">
+        <t t-if="event.specific_question_ids">
+            <div t-foreach="event.specific_question_ids" t-as="question" class="row">
+                <div class="col-lg-6 mt-2">
+                    <label t-esc="question.title"/>
+                    <select t-attf-name="#{counter}-answer_ids-#{question.id}" class="custom-select" required="true">
+                        <t t-foreach="question.answer_ids" t-as="answer">
+                            <option t-esc="answer.name" t-att-value="answer.id"/>
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </t>
+    </xpath>
+    <!-- Generic questions -->
+    <xpath expr="//*[hasclass('modal-footer')]" position="before">
+        <t t-if="event.general_question_ids">
+            <div class="modal-body bg-light border-bottom">
+                <div t-foreach="event.general_question_ids" t-as="question" class="row">
+                    <div class="col-lg-6">
+                        <label class="h5" t-esc="question.title"/>
+                        <select t-attf-name="0-answer_ids-#{question.id}" class="custom-select" required="true">
+                            <t t-foreach="question.answer_ids" t-as="answer">
+                                <option t-esc="answer.name" t-att-value="answer.id"/>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </xpath>
+</template>
+
+</odoo>

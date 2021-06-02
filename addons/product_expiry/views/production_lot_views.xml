@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <record id="view_move_form_expiry" model="ir.ui.view">
+        <field name="name">stock.production.lot.inherit.form</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form" />
+        <field name="arch" type="xml">
+        <xpath expr="//page[@name='description']" position="before">
+            <page string="Dates">
+                <group>
+                    <group>
+                        <field name="use_date" />
+                        <field name="removal_date" />
+                    </group>
+                    <group>
+                        <field name="life_date" />
+                        <field name="alert_date" />
+                    </group>
+                </group>
+            </page>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_title')]" position="inside">
+            <field name="product_expiry_alert" invisible="1"/>
+            <span class="badge badge-danger" attrs="{'invisible': [('product_expiry_alert', '=', False)]}">Expiration Alert</span>
+        </xpath>
+        </field>
+    </record>
+
+    <record id="search_product_lot_filter_inherit_product_expiry" model="ir.ui.view">
+        <field name="name">stock.production.lot.search.inherit</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <filter string="Expiration Alerts" name="expiration_alerts" domain="[('alert_date', '&lt;=', time.strftime('%Y-%m-%d %H:%M:%S'))]"/>
+            </xpath>
+        </field>
+     </record>
+
+    <record id="view_production_lot_view_tree" model="ir.ui.view">
+        <field name="name">stock.production.lot.tree.inherit.product.expiry</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="after">
+                <field name="use_date" optional="hide"/>
+                <field name="removal_date" optional="hide"/>
+                <field name="life_date" optional="hide"/>
+                <field name="alert_date" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

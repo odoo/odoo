@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <t t-extend="mail.discuss.SidebarChannels">
+        <t t-jquery="t[t-call='mail.discuss.SidebarItems']:last" t-operation="after">
+            <t t-set="type" t-value="'livechat'"/>
+            <t t-set="disableAddThread" t-value="true"/>
+            <t t-call="mail.discuss.SidebarTitle">
+                <t t-set="title">Livechat</t>
+                <t t-set="icon" t-value="fa-comments"/>
+            </t>
+            <t t-call="mail.discuss.SidebarItems"/>
+        </t>
+    </t>
+
+    <!-- Mobile templates -->
+    <t t-extend="mail.discuss_mobile">
+        <t t-jquery=".o_mail_mobile_tabs" t-operation="append">
+            <div class="o_mail_mobile_tab" data-type="livechat">
+                <span class="fa fa-comments"/>
+                <span class="o_tab_title">Livechat</span>
+            </div>
+        </t>
+    </t>
+
+</template>

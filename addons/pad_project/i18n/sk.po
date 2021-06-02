@@ -3,26 +3,51 @@
 # * pad_project
 # 
 # Translators:
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-22 15:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: pad_project
-#: field:project.task,description_pad:0
-msgid "Description PAD"
-msgstr ""
+#: model:ir.model.fields,field_description:pad_project.field_project_task__description_pad
+msgid "Pad URL"
+msgstr "URL adresa bloku"
+
+#. module: pad_project
+#: model:ir.model,name:pad_project.model_project_project
+msgid "Project"
+msgstr "Projekt"
 
 #. module: pad_project
 #: model:ir.model,name:pad_project.model_project_task
 msgid "Task"
-msgstr "Úloha"
+msgstr "Požiadavka"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_task__use_pad
+msgid "Use collaborative pad"
+msgstr "Použite podložku na spoluprácu"
+
+#. module: pad_project
+#: model:ir.model.fields,help:pad_project.field_project_project__use_pads
+#: model:ir.model.fields,help:pad_project.field_project_task__use_pad
+msgid "Use collaborative pad for the tasks on this project."
+msgstr "Na úlohy v tomto projekte použite podložku na spoluprácu."
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__use_pads
+msgid "Use collaborative pads"
+msgstr "Používajte podložky na spoluprácu"

@@ -1,0 +1,148 @@
+///
+/// This file is a copy of the bootstrap _variables.scss file where all the
+/// left-untouched variables definition have been removed.
+///
+
+//
+// Color system
+//
+
+// All of those are BS default
+$white:    #fff !default;
+$gray-100: $o-gray-100 !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black:    #000 !default;
+
+$primary: $o-brand-primary !default;
+$secondary: $white !default;
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg: $o-brand-secondary !default;
+$body-color: $o-main-text-color !default;
+
+// Links
+//
+// Style anchor elements.
+
+$link-hover-decoration: none !default;
+
+// Muted
+//
+// Style .text-muted elements
+
+$text-muted: $gray-500 !default;
+
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-gutter-width: $o-horizontal-padding * 2 !default;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$border-radius: 3px !default;
+
+$component-active-color: $o-brand-primary !default;
+$component-active-bg: $gray-200 !default;
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif: o-add-unicode-support-font(("Lucida Grande", Helvetica, Verdana, Arial, sans-serif), 1) !default;
+
+$font-size-base: $o-font-size-base !default;
+$line-height-base: $o-line-height-base !default;
+
+$h1-font-size: $font-size-base * 2.0 !default;
+$h2-font-size: $font-size-base * 1.5 !default;
+$h3-font-size: $font-size-base * 1.3 !default;
+$h4-font-size: $font-size-base * 1.2 !default;
+$h5-font-size: $font-size-base * 1.1 !default;
+
+$headings-font-weight: bold !default;
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+$table-accent-bg: rgba($black, .01) !default;
+$table-hover-bg: rgba($black, .04) !default;
+
+// Dropdowns
+//
+// Dropdown menu container and contents.
+
+$dropdown-border-color: $gray-300 !default;
+
+$dropdown-link-color: $o-main-text-color !default;
+$dropdown-link-hover-color: $gray-900 !default;
+$dropdown-link-hover-bg: $gray-200 !default;
+
+$dropdown-link-active-color: $gray-900 !default;
+$dropdown-link-active-bg: $gray-300 !default;
+
+// Z-index master list
+
+// Change the z-index of the modal-backdrop elements to be equal to the
+// modal elements' ones. Bootstrap does not support multi-modals, and without
+// this rule all the modal-backdrops are below all the opened modals.
+// Indeed, bootstrap forces them to a lower z-index as the modal-backdrop
+// element (unique in their supported cases) might be put after the modal
+// element (if the modal is already in the DOM, hidden, then opened). This
+// cannot happen in odoo though as modals are not hidden but removed from
+// the DOM and are always put at the end of the body when opened.
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// $zindex-modal-backdrop: $zindex-modal;
+
+// Navs
+
+$nav-tabs-link-active-bg: $white !default;
+
+$nav-pills-border-radius: 0 !default;
+$nav-pills-link-active-color: $white !default;
+$nav-pills-link-active-bg: $o-brand-primary !default;
+
+// Toasts
+
+$toast-max-width: 300px !default;
+$toast-padding-x: 1.5rem !default;
+$toast-padding-y: 0.5rem !default;
+$toast-font-size: $font-size-base !default;
+$toast-background-color: rgba($white, .7) !default;
+$toast-header-background-color: $toast-background-color !default;
+
+// Badges
+
+$badge-font-weight: normal !default;
+
+// Modals
+
+// Padding applied to the modal body
+$modal-inner-padding: $o-horizontal-padding !default;
+
+$modal-lg: $o-modal-lg !default;
+$modal-md: $o-modal-md !default;
+
+// Breadcrumbs
+
+$breadcrumb-padding-y: 0 !default;
+$breadcrumb-padding-x: 0 !default;
+$breadcrumb-margin-bottom: 0 !default;
+
+$breadcrumb-bg: $o-control-panel-background-color !default;
+$breadcrumb-active-color: #777777 !default;

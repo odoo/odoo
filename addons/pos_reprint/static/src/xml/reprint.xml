@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ReprintButton">
+        <div class='control-button js_reprint'>
+            <i class="fa fa-retweet"></i> Reprint Receipt
+        </div>
+    </t>
+
+    <t t-name="ReprintReceiptScreenWidget" t-extend="ReceiptScreenWidget">
+        <t t-jquery="div.top-content" t-operation="inner">
+            <span class='button back'>
+                <i class='fa fa-angle-double-left'></i>
+                Back
+            </span>
+        </t>
+    </t>
+
+    <t t-extend="OrderReceipt">
+        <t t-jquery='.pos-receipt-order-data' t-operation='append'>
+            <t t-if='receipt.reprint === true'>
+                <div>DUPLICATA</div>
+            </t>
+        </t>
+    </t>
+
+</templates>

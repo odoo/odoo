@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="mail.widget.Thread.Content.ASC">
+        <t t-jquery=".o_mail_thread_content" t-operation="replace">
+            <t t-call="mail.widget.Thread.website.visitor.banner"/>
+            <div class="o_mail_thread_content o_sub_w_visitor_info">
+                <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
+                <t t-call="mail.widget.Thread.Messages"/>
+                <t t-if="options.displayBottomThreadFreeSpace">
+                    <div class="o_thread_bottom_free_space"/>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="mail.widget.Thread.Content.DESC">
+        <t t-jquery=".o_mail_thread_content" t-operation="replace">
+            <t t-call="mail.widget.Thread.website.visitor.banner"/>
+            <div class="o_mail_thread_content">
+                <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
+                <t t-set="messages" t-value="messages.slice().reverse()"/>
+                <t t-call="mail.widget.Thread.Messages"/>
+                <t t-if="options.displayLoadMore" t-call="mail.widget.Thread.LoadMore"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="mail.widget.Thread.website.visitor.banner">
+        <t t-set="visitor" t-value="thread._visitor"/>
+        <t t-if="visitor">
+            <div class="o_w_visitor_info o_thread_message o_mail_discussion d-flex">
+                <div class="o_thread_message_sidebar align-self-center">
+                    <div class="o_thread_message_sidebar_image">
+                        <img alt=""
+                             t-att-src="visitor.partner_id ? '/web/image/res.partner/' + visitor.partner_id + '/image_128' : '/mail/static/src/img/smiley/avatar.jpg'"
+                             class="o_thread_message_avatar rounded-circle"/>
+                        <span>
+                            <i t-if="visitor.is_connected" aria-label="Visitor is connected" class="o_w_visitor_status o_w_visitor_connected fa fa-circle" role="img" title="Online"></i>
+                            <i t-else="" aria-label="Visitor is offline" class="o_w_visitor_status o_w_visitor_disconnected fa fa-circle" role="img" title="Offline"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="o_thread_message_core pt-2 align-self-center">
+                    <div class="d-flex">
+                        <img t-if="visitor.country_code" t-attf-src='base/static/img/country_flags/#{visitor.country_code}.png' class="o_country_flag mr-2 mb-1"/>
+                        <strong class="o_thread_author" t-esc="visitor.name"/>
+                        <span><i class="fa fa-comment-o ml-4 mr-2" aria-label="Lang"/><t t-esc="visitor.lang"/></span>
+                        <span t-if="visitor.website"><i class="fa fa-globe ml-4 mr-2" aria-label="Website"/><span t-esc="visitor.website"/></span>
+                    </div>
+                    <div class="o_thread_message_content">
+                        <div class="d-flex">
+                            <span><i class="fa fa-history mr-2" aria-label="History"/></span>
+                            <p t-esc="visitor.history"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

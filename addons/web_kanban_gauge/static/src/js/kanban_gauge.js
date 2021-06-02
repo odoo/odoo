@@ -1,161 +1,136 @@
-openerp.web_kanban_gauge = function (instance) {
+odoo.define('web_kanban_gauge.widget', function (require) {
+"use strict";
+
+var AbstractField = require('web.AbstractField');
+var core = require('web.core');
+var field_registry = require('web.field_registry');
+var utils = require('web.utils');
+
+var _t = core._t;
 
 /**
- * Kanban widgets: GaugeWidget
  * options
+ *
  * - max_value: maximum value of the gauge [default: 100]
  * - max_field: get the max_value from the field that must be present in the
- *              view; takes over max_value
+ *   view; takes over max_value
  * - gauge_value_field: if set, the value displayed below the gauge is taken
-                        from this field instead of the base field used for
-                        the gauge. This allows to display a number different
-                        from the gauge.
- * - force_set: is value is 0, display a text 'Click to set' [default: True]
+ *   from this field instead of the base field used for
+ *   the gauge. This allows to display a number different
+ *   from the gauge.
  * - label: lable of the gauge, displayed below the gauge value
+ * - label_field: get the label from the field that must be present in the
+ *   view; takes over label
  * - title: title of the gauge, displayed on top of the gauge
- * - on_change: action to call when cliking and setting a value
- * - on_click_label: optional label of the input displayed when clicking
- *
+ * - style: custom style
  */
-var _t = instance.web._t,
-   _lt = instance.web._lt;
 
-instance.web_kanban.GaugeWidget = instance.web_kanban.AbstractField.extend({
+var GaugeWidget = AbstractField.extend({
     className: "oe_gauge",
+    jsLibs: [
+        '/web/static/lib/Chart/Chart.js',
+    ],
 
-    start: function() {
-        var self = this;
-        var parent = this.getParent();
-        // parameters
-        var max_value = this.options.max_value || 100;
-        if (this.options.max_field) {
-            max_value = this.getParent().record[this.options.max_field].raw_value;
-        }
-        var label = this.options.label || "";
-        if (this.options.label_field) {
-            label = this.getParent().record[this.options.label_field].raw_value;
-        }
-        var title = this.$node.html() || this.field.string;
-        // current gauge value
-        var val = this.field.raw_value;
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        // current value
+        var val = this.value;
         if (_.isArray(JSON.parse(val))) {
             val = JSON.parse(val);
         }
-        var value = _.isArray(val) && val.length ? val[val.length-1]['value'] : val;
-        // displayed value under gauge
-        var gauge_value = value;
-        if (this.options.gauge_value_field) {
-            gauge_value = this.getParent().record[this.options.gauge_value_field].raw_value;
+        var gauge_value = _.isArray(val) && val.length ? val[val.length-1].value : val;
+        if (this.nodeOptions.gauge_value_field) {
+            gauge_value = this.recordData[this.nodeOptions.gauge_value_field];
         }
-        // var unique_id = _.uniqueId("JustGage");
 
-        this.$el.empty().attr('style', this.$node.attr('style') + ';position:relative; display:inline-block;');
-        this.gage = new JustGage({
-            parentNode: this.$el[0],
-            // id: unique_id,
-            value: value,
-            title: title,
-            min: 0,
-            max: max_value,
-            relativeGaugeSize: true,
-            humanFriendly: true,
-            titleFontColor: '#333333',
-            valueFontColor: '#333333',
-            labelFontColor: '#000',
-            label: label,
-            levelColors: self.options.levelcolors || [
-                "#ff0000",
-                "#f9c802",
-                "#a9d70b"
-            ],
-        });
-        this.gage.refresh(value, max_value);
+        // max_value
+        var max_value = this.nodeOptions.max_value || 100;
+        if (this.nodeOptions.max_field) {
+            max_value = this.recordData[this.nodeOptions.max_field];
+        }
+        max_value = Math.max(gauge_value, max_value);
 
-        var flag_open = false;
-        if (this.options.on_change) {
-            var $svg = this.$el.find('svg');
+        // label
+        var label = this.nodeOptions.label || "";
+        if (this.nodeOptions.label_field) {
+            label = this.recordData[this.nodeOptions.label_field];
+        }
 
-            this.$el.click(function (event) {
-                event.stopPropagation();
-                flag_open = false;
-                if (!parent.view.is_action_enabled('edit')) {
-                    return;
-                }
-                // fade widget
-                $svg.fadeTo(0, 0.2);
+        // title
+        var title = this.nodeOptions.title || this.field.string;
 
-                // add input
-                if (!self.$el.find(".oe_justgage_edit").size()) {
-                    var $div = $('<div class="oe_justgage_edit" style="z-index:1"/>');
-                    $div.css({
-                        'text-align': 'center',
-                        'position': 'absolute',
-                        'width': self.$el.outerWidth() + 'px',
-                        'top': (self.$el.outerHeight()/2-5) + 'px'
-                    });
-                    var $input = $('<input/>').val(gauge_value);
-                    $input.css({
-                        'text-align': 'center',
-                        'margin': 'auto',
-                        'width': ($svg.outerWidth()-40) + 'px'
-                    });
-                    $div.append($input);
-                    if (self.options.on_click_label) {
-                        var $post_input = $('<span style="color: #000000;">' + self.options.on_click_label + '</span>');
-                        $div.append($post_input);
+        var maxLabel = max_value;
+        if (gauge_value === 0 && max_value === 0) {
+            max_value = 1;
+            maxLabel = 0;
+        }
+		var config = {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: [
+                        gauge_value,
+                        max_value - gauge_value
+					],
+					backgroundColor: [
+                        "#1f77b4", "#dddddd"
+					],
+					label: title
+				}],
+			},
+			options: {
+				circumference: Math.PI,
+				rotation: -Math.PI,
+				responsive: true,
+                tooltips: {
+                    displayColors: false,
+                    callbacks: {
+                        label: function(tooltipItems) {
+                            if (tooltipItems.index === 0) {
+                                return _t('Value: ') + gauge_value;
+                            }
+                            return _t('Max: ') + maxLabel;
+                        },
+                    },
+                },
+				title: {
+					display: true,
+					text: title,
+                    padding: 4,
+				},
+                layout: {
+                    padding: {
+                        bottom: 5
                     }
-                    self.$el.prepend($div);
-
-                    $input.focus()
-                        .keydown(function (event) {
-                            event.stopPropagation();
-                            if(isNaN($input.val())){
-                                self.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
-                                $div.remove();
-                                $svg.fadeTo(0, 1);
-                            } else {
-                                if (event.keyCode == 13 || event.keyCode == 9) {
-                                    if ($input.val() != value) {
-                                        $svg.fadeTo(0, 1);
-                                        parent.view.dataset.call(self.options.on_change, [parent.id, $input.val()]).then(function () {
-                                            parent.do_reload();
-                                        });
-                                    } else {
-                                        $svg.fadeTo(0, 1);
-                                        $div.remove();
-                                    }
-                                }
-                            }
-                        })
-                        .click(function (event) {
-                            event.stopPropagation();
-                            flag_open = false;
-                        })
-                        .blur(function (event) {
-                            if(!flag_open) {
-                                self.$el.find(".oe_justgage_edit").remove();
-                                $svg.fadeTo(0, 1);
-                            } else {
-                                $svg.fadeTo(0, 1);
-                                flag_open = false;
-                                setTimeout(function () {$input.focus();}, 0);
-                            }
-                        });
-                }
-            }).mousedown(function () {
-                flag_open = true;
-            });
-
-            if (this.options.force_set && !+input_value) {
-                $svg.fadeTo(0, 0.3);
-                var $div = $('<div/>').text(_t("Click to change value"));
-                $div.css(css);
-                this.$el.append($div);
+                },
+                maintainAspectRatio: false,
+                cutoutPercentage: 70,
             }
-        }
+		};
+        this.$canvas = $('<canvas/>');
+        this.$el.empty();
+        this.$el.append(this.$canvas);
+        this.$el.attr('style', this.nodeOptions.style);
+        this.$el.css({position: 'relative'});
+        var context = this.$canvas[0].getContext('2d');
+        this.chart = new Chart(context, config);
+
+        var humanValue = utils.human_number(gauge_value, 1);
+        var $value = $('<span class="o_gauge_value">').text(humanValue);
+        $value.css({'text-align': 'center', position: 'absolute', left: 0, right: 0, bottom: '6px', 'font-weight': 'bold'});
+        this.$el.append($value);
     },
 });
 
-instance.web_kanban.fields_registry.add("gauge", "instance.web_kanban.GaugeWidget");
+field_registry.add("gauge", GaugeWidget);
 
-}
+return GaugeWidget;
+
+});

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="hr assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/point_of_sale/static/src/scss/pos_dashboard.scss"/>
+            <link rel="stylesheet" href="/point_of_sale/static/src/css/pos_receipts.css"/>
+            <script type="text/javascript" src="/point_of_sale/static/src/js/tours/point_of_sale.js"></script>
+            <script type="text/javascript" src="/point_of_sale/static/src/js/printers.js"></script>
+            <script type="text/javascript" src="/point_of_sale/static/lib/html2canvas.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Point Of Sale Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/point_of_sale/static/tests/tours/point_of_sale.js"></script>
+        </xpath>
+    </template>
+</odoo>

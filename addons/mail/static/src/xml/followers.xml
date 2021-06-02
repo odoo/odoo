@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!--
+        Followers, actions and subtypes in a record.
+    -->
+    <t t-name="mail.Followers">
+        <div class="o_followers btn-group">
+            <div class="o_followers_title_box btn-group">
+                <button class="btn btn-link" title="Dropdown menu - Followers"
+                        data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-user" role="img" aria-label="Followers"></i>
+                    <span class="o_followers_count"/>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right o_followers_list" role="menu"/>
+            </div>
+            <div class="o_followers_actions btn-group">
+                <button class="btn btn-link o_followers_follow_button o_followers_notfollow">
+                    <span class="o_follow">Follow</span>
+                    <i class="fa fa-times o_followers_unfollow"/>
+                    <span class="o_followers_unfollow"> Unfollow</span>
+                    <i class="fa fa-check o_followers_following"/>
+                    <span class="o_followers_following"> Following</span>
+                </button>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        Partner or channel following the record
+    -->
+    <t t-name="mail.Followers.partner">
+        <div role="menuitem" t-attf-class="dropdown-item o_partner {{ !record.active ? 'o_inactive': '' }}">
+            <a class="o_mail_redirect text-truncate"
+                href="#"
+                t-att-title="record.title"
+                t-att-data-oe-model="record.res_model"
+                t-att-data-oe-id="record.res_id">
+                <img t-att-src="record.avatar_url" alt="Avatar" class="o_image_64_cover"/>
+                <t t-esc="record.name or record.display_name"/>
+            </a>
+            <button t-if="record.is_editable"
+                class="btn btn-icon fa fa-pencil o_edit_subtype d-none"
+                title="Edit subscription"
+                aria-label="Edit subscription"
+                role="img"
+                t-att-data-follower-id="record.id"
+                t-att-data-oe-id="record.res_id"
+                t-att-data-oe-model="record.res_model"/>
+            <button t-if="widget.isEditable"
+                class="btn btn-icon fa fa-remove o_remove_follower"
+                aria-label="Remove this follower"
+                role="img"
+                title="Remove this follower"/>
+        </div>
+    </t>
+
+    <!--
+        'Add followers' and 'Add channels' buttons
+    -->
+    <t t-name="mail.Followers.add_more">
+        <t t-if="widget.isEditable">
+            <a href="#" role="menuitem" class="dropdown-item o_add_follower">Add Followers</a>
+            <a href="#" role="menuitem" class="dropdown-item o_add_follower_channel">Add Channels</a>
+            <div role="separator" t-if="widget.followers.length > 0" class="dropdown-divider"/>
+        </t>
+    </t>
+
+    <!--
+        Message subtypes of a follower subscription
+    -->
+    <t t-name="mail.Followers.subtype">
+        <div role="menuitem" class="o_subtype dropdown-item">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox"
+                    t-attf-id="input_mail_followers_subtype_#{record.id + (dialog ? '_in_dialog': '')}"
+                    t-att-name="record.name"
+                    class="custom-control-input o_subtype_checkbox"
+                    t-att-checked="record.followed"
+                    t-att-data-id="record.id"/>
+                <label t-attf-for="input_mail_followers_subtype_#{record.id + (dialog ? '_in_dialog': '')}"
+                    class="custom-control-label">
+                    <t t-esc="record.name"/>
+                </label>
+            </div>
+            <i t-if="display_warning" class="fa fa-warning text-warning" role="img" aria-label="Warning" title="Warning"/>
+        </div>
+    </t>
+    <t t-name="mail.Followers.subtypes.warning">
+        <span class="text-warning">
+            <i class="fa fa-warning"/> Be careful with channels following internal notifications
+        </span>
+    </t>
+
+</templates>

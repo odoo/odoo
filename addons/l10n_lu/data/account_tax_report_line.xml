@@ -1,0 +1,959 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="account_tax_report_line_2_assesment_of_tax_due" model="account.tax.report.line">
+      <field name="name">II. ASSESSMENT OF TAX DUE (output tax)</field>
+      <field name="sequence">2</field>
+      <field name="country_id" ref="base.lu"/>
+      <field name="formula">None</field>
+    </record>
+
+    <record id="account_tax_report_line_2b_intra_community_acqui_of_goods_base" model="account.tax.report.line">
+      <field name="name">II.B. Intra-Community acquisitions of goods – base (051)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_base_3" model="account.tax.report.line">
+      <field name="name">II.B. base 3% (049)</field>
+      <field name="tag_name">II.B. base 3% (049)</field>
+      <field name="sequence">9</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+
+    <record id="account_tax_report_line_2b_base_exempt" model="account.tax.report.line">
+      <field name="name">II.B. base exempt (194)</field>
+      <field name="tag_name">II.B. base exempt (194)</field>
+      <field name="sequence">10</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_base_17" model="account.tax.report.line">
+      <field name="name">II.B. base 17% (711)</field>
+      <field name="tag_name">II.B. base 17% (711)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_base_14" model="account.tax.report.line">
+      <field name="name">II.B. base 14% (713)</field>
+      <field name="tag_name">II.B. base 14% (713)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_base_8" model="account.tax.report.line">
+      <field name="name">II.B. base 8% (715)</field>
+      <field name="tag_name">II.B. base 8% (715)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acqui_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_importation_of_goods_base" model="account.tax.report.line">
+      <field name="name">II.D. Importation of goods – base (065)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_2_base_exempt" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base exempt (196)</field>
+      <field name="tag_name">II.D.2. for non-business purposes: base exempt (196)</field>
+      <field name="sequence">12</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_base_17" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base 17% (721)</field>
+      <field name="tag_name">II.D.1. for business purposes: base 17% (721)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_base_14" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base 14% (723)</field>
+      <field name="tag_name">II.D.1. for business purposes: base 14% (723)</field>
+      <field name="sequence">4</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_base_8" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base 8% (725)</field>
+      <field name="tag_name">II.D.1. for business purposes: base 8% (725)</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_2_base_17" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base 17% (731)</field>
+      <field name="tag_name">II.D.2. for non-business purposes: base 17% (731)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_2_base_14" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base 14% (733)</field>
+      <field name="tag_name">II.D.2. for non-business purposes: base 14% (733)</field>
+      <field name="sequence">9</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_2_base_8" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base 8% (735)</field>
+      <field name="tag_name">II.D.2. for non-business purposes: base 8% (735)</field>
+      <field name="sequence">10</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_base_3" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base 3% (059)</field>
+      <field name="tag_name">II.D.1. for business purposes: base 3% (059)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_2_base_3" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: base 3% (063)</field>
+      <field name="tag_name">II.D.2. for non-business purposes: base 3% (063)</field>
+      <field name="sequence">11</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_base_exempt" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: base exempt (195)</field>
+      <field name="tag_name">II.D.1. for business purposes: base exempt (195)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2c_acquisitions_triangular_transactions_base" model="account.tax.report.line">
+      <field name="name">II.C. Acquisitions, in the context of triangular transactions – base (152)</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_supply_of_service_for_customer" model="account.tax.report.line">
+      <field name="name">II.E. Supply of services for which the customer is liable for the payment of VAT – base (409)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_base" model="account.tax.report.line">
+      <field name="name">II.E.1. base (436)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_a_base_3" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: base 3% (431)</field>
+      <field name="tag_name">II.E.1.a) not exempt within the territory: base 3% (431)</field>
+      <field name="sequence">9</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_1_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_b_exempt" model="account.tax.report.line">
+      <field name="name">II.E.1.b) exempt within the territory: exempt (435)</field>
+      <field name="tag_name">II.E.1.b) exempt within the territory: exempt (435)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_a_base_17" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: base 17% (741)</field>
+      <field name="tag_name">II.E.1.a) not exempt within the territory: base 17% (741)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_1_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_a_base_14" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: base 14% (743)</field>
+      <field name="tag_name">II.E.1.a) not exempt within the territory: base 14% (743)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_1_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_a_base_8" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: base 8% (745)</field>
+      <field name="tag_name">II.E.1.a) not exempt within the territory: base 8% (745)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_1_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_base" model="account.tax.report.line">
+      <field name="name">II.E.2. base (463)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_base_3" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: base 3% (441)</field>
+      <field name="tag_name">II.E.2. not established or residing within the Community: base 3% (441)</field>
+      <field name="sequence">9</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_2_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_exempt" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: exempt (445)</field>
+      <field name="tag_name">II.E.2. not established or residing within the Community: exempt (445)</field>
+      <field name="sequence">10</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_2_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_base_17" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: base 17% (751)</field>
+      <field name="tag_name">II.E.2. not established or residing within the Community: base 17% (751)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_2_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_base_14" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: base 14% (753)</field>
+      <field name="tag_name">II.E.2. not established or residing within the Community: base 14% (753)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_2_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_base_8" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: base 8% (755)</field>
+      <field name="tag_name">II.E.2. not established or residing within the Community: base 8% (755)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_2_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_3_base" model="account.tax.report.line">
+      <field name="name">II.E.3. base (765)</field>
+      <field name="sequence">4</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_3_base_17" model="account.tax.report.line">
+      <field name="name">II.E.3. suppliers established within the territory: base 17% (761)</field>
+      <field name="tag_name">II.E.3. suppliers established within the territory: base 17% (761)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_3_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1_assessment_taxable_turnover" model="account.tax.report.line">
+      <field name="name">I. ASSESSMENT OF TAXABLE TURNOVER</field>
+      <field name="sequence">1</field>
+      <field name="country_id" ref="base.lu"/>
+      <field name="formula">None</field>
+    </record>
+
+    <record id="account_tax_report_line_1a_overall_turnover" model="account.tax.report.line">
+      <field name="name">I.A. Overall turnover (012)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
+      <field name="country_id" ref="base.lu"/>
+      <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037 + LUTAX_455 + LUTAX_456</field>
+    </record>
+
+    <record id="account_tax_report_line_1a_vat_acc_scheme" model="account.tax.report.line">
+        <field name="name">I.A.1. VAT accounting scheme</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
+        <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1a_total_sale" model="account.tax.report.line">
+        <field name="name">I.A.2. Total Sales / Receipts (454)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037</field>
+    </record>
+
+    <!-- 471 not managed, only 472 is filled in -->
+    <record id="account_tax_report_line_1a_telecom_service" model="account.tax.report.line">
+        <field name="name">I.A.2.a). Telecommunications services, radio and television broadcasting services... (471)</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="code">LUTAX_471</field>
+    </record>
+
+    <record id="account_tax_report_line_1a_other_sales" model="account.tax.report.line">
+        <field name="name">I.A.2.b). Other sales / receipts (472)</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456</field>
+    </record>
+
+    <record id="account_tax_report_line_1a_app_goods_non_bus" model="account.tax.report.line">
+        <field name="name">I.A.3. Application of goods for non-business use and for business purposes (Art.13) (455)</field>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="code">LUTAX_455</field>
+    </record>
+
+    <record id="account_tax_report_line_1a_non_bus_gs" model="account.tax.report.line">
+        <field name="name">I.A.4. Non-business use of goods and supply of services free of charge (Art.16) (456)</field>
+        <field name="tag_name">I.A.4. Non-business use of goods and supply of services free of charge (Art.16) (456)</field>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
+        <field name="country_id" ref="base.lu"/>
+        <field name="code">LUTAX_456</field>
+    </record>
+
+    <record id="account_tax_report_line_1b_exemptions_deductible_amounts" model="account.tax.report.line">
+      <field name="name">I.B. Exemptions and deductible amounts (021)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
+      <field name="country_id" ref="base.lu"/>
+      <field name="code">LUTAX_021</field>
+    </record>
+
+    <record id="account_tax_report_line_1b_2_export" model="account.tax.report.line">
+      <field name="name">I.B.2. Exports (Art.43(1)(a) and (b)) (014)</field>
+      <field name="tag_name">I.B.2. Exports (Art.43(1)(a) and (b)) (014)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_1_intra_community_goods_pi_vat" model="account.tax.report.line">
+      <field name="name">I.B.1. Intra-Community supply of goods to persons identified for VAT purposes in another Member State (MS) (Art.43(1)(d),(e) and (f)) (3) (457)</field>
+      <field name="tag_name">I.B.1. Intra-Community supply of goods to persons identified for VAT purposes in another Member State (MS) (Art.43(1)(d),(e) and (f)) (3) (457)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_3_other_exemptions_art_43" model="account.tax.report.line">
+      <field name="name">I.B.3. Other exemptions (Art.43 and 60bis) (015)</field>
+      <field name="tag_name">I.B.3. Other exemptions (art.43 et 60bis) (015)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_4_other_exemptions_art_44_et_56quater" model="account.tax.report.line">
+      <field name="name">I.B.4. Other exemptions (Art.44 and 56quater) (016)</field>
+      <field name="tag_name">I.B.4. Other exemptions (Art.44 and 56quater) (016)</field>
+      <field name="sequence">4</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_5_manufactured_tobacco_vat_collected" model="account.tax.report.line">
+      <field name="name">I.B.5. Manufactured tobacco whose VAT was collected at the source or at the exit of the tax... (017)</field>
+      <field name="tag_name">I.B.5. Manufactured tobacco whose VAT was collected at the source or at the exit of the tax... (017)</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_6_a_subsequent_to_intra_community" model="account.tax.report.line">
+      <field name="name">I.B.6.a) Supply, subsequent to intra-Community acquisitions of goods, in the context of triangular transactions, when the customer identified,... (018)</field>
+      <field name="tag_name">I.B.6.a) Supply, subsequent to intra-Community acquisitions of goods, in the context of triangular transactions, when the customer identified,... (018)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_6_b1_non_exempt_customer_vat" model="account.tax.report.line">
+      <field name="name">I.B.6.b)1) not exempt in the MS where the customer is liable for payment of VAT (Art.17(1)(b)) (5) (423)</field>
+      <field name="tag_name">I.B.6.b)1) not exempt in the MS where the customer is liable for payment of VAT (Art.17(1)(b)) (5) (423)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_6_b2_exempt_ms_customer" model="account.tax.report.line">
+      <field name="name">I.B.6.b)2) exempt in the MS where the customer is identified (Art.17(1)(b)) (424)</field>
+      <field name="tag_name">I.B.6.b)2) exempt in the MS where the customer is identified (Art.17(1)(b)) (424)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_6_c_supplies_scope_special_arrangement" model="account.tax.report.line">
+      <field name="name">I.B.6.c) Supplies carried out within the scope of the special arrangement of art. 56sexies (226)</field>
+      <field name="tag_name">I.B.6.c) Supplies carried out within the scope of the special arrangement of art. 56sexies (226)</field>
+      <field name="sequence">9</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_6_d_supplies_other_referred" model="account.tax.report.line">
+      <field name="name">I.B.6.d) Supplies other than referred to in (6)(a) and (6)(b) (019)</field>
+      <field name="tag_name">I.B.6.d) Supplies other than referred to in (6)(a) and (6)(b) (019)</field>
+      <field name="sequence">10</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1b_7_inland_supplies_for_customer" model="account.tax.report.line">
+      <field name="name">I.B.7. Inland supplies for which the customer is liable for the payment of VAT (419)</field>
+      <field name="tag_name">I.B.7. Inland supplies for which the customer is liable for the payment of VAT (419)</field>
+      <field name="sequence">11</field>
+      <field name="parent_id" ref="account_tax_report_line_1b_exemptions_deductible_amounts"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_1c_taxable_turnover" model="account.tax.report.line">
+      <field name="name">I.C. Taxable turnover (022)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
+      <field name="country_id" ref="base.lu"/>
+      <field name="code">LUTAX_022</field>
+      <field name="formula">LUTAX_037</field>
+    </record>
+
+    <record id="account_tax_report_line_2a_breakdown_taxable_turnover_base" model="account.tax.report.line">
+      <field name="name">II.A. Breakdown of taxable turnover – base (037)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+      <field name="code">LUTAX_037</field>
+    </record>
+
+    <record id="account_tax_report_line_2a_base_3" model="account.tax.report.line">
+      <field name="name">II.A. base 3% (031)</field>
+      <field name="tag_name">II.A. base 3% (031)</field>
+      <field name="sequence">9</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_base_0" model="account.tax.report.line">
+      <field name="name">II.A. base 0% (033)</field>
+      <field name="tag_name">II.A. base 0% (033)</field>
+      <field name="sequence">10</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+      <field name="code">LUTAX_033</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_base_17" model="account.tax.report.line">
+      <field name="name">II.A. base 17% (701)</field>
+      <field name="tag_name">II.A. base 17% (701)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_base_14" model="account.tax.report.line">
+      <field name="name">II.A. base 14% (703)</field>
+      <field name="tag_name">II.A. base 14% (703)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_base_8" model="account.tax.report.line">
+      <field name="name">II.A. base 8% (705)</field>
+      <field name="tag_name">II.A. base 8% (705)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_4_tax_tobe_paid_or_reclaimed" model="account.tax.report.line">
+      <field name="name">IV. TAX TO BE PAID OR TO BE RECLAIMED</field>
+      <field name="sequence">4</field>
+      <field name="country_id" ref="base.lu"/>
+      <field name="formula">None</field>
+    </record>
+
+    <record id="account_tax_report_line_4c_exceeding_amount" model="account.tax.report.line">
+      <field name="name">IV.C. Exceeding amount (105)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
+      <field name="formula">(LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_042+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227)-(LUTAX_458+LUTAX_459+LUTAX_460+LUTAX_090+LUTAX_461+LUTAX_092+LUTAX_228+LUTAX_094+LUTAX_095)</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <!-- Note: this should have same formula as of section `II.H. Total tax due (076)` here above -->
+    <record id="account_tax_report_line_4a_total_tax_due" model="account.tax.report.line">
+      <field name="name">IV.A. Total tax due (103)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
+      <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_042+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2f_supply_goods_base" model="account.tax.report.line">
+      <field name="name">II.F. Supply of goods for which the purchaser is liable for the payment of VAT - base (767)</field>
+      <field name="sequence">10</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2f_supply_goods_base_8" model="account.tax.report.line">
+      <field name="name">II.F. base 8% (763)</field>
+      <field name="tag_name">II.F. base 8% (763)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_2f_supply_goods_base"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2f_supply_goods_tax" model="account.tax.report.line">
+      <field name="name">II.F. Supply of goods for which the purchaser is liable for the payment of VAT - tax (768)</field>
+      <field name="sequence">11</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2f_supply_goods_tax_8" model="account.tax.report.line">
+      <field name="name">II.F. tax 8% (764)</field>
+      <field name="tag_name">II.F. tax 8% (764)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_2f_supply_goods_tax"/>
+      <field name="code">LUTAX_764</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2g_special_arrangement" model="account.tax.report.line">
+      <field name="name">II.G. Special arrangement for tax suspension: adjustment (Art.60bis, (5) and (8)) (227)</field>
+      <field name="sequence">12</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="code">LUTAX_227</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <!-- Note: any change in formula here should be reflected in section `IV.A. Total tax due (103)` below -->
+    <record id="account_tax_report_line_2h_total_tax_due" model="account.tax.report.line">
+      <field name="name">II.H. Total tax due (076)</field>
+      <field name="sequence">13</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_042+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_breakdown_taxable_turnover_tax" model="account.tax.report.line">
+      <field name="name">II.A. Breakdown of taxable turnover – tax (046)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_tax_3" model="account.tax.report.line">
+      <field name="name">II.A. tax 3% (040)</field>
+      <field name="tag_name">II.A. tax 3% (040)</field>
+      <field name="sequence">9</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
+      <field name="code">LUTAX_040</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_tax_0" model="account.tax.report.line">
+      <field name="name">II.A. tax 0% (042)</field>
+      <field name="tag_name">II.A. tax 0% (042)</field>
+      <field name="sequence">10</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
+      <field name="code">LUTAX_042</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_tax_17" model="account.tax.report.line">
+      <field name="name">II.A. tax 17% (702)</field>
+      <field name="tag_name">II.A. tax 17% (702)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
+      <field name="code">LUTAX_702</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_tax_14" model="account.tax.report.line">
+      <field name="name">II.A. tax 14% (704)</field>
+      <field name="tag_name">II.A. tax 14% (704)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
+      <field name="code">LUTAX_704</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2a_tax_8" model="account.tax.report.line">
+      <field name="name">II.A. tax 8% (706)</field>
+      <field name="tag_name">II.A. tax 8% (706)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
+      <field name="code">LUTAX_706</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_intra_community_acquisitions_goods_tax" model="account.tax.report.line">
+      <field name="name">II.B. Intra-Community acquisitions of goods – tax (056)</field>
+      <field name="sequence">4</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_tax_3" model="account.tax.report.line">
+      <field name="name">II.B. tax 3% (054)</field>
+      <field name="tag_name">II.B. tax 3% (054)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acquisitions_goods_tax"/>
+      <field name="code">LUTAX_054</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_tax_17" model="account.tax.report.line">
+      <field name="name">II.B. tax 17% (712)</field>
+      <field name="tag_name">II.B. tax 17% (712)</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acquisitions_goods_tax"/>
+      <field name="code">LUTAX_712</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_tax_14" model="account.tax.report.line">
+      <field name="name">II.B. tax 14% (714)</field>
+      <field name="tag_name">II.B. tax 14% (714)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acquisitions_goods_tax"/>
+      <field name="code">LUTAX_714</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2b_tax_8" model="account.tax.report.line">
+      <field name="name">II.B. tax 8% (716)</field>
+      <field name="tag_name">II.B. tax 8% (716)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2b_intra_community_acquisitions_goods_tax"/>
+      <field name="code">LUTAX_716</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_importation_of_goods_tax" model="account.tax.report.line">
+      <field name="name">II.D. Importation of goods – tax (407)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_tax_14" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: tax 14% (724)</field>
+      <field name="tag_name">II.D.1. for business purposes: tax 14% (724)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_724</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_tax_8" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: tax 8% (726)</field>
+      <field name="tag_name">II.D.1. for business purposes: tax 8% (726)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_726</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_2_tax_17" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: tax 17% (732)</field>
+      <field name="tag_name">II.D.2. for non-business purposes: tax 17% (732)</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_732</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_2_tax_14" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: tax 14% (734)</field>
+      <field name="tag_name">II.D.2. for non-business purposes: tax 14% (734)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_734</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_2_tax_8" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: tax 8% (736)</field>
+      <field name="tag_name">II.D.2. for non-business purposes: tax 8% (736)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_736</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_tax_3" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: tax 3% (068)</field>
+      <field name="tag_name">II.D.1. for business purposes: tax 3% (068)</field>
+      <field name="sequence">4</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_068</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_2_tax_3" model="account.tax.report.line">
+      <field name="name">II.D.2. for non-business purposes: tax 3% (073)</field>
+      <field name="tag_name">II.D.2. for non-business purposes: tax 3% (073)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_073</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2d_1_tax_17" model="account.tax.report.line">
+      <field name="name">II.D.1. for business purposes: tax 17% (722)</field>
+      <field name="tag_name">II.D.1. for business purposes: tax 17% (722)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_2d_importation_of_goods_tax"/>
+      <field name="code">LUTAX_722</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax" model="account.tax.report.line">
+      <field name="name">II.E. Supply of services for which the customer is liable for the payment of VAT – tax (410)</field>
+      <field name="sequence">9</field>
+      <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_a_tax" model="account.tax.report.line">
+      <field name="name">II.E.1.a) tax (462)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_a_tax_3" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: tax 3% (432)</field>
+      <field name="tag_name">II.E.1.a) not exempt within the territory: tax 3% (432)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_1_a_tax"/>
+      <field name="code">LUTAX_432</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_a_tax_17" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: tax 17% (742)</field>
+      <field name="tag_name">II.E.1.a) not exempt within the territory: tax 17% (742)</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_1_a_tax"/>
+      <field name="code">LUTAX_742</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_a_tax_14" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: tax 14% (744)</field>
+      <field name="tag_name">II.E.1.a) not exempt within the territory: tax 14% (744)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_1_a_tax"/>
+      <field name="code">LUTAX_744</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_1_a_tax_8" model="account.tax.report.line">
+      <field name="name">II.E.1.a) not exempt within the territory: tax 8% (746)</field>
+      <field name="tag_name">II.E.1.a) not exempt within the territory: tax 8% (746)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_1_a_tax"/>
+      <field name="code">LUTAX_746</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_tax" model="account.tax.report.line">
+      <field name="name">II.E.2. tax (464)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_tax_3" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: tax 3% (442)</field>
+      <field name="tag_name">II.E.2. not established or residing within the Community: tax 3% (442)</field>
+      <field name="sequence">8</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_2_tax"/>
+      <field name="code">LUTAX_442</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_tax_17" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: tax 17% (752)</field>
+      <field name="tag_name">II.E.2. not established or residing within the Community: tax 17% (752)</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_2_tax"/>
+      <field name="code">LUTAX_752</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_tax_14" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: tax 14% (754)</field>
+      <field name="tag_name">II.E.2. not established or residing within the Community: tax 14% (754)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_2_tax"/>
+      <field name="code">LUTAX_754</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_2_tax_8" model="account.tax.report.line">
+      <field name="name">II.E.2. not established or residing within the Community: tax 8% (756)</field>
+      <field name="tag_name">II.E.2. not established or residing within the Community: tax 8% (756)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_2_tax"/>
+      <field name="code">LUTAX_756</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_3_tax" model="account.tax.report.line">
+      <field name="name">II.E.3. tax (766)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_2e_3_tax_17" model="account.tax.report.line">
+      <field name="name">II.E.3. suppliers established within the territory: tax 17% (762)</field>
+      <field name="tag_name">II.E.3. suppliers established within the territory: tax 17% (762)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_3_tax"/>
+      <field name="code">LUTAX_762</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <!-- Note: this should have same formula as of section `III.C. Total input tax deductible (102)` here below -->
+    <record id="account_tax_report_line_4a_total_input_tax_deductible" model="account.tax.report.line">
+      <field name="name">IV.B. Total input tax deductible (104)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
+      <field name="formula">LUTAX_458+LUTAX_459+LUTAX_460+LUTAX_090+LUTAX_461+LUTAX_092+LUTAX_228+LUTAX_094+LUTAX_095</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3_assessment_deducible_tax" model="account.tax.report.line">
+      <field name="name">III. ASSESSMENT OF DEDUCTIBLE TAX (input tax)</field>
+      <field name="sequence">3</field>
+      <field name="country_id" ref="base.lu"/>
+      <field name="formula">None</field>
+    </record>
+
+    <record id="account_tax_report_line_3a_total_input_tax" model="account.tax.report.line">
+      <field name="name">III.A. Total input tax (093)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3b_total_input_tax_nd" model="account.tax.report.line">
+      <field name="name">III.B. Total input tax non-deductible (097)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3b1_rel_trans" model="account.tax.report.line">
+      <field name="name">III.B.1. relating to transactions which are exempt pursuant to articles 44 and 56quater (094)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
+      <field name="code">LUTAX_094</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3b2_ded_prop" model="account.tax.report.line">
+      <field name="name">III.B.2. where the deductible proportion determined in accordance to article 50 is applied (095)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_3b_total_input_tax_nd"/>
+      <field name="code">LUTAX_095</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <!-- Note: any change in formula here should be reflected in section `IV.B. Total input tax deductible (104)` above -->
+    <record id="account_tax_report_line_3c_total_input_tax_deductible" model="account.tax.report.line">
+      <field name="name">III.C. Total input tax deductible (102)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_3_assessment_deducible_tax"/>
+      <field name="formula">LUTAX_458+LUTAX_459+LUTAX_460+LUTAX_090+LUTAX_461+LUTAX_092+LUTAX_228+LUTAX_094+LUTAX_095</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3a_4_due_respect_application_goods" model="account.tax.report.line">
+      <field name="name">III.A.4. Due in respect of the application of goods for business purposes (Art.48(1)(d)) (090)</field>
+      <field name="tag_name">III.A.4. Due in respect of the application of goods for business purposes (Art.48(1)(d)) (090)</field>
+      <field name="sequence">4</field>
+      <field name="parent_id" ref="account_tax_report_line_3a_total_input_tax"/>
+      <field name="code">LUTAX_090</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3a_6_paid_joint_several_guarantee" model="account.tax.report.line">
+      <field name="name">III.A.6. Paid as joint and several guarantee (092)</field>
+      <field name="tag_name">III.A.6. Paid as joint and several guarantee (092)</field>
+      <field name="sequence">6</field>
+      <field name="parent_id" ref="account_tax_report_line_3a_total_input_tax"/>
+      <field name="code">LUTAX_092</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3a_7_adjusted_tax_special_arrangement" model="account.tax.report.line">
+      <field name="name">III.A.7. Adjusted tax - special arrangement for tax suspension (Art.60bis(9), subpar. 2) (228)</field>
+      <field name="tag_name">III.A.7. Adjusted tax - special arrangement for tax suspension (Art.60bis(9), subpar. 2) (228)</field>
+      <field name="sequence">7</field>
+      <field name="parent_id" ref="account_tax_report_line_3a_total_input_tax"/>
+      <field name="code">LUTAX_228</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3a_1_invoiced_by_other_taxable_person" model="account.tax.report.line">
+      <field name="name">III.A.1. Invoiced by other taxable persons for goods or services supplied (Art.48(1)(a)) (458)</field>
+      <field name="tag_name">III.A.1. Invoiced by other taxable persons for goods or services supplied (Art.48(1)(a)) (458)</field>
+      <field name="sequence">1</field>
+      <field name="parent_id" ref="account_tax_report_line_3a_total_input_tax"/>
+      <field name="code">LUTAX_458</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3a_2_due_respect_intra_comm_goods" model="account.tax.report.line">
+      <field name="name">III.A.2. Due in respect of intra-Community acquisitions of goods (Art.48(1)(b)) (459)</field>
+      <field name="tag_name">III.A.2. Due in respect of intra-Community acquisitions of goods (Art.48(1)(b)) (459)</field>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_3a_total_input_tax"/>
+      <field name="code">LUTAX_459</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3a_3_due_paid_respect_importation_goods" model="account.tax.report.line">
+      <field name="name">III.A.3. Due or paid in respect of importation of goods (Art.48(1)(c)) (460)</field>
+      <field name="tag_name">III.A.3. Due or paid in respect of importation of goods (Art.48(1)(c)) (460)</field>
+      <field name="sequence">3</field>
+      <field name="parent_id" ref="account_tax_report_line_3a_total_input_tax"/>
+      <field name="code">LUTAX_460</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+    <record id="account_tax_report_line_3a_5_due_under_reverse_charge" model="account.tax.report.line">
+      <field name="name">III.A.5. Due under the reverse charge (see points II.E and F) (461)</field>
+      <field name="tag_name">III.A.5. Due under the reverse charge (see points II.E and F) (461)</field>
+      <field name="sequence">5</field>
+      <field name="parent_id" ref="account_tax_report_line_3a_total_input_tax"/>
+      <field name="code">LUTAX_461</field>
+      <field name="country_id" ref="base.lu"/>
+    </record>
+
+</odoo>

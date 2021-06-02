@@ -1,3 +1,4 @@
-import main
-
-# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
+# -*- coding: utf-8 -*
+from . import main
+from . import bus
+from . import home

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Demo of B2B (business-to-business) Taxable supplies made to other registered person.-->
+    <record id="demo_invoice_b2b" model="account.move">
+        <field name="type">out_invoice</field>
+        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
+        <field name="l10n_in_reseller_partner_id" ref="l10n_in.res_partner_reseller"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" model="account.move.line" eval="[
+            (0, 0, {
+                'product_id': ref('product.product_product_8'),
+                'quantity': 2,
+                'price_unit': 40000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 28),
+                    ('tax_group_id', '=', ref('l10n_in.gst_group'))], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_9'),
+                'quantity': 3,
+                'price_unit': 400.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', ref('l10n_in.gst_group'))], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_10'),
+                'quantity': 4,
+                'price_unit': 300.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                        ('type_tax_use', '=', 'sale'),
+                    '|',
+                        '&amp;',
+                        ('amount', '=', 18),
+                        ('tax_group_id', '=', ref('l10n_in.gst_group')),
+                        '&amp;',
+                        ('tax_group_id', '=', ref('l10n_in.cess_group')),
+                        ('children_tax_ids.amount','=', 5)
+                    ], limit=2).ids)]
+            }),
+        ]"/>
+    </record>
+
+    <!-- Demo of B2CS (business to consumer small) Taxable supplies made to other unregistered Person and below INR 2.5 lakhs invoice value.-->
+    <record id="demo_invoice_b2cs" model="account.move">
+        <field name="type">out_invoice</field>
+        <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" model="account.move.line" eval="[
+            (0, 0, {
+                'product_id': ref('product.product_product_16'),
+                'quantity': 1,
+                'price_unit': 1500.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_20'),
+                'quantity': 1,
+                'price_unit': 2300.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_22'),
+                'quantity': 1,
+                'price_unit': 2600.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 5),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_24'),
+                'quantity': 2,
+                'price_unit': 1655.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 5),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
+            }),
+        ]"/>
+    </record>
+
+    <!-- Demo of B2CL (business to consumer - Large) Taxable supplies made to other unregistered Person and invoice value is more than INR 2.5 lakhs.-->
+    <record id="demo_invoice_b2cl" model="account.move">
+        <field name="type">out_invoice</field>
+        <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer_out_state"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" model="account.move.line" eval="[
+            (0, 0, {
+                'product_id': ref('product.consu_delivery_01'),
+                'quantity': 3,
+                'price_unit': 90000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.igst_group').id)], limit=1).ids)]
+            }),
+        ]"/>
+    </record>
+
+    <!-- Demo of EXP(Export) supplies including supplies to SEZ/SEZ Developer or deemed exports.-->
+    <record id="demo_invoice_exp" model="account.move">
+        <field name="type">out_invoice</field>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="l10n_in_export_type">export_with_igst</field>
+        <field name="journal_id" model="account.journal"
+            eval="obj().search([
+                ('type', '=', 'sale'),
+                ('l10n_in_import_export', '=', True),
+                ('company_id', '=', obj().env.company.id)], limit=1).id
+                or obj().search([('type', '=', 'sale')], limit=1).id"/>
+        <field name="l10n_in_shipping_bill_number">999704</field>
+        <field name="l10n_in_shipping_bill_date" eval="time.strftime('%Y-%m')+'-02'"/>
+        <field name="l10n_in_shipping_port_code_id" ref="l10n_in.port_code_inixy1"/>
+        <field name="invoice_line_ids" model="account.move.line" eval="[
+            (0, 0, {
+                'product_id': ref('product.product_product_4'),
+                'quantity': 30,
+                'price_unit': 8000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.igst_group').id)], limit=1).ids)]
+            }),
+        ]"/>
+    </record>
+
+    <!-- Demo of exemp(Nil Rated, Exempted and Non GST supplies). Set Nill rated and Exempted tax in line.-->
+    <record id="demo_invoice_nill" model="account.move">
+        <field name="type">out_invoice</field>
+        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="invoice_line_ids" model="account.move.line" eval="[
+            (0, 0, {
+                'product_id': ref('product.product_product_1'),
+                'quantity': 2,
+                'price_unit': 25000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.exempt_group').id)], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_5'),
+                'quantity': 1,
+                'price_unit': 400.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.nil_rated_group').id)], limit=1).ids)]
+            }),
+        ]"/>
+    </record>
+
+    <!-- Demo of cdnr(Credit/ Debit Note for registered person). Create credit note for demo b2b invoice.-->
+    <record id="demo_invoice_cdnr" model="account.move">
+        <field name="type">out_refund</field>
+        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
+        <field name="l10n_in_reseller_partner_id" ref="l10n_in.res_partner_reseller"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-02'"/>
+        <field name="reversed_entry_id" ref="l10n_in.demo_invoice_b2b"/>
+        <field name="invoice_line_ids" model="account.move.line" eval="[
+            (0, 0, {
+                'product_id': ref('product.product_product_8'),
+                'quantity': 2,
+                'price_unit': 40000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 28),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_9'),
+                'quantity': 3,
+                'price_unit': 400.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
+            }),
+            (0, 0, {
+                'product_id': ref('product.product_product_10'),
+                'quantity': 3,
+                'price_unit': 400.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                        ('type_tax_use', '=', 'sale'),
+                    '|',
+                        '&amp;',
+                        ('amount', '=', 18),
+                        ('tax_group_id', '=', ref('l10n_in.gst_group')),
+                        '&amp;',
+                        ('tax_group_id', '=', ref('l10n_in.cess_group')),
+                        ('children_tax_ids.amount','=', 5)
+                    ], limit=2).ids)]
+            }),
+        ]"/>
+    </record>
+
+    <!-- Demo of cdnr(Credit/ Debit Note for unregistered person). Create credit note for demo b2cl invoice.-->
+    <record id="demo_invoice_cdnur" model="account.move">
+        <field name="type">out_refund</field>
+        <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-02'"/>
+        <field name="reversed_entry_id" ref="l10n_in.demo_invoice_b2cl"/>
+        <field name="invoice_line_ids" model="account.move.line" eval="[
+            (0, 0, {
+                'product_id': ref('product.consu_delivery_01'),
+                'quantity': 3,
+                'price_unit': 90000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
+            }),
+        ]"/>
+    </record>
+
+    <!-- Demo of atadj(Advance adjustments). When invoice is reconcile against Advance payment.
+    Reconciled invoice consideration for which payment have been received in the past months.-->
+    <record id="demo_invoice_atadj" model="account.move">
+        <field name="type">out_invoice</field>
+        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="invoice_date" eval="(datetime.now() + relativedelta(months=1)).strftime('%Y-%m-01')"/>
+        <field name="invoice_line_ids" model="account.move.line" eval="[
+            (0, 0, {
+                'product_id': ref('product.consu_delivery_01'),
+                'quantity': 3,
+                'price_unit': 2000.0,
+                'tax_ids': [(6, 0, obj().tax_ids.search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('amount','=', 18),
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.gst_group').id)], limit=1).ids)]
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="post">
+        <value eval="[
+            ref('demo_invoice_b2b'), ref('demo_invoice_b2cs'), ref('demo_invoice_b2cl'),
+            ref('demo_invoice_exp'), ref('demo_invoice_nill'), ref('demo_invoice_cdnr'),
+            ref('demo_invoice_cdnur'), ref('demo_invoice_atadj')]"/>
+    </function>
+
+    <!-- Reconciled demo payment with demo invoice of atadj(Advance adjustments)-->
+    <function model="account.move" name="js_assign_outstanding_line">
+        <value eval="[ref('demo_invoice_atadj')]"/>
+        <value model="account.move.line" eval="obj().search([
+            ('credit', '>', 0),
+            ('debit', '=', 0),
+            ('payment_id','=', obj().env.ref('l10n_in.demo_payment_at').id)
+            ], limit=1).id"/>
+    </function>
+
+</odoo>

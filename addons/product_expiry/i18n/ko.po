@@ -1,16 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_expiry
+# 	* product_expiry
 # 
 # Translators:
+# Martin Trigaux, 2019
+# Link Up링크업 <linkup.way@gmail.com>, 2019
+# Linkup <link-up@naver.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-18 08:38+0000\n"
-"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"POT-Creation-Date: 2019-09-09 12:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,63 +23,123 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: product_expiry
-#: field:stock.production.lot,alert_date:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">만료 경고</span>"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span> days</span>"
+msgstr "<span>일</span>"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
 msgid "Alert Date"
 msgstr "경고 날짜"
 
 #. module: product_expiry
-#: field:stock.production.lot,use_date:0
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
+msgstr "도래한 경고 날짜"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
 msgid "Best before Date"
 msgstr "최적 이전 날짜"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_pain_product_template
-msgid "Bread"
-msgstr "빵"
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
+msgid ""
+"Date to determine the expired lots and serial numbers using the filter "
+"\"Expiration Alerts\"."
+msgstr "\"만료 경고\" 필터를 사용하여 만료된 로트 및 일련 번호를 확인하는 날짜입니다."
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr "우유"
-
-#. module: product_expiry
-#: view:product.template:product_expiry.view_product_form_expiry
-#: view:stock.production.lot:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
 msgstr "날짜"
 
 #. module: product_expiry
-#: field:stock.production.lot,life_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
 msgid "End of Life Date"
 msgstr "유통기한"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camembert"
-msgstr "프랑스 카망베르 치즈"
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
+msgstr "만료 경고"
 
 #. module: product_expiry
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "햄"
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
+msgid "Expiry has been reminded"
+msgstr "만료되었음을 알렸습니다"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "롯트/일련번호"
+msgstr "LOT/일련번호"
 
 #. module: product_expiry
-#: field:product.template,alert_time:0
+#: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr "로트/일련번호에 대해 경고가 발생하기까지의 일 수입니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr "상품이 위험해질 수 있기까지 소요되는 일수. 로트/일련번호로 계산됩니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr "상품이 재고에서 제거되기까지의 일 수입니다. 로트/일련번호로 계산됩니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed using the lot/serial number."
+msgstr "위험하지 않고 상품이 악화되기 시작하는 일수. 로트/일련번호를 사용하여 계산됩니다."
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr "조달 그룹"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Product Alert Time"
 msgstr "상품 경고 시간"
 
 #. module: product_expiry
-#: field:product.template,life_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "Product Expiry Alert"
+msgstr "상품 만료 경고"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
 msgid "Product Life Time"
 msgstr "상품 유통기한"
 
 #. module: product_expiry
-#: field:product.template,removal_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 msgid "Product Removal Time"
 msgstr "상품 제거 시간"
 
@@ -84,72 +149,51 @@ msgid "Product Template"
 msgstr "상품 서식"
 
 #. module: product_expiry
-#: field:product.template,use_time:0
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Product Use Time"
 msgstr "상품 사용 시간"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr "물량"
+msgstr "수량"
 
 #. module: product_expiry
-#: field:stock.production.lot,removal_date:0 field:stock.quant,removal_date:0
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 msgid "Removal Date"
 msgstr "제거 날짜"
 
 #. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid ""
-"This is the date on which an alert should be notified about the goods with "
-"this Serial Number."
-msgstr "이 일련번호를 가진 상품에 관해 어떤 경고를 통지해야 하는 날짜입니다."
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "The Alert Date has been reached."
+msgstr "경고 날짜가 다가왔습니다."
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
+#: code:addons/product_expiry/models/production_lot.py:0
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
+msgstr "로트/일련번호에 대한 경고 날짜가 다가왔습니다."
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
 msgstr "이 일련번호를 가진 상품이 위험해질 수 있거나 사용해서는 안되는 날짜입니다."
 
 #. module: product_expiry
-#: help:stock.production.lot,removal_date:0
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
-"removed from the stock."
-msgstr "이 일련번호를 가진 상품을 재고에서 제거해야 하는 날짜입니다."
+"removed from the stock. This date will be used in FEFO removal strategy."
+msgstr "이 일련번호가있는 상품을 재고에서 제거해야하는 날짜입니다. 이 날짜는 FEFO 제거 전략에 사용됩니다."
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr "이 일련번호를 가진 상품이 아직 위험하진 않지만 상태가 악화되기 시작하는 날짜입니다."
-
-#. module: product_expiry
-#: help:product.template,alert_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr "새 일련번호를 발행하면 이것은 경고를 통지하기 이전의 일 수입니다."
-
-#. module: product_expiry
-#: help:product.template,life_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr "새 일련번호를 발행하면 이것은 상품이 위험해질 수 있거나 사용해서는 안되는 이전의 일 수입니다."
-
-#. module: product_expiry
-#: help:product.template,removal_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr "새 일련번호를 발행하면 이것은 상품이 재고에서 제거되기 이전의 일 수입니다."
-
-#. module: product_expiry
-#: help:product.template,use_time:0
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr "새 일련번호를 발행하면 이것은 상품이 아직 위험하진 않지만 악화되기 시작하기 이전의 일 수입니다."

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_category_deliveries" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="name">Deliveries</field>
+        </record>
+        <record id="product_product_delivery" model="product.product">
+            <field name="name">Free delivery charges</field>
+            <field name="default_code">Delivery_007</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+        </record>
+        <record id="free_delivery_carrier" model="delivery.carrier">
+            <field name="name">Free delivery charges</field>
+            <field name="fixed_price">0.0</field>
+            <field name="free_over" eval="True"/>
+            <field name="amount">1000</field>
+            <field name="sequence">1</field>
+            <field name="delivery_type">fixed</field>
+            <field name="product_id" ref="delivery.product_product_delivery"/>
+        </record>
+    </data>
+</odoo>

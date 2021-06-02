@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Note for later versions, the group Employee Manager should become contract manager -->
+    <record id="hr.group_hr_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('fleet.fleet_group_manager'))]"/>
+    </record>
+</odoo>

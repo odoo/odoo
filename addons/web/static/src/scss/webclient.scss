@@ -1,0 +1,145 @@
+:root {
+    font-size: $o-root-font-size;
+}
+
+// ------------------------------------------------------------------
+//  General
+// ------------------------------------------------------------------
+.o_web_client {
+    direction: ltr;
+    position: relative; // normally useless but required by bootstrap-datepicker
+    background-color: $o-webclient-background-color;
+}
+
+// ------------------------------------------------------------------
+// Misc. widgets
+// ------------------------------------------------------------------
+
+// Buttons
+.o_icon_button {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    outline: none;
+}
+
+// Boolean Toggle widget
+div.o_boolean_toggle.custom-control.custom-checkbox {
+    $line-height-computed: $line-height-base * $font-size-base;
+    $slider-width: $line-height-computed * 1.5;
+    $circle-width: $line-height-computed * 0.6;
+
+    display: inline-block;
+    padding-left: $slider-width + 0.25rem;
+
+    > label.custom-control-label {
+        &::before, &::after {
+            content: "";
+            top: 0;
+            left: -($slider-width + 0.25rem);
+        }
+        &::before {
+            width: $slider-width;
+            height: 100%;
+            background-color: #a0a0a0 !important;
+            border-radius: 100px;
+            outline: none !important;
+        }
+        &::after {
+            transform: translate($line-height-computed * 0.2, $line-height-computed * 0.2);
+            width: ceil($circle-width / 1rem * $o-root-font-size);
+            height: ceil($circle-width / 1rem * $o-root-font-size);
+            border-radius: 100px;
+            background-color: $white;
+            cursor: pointer;
+        }
+    }
+    > input.custom-control-input:checked + label.custom-control-label {
+        &::before {
+            background-color: $o-brand-primary !important;
+        }
+        &::after {
+            transform: translate($slider-width - $circle-width - $line-height-computed * 0.2, $line-height-computed * 0.2);
+            background-image: none;
+        }
+    }
+}
+
+// Full bg colors (bootstrap extension)
+.bg-success-full {
+    background-color: theme-color('success');
+}
+.bg-warning-full {
+    background-color: theme-color('warning');
+}
+.bg-danger-full {
+    background-color: theme-color('danger');
+}
+.bg-info-full {
+    background-color: theme-color('info');
+}
+.bg-muted-full {
+    background-color: #dee2e6;
+}
+
+.o_web_accesskey_overlay {
+    font-family: $font-family-sans-serif;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0,.6);
+    color: #FFFFFF;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+// Decorations
+.text-bf {
+    font-weight: bold;
+}
+.text-it {
+    font-style: italic;
+}
+
+//== Badges
+.badge {
+    margin: 1px 2px 1px 0;
+}
+
+// Btn-link variations
+.btn-link {
+    font-weight: $btn-font-weight;
+
+    &.btn-secondary {
+        @include o-btn-link-variant($body-color, $headings-color);
+    }
+    &.btn-success, &.text-success {
+        @include o-btn-link-variant($body-color, theme-color('success'));
+    }
+    &.btn-warning, &.text-warning {
+        @include o-btn-link-variant($body-color, theme-color('warning'));
+    }
+    &.btn-danger, &.text-danger {
+        @include o-btn-link-variant($body-color, theme-color('danger'));
+    }
+    &.btn-info, &.text-info {
+        @include o-btn-link-variant($body-color, darken(theme-color('info'), 20%));
+    }
+}
+
+//== Printing improvements
+@media print {
+    .table-responsive {
+        overflow-x: initial;
+    }
+}
+
+//== Action manager
+// ensure special links are styled as pointers even when they don't
+// have an href
+[type="action"], [type="toggle"] {
+  cursor: pointer !important;
+}

@@ -1,88 +1,54 @@
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
-from openerp.tools.translate import _
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
-class CashBox(osv.osv_memory):
+class CashBox(models.TransientModel):
     _register = False
-    _columns = {
-        'name' : fields.char('Reason', required=True),
-        # Attention, we don't set a domain, because there is a journal_type key 
-        # in the context of the action
-        'amount' : fields.float('Amount',
-                                digits_compute = dp.get_precision('Account'),
-                                required=True),
-    }
 
-    def run(self, cr, uid, ids, context=None):
-        if not context:
-            context = dict()
+    name = fields.Char(string='Reason', required=True)
+    # Attention, we don't set a domain, because there is a journal_type key
+    # in the context of the action
+    amount = fields.Float(string='Amount', digits=0, required=True)
 
-        active_model = context.get('active_model', False) or False
-        active_ids = context.get('active_ids', []) or []
+    def run(self):
+        context = dict(self._context or {})
+        active_model = context.get('active_model', False)
+        active_ids = context.get('active_ids', [])
 
-        records = self.pool[active_model].browse(cr, uid, active_ids, context=context)
+        records = self.env[active_model].browse(active_ids)
 
-        return self._run(cr, uid, ids, records, context=context)
+        return self._run(records)
 
-    def _run(self, cr, uid, ids, records, context=None):
-        for box in self.browse(cr, uid, ids, context=context):
+    def _run(self, records):
+        for box in self:
             for record in records:
                 if not record.journal_id:
-                    raise osv.except_osv(_('Error!'),
-                                         _("Please check that the field 'Journal' is set on the Bank Statement"))
-                    
-                if not record.journal_id.internal_account_id:
-                    raise osv.except_osv(_('Error!'),
-                                         _("Please check that the field 'Internal Transfers Account' is set on the payment method '%s'.") % (record.journal_id.name,))
-
-                self._create_bank_statement_line(cr, uid, box, record, context=context)
-
+                    raise UserError(_("Please check that the field 'Journal' is set on the Bank Statement"))
+                if not record.journal_id.company_id.transfer_account_id:
+                    raise UserError(_("Please check that the field 'Transfer Account' is set on the company."))
+                box._create_bank_statement_line(record)
         return {}
 
-    def _create_bank_statement_line(self, cr, uid, box, record, context=None):
-        if record.state == 'confirm':
-            raise osv.except_osv(_('Error!'),
-                                 _("You cannot put/take money in/out for a bank statement which is closed."))
-        values = self._compute_values_for_statement_line(cr, uid, box, record, context=context)
-        return self.pool.get('account.bank.statement').write(cr, uid, [record.id], {'line_ids': [(0, False, values)]}, context=context)
-
-
-class CashBoxIn(CashBox):
-    _name = 'cash.box.in'
-
-    _columns = CashBox._columns.copy()
-    _columns.update({
-        'ref': fields.char('Reference'),
-    })
-
-    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
-        if not record.journal_id.internal_account_id.id:
-            raise osv.except_osv(_('Configuration Error'), _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
-        return {
-            'date': record.date,
-            'statement_id': record.id,
-            'journal_id': record.journal_id.id,
-            'amount': box.amount or 0.0,
-            'account_id': record.journal_id.internal_account_id.id,
-            'ref': '%s' % (box.ref or ''),
-            'name': box.name,
-        }
+    def _create_bank_statement_line(self, record):
+        for box in self:
+            if record.state == 'confirm':
+                raise UserError(_("You cannot put/take money in/out for a bank statement which is closed."))
+            values = box._calculate_values_for_statement_line(record)
+            record.write({'line_ids': [(0, False, values)]})
 
 
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
+    _description = 'Cash Box Out'
 
-    _columns = CashBox._columns.copy()
-
-    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
-        if not record.journal_id.internal_account_id.id:
-            raise osv.except_osv(_('Configuration Error'), _("You should have defined an 'Internal Transfer Account' in your cash register's journal!"))
-        amount = box.amount or 0.0
+    def _calculate_values_for_statement_line(self, record):
+        if not record.journal_id.company_id.transfer_account_id:
+            raise UserError(_("You have to define an 'Internal Transfer Account' in your cash register's journal."))
+        amount = self.amount or 0.0
         return {
             'date': record.date,
             'statement_id': record.id,
             'journal_id': record.journal_id.id,
-            'amount': -amount if amount > 0.0 else amount,
-            'account_id': record.journal_id.internal_account_id.id,
-            'name': box.name,
+            'amount': amount,
+            'account_id': record.journal_id.company_id.transfer_account_id.id,
+            'name': self.name,
         }

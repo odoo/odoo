@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="hr_skills_survey_assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/hr_skills_survey/static/src/scss/hr_skills.scss"/>
+        </xpath>
+    </template>
+
+    <record id="resume_survey_line_view_form" model="ir.ui.view">
+        <field name="name">hr.resume.line.form</field>
+        <field name="model">hr.resume.line</field>
+        <field name="inherit_id" ref="hr_skills.resume_line_view_form"/>
+        <field eval="20" name="priority"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_type_id']" position="after">
+                <field name="survey_id" attrs="{'invisible': [('display_type', '!=', 'certification')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -3,7 +3,7 @@
 
     <t t-name="SplitbillButton">
         <span class="control-button order-split">
-            <i class="fa fa-copy"></i>
+            <i class="fa fa-files-o"></i>
             Split
         </span>
     </t>
@@ -21,14 +21,14 @@
             <ul class="info-list">
                 <t t-if="line.get_quantity_str() !== '1'">
                     <li class="info">
-                        <t t-if='selected and line.get_unit().groupable'>
+                        <t t-if='selected and line.get_unit().is_pos_groupable'>
                             <em class='big'>
                                 <t t-esc='quantity' />
                             </em>
                             /
                             <t t-esc="line.get_quantity_str()" />
                         </t>
-                        <t t-if='!(selected and line.get_unit().groupable)'>
+                        <t t-if='!(selected and line.get_unit().is_pos_groupable)'>
                             <em>
                                 <t t-esc="line.get_quantity_str()" />
                             </em>
@@ -74,11 +74,9 @@
                         <span class='subtotal'><t t-esc='widget.format_currency(0.0)'/></span>
                     </div>
                     <div class='paymentmethods'>
-                        <t t-foreach="widget.pos.cashregisters" t-as="cashregister">
-                            <div class='button paymentmethod' t-att-data-id="cashregister.id">
-                                <t t-esc='cashregister.journal.name' />
-                            </div>
-                        </t>
+                        <div class='button payment'>
+                            <i class='fa fa-chevron-right' /> Payment
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import gamification
-import res_users
-import forum
+from . import forum
+from . import gamification
+from . import res_users
+from . import website

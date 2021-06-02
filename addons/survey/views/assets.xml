@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- survey assets  -->
+    <template id="survey_assets" name="Survey Results assets">
+        <script src="/web/static/lib/Chart/Chart.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
+
+        <script type="text/javascript" src="/survey/static/src/js/survey_result.js" />
+        <script type="text/javascript" src="/survey/static/src/js/survey.js" />
+        <script type="text/javascript" src="/survey/static/src/js/survey_timer.js" />
+
+        <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
+        <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"></link>
+        <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_templates.scss"/>
+    </template>
+
+    <template id="survey_report_assets_pdf" inherit_id="web.report_assets_pdf">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_reports.scss"/>
+        </xpath>
+    </template>
+
+    <template id="assets_backend" name="survey assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/survey/static/src/css/survey_result.css"/>
+            <script type="text/javascript" src="/survey/static/src/js/fields_section_one2many.js"/>
+        </xpath>
+    </template>
+
+    <template id="assets_backend_inherit_survey" inherit_id="web.assets_backend" name="Survey backend assets">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/survey/static/src/scss/survey_views.scss"/>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Survey Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/survey/static/tests/tours/certification_failure.js"></script>
+            <script type="text/javascript" src="/survey/static/tests/tours/certification_success.js"></script>
+            <script type="text/javascript" src="/survey/static/tests/tours/survey.js"></script>
+            <script type="text/javascript" src="/survey/static/tests/tours/survey_prefill.js"></script>
+        </xpath>
+    </template>
+</data>
+</odoo>

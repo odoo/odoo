@@ -1,98 +1,103 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2013-TODAY OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
-from openerp.addons.mail.tests.common import TestMail
+from odoo.tests.common import SavepointCase
+from odoo.exceptions import UserError
 
-
-class TestProjectBase(TestMail):
+class TestProjectBase(SavepointCase):
 
     @classmethod
     def setUpClass(cls):
         super(TestProjectBase, cls).setUpClass()
-        cr, uid = cls.cr, cls.uid
 
-        # Usefull models
-        cls.project_project = cls.registry('project.project')
-        cls.project_task = cls.registry('project.task')
-        cls.project_task_delegate = cls.registry('project.task.delegate')
+        user_group_employee = cls.env.ref('base.group_user')
+        user_group_project_user = cls.env.ref('project.group_project_user')
+        user_group_project_manager = cls.env.ref('project.group_project_manager')
 
-        # Find Project User group
-        cls.group_project_user_id = cls.env.ref('project.group_project_user').id or False
-
-        # Find Project Manager group
-        cls.group_project_manager_id = cls.env.ref('project.group_project_manager').id or False
-
-        # Test partners to use through the various tests
-        cls.project_partner_id = cls.res_partner.create(cr, uid, {
-            'name': 'Gertrude AgrolaitPartner',
-            'email': 'gertrude.partner@agrolait.com',
-        })
-        cls.email_partner_id = cls.res_partner.create(cr, uid, {
-            'name': 'Patrick Ratatouille',
-            'email': 'patrick.ratatouille@agrolait.com',
-        })
+        cls.partner_1 = cls.env['res.partner'].create({
+            'name': 'Valid Lelitre',
+            'email': 'valid.lelitre@agrolait.com'})
+        cls.partner_2 = cls.env['res.partner'].create({
+            'name': 'Valid Poilvache',
+            'email': 'valid.other@gmail.com'})
 
         # Test users to use through the various tests
-        cls.user_projectuser_id = cls.res_users.create(cr, uid, {
+        Users = cls.env['res.users'].with_context({'no_reset_password': True})
+        cls.user_public = Users.create({
+            'name': 'Bert Tartignole',
+            'login': 'bert',
+            'email': 'b.t@example.com',
+            'signature': 'SignBert',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]})
+        cls.user_portal = Users.create({
+            'name': 'Chell Gladys',
+            'login': 'chell',
+            'email': 'chell@gladys.portal',
+            'signature': 'SignChell',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]})
+        cls.user_projectuser = Users.create({
             'name': 'Armande ProjectUser',
             'login': 'Armande',
-            'alias_name': 'armande',
             'email': 'armande.projectuser@example.com',
-            'groups_id': [(6, 0, [cls.group_employee_id, cls.group_project_user_id])]
-        }, {'no_reset_password': True})
-        cls.user_projectmanager_id = cls.res_users.create(cr, uid, {
+            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
+        })
+        cls.user_projectmanager = Users.create({
             'name': 'Bastien ProjectManager',
             'login': 'bastien',
-            'alias_name': 'bastien',
             'email': 'bastien.projectmanager@example.com',
-            'groups_id': [(6, 0, [cls.group_employee_id, cls.group_project_manager_id])]
-        }, {'no_reset_password': True})
-        cls.user_none_id = cls.res_users.create(cr, uid, {
-            'name': 'Charlie Avotbonkeur',
-            'login': 'charlie',
-            'alias_name': 'charlie',
-            'email': 'charlie.noone@example.com',
-            'groups_id': [(6, 0, [])]
-        }, {'no_reset_password': True})
-        cls.user_projectuser = cls.res_users.browse(cr, uid, cls.user_projectuser_id)
-        cls.user_projectmanager = cls.res_users.browse(cr, uid, cls.user_projectmanager_id)
-        cls.partner_projectuser_id = cls.user_projectuser.partner_id.id
-        cls.partner_projectmanager_id = cls.user_projectmanager.partner_id.id
+            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_manager.id])]})
 
         # Test 'Pigs' project
-        cls.project_pigs_id = cls.project_project.create(cr, uid, {
+        cls.project_pigs = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs',
-            'privacy_visibility': 'public',
+            'privacy_visibility': 'employees',
             'alias_name': 'project+pigs',
-            'partner_id': cls.partner_raoul_id,
-        }, {'mail_create_nolog': True})
-
+            'partner_id': cls.partner_1.id})
         # Already-existing tasks in Pigs
-        cls.task_1_id = cls.project_task.create(cr, uid, {
+        cls.task_1 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs UserTask',
-            'user_id': cls.user_projectuser_id,
-            'project_id': cls.project_pigs_id,
-        }, {'mail_create_nolog': True})
-        cls.task_2_id = cls.project_task.create(cr, uid, {
+            'user_id': cls.user_projectuser.id,
+            'project_id': cls.project_pigs.id})
+        cls.task_2 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs ManagerTask',
-            'user_id': cls.user_projectmanager_id,
-            'project_id': cls.project_pigs_id,
-        }, {'mail_create_nolog': True})
+            'user_id': cls.user_projectmanager.id,
+            'project_id': cls.project_pigs.id})
+
+        # Test 'Goats' project, same as 'Pigs', but with 2 stages
+        cls.project_goats = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Goats',
+            'privacy_visibility': 'followers',
+            'alias_name': 'project+goats',
+            'partner_id': cls.partner_1.id,
+            'type_ids': [
+                (0, 0, {
+                    'name': 'New',
+                    'sequence': 1,
+                }),
+                (0, 0, {
+                    'name': 'Won',
+                    'sequence': 10,
+                })]
+            })
+
+    def format_and_process(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
+                           extra='', email_from='Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>',
+                           cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
+                           model=None, target_model='project.task', target_field='name'):
+        self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
+        mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
+        self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
+        return self.env[target_model].search([(target_field, '=', subject)])
+
+    def test_delete_project_with_tasks(self):
+        """User should never be able to delete a project with tasks"""
+
+        with self.assertRaises(UserError):
+            self.project_pigs.unlink()
+
+        # click on the archive button
+        self.project_pigs.write({'active': False})
+
+        with self.assertRaises(UserError):
+            self.project_pigs.unlink()

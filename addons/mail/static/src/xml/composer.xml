@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+     <div t-name="mail.Composer" t-attf-class="o_thread_composer #{widget.extended ? 'o_thread_composer_extended' : (widget.notInline ? '' : 'o_chat_inline_composer')} #{widget.isMini ? 'o_chat_mini_composer' : ''}">
+         <div t-if="widget.isMini || !widget.notInline" class="o_file_drop_zone_container d-none">
+            <h4>Drag Files Here <span class="fa fa-download"/></h4>
+         </div>
+         <div class="o_composer_container">
+             <img t-if="widget.avatarURL" height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar o_object_fit_cover rounded-circle" t-att-src="widget.avatarURL" alt="Avatar"/>
+             <div t-if="widget.extended" class="o_composer_subject">
+                 <input tabindex="1" type="text" placeholder="Subject" class="o_input"/>
+             </div>
+             <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
+                <div t-if="widget.notInline" class="o_file_drop_zone_container d-none">
+                    <h4>Drag Files Here <span class="fa fa-download"/></h4>
+                </div>
+                <div class="o_composer_input">
+                    <textarea class="o_input o_composer_text_field" tabindex="2" placeholder="Write something..."/>
+                    <div class="o_chatter_composer_tools">
+                        <button tabindex="4" class="btn btn-secondary fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover" title="Emojis" aria-label="Emojis"/>
+                        <button t-if="!widget.options.thread or widget.options.thread.getType() !== 'livechat'" tabindex="5" class="btn btn-secondary fa fa-paperclip o_composer_button_add_attachment" type="button" aria-label="Add attachment" title="Add attachment"/>
+                        <button t-if="widget.options.isMobile" tabindex="3" t-attf-class="btn #{widget.isMini ? 'btn-primary' : 'btn-secondary'} fa fa-paper-plane-o o_composer_button_send" type="button" title="Send" aria-label="Send"/>
+                    </div>
+                </div>
+             </div>
+             <div class="o_composer_attachments_list"/>
+             <div class="o_composer_thread_typing"/>
+         </div>
+         <div class="o_composer_send">
+             <button tabindex="3" class="btn btn-primary o_composer_button_send d-none d-md-inline-block" type="button"><t t-esc="widget.options.sendText"/></button>
+             <button tabindex="3" class="btn btn-secondary o_composer_button_discard d-none" type="button">Discard</button>
+         </div>
+         <span class="d-none">
+            <t t-call="HiddenInputFile">
+                <t t-set="fileupload_id" t-value="widget.fileuploadID"/>
+                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                <t t-set="multi_upload" t-value="true"/>
+                <input type="hidden" name="model" value="mail.compose.message"/>
+                <input type="hidden" name="id" value="0"/>
+            </t>
+         </span>
+    </div>
+
+    <!--
+        @param {mail.model.Thread} thread
+    -->
+    <t t-name="mail.Composer.ThreadTyping">
+        <t t-esc="thread.getTypingMembersToText()"/>
+    </t>
+
+    <div t-name="mail.Composer.emojis" class="o_mail_emoji_container">
+        <t t-foreach="emojis" t-as="emoji">
+            <span t-att-data-emoji="emoji.sources[0]" class="o_mail_emoji" t-att-title="emoji.description" t-att-aria-label="emoji.description">
+                <t t-raw="emoji.unicode"/>
+            </span>
+        </t>
+    </div>
+
+    <!--
+        @param {Object[]} suggestions
+        @param {boolean} [suggestions.divider=false]
+    -->
+    <t t-name="mail.MentionSuggestions">
+        <div class="dropdown-menu" role="menu">
+            <t t-foreach="suggestions" t-as="suggestion">
+                <div role="separator" t-if="suggestion.divider" class="dropdown-divider"/>
+                <a t-else="" href="#" class="dropdown-item o_mention_proposition" t-att-data-id="suggestion.id" role="menuitem"/>
+            </t>
+        </div>
+    </t>
+    <t t-name="mail.MentionSuggestions.Partner" t-extend="mail.MentionSuggestions">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
+            <t t-call="mail.UserStatus">
+                <t t-set="status" t-value="suggestion.im_status"/>
+                <t t-set="partnerID" t-value="suggestion.id"/>
+            </t>
+            <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
+            <t t-if="suggestion.email">
+                <span class="o_mention_info">(<t t-esc="suggestion.email"/>)</span>
+            </t>
+        </t>
+    </t>
+    <t t-name="mail.MentionSuggestions.Channel" t-extend="mail.MentionSuggestions">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
+            <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
+        </t>
+    </t>
+    <t t-name="mail.MentionSuggestions.CannedResponse" t-extend="mail.MentionSuggestions">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
+            <span class="o_mention_name"><t t-esc="suggestion.source"/></span>
+            <span class="o_mention_info"><t t-esc="suggestion.substitution"/></span>
+        </t>
+    </t>
+    <t t-name="mail.MentionSuggestions.Command" t-extend="mail.MentionSuggestions">
+        <t t-jquery=".o_mention_proposition" t-operation="append">
+            <span class="o_mention_name">/<t t-esc="suggestion.name"/></span>
+            <span class="o_mention_info"><t t-esc="suggestion.help"/></span>
+        </t>
+    </t>
+
+    <t t-name="FieldMany2ManyTagsEmail" t-extend="FieldMany2ManyTag">
+        <t t-jquery="[t-attf-class*=badge]" t-operation="replace">
+            <div t-attf-class="badge badge-pill dropdown o_tag_color_0 #{el.email.indexOf('@') &lt; 0 ? 'o_tag_error' : ''}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+                <span class="o_badge_text" t-att-title="el.email"><t t-esc="el.display_name"/></span>
+                <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
+            </div>
+        </t>
+    </t>
+</templates>

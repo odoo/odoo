@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="sms_cancel" model="ir.ui.view">
+        <field name="name">sms.cancel.form</field>
+        <field name="model">sms.cancel</field>
+        <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+        <field name="arch" type="xml">
+            <form string="Cancel notification in failure">
+                <field name="model" invisible='1'/>
+                <field name="help_message"/>
+                <p>If you want to re-send them, click Cancel now, then click on the notification and review them one by one by clicking on the red icon next to each message.</p>
+                <footer>  
+                    <button string="Discard delivery failures" name="action_cancel" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_cancel_action" model="ir.actions.act_window">
+        <field name="name">Discard SMS delivery failures</field>
+        <field name="res_model">sms.cancel</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</data></odoo>

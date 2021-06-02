@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_products_searchbar_input" name="Products Search Input">
+    <t t-call="website_sale.website_sale_products_search_box">
+        <t t-set="_classes" t-value="'s_wsale_products_searchbar_input mb-3'"/>
+    </t>
+</template>
+<template id="s_products_searchbar" name="Products Search">
+    <section class="s_wsale_products_searchbar bg-200 pt24 pb24">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Search for a product</h2>
+                            <p>We have amazing products in our shop, check them now !</p>
+                            <t t-call="website_sale.s_products_searchbar_input"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_products_recently_viewed" name="Products Recently Viewed">
+    <section class="s_wsale_products_recently_viewed d-none pt24 pb24" style="min-height: 400px;">
+        <div class="container">
+            <div class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_non_editable_mode_hidden o_not_editable">
+                This is a preview of the recently viewed products by the user.<br/>
+                Once the user has seen at least one product this snippet will be visible.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"> × </button>
+            </div>
+
+            <h3 class="text-center mb32">Recently viewed Products</h3>
+            <div class="slider o_not_editable" style="display: none;"/> <!-- TODO master: remove deprecated inline style -->
+        </div>
+    </section>
+</template>
+
+<template id="snippets" inherit_id="website.snippets" name="e-commerce snippets">
+    <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_sale.s_products_searchbar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
+        <t t-snippet="website_sale.s_products_recently_viewed" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_recently_viewed.png"/>
+    </xpath>
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_sale.s_products_searchbar_input" t-thumbnail="/website/static/src/img/snippets_thumbs/s_products_searchbar.png"/>
+    </xpath>
+</template>
+
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_sale'][@id='s_products_searchbar']" position="replace"/>
+    <xpath expr="//t[@t-install='website_sale'][@id='s_products_searchbar_input']" position="replace"/>
+    <xpath expr="//t[@t-install='website_sale'][@id='s_products_recently_viewed']" position="replace"/>
+</template>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="e-commerce snippet options">
+    <xpath expr="." position="inside">
+        <div data-js="WebsiteSaleGridLayout"
+            data-selector="#products_grid .o_wsale_products_grid_table_wrapper > table"
+            data-no-check="true">
+            <we-button data-no-preview="true" data-choose-ppg="1">
+                <i class="fa fa-cart-plus"/> Choose number of products
+            </we-button>
+            <we-collapse-area class="o_wsale_ppr_submenu">
+                <we-toggler>
+                    <i class="fa fa-columns"/> Number of Columns
+                </we-toggler>
+                <we-collapse data-no-preview="true">
+                    <we-button data-set-ppr="2">2</we-button>
+                    <we-button data-set-ppr="3">3</we-button>
+                    <we-button data-set-ppr="4">4</we-button>
+                </we-collapse>
+            </we-collapse-area>
+        </div>
+
+        <div data-js="WebsiteSaleProductsItem"
+            data-selector="#products_grid .oe_product"
+            data-no-check="true">
+            <we-collapse-area>
+                <we-toggler>Size</we-toggler>
+                <we-collapse class="o_wsale_soptions_menu_sizes">
+                    <table>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                        <tr>
+                            <td/><td/><td/><td/>
+                        </tr>
+                    </table>
+                </we-collapse>
+            </we-collapse-area>
+            <we-collapse-area>
+                <we-toggler>Styles</we-toggler>
+                <we-collapse data-no-preview="true" name="style"/>
+            </we-collapse-area>
+            <we-collapse-area>
+                <we-toggler>Promote</we-toggler>
+                <we-collapse data-no-preview="true">
+                    <we-button data-change-sequence="top">Push to top</we-button>
+                    <we-button data-change-sequence="up">Push up</we-button>
+                    <we-button data-change-sequence="down">Push down</we-button>
+                    <we-button data-change-sequence="bottom">Push to bottom</we-button>
+                </we-collapse>
+            </we-collapse-area>
+        </div>
+
+        <div data-js="ProductsSearchBar"
+            data-selector=".s_wsale_products_searchbar_input">
+            <we-button data-no-preview="true" data-open-searchbar-settings="">
+                <i class="fa fa-search"/> Products Search Bar
+            </we-button>
+        </div>
+
+        <!-- TODO remove me in master -->
+        <div data-js="ProductsRecentlyViewed"
+            data-selector=".s_wsale_products_recently_viewed">
+        </div>
+    </xpath>
+    <xpath expr="//div[@id='so_content_addition']" position="attributes">
+        <attribute name="data-selector" add=".s_wsale_products_searchbar_input" separator=","/>
+        <attribute name="data-drop-near" add=".s_wsale_products_searchbar_input" separator=","/>
+    </xpath>
+</template>
+
+</odoo>

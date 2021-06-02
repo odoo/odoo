@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="payment.payment_acquirer_adyen" model="payment.acquirer">
+            <field name="name">Adyen</field>
+            <field name="image_128" type="base64" file="payment_adyen/static/src/img/adyen_icon.png"/>
+            <field name="provider">adyen</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="adyen_form"/>
+        </record>
+
+    </data>
+</odoo>

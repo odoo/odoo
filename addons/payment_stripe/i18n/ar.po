@@ -1,0 +1,178 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_stripe
+# 
+# Translators:
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# Yihya Hugirat <hugirat@gmail.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2019\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#, python-format
+msgid "&times;"
+msgstr "&times;"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
+msgid ""
+"A relative or absolute URL pointing to a square image of your brand or "
+"product. As defined in your Stripe profile. See: "
+"https://stripe.com/docs/checkout"
+msgstr ""
+"رابط ويب نسبي أو مطلق يشير لصورة مربعة لعلامتك التجارية أو منتجك. كما قمت "
+"بتعريفه في ملفك الشخصي على Stripe. راجع: https://stripe.com/docs/checkout"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
+msgid "Checkout Image URL"
+msgstr "رابط صورة تسجيل الخروج"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#, python-format
+msgid "Close"
+msgstr "إغلاق"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#, python-format
+msgid "Error"
+msgstr "خطأ"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:0
+#, python-format
+msgid "Just one more second, We are redirecting you to Stripe..."
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "معالج السداد"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
+msgid "Payment Method ID"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_token
+msgid "Payment Token"
+msgstr "كلمة سر السداد"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة السداد"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:0
+#, python-format
+msgid "Payment error"
+msgstr "خطأ في عملية السداد"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid ""
+"Perhaps the problem can be solved by double-checking your credit card "
+"details, or contacting your bank?"
+msgstr ""
+"ربما يمكن حل المشكلة بالتحقق من بيانات بطاقتك الائتمانية، أو التواصل مع "
+"البنك؟"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "المزود"
+
+#. module: payment_stripe
+#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
+msgid "Stripe Payment Intent ID"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
+msgid "Stripe Payment Intent Secret"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
+msgid "Stripe Publishable Key"
+msgstr "مفتاح Stripe القابل للنشر"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
+msgid "Stripe Secret Key"
+msgstr "مفتاح Stripe السري"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid "Stripe gave us the following info about the problem: '%s'"
+msgstr "أرسل إلينا Stripe هذه المعلومات عن المشكلة: '%s'"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid "Stripe: %s orders found for reference %s"
+msgstr "Stripe: تم العثور على %s طلبات لرقم الإشارة %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid "Stripe: no order found for reference %s"
+msgstr "Stripe: لم يُعثر على طلبات لرقم الإشارة %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid ""
+"Unable to convert Stripe customer for SCA compatibility. Is there at least "
+"one card for this customer in the Stripe backend?"
+msgstr ""
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "Unable to save card"
+msgstr ""
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/payment_form.js:0
+#, python-format
+msgid "We are not able to add your payment method at the moment. "
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:0
+#, python-format
+msgid "We're sorry to report that the transaction has failed."
+msgstr "نأسف لإبلاغكم بفشل المعاملة."

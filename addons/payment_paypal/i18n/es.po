@@ -1,17 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_paypal
+# 	* payment_paypal
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Martin Trigaux, 2019
+# Jesse Garza <jga@odoo.com>, 2019
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:44+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-8/language/es/)\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,36 +24,80 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_paypal
-#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
 msgid ""
-"<p>You will be redirected to the Paypal website after clicking on the "
-"payment button.</p>"
-msgstr "<p>Serás redirigido a la página web de Paypal después de hacer clic an el botón de pago.</p>"
+"<br/><br/>\n"
+"                Thanks,<br/>\n"
+"                <b>The Odoo Team</b>"
+msgstr ""
+"<br/><br/>\n"
+"                Gracias,<br/>\n"
+"                <b>El Equipo Odoo</b>"
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_api_access_token:0
-msgid "Access Token"
-msgstr "Token de acceso"
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Add your Paypal account to Odoo"
+msgstr "Agregue su cuenta de Paypal a Odoo"
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_api_access_token_validity:0
-msgid "Access Token Validity"
-msgstr "Validez del token de acceso"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid "Email"
+msgstr "Correo electrónico"
 
 #. module: payment_paypal
-#: model:ir.model,name:payment_paypal.model_res_company
-msgid "Companies"
-msgstr "Compañías"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Comisiones nacionales fijas"
 
 #. module: payment_paypal
-#: view:account.config.settings:payment_paypal.payment_paypal_option_config
-msgid "Configure payment acquiring methods"
-msgstr "Configurar los métodos de pago"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Comisiones internacionales fijas"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through PayPal.<br/>\n"
+"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
+"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
+msgstr ""
+"Hola,\n"
+"                <br/><br/>\n"
+"                Ha recibido un pago a través de PayPal.<br/>\n"
+"                Siga amablemente las instrucciones dadas por PayPal para crear su cuenta.<br/>\n"
+"                Luego, ayúdenos a completar sus credenciales de Paypal en Odoo.<br/><br/>"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
+msgid "How to configure your paypal account?"
+msgstr "¿Cómo configurar su cuenta de Paypal?"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid "Merchant Account ID"
+msgstr "ID de la cuenta del comerciante"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr "Token de identidad PDT"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Método de pago"
+msgstr "Método de Pago"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid ""
+"Payment Data Transfer allows you to receive notification of successful "
+"payments as they are made."
+msgstr ""
+"La transferencia de datos de pago le permite recibir notificación de los "
+"pagos realizados cuando estos se han hecho."
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
@@ -56,58 +105,56 @@ msgid "Payment Transaction"
 msgstr "Transacción de pago"
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_email_account:0
-msgid "Paypal Email ID"
-msgstr "Email ID de Paypal"
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
+msgid "Paypal"
+msgstr "Paypal"
 
 #. module: payment_paypal
-#: help:payment.acquirer,paypal_use_ipn:0
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Paypal Instant Payment Notification"
 msgstr "Notificación de pago instantáneo de Paypal"
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_seller_account:0
-msgid "Paypal Merchant ID"
-msgstr "ID de comerciante de Paypal"
+#: code:addons/payment_paypal/models/payment.py:0
+#, python-format
+msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
+msgstr "Paypal: datos recibidos con referencia faltante (%s) o txn_id (%s)"
 
 #. module: payment_paypal
-#: view:payment.transaction:payment_paypal.transaction_form_paypal
-msgid "Paypal TX Details"
-msgstr "Detalles de transmisión de Paypal"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Proveedor"
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_api_password:0
-msgid "Rest API Password"
-msgstr "Contraseña de la API Rest"
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid "Set Paypal credentials"
+msgstr "Establecer credenciales de Paypal"
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_api_username:0
-msgid "Rest API Username"
-msgstr "Usuario de la API Rest"
-
-#. module: payment_paypal
-#: help:payment.acquirer,paypal_seller_account:0
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
 msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
-msgstr "El ID de comerciante  se usa para asegurar que las comunicaciones que provienen de Paypal son válidas y seguras."
+msgstr ""
+"El ID de comerciante  se usa para asegurar que las comunicaciones que "
+"provienen de Paypal son válidas y seguras."
 
 #. module: payment_paypal
-#: field:payment.transaction,paypal_txn_id:0
-msgid "Transaction ID"
-msgstr "ID de la transacción"
-
-#. module: payment_paypal
-#: field:payment.transaction,paypal_txn_type:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
 msgid "Transaction type"
 msgstr "Tipo de transacción"
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_use_ipn:0
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Use IPN"
-msgstr "Usar IPN"
+msgstr "Usar Notificación de Pago Instantánea"
 
 #. module: payment_paypal
-#: field:payment.acquirer,paypal_api_enabled:0
-msgid "Use Rest API"
-msgstr "Usar API Rest"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Comisiones nacionales variables (en porcentaje)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Comisiones internacionales variables (en porcentaje)"

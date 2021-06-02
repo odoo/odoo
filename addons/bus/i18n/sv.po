@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * bus
+# 	* bus
 # 
 # Translators:
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2015
-# Christelle Wehbe <libanon_cristelle@hotmail.com>, 2015
+# Martin Trigaux, 2019
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
+# Moa Nicklasson <Moa.nicklasson@hotmail.se>, 2019
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:54+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
-"Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2019\n"
+"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,36 +23,118 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: bus
-#: field:bus.bus,channel:0
+#: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
+msgid "A user can only have one IM status."
+msgstr "En användare kan bara ha en IM-status."
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
+msgid "Away"
+msgstr "Borta"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__channel
 msgid "Channel"
 msgstr "Kanal"
 
 #. module: bus
-#: field:bus.bus,create_date:0
-msgid "Create date"
-msgstr "Registreringsdatum"
+#: model:ir.model,name:bus.model_bus_bus
+msgid "Communication Bus"
+msgstr ""
 
 #. module: bus
-#: field:bus.bus,create_uid:0
+#: model:ir.model,name:bus.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "Skapad av"
 
 #. module: bus
-#: field:bus.bus,id:0
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Created on"
+msgstr "Skapad den"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
+msgid "Display Name"
+msgstr "Visningsnamn"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__id
+#: model:ir.model.fields,field_description:bus.field_bus_presence__id
 msgid "ID"
 msgstr "ID"
 
 #. module: bus
-#: field:bus.bus,write_uid:0
+#: model:ir.model.fields,field_description:bus.field_bus_presence__status
+#: model:ir.model.fields,field_description:bus.field_res_partner__im_status
+#: model:ir.model.fields,field_description:bus.field_res_users__im_status
+msgid "IM Status"
+msgstr "IM-status"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
+#: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
+msgid "Last Modified on"
+msgstr "Senast redigerad"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
+msgid "Last Poll"
+msgstr "Senaste undersökning"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_presence__last_presence
+msgid "Last Presence"
+msgstr "Sågs senast"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
 
 #. module: bus
-#: field:bus.bus,write_date:0
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
 msgstr "Senast uppdaterad"
 
 #. module: bus
-#: field:bus.bus,message:0
+#: model:ir.model.fields,field_description:bus.field_bus_bus__message
 msgid "Message"
 msgstr "Meddelande"
+
+#. module: bus
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
+msgid "Offline"
+msgstr "Offline"
+
+#. module: bus
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
+msgid "Online"
+msgstr "Uppkopplad"
+
+#. module: bus
+#: model:ir.model,name:bus.model_bus_presence
+msgid "User Presence"
+msgstr "Användarens närvaro/status"
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_users
+#: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
+msgid "Users"
+msgstr "Användare"
+
+#. module: bus
+#: code:addons/bus/controllers/main.py:0
+#, python-format
+msgid "bus.Bus not available in test mode"
+msgstr ""

@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<odoo>
+  <data noupdate="1">
+    <record id="note_1" model="note.note">
+      <field name="name">Customer report #349872</field>
+      <field name="memo"><![CDATA[<p><b>Customer report #349872</b></p>
+    <p><br/></p>
+    <p>* Calendar app in Home</p>
+    <p>*  The calendar module should create a menu in Home, like described above.</p>
+    <p>*  This module should become a main application (in the first screen at installation)</p>
+    <p>*  We should use the term Calendar, not Meeting.</p>]]>
+      </field>
+      <field name="user_id" ref="base.user_demo"/>
+      <field name="color">2</field>
+    </record>
+
+    <record id="note_2" model="note.note">
+      <field name="memo"><![CDATA[<p><b>Call Raoulette</b></p>
+    <p><br/></p>
+    <p>* Followed by the telephone conversation and mail about D.544.3</p>]]>
+      </field>
+      <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <record id="note_4" model="note.note">
+      <field name="memo"><![CDATA[<p><b>Project N.947.5</b></p>]]>
+      </field>
+      <field name="stage_id" ref="note_stage_02"/>
+      <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="note_5" model="note.note">
+      <field name="memo"><![CDATA[<p><b>Shop for family dinner</b></p>
+      <p>* stuffed turkey</p>
+      <p>* wine</p>]]>
+      </field>
+      <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <record id="note_6" model="note.note">
+      <field name="memo"><![CDATA[<p><b>Idea to develop</b></p>
+    <p><br/></p>
+    <p>* Create a module note_pad
+    it transforms the html editable memo text field into widget='pad', similar to project_pad depends on 'memo' and 'pad' modules</p>]]>
+      </field>
+      <field name="stage_id" ref="note_stage_02"/>
+      <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="note_8" model="note.note">
+      <field name="memo"><![CDATA[<p><b>New computer specs</b></p>
+      <p><br/></p>
+      <p>* Motherboard
+      according to processor
+      </p><p>* Processor
+      need to decide
+      </p><p>* Graphic card
+      with great performance for games !
+      </p><p>* Hard drive
+      big, for lot of internet backups
+      </p><p>* Tower
+      silent, better when watching films
+      </p><p>* Blueray drive ?
+      is it interesting yet ?
+      </p><p>* Screen
+      a big one, full of pixels, of course !</p>]]>
+      </field>
+      <field name="stage_id" ref="note_stage_03"/>
+      <field name="color">3</field>
+      <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="note_9" model="note.note">
+      <field name="memo"><![CDATA[<p><b>Read those books</b></p>
+      <p><br/></p>
+      <p>* Odoo: a modern approach to integrated business management</p>
+      <p>* Odoo for Retail and Industrial Management</p>]]>
+      </field>
+      <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <record id="note_12" model="note.note">
+      <field name="memo"><![CDATA[<p><b>Read some documentation about Odoo before diving into the code</b></p>
+      <p><br/></p>
+      <p>* Odoo: a modern approach to integrated business management</p>
+      <p>* Odoo for Retail and Industrial Management</p>]]>
+      </field>
+      <field name="color">7</field>
+      <field name="stage_ids" eval="[(6,0,[ref('note_stage_03')])]"/>
+      <field name="user_id" ref="base.user_admin"/>
+    </record>
+
+  </data>
+</odoo>

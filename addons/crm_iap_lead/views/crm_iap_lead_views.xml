@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_iap_lead_mining_request_form" model="ir.ui.view">
+        <field name="name">crm.iap.lead.mining.request.form</field>
+        <field name="model">crm.iap.lead.mining.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object"
+                            string="Submit" states="draft"
+                            class="oe_highlight" invisible="context.get('is_modal')"/>
+                    <button name="action_submit" type="object"
+                            string="Retry" states="error"
+                            class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done" invisible="context.get('is_modal')"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_opportunity_action" class="oe_stat_button" type="object" icon="fa-handshake-o"
+                                attrs="{'invisible': ['|', '|', ('lead_type', '!=', 'opportunity'), ('state', '!=' , 'done')]}">
+                            <div class="o_stat_info">
+                                <field name="leads_count"/>
+                                <span class="o_stat_text">Opportunities</span>
+                            </div>
+                        </button>
+                        <button name="action_get_lead_action" class="oe_stat_button" type="object" icon="fa-handshake-o" groups="crm.group_use_lead"
+                                attrs="{'invisible': ['|', '|', ('lead_type', '!=', 'lead'), ('state', '!=' , 'done')]}">
+                            <div class="o_stat_info">
+                                <field name="leads_count"/>
+                                <span class="o_stat_text">Leads</span>
+                            </div>
+                        </button>
+                    </div>
+                    <span invisible="context.get('is_modal')">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="oe_title">
+                                    <h1>
+                                        <field name="name"/>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    <group>
+                        <group name="requests" string="Request">
+                            <field name="lead_number" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="search_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="error" attrs="{'invisible': [('state', '!=', 'error')]}"/>
+                        </group>
+                        <group name="lead_info" string="Lead Information">
+                            <field name="lead_type" groups="crm.group_use_lead" invisible="context.get('is_modal')" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="team_id" attrs="{'readonly': [('state', '!=', 'draft')]}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                            <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="tag_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="companies" string="Companies">
+                            <field name="filter_on_size" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
+                            <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
+                                From
+                                <field name="company_size_min" class="oe_inline col-sm-3" attrs="{'required': [('filter_on_size', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
+                                to
+                                <field name="company_size_max" class="oe_inline col-sm-3" attrs="{'required': [('filter_on_size', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
+                                employees
+                            </div>
+                            <field name="country_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" required="True" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])], 'readonly': [('state', '!=', 'draft')]}" domain="[('country_id', 'in', country_ids)]" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group name="contacts" string="Contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                            <field name="contact_number" attrs="{'readonly': [('state', '!=', 'draft')], 'required': [('search_type', '=', 'people')]}"/>
+                            <field name="contact_filter_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="preferred_role_id"
+                                   options="{'no_create_edit': True, 'no_quick_create': True}"
+                                   attrs="{'invisible': [('contact_filter_type','!=', 'role')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'role')], 'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="role_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"
+                                   attrs="{'invisible': ['|', ('preferred_role_id','=', False), ('contact_filter_type','!=', 'role')], 'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True}"
+                                   attrs="{'invisible': [('contact_filter_type', '!=', 'seniority')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'seniority')], 'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="alert alert-info" role="alert">
+                                <field name="lead_credits"/>
+                                <br/>
+                                <span attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                                    <field name="lead_contacts_credits"/>
+                                    <br/>
+                                    <field name="lead_total_credits"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-info" role="alert"
+                                 attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                                Make sure you know if you have to be GDPR compliant for storing personal data.
+                            </div>
+                        </div>
+                    </div>
+                    <footer>
+                        <button string="Submit" name="action_submit" type="object" default_focus="1" class="btn-primary" invisible="not context.get('is_modal')"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" invisible="not context.get('is_modal')"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_iap_lead_mining_request_tree" model="ir.ui.view">
+        <field name="name">crm.iap.lead.mining.request.tree</field>
+        <field name="model">crm.iap.lead.mining.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="lead_number"/>
+                <field name="lead_type"/>
+                <field name="search_type"/>
+                <field name="country_ids" widget="many2many_tags"/>
+                <field name="team_id"/>
+                <field name="user_id"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="state" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_iap_lead_mining_request_search" model="ir.ui.view">
+        <field name="name">crm.iap.lead.mining.request.search</field>
+        <field name="model">crm.iap.lead.mining.request</field>
+        <field name="arch" type="xml">
+            <search string="Lead Mining Request">
+                <field name="name"/>
+                <field name="team_id"/>
+                <field name="user_id"/>
+                <field name="tag_ids"/>
+                <filter name="state_is_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="state_is_done" string="Done" domain="[('state', '=', 'done')]"/>
+                <filter name="state_is_error" string="Error" domain="[('state', '=', 'error')]"/>
+                <separator/>
+                <filter name="type_is_lead" string="Leads" domain="[('lead_type', '=', 'lead')]"/>
+                <filter name="type_is_opportunity" string="Opportunities" domain="[('lead_type', '=', 'opportunity')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Type" name="groupby_lead_type" domain="[]" context="{'group_by':'lead_type'}"/>
+                    <filter string="Sales Team" name="groupby_team_id" domain="[]" context="{'group_by':'team_id'}"/>
+                    <filter string="Salesperson" name="groupby_user_id" domain="[]" context="{'group_by':'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="crm_iap_lead_mining_request_action" model="ir.actions.act_window">
+        <field name="name">Lead Mining Requests</field>
+        <field name="res_model">crm.iap.lead.mining.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- This menu is display in CRM app when crm_iap_lead is installed-->
+    <menuitem
+        id="crm_menu_lead_generation"
+        name="Lead Generation"
+        parent="crm.crm_menu_config"
+        sequence="20"/>
+
+    <menuitem
+        id="crm_iap_lead_mining_request_menu_action"
+        action="crm_iap_lead_mining_request_action"
+        parent="crm_menu_lead_generation"
+        sequence="0"/>
+
+</odoo>

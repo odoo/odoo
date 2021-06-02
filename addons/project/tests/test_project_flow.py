@@ -1,34 +1,19 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Business Applications
-#    Copyright (c) 2013-TODAY OpenERP S.A. <http://www.openerp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import base64
 
 from .test_project_base import TestProjectBase
-from openerp.exceptions import AccessError
-from openerp.tools import mute_logger
+from odoo.tools import mute_logger
+from odoo.modules.module import get_resource_path
 
 
 EMAIL_TPL = """Return-Path: <whatever-2a840@postmaster.twitter.com>
-X-Original-To: {email_to}
-Delivered-To: {email_to}
-To: {email_to}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+X-Original-To: {to}
+Delivered-To: {to}
+To: {to}
+cc: {cc}
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 Message-ID: {msg_id}
 Date: Tue, 29 Nov 2011 12:43:21 +0530
@@ -51,113 +36,159 @@ Integrator at Agrolait"""
 
 class TestProjectFlow(TestProjectBase):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
-    def test_00_project_process(self):
-        """ Testing project management """
-        cr, uid, user_projectuser_id, user_projectmanager_id, project_pigs_id = self.cr, self.uid, self.user_projectuser_id, self.user_projectmanager_id, self.project_pigs_id
+    def test_project_process_project_manager_duplicate(self):
+        pigs = self.project_pigs.with_user(self.user_projectmanager)
+        dogs = pigs.copy()
+        self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 
-        # ProjectUser: set project as template -> raise
-        self.assertRaises(AccessError, self.project_project.set_template, cr, user_projectuser_id, [project_pigs_id])
-
-        # Other tests are done using a ProjectManager
-        project = self.project_project.browse(cr, user_projectmanager_id, project_pigs_id)
-        self.assertNotEqual(project.state, 'template', 'project: incorrect state, should not be a template')
-
-        # Set test project as template
-        self.project_project.set_template(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'template', 'project: set_template: project state should be template')
-        self.assertEqual(len(project.tasks), 0, 'project: set_template: project tasks should have been set inactive')
-
-        # Duplicate template
-        new_template_act = self.project_project.duplicate_template(cr, user_projectmanager_id, [project_pigs_id])
-        new_project = self.project_project.browse(cr, user_projectmanager_id, new_template_act['res_id'])
-        self.assertEqual(new_project.state, 'open', 'project: incorrect duplicate_template')
-        self.assertEqual(len(new_project.tasks), 2, 'project: duplicating a project template should duplicate its tasks')
-
-        # Convert into real project
-        self.project_project.reset_project(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'open', 'project: resetted project should be in open state')
-        self.assertEqual(len(project.tasks), 2, 'project: reset_project: project tasks should have been set active')
-
-        # Put as pending
-        self.project_project.set_pending(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'pending', 'project: should be in pending state')
-
-        # Re-open
-        self.project_project.set_open(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'open', 'project: reopened project should be in open state')
-
-        # Close project
-        self.project_project.set_done(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-        self.assertEqual(project.state, 'close', 'project: closed project should be in close state')
-
-        # Re-open
-        self.project_project.set_open(cr, user_projectmanager_id, [project_pigs_id])
-        project.refresh()
-
-        # Re-convert into a template and schedule tasks
-        self.project_project.set_template(cr, user_projectmanager_id, [project_pigs_id])
-        self.project_project.schedule_tasks(cr, user_projectmanager_id, [project_pigs_id])
-
-        # Copy the project
-        new_project_id = self.project_project.copy(cr, user_projectmanager_id, project_pigs_id)
-        new_project = self.project_project.browse(cr, user_projectmanager_id, new_project_id)
-        self.assertEqual(len(new_project.tasks), 2, 'project: copied project should have copied task')
-
-        # Cancel the project
-        self.project_project.set_cancel(cr, user_projectmanager_id, [project_pigs_id])
-        self.assertEqual(project.state, 'cancelled', 'project: cancelled project should be in cancel state')
-
-    def test_10_task_process(self):
-        """ Testing task creation and management """
-        cr, uid, user_projectuser_id, user_projectmanager_id, project_pigs_id = self.cr, self.uid, self.user_projectuser_id, self.user_projectmanager_id, self.project_pigs_id
-
-        def format_and_process(template, email_to='project+pigs@mydomain.com, other@gmail.com', subject='Frogs',
-                               email_from='Patrick Ratatouille <patrick.ratatouille@agrolait.com>',
-                               msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>'):
-            self.assertEqual(self.project_task.search(cr, uid, [('name', '=', subject)]), [])
-            mail = template.format(email_to=email_to, subject=subject, email_from=email_from, msg_id=msg_id)
-            self.mail_thread.message_process(cr, uid, None, mail)
-            return self.project_task.search(cr, uid, [('name', '=', subject)])
-
+    @mute_logger('odoo.addons.mail.mail_thread')
+    def test_task_process_without_stage(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Frogs'
-        frogs = format_and_process(EMAIL_TPL)
+        task = self.format_and_process(
+            EMAIL_TPL, to='project+pigs@mydomain.com, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
+            email_from='%s' % self.user_projectuser.email,
+            subject='Frogs', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
+            target_model='project.task')
 
         # Test: one task created by mailgateway administrator
-        self.assertEqual(len(frogs), 1, 'project: message_process: a new project.task should have been created')
-        task = self.project_task.browse(cr, user_projectuser_id, frogs[0])
-        res = self.project_task.get_metadata(cr, uid, [task.id])[0].get('create_uid') or [None]
-        self.assertEqual(res[0], uid,
-                         'project: message_process: task should have been created by uid as alias_user_id is False on the alias')
+        self.assertEqual(len(task), 1, 'project: message_process: a new project.task should have been created')
+        # Test: check partner in message followers
+        self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
         # Test: messages
-        self.assertEqual(len(task.message_ids), 3,
-                         'project: message_process: newly created task should have 2 messages: creation and email')
-        self.assertEqual(task.message_ids[2].subtype_id.name, 'Task Created',
+        self.assertEqual(len(task.message_ids), 1,
+                         'project: message_process: newly created task should have 1 message: email')
+        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
                          'project: message_process: first message of new task should have Task Created subtype')
-        self.assertEqual(task.message_ids[1].subtype_id.name, 'Task Assigned',
-                         'project: message_process: first message of new task should have Task Created subtype')
-        self.assertEqual(task.message_ids[0].author_id.id, self.email_partner_id,
+        self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
                          'project: message_process: second message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Frogs',
                          'project: message_process: second message should be the one from Agrolait (subject failed)')
         # Test: task content
         self.assertEqual(task.name, 'Frogs', 'project_task: name should be the email subject')
-        self.assertEqual(task.project_id.id, self.project_pigs_id, 'project_task: incorrect project')
-        self.assertEqual(task.stage_id.sequence, 1, 'project_task: should have a stage with sequence=1')
+        self.assertEqual(task.project_id.id, self.project_pigs.id, 'project_task: incorrect project')
+        self.assertEqual(task.stage_id.sequence, False, "project_task: shouldn't have a stage, i.e. sequence=False")
 
-        # Open the delegation wizard
-        delegate_id = self.project_task_delegate.create(cr, user_projectuser_id, {
-            'user_id': user_projectuser_id,
-            'planned_hours': 12.0,
-            'planned_hours_me': 2.0,
-        }, {'active_id': task.id})
-        self.project_task_delegate.delegate(cr, user_projectuser_id, [delegate_id], {'active_id': task.id})
+    @mute_logger('odoo.addons.mail.mail_thread')
+    def test_task_process_with_stages(self):
+        # Do: incoming mail from an unknown partner on an alias creates a new task 'Cats'
+        task = self.format_and_process(
+            EMAIL_TPL, to='project+goats@mydomain.com, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
+            email_from='%s' % self.user_projectuser.email,
+            subject='Cats', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
+            target_model='project.task')
 
-        # Check delegation details
-        task.refresh()
-        self.assertEqual(task.planned_hours, 2, 'project_task_delegate: planned hours is not correct after delegation')
+        # Test: one task created by mailgateway administrator
+        self.assertEqual(len(task), 1, 'project: message_process: a new project.task should have been created')
+        # Test: check partner in message followers
+        self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
+        # Test: messages
+        self.assertEqual(len(task.message_ids), 1,
+                         'project: message_process: newly created task should have 1 messages: email')
+        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
+                         'project: message_process: first message of new task should have Task Created subtype')
+        self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
+                         'project: message_process: first message should be the one from Agrolait (partner failed)')
+        self.assertEqual(task.message_ids[0].subject, 'Cats',
+                         'project: message_process: first message should be the one from Agrolait (subject failed)')
+        # Test: task content
+        self.assertEqual(task.name, 'Cats', 'project_task: name should be the email subject')
+        self.assertEqual(task.project_id.id, self.project_goats.id, 'project_task: incorrect project')
+        self.assertEqual(task.stage_id.sequence, 1, "project_task: should have a stage with sequence=1")
+
+    def test_subtask_process(self):
+        """ Check subtask mecanism and change it from project. """
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        parent_task = Task.create({
+            'name': 'Mother Task',
+            'user_id': self.user_projectuser.id,
+            'project_id': self.project_pigs.id,
+            'partner_id': self.partner_2.id,
+            'planned_hours': 12,
+        })
+        child_task = Task.create({
+            'name': 'Task Child',
+            'parent_id': parent_task.id,
+            'project_id': self.project_pigs.id,
+            'planned_hours': 3,
+        })
+
+        self.assertEqual(parent_task.partner_id, child_task.partner_id, "Subtask should have the same partner than its parent")
+        self.assertEqual(parent_task.subtask_count, 1, "Parent task should have 1 child")
+        self.assertEqual(parent_task.subtask_planned_hours, 3, "Planned hours of subtask should impact parent task")
+
+        # change project
+        child_task.write({
+            'project_id': self.project_goats.id  # customer is partner_1
+        })
+
+        self.assertEqual(parent_task.partner_id, child_task.partner_id, "Subtask partner should not change when changing project")
+
+    def test_rating(self):
+        """Check if rating works correctly even when task is changed from project A to project B"""
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        first_task = Task.create({
+            'name': 'first task',
+            'user_id': self.user_projectuser.id,
+            'project_id': self.project_pigs.id,
+            'partner_id': self.partner_2.id,
+        })
+
+        self.assertEqual(first_task.rating_count, 0, "Task should have no rating associated with it")
+
+        Rating = self.env['rating.rating']
+        rating_good = Rating.create({
+            'res_model_id': self.env['ir.model']._get('project.task').id,
+            'res_id': first_task.id,
+            'parent_res_model_id': self.env['ir.model']._get('project.project').id,
+            'parent_res_id': self.project_pigs.id,
+            'rated_partner_id': self.partner_2.id,
+            'partner_id': self.partner_2.id,
+            'rating': 10,
+            'consumed': False,
+        })
+
+        rating_bad = Rating.create({
+            'res_model_id': self.env['ir.model']._get('project.task').id,
+            'res_id': first_task.id,
+            'parent_res_model_id': self.env['ir.model']._get('project.project').id,
+            'parent_res_id': self.project_pigs.id,
+            'rated_partner_id': self.partner_2.id,
+            'partner_id': self.partner_2.id,
+            'rating': 5,
+            'consumed': True,
+        })
+
+        # We need to invalidate cache since it is not done automatically by the ORM
+        # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
+        first_task.invalidate_cache()
+
+        self.assertEqual(rating_good.rating_text, 'satisfied')
+        self.assertEqual(rating_bad.rating_text, 'not_satisfied')
+        self.assertEqual(first_task.rating_count, 1, "Task should have only one rating associated, since one is not consumed")
+        self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
+
+        self.assertEqual(self.project_goats.rating_percentage_satisfaction, -1)
+        self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 0)  # There is a rating but not a "great" on, just an "okay".
+
+        # Consuming rating_good
+        first_task.rating_apply(10, rating_good.access_token)
+
+        # We need to invalidate cache since it is not done automatically by the ORM
+        # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
+        first_task.invalidate_cache()
+
+        self.assertEqual(first_task.rating_count, 2, "Task should have two ratings associated with it")
+        self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
+        self.assertEqual(self.project_goats.rating_percentage_satisfaction, -1)
+        self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 50)
+
+        # We change the task from project_pigs to project_goats, ratings should be associated with the new project
+        first_task.project_id = self.project_goats.id
+
+        # We need to invalidate cache since it is not done automatically by the ORM
+        # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
+        first_task.invalidate_cache()
+
+        self.assertEqual(rating_good.parent_res_id, self.project_goats.id)
+        self.assertEqual(self.project_goats.rating_percentage_satisfaction, 50)
+        self.assertEqual(self.project_pigs.rating_percentage_satisfaction, -1)

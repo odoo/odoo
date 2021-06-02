@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
+        <xpath expr="//div[@name='mail_button']" position="replace">
+            <form id="contactus_form" t-ignore="true" action="/website_form/" method="post" data-model_name="mail.mail" class="s_website_form container-fluid mt32" enctype="multipart/form-data" data-success_page="/contactus-thank-you">
+                <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
+                    <div class="col-lg-3 col-md-4">
+                        <label class="col-form-label" for="Name">Your Name</label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="text" class="form-control o_website_form_input" name="Name" required=""/>
+                    </div>
+                </div>
+                <div class="form-group row form-field o_website_form_custom">
+                    <div class="col-lg-3 col-md-4">
+                        <label class="col-form-label" for="Phone">Phone Number</label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="text" class="form-control o_website_form_input" name="Phone"/>
+                    </div>
+                </div>
+                <div class="form-group row form-field o_website_form_required_custom">
+                    <div class="col-lg-3 col-md-4">
+                        <label class="col-form-label" for="email_from">Email</label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="email" class="form-control o_website_form_input" name="email_from" required=""/>
+                    </div>
+                </div>
+                <div class="form-group row form-field o_website_form_custom">
+                    <div class="col-lg-3 col-md-4">
+                        <label class="col-form-label" for="Partner Name">Your Company</label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="text" class="form-control o_website_form_input" name="Partner Name"/>
+                    </div>
+                </div>
+                <div class="form-group row form-field o_website_form_required_custom">
+                    <div class="col-lg-3 col-md-4">
+                        <label class="col-form-label" for="subject">Subject</label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="text" class="form-control o_website_form_input" name="subject" required=""/>
+                    </div>
+                </div>
+                <div class="form-group row form-field o_website_form_custom o_website_form_required_custom">
+                    <div class="col-lg-3 col-md-4">
+                        <label class="col-form-label" for="Description">Your Question</label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <textarea class="form-control o_website_form_input" name="Description" required=""></textarea>
+                    </div>
+                </div>
+                <div class="form-group row form-field d-none">
+                    <div class="col-lg-3 col-md-4">
+                        <label class="col-form-label" for="email_to">Email To</label>
+                    </div>
+                    <div class="col-lg-7 col-md-8">
+                        <input type="hidden" class="form-control o_website_form_input" name="email_to" t-att-value="res_company.email"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
+                        <a href="#" class="btn btn-primary btn-lg o_website_form_send">Send</a>
+                        <span id="o_website_form_result"></span>
+                    </div>
+                </div>
+            </form>
+        </xpath>
+    </template>
+
+    <record id="contactus_thanks" model="website.page">
+        <field name="name">Thanks (Contact us)</field>
+        <field name="type">qweb</field>
+        <field name="url">/contactus-thank-you</field>
+        <field name="website_indexed" eval="False"/>
+        <field name="is_published">True</field>
+        <field name="key">website_form.contactus_thanks</field>
+        <field name="arch" type="xml">
+            <t name="Thanks (Contact us)" t-name="website_form.contactus_thanks">
+                <t t-call="website.layout">
+                  <div id="wrap">
+                    <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_1"/>
+                    <div class="container pt-3">
+                        <h1>Thanks!</h1>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="alert alert-success" role="status">
+                                    Your message has been sent successfully.
+                                    <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                                </div>
+                                <p>
+                                    We will get back to you shortly.
+                                </p>
+                            </div>
+                            <div class="col-lg-4">
+                                <t t-call="website.company_description"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_2"/>
+                  </div>
+                </t>
+            </t>
+        </field>
+    </record>
+
+</odoo>

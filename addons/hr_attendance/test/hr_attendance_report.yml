@@ -1,9 +1,0 @@
--
-  Print HR Attendance Error Report through the wizard
--
-  !python {model: hr.employee}: |
-    import time
-    from openerp.tools import test_reports
-    ctx = {'model': 'hr.employee','active_ids': [ref('hr.employee_fp')]}
-    data_dict = {'init_date': time.strftime('%Y-01-01')}
-    test_reports.try_report_action(cr, uid, 'action_hr_attendance_error',wiz_data=data_dict, context=ctx, our_module='hr_attendance')

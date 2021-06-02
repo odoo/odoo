@@ -1,0 +1,431 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_slides_survey
+# 
+# Translators:
+# Siyuan Gu <siyuancn@hotmail.com>, 2019
+# liulixia <liu.lixia@elico-corp.com>, 2019
+# 李赋 <fu792659@163.com>, 2019
+# Youfu Sheng <wdmsyf@sina.com>, 2019
+# Manga Tsang <mts@odoo.com>, 2019
+# Martin Trigaux, 2019
+# fausthuang, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 佳 胡 <hujia@tang96.com>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 13.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: 佳 胡 <hujia@tang96.com>, 2019\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_slides_survey
+#: model:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a member of the course: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
+"        Don't hesitate to enroll again!\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Enroll now\n"
+"            </a>\n"
+"        </div>\n"
+"        Thank you for your participation.\n"
+"    </p>\n"
+"</div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        亲爱的 ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        遗憾的是，您未通过认证，不再是该课程的成员：${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
+"        请再次报名！\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                立即报名\n"
+"            </a>\n"
+"        </div>\n"
+"        感谢您的参与。.\n"
+"    </p>\n"
+"</div>\n"
+"            "
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> Download certification"
+msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download "
+"certification\" title=\"Download certification\"/> 下载证书"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.courses_home_inherit_survey
+msgid "<span class=\"ml-1\">Certifications</span>"
+msgstr "<span class=\"ml-1\">证书</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
+msgid ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">Finished</span>\n"
+"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">Certified</span>"
+msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '&gt;', 0)]}\">已完成</span>\n"
+"                <span class=\"o_stat_text\" attrs=\"{'invisible': [('nbr_certification', '=', 0)]}\">已鉴定</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.all_user_card
+msgid "<span class=\"text-muted small font-weight-bold\">Certifications</span>"
+msgstr "<span class=\"text-muted small font-weight-bold\">证书</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.top3_user_card
+msgid "<span class=\"text-muted\">Certifications</span>"
+msgstr "<span class=\"text-muted\">证书</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
+msgid "<span class=\"text-muted\">Certified</span>"
+msgstr "<span class=\"text-muted\">认证</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_kanban
+msgid "<span class=\"text-muted\">Finished</span>"
+msgstr "<span class=\"text-muted\">已完成</span>"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
+msgid "<span>Start Now</span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
+msgstr "<span>立即开始</span><i class=\"fa fa-chevron-right ml-2 align-middle\"/>"
+
+#. module: website_slides_survey
+#: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_survey_id
+msgid "A slide of type 'certification' requires a certification."
+msgstr "“认证”类型的幻灯片需要认证。"
+
+#. module: website_slides_survey
+#: model:ir.model.constraint,message:website_slides_survey.constraint_slide_slide_check_certification_preview
+msgid "A slide of type certification cannot be previewed."
+msgstr "无法预览类型认证的幻灯片。"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
+msgid "Add Certification"
+msgstr "添加认证"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides_report
+msgid "Add a new certification"
+msgstr "添加新的认证"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_3
+msgid "Ash"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_5
+msgid "Bed"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_4
+msgid "Beech"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+msgid "Begin Certification"
+msgstr "开始认证"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.course_main
+msgid "Begin your <b>certification</b> today!"
+msgstr "今天开始 <b>认证</b>!"
+
+#. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
+#: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
+#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__survey_id
+#: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
+#, python-format
+msgid "Certification"
+msgstr "认证"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_quizz_passed
+msgid "Certification Quizz Passed"
+msgstr "通过认证测验"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
+msgid "Certification attempts"
+msgstr "认证尝试"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.o_wss_certification_icon
+msgid "Certification icon"
+msgstr "认证图标"
+
+#. module: website_slides_survey
+#: code:addons/website_slides_survey/controllers/slides.py:0
+#, python-format
+msgid "Certification slides are completed when the survey is succeeded."
+msgstr "成功完成调查后，认证幻灯片就会完成。"
+
+#. module: website_slides_survey
+#: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
+#: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides
+#: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides_report
+#: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_courses_certification
+#: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_report_certification
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_channel_view_form
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
+msgid "Certifications"
+msgstr "认证"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_1
+msgid "Chair"
+msgstr ""
+
+#. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
+#, python-format
+msgid "Content Preview"
+msgstr "内容预览"
+
+#. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
+#, python-format
+msgid "Cover Image File"
+msgstr "封面图片文件"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_6_0
+msgid "DIY Furniture Certification"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_3
+msgid "Desk"
+msgstr ""
+
+#. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#, python-format
+msgid "Download certification"
+msgstr "下载证书"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_1
+msgid "Fir"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:survey.question,question:website_slides_survey.furniture_certification_page_1
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1
+msgid "Furniture"
+msgstr "家具"
+
+#. module: website_slides_survey
+#: model:slide.slide,name:website_slides_survey.slide_slide_demo_5_4
+#: model:survey.survey,title:website_slides_survey.furniture_certification
+msgid "Furniture Creation Certification"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_templates_inherit_website_slides
+msgid "Go back to course"
+msgstr "回到课程"
+
+#. module: website_slides_survey
+#: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1
+#: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1_question_1
+#: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1_question_2
+#: model:survey.question,comments_message:website_slides_survey.furniture_certification_page_1_question_3
+msgid "If other, please specify:"
+msgstr "如果有其它，请指定"
+
+#. module: website_slides_survey
+#: model:slide.slide,description:website_slides_survey.slide_slide_demo_6_0
+msgid "It's time to test your knowledge!"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "No certifications yet!"
+msgstr "还没认证！"
+
+#. module: website_slides_survey
+#: model:slide.slide,description:website_slides_survey.slide_slide_demo_5_4
+msgid ""
+"Now that you have completed the course, it's time to test your knowledge!"
+msgstr "现在你已经完成了课程，是时候测试你的知识了!"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_channel__nbr_certification
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__nbr_certification
+msgid "Number of Certifications"
+msgstr "证书数量"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_1_choice_2
+msgid "Oak"
+msgstr "橡木"
+
+#. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#, python-format
+msgid "Pass Certification"
+msgstr "通过认证测试"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_id
+msgid "Related course slide"
+msgstr "相关课程幻灯片"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
+msgid "Score :"
+msgstr "分数："
+
+#. module: website_slides_survey
+#: model:survey.question,question:website_slides_survey.furniture_certification_page_1_question_2
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_2
+msgid "Select all the furniture shown in the video"
+msgstr "选择视频中显示的所有家具"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_4
+msgid "Shelve"
+msgstr "搁置"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_slide_partner
+msgid "Slide / Partner decorated m2m"
+msgstr "幻灯片/合作伙伴装饰m2m"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_channel
+msgid "Slide Channel"
+msgstr "幻灯片频道"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_partner_id
+msgid "Slide membership information for the logged in user"
+msgstr "为登录用户滑动成员资格信息"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_slide_slide
+msgid "Slides"
+msgstr "幻灯片"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_partner_id
+msgid "Subscriber information"
+msgstr "订阅者信息"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_survey_survey
+msgid "Survey"
+msgstr "问卷"
+
+#. module: website_slides_survey
+#: model:ir.model,name:website_slides_survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "调查用户输入"
+
+#. module: website_slides_survey
+#: model:survey.label,value:website_slides_survey.furniture_certification_page_1_question_2_choice_2
+msgid "Table"
+msgstr "桌台"
+
+#. module: website_slides_survey
+#. openerp-web
+#: code:addons/website_slides_survey/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
+#, python-format
+msgid "Test Certification"
+msgstr "测试认证"
+
+#. module: website_slides_survey
+#: model_terms:survey.question,description:website_slides_survey.furniture_certification_page_1
+msgid "Test your furniture knowledge!"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:survey.survey,description:website_slides_survey.furniture_certification
+msgid "Test your furniture knowledge!."
+msgstr "测试你的家具知识!"
+
+#. module: website_slides_survey
+#: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1
+#: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_1
+#: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_2
+#: model:survey.question,validation_error_msg:website_slides_survey.furniture_certification_page_1_question_3
+msgid "The answer you entered is not valid."
+msgstr "您输入的答案无效。"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
+msgid ""
+"The document type will be set automatically based on the document URL and "
+"properties (e.g. height and width for presentation and document)."
+msgstr "将根据文档网址和属性（例如演示文稿的高度和宽度以及文档）自动设置文档类型。"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
+msgid "The related course slide when there is no membership information"
+msgstr "没有会员资料时，相关课程会滑动"
+
+#. module: website_slides_survey
+#: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1
+#: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1_question_1
+#: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1_question_2
+#: model:survey.question,constr_error_msg:website_slides_survey.furniture_certification_page_1_question_3
+msgid "This question requires an answer."
+msgstr "此问题需要答案。"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
+msgid "Type"
+msgstr "类型"
+
+#. module: website_slides_survey
+#: model:survey.question,question:website_slides_survey.furniture_certification_page_1_question_3
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_3
+msgid "What do you think about the content of the course? (not rated)"
+msgstr "你认为这门课的内容怎么样?(未评级)"
+
+#. module: website_slides_survey
+#: model:survey.question,question:website_slides_survey.furniture_certification_page_1_question_1
+#: model:survey.question,title:website_slides_survey.furniture_certification_page_1_question_1
+msgid "What type of wood is the best for furniture?"
+msgstr "什么样的木头最适合做家具?"
+
+#. module: website_slides_survey
+#: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
+msgid "You have failed the course: ${object.slide_partner_id.channel_id.name}"
+msgstr ""
+"您没有通过课程:\n"
+" ${object.slide_partner_id.channel_id.name}"

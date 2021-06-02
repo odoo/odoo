@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="certification_report_view">
+        <t t-set="data_report_landscape" t-value="True"/>
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="user_input">
+                <div t-att-data-oe-model="user_input._name" t-att-data-oe-id="user_input.id" class="article certification-wrapper">
+                    <div t-attf-class="certification #{'test-entry' if user_input.test_entry else ''}">
+                        <h2>
+                            <span t-field="user_input.survey_id.create_uid.company_id.display_name"/>
+                        </h2>
+                        <p>Certifies that</p>
+                        <h2>
+                            <span t-esc="user_input.partner_id.name or user_input.email"/>
+                        </h2>
+                        <!-- You should not print a certificate if failed :) -->
+                        <p t-if="user_input.quizz_passed">Successfully achieved</p>
+                        <p t-if="not user_input.quizz_passed">Successfully failed</p>
+                        <h3>
+                            <span t-field="user_input.survey_id.display_name"/>
+                        </h3>
+                        <p>
+                            <strong t-if="user_input.quizz_passed">Date of Certification:</strong>
+                            <strong t-if="not user_input.quizz_passed">Date of Failure:</strong>
+                            <span t-field="user_input.create_date"/>
+                        </p>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</data>
+</odoo>

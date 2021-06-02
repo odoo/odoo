@@ -1,31 +1,39 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from stock import *
-import partner
-import product
-import procurement
-import report
-import wizard
-import res_config
+from . import controllers
+from . import models
+from . import report
+from . import wizard
 
-import controllers
 
+from odoo import api, SUPERUSER_ID
+
+
+# TODO: Apply proper fix & remove in master
+def pre_init_hook(cr):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env['ir.model.data'].search([
+        ('model', 'like', '%stock%'),
+        ('module', '=', 'stock')
+    ]).unlink()
+
+def _assign_default_mail_template_picking_id(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    company_ids_without_default_mail_template_id = env['res.company'].search([
+        ('stock_mail_confirmation_template_id', '=', False)
+    ])
+    default_mail_template_id = env.ref('stock.mail_template_data_delivery_confirmation', raise_if_not_found=False)
+    if default_mail_template_id:
+        company_ids_without_default_mail_template_id.write({
+            'stock_mail_confirmation_template_id': default_mail_template_id.id,
+        })
+
+
+def uninstall_hook(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    default = env['product.template']._fields['type'].default(env['product.template'])
+    # stock introduces an option on the `type` Selection field of `product.template`
+    # if this module is uninstalled and any `product.template` record still points to this option
+    # the registry will find itself in an unstable state and will most likely crash (eventually)
+    cr.execute("UPDATE product_template SET type = %s WHERE type = %s", (default, 'product'))

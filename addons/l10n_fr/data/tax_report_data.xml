@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="tax_report_base_coll" model="account.tax.report.line">
+            <field name="name">Base H.T. TVA collectée</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_base_coll_20" model="account.tax.report.line">
+            <field name="name">Base H.T. 20.0%</field>
+            <field name="tag_name">Base collectée 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_coll"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_base_coll_19_6" model="account.tax.report.line">
+            <field name="name">Base H.T. 19.6%</field>
+            <field name="tag_name">Base collectée 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_coll"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_base_coll_8_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 8.5%</field>
+            <field name="tag_name">Base collectée 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_coll"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_base_coll_10" model="account.tax.report.line">
+            <field name="name">Base H.T. 10.0%</field>
+            <field name="tag_name">Base collectée 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_coll"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_base_coll_7" model="account.tax.report.line">
+            <field name="name">Base H.T. 7.0%</field>
+            <field name="tag_name">Base collectée 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_coll"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_base_coll_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.0%</field>
+            <field name="tag_name">Base collectée 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_coll"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_base_coll_5_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.5%</field>
+            <field name="tag_name">Base collectée 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_coll"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_base_coll_2_1" model="account.tax.report.line">
+            <field name="name">Base H.T. 2.1%</field>
+            <field name="tag_name">Base collectée 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_coll"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_tva_coll" model="account.tax.report.line">
+            <field name="name">TVA collectée</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_tva_coll_20" model="account.tax.report.line">
+            <field name="name">TVA 20.0%</field>
+            <field name="tag_name">TVA collectée 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_coll"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_tva_coll_19_6" model="account.tax.report.line">
+            <field name="name">TVA 19.6%</field>
+            <field name="tag_name">TVA collectée 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_coll"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_tva_coll_8_5" model="account.tax.report.line">
+            <field name="name">TVA 8.5%</field>
+            <field name="tag_name">TVA collectée 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_coll"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_tva_coll_10" model="account.tax.report.line">
+            <field name="name">TVA 10.0%</field>
+            <field name="tag_name">TVA collectée 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_coll"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_tva_coll_7" model="account.tax.report.line">
+            <field name="name">TVA 7.0%</field>
+            <field name="tag_name">TVA collectée 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_coll"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_tva_coll_5" model="account.tax.report.line">
+            <field name="name">TVA 5.0%</field>
+            <field name="tag_name">TVA collectée 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_coll"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_tva_coll_5_5" model="account.tax.report.line">
+            <field name="name">TVA 5.5%</field>
+            <field name="tag_name">TVA collectée 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_coll"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_tva_coll_2_1" model="account.tax.report.line">
+            <field name="name">TVA 2.1%</field>
+            <field name="tag_name">TVA collectée 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_coll"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_base_acq" model="account.tax.report.line">
+            <field name="name">Base H.T. TVA acquittée</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_base_acq_20" model="account.tax.report.line">
+            <field name="name">Base H.T. 20.0%</field>
+            <field name="tag_name">Base acquittée 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_base_acq_19_6" model="account.tax.report.line">
+            <field name="name">Base H.T. 19.6%</field>
+            <field name="tag_name">Base acquittée 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_base_acq_8_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 8.5%</field>
+            <field name="tag_name">Base acquittée 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_base_acq_10" model="account.tax.report.line">
+            <field name="name">Base H.T. 10.0%</field>
+            <field name="tag_name">Base acquittée 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_base_acq_7" model="account.tax.report.line">
+            <field name="name">Base H.T. 7.0%</field>
+            <field name="tag_name">Base acquittée 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_base_acq_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.0%</field>
+            <field name="tag_name">Base acquittée 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_base_acq_5_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.5%</field>
+            <field name="tag_name">Base acquittée 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_base_acq_2_1" model="account.tax.report.line">
+            <field name="name">Base H.T. 2.1%</field>
+            <field name="tag_name">Base acquittée 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_tva_acq" model="account.tax.report.line">
+            <field name="name">TVA acquittée</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_tva_acq_20" model="account.tax.report.line">
+            <field name="name">TVA 20.0%</field>
+            <field name="tag_name">TVA acquittée 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_tva_acq_19_6" model="account.tax.report.line">
+            <field name="name">TVA 19.6%</field>
+            <field name="tag_name">TVA acquittée 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_tva_acq_8_5" model="account.tax.report.line">
+            <field name="name">TVA 8.5%</field>
+            <field name="tag_name">TVA acquittée 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_tva_acq_10" model="account.tax.report.line">
+            <field name="name">TVA 10.0%</field>
+            <field name="tag_name">TVA acquittée 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_tva_acq_7" model="account.tax.report.line">
+            <field name="name">TVA 7.0%</field>
+            <field name="tag_name">TVA acquittée 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_tva_acq_5" model="account.tax.report.line">
+            <field name="name">TVA 5.0%</field>
+            <field name="tag_name">TVA acquittée 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_tva_acq_5_5" model="account.tax.report.line">
+            <field name="name">TVA 5.5%</field>
+            <field name="tag_name">TVA acquittée 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_tva_acq_2_1" model="account.tax.report.line">
+            <field name="name">TVA 2.1%</field>
+            <field name="tag_name">TVA acquittée 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_base_acq_immo" model="account.tax.report.line">
+            <field name="name">Base H.T. TVA acquittée pour immobilisations</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_base_acq_immo_20" model="account.tax.report.line">
+            <field name="name">Base H.T. 20.0%</field>
+            <field name="tag_name">Base acquittée immo. 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq_immo"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_base_acq_immo_19_6" model="account.tax.report.line">
+            <field name="name">Base H.T. 19.6%</field>
+            <field name="tag_name">Base acquittée immo. 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq_immo"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_base_acq_immo_8_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 8.5%</field>
+            <field name="tag_name">Base acquittée immo. 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq_immo"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_base_acq_immo_10" model="account.tax.report.line">
+            <field name="name">Base H.T. 10.0%</field>
+            <field name="tag_name">Base acquittée immo. 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq_immo"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_base_acq_immo_7" model="account.tax.report.line">
+            <field name="name">Base H.T. 7.0%</field>
+            <field name="tag_name">Base acquittée immo. 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq_immo"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_base_acq_immo_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.0%</field>
+            <field name="tag_name">Base acquittée immo. 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq_immo"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_base_acq_immo_5_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.5%</field>
+            <field name="tag_name">Base acquittée immo. 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq_immo"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_base_acq_immo_2_1" model="account.tax.report.line">
+            <field name="name">Base H.T. 2.1%</field>
+            <field name="tag_name">Base acquittée immo. 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_acq_immo"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_tva_acq_immo" model="account.tax.report.line">
+            <field name="name">TVA acquittée pour immobilisations</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_tva_acq_immo_20" model="account.tax.report.line">
+            <field name="name">TVA 20.0%</field>
+            <field name="tag_name">TVA acquittée immo. 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq_immo"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_tva_acq_immo_19_6" model="account.tax.report.line">
+            <field name="name">TVA 19.6%</field>
+            <field name="tag_name">TVA acquittée immo. 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq_immo"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_tva_acq_immo_8_5" model="account.tax.report.line">
+            <field name="name">TVA 8.5%</field>
+            <field name="tag_name">TVA acquittée immo. 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq_immo"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_tva_acq_immo_10" model="account.tax.report.line">
+            <field name="name">TVA 10.0%</field>
+            <field name="tag_name">TVA acquittée immo. 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq_immo"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_tva_acq_immo_7" model="account.tax.report.line">
+            <field name="name">TVA 7.0%</field>
+            <field name="tag_name">TVA acquittée immo. 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq_immo"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_tva_acq_immo_5" model="account.tax.report.line">
+            <field name="name">TVA 5.0%</field>
+            <field name="tag_name">TVA acquittée immo. 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq_immo"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_tva_acq_immo_5_5" model="account.tax.report.line">
+            <field name="name">TVA 5.5%</field>
+            <field name="tag_name">TVA acquittée immo. 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq_immo"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_tva_acq_immo_2_1" model="account.tax.report.line">
+            <field name="name">TVA 2.1%</field>
+            <field name="tag_name">TVA acquittée immo. 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_acq_immo"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_base_due_intra" model="account.tax.report.line">
+            <field name="name">Base H.T. TVA due intracommunautaire</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_base_due_intra_20" model="account.tax.report.line">
+            <field name="name">Base H.T. 20.0%</field>
+            <field name="tag_name">Base due intracom. 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_due_intra"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_base_due_intra_19_6" model="account.tax.report.line">
+            <field name="name">Base H.T. 19.6%</field>
+            <field name="tag_name">Base due intracom. 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_due_intra"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_base_due_intra_8_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 8.5%</field>
+            <field name="tag_name">Base due intracom. 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_due_intra"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_base_due_intra_10" model="account.tax.report.line">
+            <field name="name">Base H.T. 10.0%</field>
+            <field name="tag_name">Base due intracom. 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_due_intra"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_base_due_intra_7" model="account.tax.report.line">
+            <field name="name">Base H.T. 7.0%</field>
+            <field name="tag_name">Base due intracom. 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_due_intra"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_base_due_intra_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.0%</field>
+            <field name="tag_name">Base due intracom. 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_due_intra"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_base_due_intra_5_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.5%</field>
+            <field name="tag_name">Base due intracom. 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_due_intra"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_base_due_intra_2_1" model="account.tax.report.line">
+            <field name="name">Base H.T. 2.1%</field>
+            <field name="tag_name">Base due intracom. 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_due_intra"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_tva_due_intra" model="account.tax.report.line">
+            <field name="name">TVA due intracommunautaire</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_tva_due_intra_20" model="account.tax.report.line">
+            <field name="name">TVA 20.0%</field>
+            <field name="tag_name">TVA due intracom. 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_due_intra"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_tva_due_intra_19_6" model="account.tax.report.line">
+            <field name="name">TVA 19.6%</field>
+            <field name="tag_name">TVA due intracom. 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_due_intra"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_tva_due_intra_8_5" model="account.tax.report.line">
+            <field name="name">TVA 8.5%</field>
+            <field name="tag_name">TVA due intracom. 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_due_intra"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_tva_due_intra_10" model="account.tax.report.line">
+            <field name="name">TVA 10.0%</field>
+            <field name="tag_name">TVA due intracom. 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_due_intra"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_tva_due_intra_7" model="account.tax.report.line">
+            <field name="name">TVA 7.0%</field>
+            <field name="tag_name">TVA due intracom. 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_due_intra"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_tva_due_intra_5" model="account.tax.report.line">
+            <field name="name">TVA 5.0%</field>
+            <field name="tag_name">TVA due intracom. 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_due_intra"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_tva_due_intra_5_5" model="account.tax.report.line">
+            <field name="name">TVA 5.5%</field>
+            <field name="tag_name">TVA due intracom. 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_due_intra"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_tva_due_intra_2_1" model="account.tax.report.line">
+            <field name="name">TVA 2.1%</field>
+            <field name="tag_name">TVA due intracom. 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_due_intra"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_base_ded_intra" model="account.tax.report.line">
+            <field name="name">Base H.T. TVA déductible intracommunautaire</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">9</field>
+        </record>
+
+        <record id="tax_report_base_ded_intra_20" model="account.tax.report.line">
+            <field name="name">Base H.T. 20.0%</field>
+            <field name="tag_name">Base déductible intracom. 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_ded_intra"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_base_ded_intra_19_6" model="account.tax.report.line">
+            <field name="name">Base H.T. 19.6%</field>
+            <field name="tag_name">Base déductible intracom. 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_ded_intra"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_base_ded_intra_8_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 8.5%</field>
+            <field name="tag_name">Base déductible intracom. 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_ded_intra"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_base_ded_intra_10" model="account.tax.report.line">
+            <field name="name">Base H.T. 10.0%</field>
+            <field name="tag_name">Base déductible intracom. 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_ded_intra"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_base_ded_intra_7" model="account.tax.report.line">
+            <field name="name">Base H.T. 7.0%</field>
+            <field name="tag_name">Base déductible intracom. 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_ded_intra"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_base_ded_intra_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.0%</field>
+            <field name="tag_name">Base déductible intracom. 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_ded_intra"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_base_ded_intra_5_5" model="account.tax.report.line">
+            <field name="name">Base H.T. 5.5%</field>
+            <field name="tag_name">Base déductible intracom. 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_ded_intra"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_base_ded_intra_2_1" model="account.tax.report.line">
+            <field name="name">Base H.T. 2.1%</field>
+            <field name="tag_name">Base déductible intracom. 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_base_ded_intra"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_tva_ded_intra" model="account.tax.report.line">
+            <field name="name">TVA déductible intracommunautaire</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">9</field>
+        </record>
+
+        <record id="tax_report_tva_ded_intra_20" model="account.tax.report.line">
+            <field name="name">TVA 20.0%</field>
+            <field name="tag_name">TVA déductible intracom. 20.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_ded_intra"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_tva_ded_intra_19_6" model="account.tax.report.line">
+            <field name="name">TVA 19.6%</field>
+            <field name="tag_name">TVA déductible intracom. 19.6%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_ded_intra"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_tva_ded_intra_8_5" model="account.tax.report.line">
+            <field name="name">TVA 8.5%</field>
+            <field name="tag_name">TVA déductible intracom. 8.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_ded_intra"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_tva_ded_intra_10" model="account.tax.report.line">
+            <field name="name">TVA 10.0%</field>
+            <field name="tag_name">TVA déductible intracom. 10.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_ded_intra"/>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="tax_report_tva_ded_intra_7" model="account.tax.report.line">
+            <field name="name">TVA 7.0%</field>
+            <field name="tag_name">TVA déductible intracom. 7.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_ded_intra"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_tva_ded_intra_5" model="account.tax.report.line">
+            <field name="name">TVA 5.0%</field>
+            <field name="tag_name">TVA déductible intracom. 5.0%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_ded_intra"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_tva_ded_intra_5_5" model="account.tax.report.line">
+            <field name="name">TVA 5.5%</field>
+            <field name="tag_name">TVA déductible intracom. 5.5%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_ded_intra"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_tva_ded_intra_2_1" model="account.tax.report.line">
+            <field name="name">TVA 2.1%</field>
+            <field name="tag_name">TVA déductible intracom. 2.1%</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_tva_ded_intra"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_non_imp" model="account.tax.report.line">
+            <field name="name">Base H.T. Opérations non imposables</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="tax_report_non_imp_hors_ue" model="account.tax.report.line">
+            <field name="name">Exportations hors U.E.</field>
+            <field name="tag_name">Exportations hors U.E.</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_non_imp"/>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="tax_report_non_imp_livraisons_intra" model="account.tax.report.line">
+            <field name="name">Livraisons intracommunautaires</field>
+            <field name="tag_name">Livraisons intracommunautaires</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_non_imp"/>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="tax_report_non_imp_non_imposables" model="account.tax.report.line">
+            <field name="name">Autres opérations non imposables</field>
+            <field name="tag_name">Autres opérations non imposables</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_non_imp"/>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="tax_report_non_imp_non_ca3" model="account.tax.report.line">
+            <field name="name">Base H.T. Non présent sur la CA3</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="sequence">11</field>
+        </record>
+
+        <record id="tax_report_non_imp_achats_import" model="account.tax.report.line">
+            <field name="name">Achats import</field>
+            <field name="tag_name">Achats import</field>
+            <field name="country_id" ref="base.fr"/>
+            <field name="parent_id" ref="tax_report_non_imp_non_ca3"/>
+            <field name="sequence">5</field>
+        </record>
+
+    </data>
+</odoo>

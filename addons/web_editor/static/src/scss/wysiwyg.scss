@@ -1,0 +1,477 @@
+$o-we-overlay-zindex: ($zindex-fixed + $zindex-modal-backdrop) / 2 !default;
+$o-we-zindex: $o-we-overlay-zindex + 1 !default;
+
+// Use css variables to control the default style of the editor so that an
+// external assets bundle can influence it without duplicating the css.
+:root {
+    --o-we-toolbar-height: #{$o-we-toolbar-height};
+
+    --o-we-bg-color: #{$o-we-bg-color};
+    --o-we-bg-color-dark: #{$o-we-bg-color-dark};
+    --o-we-color: #{$o-we-color};
+    --o-we-color-accent: #{$o-we-color};
+
+    --o-we-dropdown-bg-color: #{$o-we-dropdown-bg-color};
+    --o-we-dropdown-color: #{$o-we-dropdown-color};
+
+    --o-we-snippets-bg-color: #{$o-we-bg-color};
+    --o-we-snippets-color: #{$o-we-color};
+}
+
+.o_we_command_protector {
+    font-weight: 400 !important;
+
+    b, strong {
+        font-weight: 700 !important;
+    }
+    * {
+        font-weight: inherit !important;
+    }
+    .btn {
+        text-align: unset !important;
+    }
+}
+
+// EDITOR TOP BAR AND POPOVER
+.note-popover .popover {
+    max-width: 350px;
+    left: 50% !important;
+    transform: translate(-50%, 0);
+    .popover-body {
+        white-space: normal;
+    }
+}
+
+.editor_enable {
+    padding-top: var(--o-we-toolbar-height) !important;
+    .note-popover .popover .popover-body {
+        height: var(--o-we-toolbar-height);
+    }
+    .note-popover .popover  {
+        transform: none;
+    }
+}
+
+#web_editor-top-edit {
+    @include o-position-absolute(0, 0, auto, 0);
+    position: fixed;
+    z-index: $o-we-zindex;
+    height: var(--o-we-toolbar-height);
+    background-color: var(--o-we-bg-color);
+
+    .note-popover .popover {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        border: none !important;
+        max-width: none;
+    }
+}
+
+.wysiwyg_iframe,
+.note-editor {
+    border: $o-we-border-width solid $o-we-border-color;
+    margin: 0;
+    padding: 0;
+}
+// avoid popover bar over its opened modal
+.note-popover .popover {
+    z-index: $o-we-overlay-zindex;
+}
+.note-popover .popover .popover-body,
+.panel-heading.note-toolbar {
+    padding-bottom: 0;
+    border-bottom: $o-we-border-width solid $o-we-border-color;
+    background-color: var(--o-we-bg-color);
+    font-family: $o-we-font-family;
+
+    // Main layout of buttons
+    .btn-group, .btn {
+        width: auto !important;
+        height: 100% !important;
+        margin-top: 0;
+        margin-bottom: 0;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+    }
+    .btn-secondary {
+        color: inherit;
+    }
+
+    // Active buttons and opened dropdowns
+    .btn {
+        padding: 0.5em 0.75em !important;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+        color: var(--o-we-color);
+        font-size: $o-we-font-size !important;
+        border-bottom-color: transparent; // See caret design below
+
+        &.active {
+            background-color: var(--o-we-bg-color-dark);
+            color: var(--o-we-color-accent);
+        }
+
+        &:hover {
+            color: var(--o-we-color-accent);
+        }
+
+        &:focus, &:active, &:focus:active {
+            @extend %we-active-button;
+        }
+
+        // This element should have been removed but still exists in 13.0 by
+        // mistake. This takes advantage of it to restore the color preview
+        // feature which disappeared and cannot be fixed as in 12.0.
+        // TODO fix the right way in 14.0.
+        > .caret {
+            display: block;
+            @include o-position-absolute(auto, 0, 0, 0);
+            border-bottom: 3px solid transparent;
+            border-bottom-color: inherit;
+        }
+    }
+    .btn-group.show {
+        > .btn {
+            @extend %we-active-button;
+        }
+        &::after {
+            content: '';
+            @include o-position-absolute(100%, $o-we-border-width, auto, $o-we-border-width);
+            height: $o-we-border-width;
+            background-color: var(--o-we-dropdown-bg-color);
+        }
+    }
+    %we-active-button {
+        border-left-color: $o-we-border-color;
+        border-right-color: $o-we-border-color;
+        background: var(--o-we-dropdown-bg-color);
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    .dropdown-menu {
+        margin-top: 0;
+        border: $o-we-border-width solid $o-we-border-color;
+        border-top-color: transparent;
+        border-radius: 0;
+        background-color: var(--o-we-dropdown-bg-color);
+        color: var(--o-we-dropdown-color);
+        box-shadow: none;
+    }
+    .dropdown-menu.show { // To overcome .note-XXX .dropdown-menu rules
+        min-width: 0;
+    }
+    .dropdown-item { // To overcome summernote rules breaking this in iframes
+        display: block;
+        max-width: none;
+        overflow: visible;
+        color: var(--o-we-color);
+
+        &:hover {
+            background-color: var(--o-we-bg-color) !important;
+            color: var(--o-we-color-accent) !important;
+
+            > * {
+                color: inherit !important;
+            }
+        }
+    }
+
+    // Specific elements
+    .o_image_alt {
+        @include o-text-overflow();
+        max-width: 150px;
+    }
+    .note-color-palette div .note-color-btn {
+        border-color: var(--o-we-dropdown-bg-color);
+    }
+    .note-custom-color-palette .note-color-row {
+        height: auto!important;
+        .note-color-btn {
+            float: left;
+            height: 20px;
+            width: 20px;
+            padding: 0;
+            margin: 0;
+            border: 1px solid var(--o-we-dropdown-bg-color);
+        }
+    }
+}
+.note-color ul.show {
+    min-width: 172px !important;
+}
+
+// ANIMATIONS
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        transform: translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes inputHighlighter {
+    from {
+        background: $o-brand-primary;
+    }
+    to {
+        width: 0;
+        background: transparent;
+    }
+}
+
+// MODALS
+body .modal {
+
+    // SELECT MEDIA
+    .o_select_media_dialog {
+        max-width: 80%;
+
+        .modal-body {
+            .tab-pane {
+                min-height: 300px;
+            }
+
+            .o_we_images .o_existing_attachment_cell {
+                // give enough space for the hover buttons
+                min-width: 64px;
+                img {
+                    // prevent url images from being too big
+                    max-width: 256px;
+                    max-height: 192px;
+                }
+            }
+
+            .o_existing_attachment_cell {
+                cursor: pointer;
+                list-style: none;
+
+                .o_existing_attachment_optimize, .o_existing_attachment_remove {
+                    background-color: scale-color($card-border-color, $alpha: -50%);
+                    text-shadow: 0 0 1px white;
+                    opacity: 0;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: $card-border-color;
+                    }
+                }
+
+                .o_existing_attachment_optimize {
+                    @include o-position-absolute($top: 0, $left: 0);
+                    border-radius: 0 0 2px 0;
+                }
+
+                .o_existing_attachment_remove {
+                    @include o-position-absolute($top: 0, $right: 0);
+                    border-radius: 0 0 0 2px;
+                    &:hover {
+                        color: $o-we-color-danger;
+                    }
+                }
+
+                .o_file_name {
+                    @include o-text-overflow;
+                }
+
+                &:hover {
+                    .o_existing_attachment_optimize, .o_existing_attachment_remove {
+                        opacity: 1;
+                    }
+                    &.o_we_attachment_highlight, .o_we_attachment_highlight {
+                        border-color: $card-border-color;
+                        box-shadow: 0px 0px 2px 2px $card-border-color;
+                    }
+                }
+            }
+
+            .o_we_attachment_selected {
+                &.o_we_attachment_highlight, .o_we_attachment_highlight, &.font-icons-icon {
+                    border-color: $o-brand-primary;
+                    box-shadow: 0px 0px 2px 2px $o-brand-primary;
+                }
+            }
+
+            .font-icons-icons {
+                > span {
+                    text-align: center;
+                    font-size: 22px;
+                    margin: 5px;
+                    width: 50px;
+                    height: 50px;
+                    padding: 15px;
+                    cursor: pointer;
+                }
+            }
+
+            #editor-media-image,
+            #editor-media-document {
+                .o_we_url_input {
+                    width: 300px;
+                }
+            }
+
+            // VIDEO TAB
+            #editor-media-video {
+                .o_video_dialog_form {
+                    #o_video_form_group {
+                        position: relative;
+                        width: 100%;
+
+                        > textarea {
+                            width: 100%;
+                            min-height: 95px;
+                            padding-bottom: 25px;
+                            overflow-y: scroll;
+                        }
+                    }
+                }
+
+                #video-preview {
+                    position: relative;
+                    @include o-we-preview-box();
+                    border: none;
+
+                    .media_iframe_video {
+                        width: 100%;
+                    }
+
+                    .o_video_dialog_iframe {
+                        @include o-we-preview-content;
+                        max-width: 100%;
+                        max-height: 100%;
+
+                        &.alert {
+                            animation: fadeInDownSmall 700ms forwards;
+                            margin: 0 auto;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Crop Dialog
+    .o_crop_image_dialog .o_crop_area {
+        height: 350px;
+
+        .cropper-point {
+            background-color: white;
+            transition: all 400ms $o-we-md-ease 0s;
+            transform: scale(1.5, 1.5);
+            border-radius: 10px;
+            box-shadow: 0 0 1px 1px rgba(23, 23, 23, 0.5);
+            opacity: 1;
+
+            &:hover {
+                transform: scale(2.5, 2.5);
+            }
+        }
+
+        .cropper-line {
+            background: black;
+        }
+
+        .cropper-view-box {
+            outline: 2px solid white;
+        }
+    }
+
+    // LINK EDITOR DIALOG COLOR SELECTOR
+    .o_link_dialog {
+        .o_link_dialog_color > .o_link_dialog_color_item {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            padding: 0; // Important for themes
+            border: 2px solid rgba(0, 0, 0, 0.25);
+            border-radius: 50%;
+
+            input:checked + i::before {
+                content: "\f00c";
+                @include o-position-absolute($top: 6px, $left: 5px);
+            }
+
+            &.btn-link {
+                padding: 3px 9px;
+
+                > span {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .o_link_dialog_preview {
+            border-left: 1px solid gray('200');
+        }
+    }
+
+    .o_we_image_optimize_dialog {
+        .o_we_title_label {
+            font-size: $o-we-font-size;
+        }
+        .o_we_preview_area {
+            max-height: 400px;
+            overflow: auto;
+        }
+    }
+}
+
+// Highlight selected image/icon
+%o-we-selected-image {
+    $o-selected-image-color: rgba(150, 150, 220, 0.3);
+    background: $o-selected-image-color;
+    outline: 3px solid $o-selected-image-color;
+}
+
+img.o_we_selected_image {
+    @extend %o-we-selected-image;
+}
+
+.fa.o_we_selected_image::before {
+    @extend %o-we-selected-image;
+}
+
+.fa.mx-auto,
+img.o_we_custom_image.mx-auto {
+    display: block;
+}
+
+@include media-breakpoint-down(md) {
+    #web_editor-top-edit {
+        position: initial !important;
+        height: initial !important;
+        top: initial !important;
+        left: initial !important;
+
+        #web_editor-toolbars .popover-body {
+            display: flex;
+            width: 100%;
+            overflow-x: auto;
+
+            .btn-group {
+                position: static;
+            }
+        }
+    }
+}
+
+// User modal in edit mode
+.editor_enable, .note-editable {
+    .modal:not(.o_technical_modal) {
+        top: 40px;
+        right: 0;
+        bottom: 0;
+        left: $o-we-sidebar-width;
+        width: auto;
+        height: auto;
+
+        .modal-dialog {
+            padding: 0.5rem 0; // To use more editor space if necessary
+        }
+    }
+}

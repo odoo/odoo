@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.actions.act_window" id="action_mrp_production_moves">
+            <field name="name">Inventory Moves</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('move_id.raw_material_production_id', '=', active_id), ('move_id.production_id', '=', active_id)]</field>
+        </record>
+
+        <record id="view_stock_move_lots" model="ir.ui.view">
+            <field name="name">stock.move.lots.form</field>
+            <field name="model">stock.move</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form string="Lots">
+                    <field name="state" invisible="1" force_save="1"/>
+                    <group>
+                        <group>
+                            <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <label for="product_uom_qty"/>
+                            <div class="o_row">
+                                <span><field name="product_uom_qty" attrs="{'readonly': [('parent.state', '!=', 'draft')]}" nolabel="1"/></span>
+                                <span><field name="product_uom" readonly="1" force_save="1" nolabel="1"/></span>
+                            </div>
+                            <label for="quantity_done" attrs="{'invisible': [('parent.state', '=', 'draft')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('parent.state', '=', 'draft')]}">
+                                <span><field name="quantity_done" attrs="{'readonly': ['|', '|', ('move_line_ids', '!=', False), ('is_locked', '=', True), '|', ('finished_lots_exist', '=', True), ('has_tracking', '!=', 'none')]}" nolabel="1"/></span>
+                                <span> / </span>
+                                <span><field name="reserved_availability" nolabel="1"/></span>
+                            </div>
+                            <field name="company_id" invisible="1"/>
+                            <field name="is_done" invisible="1"/>
+                            <field name="workorder_id" invisible="1"/>
+                            <field name="bom_line_id" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
+                            <field name="picking_type_id" invisible="1"/>
+                            <field name="operation_id" invisible="1"/>
+                            <field name="warehouse_id" invisible="1"/>
+                            <field name="production_id" invisible="1"/>
+                            <field name="date" invisible="1"/>
+                            <field name="date_expected" invisible="1"/>
+                            <field name="raw_material_production_id" invisible="1"/>
+                            <field name="is_locked" invisible="1"/>
+                            <field name="name" invisible="1"/>
+                            <field name="has_tracking" invisible="1"/>
+                            <field name="order_finished_lot_ids" invisible="1"/>
+                            <field name="finished_lots_exist" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="move_line_ids" attrs="{'invisible': [('parent.state', '=', 'draft')], 'readonly': ['|', ('is_locked', '=', True), ('state', '=', 'cancel')]}" context="{'default_workorder_id': workorder_id, 'default_product_uom_id': product_uom, 'default_product_id': product_id,  'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_production_id': production_id or raw_material_production_id}">
+                        <tree editable="bottom" decoration-success="product_uom_qty==qty_done" decoration-danger="(product_uom_qty &gt; 0) and (qty_done&gt;product_uom_qty)">
+                            <field name="lot_id" attrs="{'column_invisible': [('parent.has_tracking', '=', 'none')]}" context="{'default_product_id': parent.product_id}"/>
+                            <field name="lot_produced_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}" domain="[('id', 'in', parent.order_finished_lot_ids)]" invisible="not context.get('final_lots')"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner" options="{'no_open': True, 'no_create': True}" optional="hide"/>
+                            <field name="package_id" groups="stock.group_tracking_lot" options="{'no_open': True, 'no_create': True}" optional="hide"/>
+                            <field name="product_uom_qty" string="Reserved" readonly="1" optional="show"/>
+                            <field name="qty_done"/>
+                            <field name="workorder_id" invisible="1"/>
+                            <field name="product_id" invisible="1"/>
+                            <field name="product_uom_id" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
+                            <field name="production_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_stock_move_raw_tree" model="ir.ui.view">
+            <field name="name">stock.move.raw.tree</field>
+            <field name="model">stock.move</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty and product_uom_qty - reserved_availability &gt; 0.0001">
+                    <field name="product_id" required="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="product_uom_category_id" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="unit_factor" invisible="1"/>
+                    <field name="product_uom" groups="uom.group_uom"/>
+                    <field name="date" invisible="1"/>
+                    <field name="date_expected" invisible="1"/>
+                    <field name="picking_type_id" invisible="1"/>
+                    <field name="has_tracking" invisible="1"/>
+                    <field name="operation_id" invisible="1"/>
+                    <field name="needs_lots" readonly="1" groups="stock.group_production_lot"/>
+                    <field name="is_done" invisible="1"/>
+                    <field name="bom_line_id" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="warehouse_id" invisible="1"/>
+                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
+                    <field name="state" invisible="1" force_save="1"/>
+                    <field name="product_uom_qty" string="To Consume"/>
+                    <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)], 'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" string="Reserved"/>
+                    <field name="quantity_done" string="Consumed" attrs="{'column_invisible': [('parent.state', '=', 'draft')]}" readonly="1"/>
+                    <field name="group_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_move_kanban_inherit_mrp" model="ir.ui.view">
+            <field name="name">stock.move.kanban.inherit.mrp</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_kandan"/>
+            <field name="arch" type="xml">
+                <xpath expr="//templates" position="before">
+                    <field name="bom_line_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_finisehd_move_line" model="ir.ui.view">
+            <field name="name">mrp.finished.move.line.form</field>
+            <field name="priority">1000</field>
+            <field name="model">stock.move.line</field>
+            <field name="arch" type="xml">
+                <form string="Finished Product">
+                    <group>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="product_id" readonly="1"/>
+                            <label for="qty_done" string ="Quantity"/>
+                            <div class="o_row">
+                                <span><field name="qty_done" readonly="1" nolabel="1"/></span>
+                                <span>/</span>
+                                <span><field name="product_uom_qty" readonly="1" nolabel="1"/></span>
+                                <span><field name="product_uom_id" attrs="{'readonly': [('id', '!=', False)]}" nolabel="1"/></span>
+                            </div>
+                            <field name="lot_id" string="Lot/Serial number" groups="stock.group_production_lot" readonly="1" attrs="{'invisible': [('lots_visible', '=', False)]}"/>
+                            <field name="lots_visible" invisible="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+    <menuitem id="menu_mrp_traceability"
+          name="Lots/Serial Numbers"
+          parent="menu_mrp_bom"
+          action="stock.action_production_lot_form"
+          groups="stock.group_production_lot"
+          sequence="15"/>
+
+    <menuitem id="menu_mrp_scrap"
+            name="Scrap Orders"
+            parent="menu_mrp_manufacturing"
+            action="stock.action_stock_scrap"
+            sequence="25"/>
+
+</odoo>

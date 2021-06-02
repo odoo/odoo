@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pe_partner_address_form" model="ir.ui.view">
+        <field name="name">pe.partner.form.address</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_address_format">
+                    <field name="parent_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="street_name" placeholder="Street Name..." attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" class="oe_read_only"/>
+                    <field name="street" placeholder="Street" class="oe_edit_only"/>
+                    <field name="street2" placeholder="Street2" invisible="1"/>
+                    <div class="o_row">
+                        <label for="street_number" class="oe_edit_only"/>
+                        <field name="street_number" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                        <span> </span>
+                        <label for="street_number2" class="oe_edit_only"/>
+                        <field name="street_number2" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                    </div>
+                    <field name="l10n_pe_district" placeholder="District..."/>
+                    <field name="city" placeholder="Province..." invisible="1"/>
+                    <field name="city_id" placeholder="Province..."/>
+                    <field name="state_id" class="o_address_state" placeholder="State..." options='{"no_open": True}'/>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="base.pe" model="res.country">
+        <field name="enforce_cities" eval="1" />
+        <field name="address_view_id" ref="pe_partner_address_form" />
+        <field name="address_format" eval="'%(street)s\n%(city)s\n%(state_name)s\n%(country_name)s'"/>
+        <field name="street_format" eval="'%(street_name)s %(street_number)s, %(street_number2)s'"/>
+    </record>
+</odoo>

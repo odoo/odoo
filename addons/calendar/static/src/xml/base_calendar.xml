@@ -1,84 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
-    <t t-name="many2manyattendee">
-        <t t-set="i" t-value="0"/>
-            <t t-foreach="elements" t-as="el">
-                <span class="oe_tag no-wrap" t-att-data-index="i">
-                    <a t-attf-class="oe_invitation #{el[2]}"/>
-                    <t t-esc="el[1]"/>
-                </span>
-            <t t-set="i" t-value="i + 1"/>
+    <t t-name="Many2ManyAttendeeTag" t-extend="FieldMany2ManyTag">
+        <t t-jquery="span:first" t-operation="prepend">
+            <span t-if="attendeesData[el_index]" t-attf-class="o_calendar_invitation #{attendeesData[el_index].status}"/>
         </t>
     </t>
-    <t t-name='notify_title'>
-        <span  t-attf-class="link2event eid_#{id}">
-            <t t-esc="title"/>
-        </span> 
-    </t>
-    <t t-name='notify_footer'>
-        <br/><br/>
-        <button class='link2showed oe_highlight oe_form oe_button '><span>OK</span></button> 
-        <button class='link2event '>Details</button>
-        <button class='link2recall '>Snooze</button> 
-    </t>
-    <t t-name='m2mattendee_tag'>
-        <div class="text-tag">
-            <div class="text-button">
-                <a class="oe_invitation custom-edit"/>
-                <span class="text-label"/>
-                <a class="text-remove"/>
+
+    <t t-extend="mail.systray.ActivityMenu.Previews">
+        <t t-jquery="div.o_preview_title" t-operation="after">
+            <div t-if="activity and activity.type == 'meeting'">
+                <t t-set="is_next_meeting" t-value="true"/>
+                <t t-foreach="activity.meetings" t-as="meeting">
+                    <div>
+                        <span t-att-class="!meeting.allday and is_next_meeting ? 'o_meeting_filter o_meeting_bold' : 'o_meeting_filter'" t-att-data-res_model="activity.model" t-att-data-res_id="meeting.id" t-att-data-model_name="activity.name" t-att-title="meeting.name">
+                            <span><t t-esc="meeting.name"/></span>
+                        </span>
+                        <span t-if="meeting.start" class="float-right">
+                            <t t-if="meeting.allday">All Day</t>
+                            <t t-else=''>
+                                <t t-set="is_next_meeting" t-value="false"/>
+                                <t t-esc="moment(meeting.start).local().format('hh:mm A')"/>
+                            </t>
+                        </span>
+                    </div>
+                </t>
             </div>
-        </div>         
+        </t>
     </t>
-    
-    <t t-name="invitation_view">
-        <div class='invitation_block well' style='width:50%; margin:auto; margin-top : 30px;'>
-            <div class="oe_right" style="margin-left:0px"><b><t t-esc="invitation['current_attendee'].cn"/> (<t t-esc="invitation['current_attendee'].email"/>)</b></div>
-            <div class="oe_left">
-                <img class="cal_inline cal_image" src='/web/binary/company_logo' />
-            </div>
-            <div>               
-                <div class="invitation_block cal_meeting">
-                    <h2 class="cal_inline">Calendar Invitation</h2>                                
-                    <t t-if="invitation['current_attendee'].state != 'needsAction'">
-                        <a t-attf-class="attendee_#{invitation['current_attendee'].state}">
-                            <b t-if="invitation['current_attendee'].state == 'accepted'">Yes I'm going.</b>
-                            <b t-if="invitation['current_attendee'].state == 'declined'">No I'm not going.</b>
-                        </a>                        
-                    </t>
-                    <br/><br/>
-                    <div class="cal_meeting"><t t-esc="invitation['meeting'].event"/></div>
-                    <br/>
-                    <table class="">
-                        <tr>
-                            <td class="cal_lable">When</td>
-                            <td> <t t-esc="invitation['meeting'].when"/></td>
-                        </tr>
-                        <tr>
-                            <td class="cal_lable">Where</td>
-                            <td> <t t-esc="invitation['meeting'].where or '-'"/></td>
-                        </tr>
-                        <tr>
-                            <td class="cal_lable">Who</td>
-                            <td>
-                                <t t-foreach="invitation['attendee']" t-as="att">
-                                    <br/>
-                                    <span class="cal_status"><a t-attf-class="oe_invitation #{att.status}"/><t t-esc="att.name"/></span>
-                                </t>
-                            </td>
-                        </tr>
-                    </table>
-                    <br/>
+
+    <t t-name="Calendar.attendee.status.popover" t-extend="CalendarView.event.popover">
+        <t t-jquery=".o_cw_popover_delete" t-operation="after">
+            <div t-if="widget.showStatusDropdown" class="btn-group o-calendar-attendee-status ml-2">
+                <a href="#" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i t-attf-class="fa fa-circle o-calendar-attendee-status-icon #{widget.selectedStatusInfo.color}"/> <span class="o-calendar-attendee-status-text" t-esc="widget.selectedStatusInfo.text"></span>
+                </a>
+                <div class="dropdown-menu overflow-hidden">
+                    <a class="dropdown-item" href="#" data-action="accepted"><i class="fa fa-circle text-success"/> Accept</a>
+                    <a class="dropdown-item" href="#" data-action="declined"><i class="fa fa-circle text-danger"/> Decline</a>
+                    <a class="dropdown-item" href="#" data-action="tentative"><i class="fa fa-circle text-muted"/> Uncertain</a>
                 </div>
             </div>
-        </div>
-     </t>
-
-    <t t-extend="CalendarView.sidebar.responsible">
-        <t t-jquery="span[t-attf-class*='color_filter']" t-operation="after">
-            <t t-if="(filters_value.value != -1) &amp;&amp; (filters_value.is_remove != false)">
-                <span class="oe_remove_follower oe_e hidden" title="Remove this favorite from the list" t-att-data-id="filters_value.value">X</span>
-           </t>
         </t>
     </t>
 

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <span t-name="LunchKanbanWidget">
+        <t t-foreach="widget.alerts" t-as="alert">
+            <div class="alert alert-warning mb-0" role="alert">
+                <t t-raw="alert.message"/> <!-- alert.message is coming from a fields.Html so it should be safe -->
+            </div>
+        </t>
+        <div class="o_lunch_kanban_banner container-fluid">
+            <div class="o_lunch_widget row py-3 py-md-0">
+                <div class="o_lunch_widget_info col-12 col-md-4 card border-0">
+                    <div class="card-body row no-gutters align-items-center">
+                        <div class="col-3 col-md-6 col-lg-3">
+                            <img class="o_image_64_cover rounded-circle" t-attf-src="{{ widget.userimage }}"/>
+                        </div>
+                        <div class="col-9 col-md-6 col-lg-9">
+                            <div class="pl-3">
+                                <div class="o_lunch_user_field py-1"/>
+                                <div class="o_lunch_location_field py-1"/>
+                                <div class="d-flex flex-row py-1">
+                                    <span class="flex-grow-1">Your Account</span>
+                                    <t t-call="currency_field">
+                                        <t t-set="value" t-value="widget.wallet"/>
+                                        <t t-set="currency" t-value="widget.currency"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_lunch_widget_info col-12 col-md-4 card border-0">
+                    <t t-if="!_.isEmpty(widget.lines)">
+                        <t t-if="widget.raw_state == 'ordered'">
+                            <t t-set="state_class" t-value="'badge-warning o_lunch_ordered'"/>
+                        </t>
+                        <t t-else="widget.raw_state == 'confirmed'">
+                            <t t-set="state_class" t-value="'badge-success o_lunch_confirmed'"/>
+                        </t>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                Your order
+                                <button t-if="widget.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link fa fa-trash o_lunch_widget_unlink"/>
+                                <span t-if="widget.raw_state != 'new'" t-esc="widget.state" t-attf-class="badge badge-pill {{ state_class }}"/>
+                            </h4>
+                            <ul class="list-unstyled o_lunch_widget_lines">
+                                <li t-foreach="widget.lines" t-as="line">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-grow-0 flex-shrink-0 o_lunch_product_quantity">
+                                            <button class="btn btn-sm btn-icon btn-link fa fa-minus-circle o_remove_product" t-if="widget.raw_state != 'confirmed'" t-attf-data-id="{{ line.id }}"/>
+                                            <span t-esc="line.quantity"/>
+                                            <button class="btn btn-sm btn-icon btn-link fa fa-plus-circle o_add_product" t-if="widget.raw_state != 'confirmed'" t-attf-data-id="{{ line.id }}"/>
+                                        </div>
+                                        <div class="flex-grow-1 pl-2">
+                                            <button t-esc="line.product[1]" class="btn btn-link o_lunch_open_wizard" t-attf-data-product-id="{{ line.product[0] }}" t-attf-data-id="{{ line.id }}"/>
+                                        </div>
+                                        <div class="flex-grow-0">
+                                            <t t-call="currency_field">
+                                                <t t-set="value" t-value="line.product[2]"/>
+                                                <t t-set="currency" t-value="widget.currency"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <div t-foreach="line.toppings" t-as="topping" class="d-flex flex-row">
+                                        <div class="flex-grow-1 pl-5">
+                                            <span>+ <t t-esc="topping[0]"/></span>
+                                        </div>
+                                        <div class="flex-grow-0">
+                                            <t t-call="currency_field">
+                                                <t t-set="value" t-value="topping[1]"/>
+                                                <t t-set="currency" t-value="widget.currency"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <span t-if="line.note" t-esc="line.note" class="text-muted pl-5"/>
+                                </li>
+                            </ul>
+                        </div>
+                    </t>
+                </div>
+                <div class="o_lunch_widget_info col-12 col-md-4 card border-0">
+                    <t t-if="!_.isEmpty(widget.lines) &amp;&amp; widget.raw_state == 'new'">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h4 class="card-title d-flex py-1">
+                                <span class="flex-grow-1">Total</span>
+                                <t t-call="currency_field">
+                                    <t t-set="value" t-value="widget.total"/>
+                                    <t t-set="currency" t-value="widget.currency"/>
+                                </t>
+                            </h4>
+                            <button t-if="widget.raw_state == 'new'" class="btn btn-primary w-100 o_lunch_widget_order_button">Order now</button>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </span>
+
+    <span t-name="currency_field" class="o_field_monetary o_field_number o_field_widget">
+        <t t-js="ctx">
+            ctx.value = _.str.sprintf('%.2f', parseFloat(ctx.value));
+        </t>
+        <t t-if="currency">
+            <t t-if="currency.position == 'after'">
+                <t t-esc="value"/><t t-esc="currency.symbol"/>
+            </t>
+            <t t-else="">
+                <t t-esc="currency.symbol"/><t t-esc="value"/>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-esc="value"/>
+        </t>
+    </span>
+
+    <div t-name="lunch.LunchPaymentDialog">
+        <span t-esc="widget.message"/>
+    </div>
+
+    <t t-name="LunchKanbanWidgetMobile">
+        <details class="fixed-bottom" t-attf-open="#{widget.keepOpen}">
+            <summary class="o_lunch_toggle_cart btn btn-primary w-100">
+                <i class="fa fa-fw fa-shopping-cart"/>
+                Your cart
+                (<t t-call="currency_field">
+                    <t t-set="value" t-value="widget.total"/>
+                    <t t-set="currency" t-value="widget.currency"/>
+                </t>)
+            </summary>
+            <t t-call="LunchKanbanWidget"/>
+        </details>
+    </t>
+</templates>

@@ -1,17 +1,20 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * l10n_multilang
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Osoul <baruni@osoul.ly>, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 01:06+0000\n"
-"PO-Revision-Date: 2015-11-03 10:02+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
+"POT-Creation-Date: 2018-10-08 14:33+0000\n"
+"PO-Revision-Date: 2019-08-26 09:11+0000\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,143 +22,136 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr "قوالب للمركز المالي"
+#: model:ir.model,name:l10n_multilang.model_account_account
+msgid "Account"
+msgstr "الحساب"
 
 #. module: l10n_multilang
-#: sql_constraint:account.account:0
-msgid "The code of the account must be unique per company !"
-msgstr "يجب ان يكون كود الحساب فريداً لكل شركة !"
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "قالب مخطط الحساب"
 
 #. module: l10n_multilang
-#: constraint:account.account.template:0
+#: model:ir.model,name:l10n_multilang.model_account_account_tag
+msgid "Account Tag"
+msgstr "وسم الحساب"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
 msgid ""
-"Configuration Error!\n"
-"You can not define children to an account with internal type different of \"View\"! "
-msgstr "خطأ في الإعدادات!\n لاتستطيع تعريف أطفال لحساب من نوع داخلي مختلف ل\"العرض\"! "
+"Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
+msgstr "التقسيم الإداري للدولة. مثال: ولايات فيدرالية، أقسام، أقاليم"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_journal
-msgid "Analytic Journal"
-msgstr "يومية تحليلية"
+#: model:ir.model,name:l10n_multilang.model_account_analytic_account
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
+msgid "Analytic Account"
+msgstr "الحساب التحليلي"
 
 #. module: l10n_multilang
-#: constraint:account.account.template:0
-msgid "Error ! You can not create recursive account templates."
-msgstr "خطأ ! لا يمكنك انشاء قوالب الحاسب العودية."
+#: model:ir.model,name:l10n_multilang.model_res_country_state
+msgid "Country state"
+msgstr "الولاية أو المحافظة"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__description
+msgid "Display on Invoices"
+msgstr "عرض على الفواتير"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__name
+msgid "Fiscal Position"
+msgstr "الموقف الضريبي"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__name
+msgid "Fiscal Position Template"
+msgstr "قالب الموقف الضريبي"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_base_language_install
+msgid "Install Language"
+msgstr "تثبيت اللغة"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_journal
 msgid "Journal"
-msgstr "يومية"
+msgstr "دفتر اليومية"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "القوالب لجدول الحساب"
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_journal__name
+msgid "Journal Name"
+msgstr "اسم دفتر اليومية"
 
 #. module: l10n_multilang
-#: sql_constraint:account.tax:0
-msgid "The description must be unique per company!"
-msgstr "وصف لكل شركة يجب ان تكون فريد!"
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__description
+msgid "Label on Invoices"
+msgstr "تسمية الفواتير"
 
 #. module: l10n_multilang
-#: constraint:account.tax.code.template:0
-msgid "Error ! You can not create recursive Tax Codes."
-msgstr "خطأ ! لايمكنك إنشاء اكواد ضريبية متداخلة."
+#: model:ir.model.fields,help:l10n_multilang.field_account_fiscal_position__note
+msgid "Legal mentions that have to be printed on the invoices."
+msgstr "الإشارات القانونية التي يجب طباعتها على الفواتير."
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_template
-msgid "account.tax.template"
-msgstr "account.tax.template"
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+msgid "Name"
+msgstr "الاسم"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax
-msgid "account.tax"
-msgstr "account.tax"
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__note
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__note
+msgid "Notes"
+msgstr "الملاحظات"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_account
-msgid "Account"
-msgstr "حساب"
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
+msgid "Spoken Languages"
+msgstr "اللغات التي يتحدث بها"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"
+#: model:ir.model.fields,field_description:l10n_multilang.field_res_country_state__name
+msgid "State Name"
+msgstr "اسم الولاية"
 
 #. module: l10n_multilang
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr "خطأ في الإعدادات! يجب أن تكون العملة المختارة مشتركة للحسابات الإفتراضية أيضأً."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_account_template
-msgid "Templates for Accounts"
-msgstr "قوالب للحسابات"
-
-#. module: l10n_multilang
-#: help:account.chart.template,spoken_languages:0
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template__spoken_languages
 msgid ""
 "State here the languages for which the translations of templates could be "
 "loaded at the time of installation of this localization module and copied in"
 " the final object when generating them from templates. You must provide the "
 "language codes separated by ';'"
-msgstr "ضع هنا اللغات حيث ترجمات القوالب، و ليكون كود اللغة مفصول بـ \";\""
+msgstr ""
+"يذكر هنا اللغات التي يمكن تحميل ترجمات النماذج في وقت التثبيت هذه الموديول "
+"الأقلمة ونسخ في الكائن النهائي عندما بتوليد لهم من النماذج. يجب توفير رموز "
+"لغة مفصولة '؛'"
 
 #. module: l10n_multilang
-#: constraint:account.account:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "خطأ ! لا يمكن إنشاء حسابات تكرارية."
+#: model:ir.model,name:l10n_multilang.model_account_tax
+msgid "Tax"
+msgstr "الضريبة"
 
 #. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not select an account type with a deferral method different of \"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
-msgstr "التكوين الخطأ!\nلا يمكنك اختيار  نوع الحساب باستخدام  طريقة التأجيل المختلفه \"عدم المساواه\" للحسابات من النوع الداخلي \"الدفع / القبض\" "
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
+msgid "Tax Name"
+msgstr "اسم الضريبة"
 
 #. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "يجب ان يكون الاسم لليومية فريد لكل شركة!"
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
+msgid "Template for Fiscal Position"
+msgstr "قالب للموقف الضريبي"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_analytic_account
-msgid "Analytic Account"
-msgstr "حسابات تحليلية"
+#: model:ir.model,name:l10n_multilang.model_account_account_template
+msgid "Templates for Accounts"
+msgstr "قوالب الحسابات"
 
 #. module: l10n_multilang
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "يجب ان يكون الكود لليومية فريد لكل شركة !"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position
-msgid "Fiscal Position"
-msgstr "الوضع المالي"
-
-#. module: l10n_multilang
-#: constraint:account.account:0
-msgid ""
-"Configuration Error! \n"
-"You can not define children to an account with internal type different of \"View\"! "
-msgstr "خطأ في الإعدادات!\nلا يمكنك تحديد فرع لحساب مع نوع داخلي مختلف من \"عرض\"! "
-
-#. module: l10n_multilang
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "خطأ! لا يمكنك إنشاء حسابات تحليلية متكررة."
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_tax_code_template
-msgid "Tax Code Template"
-msgstr "قالب رمز الضريبة"
-
-#. module: l10n_multilang
-#: field:account.chart.template,spoken_languages:0
-msgid "Spoken Languages"
-msgstr "اللغات المنطوقة"
+#: model:ir.model,name:l10n_multilang.model_account_tax_template
+msgid "Templates for Taxes"
+msgstr "قوالب الضرائب"

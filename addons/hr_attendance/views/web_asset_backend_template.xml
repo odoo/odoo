@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="hr_attendance assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/hr_attendance/static/src/js/employee_kanban_view_handler.js"></script>
+            <script type="text/javascript" src="/hr_attendance/static/src/js/greeting_message.js"></script>
+            <script type="text/javascript" src="/hr_attendance/static/src/js/kiosk_mode.js"></script>
+            <script type="text/javascript" src="/hr_attendance/static/src/js/kiosk_confirm.js"></script>
+            <script type="text/javascript" src="/hr_attendance/static/src/js/my_attendances.js"></script>
+            <script type="text/javascript" src="/hr_attendance/static/src/js/time_widget.js"></script>
+            <link rel="stylesheet" type="text/scss" href="/hr_attendance/static/src/scss/hr_attendance.scss"/>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="hr attendance tests" inherit_id="web.qunit_suite">
+        <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
+            <script type="text/javascript" src="/hr_attendance/static/tests/hr_attendance_tests.js"></script>
+        </xpath>
+    </template>
+</odoo>

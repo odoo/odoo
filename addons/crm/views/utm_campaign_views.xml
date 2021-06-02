@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="utm_campaign_view_kanban">
+        <field name="name">utm.campaign.view.kanban</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='utm_statistics']" position="inside">
+                <field name="crm_lead_activated" invisible="1"/>
+                <div class="mr-3"
+                    groups="sales_team.group_sale_salesman"
+                    attrs="{'invisible': [('crm_lead_activated', '=', False)]}" title="Leads">
+                    <i class="fa fa-star text-muted"></i>
+                    <small class="font-weight-bold"><field name="lead_count"/></small>
+                </div>
+                <div class="mr-3"
+                    groups="sales_team.group_sale_salesman"
+                    attrs="{'invisible': [('crm_lead_activated', '=', True)]}" title="Opportunities">
+                    <i class="fa fa-star text-muted"></i>
+                    <small class="font-weight-bold"><field name="opportunity_count"/></small>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_form">
+        <field name="name">utm.campaign.view.form</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <field name="crm_lead_activated" invisible="1"/>
+                <button name="action_redirect_to_leads"
+                    type="object"
+                    class="oe_stat_button order-3"
+                    icon="fa-star"
+                    groups="sales_team.group_sale_salesman"
+                    attrs="{'invisible': [('crm_lead_activated', '=', False)]}">
+                    <field name="lead_count" widget="statinfo" string="Leads"/>
+                </button>
+                <button name="action_redirect_to_opportunities"
+                    type="object"
+                    class="oe_stat_button order-3"
+                    icon="fa-star"
+                    groups="sales_team.group_sale_salesman"
+                    attrs="{'invisible': [('crm_lead_activated', '=', True)]}">
+                    <field name="opportunity_count" widget="statinfo" string="Opportunities"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

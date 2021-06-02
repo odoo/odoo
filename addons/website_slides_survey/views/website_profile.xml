@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
+        <xpath expr="//div[@id='profile_about_badge']" position="before">
+            <t t-if="channel">
+                <div class="mb32">
+                    <h5 class="border-bottom pb-1">Certifications</h5>
+                    <t t-call="website_slides_survey.display_certificate"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+     <template id="display_certificate">
+        <t t-if="certificates">
+            <div class="row">
+                <div class="col-12 col-lg-6" t-foreach="certificates" t-as="certificate">
+                    <div class="card mb-2">
+                        <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex">
+                            <div class="pl-5 pr-4 rounded-left" t-attf-style="background-image: url(#{website.image_url(certificate.slide_id, 'image_128')}); background-position: center"/>
+                            <div class="p-2 w-100">
+                                <h5 class="mt-0 mb-1" t-esc="certificate.survey_id.title"/>
+                                <div t-if="user.id == uid">
+                                    <small class="font-weight-bold">Score : <span t-esc="certificate.quizz_score"/> %</small>
+                                   <a role="button" class="float-right" t-att-href="'/survey/%s/get_certification' % certificate.survey_id.id">
+                                        <i class="fa fa-download"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <p class="text-muted">No certifications yet!</p>
+        </t>
+    </template>
+
+    <template id="top3_user_card" inherit_id="website_profile.top3_user_card">
+        <xpath expr="//div[hasclass('o_wprofile_top3_card_footer')]//div[last()]" position="after">
+            <div class="col py-3"><b t-esc="user['certification_count']"/> <span class="text-muted">Certifications</span></div>
+        </xpath>
+    </template>
+
+    <template id="all_user_card" inherit_id="website_profile.all_user_card">
+        <xpath expr="//td[hasclass('all_user_badge_count')]" position="after">
+            <td class="align-middle text-right pr-3 text-nowrap all_user_certification_count">
+                <b t-esc="user['certification_count']"/> <span class="text-muted small font-weight-bold">Certifications</span>
+            </td>
+        </xpath>
+    </template>
+</data></odoo>

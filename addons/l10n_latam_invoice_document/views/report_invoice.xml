@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- TODO remove on v14. We keep this view just in case someone has inherit from it and also so that update is not broken -->
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+    </template>
+
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <t t-call="account.report_invoice_document" position="attributes">
+            <attribute name="t-call">#{ o._get_name_invoice_report('account.report_invoice_document') }</attribute>
+        </t>
+    </template>
+
+    <template id="report_invoice_with_payments" inherit_id="account.report_invoice_with_payments">
+        <t t-call="account.report_invoice_document_with_payments" position="attributes">
+            <attribute name="t-call">#{ o._get_name_invoice_report('account.report_invoice_document_with_payments') }</attribute>
+        </t>
+    </template>
+
+</odoo>

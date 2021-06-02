@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Contract-related subtypes for messaging / Chatter -->
+        <record id="mt_contract_pending" model="mail.message.subtype">
+            <field name="name">To Renew</field>
+            <field name="res_model">hr.contract</field>
+            <field name="default" eval="True"/>
+            <field name="description">Contract about to expire</field>
+        </record>
+        <record id="mt_contract_close" model="mail.message.subtype">
+            <field name="name">Expired</field>
+            <field name="res_model">hr.contract</field>
+            <field name="default" eval="False"/>
+            <field name="description">Contract expired</field>
+        </record>
+        <!-- Department-related (parent) subtypes for messaging / Chatter -->
+        <record id="mt_department_contract_pending" model="mail.message.subtype">
+            <field name="name">Contract to Renew</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_contract_pending')"/>
+            <field name="relation_field">department_id</field>
+            <field name="description">Contract about to expire</field>
+        </record>
+
+        <!-- Expired Soon -->
+        <record id="ir_cron_data_contract_update_state" model="ir.cron">
+            <field name="name">HR Contract: update state</field>
+            <field name="model_id" ref="model_hr_contract"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.update_state()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+</odoo>

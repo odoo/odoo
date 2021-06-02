@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_frontend" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" href="/website_mail_channel/static/src/css/website_mail_channel.css"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.js"/>
+        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.snippet.js"/>
+    </xpath>
+</template>
+
+<template id="assets_editor" inherit_id="website.assets_editor">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_mail_channel/static/src/js/website_mail_channel.editor.js"/>
+    </xpath>
+</template>
+
+<template id="mail_channels" name="Mailing Lists">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty">
+            <section class="bg-primary jumbotron mt0 mb0">
+                <div class="container">
+                    <h1>Stay in touch with our Community</h1>
+                    <p>Alone we can do so little, together we can do so much</p>
+                </div>
+            </section>
+        </div>
+        <div class="container mt32">
+            <div t-if="'unsubscribe' in request.params" class="offset-lg-9 col-lg-3 alert alert-info" role="status">
+               <h3>Need to unsubscribe? It's right here! <span class="fa fa-2x fa-arrow-down float-right" role="img" aria-label="" title="Read this !"></span></h3>
+            </div>
+            <div class="row mt8" t-foreach="groups" t-as="group">
+                <div class="col-lg-3">
+                    <img t-att-src="website.image_url(group, 'image_128')" class="o_image_64_cover float-left" alt="Group"/>
+                    <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong><br />
+                    <t t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
+                        <i class='fa fa-envelope-o' role="img" aria-label="Alias" title="Alias"/>
+                        <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
+                    </t>
+                </div>
+                <div class="col-lg-4">
+                    <div t-esc="group.description" class="text-muted"/>
+                </div>
+                <div class="col-lg-2">
+                    <i class='fa fa-fw fa-user' role="img" aria-label="Recipients" title="Recipients"/> <t t-esc="group_data[group.id]['members_count']"/> members<br />
+                    <i class='fa fa-fw fa-envelope-o' role="img" aria-label="Traffic" title="Traffic"/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
+                </div>
+                <div class="col-lg-3">
+                    <!--<t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>-->
+
+                    <div class="js_follow_alias"
+                              t-att-data-id="group.id"
+                              data-object="mail.channel"
+                              t-att-data-follow="'on' if 'unsubscribe' in request.params else 'off'">
+                        <div class="input-group js_mg_follow_form">
+                            <input
+                                  type="email"
+                                  name="email"
+                                  class="js_follow_email form-control"
+                                  placeholder="your email..."/>
+                            <div t-if="'unsubscribe' not in request.params" class="input-group-append">
+                               <button href="#" class="btn btn-primary js_follow_btn">Subscribe</button>
+                            </div>
+                            <div t-if="'unsubscribe' in request.params" class="input-group-append">
+                               <button href="#" class="btn btn-primary js_follow_btn">Unsubscribe</button>
+                            </div>
+                        </div>
+                        <p class="js_mg_details d-none">
+                            <span class="js_mg_email d-none"><a href="#" class="js_mg_email"><i class="fa fa-envelope-o"/> send mail</a> - </span>
+                            <a href="#" class="js_mg_link"><i class="fa fa-file-o"/> archives</a> -
+                            <a role="button" href="#" class="js_unfollow_btn"><i class="fa fa-times"/> unsubscribe</a>
+                        </p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="group_messages" name="Message Threads">
+    <t t-call="website.layout">
+        <section class="container">
+            <div class="mt8">
+                <ol class="breadcrumb float-left">
+                    <li class="breadcrumb-item"><a href="/groups">Mailing Lists</a></li>
+                    <li class="breadcrumb-item">
+                        <a t-attf-href="/groups/#{slug(group)}?#{mode and 'mode=%s' % mode or ''}#{date_begin and '&amp;date_begin=%s' % date_begin or ''}#{date_end and '&amp;date_end=%s' % date_end or ''}"><t t-esc="group.name"/></a>
+                    </li>
+                </ol>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="text-center">
+                        <t t-esc="group.name"/> mailing list archives
+                    </h1><h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
+                        <i class='fa fa-envelope-o' role="img" aria-label="Alias" title="Alias"/>
+                        <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
+                    </h4>
+                </div>
+                <div class="col-lg-3">
+                    <h2>Archives</h2>
+                    <ul class="nav nav-pills flex-column" id="group_mode">
+                        <li class="nav-item">
+                            <a t-attf-href="/groups/#{ slug(group) }?mode=thread" t-attf-class="nav-link#{mode=='thread' and ' active' or ''}">By thread</a>
+                        </li>
+                        <li class="nav-item">
+                            <a t-attf-href="/groups/#{ slug(group) }?mode=date" t-attf-class="nav-link#{mode=='date' and not date_begin and ' active' or ''}">By date</a>
+                            <ul class="nav nav-pills flex-column" style="margin-left: 8px;">
+                                <t t-foreach="archives" t-as="month_archive">
+                                <li class="nav-item">
+                                    <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}"
+                                        t-attf-class="nav-link#{month_archive['date_begin'] == date_begin and ' active' or ''}">
+                                        <t t-esc="month_archive['date']"/>
+                                        <span class="float-right badge badge-pill" t-esc="month_archive['date_count']"/>
+                                    </a>
+                                </li>
+                                </t>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-9">
+                    <div>
+                        <t t-call="website.pager"/>
+                    </div>
+                    <t t-call="website_mail_channel.messages_short">
+                        <t t-set="messages" t-value="messages"/>
+                        <t t-set="msg_more_count" t-value="0"/>
+                        <t t-set="thread_header" t-value="None"/>
+                    </t>
+                    <div>
+                        <t t-call="website.pager"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+</template>
+
+<template id="group_message">
+    <t t-call="website.layout">
+        <t t-set="additional_title"><t t-esc="message.description"/></t>
+        <section class="container">
+            <div class="row mt8">
+                <ol class="breadcrumb float-left">
+                    <li class="breadcrumb-item"><a href="/groups">Mailing Lists</a></li>
+                    <li class="breadcrumb-item">
+                        <a t-attf-href="/groups/#{slug(group)}?#{mode and 'mode=%s' % mode or ''}#{date_begin and '&amp;date_begin=%s' % date_begin or ''}#{date_end and '&amp;date_end=%s' % date_end or ''}"><t t-esc="group.name"/></a>
+                    </li>
+                    <li t-if="message" class="breadcrumb-item active"><t t-esc="message.description"/></li>
+                </ol>
+            </div>
+            <div class="row">
+                <h1 class="text-center">
+                    <t t-esc="group.name"/> mailing list archives
+                </h1><h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
+                    <i class='fa fa-envelope-o' role="img" aria-label="Alias" title="Alias"/>
+                    <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
+                </h4>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <h4>Browse archives</h4>
+                    <ul class="nav nav-pills flex-column" id="group_mode">
+                        <li class="nav-item">
+                            <a t-attf-href="/groups/#{ slug(group) }?mode=thread" t-attf-class="nav-link#{mode=='thread' and ' active' or ''}">By thread</a>
+                        </li>
+                        <li class="nav-item">
+                            <a t-attf-href="/groups/#{ slug(group) }?mode=date" t-attf-class="nav-link#{mode=='date' and not date_begin and ' active' or ''}">By date</a>
+                            <ul class="nav nav-pills flex-column" style="margin-left: 8px;">
+                                <t t-foreach="archives" t-as="month_archive">
+                                <li class="nav-item">
+                                    <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}"
+                                        t-attf-class="nav-link#{month_archive['date_begin'] == date_begin and ' active' or ''}">
+                                        <t t-esc="month_archive['date']"/>
+                                        <span class="float-right badge badge-pill" t-esc="month_archive['date_count']"/>
+                                    </a>
+                                </li>
+                                </t>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-9">
+                    <div class="row">
+                        <h4 class="col-lg-6">
+                            <t t-if="prev_message"><a t-attf-href='/groups/#{slug(group)}/#{slug(prev_message)}?#{mode and "mode=%s" % mode or ""}'>
+                                <i class="fa fa-arrow-left" role="img" aria-label="Previous message" title="Previous message"/> <t t-esc="prev_message.description"/>
+                            </a></t>
+                        </h4>
+                        <h4 class="col-lg-6">
+                            <t t-if="next_message"><a class="float-right" t-attf-href='/groups/#{slug(group)}/#{slug(next_message)}?#{mode and "mode=%s" % mode or ""}'>
+                                <t t-esc="next_message.description"/> <i class="fa fa-arrow-right" role="img" aria-label="Next message" title="Next message"/>
+                            </a></t>
+                        </h4>
+                    </div>
+                    <div class="media">
+                        <img class="rounded mt0 o_image_40_cover"
+                            t-att-src="website.image_url(message, 'author_avatar')"  alt="Avatar"/>
+                        <div class="media-body">
+                            <h4 t-esc="message.description"/>
+                            <small>
+                                by
+                                <t t-if="message.author_id">
+                                    <span t-field="message.author_id" style="display: inline-block;" t-options='{
+                                        "widget": "contact",
+                                        "fields": ["name"]
+                                    }'/>
+                                </t>
+                                <t t-if="not message.author_id"><t t-esc="message.email_from"/></t>
+                                - <i class="fa fa-calendar" role="img" aria-label="Date" title="Date"/> <span t-field="message.date"/>
+                            </small>
+                            <div t-raw="message.body"/>
+
+                            <div>
+                                <p t-if="message.attachment_ids" class="mt8">
+                                    <a href="#" class="o_mg_link_hide">
+                                        <i class="fa fa-chevron-right" role="img" aria-label="Hide attachments" title="Hide attachments"/> <t t-raw="len(message.attachment_ids)"/> attachments
+                                    </a>
+                                    <a href="#" class="o_mg_link_show">
+                                        <i class="fa fa-chevron-down" role="img" aria-label="Show attachments" title="Show attachments"/> <t t-raw="len(message.attachment_ids)"/> attachments
+                                    </a>
+                                </p>
+                                <div class="o_mg_link_content">
+                                    <div class="col-lg-2 col-md-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
+                                        <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
+                                            <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
+                                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="message.child_ids" class="o_mg_replies">
+                        <h4 class="o_page_header">Follow-Ups</h4>
+                        <t t-call="website_mail_channel.messages_short">
+                            <t t-set="messages" t-value="message.child_ids[:replies_per_page]"/>
+                            <t t-set="msg_more_count" t-value="len(message.child_ids) - replies_per_page"/>
+                            <t t-set="thread_header" t-value="message"/>
+                        </t>
+                    </div>
+                    <div t-if="message.parent_id">
+                        <h4 class="o_page_header">Reference</h4>
+                        <t t-call="website_mail_channel.messages_short">
+                            <t t-set="messages" t-value="[message.parent_id]"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+</template>
+
+<template id="messages_short">
+    <div>
+        <ul class="list-unstyled">
+            <li t-foreach="messages" t-as="thread" class="media mt-3">
+                <img class="rounded mt-0 o_image_40_cover" alt="Avatar"
+                    t-att-src="website.image_url(thread, 'author_avatar')"/>
+                <div class="media-body">
+                    <h4>
+                        <a t-attf-href="/groups/#{slug(group)}/#{slug(thread)}?mode=#{mode}&amp;date_begin=#{date_begin}&amp;date_end=#{date_end}" t-esc="thread.description"/>
+                    </h4>
+                    <small>
+                        by
+                        <t t-if="thread.author_id">
+                            <span t-field="thread.author_id" style="display: inline-block;" t-options='{
+                                "widget": "contact",
+                                "fields": ["name"]
+                            }'/>
+                        </t>
+                        <t t-if="not thread.author_id"><t t-esc="thread.email_from"/></t>
+                        - <i class="fa fa-calendar" role="img" aria-label="Date" title="Date"/> <span t-field="thread.date"/>
+                        - <i class="fa fa-paperclip" role="img" aria-label="Attachments" title="Attachments"/> <t t-esc="len(thread.attachment_ids)"/>
+                    </small>
+                    <p t-if="thread.child_ids" class="mt8">
+                        <a href="#" class="o_mg_link_hide">
+                            <i class="fa fa-chevron-right" role="img" aria-label="Hide replies" title="Hide replies"/> <t t-raw="len(thread.child_ids)"/> replies
+                        </a>
+                        <a href="#" class="o_mg_link_show">
+                            <i class="fa fa-chevron-down" role="img" aria-label="Show replies" title="Show replies"/> <t t-raw="len(thread.child_ids)"/> replies
+                        </a>
+                    </p>
+                    <div class="o_mg_link_content o_mg_replies">
+                        <t t-call="website_mail_channel.messages_short">
+                            <t t-set="messages" t-value="thread.child_ids[:replies_per_page]"/>
+                            <t t-set="msg_more_count" t-value="len(thread.child_ids) - replies_per_page"/>
+                            <t t-set="thread_header" t-value="thread"/>
+                        </t>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <p t-if="messages and (msg_more_count or 0) > 0 and thread_header">
+            <button class="fa btn-link o_mg_read_more"
+                t-attf-data-href="/groups/#{slug(group)}/#{slug(thread_header)}/get_replies"
+                t-attf-data-msg-id="#{messages[-1].id}">
+                show <t t-esc="msg_more_count"/> more replies
+            </button>
+        </p>
+    </div>
+</template>
+
+
+<template id="confirmation_subscription" name="Mailing List Confirmation">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty">
+            <div class="container">
+                <p>
+                    You have been correctly
+                    <t t-if="subscribing">subscribed</t>
+                    <t t-if="not subscribing">unsubscribed</t>
+                    to the mailing list.
+                </p>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="invalid_token_subscription" name="Invalid Token Submitted">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty">
+            <div class="container">
+                <p>
+                    Invalid or expired confirmation link.
+                </p>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="not_subscribed" name="Email address was not subscribed">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty">
+            <div class="container">
+                <p>
+                    The address <t t-esc="partner_id.email"/> is already
+                    unsubscribed or was never subscribed to the mailing
+                    list, you may want to check that the address was
+                    correct.
+                </p>
+            </div>
+        </div>
+    </t>
+</template>
+
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_job_survey_inherit" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="before">
+                <label for="survey_id" groups="survey.group_survey_user"/>
+                <div groups="survey.group_survey_user" class="o_row">
+                    <field name="survey_id"
+                        context="{'default_category': 'hr_recruitment', 'default_access_mode': 'token'}"/>
+                    <button string="Display Interview Form" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}" class="oe_link"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_hr_job_kanban_inherit" model="ir.ui.view">
+        <field name="name">hr.job.kanban.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='manager_id']" position="after">
+                <field name="survey_id"/>
+            </xpath>
+            <xpath expr='//a[@name="edit_job"]' position="after">
+                <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" title="Display Interview Form">Interview Form</a>
+                <span t-if="!record.survey_id.raw_value">No Interview Form</span>
+            </xpath>
+        </field>
+    </record>
+</odoo>

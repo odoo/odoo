@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_session_form" model="ir.ui.view">
+        <field name="name">pos.session.form.view</field>
+        <field name="model">pos.session</field>
+        <field name="arch" type="xml">
+            <form string="Point of Sale Session" create="0">
+                <header>
+                    <button name="open_cashbox_pos" type="object" string="Open Session"
+                        attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'new_session')]}" class="oe_highlight"
+                         context="{'balance': 'start'}"/>
+                    <button name="action_pos_session_open" type="object" string="Start Session"
+                        attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
+                    <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
+                        class="oe_highlight"/>
+                    <button id="end_session_opened" name="action_pos_session_closing_control" type="object" string="End of Session"
+                        attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
+                        class="oe_highlight"/>
+                    <button id="validate_opened" name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
+                        attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
+                        class="oe_highlight"/>
+                    <button id="validate_closing_control" name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
+                        class="oe_highlight"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="new_session,opening_control,opened,closing_control,closed" nolabel="1" />
+                </header>
+                <sheet>
+                    <field name="cash_register_id" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_order"
+                            class="oe_stat_button"
+                            icon="fa-shopping-basket"
+                            type="object">
+                            <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                        <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-arrows-v" attrs="{'invisible':[('picking_count', '=', 0)]}">
+                            <field name="picking_count" widget="statinfo" string="Picking Errors"/>
+                        </button>
+                        <button
+                            name="action_show_payments_list"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-dollar"
+                            >
+                            <field name="total_payments_amount" widget="statinfo" string="Payments"/>
+                        </button>
+                        <button
+                            name="show_journal_items"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-bars"
+                            string="Journal Items"
+                            attrs="{'invisible':[('move_id', '=', False)]}"
+                            groups="account.group_account_user"
+                            >
+                        </button>
+                    </div>
+                    <h1 class="oe_title">
+                        <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
+                    </h1>
+                    <group>
+                        <field name="cash_control" invisible="1" />
+                        <field name="user_id"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="config_id"/>
+                        <field name="move_id" readonly="1" groups="account.group_account_user" />
+                        <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
+                        <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
+                    </group>
+                    <notebook>
+                        <page string="Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
+                            <group class="col-md-12" style="margin-left: 140px;">
+                                <group class="col-md-7">
+                                    <div style="margin:0;padding:0;">
+                                        <group style="margin:0;padding:0;">
+                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_start" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}" string="Starting Cash"/>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}" string="+ Transactions"/>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end" widget="monetary" options="{'currency_field': 'currency_id'}" string="= Expected in Cash"/>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end_real" widget="monetary" options="{'currency_field': 'currency_id'}" string="Actual in Cash"/>
+                                        </group>
+                                    </div>
+                                    <div style="margin:0;padding:0;">
+                                        <group style="margin:0;padding:0;">
+                                            <button class="oe_inline oe_link" name="open_cashbox_pos" type="object" context="{'balance': 'start'}" attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}">Set Starting Cash</button>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <button class="oe_inline oe_link" name="%(action_pos_box_out)d" type="action" attrs="{'invisible' : [('state', '=', 'closed')]}">Cash In/Out</button>
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                        </group>
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                            <button class="oe_inline oe_link" name="open_cashbox_pos" type="object" attrs="{'invisible': [('state', 'in', ['new_session', 'opening_control', 'closed'])]}" context="{'balance': 'close'}">Set Closing Cash</button>
+                                        </group>
+                                    </div>
+                                </group>
+                            </group>
+
+                            <div class="col-md-4" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control', 'opened'])]}" style="height: 30px">
+                                <group class="oe_subtotal_footer">
+                                    <field name="cash_register_difference" widget="monetary" options="{'currency_field': 'currency_id'}" decoration-danger="cash_register_difference != 0"/>
+                                </group>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_session_tree" model="ir.ui.view">
+        <field name="name">pos.session.tree.view</field>
+        <field name="model">pos.session</field>
+        <field name="arch" type="xml">
+            <tree string="Point of Sale Session" create="0">
+                <field name="config_id" />
+                <field name="name" />
+                <field name="user_id" />
+                <field name="start_at" />
+                <field name="stop_at" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_pos_session_kanban">
+        <field name="name">pos.session.kanban</field>
+        <field name="model">pos.session</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0">
+                <field name="config_id" />
+                <field name="name" />
+                <field name="user_id" />
+                <field name="start_at" />
+                <field name="state" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><span><field name="config_id"/></span></strong>
+                                </div>
+                                <field name="state" widget="label_selection" options="{'classes': {'opening_control': 'default',
+                                        'opened': 'success', 'closing_control': 'warning', 'closed': 'warning'}}"/>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <field name="name" />
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <span><field name="start_at" /></span>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_pos_session_search" model="ir.ui.view">
+        <field name="name">pos.session.search.view</field>
+        <field name="model">pos.session</field>
+        <field name="arch" type="xml">
+            <search string="Point of Sale Session">
+                <field name="name"/>
+                <field name="config_id" />
+                <field name="user_id" />
+                <filter name="my_sessions" string="My Sessions" domain="[('user_id', '=', uid)]"/>
+                <separator/>    
+                <filter name="open_sessions" string="In Progress" domain="[('state', '=', 'opened')]"/>
+                <separator/>
+                <filter string="Opening Date" name="start_date" date="start_at" />
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
+                    <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_session" model="ir.actions.act_window">
+        <field name="name">Sessions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.session</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="search_view_id" ref="view_pos_session_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No sessions found
+            </p><p>
+                A session is a period of time, usually one day, during which you sell through the Point of Sale.
+            </p>
+        </field>
+    </record>
+
+    <record id="mail_activity_old_session" model="mail.activity.type">
+        <field name="name">Session open over 7 days</field>
+        <field name="summary">note</field>
+        <field name="category">default</field>
+        <field name="res_model_id" ref="model_pos_session"/>
+        <field name="icon">fa-tasks</field>
+        <field name="delay_count">0</field>
+    </record>
+
+
+    <record model="ir.ui.view" id="closing_balance_confirm">
+        <field name="name">Confirming balance closing</field>
+        <field name="model">closing.balance.confirm.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <span>There is a difference between the expected and actual closing in cash. Are you sure you want to close the session and post the accounting entries?</span>
+                </group>
+                <footer>
+                    <button name="confirm_closing_balance" string="Confirm" type="object" class="oe_highlight, btn-primary" />
+                    <button string="Discard" special="cancel" class="oe_highlight, btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_pos_session_all"
+        parent="menu_point_of_sale"
+        action="action_pos_session"
+        sequence="2"
+        groups="group_pos_manager"/>
+</odoo>

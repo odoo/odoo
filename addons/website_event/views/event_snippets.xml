@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Snippet - Country Events - Placeholder -->
+<template id="s_country_events" name="Country Events">
+    <div t-attf-class="s_country_events_list oe_country_events #{_classes}">
+        <div class="country_events_list">
+            <h6 class="o_wevent_sidebar_title">
+                <i class="fa fa-globe mr-2"/>Upcoming Events
+            </h6>
+        </div>
+    </div>
+</template>
+
+<!-- Snippet - Country Events - List -->
+<template id="country_events_list" name="Country Events List">
+    <div class="country_events_list">
+        <t t-if="events">
+            <h6 class="o_wevent_sidebar_title">
+                <t t-if="country">
+                    <i class="fa fa-flag mr-2"/>Events: <span t-esc="country.name"/>
+                    <img class="img-fluid" t-att-src="website.image_url(country, 'image')" alt=""/>
+                </t>
+                <t t-else="">
+                    <i class="fa fa-globe mr-2"/>Upcoming Events
+                </t>
+            </h6>
+            <ul class="list-group mb-3">
+                <li t-foreach="events[:5]" t-as="event_dict" class="list-group-item d-flex justify-content-between">
+                    <a t-att-href="event_dict['url']">
+                        <i t-if="not event_dict['event'].website_published" class="fa fa-ban text-danger mr-1" role="img" aria-label="Unpublished" title="Unpublished"/>
+                        <span t-esc="event_dict['event'].name" t-attf-class="#{(not event_dict['event'].website_published) and 'text-danger' or ''}"/>
+                    </a>
+                    <span t-esc="event_dict['date']"/>
+                </li>
+            </ul>
+            <div t-if="len(events) &gt; 5">
+                <t t-if="country">
+                    <a t-attf-href="/event?country=#{country.id}" class="small"><b>See all events from <span t-esc="country.name"/></b></a>
+                </t>
+                <t t-else="">
+                    <a href="/event" class="small"><b>View all</b></a>
+                </t>
+            </div>
+        </t>
+    </div>
+</template>
+
+<!-- Replace snippet demo with actual snippet and options -->
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_event']" position="replace"/>
+</template>
+
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_event.s_country_events" t-thumbnail="/website_event/static/src/img/world_map.jpg"/>
+        <t t-snippet="website_event.s_speaker_bio" t-thumbnail="/website_event/static/src/img/s_country_events.png"/>
+    </xpath>
+</template>
+
+<template id="snippet_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@id='so_content_addition']" position="attributes">
+        <attribute name="data-selector" add=".oe_country_events, .s_speaker_bio" separator=","/>
+    </xpath>
+</template>
+
+<!-- Snippet - Speaker Bio -->
+<template id="s_speaker_bio" name="Speaker Bio">
+    <div class="s_speaker_bio" itemscope="itemscope" itemtype="http://schema.org/Person" itemprop="performer">
+        <span class="badge badge-secondary text-uppercase o_wevent_badge">Speaker</span>
+        <img src="/website_event/static/src/img/speaker.png" width="70" class="img-fluid rounded-circle float-left mr-3" alt=""/>
+        <div class="overflow-hidden">
+            <h4 class="mt-3 mb-1" itemprop="name">John DOE</h4>
+            <h6 class="mb-4">Company</h6>
+            <p>At just 13 years old, John DOE was already starting to develop his first business applications for customers. After mastering civil engineering, he founded TinyERP. This was the first phase of OpenERP which would later became Odoo, the most installed open-source business software worldwide.</p>
+        </div>
+    </div>
+</template>
+
+</odoo>

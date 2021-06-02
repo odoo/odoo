@@ -1,0 +1,18 @@
+<odoo>
+    <record id="mrp_production_form_view_inherited" model="ir.ui.view">
+        <field name="name">mrp.production.view.inherited</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='finished_move_line_ids']" position="before">
+                <field name="show_valuation" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button string="Valuation" type="object"
+                    name="action_view_stock_valuation_layers"
+                    class="oe_stat_button" icon="fa-dollar" groups="stock.group_stock_manager"
+                    attrs="{'invisible': [('show_valuation', '=', False)]}" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

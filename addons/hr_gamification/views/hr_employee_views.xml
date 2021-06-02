@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='public']" position="after">
+                <page string="Received Badges" attrs="{'invisible': [('user_id', '=', False)]}">
+                    <field name="has_badges" invisible="1"/>
+                    <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
+                    <div class="o_field_nocontent" attrs="{'invisible': [('has_badges', '=', True)]}">
+                        <p>
+                            Grant this employee his first badge
+                        </p><p class="oe_grey">
+                            Badges are rewards of good work. Give them to people you believe deserve it.
+                        </p>
+                    </div>
+                    <field name="badge_ids" mode="kanban" widget="many2many"/>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="hr_employee_public_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.public.view.form.inherit</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='public']" position="after">
+                <page string="Received Badges" attrs="{'invisible': [('user_id', '=', False)]}">
+                    <field name="has_badges" invisible="1"/>
+                    <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
+                    <div class="o_field_nocontent" attrs="{'invisible': [('has_badges', '=', True)]}">
+                        <p>
+                            Grant this employee his first badge
+                        </p><p class="oe_grey">
+                            Badges are rewards of good work. Give them to people you believe deserve it.
+                        </p>
+                    </div>
+                    <field name="badge_ids" mode="kanban" widget="many2many"/>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

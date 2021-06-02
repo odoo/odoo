@@ -1,129 +1,73 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
+from odoo import api, fields, models, _
+from odoo.tools import float_is_zero
 
 
-class account_journal(osv.osv):
-    _inherit = 'account.journal'
-
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if not context:
-            context = {}
-        session_id = context.get('pos_session_id', False) or False
-
-        if session_id:
-            session = self.pool.get('pos.session').browse(cr, uid, session_id, context=context)
-
-            if session:
-                journal_ids = [journal.id for journal in session.config_id.journal_ids]
-                args += [('id', 'in', journal_ids)]
-
-        return super(account_journal, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
-
-
-class pos_make_payment(osv.osv_memory):
+class PosMakePayment(models.TransientModel):
     _name = 'pos.make.payment'
-    _description = 'Point of Sale Payment'
-    def check(self, cr, uid, ids, context=None):
+    _description = 'Point of Sale Make Payment Wizard'
+
+    def _default_config(self):
+        active_id = self.env.context.get('active_id')
+        if active_id:
+            return self.env['pos.order'].browse(active_id).session_id.config_id
+        return False
+
+    def _default_amount(self):
+        active_id = self.env.context.get('active_id')
+        if active_id:
+            order = self.env['pos.order'].browse(active_id)
+            return order.amount_total - order.amount_paid
+        return False
+
+    def _default_payment_method(self):
+        active_id = self.env.context.get('active_id')
+        if active_id:
+            order_id = self.env['pos.order'].browse(active_id)
+            return order_id.session_id.payment_method_ids.sorted(lambda pm: pm.is_cash_count, reverse=True)[:1]
+        return False
+
+    config_id = fields.Many2one('pos.config', string='Point of Sale Configuration', required=True, default=_default_config)
+    amount = fields.Float(digits=0, required=True, default=_default_amount)
+    payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True, default=_default_payment_method)
+    payment_name = fields.Char(string='Payment Reference')
+    payment_date = fields.Datetime(string='Payment Date', required=True, default=lambda self: fields.Datetime.now())
+
+    def check(self):
         """Check the order:
         if the order is not paid: continue payment,
         if the order is paid print ticket.
         """
-        context = context or {}
-        order_obj = self.pool.get('pos.order')
-        active_id = context and context.get('active_id', False)
+        self.ensure_one()
 
-        order = order_obj.browse(cr, uid, active_id, context=context)
-        amount = order.amount_total - order.amount_paid
-        data = self.read(cr, uid, ids, context=context)[0]
-        # this is probably a problem of osv_memory as it's not compatible with normal OSV's
-        data['journal'] = data['journal_id'][0]
+        order = self.env['pos.order'].browse(self.env.context.get('active_id', False))
+        currency = order.currency_id
 
-        if amount != 0.0:
-            order_obj.add_payment(cr, uid, active_id, data, context=context)
+        init_data = self.read()[0]
+        if not float_is_zero(init_data['amount'], precision_rounding=currency.rounding):
+            order.add_payment({
+                'pos_order_id': order.id,
+                'amount': order._get_rounded_amount(init_data['amount']),
+                'name': init_data['payment_name'],
+                'payment_method_id': init_data['payment_method_id'][0],
+            })
 
-        if order_obj.test_paid(cr, uid, [active_id]):
-            order_obj.signal_workflow(cr, uid, [active_id], 'paid')
-            return {'type' : 'ir.actions.act_window_close' }
+        if order._is_pos_order_paid():
+            order.action_pos_order_paid()
+            return {'type': 'ir.actions.act_window_close'}
 
-        return self.launch_payment(cr, uid, ids, context=context)
+        return self.launch_payment()
 
-    def launch_payment(self, cr, uid, ids, context=None):
+    def launch_payment(self):
         return {
             'name': _('Payment'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.make.payment',
             'view_id': False,
             'target': 'new',
             'views': False,
             'type': 'ir.actions.act_window',
-            'context': context,
+            'context': self.env.context,
         }
-
-    def print_report(self, cr, uid, ids, context=None):
-        active_id = context.get('active_id', [])
-        datas = {'ids' : [active_id]}
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'pos.receipt',
-            'datas': datas,
-        }
-
-    def _default_journal(self, cr, uid, context=None):
-        if not context:
-            context = {}
-        session = False
-        order_obj = self.pool.get('pos.order')
-        active_id = context and context.get('active_id', False)
-        if active_id:
-            order = order_obj.browse(cr, uid, active_id, context=context)
-            session = order.session_id
-        if session:
-            for journal in session.config_id.journal_ids:
-                return journal.id
-        return False
-
-    def _default_amount(self, cr, uid, context=None):
-        order_obj = self.pool.get('pos.order')
-        active_id = context and context.get('active_id', False)
-        if active_id:
-            order = order_obj.browse(cr, uid, active_id, context=context)
-            return order.amount_total - order.amount_paid
-        return False
-
-    _columns = {
-        'journal_id' : fields.many2one('account.journal', 'Payment Mode', required=True),
-        'amount': fields.float('Amount', digits=(16,2), required= True),
-        'payment_name': fields.char('Payment Reference'),
-        'payment_date': fields.date('Payment Date', required=True),
-    }
-    _defaults = {
-        'journal_id' : _default_journal,
-        'payment_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'amount': _default_amount,
-    }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

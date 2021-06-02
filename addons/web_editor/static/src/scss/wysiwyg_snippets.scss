@@ -1,0 +1,800 @@
+///
+/// This file contains all variables and mixins that are specific to the editor.
+///
+
+// OVERRIDES FOR EDITOR WITH SNIPPETS
+body.editor_enable.editor_has_snippets {
+    padding-left: $o-we-sidebar-width !important;
+
+    #web_editor-top-edit .note-popover .popover {
+        left: $o-we-sidebar-width !important;
+    }
+
+    .modal:not(.o_technical_modal) {
+        // set z-index so customize options visible on dialog.
+        z-index: $o-we-overlay-zindex - 1;
+        // just for fake backdrop effect
+        background-color: rgba(66, 66, 66, 0.4);
+    }
+}
+
+// Mobile fix for mass mailing
+@include media-breakpoint-down(md) {
+    body.editor_enable.editor_has_snippets {
+        padding-left: inherit !important;
+
+        #web_editor-top-edit {
+            position: initial !important;
+            height: initial !important;
+            top: initial !important;
+            left: initial !important;
+
+            .note-popover .popover {
+                left: 0 !important;
+            }
+        }
+    }
+}
+// SNIPPET PANEL
+#oe_snippets {
+    @include o-w-preserve-btn;
+
+    @include o-position-absolute(0, auto, 0, -$o-we-sidebar-width);
+    position: fixed;
+    z-index: $o-we-zindex;
+    display: flex;
+    flex-flow: column nowrap;
+    width: $o-we-sidebar-width;
+
+    border-right: $o-we-border-width solid $o-we-border-color;
+    background-color: var(--o-we-snippets-bg-color);
+    color: var(--o-we-snippets-color);
+    box-shadow: 0px 10px 10px -10px black inset;
+    font-family: Roboto, $font-family-sans-serif;
+
+    transition: left 400ms $o-we-md-ease 0s;
+
+    &.o_loaded {
+        left: 0 !important;
+    }
+
+    #snippets_menu {
+        flex: 0 0 auto;
+        display: flex;
+        height: var(--o-we-toolbar-height);
+        background: var(--o-we-bg-color);
+        color: var(--o-we-color);
+        font-family: $o-we-font-family;
+
+        > button {
+            flex: 1 1 auto;
+            border: none;
+            background: transparent;
+            color: inherit;
+            @include o-text-overflow();
+
+            &.active {
+                background: var(--o-we-snippets-bg-color);
+                color: var(--o-we-snippets-color);
+            }
+
+            &:focus, &:active, &:focus:active {
+                outline: none;
+            }
+        }
+    }
+
+    > #o_scroll, > .o_we_customize_panel {
+        flex: 1 1 auto;
+        height: 100%;
+        overflow: auto;
+    }
+
+    > #o_scroll {
+
+        .o_panel_header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3%;
+            color: inherit;
+            margin-bottom: 3%;
+
+            i {
+                margin-right: 5px;
+            }
+        }
+
+        .o_panel_body {
+            &:after {
+                content: " ";
+                display: table;
+                clear: both;
+            }
+
+            .oe_snippet {
+                float: left;
+                width: 45.5%;
+                margin: 0 0 6% 3%;
+                box-shadow: none;
+                background-color: transparent;
+                user-select: none;
+
+                cursor: pointer;
+                cursor: copy;
+                cursor: grab;
+
+                .oe_snippet_thumbnail {
+                    .oe_snippet_thumbnail_img {
+                        border: none;
+                    }
+
+                    .oe_snippet_thumbnail_title {
+                        border: none;
+                        padding: 5px 0;
+                    }
+
+                    &:hover .oe_snippet_thumbnail_img {
+                        transition: transform 200ms ease 0s;
+                        transform: scale(1.05);
+                    }
+                }
+
+                &.o_disabled {
+                    .oe_snippet_thumbnail {
+                        background-color: rgba(255, 0, 0, 0.75);
+                    }
+
+                    .oe_snippet_thumbnail_img {
+                        opacity: 0.8;
+                    }
+                }
+
+                &.o_snippet_install {
+                    .oe_snippet_thumbnail_img {
+                        opacity: 0.5;
+                    }
+
+                    .btn.o_install_btn {
+                        display: none;
+                        @include o-position-absolute(16px, 4px, auto, 4px);
+                    }
+
+                    &:hover .btn.o_install_btn {
+                        display: block;
+                    }
+                }
+
+                &:nth-child(2n + 1) {
+                    clear: left;
+                }
+            }
+        }
+    }
+
+    > .o_we_customize_panel {
+
+        we-button, we-toggler {
+            cursor: pointer;
+            @include o-text-overflow(inline-block);
+            padding: 0.25rem 0.5rem;
+            margin: 0;
+            background-color: var(--o-we-bg-color-dark);
+            color: var(--o-we-color);
+            line-height: 1.5;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        %we-icon-button {
+            position: relative;
+
+            &::after {
+                position: absolute;
+                width: 1em;
+                right: 0.5em;
+                text-align: center;
+                font-family: FontAwesome;
+            }
+        }
+
+        @mixin we-icon-button($icon, $color: null) {
+            @extend %we-icon-button;
+            padding-right: 0.5em + 1em + 0.5em;
+
+            &::after {
+                content: $icon;
+                color: $color;
+            }
+        }
+
+        we-customizeblock-options {
+            display: block;
+            color: var(--o-we-snippets-color);
+            margin-top: 0.5rem;
+
+            > we-title {
+                display: flex;
+                align-items: center;
+                margin: 0.25rem 0;
+                padding: 0 0.5rem;
+                font-weight: bold;
+                color: inherit !important;
+
+                > we-button-group {
+                    flex: 0 0 auto;
+                    display: block;
+                    margin-left: auto;
+                    text-align: center;
+
+                    > we-button {
+                        margin-left: 0.25rem;
+                        width: 1.5rem;
+                        padding: 0.125rem;
+                    }
+                }
+            }
+        }
+
+        we-customizeblock-option {
+            position: relative;
+            display: block;
+
+            > * {
+                display: block;
+                margin-top: 0.25rem;
+            }
+
+            we-button, we-toggler {
+                display: block;
+                text-align: left;
+                border-radius: 0;
+            }
+            we-button {
+                &.active {
+                    @include we-icon-button('\f00c', $o-we-color-success);
+                }
+            }
+            we-collapse {
+                position: relative;
+                display: block;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 200ms ease 0s;
+            }
+            we-toggler {
+                @include we-icon-button('\f104');
+
+                &.active {
+                    @include we-icon-button('\f107');
+
+                    + we-collapse {
+                        max-height: 500px;
+                    }
+                }
+            }
+
+            .dropdown-menu {
+                // FIXME temporary fix for m2o option for example
+                position: static !important;
+            }
+        }
+    }
+}
+
+.oe_snippet {
+    // No root because can be drag and drop (and the helper is in the body)
+    position: relative;
+    z-index: $o-we-zindex;
+    width: 100px;
+    background-color: var(--o-we-snippets-bg-color);
+    color: var(--o-we-snippets-color);
+
+    > :not(.oe_snippet_thumbnail) {
+        display: none !important;
+    }
+
+    .oe_snippet_thumbnail {
+        width: 100%;
+
+        .oe_snippet_thumbnail_img {
+            width: 100%;
+            height: 0;
+            border: $o-we-border-width solid $o-we-border-color;
+            padding-bottom: 75%;
+            background-size: cover;
+            background-position: center center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        img.oe_snippet_thumbnail_img {
+            height: auto;
+            padding-bottom: 0;
+        }
+
+        .oe_snippet_thumbnail_title {
+            display: block;
+            padding: 5px;
+            font-size: 12px;
+            font-weight: 300;
+            text-shadow: none;
+        }
+
+        &:hover .oe_snippet_thumbnail_title {
+            color: var(--o-we-color-accent);
+        }
+    }
+}
+
+// SNIPPET OPTIONS
+.colorpicker {
+    .o_colorpicker_sections {
+        font-size: 14px;
+
+        button {
+            float: left;
+            width: percentage(1 / 8);
+            padding-top: percentage(1 / 8);
+            margin: 0;
+            border: none;
+            box-shadow: inset 0 0 0 1px var(--o-we-snippets-bg-color);
+        }
+
+        .o_colorpicker_section {
+
+            > :first-child {
+                margin: 8px 0 4px;
+            }
+            button {
+                position: relative;
+
+                &.o_small {
+                    border-radius: 50%;
+                }
+
+                &:hover,
+                &.selected {
+                    box-shadow: inset 0 0 1px 1px var(--o-we-snippets-bg-color);
+                }
+
+                &.selected::before {
+                    @include o-position-absolute(0, 0, 0, 0);
+                    content: "\f00c" !important;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-family: FontAwesome !important;
+                    color: $o-we-color-success;
+                }
+
+                &.o_btn_transparent::before {
+                    background-color: transparent;
+                }
+            }
+
+            &[data-name="transparent_grayscale"] button {
+                @include o-alpha-button-preview;
+
+                &::before, &::after {
+                    box-shadow: inherit;
+                }
+            }
+        }
+    }
+
+    .note-palette-title {
+        padding: 10px 0 10px 10px;
+        font-weight: bold;
+    }
+
+    .palette-reset {
+        @include o-position-absolute(0, 0);
+        margin: 0;
+        padding: 5px 10px 0;
+
+        .note-color-reset {
+            font-size: 20px !important;
+            color: desaturate(rgba($o-we-color-danger, 0.6), 40%);
+            margin: 1px 0 0;
+            padding: 0;
+            cursor: pointer;
+
+            &:hover {
+                background: transparent !important;
+                color: $o-we-color-danger;
+            }
+        }
+    }
+}
+
+// DROPZONES
+@keyframes dropZoneInsert {
+    to {
+        background-color: rgba($o-brand-odoo, 0.3);
+    }
+}
+
+.oe_drop_zone {
+    background-color: rgba($o-brand-odoo, 0.15);
+    animation: dropZoneInsert 1s linear 0s infinite alternate;
+
+    &.oe_insert {
+        position: relative;
+        z-index: $o-we-overlay-zindex;
+        width: 100%;
+        height: $o-we-dropzone-size;
+        margin: (-$o-we-dropzone-size/2) 0;
+        border: 2px dashed $o-we-border-color;
+
+        &.oe_vertical {
+            width: $o-we-dropzone-size;
+            float: left;
+            margin: 0 (-$o-we-dropzone-size/2);
+        }
+    }
+}
+
+// MANIPULATORS
+#oe_manipulators {
+    position: relative;
+    z-index: $o-we-overlay-zindex;
+
+    // SNIPPET MANIPULATORS
+    .oe_overlay {
+        @include o-position-absolute;
+        display: none;
+        height: 0;
+        border-color: $o-we-handles-accent-color;
+        background: transparent;
+        text-align: center;
+        transition: opacity 400ms linear 0s;
+
+        &.o_keypress {
+            opacity: 0;
+        }
+        &.oe_active {
+            display: block;
+            z-index: 1;
+        }
+
+        // HANDLES
+        > .o_handles {
+            @include o-position-absolute(-$o-we-handles-offset-to-hide, 0, auto, 0);
+            border-color: inherit;
+
+            &:hover > .o_handle {
+                background-color: rgba($o-we-handles-accent-color, 0.05);
+            }
+            > .o_handle {
+                position: relative;
+                border: 0 solid transparent;
+                border-color: inherit;
+                transition: background 300ms ease 0s;
+
+                &.w {
+                    @include o-position-absolute($o-we-handles-offset-to-hide, auto, -$o-we-handles-offset-to-hide, 0);
+                    width: $o-we-handle-edge-size;
+                    border-width: $o-we-handle-border-width;
+                    border-right-width: 0;
+                    cursor: e-resize;
+
+                    &:after {
+                        @include o-position-absolute($top: 50%, $left: 40%);
+                        margin-top: -$o-we-handles-btn-size/2;
+                    }
+                }
+                &.e {
+                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, -$o-we-handles-offset-to-hide, auto);
+                    width: $o-we-handle-edge-size;
+                    border-right-width: $o-we-handle-border-width;
+                    cursor: w-resize;
+
+                    &:after {
+                        @include o-position-absolute($top: 50%, $right: 40%);
+                        margin-top: -$o-we-handles-btn-size/2;
+                    }
+                }
+                &.n {
+                    @include o-position-absolute($o-we-handles-offset-to-hide, 0, auto, 0);
+                    height: $o-we-handle-edge-size;
+                    border-top-width: $o-we-handle-border-width;
+                    cursor: ns-resize;
+
+                    &:after {
+                        @include o-position-absolute($left: 50%, $top: 40%);
+                        margin-left: -$o-we-handles-btn-size/2;
+                    }
+                }
+                &.s {
+                    @include o-position-absolute(auto, 0, -$o-we-handles-offset-to-hide, 0);
+                    height: $o-we-handle-edge-size;
+                    border-bottom-width: $o-we-handle-border-width;
+                    cursor: ns-resize;
+
+                    &:after {
+                        @include o-position-absolute($left: 50%, $bottom: 40%);
+                        margin-left: -$o-we-handles-btn-size/2;
+                    }
+                }
+
+                &::after {
+                    z-index: 1;
+                    display: block;
+                    width: $o-we-handles-btn-size;
+                    height: $o-we-handles-btn-size;
+                    border: solid 1px darken($o-we-handles-accent-color, 10%);
+                    line-height: $o-we-handles-btn-size - 2;
+                    font-size: 14px;
+                    font-family: FontAwesome;
+                    background-color: darken($o-we-handles-accent-color, 20%);
+                    color: white;
+                }
+
+                &:hover,
+                &.o_active {
+                    background-color: rgba($o-we-handles-accent-color, 0.2);
+
+                    &::after {
+                        border-color: darken($o-we-handles-accent-color, 10%);
+                        background-color: darken($o-we-handles-accent-color, 20%);
+                    }
+                }
+
+                &.w:after,
+                &.e:after {
+                    content: "\f07e";
+                }
+
+                &.s:after,
+                &.n:after {
+                    content: "\f07d";
+                }
+
+                &.o_handle_start {
+
+                    &.w:after,
+                    &.e:after {
+                        content: '\f061';
+                    }
+
+                    &.n:after,
+                    &.s:after {
+                        content: '\f063';
+                    }
+                }
+
+                &.o_handle_end {
+
+                    &.w:after,
+                    &.e:after {
+                        content: '\f060';
+                    }
+
+                    &.n:after,
+                    &.s:after {
+                        content: '\f062';
+                    }
+                }
+
+                &.readonly {
+                    cursor: auto !important;
+
+                    &:after {
+                        display: none !important;
+                    }
+
+                    &:hover {
+                        opacity: 0.5;
+                    }
+                }
+            }
+
+            > .o_move_handle {
+                @include o-position-absolute($o-we-handles-offset-to-hide, $left: 50%);
+                transform: translate(-50%, -110%);
+                padding: 2px 4px;
+                // box-shadow instead of border due to incorrect border rendering when using css transform in Firefox
+                box-shadow: 0px 0px 0px 1px $o-we-color-text-normal;
+                border-radius: 20%;
+                color: $o-we-color-text-normal;
+                opacity: 0.5;
+                transition: opacity 400ms ease 0;
+                cursor: pointer;
+                cursor: move;
+
+                &::before, &::after {
+                    content: '\f141';
+                    display: block;
+                    font-family: FontAwesome;
+                    font-size: 0.8em;
+                    line-height: 0.35em;
+                }
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        &.o_top_cover > .o_handles > .o_move_handle {
+            top: auto;
+            bottom: -$o-we-handles-offset-to-hide;
+            transform: translate(-50%, 110%);
+        }
+
+        &.o_we_overlay_preview {
+            border-color: $o-we-handles-accent-color-preview;
+
+            > .o_handles {
+
+                > .o_handle {
+                    border-style: dashed;
+                    background-color: transparent !important;
+
+                    &::before {
+                        content: '';
+                        @include o-position-absolute(0, 0, 0, 0);
+                        z-index: -1;
+                        display: block;
+                        border-width: inherit;
+                        border-style: solid;
+                        border-color: white;
+                    }
+                    &::after {
+                        display: none;
+                    }
+
+                    &.w {
+                        border-width: $o-we-handle-border-width-preview;
+                        border-right-width: 0;
+
+                        &::before {
+                            top: -$o-we-handle-border-width-preview;
+                            bottom: -$o-we-handle-border-width-preview;
+                            left: -$o-we-handle-border-width-preview;
+                        }
+                    }
+                    &.e {
+                        border-right-width: $o-we-handle-border-width-preview;
+
+                        &::before {
+                            right: -$o-we-handle-border-width-preview;
+                        }
+                    }
+                    &.n {
+                        border-top-width: $o-we-handle-border-width-preview;
+
+                        &::before {
+                            top: -$o-we-handle-border-width-preview;
+                        }
+                    }
+                    &.s {
+                        border-bottom-width: $o-we-handle-border-width-preview;
+
+                        &::before {
+                            bottom: -$o-we-handle-border-width-preview;
+                        }
+                    }
+                }
+
+                > .o_move_handle {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+.s-resize-important * {
+    cursor: s-resize !important;
+}
+
+.n-resize-important * {
+    cursor: n-resize !important;
+}
+
+.e-resize-important * {
+    cursor: e-resize !important;
+}
+
+.w-resize-important * {
+    cursor: w-resize !important;
+}
+
+.move-important * {
+    cursor: move !important;
+}
+
+.dropdown-menu label .o_switch {
+    margin: 0;
+    padding: 2px 0;
+}
+
+.text-input-group {
+    position: relative;
+    margin-bottom: 45px;
+
+    input {
+        font-size: 18px;
+        padding: 10px 10px 10px 5px;
+        display: block;
+        width: 300px;
+        border: none;
+        border-bottom: 1px solid #757575;
+    }
+
+    input:focus {
+        outline: none;
+    }
+
+    /* LABEL ======================================= */
+    label {
+        color: #999;
+        font-size: 18px;
+        font-weight: normal;
+        @include o-position-absolute($top: 10px, $left: 5px);
+        pointer-events: none;
+        transition: 0.2s ease all;
+    }
+
+    /* active state */
+    input:focus~label,
+    input:valid~label {
+        top: -20px;
+        font-size: 14px;
+        color: #5264AE;
+    }
+
+    /* BOTTOM BARS ================================= */
+    .bar {
+        position: relative;
+        display: block;
+        width: 300px;
+    }
+
+    .bar:before,
+    .bar:after {
+        content: '';
+        height: 2px;
+        width: 0;
+        bottom: 1px;
+        @include o-position-absolute;
+        background: #5264AE;
+        transition: 0.2s ease all;
+    }
+
+    .bar:before {
+        left: 50%;
+    }
+
+    .bar:after {
+        right: 50%;
+    }
+
+    /* active state */
+    input:focus~.bar:before,
+    input:focus~.bar:after {
+        width: 50%;
+    }
+
+    /* HIGHLIGHTER ================================== */
+    .highlight {
+        @include o-position-absolute($top: 25%, $left: 0);
+        height: 60%;
+        width: 100px;
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    /* active state */
+    input:focus~.highlight {
+        animation: inputHighlighter 0.3s ease;
+    }
+}
+
+// DRAG&DROP ANIMATIONS
+.oe_snippet_body {
+    opacity: 0;
+    animation: fadeInDownSmall 700ms forwards;
+}

@@ -1,0 +1,28 @@
+.certification-wrapper {
+    background: url(/survey/static/src/img/certification_background.png) no-repeat;
+    background-size: 100% 100%;
+    height: 610px;
+    width: 860px;
+
+    .certification {
+        margin-left: 350px;
+        padding-top: 140px;
+        width: 510px;
+        text-align: center;
+
+        h2 {
+            color: #876B81;
+        }
+
+        &.test-entry::after {
+            top: 0px;
+            left: 0px;
+            position: absolute;
+            content: '';
+            height: 610px;
+            width: 860px;
+            background: url(/survey/static/src/img/watermark.png) no-repeat;
+            background-size: 100% 100%;
+        }
+    }
+}

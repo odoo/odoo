@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="account.BillsHiddenUploadForm">
+        <div class="d-none o_vendor_bill_upload">
+            <t t-call="HiddenInputFile">
+                <t t-set="multi_upload" t-value="true"/>
+                <t t-set="fileupload_id" t-value="widget.fileUploadID"/>
+                <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                <input type="hidden" name="model" value=""/>
+                <input type="hidden" name="id" value="0"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="BillsListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <button type="button" class="btn btn-secondary o_button_upload_bill">
+                Upload
+            </button>
+        </t>
+    </t>
+</templates>

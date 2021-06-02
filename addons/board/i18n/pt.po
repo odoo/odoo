@@ -1,17 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * board
+# 	* board
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Pedro Filipe <pedro2.10@hotmail.com>, 2019
+# Martin Trigaux, 2019
+# Manuela Silva <manuelarodsilva@gmail.com>, 2019
+# Pedro Castro Silva <pedrocs@exo.pt>, 2019
+# Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 06:54+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-8/language/pt/)\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019\n"
+"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,194 +25,162 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:28
+#: code:addons/board/static/src/xml/board.xml:58
+#, python-format
+msgid ""
+"\"Add to\n"
+"                Dashboard\""
+msgstr ""
+"\"Adicionar ao\n"
+"Painel\""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:30
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"<div class=\"oe_empty_custom_dashboard\">\n"
-"                  <p>\n"
-"                    <b>Your personal dashboard is empty.</b>\n"
-"                  </p><p>\n"
-"                    To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add to\n"
-"                    Dashboard'</i> in the extended search options.\n"
-"                  </p><p>\n"
-"                    You can filter and group data before inserting into the\n"
-"                    dashboard using the search options.\n"
-"                  </p>\n"
-"              </div>\n"
-"            "
-msgstr "<div class=\"oe_empty_custom_dashboard\">\n                  <p>\n                    <b>O seu painel pessoal está vazio.</b>\n                  </p><p>\n                    Para adicionar o seu primeiro relatório, vá ao\n                    menu, mude para a vista de gráfico ou de listagem, e carregue em <i>'Adicionar\n                    ao painel'</i> nas opções avançadas de pesquisa.\n                  </p><p>\n                    Pode filtrar e agrupar dados antes de os inserir no painel, usando a pesquisa avançada.\n                  </p>\n              </div>\n            "
+#. openerp-web
+#: code:addons/board/static/src/js/add_to_board_menu.js:132
+#, python-format
+msgid "'%s' added to dashboard"
+msgstr "'%s' adicionado ao painel"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:70
+#: code:addons/board/static/src/xml/board.xml:88
+#: code:addons/board/static/src/xml/board.xml:98
 #, python-format
 msgid "Add"
 msgstr "Adicionar"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:67
+#: code:addons/board/static/src/xml/board.xml:83
+#: code:addons/board/static/src/xml/board.xml:93
 #, python-format
-msgid "Add to Dashboard"
-msgstr "Adicionar ao painel"
+msgid "Add to my Dashboard"
+msgstr "Adicionar ao meu Painel"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:136
+#: code:addons/board/static/src/js/board_view.js:378
 #, python-format
-msgid "Are you sure you want to remove this item ?"
+msgid "Are you sure you want to remove this item?"
 msgstr "Tem a certeza de que pretende remover este item?"
 
 #. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/board_view.js:432
 #: model:ir.model,name:board.model_board_board
+#, python-format
 msgid "Board"
 msgstr "Quadro"
 
 #. module: board
-#: model:ir.model,name:board.model_board_create
-msgid "Board Creation"
-msgstr "Criação de painel"
-
-#. module: board
-#: field:board.create,name:0
-msgid "Board Name"
-msgstr "Nome do painel"
-
-#. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:374
-#, python-format
-msgid "Can't find dashboard action"
-msgstr "Não consegue encontrar a acção do painel"
-
-#. module: board
-#: view:board.create:board.view_board_create
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: board
-#. openerp-web
-#: code:addons/board/static/src/xml/board.xml:10
+#: code:addons/board/static/src/xml/board.xml:11
 #, python-format
 msgid "Change Layout"
 msgstr "Mudar aspeto"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:8
+#: code:addons/board/static/src/xml/board.xml:9
 #, python-format
 msgid "Change Layout.."
 msgstr "Mudar aspeto..."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:40
+#: code:addons/board/static/src/xml/board.xml:41
 #, python-format
 msgid "Choose dashboard layout"
-msgstr "Escolha o aspeto do painel"
+msgstr "Escolher o layout do painel"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:406
+#: code:addons/board/static/src/js/add_to_board_menu.js:136
 #, python-format
 msgid "Could not add filter to dashboard"
-msgstr "Não conseguiu adicionar filtro ao painel"
+msgstr "Não foi possível adicionar o filtro ao painel"
 
 #. module: board
-#: view:board.create:board.view_board_create
-msgid "Create"
-msgstr "Criar"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_create
-#: model:ir.ui.menu,name:board.menu_board_create
-msgid "Create Board"
-msgstr "Criar painel"
-
-#. module: board
-#: view:board.create:board.view_board_create
-msgid "Create New Dashboard"
-msgstr "Criar painel"
-
-#. module: board
-#: field:board.create,create_uid:0
-msgid "Created by"
-msgstr "Criada por"
-
-#. module: board
-#: field:board.create,create_date:0
-msgid "Created on"
-msgstr "Criado em"
+#: model:ir.model.fields,field_description:board.field_board_board__display_name
+msgid "Display Name"
+msgstr "Nome a Exibir"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:92
+#: code:addons/board/static/src/js/board_view.js:83
 #, python-format
 msgid "Edit Layout"
 msgstr "Editar aspeto"
 
 #. module: board
-#. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:409
-#, python-format
-msgid "Filter added to dashboard"
-msgstr "Filtro adicionado ao dashboard"
-
-#. module: board
-#: field:board.board,id:0 field:board.create,id:0
+#: model:ir.model.fields,field_description:board.field_board_board__id
 msgid "ID"
 msgstr "ID"
 
 #. module: board
-#: field:board.create,write_uid:0
-msgid "Last Updated by"
-msgstr "Última Actualização por"
+#: model:ir.model.fields,field_description:board.field_board_board____last_update
+msgid "Last Modified on"
+msgstr "Última Modificação em"
 
 #. module: board
-#: field:board.create,write_date:0
-msgid "Last Updated on"
-msgstr "Última Actualização em"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:46
+#, python-format
+msgid "Layout"
+msgstr "Aspeto"
 
 #. module: board
-#: view:board.board:board.board_my_dash_view
+#. openerp-web
+#: code:addons/board/static/src/js/board_view.js:46
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
+#: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
+#, python-format
 msgid "My Dashboard"
-msgstr "O meu painel"
-
-#. module: board
-#: field:board.create,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Menu Ascendente"
+msgstr "O Meu Painel"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:6
+#: code:addons/board/static/src/js/add_to_board_menu.js:133
 #, python-format
-msgid "Reset"
-msgstr "Reiniciar"
+msgid "Please refresh your browser for the changes to take effect."
+msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:4
+#: code:addons/board/static/src/xml/board.xml:56
 #, python-format
-msgid "Reset Layout.."
-msgstr "Repor Estrutura"
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                menu, switch to list or graph view, and click"
+msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
+#: code:addons/board/static/src/xml/board.xml:60
 #, python-format
-msgid "Title of new dashboard item"
-msgstr "Título do novo item de painel"
+msgid ""
+"You can filter and group data before inserting into the\n"
+"                dashboard using the search options."
+msgstr ""
 
 #. module: board
-#: view:board.create:board.view_board_create
-msgid "or"
-msgstr "ou"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:54
+#, python-format
+msgid "Your personal dashboard is empty"
+msgstr "O seu Painel Pessoal está vazio"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:58
+#, python-format
+msgid "in the extended search options."
+msgstr ""

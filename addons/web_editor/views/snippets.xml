@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="snippets">
+    <div id="snippets_menu">
+        <button type="button" class="o_we_add_snippet_btn active">
+            Blocks
+        </button>
+        <t t-set="customize_title">Click in the page to customize</t>
+        <button type="button" class="o_we_customize_snippet_btn"
+                t-att-data-title="customize_title"
+                disabled="disabled">
+            Options
+        </button>
+    </div>
+
+    <div id="o_scroll">
+        <div id="snippet_structure" class="o_panel">
+            <div class="o_panel_header">
+                <i class="fa fa-th-large"/> First Panel
+            </div>
+            <div class="o_panel_body">
+                <t t-snippet="web_editor.s_hr" t-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png"/>
+            </div>
+        </div>
+    </div>
+
+    <div id="snippet_options" class="d-none">
+        <t t-call="web_editor.snippet_options"/>
+    </div>
+</template>
+
+<!-- options (data-selector, data-drop-in, data-drop-near, data-js to link js object ) -->
+<template id="snippet_options">
+    <!-- t-field -->
+    <div data-js='many2one'
+         data-selector="[data-oe-many2one-model]:not([data-oe-readonly])"
+         data-no-check="true"/>
+
+    <div data-selector=".s_hr"
+         data-drop-near="p, h1, h2, h3, blockquote, .s_hr"/>
+</template>
+
+<!-- default block -->
+<template id="s_hr" name="Separator">
+    <div class="s_hr pt32 pb32">
+        <hr class="s_hr_1px s_hr_solid w-100 mx-auto"/>
+    </div>
+</template>
+
+</odoo>

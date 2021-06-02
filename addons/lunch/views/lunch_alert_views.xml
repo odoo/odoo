@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lunch_alert_view_search" model="ir.ui.view">
+        <field name="name">lunch.alert.search</field>
+        <field name="model">lunch.alert</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="message"/>
+                <filter name="inactive_today" string="Currently inactive" domain="[('available_today', '=', False)]"/>
+                <separator/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="lunch_alert_view_tree" model="ir.ui.view">
+        <field name="name">lunch.alert.tree</field>
+        <field name="model">lunch.alert</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="mode"/>
+                <field name="message" invisible="1"/>
+                <field name="available_today"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="lunch_alert_view_form" model="ir.ui.view">
+        <field name="name">lunch.alert.form</field>
+        <field name="model">lunch.alert</field>
+        <field name="arch" type="xml">
+            <form string="alert form">
+                <sheet>
+                    <div class="oe_title" name="title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="mode" widget="radio"/>
+                            <field name="recipients" attrs="{'invisible': [['mode', '!=', 'chat']]}" widget="radio"/>
+                            <field name="location_ids" widget="many2many_tags" required="1"/>
+                            <field name="until"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="recurrency_monday"/>
+                            <field name="recurrency_tuesday"/>
+                            <field name="recurrency_wednesday"/>
+                            <field name="recurrency_thursday"/>
+                            <field name="recurrency_friday"/>
+                            <field name="recurrency_saturday"/>
+                            <field name="recurrency_sunday"/>
+                            <label for="notification_time" attrs="{'invisible': [['mode', '!=', 'chat']]}"/>
+                            <div class="o_row" attrs="{'invisible': [['mode', '!=', 'chat']]}">
+                                <field name="notification_time" attrs="{'required': [('mode', '=', 'chat')]}" widget="float_time"/>
+                                <field name="notification_moment"/>
+                            </div>
+                            <field name="tz" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="message"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="lunch_alert_action" model="ir.actions.act_window">
+        <field name="name">Lunch Alerts</field>
+        <field name="res_model">lunch.alert</field>
+        <field name="search_view_id" ref="lunch_alert_view_search"/>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|', ('active', '=', True), ('active', '=', False)]</field>
+        <field name="context">{}</field>
+        <field name="view_id" ref="lunch_alert_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create new lunch alerts
+            </p>
+        </field>
+    </record>
+</odoo>

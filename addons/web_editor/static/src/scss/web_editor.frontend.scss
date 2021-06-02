@@ -1,0 +1,16 @@
+@include media-breakpoint-down(sm) {
+    img, .media_iframe_video, span.fa, i.fa {
+        transform: none !important;
+    }
+}
+
+.o_wysiwyg_loader {
+    @extend .form-control:disabled;
+    pointer-events: none;
+    min-height: 100px;
+    color: transparent;
+}
+.o_wysiwyg_loading {
+    @include o-position-absolute($top: 50%, $left: 50%);
+    transform: translate(-50%, -50%)
+}

@@ -3,58 +3,63 @@
 # * website_gengo
 # 
 # Translators:
+# Martin Trigaux, 2019
+# Matus Krnac <matus.krnac@gmail.com>, 2019
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-05-03 05:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
+"POT-Creation-Date: 2019-03-20 13:50+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:146
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:120
 #, python-format
 msgid "- Enable if you using testing account"
 msgstr "- Aktivujte ak používate testovací účet"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:140
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:114
 #, python-format
 msgid "- Jobs are Automatically Approved by Gengo."
 msgstr "- Práce sú automaticky schválené od Gengo."
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:120
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:94
 #, python-format
 msgid "1. Go To your"
 msgstr "1. Prejdite na vaše"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:121
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:95
 #, python-format
 msgid "2. Then paste generated keys in given form"
 msgstr "2. Potom vloźte kľúče vygenerované z"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:29
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:18
 #, python-format
 msgid "Already translated content"
 msgstr "Už preložený obsah"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:139
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:113
 #, python-format
 msgid "Auto Approve Translation"
 msgstr "Automaticky potvrdiť preklad"
@@ -67,199 +72,178 @@ msgid "Auto Translate"
 msgstr "Automatický preklad"
 
 #. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:68
-#, python-format
-msgid "By Machine (Free)"
-msgstr "Strojovo (Zdarma)"
+#: model:ir.model,name:website_gengo.model_base_gengo_translations
+msgid "Base Gengo Translations"
+msgstr "Základné preklady gengo"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:49
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:78
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:43
+#, python-format
+msgid "By Machine (Free)"
+msgstr "Strojovo (zdarma)"
+
+#. module: website_gengo
+#. openerp-web
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:52
 #, python-format
 msgid "Cancel"
 msgstr "Zrušiť"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:14
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:62
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:38
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:65
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:78
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:90
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:104
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:115
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:156
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:129
 #, python-format
 msgid "Close"
 msgstr "Zatvoriť"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:23
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:12
 #, python-format
 msgid "Content to translate or you can post them to"
 msgstr "Obsah na preloženie, alebo ich môžete zverejniť do"
 
 #. module: website_gengo
 #. openerp-web
+#: code:addons/website_gengo/static/src/js/website_gengo.js:90
+#, python-format
+msgid "Could not Post translation"
+msgstr "Nepodarilo sa odoslať preklad"
+
+#. module: website_gengo
+#. openerp-web
+#: code:addons/website_gengo/static/src/js/website_gengo.js:206
+#, python-format
+msgid "Could not submit ! Try Again"
+msgstr "Nepodarilo sa odoslať! Skúste to znova"
+
+#. module: website_gengo
+#. openerp-web
 #: code:addons/website_gengo/static/src/xml/website.gengo.xml:7
 #, python-format
 msgid "Count Words"
-msgstr "Zrátať slová"
+msgstr "Spočítať slová"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:43
-#, python-format
-msgid "Do not show this dialog later."
-msgstr "Neukazovať tento dialóg neskôr."
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:24
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:13
 #, python-format
 msgid "Gengo"
 msgstr "Gengo"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:116
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:89
 #, python-format
 msgid "Gengo API is not configured"
 msgstr "Gengo API nie je nakonfigurované"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:96
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:70
 #, python-format
 msgid "Gengo Dashboard"
 msgstr "Gengo nástenka"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:96
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:70
 #, python-format
 msgid "Gengo Statistics"
 msgstr "Gengo štatistiky"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:120
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:94
 #, python-format
 msgid "Gengo account"
 msgstr "Gengo účet"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:20
-#, python-format
-msgid "Here are the visuals used to help you translate efficiently:"
-msgstr "Tu sú vizuály používané pre váš efektívny preklad:"
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:34
-#, python-format
-msgid ""
-"In this mode, you can translate texts or post texts to Gengo for translation.\n"
-"                            To change the structure of the page, you must edit the\n"
-"                            master page."
-msgstr "V tomto režime môžete iba prekladať texty alebo prispievať texty do Gengo na preklad.\nNa zmenu štruktúry stránky, musíte upraviť\nhlavnú stránku. "
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:47
-#, python-format
-msgid "Ok"
-msgstr "Ok"
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:134
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:108
 #, python-format
 msgid "Paste private key here"
 msgstr "Sem vložte súkromný kľúč"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:127
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:101
 #, python-format
 msgid "Paste public key here"
 msgstr "Sem vložte verejný kľúč"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:76
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:51
 #, python-format
 msgid "Post"
-msgstr "Zverejniť"
+msgstr "Príspevok"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:132
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:106
 #, python-format
 msgid "Private key"
 msgstr "Súkromný kľúč"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:70
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:45
 #, python-format
 msgid "Pro - $"
-msgstr "Pro - $"
+msgstr "Profi - $"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:125
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:99
 #, python-format
 msgid "Public key"
 msgstr "Verejný kľúč"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:145
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:119
 #, python-format
 msgid "Sandbox"
 msgstr "Sandbox"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:63
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:37
 #, python-format
 msgid "Select Gengo Translation Service Level"
 msgstr "Vyberte úroveň Gengo prekladateľskej služby"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:69
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:44
 #, python-format
 msgid "Standard - $"
 msgstr "Štandard - $"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:119
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:93
 #, python-format
 msgid "Steps for configure Gengo"
 msgstr "Kroky pre nastavenie Gengo"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:154
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:128
 #, python-format
 msgid "Submit"
-msgstr "Odovzdať"
+msgstr "Zaslať"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:15
-#, python-format
-msgid "Translate this page"
-msgstr "Preložiť túto stranu"
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:100
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:74
 #, python-format
 msgid "Translated words"
 msgstr "Preložené slová"
@@ -273,21 +257,21 @@ msgstr "Preklad prebieha"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:26
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:15
 #, python-format
 msgid "Translation in process (Gengo)"
 msgstr "Preklad prebieha (Gengo)"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:91
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:64
 #, python-format
 msgid "Translator statistics for this page"
 msgstr "Štatistiky prekladača pre túto stránku"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:71
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:46
 #, python-format
 msgid "Ultra - $"
 msgstr "Ultra - $"
@@ -301,51 +285,35 @@ msgstr "Čakať"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:99
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:73
 #, python-format
 msgid "Words in progress"
 msgstr "Spracovávané slová"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:98
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:72
 #, python-format
 msgid "Words posted for translate"
 msgstr "Slová zverejnené na preklad"
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:19
-#, python-format
-msgid "You are about to enter the translation mode."
-msgstr "Chystáte sa vstúpiť do režimu prekladu."
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:120
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:94
 #, python-format
 msgid "and generate API Keys."
 msgstr "a vygenerovať API kľúče."
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:24
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:13
 #, python-format
 msgid "for translation."
 msgstr "na preklad."
 
 #. module: website_gengo
 #. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:95
+#: code:addons/website_gengo/static/src/xml/website.gengo.xml:69
 #, python-format
 msgid "new words found on this page."
 msgstr "nové slová nájdené na tejto stránke."
-
-#. module: website_gengo
-#. openerp-web
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:47
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:76
-#: code:addons/website_gengo/static/src/xml/website.gengo.xml:154
-#, python-format
-msgid "or"
-msgstr "alebo"

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+
+     <t t-extend="mail.widget.Thread.Message">
+        <t t-jquery=".o_thread_tooltip_container" t-operation="after">
+            <span t-if="message.getType() === 'sms' and message.hasSmsData() and options.displaySmsIcons" class="o_thread_sms_tooltip_container ml-1">
+                <t t-set="thread_icon_class" t-value="'o_thread_sms_tooltip o_thread_message_sms o_thread_message_sms_' + message.getSmsStatus()" />
+                <span t-attf-class="d-inline-flex align-items-center o_thread_sms_tooltip o_thread_message_sms o_thread_message_sms_#{message.getSmsStatus()} #{message.isError() ? 'o_thread_message_sms_error' : ''}"
+                       t-att-data-message-id="message.getID()">
+                    <i class="fa fa-mobile"/>
+                    <small class="font-weight-bold ml-1">SMS</small>
+                </span>
+            </span>
+        </t>
+    </t>
+
+     <t t-name="sms.widget.Thread.Message.SmsTooltip">
+        <div t-foreach="data" t-as="customerSMSData">
+            <span class="d-inline-block text-center o_thread_tooltip_icon">
+                <i t-if="customerSMSData[2] === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
+                <i t-if="customerSMSData[2] === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+                <i t-if="customerSMSData[2] === 'outgoing'" class='fa fa-clock-o' title="Awaiting Dispatch" role="img" aria-label="Awaiting Dispatch"/>
+                <i t-if="customerSMSData[2] === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
+            </span>
+            <span t-esc="customerSMSData[1]"/>
+        </div>
+    </t>
+
+ </template>

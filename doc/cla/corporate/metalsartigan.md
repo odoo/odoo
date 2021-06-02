@@ -1,4 +1,4 @@
-Canada, 2017-4-4
+Canada, 2017-3-24
 
 Métal Sartigan agrees to the terms of the Odoo Corporate Contributor License
 Agreement v1.0.

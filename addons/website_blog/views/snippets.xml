@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="website_blog" inherit_id="website.snippets" name="Snippet Blog">
+    <xpath expr="//div[@id='snippet_feature']/div[hasclass('o_panel_body')]/t" position="before">
+        <t t-snippet="website_blog.s_latest_posts" t-thumbnail="/website_blog/static/src/img/s_latest_posts.jpg"/>
+        <t t-snippet="website_blog.s_latest_posts_big_picture" t-thumbnail="/website_blog/static/src/img/s_latest_posts_big_picture.jpg"/>
+    </xpath>
+</template>
+
+<!-- Snippets' Options -->
+<template id="s_latest_posts_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='background']" position="before">
+        <div data-js="js_get_posts_selectBlog" data-selector=".s_latest_posts, .s_latest_posts_big_picture" data-target=".js_get_posts" data-no-check="true">
+            <we-collapse-area>
+                <we-toggler><i class="fa fa-folder-open"/> Choose a blog</we-toggler>
+                <we-collapse data-no-preview="true">
+                    <we-button data-filter-by-blog-id="0">All blogs</we-button>
+                    <!-- the blog list will be generated in js -->
+                </we-collapse>
+            </we-collapse-area>
+        </div>
+
+        <div data-js="js_get_posts_limit" data-selector=".s_latest_posts, .s_latest_posts_big_picture" data-target=".js_get_posts" data-no-check="true">
+            <we-collapse-area>
+                <we-toggler><i class="fa fa-sort-numeric-asc"/> Posts limit</we-toggler>
+                <we-collapse data-no-preview="true">
+                    <we-button data-posts-limit="1">1 post max</we-button>
+                    <we-button data-posts-limit="2">2 posts max</we-button>
+                    <we-button data-posts-limit="3">3 posts max</we-button>
+                    <we-button data-posts-limit="4">4 posts max</we-button>
+                    <we-button data-posts-limit="5">5 posts max</we-button>
+                    <we-button data-posts-limit="6">6 posts max</we-button>
+                    <we-button data-posts-limit="7">7 posts max</we-button>
+                    <we-button data-posts-limit="8">8 posts max</we-button>
+                    <we-button data-posts-limit="9">9 posts max</we-button>
+                    <we-button data-posts-limit="10">10 posts max</we-button>
+                </we-collapse>
+            </we-collapse-area>
+        </div>
+    </xpath>
+    <xpath expr="//div[@data-js='layout_column']" position="attributes">
+        <attribute name="data-exclude" add=".s_latest_posts, .s_latest_posts_big_picture" separator=","/>
+    </xpath>
+    <xpath expr="//*[@data-js='anchorName']" position="attributes">
+        <attribute name="data-exclude" add=".o_wblog_post_content_field > :not(div, section)" separator=","/>
+    </xpath>
+</template>
+</odoo>

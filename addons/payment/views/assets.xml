@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="web.assets_frontend">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/payment/static/src/scss/portal_payment.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/payment/static/src/scss/payment_form.scss"/>
+        </xpath>
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/payment/static/lib/jquery.payment/jquery.payment.js"></script>
+            <script type="text/javascript" src="/payment/static/src/js/payment_portal.js"></script>
+            <script type="text/javascript" src="/payment/static/src/js/payment_transaction_portal.js"></script>
+            <script type="text/javascript" src="/payment/static/src/js/payment_form.js"></script>
+            <script type="text/javascript" src="/payment/static/src/js/payment_processing.js"></script>
+        </xpath>
+    </template>
+</odoo>

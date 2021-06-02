@@ -1,193 +1,203 @@
-function openerp_restaurant_splitbill(instance, module){
-    var QWeb = instance.web.qweb;
-	var _t = instance.web._t;
+odoo.define('pos_restaurant.splitbill', function (require) {
+"use strict";
 
-    module.SplitbillScreenWidget = module.ScreenWidget.extend({
-        template: 'SplitbillScreenWidget',
+var gui = require('point_of_sale.gui');
+var models = require('point_of_sale.models');
+var screens = require('point_of_sale.screens');
+var core = require('web.core');
 
-        show_leftpane:   false,
-        previous_screen: 'products',
+var QWeb = core.qweb;
 
-        renderElement: function(){
-            var self = this;
-            this._super();
-            var order = this.pos.get('selectedOrder');
-            if(!order){
-                return;
+var SplitbillScreenWidget = screens.ScreenWidget.extend({
+    template: 'SplitbillScreenWidget',
+
+    previous_screen: 'products',
+
+    renderElement: function(){
+        var self = this;
+        var linewidget;
+
+        this._super();
+        var order = this.pos.get_order();
+        if(!order){
+            return;
+        }
+        var orderlines = order.get_orderlines();
+        for(var i = 0; i < orderlines.length; i++){
+            var line = orderlines[i];
+            linewidget = $(QWeb.render('SplitOrderline',{ 
+                widget:this, 
+                line:line, 
+                selected: false,
+                quantity: 0,
+                id: line.id,
+            }));
+            linewidget.data('id',line.id);
+            this.$('.orderlines').append(linewidget);
+        }
+        this.$('.back').click(function(){
+            self.gui.show_screen(self.previous_screen);
+        });
+    },
+
+    split_quantity: function(split, line, splitlines) {
+        if( !line.get_unit().is_pos_groupable ){
+            if( split.quantity !== line.get_quantity()){
+                split.quantity = line.get_quantity();
+            }else{
+                split.quantity = 0;
             }
-            var orderlines = order.get('orderLines').models;
-            for(var i = 0; i < orderlines.length; i++){
-                var line = orderlines[i];
-                linewidget = $(QWeb.render('SplitOrderline',{ 
-                    widget:this, 
-                    line:line, 
-                    selected: false,
-                    quantity: 0,
-                    id: line.id,
-                }));
-                linewidget.data('id',line.id);
-                this.$('.orderlines').append(linewidget);
-            }
-            this.$('.back').click(function(){
-                self.pos_widget.screen_selector.set_current_screen(self.previous_screen);
-            });
-        },
-
-        lineselect: function($el,order,neworder,splitlines,line_id){
-            var split = splitlines[line_id] || {'quantity': 0, line: null};
-            var line  = order.getOrderline(line_id);
-            
-            if( !line.get_unit().groupable ){
-                if( split.quantity !== line.get_quantity()){
+        }else{
+            if( split.quantity < line.get_quantity()){
+                split.quantity += line.get_unit().is_pos_groupable ? 1 : line.get_unit().rounding;
+                if(split.quantity > line.get_quantity()){
                     split.quantity = line.get_quantity();
-                }else{
-                    split.quantity = 0;
                 }
             }else{
-                if( split.quantity < line.get_quantity()){
-                    split.quantity += line.get_unit().is_unit ? 1 : line.get_unit().rounding;
-                    if(split.quantity > line.get_quantity()){
-                        split.quantity = line.get_quantity();
-                    }
-                }else{
-                    split.quantity = 0;
-                }
+                split.quantity = 0;
+            }
+        }
+    },
+
+    set_line_on_order: function(neworder, split, line) {
+        if( split.quantity ){
+            if ( !split.line ){
+                split.line = line.clone();
+                neworder.add_orderline(split.line);
+            }
+            split.line.set_quantity(split.quantity, 'do not recompute unit price');
+        }else if( split.line ) {
+            neworder.remove_orderline(split.line);
+            split.line = null;
+        }
+    },
+
+    lineselect: function($el,order,neworder,splitlines,line_id){
+        var split = splitlines[line_id] || {'quantity': 0, line: null};
+        var line  = order.get_orderline(line_id);
+
+        this.split_quantity(split, line, null);
+
+        this.set_line_on_order(neworder, split, line);
+
+        splitlines[line_id] = split;
+        $el.replaceWith($(QWeb.render('SplitOrderline',{
+            widget: this,
+            line: line,
+            selected: split.quantity !== 0,
+            quantity: split.quantity,
+            id: line_id,
+        })));
+        this.$('.order-info .subtotal').text(this.format_currency(neworder.get_subtotal()));
+    },
+
+    check_full_pay_order: function (order, splitlines) {
+        return _.every(order.get_orderlines(), function(orderLine) {
+            var split = splitlines[orderLine.id];
+            return split && split.quantity === orderLine.get_quantity();
+        });
+    },
+
+    set_quantity_on_order: function(splitlines, order) {
+        for(var id in splitlines){
+            var split = splitlines[id];
+            var line  = order.get_orderline(parseInt(id));
+            line.set_quantity(line.get_quantity() - split.quantity, 'do not recompute unit price');
+            if(Math.abs(line.get_quantity()) < 0.00001){
+                order.remove_orderline(line);
+            }
+            delete splitlines[id];
+        }
+    },
+
+    pay: function(order,neworder,splitlines){
+        if(_.isEmpty(splitlines))    // Splitlines is empty
+            return;
+
+        delete neworder.temporary;
+
+        if(this.check_full_pay_order(order, splitlines)){
+            this.gui.show_screen('payment');
+        }else{
+            this.set_quantity_on_order(splitlines, order);
+
+            neworder.set_screen_data('screen','payment');
+
+            // for the kitchen printer we assume that everything
+            // has already been sent to the kitchen before splitting
+            // the bill. So we save all changes both for the old
+            // order and for the new one. This is not entirely correct
+            // but avoids flooding the kitchen with unnecessary orders.
+            // Not sure what to do in this case.
+
+            if ( neworder.saveChanges ) {
+                order.saveChanges();
+                neworder.saveChanges();
             }
 
-            if( split.quantity ){
-                if ( !split.line ){
-                    split.line = line.clone();
-                    neworder.addOrderline(split.line);
-                }
-                split.line.set_quantity(split.quantity);
-            }else if( split.line ) {
-                neworder.removeOrderline(split.line);
-                split.line = null;
-            }
-     
-            splitlines[line_id] = split;
-            $el.replaceWith($(QWeb.render('SplitOrderline',{
-                widget: this,
-                line: line,
-                selected: split.quantity !== 0,
-                quantity: split.quantity,
-                id: line_id,
-            })));
-            this.$('.order-info .subtotal').text(this.format_currency(neworder.getSubtotal()));
-        },
+            neworder.set_customer_count(1);
+            order.set_customer_count(order.get_customer_count() - 1);
+            order.set_screen_data('screen','products');
 
-        pay: function($el,order,neworder,splitlines,cashregister_id){
-            var orderlines = order.get('orderLines').models;
-            var empty = true;
-            var full  = true;
+            this.pos.get('orders').add(neworder);
+            this.pos.set('selectedOrder',neworder);
+        }
+    },
+    show: function(){
+        var self = this;
+        this._super();
+        this.renderElement();
 
-            for(var i = 0; i < orderlines.length; i++){
-                var id = orderlines[i].id;
-                var split = splitlines[id];
-                if(!split){
-                    full = false;
-                }else{
-                    if(split.quantity){
-                        empty = false;
-                        if(split.quantity !== orderlines[i].get_quantity()){
-                            full = false;
-                        }
-                    }
-                }
-            }
-            
-            if(empty){
-                return;
-            }
+        var order = this.pos.get_order();
+        var neworder = new models.Order({},{
+            pos: this.pos,
+            temporary: true,
+        });
+        neworder.set('client',order.get('client'));
 
-            for(var i = 0; i < this.pos.cashregisters.length; i++){
-                if(this.pos.cashregisters[i].id === cashregister_id){
-                    var cashregister = this.pos.cashregisters[i];
-                    break;
-                }
-            }
+        var splitlines = {};
 
-            if(full){
-                order.addPaymentline(cashregister);
-                this.pos_widget.screen_selector.set_current_screen('payment');
-            }else{
-                for(var id in splitlines){
-                    var split = splitlines[id];
-                    var line  = order.getOrderline(parseInt(id));
-                    line.set_quantity(line.get_quantity() - split.quantity);
-                    if(Math.abs(line.get_quantity()) < 0.00001){
-                        order.removeOrderline(line);
-                    }
-                    delete splitlines[id];
-                }
-                neworder.addPaymentline(cashregister);
-                neworder.set_screen_data('screen','payment');
+        this.$('.orderlines').on('click','.orderline',function(){
+            var id = parseInt($(this).data('id'));
+            var $el = $(this);
+            self.lineselect($el,order,neworder,splitlines,id);
+        });
 
-                // for the kitchen printer we assume that everything
-                // has already been sent to the kitchen before splitting 
-                // the bill. So we save all changes both for the old 
-                // order and for the new one. This is not entirely correct 
-                // but avoids flooding the kitchen with unnecessary orders. 
-                // Not sure what to do in this case.
+        this.$('.paymentmethods .button').click(function(){
+            self.pay(order,neworder,splitlines);
+        });
+    },
+});
 
-                if ( neworder.saveChanges ) { 
-                    order.saveChanges();
-                    neworder.saveChanges();
-                }
+gui.define_screen({
+    'name': 'splitbill',
+    'widget': SplitbillScreenWidget,
+    'condition': function(){
+        return this.pos.config.iface_splitbill;
+    },
+});
 
-                this.pos.get('orders').add(neworder);
-                this.pos.set('selectedOrder',neworder);
-            }
-        },
-        show: function(){
-            var self = this;
-            this._super();
-            this.renderElement();
+var SplitbillButton = screens.ActionButtonWidget.extend({
+    template: 'SplitbillButton',
+    button_click: function(){
+        if(this.pos.get_order().get_orderlines().length > 0){
+            this.gui.show_screen('splitbill');
+        }
+    },
+});
 
-            var order = this.pos.get('selectedOrder');
-            var neworder = new module.Order({
-                pos: this.pos,
-                temporary: true,
-            });
-            neworder.set('client',order.get('client'));
+screens.define_action_button({
+    'name': 'splitbill',
+    'widget': SplitbillButton,
+    'condition': function(){
+        return this.pos.config.iface_splitbill;
+    },
+});
 
-            var splitlines = {};
-
-            this.$('.orderlines').on('click','.orderline',function(){
-                var id = parseInt($(this).data('id'));
-                var $el = $(this);
-                self.lineselect($el,order,neworder,splitlines,id);
-            });
-
-            this.$('.paymentmethod').click(function(){
-                var id = parseInt($(this).data('id'));
-                var $el = $(this);
-                self.pay($el,order,neworder,splitlines,id);
-            });
-        },
-    });
-
-    module.PosWidget.include({
-        build_widgets: function(){
-            var self = this;
-            this._super();
-
-            if(this.pos.config.iface_splitbill){
-                this.splitbill_screen = new module.SplitbillScreenWidget(this,{});
-                this.splitbill_screen.appendTo(this.$('.screens'));
-                this.screen_selector.add_screen('splitbill',this.splitbill_screen);
-
-                var splitbill = $(QWeb.render('SplitbillButton'));
-
-                splitbill.click(function(){
-                    if(self.pos.get('selectedOrder').get('orderLines').models.length > 0){
-                        self.pos_widget.screen_selector.set_current_screen('splitbill');
-                    }
-                });
-                
-                splitbill.appendTo(this.$('.control-buttons'));
-                this.$('.control-buttons').removeClass('oe_hidden');
-            }
-        },
-    });
+return {
+    SplitbillButton: SplitbillButton,
+    SplitbillScreenWidget: SplitbillScreenWidget,
 }
+
+});
+

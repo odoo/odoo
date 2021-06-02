@@ -1,17 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_timesheet
+# 	* hr_timesheet
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Martin Trigaux, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Cas Vissers <c.vissers@brahoo.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-07-17 07:21+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
+"POT-Creation-Date: 2019-10-18 09:46+0000\n"
+"PO-Revision-Date: 2019-08-26 09:11+0000\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,539 +25,685 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
-msgid "(Keep empty for current time)"
-msgstr "(Laat leeg voor huidige tijd)"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+msgid "<em class=\"font-weight-normal text-muted\">Timesheets for project:</em>"
+msgstr "<em class=\"font-weight-normal text-muted\">Urenstaten voor project:</em>"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-msgid "(local time on the server side)"
-msgstr "(lokale tijd op de server)"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
+msgid "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Datum\" title=\"Datum\"/>"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to record activities.\n"
-"              </p><p>\n"
-"                You can register and track your workings hours by project every\n"
-"                day. Every time spent on a project will become a cost in the\n"
-"                analytic accounting/contract and can be re-invoiced to\n"
-"                customers if required.\n"
-"              </p>\n"
-"            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Klik voor het aanmaken van activiteiten.\n              </p><p>\n                U kunt uw gewerkte uren per dag per project registreren en volgen.\n                Elke tijd besteed aan een project geeft kosten op de kostenplaats/contract\n                en kan, indien nodig,  worden doorberekend aan de klant.\n              </p>\n            "
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"De waarden die hier worden "
+"ingesteld, zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\"/>"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
-msgid ""
-"<p>\n"
-"                No activity yet on this contract.\n"
-"              </p><p>\n"
-"                In Odoo, contracts and projects are implemented using\n"
-"                analytic account. So, you can track costs and revenues to analyse\n"
-"                your margins easily.\n"
-"              </p><p>\n"
-"                Costs will be created automatically when you register supplier\n"
-"                invoices, expenses or timesheets.\n"
-"              </p><p>\n"
-"                Revenues will be created automatically when you create customer\n"
-"                invoices. Customer invoices can be created based on sale orders\n"
-"                (fixed price invoices), on timesheets (based on the work done) or\n"
-"                on expenses (e.g. reinvoicing of travel costs).\n"
-"              </p>\n"
-"            "
-msgstr "<p>\n                Nog geen activiteit op dit contract.\n              </p><p>\n                In Odoo, zijn contracten en projecten opgenomen als een kostenplaats.\n                Dus, kunt u uw kosten en opbrengsten bijhouden om zo uw marges te analyseren\n              </p>\n                De kosten zullen automatisch gemaakt wanneer u inkoopfacturen, declaraties of\n                urenstaten boekt.\n              </p>\n                Opbregsten worden automatisch gemaakt wanneer u klantfacturen maakt.\n                Klant facturen kunnen worden aangemaakt op basis van verkooporders\n                (vaste prijs facturen), op urenstaten (op basis van de verrichte werkzaamheden) of\n                op de uitgaven (bijv. doorrekeningen van reiskosten).\n              </p>\n            "
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
+msgid "<span class=\"o_label\">Timesheets</span>"
+msgstr "<span class=\"o_label\">Urenstaten</span>"
 
 #. module: hr_timesheet
-#: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
-msgid "Absent"
-msgstr "Afwezig"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
+msgid "<span class=\"o_stat_text\">Timesheets</span>"
+msgstr "<span class=\"o_stat_text\">Urenstaten</span>"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-msgid "Accounting"
-msgstr "Financieel"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid "<span> planned hours</span>"
+msgstr "<span>geplande uren</span>"
 
 #. module: hr_timesheet
-#: field:hr.timesheet.report,account_id:0
-#: model:ir.model,name:hr_timesheet.model_account_analytic_account
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "<span>Date</span>"
+msgstr "<span>Datum</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "<span>Description</span>"
+msgstr "<span>Omschrijving</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "<span>Responsible</span>"
+msgstr "<span>Verantwoordelijke</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "<span>Time</span>"
+msgstr "<span>Tijd</span>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
+msgid "<strong>Duration: </strong>"
+msgstr "<strong>Duur: </strong>"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "<strong>Total</strong>"
+msgstr "<strong>Totaal</strong>"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_by_project
+msgid "Activities"
+msgstr "Activiteiten"
+
+#. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_timesheet_manager
+msgid "Administrator"
+msgstr "Beheerder"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "All"
+msgstr "Alle"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
+msgid "All Timesheets"
+msgstr "Alle urenstaten"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
+msgid "Allow timesheets"
+msgstr "Urenstaten toestaan"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
 msgid "Analytic Account"
 msgstr "Kostenplaats"
 
 #. module: hr_timesheet
-#: field:hr.employee,journal_id:0
-msgid "Analytic Journal"
-msgstr "Kostenplaatsdagboek"
-
-#. module: hr_timesheet
-#: field:hr.analytic.timesheet,line_id:0
-msgid "Analytic Line"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
+msgid "Analytic Entry"
 msgstr "Kostenplaatsboeking"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-msgid "Analytic account"
-msgstr "Kostenplaats"
+#: model:ir.model,name:hr_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Kostenplaatsregel"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
-msgid "Cancel"
-msgstr "Annuleren"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Apple App Store"
+msgstr "Apple App Store"
 
 #. module: hr_timesheet
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
-msgid "Change Work"
-msgstr "Verander taak"
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
+msgid "Awesome Timesheet"
+msgstr "Geweldige Urenstaten"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:176
-#, python-format
-msgid ""
-"Changing the date will let this entry appear in the timesheet of the new "
-"date."
-msgstr "Het veranderen van de datum zal ervoor zorgen dat deze regel in een urenstaat van een andere datum verschijnt."
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
+msgid "By Employee"
+msgstr "Per werknemer"
 
 #. module: hr_timesheet
-#: help:account.analytic.account,use_timesheets:0
-msgid "Check this field if this project manages timesheets"
-msgstr "Vink dit aan als voor dit project uren worden bijgehouden."
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
+msgid "By Project"
+msgstr "Per project"
 
 #. module: hr_timesheet
-#: field:hr.sign.out.project,date:0
-msgid "Closing Date"
-msgstr "Afsluitdatum"
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
+msgid "By Task"
+msgstr "Per taak"
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
-#: field:hr.timesheet.report,company_id:0
-msgid "Company"
-msgstr "Bedrijf"
+#: model:ir.model,name:hr_timesheet.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
 
 #. module: hr_timesheet
-#: field:hr.timesheet.report,cost:0
-msgid "Cost"
-msgstr "Kosten"
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
+msgid "Computed as: Time Spent + Sub-tasks Hours."
+msgstr "Berekend als: Gebruikte tijd + uren subtaken."
 
 #. module: hr_timesheet
-#: view:account.analytic.account:hr_timesheet.account_analytic_account_timesheet_form
-msgid "Cost/Revenue"
-msgstr "Kosten/Opbrengst"
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
+msgid "Computed using the sum of the task work done."
+msgstr "Berekend met de som van het werk dat verricht is."
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
-msgid "Costs & Revenues"
-msgstr "Kosten & Opbrengsten"
+#: model:ir.model,name:hr_timesheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,create_uid:0
-#: field:hr.sign.in.project,create_uid:0
-#: field:hr.sign.out.project,create_uid:0
-msgid "Created by"
-msgstr "Aangemaakt door"
+#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
+msgid "Configuration"
+msgstr "Configuratie"
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,create_date:0
-#: field:hr.sign.in.project,create_date:0
-#: field:hr.sign.out.project,create_date:0
-msgid "Created on"
-msgstr "Aangemaakt op"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Create timesheets upon time off validation"
+msgstr "Maak urenstaten gebaseerd op vakantie validatie"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,server_date:0
-#: field:hr.sign.out.project,server_date:0
-msgid "Current Date"
-msgstr "Huidige datum"
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__currency_id
+msgid "Currency"
+msgstr "Valuta"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,state:0 field:hr.sign.out.project,state:0
-msgid "Current Status"
-msgstr "Huidige status"
-
-#. module: hr_timesheet
-#: field:hr.timesheet.report,date:0
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Date"
 msgstr "Datum"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
-msgid "Define your Analytic Structure"
-msgstr "Definieer uw kostenplaatsstructuur"
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
+msgid "Department"
+msgstr "Afdeling"
 
 #. module: hr_timesheet
-#: field:hr.timesheet.report,name:0
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Description"
 msgstr "Omschrijving"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__progress
+msgid "Display progress of current task."
+msgstr "Toon voortgang van huidige taak."
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Duration"
 msgstr "Tijdsduur"
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Duration (%s)"
+msgstr "Tijdsduur (%s)"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_effective
+msgid "Effective Hours"
+msgstr "Werkelijke uren"
+
+#. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_employee
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Employee"
 msgstr "Werknemer"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,emp_id:0 field:hr.sign.out.project,emp_id:0
-msgid "Employee ID"
-msgstr "Werknemer ID"
+#: model:ir.model.fields,help:hr_timesheet.field_project_project__allow_timesheets
+msgid "Enable timesheeting on the project."
+msgstr "Urenstaten inschakelen op het project."
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:152
-#, python-format
-msgid ""
-"Employee is not created for this user. Please create one from configuration "
-"panel."
-msgstr "Werknemer is niet aangemaakt voor deze gebruiker. Maak deze aan via het configuratie scherm."
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
+msgid "Encoding Unit"
+msgstr "Ingave eenheid"
 
 #. module: hr_timesheet
-#: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
-msgid "Employee's Name"
-msgstr "Naam werknemer"
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__encoding_uom_id
+msgid "Encoding Uom"
+msgstr "Encodering maateenheid"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
-msgid ""
-"Employees can encode their time spent on the different projects they are "
-"assigned on. A  project is an analytic account and the time spent on a "
-"project generates costs on the analytic account. This feature allows to "
-"record at the same time the attendance and the timesheet."
-msgstr "Werknemer kunnen gewerkte tijd boeken op verschillende projecten waaraan ze zijn toegewezen. Een project is een kostenplaats en de gewerkte tijd op een project genereert kosten op de kostenplaats. Deze functionaliteit laat tegelijkertijd de aanwezigheid en de urenverantwoording vastleggen."
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Google Chrome Store"
+msgstr "Google Chrome Store"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
-msgid ""
-"Employees can encode their time spent on the different projects. A project "
-"is an analytic account and the time spent on a project generate costs on the"
-" analytic account. This feature allows to record at the same time the "
-"attendance and the timesheet."
-msgstr "Werknemer kunnen gewerkte tijd boeken op verschillende projecten. Een project is een kostenplaats en de gewerkte tijd op een project genereert kosten op de kostenplaats. Dit kenmerk laat tegelijkertijd de aanwezigheid en de urenverantwoording vastleggen."
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Google Play Store"
+msgstr "Google Play Store"
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
-msgid "Extended Filters..."
-msgstr "Uitgebreide filters..."
-
-#. module: hr_timesheet
-#: field:hr.timesheet.report,general_account_id:0
-msgid "General Account"
-msgstr "Algemene grootboekrekening"
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
-msgid "General Information"
-msgstr "Algemene informatie"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:153
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Ga naar het configuratie paneel"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Group By"
-msgstr "Groeperen op"
+msgstr "Groepeer op"
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
-msgid "Group by month of date"
-msgstr "Groepeer op maand of datum"
+#: model:ir.model,name:hr_timesheet.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP routing"
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,id:0 field:hr.sign.in.project,id:0
-#: field:hr.sign.out.project,id:0 field:hr.timesheet.report,id:0
-msgid "ID"
-msgstr "ID"
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__effective_hours
+msgid "Hours Spent"
+msgstr "Gewerkte uren"
 
 #. module: hr_timesheet
-#: help:hr.employee,product_id:0
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__analytic_account_active
 msgid ""
-"If you want to reinvoice working time of employees, link this employee to a "
-"service to determinate the cost price of the job."
-msgstr "Als u gewerkte uren van uw werknemer wilt doorberekenen, koppel dan deze werknemer aan een product van het type 'dienst' om de kostprijs van de werkzaamheden te bepalen."
+"If the active field is set to False, it will allow you to hide the account "
+"without removing it."
+msgstr ""
+"Als het veld \"actief\" uitstaat, kunt u de grootboekrekening verbergen "
+"zonder deze te verwijderen."
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-msgid "Information"
-msgstr "Informatie"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Initially Planned Hours"
+msgstr "Begroot aantal uren"
 
 #. module: hr_timesheet
-#: field:hr.timesheet.report,journal_id:0
-msgid "Journal"
-msgstr "Dagboek"
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Last month"
+msgstr "Vorige maand"
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,write_uid:0
-#: field:hr.sign.in.project,write_uid:0 field:hr.sign.out.project,write_uid:0
-msgid "Last Updated by"
-msgstr "Laatst aangepast door"
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Last week"
+msgstr "Vorige week"
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,write_date:0
-#: field:hr.sign.in.project,write_date:0
-#: field:hr.sign.out.project,write_date:0
-msgid "Last Updated on"
-msgstr "Laatst aangepast op"
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Last year"
+msgstr "Vorig jaar"
 
 #. module: hr_timesheet
-#: field:hr.sign.out.project,analytic_amount:0
-msgid "Minimum Analytic Amount"
-msgstr "Minimum bedrag kostenplaats"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
+msgid "Log time on tasks"
+msgstr "Log tijd op taken"
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
-msgid "Month"
-msgstr "Maand"
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_mine
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "My Timesheets"
+msgstr "Mijn urenstaten"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:189
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Name"
+msgstr "Naam"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Newest"
+msgstr "Nieuwste"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "None"
+msgstr "Geen"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_planned
+msgid "Planned Hours"
+msgstr "Geplande uren"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Maateenheid product"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__progress
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__progress
+msgid "Progress"
+msgstr "Voortgang"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#: model:ir.model,name:hr_timesheet.model_project_project
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__project_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+#, python-format
+msgid "Project"
+msgstr "Project"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_company__project_time_mode_id
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__project_time_mode_id
+msgid "Project Time Unit"
+msgstr "Tijdseenheid project"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
+msgid "Record Time Off"
+msgstr "Registreer vrije tijd"
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
+msgid "Record a new activity"
+msgstr "Registreer een nieuwe activiteit"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours
+#: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__remaining_hours
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Remaining Hours"
+msgstr "Resterende uren"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
+msgid "Remaining hours"
+msgstr "Resterende uren"
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
+msgid "Reporting"
+msgstr "Rapportages"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in All"
+msgstr "Zoek in alle"
+
+#. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
+msgid "See all Timesheets"
+msgstr "Bekijk alle urenstaten"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Set the time unit used to record your timesheets"
+msgstr "Stel de tijdseenheid in om uw urenstaten te registreren"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
+#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_config_settings_menu_action
+msgid "Settings"
+msgstr "Instellingen"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Spent Hours"
+msgstr "Gewerkte uren"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
+msgid "Sub-tasks Hours Spent"
+msgstr "Sub-taken verbruikte uren"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
+msgid "Sum of actually spent hours on the subtask(s)"
+msgstr "Som van werkelijk gepresteerde uren op de subta(a)k(en)"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Synchronize time spent with our web/mobile apps"
+msgstr "Synchroniseer tijd gespendeerd met web/mobiele apps"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_project_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__task_id
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "Task"
+msgstr "Taak"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "Takenanalyse"
+
+#. module: hr_timesheet
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
+msgid "Team Approver"
+msgstr "Goedkeurder team"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid ""
-"No 'Analytic Journal' is defined for employee %s \n"
-"Define an employee for the selected user and assign an 'Analytic Journal'!"
-msgstr "Er is geen 'kostenplaats dagboek' gedefinieerd voor deze werknemer %s \nDefinieer een werknemer voor de geselecteerde gebruiker en wijs een kostenplaats dagboek toe!"
+"The project you are timesheeting on is not linked to an active analytic "
+"account. Set one on the project configuration."
+msgstr ""
+"Het project waarop u urenstaten boekt is niet gelinkt aan een actieve "
+"kostenplaats. Stel een kostenplaats in bij de projectinstellingen."
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:191
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+msgid "There are no timesheets."
+msgstr "Er zijn geen urenstaten."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
-msgid ""
-"No analytic account is defined on the project.\n"
-"Please set one or we cannot automatically fill the timesheet."
-msgstr "Er is geen kostenplaats gedefinieerd voor dit project.\nGeef deze in, anders kan het systeem de urenstaat niet automatisch invullen."
+msgid "This Quarter"
+msgstr "Dit kwartaal"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:158
+#: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
-msgid ""
-"No analytic journal defined for '%s'.\n"
-"You should assign an analytic journal on the employee form."
-msgstr "Geen kostenplaats gedefinieerd voor '%s'.\nU dient een kostenplaats dagboek toe te wijzen bij de werknemer instellingen."
-
-#. module: hr_timesheet
-#: field:hr.analytic.timesheet,partner_id:0
-msgid "Partner"
-msgstr "Relatie"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
-#, python-format
-msgid "Please define cost unit for this employee."
-msgstr "Definieer een kosten eenheid voor deze werknemer."
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
-#, python-format
-msgid "Please define employee for your user."
-msgstr "Maak een werknemer aan voor deze gebruiker."
-
-#. module: hr_timesheet
-#: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
-msgid "Present"
-msgstr "Aanwezig"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-#: field:hr.employee,product_id:0 field:hr.timesheet.report,product_id:0
-msgid "Product"
-msgstr "Product"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,account_id:0
-msgid "Project / Analytic Account"
-msgstr "Project / Kostenplaats"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
-msgid "Sign In By Project"
-msgstr "Inklokken op project"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
-msgid "Sign In/Out by Project"
-msgstr "In-/Uitklokken per project"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
-msgid "Sign Out By Project"
-msgstr "Uitklokken op project"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-msgid "Sign in"
-msgstr "Inklokken"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:145
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
-#, python-format
-msgid "Sign in / Sign out"
-msgstr "Inschrijven/Uitschrijven"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
-msgid "Sign in / Sign out by Project"
-msgstr "Log in / Log uit per project"
-
-#. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-msgid "Start Working"
-msgstr "Begin met werken"
-
-#. module: hr_timesheet
-#: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
-msgid "Starting Date"
-msgstr "Begindatum"
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
-msgid "Stop Working"
-msgstr "Stop met werken"
-
-#. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
-msgid "This Month"
+msgid "This month"
 msgstr "Deze maand"
 
 #. module: hr_timesheet
-#: field:hr.timesheet.report,quantity:0
-msgid "Time"
-msgstr "Tijd"
+#: code:addons/hr_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"This task must be part of a project because there are some timesheets linked"
+" to it."
+msgstr ""
+"De taak moet deel uitmaken van een project omdat er urenstaten aan gelinkt "
+"zijn."
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_graph
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
-#: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_reports
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This week"
+msgstr "Deze week"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_res_company__project_time_mode_id
+#: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__project_time_mode_id
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
+msgstr ""
+"Hiermee wordt de gebruikte maateenheid ingesteld die wordt gebruikt in projecten en taken.\n"
+"Wanneer u gebruik maakt van urenstaten gekoppeld aan projecten, vergeet dan niet de juiste eenheid voor uw werknemers in te stellen."
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_res_company__timesheet_encode_uom_id
+#: model:ir.model.fields,help:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
+msgid ""
+"This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
+"        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
+msgstr ""
+"Hiermee wordt de maateenheid ingesteld die wordt gebruikt op de urenstaat. Dit levert eenvoudige hulpmiddelen\n"
+"en widgets op  om bij de ingave te helpen. Alle rapportages wordt nog steeds uitgedrukt in uren (standaardwaarde)."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "This year"
+msgstr "Dit jaar"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Time Encoding"
+msgstr "Tijd formattering"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Time Off"
+msgstr "Verlof"
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet"
 msgstr "Urenstaat"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
-msgid "Timesheet Accounts"
-msgstr "Urenstaat rekeningen"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheet Activities"
 msgstr "Urenstaten activiteiten"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
-msgid "Timesheet Analysis"
-msgstr "Urenstaat analyse"
+#: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__timesheet_cost
+msgid "Timesheet Cost"
+msgstr "Kostprijs urenstaat"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Regel urenstaat"
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
+msgid "Timesheet Encoding Unit"
+msgstr "Urenstaat ingave eenheid"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-msgid "Timesheet Month"
-msgstr "Urenstaat maand"
+#: model:ir.actions.report,name:hr_timesheet.timesheet_report
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "Timesheet Entries"
+msgstr "Urenstaten boekingen"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-msgid "Timesheet by Month"
-msgstr "Urenstaat per maand"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "Timesheet by Date"
+msgstr "Urenstaat op datum"
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-#: view:hr.employee:hr_timesheet.hr_timesheet_employee_extd_form
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allow_timesheets
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__timesheet_ids
+#: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_root
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_layout
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_home_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheets"
 msgstr "Urenstaten"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
-msgid "Total cost"
-msgstr "Totale kosten"
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
+msgid "Timesheets By Employee"
+msgstr "Urenstaten per werknemer"
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_tree
-msgid "Total time"
-msgstr "Totale tijd"
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
+msgid "Timesheets By Project"
+msgstr "Urenstaten per project"
 
 #. module: hr_timesheet
-#: field:hr.employee,uom_id:0
-msgid "Unit of Measure"
-msgstr "Maateenheid"
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
+msgid "Timesheets By Task"
+msgstr "Urenstaten per taak"
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
-#: field:hr.timesheet.report,user_id:0
-msgid "User"
-msgstr "Gebruiker"
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
+msgid "Timesheets can be logged on this task."
+msgstr "Urenstaten kunnen geregistreerd worden op deze taak."
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:176
+#: code:addons/hr_timesheet/models/project.py:0
 #, python-format
-msgid "User Alert!"
-msgstr "Gebruikers waarschuwing!"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:131
-#, python-format
-msgid "User Error!"
-msgstr "Gebruikersfout!"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
-msgid "Users"
-msgstr "Gebruikers"
-
-#. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:158
-#: code:addons/hr_timesheet/hr_timesheet.py:189
-#: code:addons/hr_timesheet/hr_timesheet.py:191
-#, python-format
-msgid "Warning!"
-msgstr "Waarschuwing!"
-
-#. module: hr_timesheet
-#: field:hr.sign.out.project,info:0
-msgid "Work Description"
-msgstr "Werkomschrijving"
-
-#. module: hr_timesheet
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
-msgid "Work done in the last period"
-msgstr "Gedane arbeid in de laatste periode"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
 msgid ""
-"You should create an analytic account structure depending on your needs to "
-"analyse costs and revenues. In Odoo, analytic accounts are also used to "
-"track customer contracts."
-msgstr "U dient kostenplaatsen aan te maken op basis van de benodigde analyse op kosten en opbrengsten. In Odoo worden kostenplaatsen ook gebruikt voor het maken van klant contracten."
+"To allow timesheet, your project %s should have an analytic account set."
+msgstr ""
+"Om urenstaten toe te staan moet uw project %s een kostenplaats dagboek "
+"ingesteld hebben."
 
 #. module: hr_timesheet
-#: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
-msgid "month"
-msgstr "maand"
+#: code:addons/hr_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Today"
+msgstr "Vandaag"
 
 #. module: hr_timesheet
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
-#: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
-#: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
-msgid "or"
-msgstr "of"
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
+msgid "Total"
+msgstr "Totaal"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
+msgid "Total Hours"
+msgstr "Totaal aantal uren"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
+msgid ""
+"Total remaining time, can be re-estimated periodically by the assignee of "
+"the task."
+msgstr ""
+"Totaal resterende tijd. Kan periodiek opnieuw worden geschat door de aan "
+"deze taak toegewezen persoon."
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
+msgid "Widget"
+msgstr "Widget"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_uom_uom__timesheet_widget
+msgid ""
+"Widget used in the webclient when this unit is the one used to encode "
+"timesheets."
+msgstr ""
+"Widget gebruikt in de webclient wanneer deze eenheid gebruikt wordt om om "
+"een urenstaat in te voeren."
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
+msgid ""
+"You can not log timesheets on this project since is linked to an inactive "
+"analytic account. Please change it, or reactivate the current one to "
+"timesheet on the project."
+msgstr ""
+"U kunt geen urenstaten op dit project registreren omdat dit is gekoppeld aan"
+" een inactieve kostenplaats. Verander de kostenplaats of heractiveer de "
+"huidige."
+
+#. module: hr_timesheet
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
+#: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
+msgid ""
+"You can register and track your workings hours by project every\n"
+"                day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                customers if required."
+msgstr ""
+"U kan elke dag uw werkuren registeren en opvolgen per project.\n"
+"Alle tijd die gespendeerd wordt op een project wordt als kosten geboekt en kan opnieuw gefactureerd worden aan klanten indien nodig"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/project.py:0
+#, python-format
+msgid ""
+"You cannot delete a project containing timesheets. You can either archive it"
+" or first delete all of its timesheets."
+msgstr ""
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "for the"
+msgstr "voor het"
+
+#. module: hr_timesheet
+#: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
+msgid "per hour"
+msgstr "per uur"

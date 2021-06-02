@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Remove Odoo bootstrap overridde -->
+    <template id="_assets_frontend_helpers" inherit_id="website._assets_frontend_helpers">
+        <xpath expr="//link[@href='/web_editor/static/src/scss/bootstrap_overridden.scss']" position="replace"/>
+        <xpath expr="//link[@href='/website/static/src/scss/bootstrap_overridden.scss']" position="replace"/>
+    </template>
+
+    <template id="theme_customize" inherit_id="website.theme_customize">
+        <xpath expr="//div" position="replace">
+            <div>
+                <content data-string="Themes" data-title="Bootswatch Themes">
+                    <opt data-xmlid="" data-icon="/theme_bootswatch/static/src/img/bootswatch_default_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_cerulean_bs_variables,theme_bootswatch.theme_cerulean" data-icon="/theme_bootswatch/static/src/img/cerulean_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_cosmo_bs_variables,theme_bootswatch.theme_cosmo" data-disable="ee" data-icon="/theme_bootswatch/static/src/img/cosmo_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_cyborg_bs_variables,theme_bootswatch.theme_cyborg" data-icon="/theme_bootswatch/static/src/img/cyborg_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_flatly_bs_variables,theme_bootswatch.theme_flatly" data-icon="/theme_bootswatch/static/src/img/flatly_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_journal_bs_variables,theme_bootswatch.theme_journal" data-icon="/theme_bootswatch/static/src/img/journal_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_simplex_bs_variables,theme_bootswatch.theme_simplex" data-icon="/theme_bootswatch/static/src/img/simplex_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_slate_bs_variables,theme_bootswatch.theme_slate" data-icon="/theme_bootswatch/static/src/img/slate_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_spacelab_bs_variables,theme_bootswatch.theme_spacelab" data-icon="/theme_bootswatch/static/src/img/spacelab_thumbnail.png"/>
+                    <opt data-xmlid="theme_bootswatch.theme_united_bs_variables,theme_bootswatch.theme_united" data-icon="/theme_bootswatch/static/src/img/united_thumbnail.png"/>
+                </content>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="theme_cerulean_bs_variables" name="Cerulean" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/cerulean/_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="theme_cerulean" name="Cerulean" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/cerulean/_bootswatch.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/src/scss/cerulean_fix.scss"/>
+        </xpath>
+    </template>
+
+    <template id="theme_cosmo_bs_variables" name="Cosmo" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/cosmo/_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="theme_cosmo" name="Cosmo" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/cosmo/_bootswatch.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/src/scss/cosmo_fix.scss"/>
+        </xpath>
+    </template>
+
+    <template id="theme_cyborg_bs_variables" name="Cyborg" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/cyborg/_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="theme_cyborg" name="Cyborg" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/cyborg/_bootswatch.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/src/scss/cyborg_fix.scss"/>
+        </xpath>
+    </template>
+
+    <template id="theme_flatly_bs_variables" name="Flatly" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/flatly/_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="theme_flatly" name="Flatly" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/flatly/_bootswatch.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/src/scss/flatly_fix.scss"/>
+        </xpath>
+    </template>
+
+    <template id="theme_journal_bs_variables" name="Journal" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/journal/_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="theme_journal" name="Journal" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/journal/_bootswatch.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/src/scss/journal_fix.scss"/>
+        </xpath>
+    </template>
+
+    <template id="theme_simplex_bs_variables" name="Simplex" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/simplex/_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="theme_simplex" name="Simplex" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/simplex/_bootswatch.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/src/scss/simplex_fix.scss"/>
+        </xpath>
+    </template>
+
+    <template id="theme_slate_bs_variables" name="Slate" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/slate/_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="theme_slate" name="Slate" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/slate/_bootswatch.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/src/scss/slate_fix.scss"/>
+        </xpath>
+    </template>
+
+    <template id="theme_spacelab_bs_variables" name="Spacelab" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/spacelab/_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="theme_spacelab" name="Spacelab" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/spacelab/_bootswatch.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/src/scss/spacelab_fix.scss"/>
+        </xpath>
+    </template>
+
+    <template id="theme_united_bs_variables" name="United" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/united/_variables.scss"/>
+        </xpath>
+    </template>
+    <template id="theme_united" name="United" inherit_id="website.assets_frontend" active="False">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/united/_bootswatch.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/src/scss/united_fix.scss"/>
+        </xpath>
+    </template>
+</odoo>

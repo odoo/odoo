@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.hr.fleet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+             <xpath expr="//header" position="inside">
+                <button name="action_get_claim_report" string="Claim Car Report"
+                class="btn btn-secondary"
+                type="object" groups="fleet.fleet_group_manager"
+                attrs="{'invisible': [('employee_cars_count','=', 0)]}"
+                confirm="This report will contain only PDF files. If you want all documents, please go on vehicle page. Do you want to proceed?"/>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button name="action_open_employee_cars" type="object"
+                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
+                        attrs="{'invisible': [('employee_cars_count','=', 0)]}">
+                    <field name="employee_cars_count" widget="statinfo" />
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <record id="res_users_view_form_preferences" model="ir.ui.view">
+        <field name="name">hr.user.preferences.form.inherit.hr.fleet</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile" />
+        <field name="arch" type="xml">
+             <xpath expr="//header" position="inside">
+                <button name="action_get_claim_report" string="Claim Car Report"
+                class="btn btn-primary"
+                type="object" groups="fleet.fleet_group_manager"
+                attrs="{'invisible': [('employee_cars_count','=', 0)]}"
+                confirm="This report will contain only PDF files. If you want all documents, please go on vehicle page. Do you want to proceed?"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_employee_cars" type="object"
+                        class="oe_stat_button" icon="fa-car" groups="fleet.fleet_group_manager"
+                        attrs="{'invisible': [('employee_cars_count','=', 0)]}">
+                    <field name="employee_cars_count" widget="statinfo" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

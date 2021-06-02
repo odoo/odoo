@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add action entry in the Action Menu for Partners -->
+    <record id="res_partner_view_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.sms</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mobile']" position="after">
+                <field name="phone_sanitized" groups="base.group_no_one" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='phone']" position="replace">
+                <label for="phone"/>
+                <div class="o_row">
+                    <field name="phone" widget="phone" options="{'enable_sms': True}"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='mobile']" position="replace">
+                <label for="mobile"/>
+                <div class="o_row">
+                    <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add action entry in the Action Menu for Partners -->
+    <act_window id="res_partner_act_window_sms_composer_multi"
+        name="Send SMS Text Message"
+        binding_model="res.partner"
+        res_model="sms.composer"
+        binding_views="list"
+        view_mode="form"
+        target="new"
+        context="{
+            'default_composition_mode': 'mass',
+            'default_mass_keep_log': True,
+            'default_res_ids': active_ids
+        }"
+    />
+    <act_window id="res_partner_act_window_sms_composer_single"
+        name="Send SMS Text Message"
+        binding_model="res.partner"
+        res_model="sms.composer"
+        binding_views="form"
+        view_mode="form"
+        target="new"
+        context="{
+            'default_composition_mode': 'comment',
+            'default_res_id': active_id,
+        }"
+    />
+
+</odoo>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_link_tracker_root"
+        name="Link Tracker"
+        sequence="30"
+        web_icon="utm,static/description/icon.png"
+        groups="base.group_no_one"/>
+
+    <menuitem id="marketing_utm"
+        name="UTMs"
+        parent="menu_link_tracker_root"
+        sequence="99"
+        groups="base.group_no_one"/>
+
+    <record id="utm_campaign_action" model="ir.actions.act_window">
+        <field name="name">Campaigns</field>
+        <field name="res_model">utm.campaign</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new UTM campaign
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_utm_campaign_act"
+        action="utm_campaign_action"
+        parent="marketing_utm"
+        sequence="1"
+        groups="base.group_no_one"/>
+
+	<!-- utm.medium -->
+    <record id="utm_medium_view_tree" model="ir.ui.view">
+        <field name="name">utm.medium.view.tree</field>
+        <field name="model">utm.medium</field>
+        <field name="arch" type="xml">
+            <tree string="Mediums" editable="bottom">
+                <field name="name"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="utm_medium_view_form" model="ir.ui.view">
+        <field name="name">utm.medium.view.form</field>
+        <field name="model">utm.medium</field>
+        <field name="arch" type="xml">
+            <form string="Medium">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="utm_medium_view_search" model="ir.ui.view">
+        <field name="name">utm.medium.view.search</field>
+        <field name="model">utm.medium</field>
+        <field name="arch" type="xml">
+            <search string="Search UTM Medium">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+    
+    <record id="utm_medium_action" model="ir.actions.act_window">
+        <field name="name">Mediums</field>
+        <field name="res_model">utm.medium</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="utm_medium_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new UTM medium
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_utm_medium"
+        action="utm_medium_action"
+        parent="marketing_utm"
+        sequence="5"
+        groups="base.group_no_one"/>
+
+    <!-- utm.source -->
+    <record id="utm_source_view_tree" model="ir.ui.view">
+        <field name="name">utm.source.view.tree</field>
+        <field name="model">utm.source</field>
+        <field name="arch" type="xml">
+            <tree string="Source" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="utm_source_view_form" model="ir.ui.view">
+        <field name="name">utm.source.view.form</field>
+        <field name="model">utm.source</field>
+        <field name="arch" type="xml">
+            <form string="Source">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="utm_source_action" model="ir.actions.act_window">
+        <field name="name">Sources</field>
+        <field name="res_model">utm.source</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new UTM source
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_utm_source"
+        action="utm_source_action"
+        parent="marketing_utm"
+        sequence="10"
+        groups="base.group_no_one"/>
+
+</odoo>

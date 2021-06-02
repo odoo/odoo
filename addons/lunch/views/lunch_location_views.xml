@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lunch_location_view_search" model="ir.ui.view">
+        <field name="name">lunch.location.view.search</field>
+        <field name="model">lunch.location</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="address"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="lunch_location_form_view" model="ir.ui.view">
+        <field name="name">lunch.location.view.form</field>
+        <field name="model">lunch.location</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="address"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="lunch_location_tree_view" model="ir.ui.view">
+        <field name="name">lunch.location.view.form</field>
+        <field name="model">lunch.location</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="address"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="lunch_location_action" model="ir.actions.act_window">
+        <field name="name">Lunch Locations</field>
+        <field name="res_model">lunch.location</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="lunch_location_view_search"/>
+        <field name="help" type="html">
+            <!-- TODO: better help message -->
+            <p class="o_view_nocontent_smiling_face">
+                To see some locations, create one using the create button
+            </p>
+        </field>
+    </record>
+</odoo>

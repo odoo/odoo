@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="report_saleorder_document_inherit_sale_stock" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@name='expiration_date']" position="after">
+            <div class="col-3" t-if="doc.incoterm" groups="sale_stock.group_display_incoterm">
+                <strong>Incoterm:</strong>
+                <p t-field="doc.incoterm.code"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_document_inherit_sale_stock" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@name='reference']" position="after">
+            <div class="col-auto mw-100 mb-2" t-if="o.invoice_incoterm_id" groups="sale_stock.group_display_incoterm" name="invoice_incoterm_id">
+                <strong>Incoterm:</strong>
+                <p class="m-0" t-field="o.invoice_incoterm_id.code"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

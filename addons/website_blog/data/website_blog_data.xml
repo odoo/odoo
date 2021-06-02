@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <record id="blog_blog_1" model="blog.blog">
-            <field name="name">Our News</field>
-            <field name="subtitle">Sharing our evolution with passion</field>
-            <field name="description">Presentation of new Odoo features</field>
+            <field name="name">Our blog</field>
+            <field name="subtitle">We are a team of passionate people whose goal is to improve everyone's life.</field>
+            <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_5.jpg')", "resize_class": "o_record_has_cover cover_mid", "background-color": "oe_black", "opacity": "0.4"}</field>
         </record>
 
-        <record id="menu_news" model="website.menu">
-            <field name="name">News</field>
-            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))"/>
+        <record id="menu_blog" model="website.menu">
+            <field name="name">Blog</field>
+            <field name="url">/blog</field>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">40</field>
-        </record>
-    </data>
-
-    <data>
-
-        <!-- jump to blog at install -->
-        <record id="action_open_website" model="ir.actions.act_url">
-            <field name="name">Website Blogs</field>
-            <field name="target">self</field>
-            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))+'/#tutorial.blog=true'"/>
-        </record>
-        <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_open_website"/>
-            <field name="state">open</field>
         </record>
 
         <!-- Blog-related subtypes for messaging / Chatter -->
@@ -35,6 +21,20 @@
             <field name="default" eval="True"/>
             <field name="description">Published Post</field>
         </record>
+    </data>
+
+    <data>
+
+        <!-- jump to blog at install -->
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Website Blogs</field>
+            <field name="target">self</field>
+            <field name="url" eval="'/blog/'"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_website"/>
+            <field name="state">open</field>
+        </record>
 
     </data>
-</openerp>
+</odoo>

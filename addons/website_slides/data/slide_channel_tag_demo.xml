@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="slide_channel_tag_group_level" model="slide.channel.tag.group">
+        <field name="name">Your Level</field>
+        <field name="is_published" eval="True"/>
+    </record>
+    <record id="slide_channel_tag_level_basic" model="slide.channel.tag">
+        <field name="name">Basic</field>
+        <field name="group_id" ref="website_slides.slide_channel_tag_group_level"/>
+    </record>
+    <record id="slide_channel_tag_level_intermediate" model="slide.channel.tag">
+        <field name="name">Intermediate</field>
+        <field name="group_id" ref="website_slides.slide_channel_tag_group_level"/>
+    </record>
+    <record id="slide_channel_tag_level_advanced" model="slide.channel.tag">
+        <field name="name">Advanced</field>
+        <field name="group_id" ref="website_slides.slide_channel_tag_group_level"/>
+    </record>
+
+    <record id="slide_channel_tag_group_role" model="slide.channel.tag.group">
+        <field name="name">Your Role</field>
+        <field name="is_published" eval="True"/>
+    </record>
+    <record id="slide_channel_tag_role_gardener" model="slide.channel.tag">
+        <field name="name">Gardener</field>
+        <field name="group_id" ref="website_slides.slide_channel_tag_group_role"/>
+    </record>
+    <record id="slide_channel_tag_role_carpenter" model="slide.channel.tag">
+        <field name="name">Carpenter</field>
+        <field name="group_id" ref="website_slides.slide_channel_tag_group_role"/>
+    </record>
+    <record id="slide_channel_tag_role_furniture" model="slide.channel.tag">
+        <field name="name">Furniture Designer</field>
+        <field name="group_id" ref="website_slides.slide_channel_tag_group_role"/>
+    </record>
+
+    <record id="slide_channel_tag_other_0" model="slide.channel.tag">
+        <field name="name">Quiz</field>
+        <field name="group_id" ref="website_slides.slide_channel_tag_group_data_other"/>
+    </record>
+    <record id="slide_channel_tag_other_1" model="slide.channel.tag">
+        <field name="name">Certification</field>
+        <field name="group_id" ref="website_slides.slide_channel_tag_group_data_other"/>
+    </record>
+    <record id="slide_channel_tag_other_2" model="slide.channel.tag">
+        <field name="name">Dog Friendly</field>
+        <field name="group_id" ref="website_slides.slide_channel_tag_group_data_other"/>
+    </record>
+</data></odoo>

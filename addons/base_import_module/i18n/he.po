@@ -1,105 +1,123 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_import_module
+# 	* base_import_module
 # 
 # Translators:
+# Martin Trigaux, 2019
+# Yihya Hugirat <hugirat@gmail.com>, 2019
+# hed shefetr <hed@laylinetech.com>, 2019
+# דודי מלכה <Dudimalka6@gmail.com>, 2019
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-07-23 18:40+0000\n"
-"Last-Translator: Yves Goldberg <admin@ygol.com>\n"
-"Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-8/language/he/)\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2019\n"
+"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Cancel"
 msgstr "בטל"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
 msgstr "סגור"
 
 #. module: base_import_module
-#: field:base.import.module,create_uid:0
-msgid "Created by"
-msgstr "נוצר על ידי"
+#: code:addons/base_import_module/controllers/main.py:0
+#, python-format
+msgid "Could not select database '%s'"
+msgstr "לא ניתן לבחור מסד נתונים '%s'"
 
 #. module: base_import_module
-#: field:base.import.module,create_date:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
+msgid "Created by"
+msgstr "נוצר על-ידי"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_date
 msgid "Created on"
 msgstr "נוצר ב-"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:30
-#: code:addons/base_import_module/models/ir_module.py:82
-#: code:addons/base_import_module/models/ir_module.py:91
-#, python-format
-msgid "Error !"
-msgstr "שגיאה!"
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
+msgid "Display Name"
+msgstr "הצג שם"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:90
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
-msgstr ""
+msgstr "קובץ '%s' גדול מגודל הקובץ המקסימלי המותר"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:82
-#, python-format
-msgid "File is not a zip file!"
-msgstr ""
-
-#. module: base_import_module
-#: field:base.import.module,force:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__force
 msgid "Force init"
-msgstr ""
+msgstr "כפה init"
 
 #. module: base_import_module
-#: help:base.import.module,force:0
+#: model:ir.model.fields,help:base_import_module.field_base_import_module__force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr ""
+msgstr "כפה מצב init גם אם מותקן. (יעדכן רשומות 'noupdate =' 1 ')"
 
 #. module: base_import_module
-#: field:base.import.module,id:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
 msgid "ID"
 msgstr "מזהה"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Import App"
+msgstr "ייבא יישום"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
+msgid "Import Message"
+msgstr "ייבא הודעה"
+
+#. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
-msgstr ""
+msgstr "ייבא מודול"
 
 #. module: base_import_module
-#: field:base.import.module,import_message:0
-msgid "Import message"
-msgstr ""
-
-#. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import module"
-msgstr "ייבוא מודול"
+msgstr "ייבא מודול"
 
 #. module: base_import_module
-#: field:base.import.module,write_uid:0
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
+msgid "Imported Module"
+msgstr "מודול מיובא"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module____last_update
+msgid "Last Modified on"
+msgstr "שינוי אחרון ב"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
 msgid "Last Updated by"
-msgstr "עודכן לאחרונה על ידי"
+msgstr "עודכן לאחרונה על-ידי"
 
 #. module: base_import_module
-#: field:base.import.module,write_date:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
-msgstr "עודכן לאחרונה על"
+msgstr "עדכון אחרון ב"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -107,42 +125,83 @@ msgid "Module"
 msgstr "מודול"
 
 #. module: base_import_module
-#: field:base.import.module,module_file:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__module_file
 msgid "Module .ZIP file"
 msgstr "מודול בקובץ .ZIP"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "No file sent."
+msgstr "לא נשלח קובץ."
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Note: you can only import data modules (.xml files and static assets)"
+msgstr "הערה: ניתן לייבא רק מודולי נתונים (קובצי .xml ונכסים סטטיים)"
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:0
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr "רק מנהלי מערכת יכולים להעלות מודול"
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Only zip files are supported."
+msgstr "רק קבצי zip נתמכים."
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
-msgstr ""
+msgstr "פתח מודולים"
 
 #. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Select module package to import (.zip file):"
-msgstr ""
+msgstr "בחר חבילת מודול לייבוא (קובץ zip):"
 
 #. module: base_import_module
-#: field:base.import.module,state:0
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
 msgid "Status"
 msgstr "סטטוס"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:29
+#: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "Unmet module dependencies: %s"
-msgstr ""
+msgid "Studio customizations require Studio"
+msgstr "ההתאמות של סטודיו דורשות סטודיו"
 
 #. module: base_import_module
-#: selection:base.import.module,state:0
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Studio customizations require the Odoo Studio app."
+msgstr "התאמות של סטודיו מחייבות יישום סטודיו של Odoo."
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"Unmet module dependencies: \n"
+"\n"
+" - %s"
+msgstr ""
+"תלות מודול לא מסופקת: \n"
+"\n"
+" - %s"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "View"
+msgstr "תצוגה"
+
+#. module: base_import_module
+#: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__done
 msgid "done"
 msgstr "בוצע"
 
 #. module: base_import_module
-#: selection:base.import.module,state:0
+#: model:ir.model.fields.selection,name:base_import_module.selection__base_import_module__state__init
 msgid "init"
-msgstr ""
-
-#. module: base_import_module
-#: view:base.import.module:base_import_module.view_base_module_import
-msgid "or"
-msgstr "או"
+msgstr "init"

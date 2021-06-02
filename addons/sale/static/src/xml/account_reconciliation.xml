@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-extend="reconciliation.line">
+        <t t-jquery=".o_notebook .nav-tabs" t-operation="append">
+            <t t-if="state.sale_order_ids &amp;&amp; state.sale_order_ids.length > 0">
+                <li class="nav-item" title="Match with a sale order" data-toggle="tooltip"><a data-toggle="tab" disable_anchor="true" t-attf-href="#notebook_page_saleorder_#{state.st_line.id}" class="nav-link" role="tab" aria-selected="false">Sale Order</a></li>
+            </t>
+        </t>
+        <t t-jquery=".o_notebook .tab-content" t-operation="append">
+            <t t-if="state.sale_order_ids &amp;&amp; state.sale_order_ids.length > 0">
+                <div class="tab-pane" t-attf-id="notebook_page_saleorder_#{state.st_line.id}">
+                    <div class="pl-3">
+                        There are <strong><a href="#" class="js_open_so">uninvoiced sales orders</a></strong> matching the communication of the bank statement line
+                    </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</templates>

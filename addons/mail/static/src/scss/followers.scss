@@ -1,0 +1,92 @@
+.o_followers {
+    display: flex;
+    justify-content: flex-end;
+    order: 1;
+
+    &.o_field_widget {
+        margin-bottom: initial;
+    }
+
+    > .o_followers_title_box {
+        order: 1;
+    }
+
+    .o_followers_follow_button {
+        color: $body-color;
+        font-weight: bold;
+        text-align: right;
+
+        .o_follow, .o_followers_unfollow, .o_followers_following {
+            display: none;
+        }
+
+        // when following, show 'following'
+        &.o_followers_following .o_followers_following {
+            display: initial;
+        }
+
+        // when following and hovering, show 'unfollow'
+        &.o_followers_following:hover {
+            .o_followers_following {
+                display: none;
+            }
+
+            .o_followers_unfollow {
+                display: initial;
+            }
+        }
+
+        // when not following  show 'follow'
+        &.o_followers_notfollow .o_follow {
+            display: initial;
+        }
+
+        .fa {
+            &.fa-times {
+                color: theme-color('warning');
+            }
+
+            &.fa-check {
+                color: theme-color('success');
+            }
+        }
+    }
+
+    .o_followers_list {
+        width: 20vh;
+        max-height: 50vh;
+        overflow: auto;
+    }
+
+    .o_followers_title_box .dropdown-item.o_partner {
+        padding: 0;
+        display: flex;
+        align-items: center;
+
+        .o_mail_redirect {
+            margin-right: auto;
+            color: $dropdown-link-color;
+
+            img {
+                width: $o-mail-partner-avatar-size;
+                height: $o-mail-partner-avatar-size;
+                object-fit: cover;
+            }
+        }
+
+        .btn {
+            padding: 0 $grid-gutter-width*0.25;
+        }
+
+        &.o_inactive {
+            .o_mail_redirect {
+                color: $gray-500;
+                font-style: italic;
+
+                img {
+                    opacity: 0.25;
+                }
+            }
+        }
+    }
+}

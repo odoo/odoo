@@ -1,0 +1,96 @@
+///
+/// This file regroups the CSS rules made to fix/extend bootstrap in all places
+/// where it is used in Odoo (backend / frontend / reports / ...)
+///
+
+.alert {
+    // Alerts are block elements with relative positioning.
+    // They would go over floating elements, which is never what we want.
+    clear: both;
+}
+
+// Extend bootstrap to create background and text utilities for gray colors too
+// Note: the card-body rule below needs those grays utilities to be defined
+// before so that the related o-bg-color text-muted rules work.
+@each $color, $value in $grays {
+    @include bg-variant(".bg-#{$color}", $value);
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+.card-body {
+    // BS4 colored cards do not have a very popular design. This will reset them
+    // to a BS3-like one: only the header and footer are colored and the body
+    // will use the color of a default card background with a light opacity.
+    // Limitation: bg-* utilities cannot be used on card-body elements anymore.
+    @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
+
+    &:first-child {
+        @include border-top-radius($card-inner-border-radius);
+    }
+    &:last-child {
+        @include border-bottom-radius($card-inner-border-radius);
+    }
+
+    &.row {
+        // The 'row' class should not be used on a 'card-body' element but if
+        // it is done, our custom bg color would overflow the card. As a fix
+        // for those cases (normally only one at the time this fix is made),
+        // remove the background color.
+        // TODO remove me in master.
+        background-color: transparent !important;
+    }
+}
+.accordion {
+    .collapsing, .collapse.show {
+        > .card-body:first-child {
+            // Above background color would overflow on the card-header border
+            // without this
+            margin-top: $card-border-width;
+        }
+    }
+}
+
+.toast-header {
+    background-clip: border-box;
+}
+.toast-body {
+    // Same as card-body, see explanation above
+    @include o-bg-color(opacify($toast-background-color, 0.08));
+}
+
+// Modify modals so that their scrollable element is the modal-body (except in
+// mobile).
+@include media-breakpoint-up(sm) {
+    .modal-dialog {
+        height: 100%;
+        padding: $modal-dialog-margin-y-sm-up 0;
+        margin: 0 auto;
+    }
+    .modal-content {
+        max-height: 100%;
+    }
+    .modal-header, .modal-footer {
+        flex: 0 0 auto;
+    }
+    .modal-body {
+        overflow: auto;
+        // fix iOS issue https://github.com/scottjehl/Device-Bugs/issues/8
+        -webkit-transform: translate3d(0, 0, 0);
+        min-height: 0;
+    }
+}
+
+// Restore pointer cursor which came with the 'btn' class until BS 4.3.1
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+// Disable RTL for the popover position
+.popover {
+    right: auto#{"/*rtl:ignore*/"};
+}
+
+// Restore height to prevent flex to be ignored
+.input-group .form-control {
+    height: initial;
+}

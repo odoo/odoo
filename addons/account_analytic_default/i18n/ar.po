@@ -1,18 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_analytic_default
+# 	* account_analytic_default
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Khaled Menof <kifcaliph@hotmail.com>, 2015
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Akram Alfusayal <akram_ma@hotmail.com>, 2019
+# amrnegm <amrnegm.01@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Osoul <baruni@osoul.ly>, 2019
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-09-12 22:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:07+0000\n"
+"Last-Translator: MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,29 +28,60 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: account_analytic_default
-#: field:product.product,rules_count:0 field:product.template,rules_count:0
-msgid "# Analytic Rules"
-msgstr "عدد قواعد التحليل"
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<i class=\"fa fa-calendar\"/> From"
+msgstr "<i class=\"fa fa-calendar\"/> من"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Customer</strong>"
+msgstr "<strong>العميل</strong>"
+
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Product</strong>"
+msgstr "<strong>المنتج</strong>"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__account_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Account"
+msgstr "الحساب"
+
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
 msgstr "الحسابات"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,analytic_id:0
+#: code:addons/account_analytic_default/models/account_analytic_default.py:0
+#, python-format
+msgid ""
+"An analytic default requires at least an analytic account or an analytic "
+"tag."
+msgstr ""
+"يتطلب الإعداد التحليلي الافتراضي حسابًا تحليليًا أو وسمًا تحليليًا على "
+"الأقل."
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_move_line__analytic_account_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "الحساب التحليلي"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_tree
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Analytic Default Rule"
+msgstr "قاعدة التحليل الافتراضية"
+
+#. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr "افتراضيات التحليل"
+msgstr "الافتراضيات التحليلية"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
@@ -50,155 +89,180 @@ msgid "Analytic Distribution"
 msgstr "التوزيع التحليلي"
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
+#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-#: view:product.product:account_analytic_default.product_form_view_default_analytic_button
-#: view:product.template:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
-msgstr "قواعد التحليل"
+msgstr "القواعد التحليلية"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,company_id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_move_line__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "الوسوم التحليلية"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
-msgstr "المؤسسة"
+msgstr "الشركة"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
 msgstr "الشروط"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,create_uid:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,create_date:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_date
 msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,date_stop:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
-msgstr "تاريخ انتهاء الافتراضي لهذا الحساب التحليلي."
+msgstr "تاريخ الإنتهاء الافتراضي لهذا الحساب التحليلي."
 
 #. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
 msgstr "تاريخ البدء الافتراضي لهذا الحساب التحليلي."
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_stop:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__display_name
+msgid "Display Name"
+msgstr "الاسم المعروض"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_stop
 msgid "End Date"
-msgstr "تاريخ الإنتهاء"
+msgstr "تاريخ الانتهاء"
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr "المدخلات"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,sequence:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr "وتعطي امر المتتابعة عند عرض قائمة التوزيع التحليلية"
+msgstr "يحدد التتابع التسلسلي عند عرض قائمة التوزيعات التحليلية"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
 msgstr "تجميع حسب"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__id
 msgid "ID"
-msgstr "الهوية"
+msgstr "المُعرف"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "خط الفاتورة"
+#: model:ir.model,name:account_analytic_default.model_account_move_line
+msgid "Journal Item"
+msgstr "عنصر اليومية"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,write_uid:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default____last_update
+msgid "Last Modified on"
+msgstr "آخر تعديل في"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,write_date:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_date
 msgid "Last Updated on"
-msgstr "آخر تحديث فى"
+msgstr "آخر تحديث في"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,partner_id:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
-msgstr "المشارك"
+msgstr "الشريك"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_stock_picking
-msgid "Picking List"
-msgstr "قائمة الالتقاط"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,product_id:0
-#: model:ir.model,name:account_analytic_default.model_product_product
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "المنتج"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_template
-msgid "Product Template"
-msgstr "قالب المنتج"
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "سطر أمر المبيعات"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__company_id
 msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
-msgstr "اختيار الشركة التي سوف تستخدم حساب التحليلي الافتراضي المحدد في التحليل (مثل إنشاء فاتورة عميل جديد أو أمر المبيعات إذا قمنا باختيار هذه الشركة، فسوف يؤخذ هذا أليا كحساب تحليلى)"
+msgstr ""
+"اختر المؤسسة التي ستستخدم الحساب التحليلي المحدد في الإعداد التحليلي "
+"الافتراضي (مثلًا عند إنشاء فاتورة أو أمر مبيعات، وإذا تم اختيار هذه المؤسسة؛"
+" سيتم استخدام هذا الحساب التحليلي تلقائياً)"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__partner_id
 msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
-msgstr "اختيار الشريك الذى سوف يستخدم الحساب التحليلي الافتراضي المحدد في التحليل (مثل إنشاء فاتورة عميل جديد أو أمر المبيعات إذا قمنا باختيار هذا الشريك، فسوف يؤخذ هذا أليا كحساب تحليلى)"
+msgstr ""
+"اختر الشريك الذي سيستخدم الحساب التحليلي المحدد في الإعداد التحليلي "
+"الافتراضي (مثلًا عند إنشاء فاتورة أو أمر مبيعات، وإذا تم اختيار هذا الشريك؛ "
+"فسيتم اختيار هذا الحساب التحليلي تلقائياً)"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__product_id
 msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
-msgstr "حدد المنتج الذي سيتم استخدام حساب التحليلي الافتراضي المحدد في التحليل (مثل إنشاء فاتورة عميل جديد أو أمر المبيعات إذا قمنا باختيار هذا المنتج، فسوف يؤخذ هذا أليا كحساب تحليلى )"
+msgstr ""
+"اختر المنتج الذي سيستخدم الحساب التحليلي المحدد في الإعداد التحليلية "
+"الافتراضي (مثلًا عند إنشاء فاتورة أو أمر مبيعات، وإذا تم اختيار هذا المنتج؛ "
+"فسيتم اختيار هذا الحساب التحليلي تلقائياً)"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
-msgstr "تحديد المستخدم والذى سوف يستخدم الحساب التحليلي الافتراضي المحدد في التحليل."
+msgstr ""
+"اختر المستخدم الذي سيستخدم الحساب التحليلي المحدد في الإعداد التحليلي "
+"الافتراضي."
 
 #. module: account_analytic_default
-#: field:account.analytic.default,sequence:0
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__account_id
+msgid ""
+"Select an accounting account which will use analytic account specified in "
+"analytic default (e.g. create new customer invoice or Sales order if we "
+"select this account, it will automatically take this as an analytic account)"
+msgstr ""
+"اختر الحساب المحاسبي الذي سوف يستخدم التحليل المحاسبي كحساب افتراضي (مثلًا "
+"عند إنشاء فاتورة أو أمر مبيعات، وإذا تم اختيار هذا الحساب؛ فسيتم اختيار هذا "
+"الحساب التحليلي تلقائياً)"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
 msgid "Sequence"
-msgstr "مسلسل"
+msgstr "المسلسل"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_start:0
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_start
 msgid "Start Date"
-msgstr "تاريخ البدء"
+msgstr "تاريخ البداية"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:account_analytic_default.view_account_analytic_default_form_search
-#: field:account.analytic.default,user_id:0
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+msgid "Tags"
+msgstr "الوسوم"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "المستخدم"
+
+#. module: account_analytic_default
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "to"
+msgstr "إلى"

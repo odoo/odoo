@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            string="Production Order" 
+            id="action_report_production_order" 
+            model="mrp.production" 
+            name="mrp.report_mrporder"
+            file="mrp.report.mrp_production_templates" 
+            report_type="qweb-pdf"
+            print_report_name="'Production Order - %s' % object.name"
+        />
+        <report 
+            string="BoM Structure" 
+            id="action_report_bom_structure" 
+            model="mrp.bom" 
+            name="mrp.report_bom_structure"
+            file="mrp.report_bom_structure"
+            report_type="qweb-pdf"
+            print_report_name="'Bom Structure - %s' % object.display_name"
+        />
+        <report id="label_manufacture_template"
+            model="mrp.production"
+            string="Finished Product Label (ZPL)"
+            name="mrp.label_production_view"
+            file="mrp.label_production_view"
+            report_type="qweb-text"
+        />
+        <report
+            string="Finished Product Label (PDF)"
+            id="action_report_finished_product"
+            model="mrp.production"
+            name="mrp.label_production_view_pdf"
+            file="mrp.label_production_view_pdf"
+            report_type="qweb-pdf"
+            print_report_name="'Finished products - %s' % object.name"
+        />
+    </data>
+</odoo>

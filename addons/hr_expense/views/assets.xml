@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="HR Expense Assets assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/hr_expense/static/src/js/documents_upload.js"/>
+                <script type="text/javascript" src="/hr_expense/static/src/js/upload_mixin.js"/>
+            </xpath>
+        </template>
+        <template id="assets_tests" name="HR Expense Assets Tests" inherit_id="web.assets_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/hr_expense/static/src/js/tours/hr_expense.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

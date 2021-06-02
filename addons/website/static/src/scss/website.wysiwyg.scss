@@ -1,0 +1,319 @@
+// Override css variables to influence the default style of the editor without
+// duplicating the css.
+:root {
+    --o-we-toolbar-height: #{$o-navbar-height};
+    --o-we-bg-color: #{$o-we-color-dark};
+    --o-we-bg-color-dark: #{$o-we-color-darker};
+    --o-we-color: #{$o-we-color-text-normal};
+    --o-we-color-accent: #{$o-we-color-text-light};
+
+    --o-we-dropdown-bg-color: #{$o-we-color-darker};
+    --o-we-dropdown-color: #{$o-we-color-text-normal};
+
+    --o-we-snippets-bg-color: #{$o-we-color-normal};
+    --o-we-snippets-color: #{$o-we-color-text-light};
+}
+
+// EDITOR TOP BAR AND POPOVER
+#web_editor-top-edit {
+    form.navbar-form {
+        @include o-position-absolute(0, 0, 0, auto);
+        z-index: $zindex-popover + 5;
+        height: $o-navbar-height;
+        margin: 0;
+        padding: 0;
+        transition: right 0.4s $o-we-md-ease 0s;
+        border-left: 1px solid $o-we-color-divider;
+
+        .btn-group {
+            height: 100%;
+        }
+
+        .btn {
+            height: 100%;
+            margin: 0;
+            padding: 10px;
+            line-height: 1.2;
+            font-size: 13px;
+            font-family: $o-we-font-family;
+
+            transition: all 0.3s ease 0s;
+            border: none;
+            border-radius: 0;
+
+            .fa {
+                margin-right: $grid-gutter-width/4;
+
+                &.fa-times {
+                    color: $o-we-color-danger;
+                }
+            }
+
+            &.btn-primary {
+                @include button-variant($o-brand-odoo, $o-brand-odoo);
+            }
+
+            &.btn-secondary {
+                @include button-variant($o-we-color-dark, $o-we-color-dark);
+
+                &:hover {
+                    background: rgba(black, 0.5);
+                }
+            }
+
+            &:focus,
+            &:active,
+            &:focus:active {
+                outline: none;
+            }
+        }
+
+        .dropdown-menu {
+            left: auto;
+            right: 0;
+        }
+    }
+}
+
+.note-statusbar {
+    display: none;
+}
+
+// TRANSLATIONS
+.oe_translate_examples li {
+    margin: 10px;
+    padding: 4px;
+}
+
+html[lang] > body.editor_enable [data-oe-translation-state] {
+    background: rgba($o-we-content-to-translate-color, 0.5) !important;
+
+    &[data-oe-translation-state="translated"] {
+        background: rgba($o-we-translated-content-color, 0.5) !important;
+    }
+
+    &.o_dirty {
+        background: rgba($o-we-translated-content-color, 0.25) !important;
+    }
+}
+
+// SNIPPET OPTIONS
+.colorpicker {
+    .o_colorpicker_sections {
+        .note-color-palette > div {
+            color: $o-we-color-text-light;
+        }
+    }
+
+    .o_colorpicker_section {
+        &:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        > button {
+
+            &:hover,
+            &.selected {
+                box-shadow: 0px 0px 2px 2px $o-we-color-light;
+            }
+
+            &[data-event="foreColor"] {
+                background-color: $o-we-color-normal;
+
+                &:before {
+                    background-color: rgba(white, 0.3);
+                }
+            }
+        }
+    }
+
+    .note-palette-title {
+        color: $o-we-color-text-light;
+    }
+
+    .palette-reset {
+        .note-color-reset {
+            color: desaturate(rgba($o-we-color-danger, 0.6), 40%);
+
+            &:hover {
+                color: $o-we-color-danger;
+            }
+        }
+    }
+}
+
+// ANIMATIONS
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+// MODALS
+body .modal {
+
+    // BACKGROUND IMAGE OPTIONS
+    .o_bg_img_opt_modal .o_bg_img_opt {
+        margin: 15px 0;
+
+        .help-control {
+            @include o-position-absolute(15px, 15px);
+        }
+
+        .help {
+            margin: 15px 0;
+
+            .simulator {
+                position: relative;
+                float: left;
+                margin-right: 15px;
+                width: 120px;
+                height: 100px;
+
+                .bg {
+                    @include o-position-absolute(0, 0, 0, 0);
+                    border: 1px dotted #888787;
+                    background-image: url(/web/image);
+                    background-position: center center;
+                    background-size: cover;
+                }
+
+                .el {
+                    @include o-position-absolute(10px, 0, 10px, 0);
+                    border: 1px solid #222;
+                }
+
+                &.contain_bg {
+                    .bg {
+                        @include o-position-absolute(0, 12px, 20px, 12px);
+                    }
+
+                    .el {
+                        @include o-position-absolute(0, 0, 20px, 0);
+                    }
+                }
+            }
+
+            +* {
+                clear: left;
+            }
+        }
+
+        .o_bg_img_opt_cover_edition {
+            @include o-we-preview-box;
+            padding: 0 25px 25px 25px;
+
+            h6 {
+                color: white;
+                font-weight: bold;
+            }
+
+            .o_bg_img_opt_object {
+                position: relative;
+                background: white;
+                min-height: 10px;
+                @include o-we-preview-content;
+
+                >img {
+                    cursor: crosshair;
+                    border-top: 1px solid #5A5A5A;
+                    border-bottom: 1px solid #111;
+                }
+
+                &:hover .o_focus_point:before {
+                    opacity: 0.5;
+                }
+            }
+
+            .o_bg_img_opt_ui_info {
+                animation: fadeInOut 2s ease forwards;
+                @include o-position-absolute($bottom: 1px, $right: 0);
+                display: block;
+                padding: 3px 13px;
+                background-color: rgba(255, 255, 255, 0.8);
+                color: #333;
+                text-align: center;
+                font-weight: bold;
+                pointer-events: none;
+
+                span {
+                    font-weight: normal;
+                }
+
+                .o_x {
+                    margin-right: 10px
+                }
+            }
+
+            .grid {
+                @include o-position-absolute($top: 33.33%, $left: 0);
+                display: block;
+                width: 100%;
+                height: 1px;
+                background: fade-out(lighten($o-brand-primary, 30%), 0.5);
+                pointer-events: none;
+
+                &.grid-2 {
+                    top: 66.66%
+                }
+
+                &.grid-3 {
+                    top: 0;
+                    left: 33.33%;
+                    width: 1px;
+                    height: 100%
+                }
+
+                &.grid-4 {
+                    top: 0;
+                    left: 66.66%;
+                    width: 1px;
+                    height: 100%
+                }
+            }
+
+            .o_focus_point {
+                @include o-position-absolute($top: 0, $left: 0);
+                width: 30px;
+                height: 30px;
+                border: 2px solid white;
+                border-radius: 100%;
+                margin-top: -15px;
+                margin-left: -15px;
+                box-shadow: 0 0 1px #333;
+                pointer-events: none;
+
+                &.o_with_transition {
+                    transition: all 0.2s ease 0s;
+                }
+
+                &:before {
+                    pointer-events: none;
+                    content: "";
+                    display: block;
+                    width: 100px;
+                    height: 100px;
+                    margin-top: -37px;
+                    margin-left: -37px;
+                    border: 1px solid #EAEAEA;
+                    background: rgba(247, 76, 76, 0);
+                    border-radius: 100em;
+                    opacity: 1;
+                    box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.33);
+                    transition: opacity 0.2s ease 0s;
+                }
+            }
+        }
+    }
+}

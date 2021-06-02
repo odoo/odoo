@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="hr_recruitment assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/hr_recruitment/static/src/scss/hr_job.scss"/>
+                <script type="text/javascript" src="/hr_recruitment/static/src/js/recruitment.js"></script>
+            </xpath>
+        </template>
+        <template id="assets_tests" name="HR Recruitment Assets Tests" inherit_id="web.assets_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/hr_recruitment/static/src/js/tours/hr_recruitment.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

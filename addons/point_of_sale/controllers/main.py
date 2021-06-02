@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
-import simplejson
-import os
-import openerp
-import time
-import random
 import werkzeug.utils
 
-from openerp import http
-from openerp.http import request
-from openerp.addons.web.controllers.main import module_boot, login_redirect
+from odoo import http
+from odoo.http import request
+from odoo.osv.expression import AND
 
 _logger = logging.getLogger(__name__)
 
@@ -17,32 +13,51 @@ _logger = logging.getLogger(__name__)
 class PosController(http.Controller):
 
     @http.route('/pos/web', type='http', auth='user')
-    def a(self, debug=False, **k):
-        cr, uid, context, session = request.cr, request.uid, request.context, request.session
+    def pos_web(self, config_id=False, **k):
+        """Open a pos session for the given config.
 
-        if not session.uid:
-            return login_redirect()
+        The right pos session will be selected to open, if non is open yet a new session will be created.
 
-        PosSession = request.registry['pos.session']
-        pos_session_ids = PosSession.search(cr, uid, [('state','=','opened'),('user_id','=',session.uid)], context=context)
-        if not pos_session_ids:
-            return werkzeug.utils.redirect('/web#action=point_of_sale.action_pos_session_opening')
-        PosSession.login(cr,uid,pos_session_ids,context=context)
-        
-        modules =  simplejson.dumps(module_boot(request.db))
-        init =  """
-                 var wc = new s.web.WebClient();
-                 wc._title_changed = function() {}
-                 wc.show_application = function(){
-                     wc.action_manager.do_action("pos.ui");
-                 };
-                 wc.setElement($(document.body));
-                 wc.start();
-                 """
+        :param debug: The debug mode to load the session in.
+        :type debug: str.
+        :param config_id: id of the config that has to be loaded.
+        :type config_id: str.
+        :returns: object -- The rendered pos session.
+        """
+        domain = [
+                ('state', '=', 'opened'),
+                ('user_id', '=', request.session.uid),
+                ('rescue', '=', False)
+                ]
+        if config_id:
+            domain = AND([domain,[('config_id', '=', int(config_id))]])
+        pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 
-        html = request.registry.get('ir.ui.view').render(cr, session.uid,'point_of_sale.index',{
-            'modules': modules,
-            'init': init,
-        })
+        # The same POS session can be opened by a different user => search without restricting to
+        # current user. Note: the config must be explicitly given to avoid fallbacking on a random
+        # session.
+        if not pos_session and config_id:
+            domain = [
+                ('state', '=', 'opened'),
+                ('rescue', '=', False),
+                ('config_id', '=', int(config_id)),
+            ]
+            pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
 
-        return html
+        if not pos_session:
+            return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
+        # The POS only work in one company, so we enforce the one of the session in the context
+        session_info = request.env['ir.http'].session_info()
+        session_info['user_context']['pos_session_company_ids'] = pos_session.company_id.ids
+        context = {
+            'session_info': session_info,
+            'login_number': pos_session.login(),
+        }
+        return request.render('point_of_sale.index', qcontext=context)
+
+    @http.route('/pos/sale_details_report', type='http', auth='user')
+    def print_sale_details(self, date_start=False, date_stop=False, **kw):
+        r = request.env['report.point_of_sale.report_saledetails']
+        pdf, _ = request.env.ref('point_of_sale.sale_details_report').with_context(date_start=date_start, date_stop=date_stop).render_qweb_pdf(r)
+        pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+        return request.make_response(pdf, headers=pdfhttpheaders)

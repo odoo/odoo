@@ -1,0 +1,94 @@
+$o-theme-layout: 'full';
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Extend default color palettes with website-related colors
+$-palettes: ();
+@each $palette in $o-color-palettes {
+    $-palettes: append($-palettes, map-merge((
+        'body': $o-portal-default-body-bg,
+        'menu': #F9F9F9,
+        'footer': #F9F9F9,
+        'text': null, // Default to bootstrap
+        'h1': null, // Default to text
+        'h2': null, // Default to h1
+        'h3': null, // Default to h2
+        'h4': null, // Default to h3
+        'h5': null, // Default to h4
+        'h6': null, // Default to h5
+    ), $palette));
+}
+$o-color-palettes: $-palettes;
+
+// By default, all user color palette values are null. Each null value is
+// automatically replaced with corresponsing color of chosen color palette.
+$o-user-color-palette: () !default;
+
+// By default, all user theme color palette values are null. Each null value
+// is automatically replaced with corresponsing color of chosen theme color
+// palette.
+$o-user-theme-color-palette: () !default;
+
+$o-social-colors: (
+    'facebook': #3B5999,
+    'twitter': #55ACEE,
+    'linkedin': #0077B5,
+    'google-plus': #DD4B39,
+    'youtube': #ff0000,
+    'github': #1a1e22,
+    'instagram': #cf2872,
+);
+
+$o-theme-figcaption-opacity: 0.6;
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'logo-height': null, // Default to navbar height (see portal)
+        'header-font-size': null, // Default to BS (normal font-size)
+        'font-number': 1,
+        'headings-font-number': 1,
+        'navbar-font-number': 1,
+        'buttons-font-number': 1,
+        'google-fonts': null,
+    ),
+) !default;
+$o-website-values-palette-number: 1 !default;
+
+// By default, all user website values are null. Each null value is
+// automatically replaced with corresponsing value of chosen values palette.
+$o-user-website-values: () !default;
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+$o-theme-fonts: (
+    ('Roboto', sans-serif),
+    ('Open Sans', sans-serif),
+    ('Source Sans Pro', sans-serif),
+    ('Raleway', sans-serif),
+    ('Noto Serif', serif),
+    ('Arvo', Times, serif),
+) !default;
+$o-theme-font-urls: (
+    'Roboto:300,300i,400,400i,700,700i',
+    'Open+Sans:300,300i,400,400i,700,700i',
+    'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    'Raleway:300,300i,400,400i,700,700i',
+    'Noto+Serif:300,300i,400,400i,700,700i',
+    'Arvo:300,300i,400,400i,700,700i',
+) !default;
+$o-theme-font-names: (
+    'Roboto',
+    'Open Sans',
+    'Source Sans Pro',
+    'Raleway',
+    'Noto Serif',
+    'Arvo',
+) !default;

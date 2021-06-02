@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form_inherit_pos_mercury" model="ir.ui.view">
+        <field name="name">pos.config.form.view.inherit.mercury</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('iot_barcode_scanner')]//label" position="attributes">
+                <attribute name="string">Barcode Scanner/Card Reader</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

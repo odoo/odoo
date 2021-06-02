@@ -1,0 +1,37 @@
+<odoo>
+    <template id="report_delivery_document2" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@name='div_sched_date']" position="after">
+            <div t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id" class="col-auto">
+                <strong>Carrier:</strong>
+                <p t-field="o.carrier_id"/>
+            </div>
+            <div t-if="o.shipping_weight" class="col-auto">
+                <strong>Weight:</strong>
+                <br/>
+                <span t-field="o.shipping_weight"/>
+                <span t-field="o.weight_uom_name"/>
+            </div>
+            <div t-if="o.carrier_tracking_ref" class="col-auto">
+                <strong>Tracking Number:</strong>
+                <p t-field="o.carrier_tracking_ref"/>
+            </div>
+            <t t-set="has_hs_code" t-value="o.move_lines.filtered(lambda l: l.product_id.hs_code)"/>
+        </xpath>
+
+        <xpath expr="//table[@name='stock_move_table']/thead/tr" position="inside">
+            <th t-if="has_hs_code"><strong>HS Code</strong></th>
+        </xpath>
+
+        <xpath expr="//table[@name='stock_move_table']/tbody/tr" position="inside">
+            <td t-if="has_hs_code"><span t-field="move.product_id.hs_code"/></td>
+        </xpath>
+
+        <xpath expr="//table[@name='stock_move_line_table']/thead/tr" position="inside">
+            <th t-if="has_hs_code"><strong>HS Code</strong></th>
+        </xpath>
+        <xpath expr="//table[@name='stock_move_line_table']/tbody/tr" position="inside">
+            <td t-if="has_hs_code"><span t-field="move_line.product_id.hs_code"/></td>
+        </xpath>
+
+    </template>
+</odoo>

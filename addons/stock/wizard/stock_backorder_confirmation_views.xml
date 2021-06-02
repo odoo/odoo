@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_backorder_confirmation" model="ir.ui.view">
+        <field name="name">stock_backorder_confirmation</field>
+        <field name="model">stock.backorder.confirmation</field>
+        <field name="arch" type="xml">
+            <form string="Backorder creation">
+                <group>
+                    <p>
+                        You have processed less products than the initial demand.
+                    </p><p class="text-muted">
+                        Create a backorder if you expect to process the remaining
+                        products later. Do not create a backorder if you will not
+                        process the remaining products.
+                    </p>
+                </group>
+                <footer>
+                    <button name="process" string="Create Backorder" type="object" class="oe_highlight"/>
+                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary"/>
+                    <button string="_Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

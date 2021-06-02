@@ -1,29 +1,51 @@
-$(document).ready(function () {
+odoo.define('website_sale.validate', function (require) {
+'use strict';
 
-    var _poll_nbr = 0;
+var publicWidget = require('web.public.widget');
+var core = require('web.core');
+var _t = core._t;
 
-    function payment_transaction_poll_status() {
-        var order_node = $('div.oe_website_sale_tx_status');
-        if (! order_node || order_node.data('orderId') === undefined) {
-            return;
-        }
-        var order_id = order_node.data('orderId');
-        return openerp.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
+publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
+    selector: 'div.oe_website_sale_tx_status[data-order-id]',
+
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        this._poll_nbr = 0;
+        this._paymentTransationPollStatus();
+        return def;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _paymentTransationPollStatus: function () {
+        var self = this;
+        this._rpc({
+            route: '/shop/payment/get_status/' + parseInt(this.$el.data('order-id')),
         }).then(function (result) {
-            var tx_node = $('div.oe_website_sale_tx_status');
-            _poll_nbr += 1;
-            if (result.state == 'pending' && result.validation == 'automatic' && _poll_nbr <= 5) {
-                var txt = result.mesage;
-                setTimeout(function () {
-                    payment_transaction_poll_status();
-                }, 1000);
+            self._poll_nbr += 1;
+            if (result.recall) {
+                if (self._poll_nbr < 20) {
+                    setTimeout(function () {
+                        self._paymentTransationPollStatus();
+                    }, Math.ceil(self._poll_nbr / 3) * 1000);
+                } else {
+                    var $message = $(result.message);
+                    var $warning =  $("<i class='fa fa-warning' style='margin-right:10px;'>");
+                    $warning.attr("title", _t("We are waiting the confirmation of the bank or payment provider"));
+                    $message.find('span:first').prepend($warning);
+                    result.message = $message.html();
+                }
             }
-            else {
-                var txt = result.message;
-            }
-            tx_node.html(txt);
+            self.$el.html(result.message);
         });
-    }
-
-    payment_transaction_poll_status();
+    },
+});
 });

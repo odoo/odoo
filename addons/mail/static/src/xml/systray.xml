@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!--
+        @param {mail.systray.MessagingMenu} widget
+    -->
+    <t t-name="mail.systray.MessagingMenu">
+        <li class="o_mail_systray_item">
+            <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" title="Conversations" href="#" role="button">
+                <i class="o_mail_messaging_menu_icon fa fa-comments fa-spinner fa-spin" role="img" aria-label="Messages"/> <span class="o_notification_counter badge badge-pill"/>
+            </a>
+            <div class="o_mail_systray_dropdown dropdown-menu dropdown-menu-right" role="menu">
+                <t t-if="widget.isMobile()">
+                    <div class="o_mail_systray_mobile_header">
+                        <button type="button" class="btn btn-secondary o_new_message"> New message </button>
+                    </div>
+                </t>
+                <div t-if="!widget.isMobile()" class="o_mail_systray_dropdown_top">
+                    <div>
+                        <button type="button" class="btn btn-link o_filter_button active" role="tab"> All </button>
+                        <button type="button" class="btn btn-link o_filter_button" data-filter='chat' role="tab"> Chat </button>
+                        <button type="button" class="btn btn-link o_filter_button" data-filter='channels' role="tab"> Channels </button>
+                    </div>
+                    <button type="button" class="btn btn-link o_new_message"> New message </button>
+                </div>
+                <div class="o_mail_systray_dropdown_items"/>
+                <t t-if="widget.isMobile()">
+                    <div class="o_mail_mobile_tabs">
+                        <div class="o_mail_mobile_tab o_filter_button active" role="tab">
+                            <span class="fa fa-envelope"/>
+                            <span class="o_tab_title">All</span>
+                        </div>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='chat' role="tab">
+                            <span class="fa fa-user"/>
+                            <span class="o_tab_title">Chat</span>
+                        </div>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='channels' role="tab">
+                            <span class="fa fa-users"/>
+                            <span class="o_tab_title">Channels</span>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </li>
+    </t>
+
+    <!--
+        @param {Object} previews valid list of objects for preview rendering
+          (see mail.Preview template)
+    -->
+    <t t-name="mail.systray.MessagingMenu.Previews">
+         <t t-if="_.isEmpty(previews)">
+            <li class="text-center o_no_activity mt16">
+                <span>No conversation yet...</span>
+            </li>
+        </t>
+        <t t-foreach="previews" t-as="preview">
+            <t t-call="mail.Preview"/>
+        </t>
+    </t>
+
+    <!--
+        @param {mail.systray.ActivityMenu} widget
+        @param {Object[]} widget.activities
+    -->
+    <t t-name="mail.systray.ActivityMenu.Previews">
+        <t t-set="activities" t-value="widget._activities"/>
+        <t t-if="_.isEmpty(activities)">
+            <div class="dropdown-item-text text-center o_no_activity">
+                <span>No activities planned.</span>
+            </div>
+        </t>
+        <t t-foreach="activities" t-as="activity">
+            <div class="o_mail_preview o_systray_activity" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
+                <div t-if="activity.icon" class="o_mail_preview_image o_mail_preview_app">
+                    <img t-att-src="activity.icon" alt="Activity"/>
+                </div>
+                <div class="o_preview_info">
+                    <div class="o_preview_title">
+                        <span class="o_preview_name">
+                            <t t-esc="activity.name"/>
+                        </span>
+                        <div t-if="activity.actions" class="o_mail_activity_action_buttons">
+                            <t t-foreach="activity.actions" t-as="action">
+                                <button type="button"
+                                    t-att-title="action.name"
+                                    t-att-class="'o_mail_activity_action btn btn-link fa ' + action.icon"
+                                    t-att-data-action_xmlid="action.action_xmlid"
+                                    t-att-data-res_model="activity.model"
+                                    t-att-data-model_name="activity.name">
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                    <div t-if="activity and activity.type == 'activity'">
+                        <button t-if="activity.overdue_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='overdue'><t t-esc="activity.overdue_count"/> Late </button>
+                        <span t-if="!activity.overdue_count" class="o_no_activity mr16">0 Late </span>
+                        <button t-if="activity.today_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='today'> <t t-esc="activity.today_count"/> Today </button>
+                        <span t-if="!activity.today_count" class="o_no_activity mr16">0 Today </span>
+                        <button t-if="activity.planned_count" type="button" class="btn btn-link o_activity_filter_button float-right" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='upcoming_all'> <t t-esc="activity.planned_count"/> Future </button>
+                        <span t-if="!activity.planned_count" class="o_no_activity float-right">0 Future</span>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="mail.systray.ActivityMenu">
+        <li class="o_mail_systray_item">
+            <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" data-display="static" aria-expanded="false" title="Activities" href="#" role="button">
+                <i class="fa fa-clock-o" role="img" aria-label="Activities"/> <span class="o_notification_counter badge badge-pill"/>
+            </a>
+            <div class="o_mail_systray_dropdown dropdown-menu dropdown-menu-right" role="menu">
+                <div class="o_mail_systray_dropdown_items"/>
+            </div>
+        </li>
+    </t>
+</templates>

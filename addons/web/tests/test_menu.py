@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import unittest2
-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.tests.common import BaseCase
 from ..controllers import main
 
 
-class ActionMungerTest(unittest2.TestCase):
+class ActionMungerTest(BaseCase):
     def test_actual_treeview(self):
         action = {
             "views": [[False, "tree"], [False, "form"],

@@ -18,13 +18,19 @@
         <t t-jquery="ul">this.attr('class', 'main');</t>
     </t>
     <t t-extend="jquery-extend">
+        <t t-jquery="ul" t-operation="attributes"><attribute name="title" value="Main Title" /></t>
+    </t>
+    <t t-extend="jquery-extend">
+        <t t-jquery="ul" t-operation="attributes"><attribute name="name">main-ul</attribute></t>
+    </t>
+    <t t-extend="jquery-extend">
         <t t-jquery="hr:eq(1)" t-operation="replace"><footer></footer></t>
     </t>
     <t t-extend="jquery-extend">
         <t t-jquery="footer" t-operation="inner"><b>[[end]]</b></t>
     </t>
     <result id="jquery-extend"><![CDATA[
-    <hr/><ul class="main"><li>1</li><li>2</li><li>3</li></ul><footer><b>[[end]]</b></footer>
+    <hr/><ul class="main" title="Main Title" name="main-ul"><li>1</li><li>2</li><li>3</li></ul><footer><b>[[end]]</b></footer>
 ]]></result>
 
     <t t-name="jquery-extend-clone" t-extend="jquery-extend">

@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_iban
+# 	* base_iban
 # 
 # Translators:
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# aleksandar ivanov, 2020
+# Maria Boyadjieva <marabo2000@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-05-27 09:14+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-8/language/bg/)\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2020\n"
+"Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,15 +21,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_iban
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments"
-msgstr ""
-
-#. module: base_iban
-#: model:res.partner.bank.type,format_layout:base_iban.bank_iban
-msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
+#. openerp-web
+#: code:addons/base_iban/static/src/js/iban_widget.js:0
+#, python-format
+msgid "Account isn't IBAN compliant."
 msgstr ""
 
 #. module: base_iban
@@ -36,51 +33,42 @@ msgid "Bank Accounts"
 msgstr "Банкови сметки"
 
 #. module: base_iban
-#: field:res.partner.bank,iban:0
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "Cannot compute the BBAN because the account number is not an IBAN."
+msgstr "Не можете да изчислите BBAN, защото номерът на сметката не е IBAN."
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
 msgid "IBAN"
-msgstr "IBAN"
+msgstr ""
 
 #. module: base_iban
-#: model:res.partner.bank.type,name:base_iban.bank_iban
-msgid "IBAN Account"
-msgstr "IBAN сметка"
-
-#. module: base_iban
-#: help:res.partner.bank,iban:0
-msgid "International Bank Account Number"
-msgstr "Международен номер на сметка (IBAN)"
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:138
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid ""
-"The IBAN does not seem to be correct. You should have entered something like"
-" this %s"
+"The IBAN does not seem to be correct. You should have entered something like this %s\n"
+"Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
+"Изглежда, че IBAN-ът не е верен. Трябва да въведете нещо от сорта на %s "
+"Където B = Национален банков код, S = Код на клон, C = Номер на сметка, k = "
+"чекова цифра"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:142
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "IBAN-ът е невалиден, той трябва да започва с кода на държавата."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:141
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
-msgid "This IBAN does not pass the validation check, please verify it"
+msgid "There is no IBAN code."
 msgstr ""
 
 #. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
-msgid "bank_bic"
-msgstr ""
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
-msgid "country_id"
-msgstr "country_id"
-
-#. module: base_iban
-#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
-msgid "zip"
-msgstr "пощ. код"
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it."
+msgstr "Този IBAN не издържа проверката за валидиране, моля проверете го."

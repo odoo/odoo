@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="digest_digest_view_form" model="ir.ui.view">
+        <field name="name">digest.digest.view.form.inherit.hr.recruitment</field>
+        <field name="model">digest.digest</field>
+        <field name="inherit_id" ref="digest.digest_digest_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='kpi_general']" position="after">
+                <group name="kpi_hr" string="Recruitment" groups="hr_recruitment.group_hr_recruitment_user">
+                    <field name="kpi_hr_recruitment_new_colleagues"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

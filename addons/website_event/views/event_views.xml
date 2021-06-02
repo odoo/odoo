@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_type_view_form_inherit_website" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.website</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="event.view_event_type_form"/>
+        <field name="arch" type="xml">
+            <div name="event_type_visibility_seats" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" name="event_type_visibility_website">
+                    <div class="o_setting_left_pane">
+                        <field name="website_menu"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="website_menu"/>
+                        <div class="row">
+                            <div class="col-lg-8 mt16 text-muted">
+                                Check this option to have menus for your event on the
+                                website: registrations, schedule, map, ...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="event_event_view_form_inherit_website" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.website</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <field name="organizer_id" position="before">
+                <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="website.group_multi_website"/>
+            </field>
+            <div name="button_box" position="inside">
+                <field name="website_url" invisible="1"/>
+                <field name="is_published" widget="website_redirect_button"/>
+            </div>
+            <label for="is_online" position="after">
+                <field name="website_menu"/>
+                <label for="website_menu" string="Website Menu"/>
+            </label>
+            <xpath expr="//button[@name='button_done']" position="before">
+                <button name="action_open_badge_editor"
+                    type="object"
+                    states="confirm"
+                    string="Preview Badges"
+                    class="oe_highlight"/>
+                <button name="action_open_badge_editor"
+                    type="object"
+                    states="done"
+                    string="Preview Badges"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_event_view_list_inherit_website" model="ir.ui.view">
+        <field name="name">event.event.view.list.inherit.website</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="website_id" groups="website.group_multi_website" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

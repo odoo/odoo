@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_ae_statements_menu" name="UAE" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+     <record id="uae_chart_template_standard" model="account.chart.template">
+         <field name="name">U.A.E Chart of Accounts - Standard</field>
+         <field name="code_digits">6</field>
+         <field name="bank_account_code_prefix">101</field>
+         <field name="cash_account_code_prefix">105</field>
+         <field name="transfer_account_code_prefix">100</field>
+         <field name="currency_id" ref="base.AED" />
+         <field name="complete_tax_set" eval="True"/>
+     </record>
+</odoo>

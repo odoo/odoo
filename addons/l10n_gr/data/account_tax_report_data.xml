@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_tax_report_line_311" model="account.tax.report.line">
+        <field name="name">311 Σύνολο Εκροών</field>
+        <field name="code">GRTAX_311</field>
+        <field name="sequence" eval="1"/>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+
+    <record id="account_tax_report_line_307" model="account.tax.report.line">
+        <field name="name">307 Σύνολο φορολ. Εκροών</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_311"/>
+        <field name="formula">GRTAX_303</field>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+
+    <record id="account_tax_report_line_303" model="account.tax.report.line">
+        <field name="name">303 Πωλήσεις 19-23%f</field>
+        <field name="tag_name">303 Πωλήσεις 19-23%</field>
+        <field name="code">GRTAX_303</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_307"/>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+
+    <record id="account_tax_report_line_358" model="account.tax.report.line">
+        <field name="name">358 Σύνολο φορολ. Εισροών</field>
+        <field name="code">GRTAX_358</field>
+        <field name="sequence" eval="2"/>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+    <record id="account_tax_report_line_353" model="account.tax.report.line">
+        <field name="name">353 Αγορές ΦΠΑ 19-23%</field>
+        <field name="tag_name">353 Αγορές ΦΠΑ 19-23%</field>
+        <field name="code">GRTAX_353</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_358"/>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+    <record id="account_tax_report_line_357" model="account.tax.report.line">
+        <field name="name">357 Δαπάνες/Έξοδα φορολ.</field>
+        <field name="tag_name">357 Δαπάνες/Έξοδα φορολ.</field>
+        <field name="code">GRTAX_357</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_358"/>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+    <record id="account_tax_report_line_501-511" model="account.tax.report.line">
+        <field name="name">501-511 Υπόλοιπο ΦΠΑ</field>
+        <field name="sequence" eval="3"/>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+    <record id="account_tax_report_line_337" model="account.tax.report.line">
+        <field name="name">337 ΦΠΑ Πωλήσεων</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_501-511"/>
+        <field name="formula">GRTAX_333</field>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+    <record id="account_tax_report_line_333" model="account.tax.report.line">
+        <field name="name">333 ΦΠΑ 19-23%</field>
+        <field name="tag_name">333 ΦΠΑ 19-23%</field>
+        <field name="code">GRTAX_333</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_337"/>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+    <record id="account_tax_report_line_420" model="account.tax.report.line">
+        <field name="name">420 ΦΠΑ Αγορών</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_501-511"/>
+        <field name="formula">GRTAX_373+GRTAX_377</field>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+    <record id="account_tax_report_line_378" model="account.tax.report.line">
+        <field name="name">378 Σύνολο Φορ. Αγορών</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_420"/>
+        <field name="formula">GRTAX_373+GRTAX_377</field>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+    <record id="account_tax_report_line_373" model="account.tax.report.line">
+        <field name="name">373 ΦΠΑ Αγορών 19-23%</field>
+        <field name="tag_name">373 ΦΠΑ Αγορών 19-23%</field>
+        <field name="code">GRTAX_373</field>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_378"/>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+    <record id="account_tax_report_line_377" model="account.tax.report.line">
+        <field name="name">377 ΦΠΑ Δαπανών</field>
+        <field name="tag_name">377 ΦΠΑ Δαπανών</field>
+        <field name="code">GRTAX_377</field>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_378"/>
+        <field name="country_id" ref="base.gr"/>
+    </record>
+
+</odoo>

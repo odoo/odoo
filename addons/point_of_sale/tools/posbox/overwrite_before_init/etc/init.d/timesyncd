@@ -1,0 +1,41 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          timesyncd
+# Required-Start:    $remote_fs $network
+# Required-Stop:     $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start systemd-timesyncd daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
+start()
+{
+    echo "start timesyncd"
+    service systemd-timesyncd start
+}
+
+stop()
+{
+    echo "stop timesyncd"
+    service systemd-timesyncd stop
+}
+
+restart()
+{
+    stop;
+    sleep 1;
+    start;
+}
+case $1 in
+start) 
+      start;;
+stop)
+      stop;;
+restart)
+      restart;;
+*)
+      start;;
+esac
+
+exit 0

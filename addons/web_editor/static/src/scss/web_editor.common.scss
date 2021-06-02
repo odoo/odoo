@@ -1,0 +1,502 @@
+///
+/// This file regroups basic style rules for web_editor enable page edition and backend utils.
+///
+
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.css_non_editable_mode_hidden {
+    display: none !important;
+}
+.editor_enable .css_editable_mode_hidden {
+    display: none !important;
+}
+.note-toolbar {
+    margin-left: 0 !important;
+}
+.note-popover .popover > .arrow {
+    display: none;
+}
+
+.note-popover .popover, .note-editor {
+    .dropdown-menu .dropdown-item {
+        > i {
+            visibility: hidden;
+        }
+        &.checked > i {
+            visibility: visible;
+        }
+    }
+}
+
+/* ----- GENERIC LAYOUTING HELPERS ---- */
+/* table */
+#wrapwrap, .o_editable {
+    // Only style editor-made tables (shop/portal/... tables are not supposed to
+    // use table-bordered...)
+    table.table.table-bordered {
+        table-layout: fixed;
+        td {
+            min-width: 20px;
+        }
+    }
+    @include media-breakpoint-down(sm) {
+        .table-responsive > table.table {
+            table-layout: auto;
+        }
+    }
+}
+
+// List
+ul.o_checklist {
+    list-style: none;
+
+    >li {
+        position: relative;
+        margin-left: $o-checklist-margin-left;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: - $o-checklist-margin-left;
+            display: block;
+            height: $o-checklist-before-size;
+            width: $o-checklist-before-size;
+            margin-top: 4px;
+            border: 1px solid;
+            text-align: center;
+            cursor: pointer;
+        }
+        &.o_checked {
+            text-decoration: line-through;
+            &::after {
+                content: "✓";
+                position: absolute;
+                left: - ($o-checklist-margin-left - $o-checklist-checkmark-width);
+                top: +1px;
+            }
+        }
+    }
+}
+ol > li.o_indent, ul > li.o_indent {
+    margin-left: 0;
+    list-style: none;
+    &::before {
+        content: none;
+    }
+}
+
+
+// Medias
+img.shadow {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+}
+img.padding-small, .img.padding-small, span.fa.padding-small, iframe.padding-small {
+    padding: 4px;
+}
+img.padding-medium, .img.padding-medium, span.fa.padding-medium, iframe.padding-medium {
+    padding: 8px;
+}
+img.padding-large, .img.padding-large, span.fa.padding-large, iframe.padding-large {
+    padding: 16px;
+}
+img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
+    padding: 32px;
+}
+img.ml-auto, img.mx-auto {
+    display: block;
+}
+
+.fa-6x {
+    font-size: 6em;
+}
+.fa-7x {
+    font-size: 7em;
+}
+.fa-8x {
+    font-size: 8em;
+}
+.fa-9x {
+    font-size: 9em;
+}
+.fa-10x {
+    font-size: 10em;
+}
+.fa.d-block.mx-auto {
+    text-align: center;
+}
+
+div.media_iframe_video {
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-width: 100px;
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        @include o-position-absolute($top: 0);
+        margin: 0 auto;
+        margin-left: -50%;
+    }
+    &.padding-small iframe {
+        padding: 4px;
+    }
+    &.padding-medium iframe {
+        padding: 8px;
+    }
+    &.padding-large iframe {
+        padding: 16px;
+    }
+    &.padding-xl iframe {
+        padding: 32px;
+    }
+
+    .media_iframe_video_size {
+        padding-bottom: 66.5%;
+        position: relative;
+        width: 100%;
+        height: 0;
+    }
+
+    .css_editable_mode_display {
+        @include o-position-absolute(0,0,0,0);
+        width: 100%;
+        height: 100%;
+        display: none;
+        z-index: 2;
+    }
+}
+
+html[data-browser^="msie"] div.media_iframe_video iframe {
+    margin-left: 0;
+}
+
+
+
+// Fields
+address {
+    .fa.fa-mobile-phone {
+        margin: 0 3px 0 2px;
+    }
+    .fa.fa-file-text-o {
+        margin-right: 1px;
+    }
+}
+
+span[data-oe-type="monetary"] {
+    white-space: nowrap;
+}
+
+// Menus
+// TODO should not be here but used by web_studio so must stay here for now
+ul.oe_menu_editor {
+    .oe_menu_placeholder {
+        outline: 1px dashed #4183C4;
+    }
+    ul {
+        list-style: none;
+    }
+    li div {
+        cursor: move;
+    }
+}
+
+// Generate all spacings for all sizes
+@mixin o-spacing-all($factor: 1) {
+    // Generate vertical margin/padding classes used by the editor
+    @for $i from 0 through (256 / 8) {
+        @include o-vspacing($i * 8, $factor);
+    }
+    @include o-vspacing(4, $factor);
+
+    // 92px vertical margin is kept for compatibility
+    @include o-vmargins(92, $factor);
+
+    // Some horizontal margin classes defined for convenience
+    // (and compatibility)
+    @include o-hmargins(0, $factor);
+    @include o-hmargins(4, $factor);
+    @include o-hmargins(8, $factor);
+    @include o-hmargins(16, $factor);
+    @include o-hmargins(32, $factor);
+    @include o-hmargins(64, $factor);
+}
+
+// Generate all spacings for one size, scalled by a given factor
+// (0 <= factor <= 1)
+@mixin o-vspacing($name, $factor: 1) {
+    @include o-vmargins($name, $factor);
+    @include o-vpaddings($name, $factor);
+}
+@mixin o-vmargins($name, $factor: 1) {
+    @include o-vmargins-define($name, $factor * $name);
+}
+@mixin o-vpaddings($name, $factor: 1) {
+    @include o-vpaddings-define($name, $factor * $name);
+}
+@mixin o-hspacing($name, $factor: 1) {
+    @include o-hmargins($name, $factor);
+    @include o-hpaddings($name, $factor);
+}
+@mixin o-hmargins($name, $factor: 1) {
+    @include o-hmargins-define($name, $factor * $name);
+}
+@mixin o-hpaddings($name, $factor: 1) {
+    @include o-hpaddings-define($name, $factor * $name);
+}
+
+// Generate all spacings for one size, given the name of the spacing and
+// intended size
+@mixin o-vmargins-define($name, $size: $name) {
+    .mt#{$name} { margin-top: $size * 1px !important; }
+    .mb#{$name} { margin-bottom: $size * 1px !important; }
+}
+@mixin o-vpaddings-define($name, $size: $name) {
+    .pt#{$name} { padding-top: $size * 1px !important; }
+    .pb#{$name} { padding-bottom: $size * 1px !important; }
+}
+@mixin o-hmargins-define($name, $size: $name) {
+    .ml#{$name} { margin-left: $size * 1px !important; }
+    .mr#{$name} { margin-right: $size * 1px !important; }
+}
+@mixin o-hpaddings-define($name, $size: $name) {
+    .pl#{$name} { padding-left: $size * 1px !important; }
+    .pr#{$name} { padding-right: $size * 1px !important; }
+}
+
+// Generate all margins
+@include o-spacing-all;
+
+// Underline
+a.o_underline {
+    text-decoration: underline;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// ACE EDITOR
+.o_ace_view_editor {
+    background: $o-we-ace-color;
+    color: white;
+    display: flex;
+    flex-flow: column nowrap;
+    opacity: 0.97;
+
+    .o_ace_view_editor_title {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        padding: $grid-gutter-width/4;
+
+        >.o_ace_type_switcher>button::after {
+            @include o-caret-down;
+            margin-left: 4px;
+        }
+
+        >* {
+            flex: 0 0 auto;
+            margin: 0 $grid-gutter-width/4;
+
+            &.o_include_option {
+                display: flex;
+                align-items: center;
+                font-size: 11px;
+
+                >.custom-control {
+                    margin-right: $grid-gutter-width/4;
+                }
+            }
+
+            &.o_res_list {
+                flex: 1 1 auto;
+                min-width: 60px;
+            }
+        }
+    }
+
+    #ace-view-id {
+        flex: 0 0 auto;
+        padding: $grid-gutter-width/4 $grid-gutter-width/2;
+        background-color: lighten($o-we-ace-color, 10%);
+
+        .o_ace_editor_resource_info {
+            color: $o-we-color-text-lighter;
+        }
+    }
+
+    #ace-view-editor {
+        @mixin ace-line-error-mixin {
+            content: "";
+            z-index: 1000;
+            display: block;
+            background-color: theme-color('danger');
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        height: 70%; // in case flex is not supported
+        flex: 1 1 auto;
+
+        .ace_gutter {
+            display: block !important; // display even with aria-hidden
+            cursor: ew-resize;
+
+            .ace_gutter-cell.o_error {
+                position: relative;
+
+                &::after {
+                    @include o-position-absolute(-100%, 0, -100%, 0);
+                    @include ace-line-error-mixin;
+                }
+            }
+        }
+
+        .ace_resize_bar {
+            @include o-position-absolute($right: 0);
+            width: 25px;
+            height: 100%;
+            cursor: ew-resize;
+        }
+
+        .ace_scroller.o_error::after {
+            @include o-position-absolute(0, auto, 0, 0);
+            width: 3px;
+            @include ace-line-error-mixin;
+        }
+    }
+}
+
+.o_ace_select2_dropdown {
+    width: auto !important;
+    padding-top: 4px;
+    font-family: monospace !important;
+
+    >.select2-results {
+        max-height: none;
+        max-height: 70vh;
+
+        .select2-result-label {
+            padding-top: 1px;
+            padding-bottom: 2px;
+
+            >.o_ace_select2_result {
+                padding: 0;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+        }
+    }
+}
+
+.o_nocontent_help {
+    @include o-nocontent-empty;
+
+    .o_empty_folder_image:before {
+        @extend %o-nocontent-empty-document;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    odoo-wysiwyg-container {
+        .panel-heading.note-toolbar {
+            overflow-x: auto;
+        }
+        .btn-group {
+            position: static;
+        }
+    }
+    // modal select media
+    .o_technical_modal.o_web_editor_dialog {
+        // see template 'web_editor.FieldTextHtml.fullscreen'
+        z-index: 2001;
+
+        > .o_select_media_dialog {
+            max-width: inherit !important;
+            z-index: 2001;
+
+            .modal-dialog, .model-content {
+                height: 100%;
+            }
+
+            .modal-body {
+                .nav .nav-item.search {
+                    width: 100%;
+
+                    .btn-group {
+                        display: flex;
+                        justify-content: space-around;
+                        padding: 5px;
+                    }
+                }
+
+                // center pictogram
+                .font-icons-icons {
+                    text-align: center;
+                }
+
+                // fix search image
+                .form-control.o_we_search {
+                    height: inherit;
+                }
+
+                .form-inline {
+                    .btn-group {
+                        width: 100%;
+
+                        .btn.btn-primary:not(.dropdown-toggle) {
+                            width: 90%;
+                        }
+                    }
+
+                    > .input-group.ml-2 {
+                        margin-left: 0 !important;
+
+                        > .input-group-append {
+                            width: 100%;
+
+                            > .btn {
+                                width: 100%;
+                            }
+
+                            > .ml-2 {
+                                margin-left: 0 !important;
+                            }
+                        }
+                    }
+                }
+
+                // attachment cells
+                .o_we_existing_attachments > .row {
+                    flex-direction: column;
+
+                    > .o_existing_attachment_cell {
+                        flex: initial;
+                        max-width: 100%;
+
+                        > .o_existing_attachment_remove {
+                            opacity: inherit;
+                            top: 10px;
+                        }
+                    }
+                }
+
+                // select media dialog unsplash error
+                #editor-media-image .unsplash_img_container .unsplash_error .mx-auto {
+                    width: 100%;
+
+                    .form-group {
+                        input.w-100 {
+                            min-width: 100px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

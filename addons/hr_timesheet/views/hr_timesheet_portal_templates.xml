@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_layout" name="Portal layout: timesheet menu entry" inherit_id="portal.portal_breadcrumbs" priority="35">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'timesheet' or timesheet" t-attf-class="breadcrumb-item #{'active' if not timesheet else ''}">
+                <t>Timesheets</t>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_timesheet" name="Portal My Home : timesheets entries" inherit_id="portal.portal_my_home" priority="45">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-if="timesheet_count" t-call="portal.portal_docs_entry">
+                <t t-set="title">Timesheets</t>
+                <t t-set="url" t-value="'/my/timesheets'"/>
+                <t t-set="count" t-value="timesheet_count"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_timesheets" name="My Timesheets">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Timesheets</t>
+            </t>
+            <t t-if="not grouped_timesheets">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no timesheets.
+                </div>
+            </t>
+            <t t-if="grouped_timesheets">
+                <t t-call="portal.portal_table">
+                    <t t-foreach="grouped_timesheets" t-as="timesheets">
+                        <thead>
+                            <tr t-attf-class="{{'thead-light' if not groupby == 'none' else ''}}">
+                                <th t-if="groupby == 'none'">Description</th>
+                                <th t-else="">
+                                    <em class="font-weight-normal text-muted">Timesheets for project:</em>
+                                    <span t-field="timesheets[0].project_id.name"/></th>
+                                <th>Date</th>
+                                <th>Employee</th>
+                                <th class="text-right">Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="timesheets" t-as="timesheet">
+                                <tr>
+                                    <td><span t-esc="timesheet.name"/></td>
+                                    <td><span t-field="timesheet.date" t-options='{"widget": "date"}'/></td>
+                                    <td><span t-field="timesheet.employee_id"/></td>
+                                    <td class="text-right"><span t-field="timesheet.unit_amount" t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

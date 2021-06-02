@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <!-- First of all: remove admin of all memberships to avoid noisy demo data -->
+    <function model="slide.channel"
+        name="_remove_membership"
+        eval="[
+            [ref('website_slides.slide_channel_demo_0_gard_0'),
+             ref('website_slides.slide_channel_demo_1_gard1'),
+             ref('website_slides.slide_channel_demo_2_gard2'),
+             ref('website_slides.slide_channel_demo_3_furn0'),
+             ref('website_slides.slide_channel_demo_4_furn1'),
+             ref('website_slides.slide_channel_demo_5_furn2'),
+             ref('website_slides.slide_channel_demo_6_furn3')],
+            [ref('base.partner_admin')]
+        ]"/>
+
+    <!-- CHANNEL 0: Basics of Gardening -->
+    <!-- ================================================== -->
+    <record id="slide_channel_0_partner_admin" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+    </record>
+    <record id="slide_slide_0_0_partner_admin" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_0_0"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="completed" eval="True"/>
+        <field name="vote">1</field>
+    </record>
+    <record id="slide_slide_0_1_partner_admin" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_0_1"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="completed" eval="True"/>
+        <field name="vote">1</field>
+    </record>
+    <record id="slide_channel_0_partner_demo" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+    </record>
+    <record id="slide_slide_0_0_partner_demo" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_0_0"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="vote">1</field>
+    </record>
+    <record id="slide_slide_0_1_partner_demo" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_0_1"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="vote">1</field>
+    </record>
+    <record id="slide_channel_0_partner_demo_portal" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+    </record>
+    <record id="slide_slide_0_0_partner_demo_portal" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_0_0"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="vote">1</field>
+    </record>
+
+    <record id="message_channel_0_admin" model="mail.message">
+        <field name="model">slide.channel</field>
+        <field name="res_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="website_published" eval="True"/>
+        <field name="message_type">comment</field>
+        <field name="author_id" ref="base.partner_admin"/>
+        <field name="body" type="html"><div>I fear beginners could be lost... Isn't it a bit harsh for a "basics" course ?</div></field>
+    </record>
+    <record id="rating_channel_0_admin" model="rating.rating">
+        <field name="res_model_id" ref="website_slides.model_slide_channel"/>
+        <field name="res_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="consumed" eval="True"/>
+        <field name="feedback">I fear beginners could be lost... Isn't it a bit harsh for a "basics" course ?</field>
+        <field name="rating">6</field>
+        <field name="message_id" ref="website_slides.message_channel_0_admin"/>
+    </record>
+    <record id="message_channel_0_demo" model="mail.message">
+        <field name="model">slide.channel</field>
+        <field name="res_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="website_published" eval="True"/>
+        <field name="message_type">comment</field>
+        <field name="author_id" ref="base.partner_demo"/>
+        <field name="body" type="html"><div>Back to basics and interesting. Just WOW !</div></field>
+    </record>
+    <record id="rating_channel_0_demo" model="rating.rating">
+        <field name="res_model_id" ref="website_slides.model_slide_channel"/>
+        <field name="res_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="consumed" eval="True"/>
+        <field name="rating">10</field>
+        <field name="feedback">Back to basics and interesting. Just WOW !</field>
+        <field name="message_id" ref="website_slides.message_channel_0_demo"/>
+    </record>
+
+    <function model="slide.channel" name="message_subscribe"
+            eval="[ref('website_slides.slide_channel_demo_0_gard_0')], [ref('base.partner_admin'), ref('base.partner_demo'), ref('base.partner_demo_portal')]"/>
+
+    <!-- CHANNEL 1: Taking care of Trees -->
+    <!-- ================================================== -->
+    <record id="slide_channel_1_partner_admin" model="slide.channel.partner">
+    	<field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+    	<field name="partner_id" ref="base.partner_admin"/>
+    </record>
+    <record id="slide_slide_1_0_partner_admin" model="slide.slide.partner">
+    	<field name="slide_id" ref="website_slides.slide_slide_demo_1_0"/>
+    	<field name="partner_id" ref="base.partner_admin"/>
+    	<field name="completed" eval="True"/>
+    </record>
+    <record id="slide_slide_1_1_partner_admin" model="slide.slide.partner">
+    	<field name="slide_id" ref="website_slides.slide_slide_demo_1_1"/>
+    	<field name="partner_id" ref="base.partner_admin"/>
+    	<field name="completed" eval="True"/>
+    </record>
+    <record id="slide_slide_1_2_partner_admin" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_1_2"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="vote">1</field>
+        <field name="completed" eval="True"/>
+    </record>
+    <record id="slide_slide_1_3_partner_admin" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_1_3"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="vote">1</field>
+        <field name="completed" eval="True"/>
+    </record>
+    <record id="slide_channel_1_partner_demo" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+    </record>
+    <record id="slide_slide_1_0_partner_demo" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_1_0"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="vote">1</field>
+        <field name="completed" eval="True"/>
+    </record>
+    <record id="slide_slide_1_1_partner_demo" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_1_1"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="vote">1</field>
+    </record>
+    <record id="slide_channel_1_partner_demo_portal" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="completed" eval="True"/>
+    </record>
+    <record id="slide_slide_1_0_partner_demo" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_1_0"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="vote">1</field>
+        <field name="completed" eval="True"/>
+    </record>
+
+    <record id="message_channel_1_admin" model="mail.message">
+        <field name="model">slide.channel</field>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="website_published" eval="True"/>
+        <field name="message_type">comment</field>
+        <field name="author_id" ref="base.partner_admin"/>
+        <field name="body" type="html"><div>Very good course.</div></field>
+    </record>
+    <record id="rating_channel_1_admin" model="rating.rating">
+        <field name="res_model_id" ref="website_slides.model_slide_channel"/>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="consumed" eval="True"/>
+        <field name="feedback">Very good course.</field>
+        <field name="rating">10</field>
+        <field name="message_id" ref="website_slides.message_channel_1_admin"/>
+    </record>
+    <record id="message_channel_1_demo" model="mail.message">
+        <field name="model">slide.channel</field>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="website_published" eval="True"/>
+        <field name="message_type">comment</field>
+        <field name="author_id" ref="base.partner_demo"/>
+        <field name="body" type="html"><div>Interesting !</div></field>
+    </record>
+    <record id="rating_channel_1_demo" model="rating.rating">
+        <field name="res_model_id" ref="website_slides.model_slide_channel"/>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="consumed" eval="True"/>
+        <field name="rating">8</field>
+        <field name="feedback">Interesting !</field>
+        <field name="message_id" ref="website_slides.message_channel_1_demo"/>
+    </record>
+    <record id="message_channel_1_portal" model="mail.message">
+        <field name="model">slide.channel</field>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="subtype_id" ref="mail.mt_comment"/>
+        <field name="website_published" eval="True"/>
+        <field name="message_type">comment</field>
+        <field name="author_id" ref="base.partner_demo_portal"/>
+        <field name="body" type="html"><div>Interesting. Could be great to include more examples.</div></field>
+    </record>
+    <record id="rating_channel_1_portal" model="rating.rating">
+        <field name="res_model_id" ref="website_slides.model_slide_channel"/>
+        <field name="res_id" ref="website_slides.slide_channel_demo_1_gard1"/>
+        <field name="partner_id" ref="base.partner_demo_portal"/>
+        <field name="consumed" eval="True"/>
+        <field name="rating">6</field>
+        <field name="feedback">Interesting. Could be great to include more examples.</field>
+        <field name="message_id" ref="website_slides.message_channel_1_portal"/>
+        <field name="publisher_comment">Thanks for the feedback! We just updated first lessons to better include newcomers.</field>
+        <field name="publisher_id" ref="base.partner_admin"/>
+        <field name="publisher_datetime" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
+    </record>
+
+    <function model="slide.channel" name="message_subscribe"
+            eval="[ref('website_slides.slide_channel_demo_1_gard1')], [ref('base.partner_admin'), ref('base.partner_demo'), ref('base.partner_demo_portal')]"/>
+
+
+    <!-- CHANNEL 2: Trees, Wood and Garden -->
+    <!-- ================================================== -->
+    <record id="slide_channel_2_partner_admin" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+    </record>
+    <record id="slide_slide_2_0_partner_admin" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_2_0"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="vote">1</field>
+        <field name="quiz_attempts_count">1</field>
+        <field name="completed" eval="True"/>
+    </record>
+    <record id="slide_slide_2_1_partner_admin" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_2_1"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="vote">1</field>
+    </record>
+    <record id="slide_channel_2_partner_demo" model="slide.channel.partner">
+        <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+    </record>
+    <record id="slide_slide_2_0_partner_demo" model="slide.slide.partner">
+        <field name="slide_id" ref="website_slides.slide_slide_demo_2_0"/>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="vote">1</field>
+        <field name="quiz_attempts_count">2</field>
+    </record>
+
+    <function model="slide.channel" name="message_subscribe"
+            eval="[ref('website_slides.slide_channel_demo_2_gard2')], [ref('base.partner_admin'), ref('base.partner_demo')]"/>
+
+</data></odoo>

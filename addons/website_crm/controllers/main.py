@@ -1,110 +1,70 @@
 # -*- coding: utf-8 -*-
-import base64
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-import werkzeug.urls
-
-from openerp import http, SUPERUSER_ID
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo import http
+from odoo.http import request
+from odoo.addons.website_form.controllers.main import WebsiteForm
 
 
-class contactus(http.Controller):
+class WebsiteForm(WebsiteForm):
 
-    def generate_google_map_url(self, street, city, city_zip, country_name):
-        url = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" % werkzeug.url_quote_plus(
-            '%s, %s %s, %s' % (street, city, city_zip, country_name)
-        )
-        return url
+    def _get_country(self):
+        country_code = request.session.geoip and request.session.geoip.get('country_code') or False
+        if country_code:
+            return request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1)
+        return request.env['res.country']
 
-    @http.route(['/page/website.contactus', '/page/contactus'], type='http', auth="public", website=True)
-    def contact(self, **kwargs):
-        values = {}
-        for field in ['description', 'partner_name', 'phone', 'contact_name', 'email_from', 'name']:
-            if kwargs.get(field):
-                values[field] = kwargs.pop(field)
-        values.update(kwargs=kwargs.items())
-        return request.website.render("website.contactus", values)
+    def _get_phone_fields_to_validate(self):
+        return ['phone', 'mobile']
 
-    def create_lead(self, request, values, kwargs):
-        """ Allow to be overrided """
-        cr, context = request.cr, request.context
-        return request.registry['crm.lead'].create(cr, SUPERUSER_ID, values, context=dict(context, mail_create_nosubscribe=True))
+    # Check and insert values from the form on the model <model> + validation phone fields
+    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
+    def website_form(self, model_name, **kwargs):
+        model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
+        if model_record and hasattr(request.env[model_name], 'phone_format'):
+            try:
+                data = self.extract_data(model_record, request.params)
+            except:
+                # no specific management, super will do it
+                pass
+            else:
+                record = data.get('record', {})
+                phone_fields = self._get_phone_fields_to_validate()
+                country = request.env['res.country'].browse(record.get('country_id'))
+                contact_country = country.exists() and country or self._get_country()
+                for phone_field in phone_fields:
+                    if not record.get(phone_field):
+                        continue
+                    number = record[phone_field]
+                    fmt_number = request.env[model_name].phone_format(number, contact_country)
+                    request.params.update({phone_field: fmt_number})
 
-    def preRenderThanks(self, values, kwargs):
-        """ Allow to be overrided """
-        company = request.website.company_id
-        return {
-            'google_map_url': self.generate_google_map_url(company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''),
-            '_values': values,
-            '_kwargs': kwargs,
-        }
+        if model_name == 'crm.lead' and not request.params.get('state_id'):
+            geoip_country_code = request.session.get('geoip', {}).get('country_code')
+            geoip_state_code = request.session.get('geoip', {}).get('region')
+            if geoip_country_code and geoip_state_code:
+                state = request.env['res.country.state'].search([('code', '=', geoip_state_code), ('country_id.code', '=', geoip_country_code)])
+                if state:
+                    request.params['state_id'] = state.id
+        return super(WebsiteForm, self).website_form(model_name, **kwargs)
 
-    def get_contactus_response(self, values, kwargs):
-        values = self.preRenderThanks(values, kwargs)
-        return request.website.render(kwargs.get("view_callback", "website_crm.contactus_thanks"), values)
+    def insert_record(self, request, model, values, custom, meta=None):
+        is_lead_model = model.model == 'crm.lead'
+        if is_lead_model:
+            if 'company_id' not in values:
+                values['company_id'] = request.website.company_id.id
+            lang = request.context.get('lang', False)
+            values['lang_id'] = values.get('lang_id') or request.env['res.lang']._lang_get_id(lang)
 
-    @http.route(['/crm/contactus'], type='http', auth="public", website=True)
-    def contactus(self, **kwargs):
-        def dict_to_str(title, dictvar):
-            ret = "\n\n%s" % title
-            for field in dictvar:
-                ret += "\n%s" % field
-            return ret
+        result = super(WebsiteForm, self).insert_record(request, model, values, custom, meta=meta)
 
-        _TECHNICAL = ['show_info', 'view_from', 'view_callback']  # Only use for behavior, don't stock it
-        _BLACKLIST = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date', 'user_id', 'active']  # Allow in description
-        _REQUIRED = ['name', 'contact_name', 'email_from', 'description']  # Could be improved including required from model
-
-        post_file = []  # List of file to add to ir_attachment once we have the ID
-        post_description = []  # Info to add after the message
-        values = {}
-
-        values['medium_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'crm.crm_medium_website')
-        values['section_id'] = request.registry['ir.model.data'].xmlid_to_res_id(request.cr, SUPERUSER_ID, 'website.salesteam_website_sales')
-
-        for field_name, field_value in kwargs.items():
-            if hasattr(field_value, 'filename'):
-                post_file.append(field_value)
-            elif field_name in request.registry['crm.lead']._fields and field_name not in _BLACKLIST:
-                values[field_name] = field_value
-            elif field_name not in _TECHNICAL:  # allow to add some free fields or blacklisted field like ID
-                post_description.append("%s: %s" % (field_name, field_value))
-
-        if "name" not in kwargs and values.get("contact_name"):  # if kwarg.name is empty, it's an error, we cannot copy the contact_name
-            values["name"] = values.get("contact_name")
-        # fields validation : Check that required field from model crm_lead exists
-        error = set(field for field in _REQUIRED if not values.get(field))
-
-        if error:
-            values = dict(values, error=error, kwargs=kwargs.items())
-            return request.website.render(kwargs.get("view_from", "website.contactus"), values)
-
-        # description is required, so it is always already initialized
-        if post_description:
-            values['description'] += dict_to_str(_("Custom Fields: "), post_description)
-
-        if kwargs.get("show_info"):
-            post_description = []
-            environ = request.httprequest.headers.environ
-            post_description.append("%s: %s" % ("IP", environ.get("REMOTE_ADDR")))
-            post_description.append("%s: %s" % ("USER_AGENT", environ.get("HTTP_USER_AGENT")))
-            post_description.append("%s: %s" % ("ACCEPT_LANGUAGE", environ.get("HTTP_ACCEPT_LANGUAGE")))
-            post_description.append("%s: %s" % ("REFERER", environ.get("HTTP_REFERER")))
-            values['description'] += dict_to_str(_("Environ Fields: "), post_description)
-
-        lead_id = self.create_lead(request, dict(values, user_id=False), kwargs)
-        values.update(lead_id=lead_id)
-        if lead_id:
-            for field_value in post_file:
-                attachment_value = {
-                    'name': field_value.filename,
-                    'res_name': field_value.filename,
-                    'res_model': 'crm.lead',
-                    'res_id': lead_id,
-                    'datas': base64.encodestring(field_value.read()),
-                    'datas_fname': field_value.filename,
-                }
-                request.registry['ir.attachment'].create(request.cr, SUPERUSER_ID, attachment_value, context=request.context)
-
-        return self.get_contactus_response(values, kwargs)
+        if is_lead_model:
+            visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
+            if visitor_sudo and result:
+                lead_sudo = request.env['crm.lead'].browse(result).sudo()
+                if lead_sudo.exists():
+                    vals = {'lead_ids': [(4, result)]}
+                    if not visitor_sudo.lead_ids and not visitor_sudo.partner_id:
+                        vals['name'] = lead_sudo.contact_name
+                    visitor_sudo.write(vals)
+        return result

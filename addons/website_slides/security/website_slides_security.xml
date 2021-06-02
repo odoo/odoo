@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- CHANNEL -->
+        <record id="rule_slide_channel_global" model="ir.rule">
+            <field name="name">Channel: always visible (sub rules exist)</field>
+            <field name="model_id" ref="model_slide_channel"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="rule_slide_channel_not_website" model="ir.rule">
+            <field name="name">Channel: public/portal/user: restricted to published and visible or member only</field>
+            <field name="model_id" ref="model_slide_channel"/>
+            <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+            <field name="domain_force">['&amp;', ('website_published', '=', True), '|', ('visibility', '=', 'public'), ('partner_ids', '=', user.partner_id.id)]</field>
+        </record>
+
+        <record id="rule_slide_channel_website" model="ir.rule">
+            <field name="name">Channel: website group: access all</field>
+            <field name="model_id" ref="model_slide_channel"/>
+            <field name="groups" eval="[(4, ref('website.group_website_publisher'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- SLIDE -->
+        <record id="rule_slide_slide_global" model="ir.rule">
+            <field name="name">Slide: always visible (sub rules exist)</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="rule_slide_slide_not_website" model="ir.rule">
+            <field name="name">Slide: public/portal/user: restricted to published or uploaded by user, and either channel member or public channel &amp; (category or previewable)</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+            <field name="domain_force">['&amp;',
+    '|',
+        '&amp;', ('channel_id.visibility', '=', 'public'), '|', ('is_category','=', True), ('is_preview', '=', True),
+        ('channel_id.partner_ids', '=', user.partner_id.id),
+    '&amp;', ('channel_id.website_published', '=', True), '|', ('user_id', '=', user.id), ('website_published', '=', True)]</field>
+        </record>
+
+        <record id="rule_slide_slide_website" model="ir.rule">
+            <field name="name">Slide: website group: access all</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="groups" eval="[(4, ref('website.group_website_publisher'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_tree_view" model="ir.ui.view">
+            <field name="name">product.template.tree.inherit.stock.account</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <group name="account_property" position="inside">
+                    <group name="account_stock_property" string="Account Stock Properties" groups="account.group_account_user">
+                        <field name="property_stock_account_input_categ_id" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_account_output_categ_id" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_valuation_account_id" options="{'no_create': True}" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}"/>
+                        <field name="property_stock_journal" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                    </group>
+                </group>
+                <group name="account_property" position="before">
+                    <group>
+                        <group string="Inventory Valuation">
+                            <field name="property_cost_method"/>
+                            <field name="property_valuation" groups="account.group_account_user"/>
+                        </group>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="view_template_property_form" model="ir.ui.view">
+            <field name="name">product.template.stock.property.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="list_price" position="after">
+                        <field name="valuation" invisible="1" readonly="1"/>
+                        <field name="cost_method" invisible="1" readonly="1"/>
+                    </field>
+                    <field name="standard_price" position="replace">
+                        <field name="standard_price"
+                            attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
+                            widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
+                            class="oe_inline"/>
+                    </field>
+                    <xpath expr="//div[@name='standard_price_uom']" position="inside">
+                        <span name="update_cost_price">
+                            <button string="Update Cost" type="action"
+                                name="%(action_view_change_standard_price)d"
+                                attrs="{'invisible':['|', ('cost_method', '=', 'fifo'), ('product_variant_count', '>', 1)]}"
+                                class="oe_link pt-0 oe_inline"/>
+                        </span>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="product_product_normal_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.normal.form.view.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="standard_price" position="replace">
+                        <field name="standard_price"
+                            attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
+                            widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
+                            class="oe_inline"/>
+                    </field>
+                    <xpath expr="//button[@name='%(action_view_change_standard_price)d']" position="attributes">
+                        <attribute name="attrs">{'invisible': [('cost_method', '=', 'fifo')]}</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="product_variant_easy_edit_view_inherit" model="ir.ui.view">
+            <field name="name">product.product.product.view.form.easy.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="standard_price" position="replace">
+                        <field name="valuation" invisible="1" readonly="1"/>
+                        <field name="cost_method" invisible="1" readonly="1"/>
+                        <label for="standard_price"/>
+                        <div class="o_row" name="update_cost_price">
+                            <field name="standard_price"
+                                attrs="{'readonly':[('cost_method', '!=', 'fifo')]}"
+                                widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"
+                                class="oe_inline"/>
+                            <button string="Update Cost" type="action"
+                                name="%(action_view_change_standard_price)d"
+                                attrs="{'invisible':[('cost_method', '=', 'fifo')]}"
+                                class="oe_link oe_inline"/>
+                        </div>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+   </data>
+</odoo>

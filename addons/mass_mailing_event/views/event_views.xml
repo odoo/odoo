@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_event_view_form_inherit_mass_mailing" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.mass.mailing</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_cancel']" position="after">
+                <button name="action_mass_mailing_attendees" string="Contact Attendees" type="object" attrs="{'invisible': [('seats_expected', '=', 0)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

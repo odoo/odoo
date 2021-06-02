@@ -1,16 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * event_sale
+# 	* event_sale
 # 
 # Translators:
+# Martin Trigaux, 2019
+# fanha99 <fanha99@hotmail.com>, 2019
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
+# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2020
+# Trần Hà <tranthuha13590@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-02-23 04:22+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-8/language/vi/)\n"
+"POT-Creation-Date: 2019-10-07 07:12+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
+"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,316 +26,538 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: event_sale
-#: field:event.event.ticket,seats_available:0
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "Apply"
+msgstr "Áp dụng"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_availability
+msgid "Available Seat"
+msgstr "Số Chỗ Khả dụng"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_available
 msgid "Available Seats"
-msgstr ""
+msgstr "Sô Chỗ khả dụng"
 
 #. module: event_sale
-#: view:event.event:event_sale.view_event_form
-#: model:ir.actions.report.xml,name:event_sale.action_report_registrationbadge
-msgid "Badge"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "Before confirming"
+msgstr "Trước khi xác nhận"
 
 #. module: event_sale
-#: view:event.event:event_sale.view_event_form
-msgid "Badge (Back)"
-msgstr ""
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__campaign_id
+msgid "Campaign"
+msgstr "Chiến dịch"
 
 #. module: event_sale
-#: view:event.event:event_sale.view_event_form
-msgid "Badge (Inner Left)"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Cancel"
+msgstr "Hủy"
 
 #. module: event_sale
-#: view:event.event:event_sale.view_event_form
-msgid "Badge (Inner Right)"
-msgstr ""
-
-#. module: event_sale
-#: field:event.event,badge_back:0
-msgid "Badge Back"
-msgstr ""
-
-#. module: event_sale
-#: field:event.event,badge_innerright:0
-msgid "Badge Inner Right"
-msgstr ""
-
-#. module: event_sale
-#: field:event.event,badge_innerleft:0
-msgid "Badge Innner Left"
-msgstr ""
-
-#. module: event_sale
-#: help:sale.order.line,event_id:0
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
 msgstr ""
+"Chọn một sự kiện và điều đí sẽ tự động khởi tạo một đăng ký cho sự kiện này."
 
 #. module: event_sale
-#: help:sale.order.line,event_ticket_id:0
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
+"Chọn một vé sự kiện và điều đó sẽ tự động khởi tạo một đăng ký cho vé sự "
+"kiện này."
 
 #. module: event_sale
-#: model:product.template,name:event_sale.event_2_product_product_template
-msgid "Conference on Business Applications"
-msgstr ""
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__company_id
+msgid "Company"
+msgstr "Công ty"
 
 #. module: event_sale
-#: field:event.event.ticket,create_uid:0
+#: model:ir.actions.act_window,name:event_sale.event_configurator_action
+msgid "Configure an event"
+msgstr "Configure an event"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
 msgid "Created by"
-msgstr "Tạo bởi"
+msgstr "Được tạo bởi"
 
 #. module: event_sale
-#: field:event.event.ticket,create_date:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__create_date
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
 msgid "Created on"
-msgstr "Tạo trên"
+msgstr "Thời điểm tạo"
 
 #. module: event_sale
-#: help:product.template,event_ok:0
+#: model:ir.model.fields,help:event_sale.field_event_event_ticket__seats_max
 msgid ""
-"Determine if a product needs to create automatically an event registration "
-"at the confirmation of a sales order line."
+"Define the number of available tickets. If you have too much registrations "
+"you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
+"as unlimited."
 msgstr ""
+"Xác định số lượng vé khả dụng. Nếu bạn có quá nhiều đăng ký, bạn sẽ không "
+"thể bán thêm vé được nữa. Nếu bạn đặt 0, bạn sẽ có thể bán vé không giới "
+"hạn."
 
 #. module: event_sale
-#: field:event.event.ticket,event_id:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor
+msgid "Edit Attendee Details on Sales Confirmation"
+msgstr "Edit Attendee Details on Sales Confirmation"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor_line
+msgid "Edit Attendee Line on Sales Confirmation"
+msgstr "Edit Attendee Line on Sales Confirmation"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
+msgid "Editor"
+msgstr "Biên tập"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
+msgid "Email"
+msgstr "Tên đăng nhập / Email"
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event
-#: field:sale.order.line,event_id:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
 msgid "Event"
 msgstr "Sự kiện"
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_event_type
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_type_id
+msgid "Event Category"
+msgstr "Nhóm Sự kiện"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_event_configurator
+msgid "Event Configurator"
+msgstr "Event Configurator"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event Name"
+msgstr "Tên Sự kiện"
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
-msgid "Event Registration"
-msgstr ""
-
-#. module: event_sale
-#: field:product.template,event_ok:0
+#: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
-msgid "Event Subscription"
-msgstr ""
+msgid "Event Registration"
+msgstr "Đăng ký Sự kiện"
 
 #. module: event_sale
-#: field:event.event,event_ticket_ids:0
-#: field:event.registration,event_ticket_id:0
-#: field:sale.order.line,event_ticket_id:0
+#: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
+msgid "Event Registrations"
+msgstr "Đăng ký Sự kiện"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_event_event_ticket
+#: model:ir.model.fields,field_description:event_sale.field_event_event__event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
 msgid "Event Ticket"
-msgstr ""
+msgstr "Vé Sự kiện"
 
 #. module: event_sale
-#: field:product.product,event_ticket_ids:0
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
+msgstr "Vé Sự kiện"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event's Ticket"
+msgstr "Vé của Sự kiện"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
+msgid "Events"
+msgstr "Các sự kiện"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "Free"
+msgstr "Rảnh"
+
+#. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_4_ticket_1
+msgid "General Admission"
 msgstr ""
 
 #. module: event_sale
-#: field:sale.order.line,event_type_id:0
-msgid "Event Type"
-msgstr "Loại sự kiện"
-
-#. module: event_sale
-#: view:event.event:event_sale.view_event_form
-msgid "Event badge_back..."
-msgstr ""
-
-#. module: event_sale
-#: view:event.event:event_sale.view_event_form
-msgid "Event badge_innerleft..."
-msgstr ""
-
-#. module: event_sale
-#: view:event.event:event_sale.view_event_form
-msgid "Event badge_innerright..."
-msgstr ""
-
-#. module: event_sale
-#: model:product.template,name:event_sale.event_1_product_product_template
-msgid "Functional Webinar"
-msgstr ""
-
-#. module: event_sale
-#: field:event.event.ticket,id:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
 msgstr "ID"
 
 #. module: event_sale
-#: field:event.event.ticket,is_expired:0
+#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
+#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
+msgid ""
+"If checked this product automatically creates an event registration at the "
+"sales order confirmation."
+msgstr ""
+"If checked this product automatically creates an event registration at the "
+"sales order confirmation."
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__is_expired
 msgid "Is Expired"
-msgstr ""
+msgstr "Đã Hết hạn"
 
 #. module: event_sale
-#: view:website:event_sale.report_registrationbadge
-msgid "June 4th - 6th , 2014"
-msgstr ""
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ok
+#: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
+msgid "Is an Event Ticket"
+msgstr "Is an Event Ticket"
 
 #. module: event_sale
-#: field:event.event.ticket,write_uid:0
+#: model:ir.model,name:event_sale.model_account_move
+msgid "Journal Entries"
+msgstr "Bút toán phát sinh"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator____last_update
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket____last_update
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
+msgid "Last Modified on"
+msgstr "Sửa lần cuối"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
+msgstr "Cập nhật gần đây bởi"
 
 #. module: event_sale
-#: field:event.event.ticket,write_date:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__write_date
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối"
+msgstr "Cập nhật gần đây vào"
 
 #. module: event_sale
-#: field:event.event.ticket,seats_max:0
+#: model:ir.model.fields.selection,name:event_sale.selection__event_event_ticket__seats_availability__limited
+msgid "Limited"
+msgstr "Giới hạn"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
+msgid "Marketing"
+msgstr "Marketing"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_max
 msgid "Maximum Available Seats"
-msgstr ""
+msgstr "Số Chỗ Khả dụng Tối đa"
 
 #. module: event_sale
-#: field:event.event.ticket,name:0
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__medium_id
+msgid "Medium"
+msgstr "Kênh trung gian"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__mobile
+msgid "Mobile"
+msgstr "Di động"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
+#, python-format
 msgid "Name"
 msgstr "Tên"
 
 #. module: event_sale
-#: constraint:event.event.ticket:0 constraint:event.registration:0
-msgid "No more available tickets."
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "No more available seats for this ticket"
+msgstr "Không còn chỗ nào khả dụng cho vé này"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "No more available seats for this ticket type."
 msgstr ""
 
 #. module: event_sale
-#: field:event.event.ticket,seats_used:0
-msgid "Number of Participations"
-msgstr ""
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "None"
+msgstr "Không dùng"
 
 #. module: event_sale
-#: model:product.template,name:event_sale.event_0_product_product_template
-msgid "Open Days in Los Angeles"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
+msgid "Ok"
+msgstr "Đồng ý"
 
 #. module: event_sale
-#: view:event.event:event_sale.view_event_form
-msgid "Payments"
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
+msgid "Origin"
+msgstr "Ban đầu"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
+msgid "Original Registration"
+msgstr "Original Registration"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "Paid"
+msgstr "Đã thanh toán"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "Payment"
 msgstr "Thanh toán"
 
 #. module: event_sale
-#: field:event.event.ticket,price:0
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
+msgid "Phone"
+msgstr "Điện thoại"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 msgid "Price"
 msgstr "Giá"
 
 #. module: event_sale
-#: field:event.event.ticket,price_reduce:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
 msgid "Price Reduce"
-msgstr ""
+msgstr "Giảm Giá"
 
 #. module: event_sale
-#: field:event.event.ticket,product_id:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
+msgid "Price Reduce Tax inc"
+msgstr "Giảm Giá gồm Thuế"
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
+#: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__product_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_template
 msgid "Product Template"
-msgstr "Product Template"
+msgstr "Bản mẫu sản phẩm"
 
 #. module: event_sale
-#: field:event.event.ticket,registration_ids:0
+#: code:addons/event_sale/models/event.py:0
+#: code:addons/event_sale/models/event.py:0
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+#, python-format
+msgid "Registration"
+msgstr "Đăng ký"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:0
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "Registration for %s"
+msgstr "Đăng ký cho %s"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__registration_ids
 msgid "Registrations"
-msgstr ""
+msgstr "Đăng ký"
 
 #. module: event_sale
-#: field:event.event.ticket,seats_reserved:0
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
+msgid "Registrations to Edit"
+msgstr "Đăng ký để Sửa"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
-msgstr ""
+msgstr "Số Chỗ đã Xí"
 
 #. module: event_sale
-#: field:event.event.ticket,deadline:0
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
 msgid "Sales End"
-msgstr ""
+msgstr "Hết mở bán"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "dòng hảng của đơn hàng bán"
+msgstr "Chi tiết đơn hàng"
 
 #. module: event_sale
-#: help:product.template,event_type_id:0
-msgid ""
-"Select event types so when we use this product in sales order lines, it will"
-" filter events of this type only."
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_used
+msgid "Seats Used"
 msgstr ""
 
 #. module: event_sale
+#: model:event.type,name:event_sale.event_type_data_sale
+msgid "Sell Online"
+msgstr "Bán Trực tuyến"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "Skip"
+msgstr "Bỏ qua"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__source_id
+msgid "Source"
+msgstr "Nguồn"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
+msgid "Source Sales Order"
+msgstr "Nguồn gốc Đơn bán hàng"
+
+#. module: event_sale
 #: model:event.event.ticket,name:event_sale.event_0_ticket_1
-#: model:event.event.ticket,name:event_sale.event_1_ticket_1
 #: model:event.event.ticket,name:event_sale.event_2_ticket_1
-#: model:event.event.ticket,name:event_sale.event_3_ticket_1
 msgid "Standard"
 msgstr "Standard"
 
 #. module: event_sale
-#: view:website:event_sale.report_registrationbadge
-msgid "Status"
-msgstr "Tình trạng"
-
-#. module: event_sale
-#: code:addons/event_sale/event_sale.py:154
+#: code:addons/event_sale/models/event.py:0
 #, python-format
-msgid "Subscription"
-msgstr "Subscription"
+msgid "The registration must be paid"
+msgstr "The registration must be paid"
 
 #. module: event_sale
-#: model:product.template,name:event_sale.event_3_product_product_template
-msgid "Technical Training"
-msgstr ""
-
-#. module: event_sale
-#: code:addons/event_sale/event_sale.py:123
-#, python-format
+#: model:ir.model.fields,help:event_sale.field_event_registration__campaign_id
 msgid ""
-"The registration has been created for event <i>%s</i> from the Sale Order "
-"%s. "
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Đây là cái tên giúp bạn kiểm soát giữa các chiến dịch marketing khác nhau: "
+"ví dụ Chiến dịch mùa thu, Sự kiện đặc biệt dịp Giáng sinh"
 
 #. module: event_sale
-#: code:addons/event_sale/event_sale.py:121
-#, python-format
+#: model:ir.model.fields,help:event_sale.field_event_registration__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+"Đây là phương thức gửi, ví dụ. Bưu thiếp, Email, hoặc Banner quảng cáo"
+
+#. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_event_registration__source_id
 msgid ""
-"The registration has been created for event <i>%s</i> with the ticket "
-"<i>%s</i> from the Sale Order %s. "
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
 msgstr ""
+"Đây là nguồn ví dụ như Bộ tìm kiếm Google, tên miền khác, hoặc một cái tên "
+"trong danh sách email"
 
 #. module: event_sale
-#: view:event.registration:event_sale.view_event_registration_ticket_search
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "Ticket"
+msgstr "Vé"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_search
 msgid "Ticket Type"
+msgstr "Loại Vé"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "Ticket cannot belong to both the event category and the event itself."
 msgstr ""
 
 #. module: event_sale
-#: view:event.event:event_sale.view_event_form
-msgid "Ticket Types"
-msgstr ""
+#: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
+msgid "Ticketing"
+msgstr "Ticketing"
 
 #. module: event_sale
-#: field:product.template,event_type_id:0
-msgid "Type of Event"
-msgstr ""
+#: model:ir.model.fields,field_description:event_sale.field_event_type__event_ticket_ids
+#: model_terms:ir.ui.view,arch_db:event_sale.event_type_view_form_inherit_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "Tickets"
+msgstr "Vé"
 
 #. module: event_sale
-#: field:event.event.ticket,seats_unconfirmed:0
+#: code:addons/event_sale/models/event.py:0
+#, python-format
+msgid "To pay"
+msgstr "Cần trả"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr ""
+msgstr "Đặt chỗ Chưa xác nhận"
+
+#. module: event_sale
+#: model:product.product,uom_name:event_sale.product_product_event
+#: model:product.template,uom_name:event_sale.product_product_event_product_template
+msgid "Units"
+msgstr "Đơn vị"
+
+#. module: event_sale
+#: model:ir.model.fields.selection,name:event_sale.selection__event_event_ticket__seats_availability__unlimited
+msgid "Unlimited"
+msgstr "Không giới hạn"
 
 #. module: event_sale
 #: model:event.event.ticket,name:event_sale.event_0_ticket_2
 #: model:event.event.ticket,name:event_sale.event_2_ticket_2
-#: model:event.event.ticket,name:event_sale.event_3_ticket_2
 msgid "VIP"
 msgstr ""
 
 #. module: event_sale
-#: help:event.event.ticket,seats_max:0
-msgid ""
-"You can for each event define a maximum registration level. If you have too "
-"much registrations you are not able to confirm your event. (put 0 to ignore "
-"this rule )"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+msgid "please give details about the registrations"
+msgstr "Vui lòng cung cấp chi tiết về đăng ký"
 
 #. module: event_sale
-#: field:sale.order.line,event_ok:0
-msgid "event_ok"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "reserved +"
+msgstr "reserved +"
+
+#. module: event_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "unconfirmed"
+msgstr "unconfirmed"

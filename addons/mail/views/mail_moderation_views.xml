@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="mail_moderation_view_tree" model="ir.ui.view">
+            <field name="name">mail.moderation.view.tree</field>
+            <field name="model">mail.moderation</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree string="Moderation Lists" editable="bottom">
+                    <field name="channel_id"/>
+                    <field name="email"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mail_moderation_view_search" model="ir.ui.view">
+            <field name="name">mail.moderation.view.search</field>
+            <field name="model">mail.moderation</field>
+            <field name="priority">25</field>
+            <field name="arch" type="xml">
+                <search string="Search Moderation List">
+                    <field name="channel_id"/>
+                    <field name="email"/>
+                    <field name="status"/>
+                    <filter string="Is Banned"
+                            name="status_ban" help="Banned Emails"
+                            domain="[('status', '=', 'ban')]"/>
+                    <separator/>
+                    <filter string="Is Allowed"
+                            name="status_allow" help="Allowed Emails"
+                            domain="[('status', '=', 'allow')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail_moderation_action" model="ir.actions.act_window">
+            <field name="name">Moderation</field>
+            <field name="res_model">mail.moderation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="mail_moderation_view_search"/>
+            <field name="context">{'search_default_status_ban': 1}</field>
+        </record>
+
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="Channel Moderation"
+            id="mail_moderation_menu"
+            parent="base.menu_email"
+            action="mail_moderation_action"/>
+    </data>
+</odoo>

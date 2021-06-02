@@ -1,27 +1,48 @@
-$(document).ready(function () {
+odoo.define('website_sale.payment', function (require) {
+'use strict';
 
-    // When choosing an acquirer, display its Pay Now button
-    var $payment = $("#payment_method");
-    $payment.on("click", "input[name='acquirer']", function (ev) {
-            var payment_id = $(ev.currentTarget).val();
-            $("div.oe_sale_acquirer_button[data-id]", $payment).addClass("hidden");
-            $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
-        })
-        .find("input[name='acquirer']:checked").click();
+var publicWidget = require('web.public.widget');
 
-    // When clicking on payment button: create the tx using json then continue to the acquirer
-    $payment.on("click", 'button[type="submit"],button[name="submit"]', function (ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      var $form = $(ev.currentTarget).parents('form');
-      var acquirer_id = $(ev.currentTarget).parents('div.oe_sale_acquirer_button').first().data('id');
-      if (! acquirer_id) {
-        return false;
-      }
-      openerp.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {}).then(function (data) {
-        $form.html(data);
-        $form.submit();
-      });
-   });
+publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend({
+    selector: '#wrapwrap:has(#checkbox_cgv)',
+    events: {
+        'change #checkbox_cgv': '_onCGVCheckboxClick',
+    },
 
+    /**
+     * @override
+     */
+    start: function () {
+        this.$checkbox = this.$('#checkbox_cgv');
+        this.$payButton = $('button#o_payment_form_pay');
+        this.$checkbox.trigger('change');
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _adaptPayButton: function () {
+        var disabledReasons = this.$payButton.data('disabled_reasons') || {};
+        disabledReasons.cgv = !this.$checkbox.prop('checked');
+        this.$payButton.data('disabled_reasons', disabledReasons);
+
+        this.$payButton.prop('disabled', _.contains(disabledReasons, true));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onCGVCheckboxClick: function () {
+        this._adaptPayButton();
+    },
+});
 });

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- UTM Stage -->
+        <record id="default_utm_stage" model="utm.stage">
+            <field name="name">New</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="campaign_stage_1" model="utm.stage">
+            <field name="name">Schedule</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="campaign_stage_2" model="utm.stage">
+            <field name="name">Design</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="campaign_stage_3" model="utm.stage">
+            <field name="name">Sent</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- UTM Campain -->
+        <record model="utm.campaign" id="utm_campaign_fall_drive">
+            <field name="name">Sale</field>
+            <field name="stage_id" ref="utm.default_utm_stage"/>
+            <field name="is_website" eval="True"/>
+        </record>
+        <record model="utm.campaign" id="utm_campaign_christmas_special">
+            <field name="name">Christmas Special</field>
+            <field name="stage_id" ref="utm.default_utm_stage"/>
+            <field name="is_website" eval="True"/>
+        </record>
+        <record model="utm.campaign" id="utm_campaign_email_campaign_services">
+            <field name="name">Email Campaign - Services</field>
+            <field name="stage_id" ref="utm.default_utm_stage"/>
+            <field name="is_website" eval="True"/>
+        </record>
+        <record model="utm.campaign" id="utm_campaign_email_campaign_products">
+            <field name="name">Email Campaign - Products</field>
+            <field name="stage_id" ref="utm.default_utm_stage"/>
+            <field name="is_website" eval="True"/>
+        </record>
+
+        <!-- UTM Source -->
+        <record model="utm.source" id="utm_source_search_engine">
+            <field name="name">Search engine</field>
+        </record>
+        <record model="utm.source" id="utm_source_mailing">
+            <field name="name">Lead Recall</field>
+        </record>
+        <record model="utm.source" id="utm_source_newsletter">
+            <field name="name">Newsletter</field>
+        </record>
+        <record model="utm.source" id="utm_source_facebook">
+            <field name="name">Facebook</field>
+        </record>
+        <record model="utm.source" id="utm_source_twitter">
+            <field name="name">Twitter</field>
+        </record>
+
+        <!-- UTM Medium -->
+        <record model="utm.medium" id="utm_medium_website">
+            <field name="name">Website</field>
+        </record>
+        <record model="utm.medium" id="utm_medium_phone">
+            <field name="name">Phone</field>
+        </record>
+        <record model="utm.medium" id="utm_medium_direct">
+            <field name="name">Direct</field>
+        </record>
+        <record model="utm.medium" id="utm_medium_email">
+            <field name="name">Email</field>
+        </record>
+        <record model="utm.medium" id="utm_medium_banner">
+            <field name="name">Banner</field>
+        </record>
+        <record model="utm.medium" id="utm_medium_twitter">
+            <field name="name">Twitter</field>
+        </record>
+        <record model="utm.medium" id="utm_medium_facebook">
+            <field name="name">Facebook</field>
+        </record>
+        <record model="utm.medium" id="utm_medium_linkedin">
+            <field name="name">LinkedIn</field>
+        </record>
+        <record model="utm.medium" id="utm_medium_television">
+            <field name="name">Television</field>
+        </record>
+        <record model="utm.medium" id="utm_medium_google_adwords">
+            <field name="name">Google Adwords</field>
+        </record>
+
+        <!-- UTM Tag -->
+        <record id="utm_tag_1" model="utm.tag">
+            <field name="name">Marketing</field>
+            <field name="color" eval="1"/>
+        </record>
+</odoo>

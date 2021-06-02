@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_packagingbarcode">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="packaging">
+                        <div class="col-4" style="padding:0;">
+                            <table class="table table-condensed" style="border-bottom: 0px solid white !important;width: 3in;">
+                                <tr>
+                                    <th style="text-align: left;">
+                                        <strong t-field="packaging.name"/>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong t-field="packaging.product_id.display_name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="o_row">
+                                            <strong>Qty: </strong>
+                                            <strong t-field="packaging.qty"/>
+                                            <strong t-field="packaging.product_uom_id" groups="uom.group_uom"/>
+                                        </div>
+                                    </td>
+                                </tr>
+                                  <t t-if="packaging.barcode">
+                                    <tr>
+                                    <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                        <img alt="Barcode" t-if="len(packaging.barcode) == 13" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', packaging.barcode, 600, 150)" style="width:100%;height:20%;"/>
+                                        <img alt="Barcode" t-elif="len(packaging.barcode) == 8" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN8', packaging.barcode, 600, 150)" style="width:100%;height:20%;"/>
+                                        <img alt="Barcode" t-else="" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', packaging.barcode, 600, 150)" style="width:100%;height:20%;"/>
+                                        <span t-field="packaging.barcode"/>
+                                    </td>
+                                </tr>
+                              </t>
+                            </table>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

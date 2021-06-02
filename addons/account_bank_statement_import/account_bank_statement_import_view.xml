@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<odoo>
+
+        <record id="account_bank_statement_import_view" model="ir.ui.view">
+            <field name="name">Upload Bank Statements</field>
+            <field name="model">account.bank.statement.import</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Upload Bank Statements">
+                    <h2>You can upload your bank statement using:</h2>
+                    <ul id="statement_format">
+
+                    </ul>
+                    <field name="attachment_ids"  widget="many2many_binary" colspan="2" string="Select Files" nolabel="1"/>
+                    <footer>
+                        <button name="import_file" string="Upload" type="object" class="btn-primary" />
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="install_more_import_formats_action" model="ir.actions.act_window">
+            <field name="name">Install Import Format</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context" eval="{'search_default_name': 'account_bank_statement_import'}"/>
+            <field name="search_view_id" ref="base.view_module_filter"/>
+        </record>
+
+        <record id="action_account_bank_statement_import" model="ir.actions.act_window">
+            <field name="name">Upload</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement.import</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="account_bank_statement_import_view"/>
+        </record>
+
+    <record id="journal_dashboard_view_inherit" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr='//span[@name="button_import_placeholder"]' position='inside'>
+                <span>or <a type="object" name="import_statement">Import</a></span>
+            </xpath>
+            <xpath expr='//div[@name="bank_cash_commands"]' position="before">
+                <div t-if="journal_type == 'bank'">
+                    <a type="object" name="import_statement">Import Statement</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

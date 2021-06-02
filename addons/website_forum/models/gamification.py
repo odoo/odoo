@@ -1,19 +1,10 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv, fields
+from odoo import models, fields
 
 
-class gamification_challenge(osv.Model):
+class Challenge(models.Model):
     _inherit = 'gamification.challenge'
 
-    def _get_categories(self, cr, uid, context=None):
-        res = super(gamification_challenge, self)._get_categories(cr, uid, context=context)
-        res.append(('forum', 'Website / Forum'))
-        return res
-
-
-class Badge(osv.Model):
-    _inherit = 'gamification.badge'
-    _columns = {
-        'level': fields.selection([('bronze', 'bronze'), ('silver', 'silver'), ('gold', 'gold')], 'Forum Badge Level'),
-    }
+    category = fields.Selection(selection_add=[('forum', 'Website / Forum')])

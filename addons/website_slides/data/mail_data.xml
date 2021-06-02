@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+         <record id="slide_template_published" model="mail.template">
+            <field name="name">Slide Published</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="subject">New ${object.slide_type} published on ${object.channel_id.name}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello<br/><br/>
+                        There is something new in the course <strong>${object.channel_id.name}</strong> you are following:<br/><br/>
+                        <center><strong>${object.name}</strong></center>
+                        % if object.image_1024
+                        <div style="margin: 16px 8px 16px 8px; text-align: center;">
+                            <a href="${object.website_url}">
+                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
+                            </a>
+                        </div>
+                        % endif
+                        <div style="margin: 16px 8px 16px 8px; text-align: center;">
+                            <a href="${object.website_url}"
+                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View content</a>
+                        </div>
+                        Enjoy this exclusive content!
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="True"/>
+        </record>
+
+        <record id="slide_template_shared" model="mail.template">
+            <field name="name">Slide Shared</field>
+            <field name="model_id" ref="model_slide_slide"/>
+            <field name="subject">${user.name} shared a ${object.slide_type} with you!</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${ctx.get('email', '')}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello<br/><br/>
+                        ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!
+                        <div style="margin: 16px 8px 16px 8px; text-align: center;">
+                            <a href="${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}">
+                                <img alt="${object.name}" src="${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
+                            </a>
+                        </div>
+                        <div style="margin: 16px 8px 16px 8px; text-align: center;">
+                            <a href="${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}"
+                                style="background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View <strong>${object.name}</strong></a>
+                        </div>
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="True"/>
+        </record>
+
+        <!-- Channel subtypes -->
+        <record id="mt_channel_slide_published" model="mail.message.subtype">
+            <field name="name">Presentation Published</field>
+            <field name="res_model">slide.channel</field>
+            <field name="default" eval="True"/>
+            <field name="description">Presentation Published</field>
+        </record>
+
+        <!-- Slide channel invite feature -->
+        <record id="mail_template_slide_channel_invite" model="mail.template">
+            <field name="name">Channel: Invite by email</field>
+            <field name="model_id" ref="model_slide_channel_partner" />
+            <field name="subject">You have been invited to join ${object.channel_id.name}</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name or 'participant'}<br/><br/>
+        You have been invited to join a new course: ${object.channel_id.name}.
+        <div style="margin: 16px 0px 16px 0px;">
+            <a href="${(object.channel_id.website_url) | safe}"
+                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                Click here to start the course.
+            </a>
+        </div>
+        Enjoy this exclusive content !
+    </p>
+</div>
+            </field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
+        </record>
+    </data>
+</odoo>

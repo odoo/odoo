@@ -1,91 +1,64 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2013-Today OpenERP SA (<http://www.openerp.com>)
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import re
+import datetime
 
-from openerp.addons.mail.mail_message import decode
-from openerp.addons.mail.mail_thread import decode_header
-from openerp.osv import osv
+from odoo import api, models, fields, tools
 
-_logger = logging.getLogger(__name__)
+BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
 
-class MailThread(osv.AbstractModel):
-    """ Update MailThread to add the feature of bounced emails and replied emails
-    in message_process. """
-    _name = 'mail.thread'
-    _inherit = ['mail.thread']
+class MailThread(models.AbstractModel):
+    """ Update MailThread to add the support of bounce management in mass mailing traces. """
+    _inherit = 'mail.thread'
 
-    def message_route_check_bounce(self, cr, uid, message, context=None):
-        """ Override to verify that the email_to is the bounce alias. If it is the
-        case, log the bounce, set the parent and related document as bounced and
-        return False to end the routing process. """
-        bounce_alias = self.pool['ir.config_parameter'].get_param(cr, uid, "mail.bounce.alias", context=context)
-        message_id = message.get('Message-Id')
-        email_from = decode_header(message, 'From')
-        email_to = decode_header(message, 'To')
-
-        # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
-        if bounce_alias and bounce_alias in email_to:
-            # Bounce regex
-            # Typical form of bounce is bounce_alias-128-crm.lead-34@domain
-            # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
-            bounce_re = re.compile("%s-(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
-            bounce_match = bounce_re.search(email_to)
-            if bounce_match:
-                bounced_model, bounced_thread_id = None, False
-                bounced_mail_id = bounce_match.group(1)
-                stat_ids = self.pool['mail.mail.statistics'].set_bounced(cr, uid, mail_mail_ids=[bounced_mail_id], context=context)
-                for stat in self.pool['mail.mail.statistics'].browse(cr, uid, stat_ids, context=context):
-                    bounced_model = stat.model
-                    bounced_thread_id = stat.res_id
-                _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s',
-                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id)
-                if bounced_model and bounced_model in self.pool and hasattr(self.pool[bounced_model], 'message_receive_bounce') and bounced_thread_id:
-                    self.pool[bounced_model].message_receive_bounce(cr, uid, [bounced_thread_id], mail_id=bounced_mail_id, context=context)
-                return False
-
-        return True
-
-    def message_route(self, cr, uid, message, message_dict, model=None, thread_id=None,
-                      custom_values=None, context=None):
-        if not self.message_route_check_bounce(cr, uid, message, context=context):
-            return []
-        return super(MailThread, self).message_route(cr, uid, message, message_dict, model, thread_id, custom_values, context)
-
-    def message_receive_bounce(self, cr, uid, ids, mail_id=None, context=None):
-        """Called by ``message_process`` when a bounce email (such as Undelivered
-        Mail Returned to Sender) is received for an existing thread. The default
-        behavior is to check is an integer  ``message_bounce`` column exists.
-        If it is the case, its content is incremented. """
-        if 'message_bounce' in self._fields:
-            for obj in self.browse(cr, uid, ids, context=context):
-                self.write(cr, uid, [obj.id], {'message_bounce': obj.message_bounce + 1}, context=context)
-
-    def message_route_process(self, cr, uid, message, message_dict, routes, context=None):
-        """ Override to update the parent mail statistics. The parent is found
+    @api.model
+    def _message_route_process(self, message, message_dict, routes):
+        """ Override to update the parent mailing traces. The parent is found
         by using the References header of the incoming message and looking for
-        matching message_id in mail.mail.statistics. """
-        if message.get('References'):
-            message_ids = [x.strip() for x in decode(message['References']).split()]
-            self.pool['mail.mail.statistics'].set_replied(cr, uid, mail_message_ids=message_ids, context=context)
-        return super(MailThread, self).message_route_process(cr, uid, message, message_dict, routes, context=context)
+        matching message_id in mailing.trace. """
+        if routes:
+            # even if 'reply_to' in ref (cfr mail/mail_thread) that indicates a new thread redirection
+            # (aka bypass alias configuration in gateway) consider it as a reply for statistics purpose
+            thread_references = message_dict['references'] or message_dict['in_reply_to']
+            msg_references = tools.mail_header_msgid_re.findall(thread_references)
+            if msg_references:
+                self.env['mailing.trace'].set_opened(mail_message_ids=msg_references)
+                self.env['mailing.trace'].set_replied(mail_message_ids=msg_references)
+        return super(MailThread, self)._message_route_process(message, message_dict, routes)
+
+    def message_post_with_template(self, template_id, **kwargs):
+        # avoid having message send through `message_post*` methods being implicitly considered as
+        # mass-mailing
+        no_massmail = self.with_context(
+            default_mass_mailing_name=False,
+            default_mass_mailing_id=False,
+        )
+        return super(MailThread, no_massmail).message_post_with_template(template_id, **kwargs)
+
+    @api.model
+    def _routing_handle_bounce(self, email_message, message_dict):
+        """ In addition, an auto blacklist rule check if the email can be blacklisted
+        to avoid sending mails indefinitely to this email address.
+        This rule checks if the email bounced too much. If this is the case,
+        the email address is added to the blacklist in order to avoid continuing
+        to send mass_mail to that email address. If it bounced too much times
+        in the last month and the bounced are at least separated by one week,
+        to avoid blacklist someone because of a temporary mail server error,
+        then the email is considered as invalid and is blacklisted."""
+        super(MailThread, self)._routing_handle_bounce(email_message, message_dict)
+
+        bounced_email = message_dict['bounced_email']
+        bounced_msg_id = message_dict['bounced_msg_id']
+        bounced_partner = message_dict['bounced_partner']
+
+        if bounced_msg_id:
+            self.env['mailing.trace'].set_bounced(mail_message_ids=bounced_msg_id)
+        if bounced_email:
+            three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
+            stats = self.env['mailing.trace'].search(['&', ('bounced', '>', three_months_ago), ('email', '=ilike', bounced_email)]).mapped('bounced')
+            if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT and (not bounced_partner or any(p.message_bounce >= BLACKLIST_MAX_BOUNCED_LIMIT for p in bounced_partner)):
+                if max(stats) > min(stats) + datetime.timedelta(weeks=1):
+                    blacklist_rec = self.env['mail.blacklist'].sudo()._add(bounced_email)
+                    blacklist_rec._message_log(
+                        body='This email has been automatically blacklisted because of too much bounced.')

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--   Product Price List -->
+        <record id="view_product_price_list" model="ir.ui.view">
+              <field name="name">Price per unit</field>
+              <field name="model">product.price_list</field>
+              <field name="arch" type="xml">
+                <form string="Price List">
+                    <group string="Calculate Product Price per Unit Based on Pricelist Version.">
+                        <field name="price_list" widget="selection"/>
+                        <field name="qty1"/>
+                        <field name="qty2"/>
+                        <field name="qty3"/>
+                        <field name="qty4"/>
+                        <field name="qty5"/>
+                    </group>
+                    <footer>
+                        <button name="print_report" string="Print"  type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+              </field>
+        </record>
+
+        <act_window id="action_product_price_list"
+            name="Price List"
+            res_model="product.price_list"
+            binding_model="product.product"
+            binding_type="report"
+            groups="product.group_product_pricelist"
+            view_mode="form" target="new" />
+</odoo>

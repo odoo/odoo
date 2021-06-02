@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_uk_statements_menu" name="United Kingdom" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+
+        <!-- Chart template -->
+        <record id="l10n_uk" model="account.chart.template">
+            <field name="name">UK Tax and Account Chart Template (by SmartMode)</field>
+            <field name="bank_account_code_prefix">1200</field>
+            <field name="cash_account_code_prefix">1210</field>
+            <field name="transfer_account_code_prefix">1220</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.GBP"/>
+        </record>
+</odoo>

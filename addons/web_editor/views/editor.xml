@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="wysiwyg_iframe_editor_assets" name="Editor assets for wysiwyg iframe content">
+    <t t-call-assets="web.assets_common"/>
+    <t t-call-assets="web.assets_frontend" t-js="false"/>
+    <t t-call-assets="web_editor.assets_wysiwyg"/>
+</template>
+
+<template id="compiled_assets_wysiwyg" name="Wysiwyg Editor">
+    <t t-call-assets="web_editor.assets_wysiwyg"/>
+</template>
+
+<template id="assets_wysiwyg" name="Wysiwyg Editor Assets">
+    <!-- lib -->
+
+    <t t-call-assets="web_editor.summernote"/>
+
+    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/cropperjs/cropper.css"/>
+    <script type="text/javascript" src="/web_editor/static/lib/cropperjs/cropper.js"/>
+    <script type="text/javascript" src="/web_editor/static/lib/jquery-cropper/jquery-cropper.js"/>
+    <script type="text/javascript" src="/web_editor/static/lib/jQuery.transfo.js"/>
+    <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
+
+    <!-- odoo utils -->
+
+    <t t-call="web._assets_helpers">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+    </t>
+
+    <!-- integration -->
+
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_iframe.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_snippets.scss"/>
+
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/fonts.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/base.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.summernote.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/tours/rte.js"/>
+
+    <!-- widgets & plugins -->
+
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/image_optimize_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/media.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/crop_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/media_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/widgets.js"/>
+
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.options.js"/>
+
+    <!-- Launcher -->
+
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_snippets.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js"/>
+</template>
+
+<template id="summernote" name="Summernote">
+    <script type="text/javascript">
+        (function () {
+            "use strict";
+            odoo.define('jquery', function () {return $;});
+
+            var uniqId = 0;
+            odoo.__define__ = window.define;
+            window.define = function (id) {
+                var args = Array.prototype.slice.call(arguments);
+                var factorie = args.pop();
+                var id = args[0];
+
+                if (id instanceof Array) {
+                    var name = "summernote_factorie_" + (++uniqId);
+                    odoo[name] = factorie;
+
+                    var head = '';
+                    var fn = 'var fn = odoo.'+name+';\ndelete odoo.'+name+';\n';
+                    fn += 'return fn(';
+                    for (var k=0; k&lt;id.length; k++) {
+                        head += 'var a'+(++uniqId)+' = require("'+id[k]+'");\n';
+                        fn += 'a'+uniqId+', ';
+                    }
+                    fn += 'null);';
+
+                    odoo.define(odoo.website_next_define, new Function('require', head + fn));
+                } else {
+                    odoo.define(id, factorie);
+                }
+            };
+        })();
+    </script>
+    <t t-set="summer_js_files" t-value="['core/async', 'core/func', 'core/agent', 'core/list',
+        'core/dom', 'core/key', 'core/range', 'editing/Bullet', 'editing/History', 'editing/Style',
+        'editing/Table', 'editing/Typing', 'module/Editor', 'module/Button', 'module/Clipboard',
+        'module/Codeview', 'module/DragAndDrop', 'module/Fullscreen', 'module/Handle',
+        'module/HelpDialog', 'module/ImageDialog', 'module/LinkDialog', 'module/Popover',
+        'module/Statusbar', 'module/Toolbar', 'Renderer', 'EventHandler', 'defaults', 'summernote']" />
+    <t t-foreach="summer_js_files" t-as="file">
+        <script>odoo.website_next_define = 'summernote/<t t-esc="file" />';</script>
+        <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/{{ file }}.js"></script>
+    </t>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/summernote.js" />
+    <script type="text/javascript">
+        window.define = odoo.__define__;
+        delete odoo.__define__;
+        delete odoo.website_next_define;
+    </script>
+    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/src/css/summernote.css"/>
+</template>
+
+<template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.variables.scss"/>
+    </xpath>
+</template>
+
+<template id="_assets_secondary_variables" inherit_id="web._assets_secondary_variables">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/secondary_variables.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_common" inherit_id="web.assets_common" name="Web Editor Common Assets (used in backend interface and website)">
+    <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/common/ace.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/root.js"/>
+    </xpath>
+</template>
+
+<template id="_assets_backend_helpers" inherit_id="web._assets_backend_helpers">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden_backend.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_backend" inherit_id="web.assets_backend" name="Web Editor Backend Assets (used in backend interface)">
+    <xpath expr="link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/> <!-- not in common because compiled differently with context -->
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.backend.scss"/>
+    </xpath>
+    <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/backend/field_html.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/backend/convert_inline.js" />
+    </xpath>
+</template>
+
+<template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+    </xpath>
+</template>
+
+<template id="_assets_frontend_minimal_js" inherit_id="web._assets_frontend_minimal_js">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/frontend/loader_loading.js"/>
+    </xpath>
+</template>
+
+<template id="assets_frontend" inherit_id="web.assets_frontend" name="Web Editor Frontend Assets (used in public odoo)" priority="15">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/> <!-- not in common because compiled differently with context -->
+        <link rel="stylesheet" type ="text/scss" href="/web_editor/static/src/scss/web_editor.frontend.scss"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/frontend/loader.js"/>
+    </xpath>
+</template>
+
+<template id="qunit_suite" inherit_id="web.qunit_suite">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript">
+            odoo.define('web_editor.wysiwyg.root.test', function (require) {
+                'use strict';
+                var WysiwygRoot = require('web_editor.wysiwyg.root');
+                WysiwygRoot.include({
+                    assetLibs: null // We need to add the asset because tests performed overwrites (Dialog, Unbreakable...)
+                });
+            });
+        </script>
+        <t t-call="web_editor.compiled_assets_wysiwyg"/>
+
+        <script type="text/javascript" src="/web_editor/static/tests/test_utils.js"/>
+        <script type="text/javascript" src="/web_editor/static/tests/field_html_tests.js"/>
+    </xpath>
+</template>
+
+<!--
+    The web_editor.colorpicker template regroups section of colorpicker menu for website customization
+    (text foreground/background but also snippet background color option).
+    As it is presentend below, the colorpicker tag regroups a set of .o_colorpicker_section with name,
+    icon-class and icon-content as data. These will be used to build the colorpicker dropdowns.
+
+    Redefinition can edit section content, add sections or even remove them. If no section is found when
+    building a colorpicker dropdown, the template content will be used without changes as the colorpicker
+    dropdown content.
+
+    Sections should contain a set of button with a data-color attribute. When selecting such a button to
+    edit style, the "bg-x" class or the "text-x" will be automatically added.
+-->
+<template id="web_editor.colorpicker" name="Color-Picker">
+    <colorpicker>
+        <div class="o_colorpicker_section" data-name="theme" data-display="Theme Colors" data-icon-class="fa fa-flask">
+            <button data-color="alpha"></button>
+            <button data-color="beta"></button>
+            <button data-color="gamma"></button>
+            <button data-color="delta"></button>
+            <button data-color="epsilon"></button>
+        </div>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-display="Transparent Colors" data-icon-class="fa fa-eye-slash">
+            <button class="o_btn_transparent"></button>
+            <button data-color="black-25"></button>
+            <button data-color="black-50"></button>
+            <button data-color="black-75"></button>
+            <button data-color="white-25"></button>
+            <button data-color="white-50"></button>
+            <button data-color="white-75"></button>
+        </div>
+        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush">
+            <button data-color="black"></button>
+            <button data-color="white"></button>
+            <div class="clearfix"/>
+            <button data-color="900"></button>
+            <button data-color="800"></button>
+            <button data-color="700"></button>
+            <button data-color="600"></button>
+            <button data-color="500"></button>
+            <button data-color="400" class="d-none"></button><!-- Hide this one to be able to use it but not display it -->
+            <button data-color="300"></button>
+            <button data-color="200"></button>
+            <button data-color="100"></button>
+        </div>
+    </colorpicker>
+</template>
+</odoo>

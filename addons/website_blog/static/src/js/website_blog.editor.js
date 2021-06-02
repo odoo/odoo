@@ -1,62 +1,128 @@
-$(document).ready(function() {
-    "use strict";
+odoo.define('website_blog.new_blog_post', function (require) {
+'use strict';
 
-    var website = openerp.website;
-    var _t = openerp._t;
+var core = require('web.core');
+var wUtils = require('website.utils');
+var WebsiteNewMenu = require('website.newMenu');
 
-    website.EditorBarContent.include({
-        new_blog_post: function() {
-            website.prompt({
-                id: "editor_new_blog",
-                window_title: _t("New Blog Post"),
-                select: "Select Blog",
-                init: function (field) {
-                    return website.session.model('blog.blog')
-                            .call('name_search', [], { context: website.get_context() });
-                },
-            }).then(function (cat_id) {
-                document.location = '/blogpost/new?blog_id=' + cat_id;
-            });
-        },
-    });
-    if ($('.website_blog').length) {
-        website.EditorBar.include({
-            edit: function () {
-                var self = this;
-                $('.popover').remove();
-                this._super();
-                var vHeight = $(window).height();
-                $('body').on('click','#change_cover',_.bind(this.change_bg, self.rte.editor, vHeight));
-                $('body').on('click', '#clear_cover',_.bind(this.clean_bg, self.rte.editor, vHeight));
-            },
-            save : function() {
-                var self = this;
-                var _super = this._super;
-                if ($('.cover').length) {
-                    return openerp.jsonRpc("/blogpost/change_background", 'call', {
-                        'post_id' : $('#blog_post_name').attr('data-oe-id'),
-                        'image' : $('.cover').css('background-image').replace(/url\(|\)|"|'/g,''),
-                    }).then(function () {
-                        return _super.call(self);
-                    });
-                } else {
-                    return this._super();
-                }
-            },
-            clean_bg : function(vHeight) {
-                $('.js_fullheight').css({"background-image":'none', 'min-height': vHeight});
-            },
-            change_bg : function(vHeight) {
-                var self  = this;
-                var element = new CKEDITOR.dom.element(self.element.find('.cover-storage').$[0]);
-                var editor  = new website.editor.MediaDialog(self, element);
-                $(document.body).on('media-saved', self, function (o) {
-                    var url = $('.cover-storage').attr('src');
-                    $('.js_fullheight').css({"background-image": !_.isUndefined(url) ? 'url(' + url + ')' : "", 'min-height': vHeight});
-                    $('.cover-storage').hide();
+var _t = core._t;
+
+WebsiteNewMenu.include({
+    actions: _.extend({}, WebsiteNewMenu.prototype.actions || {}, {
+        new_blog_post: '_createNewBlogPost',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Actions
+    //--------------------------------------------------------------------------
+
+    /**
+     * Asks the user information about a new blog post to create, then creates
+     * it and redirects the user to this new post.
+     *
+     * @private
+     * @returns {Promise} Unresolved if there is a redirection
+     */
+    _createNewBlogPost: function () {
+        return this._rpc({
+            model: 'blog.blog',
+            method: 'search_read',
+            args: [wUtils.websiteDomain(this), ['name']],
+        }).then(function (blogs) {
+            if (blogs.length === 1) {
+                document.location = '/blog/' + blogs[0]['id'] + '/post/new';
+                return new Promise(function () {});
+            } else if (blogs.length > 1) {
+                return wUtils.prompt({
+                    id: 'editor_new_blog',
+                    window_title: _t("New Blog Post"),
+                    select: _t("Select Blog"),
+                    init: function (field) {
+                        return _.map(blogs, function (blog) {
+                            return [blog['id'], blog['name']];
+                        });
+                    },
+                }).then(function (result) {
+                    var blog_id = result.val;
+                    if (!blog_id) {
+                        return;
+                    }
+                    document.location = '/blog/' + blog_id + '/post/new';
+                    return new Promise(function () {});
                 });
-                editor.appendTo('body');
-            },
+            }
         });
+    },
+});
+});
+
+//==============================================================================
+
+odoo.define('website_blog.editor', function (require) {
+'use strict';
+
+require('web.dom_ready');
+var core = require('web.core');
+var options = require('web_editor.snippets.options');
+var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
+
+var _t = core._t;
+
+if (!$('.website_blog').length) {
+    return Promise.reject("DOM doesn't contain '.website_blog'");
+}
+
+WysiwygMultizone.include({
+    /**
+     * @override
+     */
+    start: function () {
+        $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
+        return this._super.apply(this, arguments);
+    },
+});
+
+options.registry.many2one.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _selectRecord: function ($opt) {
+        var self = this;
+        this._super.apply(this, arguments);
+        if (this.$target.data('oe-field') === 'author_id') {
+            var $nodes = $('[data-oe-model="blog.post"][data-oe-id="'+this.$target.data('oe-id')+'"][data-oe-field="author_avatar"]');
+            $nodes.each(function () {
+                var $img = $(this).find('img');
+                var css = window.getComputedStyle($img[0]);
+                $img.css({ width: css.width, height: css.height });
+                $img.attr('src', '/web/image/res.partner/'+self.ID+'/image_1024');
+            });
+            setTimeout(function () { $nodes.removeClass('o_dirty'); },0);
+        }
     }
+});
+
+options.registry.CoverProperties.include({
+    /**
+     * @override
+     */
+    _setActive: function () {
+        this._super(...arguments);
+        var isRegularCover = this.$target.is('.o_wblog_post_page_cover_regular');
+        var $coverFull = this.$el.find('[data-select-class*="cover_full"]');
+        var $coverMid = this.$el.find('[data-select-class*="cover_mid"]');
+        var $coverAuto = this.$el.find('[data-select-class*="cover_auto"]');
+        this._coverFullOriginalLabel = this._coverFullOriginalLabel || $coverFull.text();
+        this._coverMidOriginalLabel = this._coverMidOriginalLabel || $coverMid.text();
+        this._coverAutoOriginalLabel = this._coverAutoOriginalLabel || $coverAuto.text();
+        $coverFull.text(isRegularCover ? _t("Large") : this._coverFullOriginalLabel);
+        $coverMid.text(isRegularCover ? _t("Medium") : this._coverMidOriginalLabel);
+        $coverAuto.text(isRegularCover ? _t("Tiny") : this._coverAutoOriginalLabel);
+    },
+});
 });

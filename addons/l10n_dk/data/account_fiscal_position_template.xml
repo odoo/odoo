@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fiscal_position_template_dk_vat" model="account.fiscal.position.template">
+        <field name="name">Danmark (Virkomshed)</field>
+        <field name="chart_template_id" ref="dk_chart_template" />
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="sequence">10</field>
+        <field name="country_id" ref="base.dk"/>
+    </record>
+    <record id="fiscal_position_template_eu" model="account.fiscal.position.template">
+        <field name="name">EU lande (Privat)</field>
+        <field name="chart_template_id" ref="dk_chart_template" />
+        <field name="auto_apply" eval="True"/>
+        <field name="sequence">11</field>
+        <field name="country_group_id" ref="base.europe"/>
+    </record>
+    <record id="fiscal_position_template_eu_taxid" model="account.fiscal.position.template">
+        <field name="name">EU lande (Virksomhed)</field>
+        <field name="chart_template_id" ref="dk_chart_template" />
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="sequence">12</field>
+        <field name="country_group_id" ref="base.europe"/>
+    </record>
+    <record id="fiscal_position_template_3lande" model="account.fiscal.position.template">
+        <field name="name">3. lande (Virksomhed / Privat)</field>
+        <field name="chart_template_id" ref="dk_chart_template" />
+        <field name="auto_apply" eval="True"/>
+        <field name="sequence">13</field>
+    </record>
+</odoo>

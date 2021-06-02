@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_view_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_rfq_send']" position="after">
+                <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button type="object"
+                    name="action_view_picking"
+                    class="oe_stat_button"
+                    icon="fa-truck" attrs="{'invisible':[('picking_ids','=',[])]}">
+                    <field name="picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
+                    <field name="picking_ids" invisible="1"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="is_shipped" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='date_planned']" position="after">
+                <field name="move_dest_ids" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">
+                <field name="move_ids"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='account_analytic_id']" position="before">
+                <field name="propagate_cancel" groups="base.group_no_one"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='qty_received']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('product_type', 'in', ('consu', 'product'))]}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='purchase_delivery_invoice']/group/group" position="inside">
+                <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                <field name="dest_address_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('default_location_dest_id_usage', '!=', 'customer')], 'required': [('default_location_dest_id_usage', '=', 'customer')]}"/>
+                <field name="default_location_dest_id_usage" invisible="1"/>
+                <field name="incoterm_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_view_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.line.form.inherit</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_lines']" position="after">
+                <separator string="Stock Moves"/>
+                <field name="move_ids"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

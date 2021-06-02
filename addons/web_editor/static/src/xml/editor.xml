@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!--=================-->
+    <!-- Base components -->
+    <!--=================-->
+
+    <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
+    <t t-name="web_editor.editorbar">
+        <div id="web_editor-toolbars"/>
+    </t>
+
+    <!--=================-->
+    <!-- Snippet options -->
+    <!--=================-->
+
+    <!-- Background position option dialog -->
+    <div t-name="web_editor.dialog.background_position" class="o_bg_img_opt_modal">
+        <label class="radio-inline"><input type="radio" name="o_bg_img_opt" value="cover"/> Cover</label>
+        <label class="radio-inline"><input type="radio" name="o_bg_img_opt" value="contain"/> Contain</label>
+        <label class="radio-inline"><input type="radio" name="o_bg_img_opt" value="custom"/> Custom</label>
+
+        <div class="o_bg_img_opt" data-value="cover">
+            <div class="o_bg_img_opt_cover_edition">
+                <h6>Assign a focal point that will always be visible</h6>
+                <div class="o_bg_img_opt_object">
+                    <span class="grid grid-1"/>
+                    <span class="grid grid-2"/>
+                    <span class="grid grid-3"/>
+                    <span class="grid grid-4"/>
+                    <span class="o_focus_point"/>
+                    <div class="o_bg_img_opt_ui_info">X: <span class="o_x"/> Y: <span class="o_y"/></div>
+                </div>
+            </div>
+        </div>
+        <div class="o_bg_img_opt" data-value="contain">
+            <form>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label" for="repeatInput">Repeat</label>
+                    <div class="col-md-5">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="o_bg_img_opt_contain_repeat"/>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <form class="o_bg_img_opt" data-value="custom">
+            <fieldset>
+                <legend>Background size</legend>
+                <p>Sets the width and height of the background image in percent of the parent element.</p>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_size_x">Background width</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input type="number" min="0" max="100" class="form-control" id="o_bg_img_opt_custom_size_x" placeholder="auto"/>
+                            <div class="input-group-append">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_size_y">Background height</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input type="number" min="0" max="100" class="form-control" id="o_bg_img_opt_custom_size_y" placeholder="auto"/>
+                            <div class="input-group-append">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Background position</legend>
+                <p>Set the starting position of the background image.</p>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_pos_x">Horizontal</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input type="number" min="0" max="100" class="form-control " id="o_bg_img_opt_custom_pos_x" placeholder="auto"/>
+                            <div class="input-group-append">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="o_bg_img_opt_custom_pos_y">Vertical</label>
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <input type="number" min="0" max="100" class="form-control" id="o_bg_img_opt_custom_pos_y" placeholder="auto"/>
+                            <div class="input-group-append">
+                                <div class="input-group-text">%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Background repeat</legend>
+                <p>Define if/how the background image will be repeated</p>
+                <select class="form-control" id="o_bg_img_opt_custom_repeat">
+                    <option value="">No repeat</option>
+                    <option value="o_bg_img_opt_repeat">Repeat both</option>
+                    <option value="o_bg_img_opt_repeat_x">Repeat x</option>
+                    <option value="o_bg_img_opt_repeat_y">Repeat y</option>
+                </select>
+            </fieldset>
+        </form>
+    </div>
+</templates>

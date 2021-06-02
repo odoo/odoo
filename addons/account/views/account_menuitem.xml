@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Top menu item -->
+        <menuitem name="Invoicing"
+            id="menu_finance"
+            groups="account.group_account_user,account.group_account_manager,account.group_account_invoice"
+            web_icon="account,static/description/icon.png"
+            sequence="40"/>
+
+        <menuitem id="menu_finance_receivables" name="Customers" parent="menu_finance" sequence="2"/>
+        <menuitem id="menu_finance_payables" name="Vendors" parent="menu_finance" sequence="3"/>
+        <menuitem id="menu_finance_entries" name="Accounting" parent="menu_finance" sequence="4" groups="account.group_account_user"/>
+            <!-- Adviser sub-menus -->
+            <menuitem id="menu_finance_entries_accounting_miscellaneous" name="Miscellaneous" parent="account.menu_finance_entries" sequence="1"/>
+            <menuitem id="menu_finance_entries_accounting_journals" name="Journals" parent="account.menu_finance_entries" sequence="2"/>
+            <menuitem id="menu_finance_entries_accounting_ledgers" name="Ledgers" parent="account.menu_finance_entries" sequence="3"/>
+            <menuitem id="menu_finance_entries_management" name="Management" parent="menu_finance_entries" sequence="10" groups="account.group_account_invoice"/>
+            <menuitem id="menu_finance_entries_actions" name="Actions" parent="account.menu_finance_entries" sequence="11"/>
+            <menuitem id="menu_finance_entries_generate_entries" name="Generate Entries" parent="account.menu_finance_entries"/>
+
+        <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="20" groups="account.group_account_manager"/>
+            <!-- Reporting sub-menus -->
+            <menuitem id="account_reports_management_menu" name="Management" parent="account.menu_finance_reports" sequence="4"/>
+            <menuitem id="account_reports_legal_statements_menu" name="Generic Statements" parent="account.menu_finance_reports" sequence="1" groups="account.group_account_user"/>
+
+        <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="35" groups="account.group_account_manager"/>
+            <!-- Configuration Sub-Menu -->
+            <menuitem id="account_invoicing_menu" name="Invoicing" parent="account.menu_finance_configuration" sequence="1" groups="account.group_account_invoice"/>
+            <menuitem id="root_payment_menu" name="Payments" parent="account.menu_finance_configuration" sequence="2" groups="account.group_account_manager"/>
+            <menuitem id="account_account_menu" name="Accounting" parent="account.menu_finance_configuration" sequence="3" groups="account.group_account_manager"/>
+            <menuitem id="menu_action_currency_form" action="base.action_currency_form" name="Currencies" parent="account_account_menu" sequence="1" groups="base.group_multi_currency"/>
+            <menuitem id="account_management_menu" name="Management" parent="account.menu_finance_configuration" sequence="4" groups="account.group_account_manager"/>
+            <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags" sequence="5"/>
+
+    </data>
+</odoo>

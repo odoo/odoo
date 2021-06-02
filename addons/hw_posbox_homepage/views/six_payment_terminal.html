@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% from "loading.html" import loading_block_ui %}
+{% block head %}
+    <script>
+        var _onQueryDone = function () {
+            $('.message-status').html('Updated configuration <br> Refreshing page');
+            setTimeout(function () {
+                location.reload();
+            }, 30000);
+        }
+        $(document).ready(function () {
+            $('#terminal-id').submit(function(e){
+                e.preventDefault();
+                $('.loading-block').removeClass('o_hide');
+                $.ajax({
+                    url: '/six_payment_terminal_add',
+                    type: 'post',
+                    data: $('#terminal-id').serialize(),
+                }).always(_onQueryDone);
+            });
+            $('#terminal-clear').submit(function(e){
+                e.preventDefault();
+                $('.loading-block').removeClass('o_hide');
+                $.ajax({
+                    url: '/six_payment_terminal_clear',
+                    type: 'get',
+                }).always(_onQueryDone);
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <h2 class="text-center">Six Payment Terminal</h2>
+    <p>
+        Set the Terminal ID (TID) of the terminal you want to use.
+    </p>
+    <form id="terminal-id" action='/six_payment_terminal_add' method='POST'>
+        <table align="center">
+            <tr>
+                <td>Terminal ID</td>
+                <td><input type="text" name="terminal_id"></td>
+            </tr>
+            <tr>
+                <td/>
+                <td><input class="btn" type="submit" value="Connect"/></td>
+            </tr>
+        </table>
+        {{ loading_block_ui(loading_message) }}
+    </form>
+    {% if terminalId %}
+        <p class="text-center font-small">
+            Current Terminal Id: <strong>{{ terminalId }}</strong>
+        </p>
+        <div class="text-center font-small" style="margin: 10px auto;">
+            You can clear the terminal configuration
+            <form id="terminal-clear" style="display: inline-block;margin-left: 4px;">
+                <input class="btn btn-sm" type="submit" value="Clear"/>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,78 @@
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Color palette
+// -------------
+
+// By default, all user color palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default color
+// palette.
+$-palette-default: nth($o-color-palettes, $o-color-palette-number);
+$o-color-palettes: append($o-color-palettes, map-merge($-palette-default, o-map-omit($o-user-color-palette)));
+
+// Theme color palette
+// -------------------
+//
+// Proper themes have to enforce primary = alpha and secondary = beta.
+// Exceptions to this rule are made for compatibility reasons
+$-palette-default: nth($o-theme-color-palettes, $o-theme-color-palette-number);
+
+// Generate default theme color scheme if alpha is set
+$-is-alpha-primary: not map-has-key($-palette-default, 'primary');
+$-is-beta-secondary: not map-has-key($-palette-default, 'secondary');
+
+$-alpha: map-get($o-user-theme-color-palette, 'alpha');
+@if ($-alpha) {
+    $o-user-theme-color-palette: map-merge((
+        beta: lighten(desaturate($-alpha, 60%), 30%),
+        gamma: desaturate(adjust-hue($-alpha, -45deg), 10%),
+        delta: desaturate(adjust-hue($-alpha, 45deg), 10%),
+        epsilon: desaturate(adjust-hue($-alpha, 180deg), 10%),
+    ), o-map-omit($o-user-theme-color-palette));
+}
+
+// By default, all user theme color palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default theme
+// color palette.
+$o-theme-color-palettes: append($o-theme-color-palettes, map-merge($-palette-default, o-map-omit($o-user-theme-color-palette)));
+
+
+// Enable last color and theme color palettes, which are now the user customized
+// color palettes.
+$o-color-palette-number: length($o-color-palettes);
+$o-theme-color-palette-number: length($o-theme-color-palettes);
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$-website-values-default: nth($o-website-values-palettes, $o-website-values-palette-number);
+$o-website-values: map-merge($-website-values-default, o-map-omit($o-user-website-values)) !default;
+$o-website-values-palettes: append($o-website-values-palettes, $o-website-values);
+$o-website-values-palette-number: length($o-website-values-palettes);
+@function o-website-value($key) {
+    @return map-get($o-website-values, $key);
+}
+
+@if o-website-value('google-fonts') {
+    $o-theme-font-names: join($o-theme-font-names, o-website-value('google-fonts'));
+    @each $font in o-website-value('google-fonts') {
+        $o-theme-fonts: append($o-theme-fonts, (quote($font), sans-serif));
+        $o-theme-font-urls: append($o-theme-font-urls, quote($font) + ':300,300i,400,400i,700,700i');
+    }
+}
+
+// Add odoo unicode support for all fonts
+$-with-support-theme-fonts: ();
+@each $font in $o-theme-fonts {
+    $-with-support-theme-fonts: append($-with-support-theme-fonts, o-add-unicode-support-font($font));
+}
+$o-theme-fonts: $-with-support-theme-fonts;
+
+$o-theme-navbar-logo-height: o-website-value('logo-height') !default;
+$o-theme-font: nth($o-theme-fonts, o-website-value('font-number')) !default;
+$o-theme-headings-font: nth($o-theme-fonts, o-website-value('headings-font-number')) !default;
+$o-theme-navbar-font: nth($o-theme-fonts, o-website-value('navbar-font-number')) !default;
+$o-theme-buttons-font: nth($o-theme-fonts, o-website-value('buttons-font-number')) !default;

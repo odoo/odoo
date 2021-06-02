@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="payment_acquirer_test" model="payment.acquirer">
+        <field name="name">Test</field>
+        <field name="display_as">Test (do not use in production)</field>
+        <field name="sequence">99</field>
+        <field name="provider">test</field>
+        <field name="image_128" type="base64" file="payment_test/static/src/img/test_logo.jpg"/>
+        <field name="description" type="html">
+<p>Test Payment Acquirer</p>
+<ul class="list-inline">
+    <li class="list-inline-item"><i class="fa fa-check"/>S2S Online Payment</li>
+    <li class="list-inline-item"><i class="fa fa-check"/>Payment status tracking</li>
+    <li class="list-inline-item"><i class="fa fa-check"/>Never loose money while testing</li>
+</ul>
+        </field>
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_ideal"),
+                                                        ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_visa")])]'/>
+
+        <field name="module_id" ref="base.module_payment_test"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="registration_view_template_id" ref="test_s2s_form"/>
+        <field name="state">test</field>
+        <field name="payment_flow">s2s</field>
+    </record>
+</data></odoo>

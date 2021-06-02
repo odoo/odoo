@@ -3,14 +3,17 @@
 # * pad_project
 # 
 # Translators:
+# Linkup <link-up@naver.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 8.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-14 05:54+0000\n"
-"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,11 +21,32 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pad_project
-#: field:project.task,description_pad:0
-msgid "Description PAD"
-msgstr "설명 패드"
+#: model:ir.model.fields,field_description:pad_project.field_project_task__description_pad
+msgid "Pad URL"
+msgstr "패드 URL"
+
+#. module: pad_project
+#: model:ir.model,name:pad_project.model_project_project
+msgid "Project"
+msgstr "프로젝트"
 
 #. module: pad_project
 #: model:ir.model,name:pad_project.model_project_task
 msgid "Task"
-msgstr "업무"
+msgstr "작업"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_task__use_pad
+msgid "Use collaborative pad"
+msgstr "협업 패드 사용"
+
+#. module: pad_project
+#: model:ir.model.fields,help:pad_project.field_project_project__use_pads
+#: model:ir.model.fields,help:pad_project.field_project_task__use_pad
+msgid "Use collaborative pad for the tasks on this project."
+msgstr "이 프로젝트의 작업을 위해 협업 패드를 사용합니다."
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__use_pads
+msgid "Use collaborative pads"
+msgstr "협업 패드 사용"

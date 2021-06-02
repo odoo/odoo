@@ -1,241 +1,387 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 import random
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
-from openerp import SUPERUSER_ID
-import openerp.addons.decimal_precision as dp
-from openerp.osv import osv, orm, fields
-from openerp.addons.web.http import request
-from openerp.tools.translate import _
+from odoo import api, models, fields, _
+from odoo.http import request
+from odoo.osv import expression
+from odoo.exceptions import UserError, ValidationError
+
+_logger = logging.getLogger(__name__)
 
 
-class sale_order(osv.Model):
+class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _cart_qty(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict()
-        for order in self.browse(cr, uid, ids, context=context):
-            res[order.id] = int(sum(l.product_uom_qty for l in (order.website_order_line or [])))
-        return res
+    website_order_line = fields.One2many(
+        'sale.order.line',
+        compute='_compute_website_order_line',
+        string='Order Lines displayed on Website',
+        help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
+    )
+    cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
+    only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
+    is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
+    cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
+    website_id = fields.Many2one('website', string='Website', readonly=True,
+                                 help='Website through which this order was placed.')
 
-    _columns = {
-        'website_order_line': fields.one2many(
-            'sale.order.line', 'order_id',
-            string='Order Lines displayed on Website', readonly=True,
-            help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
-        ),
-        'cart_quantity': fields.function(_cart_qty, type='integer', string='Cart Quantity'),
-        'payment_acquirer_id': fields.many2one('payment.acquirer', 'Payment Acquirer', on_delete='set null', copy=False),
-        'payment_tx_id': fields.many2one('payment.transaction', 'Transaction', on_delete='set null', copy=False),
-    }
+    @api.depends('order_line')
+    def _compute_website_order_line(self):
+        for order in self:
+            order.website_order_line = order.order_line
 
-    def _get_errors(self, cr, uid, order, context=None):
-        return []
+    @api.depends('order_line.product_uom_qty', 'order_line.product_id')
+    def _compute_cart_info(self):
+        for order in self:
+            order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
+            order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
 
-    def _get_website_data(self, cr, uid, order, context):
+    @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
+    def _compute_abandoned_cart(self):
+        for order in self:
+            # a quotation can be considered as an abandonned cart if it is linked to a website,
+            # is in the 'draft' state and has an expiration date
+            if order.website_id and order.state == 'draft' and order.date_order:
+                public_partner_id = order.website_id.user_id.partner_id
+                # by default the expiration date is 1 hour if not specified on the website configuration
+                abandoned_delay = order.website_id.cart_abandoned_delay or 1.0
+                abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
+                order.is_abandoned_cart = bool(order.date_order <= abandoned_datetime and order.partner_id != public_partner_id and order.order_line)
+            else:
+                order.is_abandoned_cart = False
+
+    def _search_abandoned_cart(self, operator, value):
+        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
+        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
+        abandoned_domain = expression.normalize_domain([
+            ('date_order', '<=', abandoned_datetime),
+            ('website_id', '!=', False),
+            ('state', '=', 'draft'),
+            ('partner_id', '!=', self.env.ref('base.public_partner').id),
+            ('order_line', '!=', False)
+        ])
+        # is_abandoned domain possibilities
+        if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
+            return abandoned_domain
+        return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
+
+    def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
+        """Find the cart line matching the given parameters.
+
+        If a product_id is given, the line will match the product only if the
+        line also has the same special attributes: `no_variant` attributes and
+        `is_custom` values.
+        """
+        self.ensure_one()
+        product = self.env['product.product'].browse(product_id)
+
+        # split lines with the same product if it has untracked attributes
+        if product and (product.product_tmpl_id.has_dynamic_attributes() or product.product_tmpl_id._has_no_variant_attributes()) and not line_id:
+            return self.env['sale.order.line']
+
+        domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
+        if line_id:
+            domain += [('id', '=', line_id)]
+        else:
+            domain += [('product_custom_attribute_value_ids', '=', False)]
+
+        return self.env['sale.order.line'].sudo().search(domain)
+
+    def _website_product_id_change(self, order_id, product_id, qty=0):
+        order = self.sudo().browse(order_id)
+        product_context = dict(self.env.context)
+        product_context.setdefault('lang', order.partner_id.lang)
+        product_context.update({
+            'partner': order.partner_id,
+            'quantity': qty,
+            'date': order.date_order,
+            'pricelist': order.pricelist_id.id,
+            'force_company': order.company_id.id,
+        })
+        product = self.env['product.product'].with_context(product_context).browse(product_id)
+        discount = 0
+
+        if order.pricelist_id.discount_policy == 'without_discount':
+            # This part is pretty much a copy-paste of the method '_onchange_discount' of
+            # 'sale.order.line'.
+            price, rule_id = order.pricelist_id.with_context(product_context).get_product_price_rule(product, qty or 1.0, order.partner_id)
+            pu, currency = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)
+            if pu != 0:
+                if order.pricelist_id.currency_id != currency:
+                    # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
+                    date = order.date_order or fields.Date.today()
+                    pu = currency._convert(pu, order.pricelist_id.currency_id, order.company_id, date)
+                discount = (pu - price) / pu * 100
+                if discount < 0:
+                    # In case the discount is negative, we don't want to show it to the customer,
+                    # but we still want to use the price defined on the pricelist
+                    discount = 0
+                    pu = price
+        else:
+            pu = product.price
+            if order.pricelist_id and order.partner_id:
+                order_line = order._cart_find_product_line(product.id)
+                if order_line:
+                    pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
+
         return {
-            'partner': order.partner_id.id,
-            'order': order
+            'product_id': product_id,
+            'product_uom_qty': qty,
+            'order_id': order_id,
+            'product_uom': product.uom_id.id,
+            'price_unit': pu,
+            'discount': discount,
         }
 
-    def _cart_find_product_line(self, cr, uid, ids, product_id=None, line_id=None, context=None, **kwargs):
-        for so in self.browse(cr, uid, ids, context=context):
-            domain = [('order_id', '=', so.id), ('product_id', '=', product_id)]
-            if line_id:
-                domain += [('id', '=', line_id)]
-            return self.pool.get('sale.order.line').search(cr, SUPERUSER_ID, domain, context=context)
-
-    def _website_product_id_change(self, cr, uid, ids, order_id, product_id, qty=0, line_id=None, context=None):
-        so = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
-
-        values = self.pool.get('sale.order.line').product_id_change(cr, SUPERUSER_ID, [],
-            pricelist=so.pricelist_id.id,
-            product=product_id,
-            partner_id=so.partner_id.id,
-            fiscal_position=so.fiscal_position.id,
-            qty=qty,
-            context=dict(context or {}, company_id=so.company_id.id)
-        )['value']
-
-        if line_id:
-            line = self.pool.get('sale.order.line').browse(cr, SUPERUSER_ID, line_id, context=context)
-            values['name'] = line.name
-        else:
-            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            values['name'] = product.description_sale and "%s\n%s" % (product.display_name, product.description_sale) or product.display_name
-
-        values['product_id'] = product_id
-        values['order_id'] = order_id
-        if values.get('tax_id') != None:
-            values['tax_id'] = [(6, 0, values['tax_id'])]
-        return values
-
-    def _cart_update(self, cr, uid, ids, product_id=None, line_id=None, add_qty=0, set_qty=0, context=None, **kwargs):
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
-        sol = self.pool.get('sale.order.line')
+        self.ensure_one()
+        product_context = dict(self.env.context)
+        product_context.setdefault('lang', self.sudo().partner_id.lang)
+        SaleOrderLineSudo = self.env['sale.order.line'].sudo().with_context(product_context)
+        # change lang to get correct name of attributes/values
+        product_with_context = self.env['product.product'].with_context(product_context)
+        product = product_with_context.browse(int(product_id))
 
-        quantity = 0
-        for so in self.browse(cr, uid, ids, context=context):
-            if so.state != 'draft':
-                request.session['sale_order_id'] = None
-                raise osv.except_osv(_('Error!'), _('It is forbidden to modify a sale order which is not in draft status'))
-            if line_id != False:
-                line_ids = so._cart_find_product_line(product_id, line_id, context=context, **kwargs)
-                if line_ids:
-                    line_id = line_ids[0]
-
-            # Create line if no line with product_id can be located
-            if not line_id:
-                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=1, context=context)
-                line_id = sol.create(cr, SUPERUSER_ID, values, context=context)
-                if add_qty:
-                    add_qty -= 1
-
-            # compute new quantity
+        try:
+            if add_qty:
+                add_qty = int(add_qty)
+        except ValueError:
+            add_qty = 1
+        try:
             if set_qty:
-                quantity = set_qty
-            elif add_qty != None:
-                quantity = sol.browse(cr, SUPERUSER_ID, line_id, context=context).product_uom_qty + (add_qty or 0)
+                set_qty = int(set_qty)
+        except ValueError:
+            set_qty = 0
+        quantity = 0
+        order_line = False
+        if self.state != 'draft':
+            request.session['sale_order_id'] = None
+            raise UserError(_('It is forbidden to modify a sales order which is not in draft status.'))
+        if line_id is not False:
+            order_line = self._cart_find_product_line(product_id, line_id, **kwargs)[:1]
 
-            # Remove zero of negative lines
-            if quantity <= 0:
-                sol.unlink(cr, SUPERUSER_ID, [line_id], context=context)
-            else:
-                # update line
-                values = self._website_product_id_change(cr, uid, ids, so.id, product_id, qty=quantity, line_id=line_id, context=context)
-                values['product_uom_qty'] = quantity
-                sol.write(cr, SUPERUSER_ID, [line_id], values, context=context)
+        # Create line if no line with product_id can be located
+        if not order_line:
+            if not product:
+                raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
-        return {'line_id': line_id, 'quantity': quantity}
+            no_variant_attribute_values = kwargs.get('no_variant_attribute_values') or []
+            received_no_variant_values = product.env['product.template.attribute.value'].browse([int(ptav['value']) for ptav in no_variant_attribute_values])
+            received_combination = product.product_template_attribute_value_ids | received_no_variant_values
+            product_template = product.product_tmpl_id
 
-    def _cart_accessories(self, cr, uid, ids, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            s = set(j.id for l in (order.website_order_line or []) for j in (l.product_id.accessory_product_ids or []))
-            s -= set(l.product_id.id for l in order.order_line)
-            product_ids = random.sample(s, min(len(s),3))
-            return self.pool['product.product'].browse(cr, uid, product_ids, context=context)
+            # handle all cases where incorrect or incomplete data are received
+            combination = product_template._get_closest_possible_combination(received_combination)
 
-class sale_order_line(osv.Model):
-    _inherit = "sale.order.line"
+            # get or create (if dynamic) the correct variant
+            product = product_template._create_product_variant(combination)
 
-    def _fnct_get_discounted_price(self, cr, uid, ids, field_name, args, context=None):
-        res = dict.fromkeys(ids, False)
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = (line.price_unit * (1.0 - (line.discount or 0.0) / 100.0))
+            if not product:
+                raise UserError(_("The given combination does not exist therefore it cannot be added to cart."))
+
+            product_id = product.id
+
+            values = self._website_product_id_change(self.id, product_id, qty=1)
+
+            # add no_variant attributes that were not received
+            for ptav in combination.filtered(lambda ptav: ptav.attribute_id.create_variant == 'no_variant' and ptav not in received_no_variant_values):
+                no_variant_attribute_values.append({
+                    'value': ptav.id,
+                })
+
+            # save no_variant attributes values
+            if no_variant_attribute_values:
+                values['product_no_variant_attribute_value_ids'] = [
+                    (6, 0, [int(attribute['value']) for attribute in no_variant_attribute_values])
+                ]
+
+            # add is_custom attribute values that were not received
+            custom_values = kwargs.get('product_custom_attribute_values') or []
+            received_custom_values = product.env['product.template.attribute.value'].browse([int(ptav['custom_product_template_attribute_value_id']) for ptav in custom_values])
+
+            for ptav in combination.filtered(lambda ptav: ptav.is_custom and ptav not in received_custom_values):
+                custom_values.append({
+                    'custom_product_template_attribute_value_id': ptav.id,
+                    'custom_value': '',
+                })
+
+            # save is_custom attributes values
+            if custom_values:
+                values['product_custom_attribute_value_ids'] = [(0, 0, {
+                    'custom_product_template_attribute_value_id': custom_value['custom_product_template_attribute_value_id'],
+                    'custom_value': custom_value['custom_value']
+                }) for custom_value in custom_values]
+
+            # create the line
+            order_line = SaleOrderLineSudo.create(values)
+
+            try:
+                order_line._compute_tax_id()
+            except ValidationError as e:
+                # The validation may occur in backend (eg: taxcloud) but should fail silently in frontend
+                _logger.debug("ValidationError occurs during tax compute. %s" % (e))
+            if add_qty:
+                add_qty -= 1
+
+        # compute new quantity
+        if set_qty:
+            quantity = set_qty
+        elif add_qty is not None:
+            quantity = order_line.product_uom_qty + (add_qty or 0)
+
+        # Remove zero of negative lines
+        if quantity <= 0:
+            linked_line = order_line.linked_line_id
+            order_line.unlink()
+            if linked_line:
+                # update description of the parent
+                linked_product = product_with_context.browse(linked_line.product_id.id)
+                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
+        else:
+            # update line
+            no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
+            values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity)
+            if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
+                order = self.sudo().browse(self.id)
+                product_context.update({
+                    'partner': order.partner_id,
+                    'quantity': quantity,
+                    'date': order.date_order,
+                    'pricelist': order.pricelist_id.id,
+                    'force_company': order.company_id.id,
+                })
+            product_with_context = self.env['product.product'].with_context(product_context)
+            product = product_with_context.browse(product_id)
+            values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
+                order_line._get_display_price(product),
+                order_line.product_id.taxes_id,
+                order_line.tax_id,
+                self.company_id
+            )
+
+            order_line.write(values)
+
+            # link a product to the sales order
+            if kwargs.get('linked_line_id'):
+                linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
+                order_line.write({
+                    'linked_line_id': linked_line.id,
+                })
+                linked_product = product_with_context.browse(linked_line.product_id.id)
+                linked_line.name = linked_line.get_sale_order_line_multiline_description_sale(linked_product)
+            # Generate the description with everything. This is done after
+            # creating because the following related fields have to be set:
+            # - product_no_variant_attribute_value_ids
+            # - product_custom_attribute_value_ids
+            # - linked_line_id
+            order_line.name = order_line.get_sale_order_line_multiline_description_sale(product)
+
+        option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == order_line.id)
+
+        return {'line_id': order_line.id, 'quantity': quantity, 'option_ids': list(set(option_lines.ids))}
+
+    def _cart_accessories(self):
+        """ Suggest accessories based on 'Accessory Products' of products in cart """
+        for order in self:
+            products = order.website_order_line.mapped('product_id')
+            accessory_products = self.env['product.product']
+            for line in order.website_order_line.filtered(lambda l: l.product_id):
+                combination = line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids
+                accessory_products |= line.product_id.accessory_product_ids.filtered(lambda product:
+                    product.website_published and
+                    product not in products and
+                    product._is_variant_possible(parent_combination=combination) and
+                    (product.company_id == line.company_id or not product.company_id)
+                )
+
+            return random.sample(accessory_products, len(accessory_products))
+
+    def action_recovery_email_send(self):
+        for order in self:
+            order._portal_ensure_token()
+        composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
+
+        template_id = self._get_cart_recovery_template().id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'view_id': composer_form_view_id,
+            'target': 'new',
+            'context': {
+                'default_composition_mode': 'mass_mail' if len(self.ids) > 1 else 'comment',
+                'default_res_id': self.ids[0],
+                'default_model': 'sale.order',
+                'default_use_template': bool(template_id),
+                'default_template_id': template_id,
+                'website_sale_send_recovery_email': True,
+                'active_ids': self.ids,
+            },
+        }
+
+    def _get_cart_recovery_template(self):
+        """
+        Return the cart recovery template record for a set of orders.
+        If they all belong to the same website, we return the website-specific template;
+        otherwise we return the default template.
+        If the default is not found, the empty ['mail.template'] is returned.
+        """
+        websites = self.mapped('website_id')
+        template = websites.cart_recovery_mail_template_id if len(websites) == 1 else False
+        template = template or self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
+        return template or self.env['mail.template']
+
+    def _cart_recovery_email_send(self):
+        """Send the cart recovery email on the current recordset,
+        making sure that the portal token exists to avoid broken links, and marking the email as sent.
+        Similar method to action_recovery_email_send, made to be called in automated actions.
+        Contrary to the former, it will use the website-specific template for each order."""
+        sent_orders = self.env['sale.order']
+        for order in self:
+            template = order._get_cart_recovery_template()
+            if template:
+                order._portal_ensure_token()
+                template.send_mail(order.id)
+                sent_orders |= order
+        sent_orders.write({'cart_recovery_email_sent': True})
+
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
+                order._send_order_confirmation_mail()
         return res
 
-    _columns = {
-        'discounted_price': fields.function(_fnct_get_discounted_price, string='Discounted price', type='float', digits_compute=dp.get_precision('Product Price')),
-    }
 
-class website(orm.Model):
-    _inherit = 'website'
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
 
-    _columns = {
-        'pricelist_id': fields.related('user_id','partner_id','property_product_pricelist',
-            type='many2one', relation='product.pricelist', string='Default Pricelist'),
-        'currency_id': fields.related('pricelist_id','currency_id',
-            type='many2one', relation='res.currency', string='Default Currency'),
-    }
+    name_short = fields.Char(compute="_compute_name_short")
 
-    def sale_product_domain(self, cr, uid, ids, context=None):
-        return [("sale_ok", "=", True)]
+    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '!=', order_id)]", ondelete='cascade')
+    option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
 
-    def sale_get_order(self, cr, uid, ids, force_create=False, code=None, update_pricelist=None, context=None):
-        sale_order_obj = self.pool['sale.order']
-        sale_order_id = request.session.get('sale_order_id')
-        sale_order = None
+    def get_sale_order_line_multiline_description_sale(self, product):
+        description = super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+        if self.linked_line_id:
+            description += "\n" + _("Option for: %s") % self.linked_line_id.product_id.display_name
+        if self.option_line_ids:
+            description += "\n" + '\n'.join([_("Option: %s") % option_line.product_id.display_name for option_line in self.option_line_ids])
+        return description
 
-        # Test validity of the sale_order_id
-        if sale_order_id and sale_order_obj.exists(cr, SUPERUSER_ID, sale_order_id, context=context):
-            sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-        else:
-            sale_order_id = None
+    @api.depends('product_id.display_name')
+    def _compute_name_short(self):
+        """ Compute a short name for this sale order line, to be used on the website where we don't have much space.
+            To keep it short, instead of using the first line of the description, we take the product name without the internal reference.
+        """
+        for record in self:
+            record.name_short = record.product_id.with_context(display_default_code=False).display_name
 
-        # create so if needed
-        if not sale_order_id and (force_create or code):
-            # TODO cache partner_id session
-            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
-
-            for w in self.browse(cr, uid, ids):
-                values = {
-                    'user_id': w.user_id.id,
-                    'partner_id': partner.id,
-                    'pricelist_id': partner.property_product_pricelist.id,
-                    'section_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website', 'salesteam_website_sales')[1],
-                }
-                sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
-                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']
-                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
-                request.session['sale_order_id'] = sale_order_id
-                sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
-
-        if sale_order_id:
-            # TODO cache partner_id session
-            partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
-            # check for change of pricelist with a coupon
-            if code and code != sale_order.pricelist_id.code:
-                pricelist_ids = self.pool['product.pricelist'].search(cr, SUPERUSER_ID, [('code', '=', code)], context=context)
-                if pricelist_ids:
-                    pricelist_id = pricelist_ids[0]
-                    request.session['sale_order_code_pricelist_id'] = pricelist_id
-                    update_pricelist = True
-
-            pricelist_id = request.session.get('sale_order_code_pricelist_id') or partner.property_product_pricelist.id
-
-            # check for change of partner_id ie after signup
-            if sale_order.partner_id.id != partner.id and request.website.partner_id.id != partner.id:
-                flag_pricelist = False
-                if pricelist_id != sale_order.pricelist_id.id:
-                    flag_pricelist = True
-                fiscal_position = sale_order.fiscal_position and sale_order.fiscal_position.id or False
-
-                values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [sale_order_id], partner.id, context=context)['value']
-                if values.get('fiscal_position'):
-                    order_lines = map(int,sale_order.order_line)
-                    values.update(sale_order_obj.onchange_fiscal_position(cr, SUPERUSER_ID, [],
-                        values['fiscal_position'], [[6, 0, order_lines]], context=context)['value'])
-
-                values['partner_id'] = partner.id
-                sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
-
-                if flag_pricelist or values.get('fiscal_position', False) != fiscal_position:
-                    update_pricelist = True
-
-            # update the pricelist
-            if update_pricelist:
-                values = {'pricelist_id': pricelist_id}
-                values.update(sale_order.onchange_pricelist_id(pricelist_id, None)['value'])
-                sale_order.write(values)
-                for line in sale_order.order_line:
-                    if line.exists():
-                        sale_order._cart_update(product_id=line.product_id.id, line_id=line.id, add_qty=0)
-
-            # update browse record
-            if (code and code != sale_order.pricelist_id.code) or sale_order.partner_id.id !=  partner.id:
-                sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order.id, context=context)
-
-        else:
-            request.session['sale_order_id'] = None
-            return None
-
-        return sale_order
-
-    def sale_get_transaction(self, cr, uid, ids, context=None):
-        transaction_obj = self.pool.get('payment.transaction')
-        tx_id = request.session.get('sale_transaction_id')
-        if tx_id:
-            tx_ids = transaction_obj.search(cr, SUPERUSER_ID, [('id', '=', tx_id), ('state', 'not in', ['cancel'])], context=context)
-            if tx_ids:
-                return transaction_obj.browse(cr, SUPERUSER_ID, tx_ids[0], context=context)
-            else:
-                request.session['sale_transaction_id'] = False
-        return False
-
-    def sale_reset(self, cr, uid, ids, context=None):
-        request.session.update({
-            'sale_order_id': False,
-            'sale_transaction_id': False,
-            'sale_order_code_pricelist_id': False,
-        })
-
-
+    def get_description_following_lines(self):
+        return self.name.splitlines()[1:]

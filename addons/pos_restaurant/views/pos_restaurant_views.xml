@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<odoo>
+        <!--     RESTAURANTS FLOORS  -->
+
+        <record id="view_restaurant_floor_form" model="ir.ui.view">
+            <field name="name">Restaurant Floors</field>
+            <field name="model">restaurant.floor</field>
+            <field name="arch" type="xml">
+                <form string="Restaurant Floor">
+                    <sheet>
+                        <group col="4">
+                            <field name="name" />
+                            <field name="pos_config_id" />
+                            <field name="background_color" groups="base.group_no_one" />
+                        </group>
+                        <field name="table_ids">
+                            <tree string='Tables'>
+                                <field name="name" />
+                                <field name="seats" />
+                                <field name="shape" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_restaurant_floor_tree" model="ir.ui.view">
+            <field name="name">Restaurant Floors</field>
+            <field name="model">restaurant.floor</field>
+            <field name="arch" type="xml">
+                <tree string="Restaurant Floors">
+                    <field name="sequence" widget="handle" />
+                    <field name="name" />
+                    <field name="pos_config_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_restaurant_floor_kanban" model="ir.ui.view">
+            <field name="name">restaurant.floor.kanban</field>
+            <field name="model">restaurant.floor</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="pos_config_id" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div><strong>Floor Name: </strong><t t-esc="record.name.value"/></div>
+                                <div><strong>Point of Sale: </strong><t t-esc="record.pos_config_id.value"/></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_restaurant_floor_form" model="ir.actions.act_window">
+            <field name="name">Floor Plans</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">restaurant.floor</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new restaurant floor
+              </p><p>
+                A restaurant floor represents the place where customers are served, this is where you can
+                define and position the tables.
+              </p>
+            </field>
+        </record>
+
+        <record id="view_restaurant_table_form" model="ir.ui.view">
+            <field name="name">Restaurant Table</field>
+            <field name="model">restaurant.table</field>
+            <field name="arch" type="xml">
+                <form string="Restaurant Table">
+                    <group col="2">
+                        <field name="name" />
+                        <field name="seats" />
+                    </group>
+                    <group col="4" string="Appearance" groups="base.group_no_one">
+                        <field name="shape" />
+                        <field name="color" />
+                        <field name="position_h" />
+                        <field name="position_v" />
+                        <field name="width" />
+                        <field name="height" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <menuitem id="menu_restaurant_floor_all"
+             parent="point_of_sale.menu_point_config_product"
+             action="action_restaurant_floor_form"
+             sequence="10"
+             groups="base.group_no_one"/>
+
+        <!--     RESTAURANT PRINTERS     -->
+
+        <record id="view_restaurant_printer_form" model="ir.ui.view">
+            <field name="name">Order Printer</field>
+            <field name="model">restaurant.printer</field>
+            <field name="arch" type="xml">
+                <form string="POS Printer">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="printer_type" widget="radio"/>
+                            <field name="proxy_ip" attrs="{'invisible': [('printer_type', '!=', 'iot')]}"/>
+                            <field name="product_categories_ids" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_restaurant_printer_form" model="ir.actions.act_window">
+            <field name="name">Order Printers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">restaurant.printer</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new restaurant order printer
+              </p><p>
+                Order Printers are used by restaurants and bars to print the
+                order updates in the kitchen/bar when the waiter updates the order.
+              </p><p>
+                Each Order Printer has an IP Address that defines the IoT Box/Hardware
+                Proxy where the printer can be found, and a list of product categories.
+                An Order Printer will only print updates for products belonging to one of
+                its categories.
+              </p>
+            </field>
+        </record>
+
+        <record id="view_restaurant_printer" model="ir.ui.view">
+            <field name="name">Order Printers</field>
+            <field name="model">restaurant.printer</field>
+            <field name="arch" type="xml">
+                <tree string="Restaurant Order Printers">
+                    <field name="name" />
+                    <field name="proxy_ip" />
+                    <field name="product_categories_ids" />
+                </tree>
+            </field>
+        </record>
+
+        <menuitem id="menu_restaurant_printer_all"
+             parent="point_of_sale.menu_point_config_product"
+             action="action_restaurant_printer_form"
+             sequence="15"
+             groups="base.group_no_one"/>
+
+</odoo>

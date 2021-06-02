@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="web_editor.assets_frontend" name="Portal Rating Assets">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_rating/static/src/scss/website_rating.scss"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_rating/static/src/js/portal_chatter.js"></script>
+            <script type="text/javascript" src="/website_rating/static/src/js/portal_composer.js"></script>
+            <script type="text/javascript" src="/website_rating/static/src/js/portal_rating_composer.js"></script>
+        </xpath>
+    </template>
+</odoo>

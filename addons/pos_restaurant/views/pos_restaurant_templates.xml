@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <template id="assets" inherit_id="point_of_sale.assets">
+          <xpath expr="." position="inside">
+              <script type="text/javascript" src="/pos_restaurant/static/lib/js/jquery.ui.touch-punch.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/multiprint.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/splitbill.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/printbill.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/floors.js"></script>
+              <script type="text/javascript" src="/pos_restaurant/static/src/js/notes.js"></script>
+          </xpath>
+          <xpath expr="//link[@id='pos-stylesheet']" position="after">
+              <link rel="stylesheet" href="/pos_restaurant/static/src/css/restaurant.css"/>
+          </xpath>
+        </template>
+
+    <template id="assets_backend" name="hr assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/point_of_sale/static/src/scss/pos_dashboard.scss"/>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="POS Restaurant Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_restaurant/static/src/js/tours/pos_restaurant.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

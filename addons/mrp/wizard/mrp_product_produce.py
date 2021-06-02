@@ -1,130 +1,191 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import fields, osv
-import openerp.addons.decimal_precision as dp
+from datetime import datetime
+
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
-class mrp_product_produce_line(osv.osv_memory):
-    _name="mrp.product.produce.line"
-    _description = "Product Produce Consume lines"
-
-    _columns = {
-        'product_id': fields.many2one('product.product', 'Product'),
-        'product_qty': fields.float('Quantity (in default UoM)', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
-        'produce_id': fields.many2one('mrp.product.produce'),
-        'track_production': fields.related('product_id', 'track_production', type='boolean'),
-    }
-
-class mrp_product_produce(osv.osv_memory):
+class MrpProductProduce(models.TransientModel):
     _name = "mrp.product.produce"
-    _description = "Product Produce"
+    _description = "Record Production"
+    _inherit = ["mrp.abstract.workorder"]
 
-    _columns = {
-        'product_id': fields.many2one('product.product', type='many2one'),
-        'product_qty': fields.float('Select Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
-        'mode': fields.selection([('consume_produce', 'Consume & Produce'),
-                                  ('consume', 'Consume Only')], 'Mode', required=True,
-                                  help="'Consume only' mode will only consume the products with the quantity selected.\n"
-                                        "'Consume & Produce' mode will consume as well as produce the products with the quantity selected "
-                                        "and it will finish the production order when total ordered quantities are produced."),
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'), #Should only be visible when it is consume and produce mode
-        'consume_lines': fields.one2many('mrp.product.produce.line', 'produce_id', 'Products Consumed'),
-        'track_production': fields.boolean('Track production'),
-    }
+    @api.model
+    def default_get(self, fields):
+        res = super(MrpProductProduce, self).default_get(fields)
+        production = self.env['mrp.production']
+        production_id = self.env.context.get('default_production_id') or self.env.context.get('active_id')
+        if production_id:
+            production = self.env['mrp.production'].browse(production_id)
+        if production.exists():
+            serial_finished = (production.product_id.tracking == 'serial')
+            todo_uom = production.product_uom_id.id
+            todo_quantity = self._get_todo(production)
+            if serial_finished:
+                todo_quantity = 1.0
+                if production.product_uom_id.uom_type != 'reference':
+                    todo_uom = self.env['uom.uom'].search([('category_id', '=', production.product_uom_id.category_id.id), ('uom_type', '=', 'reference')]).id
+            if 'production_id' in fields:
+                res['production_id'] = production.id
+            if 'product_id' in fields:
+                res['product_id'] = production.product_id.id
+            if 'product_uom_id' in fields:
+                res['product_uom_id'] = todo_uom
+            if 'serial' in fields:
+                res['serial'] = bool(serial_finished)
+            if 'qty_producing' in fields:
+                res['qty_producing'] = todo_quantity
+            if 'consumption' in fields:
+                res['consumption'] = production.bom_id.consumption
+        return res
 
-    def on_change_qty(self, cr, uid, ids, product_qty, consume_lines, context=None):
-        """ 
-            When changing the quantity of products to be produced it will 
-            recalculate the number of raw materials needed according
-            to the scheduled products and the already consumed/produced products
-            It will return the consume lines needed for the products to be produced
-            which the user can still adapt
+    serial = fields.Boolean('Requires Serial')
+    product_tracking = fields.Selection(related="product_id.tracking")
+    is_pending_production = fields.Boolean(compute='_compute_pending_production')
+
+    move_raw_ids = fields.One2many(related='production_id.move_raw_ids', string="PO Components")
+    move_finished_ids = fields.One2many(related='production_id.move_finished_ids')
+
+    raw_workorder_line_ids = fields.One2many('mrp.product.produce.line',
+        'raw_product_produce_id', string='Components')
+    finished_workorder_line_ids = fields.One2many('mrp.product.produce.line',
+        'finished_product_produce_id', string='By-products')
+    production_id = fields.Many2one('mrp.production', 'Manufacturing Order',
+        required=True, ondelete='cascade')
+
+    @api.depends('qty_producing')
+    def _compute_pending_production(self):
+        """ Compute if it exits remaining quantity once the quantity on the
+        current wizard will be processed. The purpose is to display or not
+        button 'continue'.
         """
-        prod_obj = self.pool.get("mrp.production")
-        uom_obj = self.pool.get("product.uom")
-        production = prod_obj.browse(cr, uid, context['active_id'], context=context)
-        consume_lines = []
-        new_consume_lines = []
-        if product_qty > 0.0:
-            product_uom_qty = uom_obj._compute_qty(cr, uid, production.product_uom.id, product_qty, production.product_id.uom_id.id)
-            consume_lines = prod_obj._calculate_qty(cr, uid, production, product_qty=product_uom_qty, context=context)
-        
-        for consume in consume_lines:
-            new_consume_lines.append([0, False, consume])
-        return {'value': {'consume_lines': new_consume_lines}}
+        for product_produce in self:
+            remaining_qty = product_produce._get_todo(product_produce.production_id)
+            product_produce.is_pending_production = remaining_qty - product_produce.qty_producing > 0.0
+
+    def continue_production(self):
+        """ Save current wizard and directly opens a new. """
+        self.ensure_one()
+        self._record_production()
+        action = self.production_id.open_produce_product()
+        action['context'] = {'default_production_id': self.production_id.id}
+        return action
+
+    def action_generate_serial(self):
+        self.ensure_one()
+        product_produce_wiz = self.env.ref('mrp.view_mrp_product_produce_wizard', False)
+        self.finished_lot_id = self.env['stock.production.lot'].create({
+            'product_id': self.product_id.id,
+            'company_id': self.production_id.company_id.id
+        })
+        return {
+            'name': _('Produce'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mrp.product.produce',
+            'res_id': self.id,
+            'view_id': product_produce_wiz.id,
+            'target': 'new',
+        }
+
+    def do_produce(self):
+        """ Save the current wizard and go back to the MO. """
+        self.ensure_one()
+        self._record_production()
+        self._check_company()
+        return {'type': 'ir.actions.act_window_close'}
+
+    def _get_todo(self, production):
+        """ This method will return remaining todo quantity of production. """
+        main_product_moves = production.move_finished_ids.filtered(lambda x: x.product_id.id == production.product_id.id)
+        todo_quantity = production.product_qty - sum(main_product_moves.mapped('quantity_done'))
+        todo_quantity = todo_quantity if (todo_quantity > 0) else 0
+        return todo_quantity
+
+    def _record_production(self):
+        # Check all the product_produce line have a move id (the user can add product
+        # to consume directly in the wizard)
+        for line in self._workorder_line_ids():
+            if not line.move_id:
+                # Find move_id that would match
+                if line.raw_product_produce_id:
+                    moves = line.raw_product_produce_id.move_raw_ids
+                else:
+                    moves = line.finished_product_produce_id.move_finished_ids
+                move_id = moves.filtered(lambda m: m.product_id == line.product_id and m.state not in ('done', 'cancel'))
+                if not move_id:
+                    # create a move to assign it to the line
+                    production = line._get_production()
+                    if line.raw_product_produce_id:
+                        values = {
+                            'name': production.name,
+                            'reference': production.name,
+                            'product_id': line.product_id.id,
+                            'product_uom': line.product_uom_id.id,
+                            'location_id': production.location_src_id.id,
+                            'location_dest_id': self.product_id.property_stock_production.id,
+                            'raw_material_production_id': production.id,
+                            'group_id': production.procurement_group_id.id,
+                            'origin': production.name,
+                            'state': 'confirmed',
+                            'company_id': production.company_id.id,
+                        }
+                    else:
+                        values = production._get_finished_move_value(line.product_id.id, 0, line.product_uom_id.id)
+                    move_id = self.env['stock.move'].create(values)
+                line.move_id = move_id.id
+
+        # because of an ORM limitation (fields on transient models are not
+        # recomputed by updates in non-transient models), the related fields on
+        # this model are not recomputed by the creations above
+        self.invalidate_cache(['move_raw_ids', 'move_finished_ids'])
+
+        # Save product produce lines data into stock moves/move lines
+        for wizard in self:
+            quantity = wizard.qty_producing
+            if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
+                raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
+        self._update_finished_move()
+        self._update_moves()
+        self.production_id.filtered(lambda mo: mo.state == 'confirmed').write({
+            'date_start': datetime.now(),
+        })
 
 
-    def _get_product_qty(self, cr, uid, context=None):
-        """ To obtain product quantity
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param context: A standard dictionary
-        @return: Quantity
+class MrpProductProduceLine(models.TransientModel):
+    _name = 'mrp.product.produce.line'
+    _inherit = ["mrp.abstract.workorder.line"]
+    _description = "Record production line"
+
+    raw_product_produce_id = fields.Many2one('mrp.product.produce', 'Component in Produce wizard')
+    finished_product_produce_id = fields.Many2one('mrp.product.produce', 'Finished Product in Produce wizard')
+
+    @api.model
+    def _get_raw_workorder_inverse_name(self):
+        return 'raw_product_produce_id'
+
+    @api.model
+    def _get_finished_workoder_inverse_name(self):
+        return 'finished_product_produce_id'
+
+    def _get_final_lots(self):
+        product_produce_id = self.raw_product_produce_id or self.finished_product_produce_id
+        return product_produce_id.finished_lot_id | product_produce_id.finished_workorder_line_ids.mapped('lot_id')
+
+    def _get_production(self):
+        product_produce_id = self.raw_product_produce_id or self.finished_product_produce_id
+        return product_produce_id.production_id
+
+    @api.onchange('lot_id')
+    def _onchange_lot_id(self):
+        """ When the user is encoding a produce line for a tracked product, we apply some logic to
+        help him. This onchange will automatically switch `qty_done` to 1.0.
         """
-        if context is None:
-            context = {}
-        prod = self.pool.get('mrp.production').browse(cr, uid,
-                                context['active_id'], context=context)
-        done = 0.0
-        for move in prod.move_created_ids2:
-            if move.product_id == prod.product_id:
-                if not move.scrapped:
-                    done += move.product_uom_qty # As uom of produced products and production order should correspond
-        return prod.product_qty - done
-
-    def _get_product_id(self, cr, uid, context=None):
-        """ To obtain product id
-        @return: id
-        """
-        prod=False
-        if context and context.get("active_id"):
-            prod = self.pool.get('mrp.production').browse(cr, uid,
-                                    context['active_id'], context=context)
-        return prod and prod.product_id.id or False
-    
-    def _get_track(self, cr, uid, context=None):
-        product_id = self._get_product_id(cr, uid, context=context)
-        if not product_id:
-            return False
-        product = self.pool.get("product.product").browse(
-            cr, uid, product_id, context=context)
-        return product.track_all or product.track_production or False
-
-    _defaults = {
-         'product_qty': _get_product_qty,
-         'mode': lambda *x: 'consume_produce',
-         'product_id': _get_product_id,
-         'track_production': _get_track, 
-    }
-
-    def do_produce(self, cr, uid, ids, context=None):
-        production_id = context.get('active_id', False)
-        assert production_id, "Production Id should be specified in context as a Active ID."
-        data = self.browse(cr, uid, ids[0], context=context)
-        self.pool.get('mrp.production').action_produce(cr, uid, production_id,
-                            data.product_qty, data.mode, data, context=context)
-        return {}
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        if self.product_id.tracking == 'serial':
+            if self.lot_id:
+                self.qty_done = 1
+            else:
+                self.qty_done = 0

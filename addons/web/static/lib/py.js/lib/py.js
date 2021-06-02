@@ -273,8 +273,7 @@ var py = {};
         var Special = '[:;.,`@]';
         var Funny = group(Operator, Bracket, Special);
 
-        var ContStr = group("([uU])?'([^']*)'", '([uU])?"([^"]*)"');
-
+        var ContStr = group("([uU])?'([^\n'\\\\]*(?:\\\\.[^\n'\\\\]*)*)'", '([uU])?"([^\n"\\\\]*(?:\\\\.[^\n"\\\\]*)*)"');
         var PseudoToken = Whitespace + group(Number, Funny, ContStr, Name);
 
         var number_pattern = new RegExp('^' + Number + '$');
@@ -282,7 +281,7 @@ var py = {};
         var name_pattern = new RegExp('^' + Name + '$');
         var strip = new RegExp('^' + Whitespace);
         return function tokenize(s) {
-            var max=s.length, tokens = [], start, end = undefined;
+            var max=s.length, tokens = [], start, end;
             // /g flag makes repeated exec() have memory
             var pseudoprog = new RegExp(PseudoToken, 'g');
 
@@ -302,7 +301,6 @@ var py = {};
                 end = pseudoprog.lastIndex;
                 // strip leading space caught by Whitespace
                 var token = s.slice(start, end).replace(strip, '');
-                var initial = token[0];
 
                 if (number_pattern.test(token)) {
                     tokens.push(create(symbols['(number)'], {
@@ -310,9 +308,10 @@ var py = {};
                     }));
                 } else if (string_pattern.test(token)) {
                     var m = string_pattern.exec(token);
+                    var value = (m[3] !== undefined ? m[3] : m[5]);
                     tokens.push(create(symbols['(string)'], {
                         unicode: !!(m[2] || m[4]),
-                        value: (m[3] !== undefined ? m[3] : m[5])
+                        value: value
                     }));
                 } else if (token in symbols) {
                     var symbol;
@@ -862,6 +861,12 @@ var py = {};
             }
             return py.float.fromJSON(this._value + other._value);
         },
+        __mod__: function (other) {
+            if (!py.PY_isInstance(other, py.float)) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value % other._value);
+        },
         __neg__: function () {
             return py.float.fromJSON(-this._value);
         },
@@ -876,6 +881,12 @@ var py = {};
                 return py.NotImplemented;
             }
             return py.float.fromJSON(this._value * other._value);
+        },
+        __pow__: function (other) {
+            if (!py.PY_isInstance(other, py.float)) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value ** other._value);
         },
         __div__: function (other) {
             if (!py.PY_isInstance(other, py.float)) {
@@ -971,6 +982,12 @@ var py = {};
         __init__: function () {
             this._values = [];
         },
+        __len__: function () {
+            return this._values.length;
+        },
+        __nonzero__: function () {
+            return py.PY_size(this) > 0 ? py.True : py.False;
+        },
         __contains__: function (value) {
             for(var i=0, len=this._values.length; i<len; ++i) {
                 if (py.PY_isTrue(this._values[i].__eq__(value))) {
@@ -1000,7 +1017,12 @@ var py = {};
             return t;
         }
     });
-    py.list = py.tuple;
+    py.list = py.type('list', null, {
+        __nonzero__: function () {
+            return this.__len__ > 0 ? py.True : py.False;
+        },
+    });
+    _.defaults(py.list, py.tuple) // Copy attributes not redefined in type list
     py.dict = py.type('dict', null, {
         __init__: function () {
             this._store = {};
@@ -1014,6 +1036,12 @@ var py = {};
         },
         __setitem__: function (key, value) {
             this._store[key.__hash__()] = [key, value];
+        },
+        __len__: function () {
+            return Object.keys(this._store).length
+        },
+        __nonzero__: function () {
+            return py.PY_size(this) > 0 ? py.True : py.False;
         },
         get: function () {
             var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);

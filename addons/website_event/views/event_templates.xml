@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Event Assets Frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_event/static/src/scss/website_event.scss"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_event/static/src/js/website_geolocation.js"></script>
+        <script type="text/javascript" src="/website_event/static/src/js/website_event.js"></script>
+    </xpath>
+</template>
+
+<template id="assets_editor" inherit_id="website.assets_editor" name="Event Assets Editor">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js"></script>
+        <script type="text/javascript" src="/website_event/static/src/js/tours/website_event.js"></script>
+    </xpath>
+</template>
+
+<!-- Index -->
+<template id="index" name="Events">
+    <t t-call="website.layout">
+        <div id="wrap" class="o_wevent_index">
+            <!-- Options -->
+            <t t-set="opt_events_list_cards" t-value="request.website.viewref('website_event.opt_events_list_cards').active"/>
+            <t t-set="opt_events_list_columns" t-value="request.website.viewref('website_event.opt_events_list_columns').active"/>
+            <!-- Topbar -->
+            <t t-call="website_event.index_topbar"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_we_index_1" class="oe_structure"/>
+            <!-- Content -->
+            <div t-attf-class="o_wevent_events_list #{opt_events_list_cards and 'opt_event_list_cards_bg'}">
+                <div class="container">
+                    <div class="row">
+                        <div id="o_wevent_index_main_col" t-attf-class="col-md my-5 #{opt_events_list_columns and 'opt_events_list_columns' or 'opt_events_list_rows'}">
+                            <div class="row">
+                                <!-- Events List -->
+                                <t t-call="website_event.events_list"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_we_index_2" class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<!-- Index - OPTION - Sidebar -->
+<template id="opt_index_sidebar" inherit_id="website_event.index" active="True" customize_show="True" name="Show Sidebar">
+    <xpath expr="//div[@id='o_wevent_index_main_col']" position="after">
+        <t t-call="website_event.index_sidebar"/>
+    </xpath>
+</template>
+
+<!-- Index Topbar -->
+<template id="index_topbar" name="Topbar">
+    <nav class="navbar navbar-light border-top shadow-sm d-print-none">
+        <div class="container">
+            <span class="navbar-brand h4 my-0 mr-4">Events</span>
+            <ul class="o_wevent_index_topbar_filters nav mr-n2"/>
+            <t t-call="website_event.events_search_box">
+                <t t-set="_classes" t-value="'ml-auto pl-lg-3'"/>
+                <t t-set="_searches" t-value="searches"/>
+            </t>
+        </div>
+    </nav>
+</template>
+
+<!-- Filter - Date -->
+<template id="event_time" inherit_id="website_event.index_topbar" customize_show="True" name="Filter by Date">
+    <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
+        <li class="nav-item dropdown mr-2 my-1 my-lg-0">
+            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-calendar"/>
+                <t t-if="current_date" t-esc="current_date"/>
+                <t t-else="">Next Events</t>
+            </a>
+            <div class="dropdown-menu">
+                <t t-foreach="dates" t-as="date">
+                    <t t-if="date[3] or (date[0] in ('old','all'))">
+                        <a t-att-href="keep('/event', date=date[0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('date') == date[0] and 'active'}">
+                            <t t-esc="date[1]"/>
+                            <span t-if="date[3]" t-esc="date[3]" class="badge badge-pill badge-primary ml-3"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Filter - Category -->
+<template id="event_category" inherit_id="website_event.index_topbar" active="True" customize_show="True" name="Filter by Category">
+    <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
+        <li class="nav-item dropdown mr-2 my-1 my-lg-0">
+            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-folder-open"/>
+                <t t-if="current_type" t-esc="current_type.name"/>
+                <t t-else="">All Categories</t>
+            </a>
+            <div class="dropdown-menu">
+                <t t-foreach="types" t-as="type">
+                    <t t-if="type['event_type_id']">
+                        <a t-att-href="keep('/event', type=type['event_type_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('type') == str(type['event_type_id'] and type['event_type_id'][0]) and 'active'}">
+                            <t t-esc="type['event_type_id'][1]"/>
+                            <span t-esc="type['event_type_id_count']" class="badge badge-pill badge-primary ml-3"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Filter - Location -->
+<template id="event_location" inherit_id="website_event.index_topbar" active="True" customize_show="True" name="Filter by Country">
+    <xpath expr="//ul[hasclass('o_wevent_index_topbar_filters')]" position="inside">
+        <li class="nav-item dropdown mr-2 my-1 my-lg-0">
+            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-map-marker"/>
+                <t t-if="current_country" t-esc="current_country.name"/>
+                <t t-else="">All countries</t>
+            </a>
+            <div class="dropdown-menu">
+                <t t-foreach="countries" t-as="country">
+                    <t t-if="country['country_id']">
+                        <a t-att-href="keep('/event', country=country['country_id'][0])" t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{searches.get('country') == str(country['country_id'] and country['country_id'][0]) and 'active'}">
+                            <t t-esc="country['country_id'][1]"/>
+                            <span t-esc="country['country_id_count']" class="badge badge-pill badge-primary ml-auto"/>
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <a t-att-href="keep('/event', country='online')" t-attf-class="dropdown-item d-flex align-items-center #{searches.get('country') == 'online' and 'active'}">
+                            <span>Online Events</span>
+                            <span t-esc="country['country_id_count']" class="badge badge-pill badge-primary ml-3"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Search Box -->
+<template id="events_search_box" inherit_id="website.website_search_box" primary="True">
+    <xpath expr="//div[@role='search']" position="replace">
+        <form t-attf-class="o_wevent_event_searchbar_form o_wait_lazy_js my-1 my-lg-0 #{_classes}"
+              t-att-action="action if action else '/event'" method="get">
+            <t t-set="search" t-value="search or _searches and _searches['search']"/>
+            <t>$0</t>
+            <t t-foreach="_searches" t-as="search">
+                <input t-if="search != 'search' and search_value != 'all'" type="hidden"
+                    t-att-name="search" t-att-value="search_value"/>
+            </t>
+            <t t-raw="0"/>
+        </form>
+    </xpath>
+</template>
+
+<!-- Index - Events list -->
+<template id="events_list" name="Events list">
+    <!-- Options -->
+    <t t-set="opt_index_sidebar" t-value="request.website.viewref('website_event.opt_index_sidebar').active"/>
+    <t t-if="opt_events_list_columns" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-md-6' or 'col-md-6 col-lg-4'"/>
+    <t t-else="" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-12' or 'col-xl-10 offset-xl-1'"/>
+    <!-- No events -->
+    <t t-if="not event_ids">
+        <div class="col-12">
+            <div class="h2 mb-3">No events found.</div>
+            <div class="alert alert-info text-center" groups="event.group_event_manager">
+                <p class="m-0">Use the top button '<b>+ New</b>' to create an event.</p>
+            </div>
+        </div>
+    </t>
+    <!-- List -->
+    <div t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size} mb-4">
+        <article t-attf-class="#{opt_events_list_cards and 'card border-0 shadow-sm'}" itemscope="itemscope" itemtype="http://schema.org/Event">
+            <div class="row no-gutters">
+                <!-- Header -->
+                <header t-attf-class="overflow-hidden bg-secondary #{opt_events_list_columns and 'col-12 rounded-top' or 'col-sm-4 col-lg-3 rounded-left'} #{(not opt_events_list_cards) and 'rounded shadow'} #{(not opt_events_list_cards and not opt_events_list_columns) and 'rounded-top'}">
+                    <!-- Image + Link -->
+                    <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="d-block h-100 w-100">
+                        <t t-call="website.record_cover">
+                            <t t-set="_record" t-value="event"/>
+
+                            <!-- Short Date -->
+                            <div class="o_wevent_event_date position-absolute bg-white shadow-sm">
+                                <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'LLL'}" class="o_wevent_event_month"/>
+                                <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'format': 'dd'}" class="o_wevent_event_day"/>
+                            </div>
+                            <!-- Participating -->
+                            <small t-if="event.is_participating" class="o_wevent_participating bg-success">
+                                <i class="fa fa-check mr-2"/>Registered
+                            </small>
+                            <!-- Unpublished -->
+                            <small t-if="not event.website_published" class="o_wevent_unpublished bg-danger">
+                                <i class="fa fa-ban mr-2"/>Unpublished
+                            </small>
+                        </t>
+                    </a>
+                </header>
+                <div t-attf-class="#{opt_events_list_columns and 'col-12' or 'col'}">
+                    <!-- Body -->
+                    <main t-attf-class="#{opt_events_list_cards and 'card-body' or (opt_events_list_columns and 'py-3' or 'px-4')}">
+                        <!-- Title -->
+                        <h5 t-attf-class="card-title mt-2 mb-0 text-truncate #{(not event.website_published) and 'text-danger'}">
+                            <a t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-reset text-decoration-none" itemprop="url">
+                                <span t-field="event.name" itemprop="name"/>
+                            </a>
+                        </h5>
+                        <!-- Organizer -->
+                        <div t-if="event.organizer_id" class="mb-3">
+                            <small class="text-muted text-truncate">Organizer: <span t-field="event.organizer_id" itemprop="organizer"/></small>
+                        </div>
+                        <!-- Location -->
+                        <div t-if="event.is_online">Online</div>
+                        <div t-else="" itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                        <!-- Start Date & Time -->
+                        <time itemprop="startDate" t-att-datetime="event.date_begin">
+                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}"/> -
+                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                        </time>
+                    </main>
+                    <!-- Footer -->
+                    <footer t-attf-class="small #{opt_events_list_cards and 'card-footer' or ((not opt_events_list_columns) and 'border-top mx-4 mt-auto pt-2' or 'border-top py-2')}">
+                        <div itemprop="price"><span content="0" class="font-weight-bold text-uppercase"></span></div>
+                    </footer>
+                </div>
+            </div>
+        </article>
+    </div>
+    <!-- Pager -->
+    <div class="form-inline justify-content-center my-3">
+        <t t-call="website.pager"/>
+    </div>
+</template>
+
+<template id="opt_events_list_columns" inherit_id="website_event.events_list" active="True" customize_show="True" name="Layout • Columns"/>
+
+<template id="opt_events_list_cards" inherit_id="website_event.events_list" active="True" customize_show="True" name="'Cards' Design"/>
+
+<template id="opt_events_list_categories" inherit_id="website_event.events_list" active="True" customize_show="True" name="Show categories">
+    <xpath expr="//main/*" position="before">
+        <a t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'float-right'}" t-field="event.event_type_id"/>
+    </xpath>
+</template>
+
+<!-- Index - Sidebar -->
+<template id="index_sidebar" name="Sidebar">
+    <div id="o_wevent_index_sidebar" class="col-lg-4 ml-lg-3 ml-xl-5 my-5"/>
+</template>
+
+<!-- Index - Sidebar - About us -->
+<template id="index_sidebar_about_us" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="About us" priority="20">
+    <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
+        <div class="o_wevent_sidebar_block">
+            <h6 class="o_wevent_sidebar_title">About us</h6>
+            <p>Use this paragrah to write a short text about your events or company.</p>
+        </div>
+        <div id="oe_structure_website_event_about_us_1" class="oe_structure"/>
+    </xpath>
+</template>
+
+<!-- Index - Sidebar - Follow us -->
+<template id="index_sidebar_follow_us" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="Follow us" priority="30">
+    <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
+        <div class="o_wevent_sidebar_block">
+            <h6 class="o_wevent_sidebar_title">Follow Us</h6>
+            <div class="o_wevent_sidebar_social mx-n1">
+                <a t-if="website.social_facebook" t-att-href="website.social_facebook" class="o_wevent_social_link"><i class="fa fa-facebook text-facebook" aria-label="Facebook" title="Facebook"/></a>
+                <a t-if="website.social_twitter" t-att-href="website.social_twitter" class="o_wevent_social_link"><i class="fa fa-twitter text-twitter" aria-label="Twitter" title="Twitter"/></a>
+                <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" class="o_wevent_social_link"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
+                <a t-if="website.social_youtube" t-att-href="website.social_youtube" class="o_wevent_social_link"><i class="fa fa-youtube-play text-youtube" aria-label="Youtube" title="Youtube"/></a>
+                <a t-if="website.social_github" t-att-href="website.social_github" class="o_wevent_social_link"><i class="fa fa-github text-github" aria-label="Github" title="Github"/></a>
+                <a t-if="website.social_instagram" t-att-href="website.social_instagram" class="o_wevent_social_link"><i class="fa fa-instagram text-instagram" aria-label="Instagram" title="Instagram"/></a>
+            </div>
+        </div>
+        <div id="oe_structure_website_event_follow_us_1" class="oe_structure"/>
+    </xpath>
+</template>
+
+<!-- Index - Sidebar - Photos -->
+<template id="index_sidebar_photos" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="Photos" priority="40">
+    <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
+        <h6 class="o_wevent_sidebar_title">Photos</h6>
+        <a href="/event">
+            <figure class="o_wevent_sidebar_block o_wevent_sidebar_figure figure">
+                <img class="figure-img img-fluid rounded" src="/website_event/static/src/img/event_past_0.jpg" alt=""/>
+                <figcaption class="figure-caption">A past event</figcaption>
+            </figure>
+        </a>
+        <a href="/event">
+            <figure class="o_wevent_sidebar_block o_wevent_sidebar_figure figure">
+                <img class="figure-img img-fluid rounded" src="/website_event/static/src/img/event_training_0.jpg" alt=""/>
+                <figcaption class="figure-caption">Our Trainings</figcaption>
+            </figure>
+        </a>
+    </xpath>
+</template>
+
+<!-- Index - Sidebar - Categories -->
+<template id="index_sidebar_categories" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="Categories" priority="50">
+    <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
+        <div class="o_wevent_sidebar_block">
+            <h6 class="o_wevent_sidebar_title">Categories</h6>
+            <t t-foreach="types" t-as="type">
+                <t t-if="type['event_type_id']">
+                    <a t-att-href="keep('/event', type=type['event_type_id'][0])" class="badge badge-secondary o_wevent_badge mb-2"><t t-esc="type['event_type_id'][1]"/></a>
+                </t>
+            </t>
+        </div>
+    </xpath>
+</template>
+
+<!-- Index - Sidebar - Quotes -->
+<template id="index_sidebar_quotes" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="Quotes" priority="60">
+    <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
+        <div class="o_wevent_sidebar_block card">
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p><em>Write here a quote from one of your attendees. It gives confidence in your events.</em></p>
+                    <footer class="blockquote-footer">Author</footer>
+                </blockquote>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- Index - Sidebar - Snippet - Country Events -->
+<template id="index_sidebar_country_event" inherit_id="website_event.index_sidebar" active="True" customize_show="True" name="Country Events" priority="70">
+    <xpath expr="//div[@id='o_wevent_index_sidebar']" position="inside">
+        <div class="o_wevent_sidebar_block">
+            <t t-call="website_event.s_country_events"/>
+        </div>
+    </xpath>
+</template>
+
+<!-- Event -->
+<template id="layout" name="Event">
+    <t t-call="website.layout">
+        <div id="wrap" class="o_wevent_event js_event">
+            <t t-if="not event.menu_id">
+                <nav class="navbar navbar-light border-top shadow-sm d-print-none">
+                    <div class="container">
+                        <a href="/event" class="navbar-brand h4 my-0 mr-4">
+                            <i class="fa fa-long-arrow-left text-primary mr-2"/>All Events
+                        </a>
+                        <ul class="navbar-nav flex-row">
+                            <li class="nav-item mr-3">
+                                <a t-attf-href="/event?type=#{event.event_type_id.id}" t-if="event.event_type_id" class="nav-link">
+                                    <i class="fa fa-folder-open text-primary mr-2"/><t t-esc="event.event_type_id.name"/>
+                                </a>
+                            </li>
+                            <li class="nav-item mr-3">
+                                <a t-if="event.country_id" t-attf-href="/event?country=#{event.country_id.id}" class="nav-link">
+                                    <i class="fa fa-map-marker text-primary mr-2"/><t t-esc="event.country_id.name"/>
+                                </a>
+                            </li>
+                        </ul>
+                        <t t-call="website_event.events_search_box">
+                            <t t-set="_classes" t-value="'ml-auto'"/>
+                            <t t-set="_searches" t-value="searches"/>
+                        </t>
+                    </div>
+                </nav>
+            </t>
+            <t t-else="">
+                <nav class="navbar navbar-light border-top shadow-sm navbar-expand-md">
+                    <div class="container">
+                        <a href="#" t-field="event.name" class="navbar-brand h4 my-0 mr-4"/>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#o_wevent_event_submenu" aria-controls="o_wevent_event_submenu" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div id="o_wevent_event_submenu" class="collapse navbar-collapse">
+                            <ul class="navbar-nav w-100" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                                <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                                    <t t-call="website.submenu">
+                                        <t t-set="item_class" t-value="'nav-item'"/>
+                                        <t t-set="link_class" t-value="'nav-link'"/>
+                                    </t>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </t>
+            <t t-raw="0"/>
+            <div class="oe_structure" id="oe_structure_website_event_layout_1" t-att-data-editor-sub-message="'Following content will appear on all events.'"/>
+        </div>
+    </t>
+</template>
+
+<template id="event_details" name="Event Header">
+    <t t-call="website_event.layout">
+        <div name="event" itemscope="itemscope" itemtype="http://schema.org/Event">
+            <t t-call="website.record_cover">
+                <t t-set="_record" t-value="event"/>
+                <t t-set="use_filters" t-value="True"/>
+                <t t-set="use_size" t-value="True"/>
+                <t t-set="use_text_size" t-value="True"/>
+                <t t-set="use_text_align" t-value="True"/>
+
+                <div class="container d-flex flex-column flex-grow-1 justify-content-around">
+                    <div class="o_wevent_event_title">
+                        <span t-if="event.is_participating" class="badge badge-success o_wevent_badge"><i class="fa fa-check mr-2"/>Registered</span>
+                        <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
+                        <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
+                    </div>
+                </div>
+                <div class="container mb-5">
+                    <t t-call="website_event.registration_template"/>
+                </div>
+            </t>
+            <t t-raw="0"/>
+        </div>
+    </t>
+</template>
+
+<!-- Event - Description -->
+<template id="event_description_full" name="Event Description">
+    <t t-call="website_event.event_details">
+        <section class="bg-200">
+            <div class="container">
+                <div class="row no-gutters mt-n5 pb-5">
+                    <!-- Description -->
+                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white rounded-left p-5 shadow-sm">
+                        <span t-field="event.description" itemprop="description"/>
+                    </div>
+                    <div class="col-lg-4 bg-light rounded-right shadow-sm d-print-none">
+                        <!-- Date & Time -->
+                        <div class="o_wevent_sidebar_block">
+                            <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
+                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
+                            <h4 class="my-1" t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}" itemprop="startDate" t-att-datetime="event.date_begin"/>
+                            <t t-if="not event.is_one_day">Start -</t>
+                            <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                            <t t-if="event.is_one_day">
+                                <i class="fa fa-long-arrow-right mx-1"/>
+                                <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
+                                <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'EEEE'}"/>
+                                <h4 class="my-1" t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'date_only': 'true', 'format': 'long'}"/>
+                                <t t-if="not event.is_one_day">End -</t>
+                                <span t-field="event.with_context(tz=event.date_tz).date_end" t-options="{'time_only': 'true', 'format': 'short'}"/>
+                            </t>
+                            <!-- Timezone -->
+                            <small t-esc="event.date_tz" class="d-block my-3 text-muted"/>
+
+                            <div class="dropdown">
+                                <i class="fa fa-calendar mr-1"/>
+                                <a href="#" role="button" data-toggle="dropdown">Add to Calendar</a>
+                                <div class="dropdown-menu">
+                                    <a t-att-href="iCal_url" class="dropdown-item">iCal/Outlook</a>
+                                    <a t-att-href="google_url" class="dropdown-item" target="_blank">Google</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Location -->
+                        <t t-if="not event.is_online">
+                            <div t-if="event.address_id" class="o_wevent_sidebar_block">
+                                <h6 class="o_wevent_sidebar_title">Location</h6>
+                                <h4 t-field="event.address_id" class="" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["name"]
+                                }'/>
+                                <div itemprop="location" class="mb-2" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["address"],
+                                    "no_marker": True
+                                }'/>
+                                <div class="mb-3" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["phone", "mobile", "email"]
+                                }'/>
+                                <i class="fa fa-map-marker fa-fw" role="img"/>
+                                <a t-att-href="event.google_map_link()" target="_blank">Get the direction</a>
+                            </div>
+                        </t>
+                        <!-- Organizer -->
+                        <div t-if="event.organizer_id" class="o_wevent_sidebar_block">
+                            <h6 class="o_wevent_sidebar_title">Organizer</h6>
+                            <h4 t-field="event.organizer_id"/>
+                            <div itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+                        </div>
+                        <!-- Social -->
+                        <div class="o_wevent_sidebar_block">
+                            <h6 class="o_wevent_sidebar_title">SHARE</h6>
+                            <p class="mb-2">Find out what people see and say about this event, and join the conversation.</p>
+                            <p t-if="event.twitter_hashtag" class="font-weight-bold">Hashtag: <a t-att-href="'http://twitter.com/search?q=%23'+event.twitter_hashtag" target="_blank">#<span t-field="event.twitter_hashtag"/></a></p>
+                            <t t-call="website.s_share">
+                                <t t-set="_no_title" t-value="True"/>
+                                <t t-set="_classes">o_wevent_sidebar_social mx-n1</t>
+                                <t t-set="_link_classes">o_wevent_social_link</t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-unstyled" id="comment">
+                    <li t-foreach="event.website_message_ids" t-as="comment" class="media mt-3">
+                        <div class="media-body">
+                            <t t-call="website.publish_management">
+                                <t t-set="object" t-value="comment"/>
+                                <t t-set="publish_edit" t-value="True"/>
+                            </t>
+                            <t t-raw="comment.body"/>
+                            <small class="float-right muted text-right">
+                                <div t-field="comment.author_id"/>
+                                <div t-field="comment.date" t-options='{"hide_seconds":"True"}'/>
+                            </small>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </t>
+</template>
+
+<!-- Event - Registration -->
+<template id="registration_template">
+    <t t-set="tickets_available" t-value="event.seats_available or event.seats_availability == 'unlimited'"/>
+    <t t-set="buy" t-value="tickets_available and event.state == 'confirm'"/>
+    <form t-if="buy" id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer" class="mb-5">
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+        <div id="o_wevent_tickets" class="bg-white rounded shadow-sm">
+            <t t-id="tickets" t-call="website_event.ticket">
+                <t t-set="name">Registration</t>
+                <t t-set="price">
+                    <span content="0" itemprop="price" class="font-weight-bold text-uppercase">Free</span>
+                </t>
+                <t t-if="event.date_begin">
+                    <t t-set="registration_end">
+                        End on <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'medium'}"/>
+                    </t>
+                </t>
+                <t t-set="quantity">
+                    <select name="nb_register-0" class="custom-select w-auto">
+                        <t t-foreach="range(0, (event.seats_availability == 'unlimited' or event.seats_available &gt; 9) and 10 or event.seats_available+1)" t-as="nb">
+                            <option t-esc="nb" t-att-selected="nb == 1 and 'selected'"/>
+                        </t>
+                    </select>
+                </t>
+            </t>
+        </div>
+    </form>
+    <div t-if="not buy" class="alert alert-info mb-5" role="status">
+        <span t-if="event.state == 'draft'" itemprop="availability" content="http://schema.org/OutOfStock">
+            <b>Event registration not yet started.</b>
+        </span>
+        <span t-if="event.state != 'draft'" itemprop="availability" content="http://schema.org/Discontinued">
+            <b>Event registration is closed.</b>
+        </span>
+        <a t-if="request.env.user.has_group('event.group_event_manager')" t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event" class="float-right">
+            <i class="fa fa-pencil mr-2" role="img" aria-label="Create" title="Create"/><em>Configure Event Registration</em>
+        </a>
+    </div>
+</template>
+
+<template id="ticket" name="Ticket offer template">
+    <div class="row p-2 pl-3">
+        <div class="col-lg-8 d-flex flex-columns align-items-center" itemscope="itemscope" itemtype="http://schema.org/Offer">
+            <h6 t-raw="name" itemprop="name" class="my-0 pr-3"/>
+            <div class="border-left border-right px-3"><t t-raw="price"/></div>
+            <small t-raw="registration_end" class="text-muted ml-3" itemprop="availabilityEnds"/>
+            <div class="ml-auto">
+                <t t-if="tickets_available">
+                    <span class="font-weight-bold align-middle pr-2">Qty</span>
+                    <link itemprop="availability" content="http://schema.org/InStock"/>
+                    <t t-raw="quantity"/>
+                </t>
+                <t t-else="">
+                    <span itemprop="availability" content="http://schema.org/SoldOut" class="text-danger">
+                        <i class="fa fa-ban mr-2"/>Sold Out
+                    </span>
+                </t>
+            </div>
+        </div>
+        <div class="col-lg-4 pt-3 pt-lg-0 pl-2 pl-lg-0">
+            <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}">Register</button>
+        </div>
+    </div>
+    <div t-if="description" class="row mx-0">
+        <div class="col-12 bg-200 rounded-bottom">
+            <p itemprop="description" t-raw="description" class="small my-2"/>
+        </div>
+    </div>
+</template>
+
+<template id="registration_attendee_details" name="Registration Attendee Details">
+    <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post" class="js_website_submit_form">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="modal-content">
+                    <div class="modal-header align-items-center">
+                        <h4 class="modal-title">Attendees</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&amp;times;</span></button>
+                    </div>
+                    <t t-set="counter_type" t-value="1"/>
+                    <t t-set="counter" t-value="0"/>
+                    <t t-foreach="tickets" t-as="ticket" t-if="availability_check">
+                        <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
+                            <t t-set="counter" t-value="counter + 1"/>
+                            <div class="modal-body bg-light border-bottom">
+                                <h5 class="mt-1 pb-2 border-bottom">Ticket #<span t-esc="counter"/> <small class="text-muted">- <span t-esc="ticket['name']"/></small></h5>
+                                <div class="row">
+                                    <div class="col-lg my-2">
+                                        <label>Name</label>
+                                        <input class="form-control" type="text" t-attf-name="#{counter}-name" required="This field is required"/>
+                                    </div>
+                                    <div class="col-lg my-2">
+                                        <label>Email</label>
+                                        <input class="form-control" type="email" t-attf-name="#{counter}-email" required="This field is required"/>
+                                    </div>
+                                    <div class="col-lg my-2">
+                                        <label>Phone <small>(Optional)</small></label>
+                                        <input class="form-control" type="tel" t-attf-name="#{counter}-phone"/>
+                                    </div>
+                                    <input class="d-none" type="text" t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-set="counter_type" t-value="counter_type + 1"/>
+                    </t>
+                    <t t-if="not availability_check">
+                        <strong> You ordered more tickets than available seats</strong>
+                    </t>
+                    <div class="modal-footer border-0 justify-content-between">
+                        <button type="button" class="btn btn-secondary js_goto_event" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" t-if="availability_check">Continue</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template id="registration_complete" name="Registration Completed">
+    <t t-call="website_event.layout">
+        <div class="container my-5">
+            <div class="row">
+                <div class="col-12">
+                    <h2>Registration confirmed!</h2>
+                    <table class="table table-striped my-4">
+                        <thead class="bg-secondary">
+                            <tr>
+                                <th>Name</th>
+                                <th>E-mail</th>
+                                <th>Phone</th>
+                                <th>Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="attendees" t-as="attendee">
+                                <tr>
+                                    <td><t t-if="attendee.name" t-esc="attendee.name"/><t t-else="">N/A</t></td>
+                                    <td><t t-if="attendee.email" t-esc="attendee.email"/><t t-else="">N/A</t></td>
+                                    <td><t t-if="attendee.phone" t-esc="attendee.phone"/><t t-else="">N/A</t></td>
+                                    <td><t t-esc="attendee.id"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-8">
+                    <h3><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h3>
+                    <p><b>Start</b> <span itemprop="startDate" t-esc="event.date_begin_located"/><br/> <b>End</b> <span itemprop="endDate" t-esc="event.date_end_located"/></p>
+                    <div id="add_to_calendar" class="mt-4">
+                        <a role="button" class="btn btn-primary" t-att-href="iCal_url">
+                            <i class="fa fa-fw fa-calendar"/> Add to iCal/Outlook
+                        </a>
+                        <a role="button" class="btn btn-primary" t-att-href="google_url" target='_blank'>
+                            <i class="fa fa-fw fa-calendar"/> Add to Google Calendar
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h4 t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
+                        "widget": "contact",
+                        "fields": ["name"]
+                        }'/>
+                    <a itemprop="location" t-att-href="event.google_map_link()" target="_BLANK" temprop="location" t-field="event.address_id" t-options='{
+                        "widget": "contact",
+                        "fields": ["address"]
+                        }'/>
+                    <div itemprop="location" t-field="event.address_id" t-options='{
+                        "widget": "contact",
+                        "fields": ["phone", "mobile", "email"]
+                        }'/>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="404" name="Event 404">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure oe_empty">
+                <div class="container">
+                    <h1 class="mt-4">Event not found!</h1>
+                    <p>Sorry, the requested event is not available anymore.</p>
+                    <p><a t-attf-href="/event">Return to the event list.</a></p>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- Multipage event - Default template when creating a new page -->
+<template id="default_page">
+    <t t-call="website.layout">
+        <div class="oe_structure oe_empty"/>
+    </t>
+</template>
+
+<!-- Multipage event - Default template for the Introduction page -->
+<template id="template_intro">
+    <t t-call="website_event.layout">
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 s_title pt48 pb48" data-name="Title">
+                        <h1>Introduction</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="oe_structure oe_empty" id="oe_structure_website_event_intro_1"/>
+    </t>
+</template>
+
+<!-- Multipage event - Default template for the Location page -->
+<template id="template_location">
+    <t t-call="website_event.layout">
+        <div class="oe_structure" id="oe_structure_website_event_location_1"/>
+        <section class="pt32 pb32">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="o_page_header mb-3">Event Location</h1>
+                        <h4 class="mb-3" t-field="event.address_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["name"],
+                        }'/>
+                        <div class="mb-3" t-field="event.address_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["address"],
+                            "no_marker": True
+                        }'/>
+                        <div class="mb-3" t-field="event.address_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["phone", "mobile", "email"],
+                            "no_marker": True
+                        }'/>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="oe_structure" id="oe_structure_website_event_location_2"/>
+    </t>
+</template>
+
+<!-- User Navbar -->
+<template id="user_navbar_inherit_website_event" inherit_id="website.user_navbar">
+    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_event']" position="attributes">
+        <attribute name="name"/>
+        <attribute name="t-att-data-module-id"/>
+        <attribute name="t-att-data-module-shortdesc"/>
+        <attribute name="groups">event.group_event_manager</attribute>
+    </xpath>
+</template>
+
+<!-- User Navbar - Edit Options -->
+<template id="event_edit_options" inherit_id="website.user_navbar" name="Edit Event Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'event.event'" t-set="action" t-value="'event.action_event_view'"/>
+    </xpath>
+</template>
+
+</odoo>

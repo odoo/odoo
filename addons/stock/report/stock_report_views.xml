@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            string="Picking Operations"
+            id="action_report_picking"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="stock.report_picking"
+            file="stock.report_picking_operations"
+            print_report_name="'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
+        />
+        <report
+            string="Delivery Slip"
+            id="action_report_delivery"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="stock.report_deliveryslip"
+            file="stock.report_deliveryslip"
+            print_report_name="'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
+        />
+        <report
+            string="Inventory"
+            id="action_report_inventory"
+            model="stock.inventory"
+            report_type="qweb-pdf"
+            name="stock.report_inventory"
+            file="stock.report_inventory"
+            print_report_name="'Inventory - %s' % (object.name)"
+        />
+        <report
+            string="Package Barcode with Content"
+            id="action_report_quant_package_barcode"
+            model="stock.quant.package"
+            report_type="qweb-pdf"
+            name="stock.report_package_barcode"
+            file="stock.report_package_barcode"/>
+        <report
+            string="Package Barcode (PDF)"
+            id="action_report_quant_package_barcode_small"
+            model="stock.quant.package"
+            report_type="qweb-pdf"
+            name="stock.report_package_barcode_small"
+            file="stock.report_package_barcode"/>
+        <report
+            string="Location Barcode"
+            id="action_report_location_barcode"
+            model="stock.location"
+            report_type="qweb-pdf"
+            name="stock.report_location_barcode"
+            file="stock.report_location_barcode"
+            print_report_name="'Location - %s' % object.name"
+        />
+        <report
+            string="Lot/Serial Number (PDF)"
+            id="action_report_lot_label"
+            model="stock.production.lot"
+            report_type="qweb-pdf"
+            name="stock.report_lot_label"
+            file="stock.report_lot_label"
+            print_report_name="'Lot-Serial - %s' % object.name"
+        />
+        <report
+            string="Operation type (PDF)"
+            id="action_report_picking_type_label"
+            model="stock.picking.type"
+            report_type="qweb-pdf"
+            name="stock.report_picking_type_label"
+            file="stock.report_picking_type_label"
+            print_report_name="'Operation-type - %s' % object.name"
+        />
+        <report
+            id="action_report_stock_rule"
+            model="product.template"
+            string="Product Routes Report"
+            report_type="qweb-html"
+            name="stock.report_stock_rule"
+            file="stock.report_stock_rule"
+            menu="False"
+        />
+        <report id="label_product_template"
+            model="product.template"
+            string="Product Label (ZPL)"
+            name="stock.label_product_template_view"
+            file="stock.label_product_template_view"
+            report_type="qweb-text"
+        />
+        <report id="label_product_product"
+            model="product.product"
+            string="Product Label (ZPL)"
+            name="stock.label_product_product_view"
+            file="stock.label_product_product_view"
+            report_type="qweb-text"
+            />
+        <report id="label_barcode_product_template"
+            model="product.template"
+            string="Product Barcode (ZPL)"
+            name="stock.label_barcode_product_template_view"
+            file="stock.label_barcode_product_template_view"
+            report_type="qweb-text"
+        />
+        <report id="label_barcode_product_product"
+            model="product.product"
+            string="Product Barcode (ZPL)"
+            name="stock.label_barcode_product_product_view"
+            file="stock.label_barcode_product_product_view"
+            report_type="qweb-text"
+        />
+        <report id="label_lot_template"
+            model="stock.production.lot"
+            string="Lot/Serial Number (ZPL)"
+            name="stock.label_lot_template_view"
+            file="stock.label_lot_template_view"
+            report_type="qweb-text"
+        />
+        <report id="action_label_transfer_template_zpl"
+            model="stock.picking"
+            string="Barcodes (ZPL)"
+            name="stock.label_transfer_template_view_zpl"
+            file="stock.label_transfer_template_view_zpl"
+            report_type="qweb-text"
+        />
+        <report id="action_label_transfer_template_pdf"
+            model="stock.picking"
+            string="Barcodes (PDF)"
+            name="stock.label_transfer_template_view_pdf"
+            file="stock.label_transfer_template_view_pdf"
+            report_type="qweb-pdf"
+        />
+        <report id="label_package_template"
+            model="stock.quant.package"
+            string="Package Barcode (ZPL)"
+            name="stock.label_package_template_view"
+            file="stock.label_package_template_view"
+            report_type="qweb-text"
+        />
+        <report id="label_product_packaging"
+            model="product.packaging"
+            string="Product Packaging (ZPL)"
+            name="stock.label_product_packaging_view"
+            file="stock.label_product_packaging_view"
+            report_type="qweb-text"
+        />
+        <report id="label_picking_type"
+            model="stock.picking.type"
+            string="Operation type (ZPL)"
+            name="stock.label_picking_type_view"
+            file="stock.label_picking_type_view"
+            report_type="qweb-text"
+        />
+    </data>
+</odoo>
