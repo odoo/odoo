@@ -312,7 +312,7 @@ class SaleOrderLine(models.Model):
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
 
     product_packaging_id = fields.Many2one('product.packaging', string='Packaging', default=False, domain="[('sales', '=', True), ('product_id','=',product_id)]", check_company=True)
-    product_packaging_qty = fields.Float('Packaging Quantity')
+    product_packaging_qty = fields.Float('Pkg Qty')
 
     @api.depends('state')
     def _compute_product_uom_readonly(self):
