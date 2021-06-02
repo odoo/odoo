@@ -73,13 +73,13 @@ class AccountPaymentRegister(models.TransientModel):
         readonly=False, store=True,
         compute='_compute_payment_method_id',
         domain="[('id', 'in', available_payment_method_ids)]",
-        help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
-        "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
-        "Check: Pay bill by check and print it from Odoo.\n"\
-        "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"\
-        "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed ")
-    available_payment_method_ids = fields.Many2many('account.payment.method',
-        compute='_compute_payment_method_fields')
+        help="Manual : Pay or Get paid by any method outside of Odoo."
+        "Payment Acquirers : Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online."
+        "Check: Pay bills by check and print it from Odoo."
+        "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary."
+        "SEPA Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary"
+        "SEPA Direct Debit : Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary")
+    available_payment_method_ids = fields.Many2many('account.payment.method', compute='_compute_payment_method_fields')
     hide_payment_method = fields.Boolean(
         compute='_compute_payment_method_fields',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
@@ -296,9 +296,9 @@ class AccountPaymentRegister(models.TransientModel):
             payment_type = batches[0]['key_values']['payment_type']
 
             if payment_type == 'inbound':
-                available_payment_methods = wizard.journal_id.inbound_payment_method_ids
+                available_payment_methods = wizard.journal_id.inbound_payment_method_line_ids.mapped('payment_method_id')
             else:
-                available_payment_methods = wizard.journal_id.outbound_payment_method_ids
+                available_payment_methods = wizard.journal_id.outbound_payment_method_line_ids.mapped('payment_method_id')
 
             # Select the first available one by default.
             if available_payment_methods:
@@ -307,26 +307,26 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.payment_method_id = False
 
     @api.depends('payment_type',
-                 'journal_id.inbound_payment_method_ids',
-                 'journal_id.outbound_payment_method_ids')
+                 'journal_id.inbound_payment_method_line_ids',
+                 'journal_id.outbound_payment_method_line_ids')
     def _compute_payment_method_fields(self):
         for wizard in self:
             if wizard.payment_type == 'inbound':
-                wizard.available_payment_method_ids = wizard.journal_id.inbound_payment_method_ids
+                wizard.available_payment_method_ids = wizard.journal_id.inbound_payment_method_line_ids.mapped('payment_method_id')
             else:
-                wizard.available_payment_method_ids = wizard.journal_id.outbound_payment_method_ids
+                wizard.available_payment_method_ids = wizard.journal_id.outbound_payment_method_line_ids.mapped('payment_method_id')
 
             wizard.hide_payment_method = len(wizard.available_payment_method_ids) == 1 and wizard.available_payment_method_ids.code == 'manual'
 
     @api.depends('payment_type',
-                 'journal_id.inbound_payment_method_ids',
-                 'journal_id.outbound_payment_method_ids')
+                 'journal_id.inbound_payment_method_line_ids',
+                 'journal_id.outbound_payment_method_line_ids')
     def _compute_payment_method_id(self):
         for wizard in self:
             if wizard.payment_type == 'inbound':
-                available_payment_methods = wizard.journal_id.inbound_payment_method_ids
+                available_payment_methods = wizard.journal_id.inbound_payment_method_line_ids.mapped('payment_method_id')
             else:
-                available_payment_methods = wizard.journal_id.outbound_payment_method_ids
+                available_payment_methods = wizard.journal_id.outbound_payment_method_line_ids.mapped('payment_method_id')
 
             # Select the first available one by default.
             if available_payment_methods:
