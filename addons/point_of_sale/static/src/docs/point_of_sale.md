@@ -5,167 +5,106 @@ OWL Framework.
 
 ## Loading POS Data
 
-### The Basics
 
 For the POS UI to properly function, backend data is initially loaded. The entry
 point is the `load_pos_data` in the model `pos.session`. This method is the
-caller of all the registered `loader` methods. `loader` methods are responsible
-in populating the objects that will be sent by `load_pos_data` to properly
-instantiate the POS UI.
+caller of all the registered `pos_loader` methods. `pos_loader` methods are
+responsible in populating the objects that will be sent by `load_pos_data` to
+properly instantiate the POS UI.
 
-A `loader` method is just a method in `pos.session` model but it is decorated
-using the `loader` decorator. The `loader` decorator requires the name of the
-model to be loaded and optionally, the fields of the model to load -- not
-providing a list of fields means all fields are loaded.
+The fundamental questions when loading data are the following:
+1. Which model do we load?
+2. Which records from the model do we need?
+3. Which fields do we load?
 
-Each `loader` method is passed an argument called `lcontext` which is
-instantiated in `load_pos_data` for each time a `loader` method is called. `lcontext`
-has the following fields: `data`, `sorted_ids`, `contents`, `model`, `fields`.
+The above questions can be answered by declaring a method in `pos.session` model
+that returns an object. And that model should be decorated by `pos_loader.meta`.
 
-**`data`** : is a dict containing the loaded models. It maps the model name to the
-dict of loaded records keyed by id.
+An example would be the following:
 
 ```py
-{
-    'product.product': {
-        1: {
-            'display_name': 'sandwich',
-            ...
-        },
-        2: {
-            ...
-        },
-        ...
-    },
-    'res.partner': {
-        10: {
-            'name': 'Demo',
-            ...
-        },
-        ...
-    },
-    'pos.session': {
-        5: {
-            'config_id': 1,
-            ...
-        },
-    }
-    ...
-}
+    @pos_loader.meta("decimal.precision")
+    def _meta_decimal_precision(self):
+        return {
+            "fields": ["name", "digits"],
+            "domain": [],
+        }
 ```
 
-**`sorted_ids`** : is a dict containing the ids of the loaded records. It maps the
-model name to the list of ids in the order that the records are queried.
+The above declaration says that we want to load records from the
+`decimal.precision` model, and notice the return of the method that it provides
+information as to which records to load (via the domain) and which fields are
+needed.
+
+We declare a `meta` method for each model we want to load. A more complicated
+example is the following:
 
 ```py
-{
-    'product.product': [1, 2, ...],
-    'res.partner': [10, ...],
-}
+    @pos_loader.meta("product.pricelist.item", requires=[("pricelists", "product.pricelist")])
+    def _meta_product_pricelist_item(self, pricelists, **kwargs):
+        return {
+            "domain": [("pricelist_id", "in", [*pricelists.keys()])],
+            "fields": [],
+        }
 ```
 
-**`contents`** : is part of the `data` object. It is the dict of records
-corresponding to the model referred in the decorator. So if the `loader` method
-is decorated with `@pos_loader('product.product')`, then `contents` will contain the
-`product.product` dict keyed by id.
+In the above example, we declared a meta method for `product.pricelist.item` but
+in order to actually come up with the right records, we need the loaded
+`pricelists`. The requirements are declared as a parameter of the decorator. The
+`requires` params accepts a list of pairs where the first item in each pair
+represents the name of the arguments passed to the meta method, and the second
+element corresponds to the loaded model which will be passed as value to the
+corresponding argument name. In the above example, `pricelists` param in the
+meta method will contain loaded records for the `product.pricelist` model.
+
+The return of a meta method can contain the following fields:
+
+* `domain`: the domain to be used during `search`
+* `fields`: list of field names that will be passed on `read`
+* `ordered`: whether we order the records
+* `order`: the forced ordering of the loaded records
+* `context`: the context used when calling `search` on the model
+* `ids`: if you know the ids to be loaded, the `domain` will be ignored
+
+Knowing the meta information is the 1st step of the data loading. We now proceed
+to the 2nd step, which is the actual loading step. There is a default method
+called during this step which is the `_default_load_method`.
+
+It is passed with the name of the model and the result of the corresponding meta
+method call. One can can override the default method by declaring a custom load
+method like so:
 
 ```py
-{
-    1: {
-        'display_name': 'sandwich',
-        ...
-    },
-    2: {
-        ...
-    }
-}
+    @pos_loader.load('product.product')
+    def _load_product_product(self, model, meta_values):
+        """
+        Replace the way products are loaded. We only load the first 100000 products.
+        The UI will make further requests of the remaining products.
+        """
+        domain = meta_values['domain']
+        fields = meta_values['fields']
+        records = self.config_id.get_products_from_cache(fields, domain)
+        return records[:100000]
 ```
 
-**`model`** : is the model referred in the decorator.
+And if really necessary, there is the 3rd step of the loading which is the
+post process step. A method can be declared and decorated like so:
 
 ```py
-'product.product'
+    @pos_loader.post("account.tax")
+    def _post_account_tax(self, account_taxes):
+        tax_ids = account_taxes.keys()
+        real_tax_amounts = self.env["account.tax"].browse(tax_ids).get_real_tax_amount()
+        for real_tax in real_tax_amounts:
+            account_taxes[real_tax["id"]]["amount"] = real_tax["amount"]
 ```
 
-**`fields`** : contains the list of field names.
+The post process method will take as first param the loaded records for the
+specified model in the decorator.
 
-```py
-['display_name', 'price', ...]
-```
-
-And since each `loader` method is defined in `pos.session` model, the `self`
-argument refers to the `pos.session` record being opened.
-
-### Example
-
-Let's take the loader method of `product.product` as an example:
-
-```py
-    @pos_loader('product.product', [<list of field names>]) #1
-    def _meta_product_product(self, lcontext):  #2
-        order = "sequence,default_code,name" #3
-        domain = self._get_product_product_domain() #4
-        records = self.env[lcontext.model].with_context(display_default_code=False).search(domain, order=order).read(lcontext.fields, load=False) #5
-        for record in records: #6
-            lcontext.contents[record["id"]] = record #7
-        lcontext.sorted_ids[lcontext.model] = [record["id"] for record in records] #8
-
-    def _get_product_product_domain(self):
-        # calculate domain
-        return domain
-```
-
-At `#1`, the method is decorated using the `loader` decorator, and we passed the
-model name and list of field names.
-
-At `#2`, we declare the method that will actually be called by `load_pos_data` to
-load the data need by the POS UI. Notice that its arguments are `self` and
-`lcontext`. As already mentioned, `self` is the `pos.session` record and
-`lcontext` is the context object passed to each loader method.
-
-From `#3` to `#8`, here we defined what the loader method does.
-
-At `#3`, we just defined the order variable that will be passed when querying `product.product`.
-
-At `#4`, we compute the domain to use for querying `product.product`.
-
-At `#5`, we perform the search and read using the `lcontext.model` which is
-`'product.product'` and using the domain and order defined at #4 and #3
-respectively. We also passed the `lcontext.fields` which qualifies the fields to
-be read by the orm.
-
-At `#6` and `#7`, we loop thru each record and we save each to `lcontext.contents`
-using the record id as key.
-
-At `#8`, we save the ids in the order by which the orm has given them and save it
-to `lcontext.sorted_ids`. This step isn't necessary to all models. In fact, it
-is only done in `res.partner` and `product.product` records.
-
-### Extending
-
-In core `point_of_sale`, the loader methods are already defined. However, when creating a new odoo module that will extend `point_of_sale`, we might need to add something in the loaded data. To do so, you can do the following:
-
-```py
-class PosSession(models.Model):
-    _inherit = "pos.session"
-
-    @pos_loader("hr.employee", ["name", "id", "user_id"])
-    def _load_hr_employee(self, lcontext):
-        if len(self.config_id.employee_ids) > 0:
-            domain = ["&", ("company_id", "=", self.config_id.company_id.id), "|", ("user_id", "=", self.user_id.id), ("id", "in", self.config_id.employee_ids.ids)]
-        else:
-            domain = [("company_id", "=", self.config_id.company_id.id)]
-        records = self.env[lcontext.model].search(domain).read(lcontext.fields, load=False)
-        for record in records:
-            lcontext.contents[record["id"]] = record
-```
-
-The code above is directly taken from `pos_hr`. What the code does is it
-registers a `loader` method to load `hr.employee` records and we are only
-concerned with `'name'`, `'id'` and `'user_id'` fields.
-
-We can also override the loader method just as we override other model
-methods. Look at `_meta_product_product` in `pos_cache` for example.
+The 3 steps of loading is coordinated in the `load_model` method. And in
+`load_pos_data`, we call for each model the `load_model` method to assemble the
+whole data that will be used in pos.
 
 ## Extending POS UI
 
@@ -320,7 +259,11 @@ patch(ReceiptScreen.prototype, 'pos_restaurant', {
 //7
 patch(ReceiptScreen, 'pos_restaurant', {
     //8
-    components: { ...ReceiptScreen.components },
+    components: {
+        ...ReceiptScreen.components,
+        NewComponent,
+        AnotherComponent,
+    },
 });
 
 export default ReceiptScreen; //9
@@ -337,11 +280,12 @@ method `shouldShowAnotherComponent` therefore, we also define it at `//5` and
 instance method.
 
 But we have to make sure that `NewComponent` and `AnotherComponent` are properly
-declared so we import them at `//2` and `//3`, respectively.
+declared so we import them at `//2` and `//3`, respectively, and specify them as
+components of the `ReceiptScreen` at `//8`.
 
 ### Extending the POS UI: PointOfSaleModel
 
-The most of the state of the POS UI resides in the `PointOfSaleModel`. (We said
+Most of the state of the POS UI resides in the `PointOfSaleModel`. (We said
 'most' because it is possible that a component can have its own local state
 using the `useState` hook.) And this state is mutated using an action. We can
 therefore think that `PointOfSaleModel` is a collection of actions and data. You
@@ -349,7 +293,7 @@ will also find a lot of getter methods in this class. By convention, if a getter
 is used in multiple components, we define the getter in the `PointOfSaleModel`,
 otherwise, we define the getter in the component class.
 
-To extend the model, we patch the `PointOfSaleModel` just like we how we patch
+To extend the model, we patch the `PointOfSaleModel` just like how we patch
 component classes:
 
 ```js
@@ -410,7 +354,7 @@ this.ui.askUser('NumberPopup', { title: 'How old are you?' }).then(([confirm, in
 ```
 
 Since call to `askUser` returns a promise, we can conveniently do the following
-inside and async method:
+inside an async method:
 
 ```js
 async () => {
@@ -423,7 +367,7 @@ async () => {
 
 ### POS Dialog Limitation
 
-There is a very limiting limitation of POS Dialogs, that is, we can only show
+There is a very limiting feature of POS Dialogs, that is, we can only show
 one dialog at a time. This means we can't render a dialog on top of an existing
 dialog. Hopefully future development will remove this limitation.
 
