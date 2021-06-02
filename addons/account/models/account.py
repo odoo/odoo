@@ -148,10 +148,10 @@ class AccountTaxReportLine(models.Model):
         tags from the provided tax report lines that are not linked
         to any other tax report lines.
         """
-        all_tags = self.mapped('tag_ids.id')
+        all_tags = self.mapped('tag_ids')
         tags_to_unlink = all_tags.filtered(lambda x: not (x.tax_report_line_ids - self))
         self.write({'tag_ids': [(2, tag.id, 0) for tag in tags_to_unlink]})
-        self._delete_tags_from_taxes(tags_to_unlink)
+        self._delete_tags_from_taxes(tags_to_unlink.ids)
 
     def _delete_tags_from_taxes(self, tag_ids_to_delete):
         """ Based on a list of tag ids, removes them first from the
