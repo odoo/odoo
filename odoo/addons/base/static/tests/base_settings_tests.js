@@ -8,13 +8,9 @@ var createView = testUtils.createView;
 var BaseSettingsView = view_registry.get('base_settings');
 
 const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
-const {
-    createWebClient,
-    doAction,
-    getActionManagerTestConfig,
-} = require("@web/../tests/webclient/actions/helpers");
+const { createWebClient, doAction } = require("@web/../tests/webclient/helpers");
 
-let testConfig;
+let serverData;
 QUnit.module('base_settings_tests', {
     beforeEach: function () {
         this.data = {
@@ -29,9 +25,7 @@ QUnit.module('base_settings_tests', {
                 fields: {}
             }
         };
-        testConfig = getActionManagerTestConfig();
-        const models = Object.assign(testConfig.serverData.models, this.data);
-        Object.assign(testConfig.serverData, { models });
+        serverData = { models: this.data };
     }
 }, function () {
 
@@ -105,7 +99,7 @@ QUnit.module('base_settings_tests', {
         async function (assert) {
             assert.expect(8);
 
-            testConfig.serverData.actions = {
+            serverData.actions = {
                 1: {
                     id: 1,
                     name: "Settings view",
@@ -122,7 +116,7 @@ QUnit.module('base_settings_tests', {
                 },
             };
 
-            testConfig.serverData.views = {
+            serverData.views = {
                 "res.config.settings,1,form":
                     `<form string="Settings" js_class="base_settings">
                         <div class="app_settings_block" string="CRM" data-key="crm">
@@ -140,7 +134,7 @@ QUnit.module('base_settings_tests', {
                 }
             };
 
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
 
             await doAction(webClient, 1);
             await testUtils.dom.click($(webClient.el).find('button[name="4"]'));
@@ -165,7 +159,7 @@ QUnit.module('base_settings_tests', {
         async function (assert) {
             assert.expect(11);
 
-            testConfig.serverData.actions = {
+            serverData.actions = {
                 1: {
                     id: 1,
                     name: "Settings view",
@@ -182,7 +176,7 @@ QUnit.module('base_settings_tests', {
                 },
             };
 
-            testConfig.serverData.views = {
+            serverData.views = {
                 "res.config.settings,1,form":
                     `<form string="Settings" js_class="base_settings">
                         <header>
@@ -224,7 +218,7 @@ QUnit.module('base_settings_tests', {
                 }
             };
 
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
 
             await doAction(webClient, 1);
             assert.containsNone(
@@ -409,7 +403,7 @@ QUnit.module('base_settings_tests', {
             // This commit fixes a race condition, that's why we artificially slow down a read rpc
             assert.expect(4);
 
-            testConfig.serverData.actions = {
+            serverData.actions = {
                 1: {
                     id: 1,
                     name: "First action",
@@ -433,7 +427,7 @@ QUnit.module('base_settings_tests', {
                 },
             };
 
-            testConfig.serverData.views = {
+            serverData.views = {
                 "task,1,list": '<tree><field name="display_name"/></tree>',
                 "res.config.settings,2,form": `
                     <form string="Settings" js_class="base_settings">
@@ -453,7 +447,7 @@ QUnit.module('base_settings_tests', {
                 }
             };
 
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 1);
             assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "First action");
 
@@ -531,15 +525,24 @@ QUnit.module('base_settings_tests', {
         async function (assert) {
             assert.expect(7);
 
-            testConfig.serverData.actions[1] = {
-                id: 1,
-                name: "Settings view",
-                res_model: "res.config.settings",
-                type: "ir.actions.act_window",
-                views: [[1, "form"]],
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Settings view",
+                    res_model: "res.config.settings",
+                    type: "ir.actions.act_window",
+                    views: [[1, "form"]],
+                },
+                4: {
+                    id: 4,
+                    name: "Other Action",
+                    res_model: "task",
+                    type: "ir.actions.act_window",
+                    views: [[false, "list"]],
+                }
             };
 
-            testConfig.serverData.views = Object.assign(testConfig.serverData.views, {
+            serverData.views = {
                 "res.config.settings,1,form": `
                     <form string="Settings" js_class="base_settings">
                         <div class="app_settings_block" string="CRM" data-key="crm">
@@ -561,7 +564,9 @@ QUnit.module('base_settings_tests', {
                     </form>
                 `,
                 "res.config.settings,false,search": "<search></search>",
-            });
+                "task,false,list": "<tree></tree>",
+                "task,false,search": "<search></search>",
+            };
 
             const mockRPC = (route, args) => {
                 if (route === "/web/dataset/call_button" && args.method === "execute") {
@@ -572,7 +577,7 @@ QUnit.module('base_settings_tests', {
                 }
             };
 
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
 
             await doAction(webClient, 1);
             assert.containsNone(

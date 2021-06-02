@@ -5,10 +5,7 @@ import * as BusService from "bus.BusService";
 import * as RamStorage from "web.RamStorage";
 import * as AbstractStorageService from "web.AbstractStorageService";
 
-import {
-    createWebClient,
-    getActionManagerTestConfig,
-} from "@web/../tests/webclient/actions/helpers";
+import { createWebClient } from "@web/../tests/webclient/helpers";
 import { assetsWatchdogService } from "@bus/js/services/assets_watchdog_service";
 import { click, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { NotificationContainer } from "@web/core/notifications/notification_container";
@@ -24,13 +21,11 @@ const serviceRegistry = registry.category("services");
 
 QUnit.module("Bus Assets WatchDog", (hooks) => {
     let legacyServicesRegistry;
-    let testConfig;
     hooks.beforeEach((assert) => {
         legacyServicesRegistry = new legacyRegistry();
         legacyServicesRegistry.add("bus_service", BusService);
         legacyServicesRegistry.add("local_storage", LocalStorageService);
 
-        testConfig = getActionManagerTestConfig();
         serviceRegistry.add("assetsWatchdog", assetsWatchdogService);
 
         clearRegistryWithCleanup(mainComponentRegistry);
@@ -68,7 +63,6 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
         };
 
         const webClient = await createWebClient({
-            testConfig,
             legacyParams: { serviceRegistry: legacyServicesRegistry },
             mockRPC,
         });

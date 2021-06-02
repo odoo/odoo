@@ -9,6 +9,19 @@ import { nextTick, patchWithCleanup } from "../helpers/utils";
 async function createRouter(params = {}) {
     const env = params.env || {};
     env.bus = env.bus || new owl.core.EventBus();
+    if (params.onPushState) {
+        const originalPushState = browser.history.pushState;
+        const onPushState = params.onPushState;
+        delete params.onPushState;
+        patchWithCleanup(browser, {
+            history: Object.assign({}, browser.history, {
+                pushState() {
+                    originalPushState(...arguments);
+                    onPushState(...arguments);
+                },
+            }),
+        });
+    }
     const router = await makeFakeRouterService(params).start(env);
     return router;
 }

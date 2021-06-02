@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { ormService } from "@web/core/orm_service";
@@ -19,7 +18,6 @@ import { effectService } from "@web/webclient/effects/effect_service";
 import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menu_service";
 import { WebClient } from "@web/webclient/webclient";
-import { DialogContainer } from "@web/core/dialog/dialog_container";
 // This import is needed because of it's sideeffects, for exemple :
 // web.test_utils easyload xml templates at line : 124:130.
 // Also it set the autocomplete delay time for the field Many2One at 0 for the tests at line : 132:137
@@ -32,15 +30,15 @@ import basicFields from "web.basic_fields";
 import Registry from "web.Registry";
 import core from "web.core";
 import makeTestEnvironment from "web.test_env";
-import { registerCleanup } from "../../helpers/cleanup";
-import { makeTestEnv } from "../../helpers/mock_env";
+import { registerCleanup } from "../helpers/cleanup";
+import { makeTestEnv } from "../helpers/mock_env";
 import {
     fakeTitleService,
     makeFakeLocalizationService,
     makeFakeRouterService,
     makeFakeUIService,
-} from "../../helpers/mock_services";
-import { getFixture, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
+} from "../helpers/mock_services";
+import { getFixture, legacyExtraNextTick, nextTick, patchWithCleanup } from "../helpers/utils";
 import session from "web.session";
 import { ComponentAdapter } from "web.OwlCompatibility";
 import LegacyMockServer from "web.MockServer";
@@ -51,79 +49,42 @@ const { Component, mount, tags } = owl;
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
-// -----------------------------------------------------------------------------
-// Utils
-// -----------------------------------------------------------------------------
 
 /**
- * This method create a web client instance properly configured.
- *
- * Note that the returned web client will be automatically cleaned up after the
- * end of the test.
- *
- * @param {*} params
+ * Builds the service registry for tests using a WebClient with a default version
+ * of each required service. If the registry already contains one of those
+ * services, the existing one is kept (it means it has been added in the test
+ * directly, e.g. to have a custom version of the service).
  */
-export async function createWebClient(params) {
-    // With the compatibility layer, the action manager keeps legacy alive if they
-    // are still acessible from the breacrumbs. They are manually destroyed as soon
-    // as they are no longer referenced in the stack. This works fine in production,
-    // because the webclient is never destroyed. However, at the end of each test,
-    // we destroy the webclient and expect every legacy that has been instantiated
-    // to be destroyed. We thus need to manually destroy them here.
-    const controllers = [];
-    patchWithCleanup(AbstractAction.prototype, {
-        init() {
-            this._super(...arguments);
-            controllers.push(this);
-        },
-    });
-    patchWithCleanup(AbstractController.prototype, {
-        init() {
-            this._super(...arguments);
-            controllers.push(this);
-        },
-    });
-
-    const legacyParams = params.legacyParams;
-    const models = params.testConfig.serverData.models;
-    if (legacyParams && legacyParams.withLegacyMockServer && models) {
-        legacyParams.models = Object.assign({}, models);
-        // In lagacy, data may not be sole models, but can contain some other variables
-        // So we filter them out for our WOWL mockServer
-        Object.entries(legacyParams.models).forEach(([k, v]) => {
-            if (!(v instanceof Object) || !("fields" in v)) {
-                delete models[k];
-            }
-        });
-    }
-
-    const mockRPC = params.mockRPC || undefined;
-    const env = await makeTestEnv({
-        ...params.testConfig,
-        mockRPC,
-    });
-    addLegacyMockEnvironment(env, params.testConfig, legacyParams);
-
-    const WebClientClass = params.WebClientClass || WebClient;
-    const target = params && params.target ? params.target : getFixture();
-    const wc = await mount(WebClientClass, { env, target });
-    registerCleanup(() => {
-        for (const controller of controllers) {
-            if (!controller.isDestroyed()) {
-                controller.destroy();
-            }
+export function setupWebClientServiceRegistry() {
+    const services = {
+        action: () => actionService,
+        dialog: () => dialogService,
+        effect: () => effectService,
+        hotkey: () => hotkeyService,
+        legacy_service_provider: () => legacyServiceProvider,
+        localization: () => makeFakeLocalizationService(),
+        menu: () => menuService,
+        notification: () => notificationService,
+        orm: () => ormService,
+        popover: () => popoverService,
+        router: () => makeFakeRouterService(),
+        title: () => fakeTitleService,
+        ui: () => makeFakeUIService(),
+        user: () => userService,
+        view: () => viewService,
+    };
+    for (let serviceName in services) {
+        if (!serviceRegistry.contains(serviceName)) {
+            serviceRegistry.add(serviceName, services[serviceName]());
         }
-        wc.destroy();
-    });
-    // Wait for visual changes caused by a potential loadState
-    await nextTick();
-    return wc;
+    }
 }
 
 /**
  * Remove this as soon as we drop the legacy support
  */
-function addLegacyMockEnvironment(env, testConfig, legacyParams = {}) {
+function addLegacyMockEnvironment(env, legacyParams = {}) {
     // setup a legacy env
     const dataManager = Object.assign(
         {
@@ -227,6 +188,74 @@ function addLegacyMockEnvironment(env, testConfig, legacyParams = {}) {
     }
 }
 
+/**
+ * This method create a web client instance properly configured.
+ *
+ * Note that the returned web client will be automatically cleaned up after the
+ * end of the test.
+ *
+ * @param {*} params
+ */
+export async function createWebClient(params) {
+    setupWebClientServiceRegistry();
+
+    // With the compatibility layer, the action manager keeps legacy alive if they
+    // are still acessible from the breacrumbs. They are manually destroyed as soon
+    // as they are no longer referenced in the stack. This works fine in production,
+    // because the webclient is never destroyed. However, at the end of each test,
+    // we destroy the webclient and expect every legacy that has been instantiated
+    // to be destroyed. We thus need to manually destroy them here.
+    const controllers = [];
+    patchWithCleanup(AbstractAction.prototype, {
+        init() {
+            this._super(...arguments);
+            controllers.push(this);
+        },
+    });
+    patchWithCleanup(AbstractController.prototype, {
+        init() {
+            this._super(...arguments);
+            controllers.push(this);
+        },
+    });
+
+    const legacyParams = params.legacyParams;
+    params.serverData = params.serverData || {};
+    const models = params.serverData.models;
+    if (legacyParams && legacyParams.withLegacyMockServer && models) {
+        legacyParams.models = Object.assign({}, models);
+        // In lagacy, data may not be sole models, but can contain some other variables
+        // So we filter them out for our WOWL mockServer
+        Object.entries(legacyParams.models).forEach(([k, v]) => {
+            if (!(v instanceof Object) || !("fields" in v)) {
+                delete models[k];
+            }
+        });
+    }
+
+    const mockRPC = params.mockRPC || undefined;
+    const env = await makeTestEnv({
+        serverData: params.serverData,
+        mockRPC,
+    });
+    addLegacyMockEnvironment(env, legacyParams);
+
+    const WebClientClass = params.WebClientClass || WebClient;
+    const target = params && params.target ? params.target : getFixture();
+    const wc = await mount(WebClientClass, { env, target });
+    registerCleanup(() => {
+        for (const controller of controllers) {
+            if (!controller.isDestroyed()) {
+                controller.destroy();
+            }
+        }
+        wc.destroy();
+    });
+    // Wait for visual changes caused by a potential loadState
+    await nextTick();
+    return wc;
+}
+
 export async function doAction(env, ...args) {
     if (env instanceof Component) {
         env = env.env;
@@ -247,41 +276,7 @@ export async function loadState(env, state) {
     await legacyExtraNextTick();
 }
 
-export function getActionManagerTestConfig() {
-    patchWithCleanup(
-        browser,
-        {
-            setTimeout: window.setTimeout.bind(window),
-            clearTimeout: window.clearTimeout.bind(window),
-            localStorage: makeRAMLocalStorage(),
-            sessionStorage: makeRAMLocalStorage(),
-        },
-        { pure: true }
-    );
-
-    // build the service registry
-
-    // need activateMockServer or something like that for odoo.browser.fetch !!! something is bad
-    const fakeLocalizationService = makeFakeLocalizationService();
-    const fakeUIService = makeFakeUIService();
-    const fakeRouterService = makeFakeRouterService();
-
-    serviceRegistry.add("action", actionService);
-    serviceRegistry.add("dialog", dialogService);
-    serviceRegistry.add("effect", effectService);
-    serviceRegistry.add("hotkey", hotkeyService);
-    serviceRegistry.add("legacy_service_provider", legacyServiceProvider);
-    serviceRegistry.add("localization", fakeLocalizationService);
-    serviceRegistry.add("menu", menuService);
-    serviceRegistry.add("notification", notificationService);
-    serviceRegistry.add("orm", ormService);
-    serviceRegistry.add("popover", popoverService);
-    serviceRegistry.add("router", fakeRouterService);
-    serviceRegistry.add("title", fakeTitleService);
-    serviceRegistry.add("ui", fakeUIService);
-    serviceRegistry.add("user", userService);
-    serviceRegistry.add("view", viewService);
-
+export function getActionManagerServerData() {
     // additional basic client action
     class TestClientAction extends Component {}
     TestClientAction.template = tags.xml`
@@ -290,7 +285,6 @@ export function getActionManagerTestConfig() {
       </div>`;
     actionRegistry.add("__test__client__action__", TestClientAction);
 
-    // build the mocked server data
     const menus = {
         root: { id: "root", children: [0, 1, 2], name: "root", appID: "root" },
         // id:0 is a hack to not load anything at webClient mount
@@ -534,14 +528,10 @@ export function getActionManagerTestConfig() {
             ],
         },
     };
-    const serverData = {
+    return {
         models,
         views: archs,
         actions,
         menus,
-    };
-    return {
-        browser,
-        serverData,
     };
 }

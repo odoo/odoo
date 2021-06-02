@@ -10,15 +10,14 @@ const fieldRegistry = require('web.field_registry');
 var ViewDialogs = require('web.view_dialogs');
 var fieldUtils = require('web.field_utils');
 var mixins = require('web.mixins');
-var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
 const Widget = require('web.Widget');
 
 const { patchWithCleanup } = require("@web/../tests/helpers/utils");
 
-const { createWebClient, getActionManagerTestConfig, doAction } = require('@web/../tests/webclient/actions/helpers');
-let testConfig;
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
+let serverData;
 
 CalendarRenderer.include({
     getAvatars: function () {
@@ -130,11 +129,10 @@ QUnit.module('Views', {
                 ]
             },
         };
-        testConfig = getActionManagerTestConfig();
+        serverData = { models: this.data };
         this.data.event.methods = {
             check_access_rights: this.data.event.check_access_rights,
         }
-        Object.assign(testConfig.serverData, {models: this.data});
     },
     afterEach: function () {
         window.removeEventListener('scroll', _preventScroll, true);
@@ -306,23 +304,25 @@ QUnit.module('Views', {
     QUnit.test('breadcrumbs are updated with the displayed period', async function (assert) {
         assert.expect(4);
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'event,1,calendar': '<calendar date_start="start" date_stop="stop" all_day="allday"/>',
             'event,false,search': '<search></search>',
         };
 
-        testConfig.serverData.actions[1] = {
-            id: 1,
-            flags: {
-                initialDate: initialDate,
+        serverData.actions = {
+            1: {
+                id: 1,
+                flags: {
+                    initialDate: initialDate,
+                },
+                name: 'Meetings Test',
+                res_model: 'event',
+                type: 'ir.actions.act_window',
+                views: [[1, 'calendar']],
             },
-            name: 'Meetings Test',
-            res_model: 'event',
-            type: 'ir.actions.act_window',
-            views: [[1, 'calendar']],
         };
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
 
         // displays month mode by default
@@ -2868,7 +2868,7 @@ QUnit.module('Views', {
     QUnit.test('calendar is configured to have no groupBy menu', async function (assert) {
         assert.expect(1);
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'event,1,calendar': '<calendar class="o_calendar_test" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
@@ -2876,15 +2876,17 @@ QUnit.module('Views', {
             'event,false,search': '<search></search>',
         };
 
-        testConfig.serverData.actions[1] = {
-            id: 1,
-            name: 'some action',
-            res_model: 'event',
-            type: 'ir.actions.act_window',
-            views: [[1, 'calendar']]
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: 'some action',
+                res_model: 'event',
+                type: 'ir.actions.act_window',
+                views: [[1, 'calendar']]
+            },
         };
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 1);
         assert.containsNone($(webClient.el).find('.o_control_panel .o_search_options span.fa.fa-bars'),
@@ -3368,21 +3370,23 @@ QUnit.module('Views', {
     QUnit.test('initial_date given in the context', async function (assert) {
         assert.expect(1);
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'event,1,calendar': '<calendar date_start="start" date_stop="stop" mode="day"/>',
             'event,false,search': '<search></search>',
         };
 
-        testConfig.serverData.actions[1] = {
-            id: 1,
-            name: 'context initial date',
-            res_model: 'event',
-            type: 'ir.actions.act_window',
-            views: [[1, 'calendar']],
-            context: {initial_date: initialDate}
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: 'context initial date',
+                res_model: 'event',
+                type: 'ir.actions.act_window',
+                views: [[1, 'calendar']],
+                context: {initial_date: initialDate}
+            },
         };
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
         await testUtils.nextTick();
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),

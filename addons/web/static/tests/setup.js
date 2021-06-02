@@ -2,7 +2,7 @@
 
 import core from "web.core";
 import session from "web.session";
-import { browser } from "@web/core/browser/browser";
+import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { legacyProm } from "web.test_legacy";
 import { registerCleanup } from "./helpers/cleanup";
@@ -24,19 +24,59 @@ function forceLocaleAndTimezoneWithCleanup() {
     });
 }
 
-function patchBrowserWithCleanup() {
-    // patch addEventListner to automatically remove listeners bound (via browser.addEventListener)
-    // during a test (e.g. during the deployment of a service)
-    const originalAddEventListener = browser.addEventListener;
-    const originalRemoveEventListener = browser.removeEventListener;
-    patchWithCleanup(browser, {
-        addEventListener() {
-            originalAddEventListener(...arguments);
-            registerCleanup(() => {
-                originalRemoveEventListener(...arguments);
-            });
+function makeMockLocation() {
+    const locationLink = Object.assign(document.createElement("a"), {
+        href: window.location.origin + window.location.pathname,
+        assign(url) {
+            this.href = url;
+        },
+        reload() {},
+    });
+    return new Proxy(locationLink, {
+        get(target, p) {
+            return target[p];
+        },
+        set(target, p, value) {
+            target[p] = value;
+            if (p === "hash") {
+                window.dispatchEvent(new HashChangeEvent("hashchange"));
+            }
+            return true;
         },
     });
+}
+
+function patchBrowserWithCleanup() {
+    const originalAddEventListener = browser.addEventListener;
+    const originalRemoveEventListener = browser.removeEventListener;
+    const mockLocation = makeMockLocation();
+    patchWithCleanup(
+        browser,
+        {
+            // patch addEventListner to automatically remove listeners bound (via
+            // browser.addEventListener) during a test (e.g. during the deployment of a service)
+            addEventListener() {
+                originalAddEventListener(...arguments);
+                registerCleanup(() => {
+                    originalRemoveEventListener(...arguments);
+                });
+            },
+            // in tests, we never want to interact with the real url or reload the page
+            location: mockLocation,
+            history: {
+                pushState(state, title, url) {
+                    mockLocation.assign(url);
+                },
+                replaceState(state, title, url) {
+                    mockLocation.assign(url);
+                },
+            },
+            // in tests, we never want to interact with the real local/session storages.
+            localStorage: makeRAMLocalStorage(),
+            sessionStorage: makeRAMLocalStorage(),
+        },
+        { pure: true }
+    );
 }
 
 function patchLegacyCoreBus() {

@@ -5,7 +5,7 @@ var AbstractView = require('web.AbstractView');
 var ajax = require('web.ajax');
 var testUtils = require('web.test_utils');
 
-const { createWebClient, doAction, getActionManagerTestConfig } = require('@web/../tests/webclient/actions/helpers');
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 var createView = testUtils.createView;
 
 QUnit.module('Views', {
@@ -113,10 +113,9 @@ QUnit.module('Views', {
     QUnit.test('group_by from context can be a string, instead of a list of strings', async function (assert) {
         assert.expect(1);
 
-        const testConfig = getActionManagerTestConfig();
-        Object.assign(testConfig.serverData, {
+        const serverData = {
             actions: {
-                1:{
+                1: {
                     id: 1,
                     name: 'Foo',
                     res_model: 'foo',
@@ -132,14 +131,14 @@ QUnit.module('Views', {
                 'foo,false,search': '<search></search>',
             },
             models: this.data
-        });
+        };
 
         const mockRPC = (route, args) => {
             if (args.method === 'web_read_group') {
                 assert.deepEqual(args.kwargs.groupby, ['bar']);
             }
         };
-        const webClient = await createWebClient({testConfig, mockRPC});
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
     });
 

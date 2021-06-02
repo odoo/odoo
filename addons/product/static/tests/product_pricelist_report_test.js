@@ -3,8 +3,9 @@ odoo.define('product.pricelist.report.tests', function (require) {
 const GeneratePriceList = require('product.generate_pricelist').GeneratePriceList;
 const testUtils = require('web.test_utils');
 
-const { createWebClient, getActionManagerTestConfig, doAction } = require('@web/../tests/webclient/actions/helpers');
-let testConfig;
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
+
+let serverData;
 
 QUnit.module('Product Pricelist', {
     beforeEach: function () {
@@ -31,8 +32,7 @@ QUnit.module('Product Pricelist', {
                     }]
                 }
             };
-            testConfig = getActionManagerTestConfig();
-            Object.assign(testConfig.serverData, {models: this.data});
+            serverData = { models: this.data };
         },
 }, function () {
     QUnit.test('Pricelist Client Action', async function (assert) {
@@ -57,7 +57,7 @@ QUnit.module('Product Pricelist', {
             }
         };
 
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, {
             id: 1,
             name: 'Generate Pricelist',

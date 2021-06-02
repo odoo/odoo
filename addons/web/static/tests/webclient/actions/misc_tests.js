@@ -6,10 +6,15 @@ import core from "web.core";
 import testUtils from "web.test_utils";
 import Widget from "web.Widget";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    createWebClient,
+    doAction,
+    getActionManagerServerData,
+    setupWebClientServiceRegistry,
+} from "./../helpers";
 
-let testConfig;
+let serverData;
 // legacy stuff
 let cpHelpers;
 const actionRegistry = registry.category("actions");
@@ -21,19 +26,19 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     hooks.beforeEach(() => {
-        testConfig = getActionManagerTestConfig();
+        serverData = getActionManagerServerData();
     });
 
     QUnit.module("Misc");
 
     QUnit.test("can execute actions from id, xmlid and tag", async (assert) => {
         assert.expect(6);
-        testConfig.serverData.actions[1] = {
+        serverData.actions[1] = {
             tag: "client_action_by_db_id",
             target: "main",
             type: "ir.actions.client",
         };
-        testConfig.serverData.actions["wowl.some_action"] = {
+        serverData.actions["wowl.some_action"] = {
             tag: "client_action_by_xml_id",
             target: "main",
             type: "ir.actions.client",
@@ -42,7 +47,8 @@ QUnit.module("ActionManager", (hooks) => {
             .add("client_action_by_db_id", () => assert.step("client_action_db_id"))
             .add("client_action_by_xml_id", () => assert.step("client_action_xml_id"))
             .add("client_action_by_object", () => assert.step("client_action_object"));
-        const env = await makeTestEnv(testConfig);
+        setupWebClientServiceRegistry();
+        const env = await makeTestEnv({ serverData });
         await doAction(env, 1);
         assert.verifySteps(["client_action_db_id"]);
         await doAction(env, "wowl.some_action");
@@ -57,7 +63,8 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("action doesn't exists", async (assert) => {
         assert.expect(1);
-        const env = await makeTestEnv(testConfig);
+        setupWebClientServiceRegistry();
+        const env = await makeTestEnv({ serverData });
         try {
             await doAction(env, {
                 tag: "this_is_a_tag",
@@ -74,7 +81,8 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("action in handler registry", async (assert) => {
         assert.expect(2);
-        const env = await makeTestEnv(testConfig);
+        setupWebClientServiceRegistry();
+        const env = await makeTestEnv({ serverData });
         actionHandlersRegistry.add("ir.action_in_handler_registry", ({ action }) =>
             assert.step(action.type)
         );
@@ -88,7 +96,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("properly handle case when action id does not exist", async (assert) => {
         assert.expect(2);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         patchWithCleanup(webClient.env.services.notification, {
             create(message) {
                 assert.strictEqual(message, "No action with id '4448' could be found");
@@ -107,7 +115,8 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
 
-        const env = await makeTestEnv({ ...testConfig, mockRPC });
+        setupWebClientServiceRegistry();
+        const env = await makeTestEnv({ serverData, mockRPC });
 
         const loadAction = env.services.action.loadAction;
 
@@ -163,7 +172,8 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
 
-        const env = await makeTestEnv({ ...testConfig, mockRPC });
+        setupWebClientServiceRegistry();
+        const env = await makeTestEnv({ serverData, mockRPC });
         const { loadAction } = env.services.action;
         const actionParams = {
             additionalContext: {
@@ -203,7 +213,7 @@ QUnit.module("ActionManager", (hooks) => {
                 this._super.apply(this, arguments);
             },
         });
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 8);
         const n = delta;
         await doAction(webClient, 4);
@@ -235,7 +245,7 @@ QUnit.module("ActionManager", (hooks) => {
                 this._super.apply(this, arguments);
             },
         });
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         const n = delta;
         await doAction(webClient, 5);
         await doAction(webClient, { type: "ir.actions.act_window_close" });
@@ -264,7 +274,7 @@ QUnit.module("ActionManager", (hooks) => {
                     await Promise.resolve(def);
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 4);
             const n = delta;
             await doAction(webClient, 3, { clearBreadcrumbs: true });
@@ -302,7 +312,7 @@ QUnit.module("ActionManager", (hooks) => {
                     await Promise.resolve(def);
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             // execute action 4 to know the number of widgets it instantiates
             await doAction(webClient, 4);
             const n = delta;
@@ -342,7 +352,7 @@ QUnit.module("ActionManager", (hooks) => {
                     await Promise.resolve(def);
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             // execute action 4 to know the number of widgets it instantiates
             await doAction(webClient, 4);
             const n = delta;
@@ -363,9 +373,9 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test('action with "no_breadcrumbs" set to true', async function (assert) {
         assert.expect(2);
-        testConfig.serverData.actions[4].context = { no_breadcrumbs: true };
+        serverData.actions[4].context = { no_breadcrumbs: true };
         const webClient = await createWebClient({
-            testConfig,
+            serverData,
         });
         await doAction(webClient, 3);
         assert.containsOnce(webClient, ".o_control_panel .breadcrumb-item");
@@ -377,7 +387,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("document's title is updated when an action is executed", async function (assert) {
         assert.expect(8);
         const defaultTitle = { zopenerp: "Odoo" };
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         let currentTitle = webClient.env.services.title.getParts();
         assert.deepEqual(currentTitle, defaultTitle);
         let currentHash = webClient.env.services.router.current.hash;
@@ -431,7 +441,7 @@ QUnit.module("ActionManager", (hooks) => {
                 },
             });
             core.action_registry.add("ClientAction", ClientAction);
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, "ClientAction");
             assert.containsOnce(webClient, ".my_button");
             await testUtils.dom.click(webClient.el.querySelector(".my_button"));
@@ -447,7 +457,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test('handles "history_back" event', async function (assert) {
         assert.expect(3);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         await doAction(webClient, 3);
         assert.containsN(webClient, ".o_control_panel .breadcrumb-item", 2);
@@ -467,9 +477,9 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("stores and restores scroll position", async function (assert) {
         assert.expect(3);
         for (let i = 0; i < 60; i++) {
-            testConfig.serverData.models.partner.records.push({ id: 100 + i, foo: `Record ${i}` });
+            serverData.models.partner.records.push({ id: 100 + i, foo: `Record ${i}` });
         }
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         webClient.el.style.height = "250px";
         // execute a first action
         await doAction(webClient, 3);
@@ -489,14 +499,14 @@ QUnit.module("ActionManager", (hooks) => {
         'executing an action with target != "new" closes all dialogs',
         async function (assert) {
             assert.expect(4);
-            testConfig.serverData.views["partner,false,form"] = `
+            serverData.views["partner,false,form"] = `
       <form>
         <field name="o2m">
           <tree><field name="foo"/></tree>
           <form><field name="foo"/></form>
         </field>
       </form>`;
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             assert.containsOnce(webClient, ".o_list_view");
             await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -514,14 +524,14 @@ QUnit.module("ActionManager", (hooks) => {
         'executing an action with target "new" does not close dialogs',
         async function (assert) {
             assert.expect(4);
-            testConfig.serverData.views["partner,false,form"] = `
+            serverData.views["partner,false,form"] = `
       <form>
         <field name="o2m">
           <tree><field name="foo"/></tree>
           <form><field name="foo"/></form>
         </field>
       </form>`;
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             assert.containsOnce(webClient, ".o_list_view");
             await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));

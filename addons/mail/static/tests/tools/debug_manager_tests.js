@@ -2,11 +2,7 @@
 
 import { manageMessages } from "@mail/js/tools/debug_manager";
 import { click, legacyExtraNextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import {
-    createWebClient,
-    doAction,
-    getActionManagerTestConfig,
-} from "@web/../tests/webclient/actions/helpers";
+import { createWebClient, doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 import { debugService } from "@web/core/debug/debug_service";
 import { registry } from "@web/core/registry";
 
@@ -16,14 +12,14 @@ QUnit.test("Manage Messages", async function (assert) {
     assert.expect(6);
 
     patchWithCleanup(odoo, { debug: "1" });
-    const testConfig = getActionManagerTestConfig();
+    const serverData = getActionManagerServerData();
 
     // Add fake "mail.message" model and arch
-    testConfig.serverData.models["mail.message"] = {
+    serverData.models["mail.message"] = {
         fields: { name: { string: "Name", type: "char" } },
         records: [],
     };
-    Object.assign(testConfig.serverData.views, {
+    Object.assign(serverData.views, {
         "mail.message,false,list": `<tree/>`,
         "mail.message,false,form": `<form/>`,
         "mail.message,false,search": `<search/>`,
@@ -44,7 +40,7 @@ QUnit.test("Manage Messages", async function (assert) {
         }
     }
 
-    const wc = await createWebClient({ testConfig, mockRPC });
+    const wc = await createWebClient({ serverData, mockRPC });
     await doAction(wc, 3, { viewType: "form", resId: 5 });
     await legacyExtraNextTick();
     await click(wc.el, ".o_debug_manager .o_dropdown_toggler");

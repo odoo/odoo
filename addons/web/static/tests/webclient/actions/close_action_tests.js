@@ -2,20 +2,20 @@
 
 import testUtils from "web.test_utils";
 import { legacyExtraNextTick, nextTick } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
-let testConfig;
+let serverData;
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
-        testConfig = getActionManagerTestConfig();
+        serverData = getActionManagerServerData();
     });
 
     QUnit.module('"ir.actions.act_window_close" actions');
 
     QUnit.test("close the currently opened dialog", async function (assert) {
         assert.expect(2);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         // execute an action in target="new"
         await doAction(webClient, 5);
         assert.containsOnce(
@@ -32,7 +32,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test('execute "on_close" only if there is no dialog to close', async function (assert) {
         assert.expect(3);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         // execute an action in target="new"
         await doAction(webClient, 5);
         function onClose() {
@@ -51,7 +51,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("close action with provided infos", async function (assert) {
         assert.expect(1);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         const options = {
             onClose: function (infos) {
                 assert.strictEqual(
@@ -73,7 +73,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("history back calls on_close handler of dialog action", async function (assert) {
         assert.expect(4);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         function onClose() {
             assert.step("on_close");
         }
@@ -91,7 +91,7 @@ QUnit.module("ActionManager", (hooks) => {
         "history back calls on_close handler of dialog action with 2 breadcrumbs",
         async function (assert) {
             assert.expect(7);
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1); // kanban
             await doAction(webClient, 3); // list
             assert.containsOnce(webClient.el, ".o_list_view");
@@ -120,7 +120,7 @@ QUnit.module("ActionManager", (hooks) => {
                 return readOnFirstRecordDef;
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open first record in form view. this will crash and will not
         // display a form view

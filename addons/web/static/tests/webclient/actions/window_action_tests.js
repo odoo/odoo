@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { debugService } from "@web/core/debug/debug_service";
 import { DialogContainer } from "@web/core/dialog/dialog_container";
 import { registry } from "@web/core/registry";
@@ -12,9 +13,9 @@ import testUtils from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerTestConfig, loadState } from "./helpers";
+import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
 
-let testConfig;
+let serverData;
 const serviceRegistry = registry.category("services");
 
 // legacy stuff
@@ -25,7 +26,7 @@ QUnit.module("ActionManager", (hooks) => {
         cpHelpers = testUtils.controlPanel;
     });
     hooks.beforeEach(() => {
-        testConfig = getActionManagerTestConfig();
+        serverData = getActionManagerServerData();
     });
 
     QUnit.module("Window Actions");
@@ -35,7 +36,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
         assert.containsOnce(
             document.body,
@@ -53,7 +54,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("sidebar is present in list view", async function (assert) {
         assert.expect(4);
-        testConfig.serverData.models.partner.toolbar = {
+        serverData.models.partner.toolbar = {
             print: [{ name: "Print that record" }],
         };
         const mockRPC = async (route, args) => {
@@ -65,7 +66,7 @@ QUnit.module("ActionManager", (hooks) => {
                 );
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         assert.containsNone(webClient, ".o_cp_action_menus");
         await testUtils.dom.clickFirst($(webClient.el).find("input.custom-control-input"));
@@ -86,7 +87,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         assert.containsOnce(webClient, ".o_list_view", "should display the list view");
         // switch to kanban view
@@ -131,7 +132,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("switching into a view with mode=edit lands in edit mode", async function (assert) {
-        testConfig.serverData.views["partner,1,kanban"] = `
+        serverData.views["partner,1,kanban"] = `
     <kanban on_create="quick_create" default_group_by="m2o">
       <templates>
         <t t-name="kanban-box">
@@ -140,7 +141,7 @@ QUnit.module("ActionManager", (hooks) => {
       </templates>
     </kanban>
     `;
-        testConfig.serverData.actions[1] = {
+        serverData.actions[1] = {
             id: 1,
             xml_id: "action_1",
             name: "Partners Action 1 patched",
@@ -155,7 +156,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.step((args && args.method) || route);
         };
         assert.expect(14);
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
         assert.containsOnce(webClient, ".o_kanban_view", "should display the kanban view");
         // quick create record
@@ -191,14 +192,14 @@ QUnit.module("ActionManager", (hooks) => {
         "orderedBy in context is not propagated when executing another action",
         async function (assert) {
             assert.expect(6);
-            testConfig.serverData.models.partner.fields.foo.sortable = true;
-            testConfig.serverData.views["partner,false,form"] = `
+            serverData.models.partner.fields.foo.sortable = true;
+            serverData.views["partner,false,form"] = `
         <form>
           <header>
             <button name="8" string="Execute action" type="action"/>
           </header>
         </form>`;
-            testConfig.serverData.models.partner.filters = [
+            serverData.models.partner.filters = [
                 {
                     id: 1,
                     context: "{}",
@@ -227,7 +228,7 @@ QUnit.module("ActionManager", (hooks) => {
                     searchReadCount += 1;
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 3);
             // Sort records
             await testUtils.dom.click($(webClient.el).find(".o_list_view th.o_column_sortable"));
@@ -243,7 +244,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("breadcrumbs are updated when switching between views", async function (assert) {
         assert.expect(15);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.containsOnce(
             webClient.el,
@@ -338,7 +339,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("switch buttons are updated when switching between views", async function (assert) {
         assert.expect(13);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.containsN(
             webClient.el,
@@ -424,7 +425,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
     QUnit.test("pager is updated when switching between views", async function (assert) {
         assert.expect(10);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         assert.strictEqual(
             $(webClient.el).find(".o_control_panel .o_pager_value").text(),
@@ -492,8 +493,8 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("domain is kept when switching between views", async function (assert) {
         assert.expect(5);
-        testConfig.serverData.actions[3].search_view_id = [4, "a custom search view"];
-        const webClient = await createWebClient({ testConfig });
+        serverData.actions[3].search_view_id = [4, "a custom search view"];
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.containsN(webClient, ".o_data_row", 5);
         // activate a domain
@@ -521,7 +522,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             await def;
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // switch to kanban view
         def = testUtils.makeTestPromise();
@@ -597,7 +598,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("breadcrumbs are updated when display_name changes", async function (assert) {
         assert.expect(4);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
         await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
@@ -637,7 +638,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test('reverse breadcrumb works on accesskey "b"', async function (assert) {
         assert.expect(4);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
         await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -673,7 +674,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // create a new record
         await testUtils.dom.click($(webClient.el).find(".o_control_panel .o_list_button_add"));
@@ -724,14 +725,14 @@ QUnit.module("ActionManager", (hooks) => {
                     },
                     "should call route with correct arguments"
                 );
-                const record = testConfig.serverData.models.partner.records.find(
+                const record = serverData.models.partner.records.find(
                     (r) => r.id === args.args[0][0]
                 );
                 record.foo = "value changed";
                 return Promise.resolve(false);
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open a record in form view
         await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -766,12 +767,12 @@ QUnit.module("ActionManager", (hooks) => {
         "requests for execute_action of type object: disable buttons (2)",
         async function (assert) {
             assert.expect(6);
-            testConfig.serverData.views["pony,44,form"] = `
+            serverData.views["pony,44,form"] = `
     <form>
     <field name="name"/>
     <button string="Cancel" class="cancel-btn" special="cancel"/>
     </form>`;
-            testConfig.serverData.actions[4] = {
+            serverData.actions[4] = {
                 id: 4,
                 name: "Create a Partner",
                 res_model: "pony",
@@ -786,7 +787,7 @@ QUnit.module("ActionManager", (hooks) => {
                     await def;
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 3);
             assert.containsOnce(webClient.el, ".o_list_view");
             // open first record in form view
@@ -826,7 +827,7 @@ QUnit.module("ActionManager", (hooks) => {
                     return Promise.reject();
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 3, { viewType: "form" });
             assert.containsOnce(webClient.el, ".o_form_view");
             // click on 'Execute action', to execute action 4 in a dialog
@@ -842,7 +843,7 @@ QUnit.module("ActionManager", (hooks) => {
         "requests for execute_action of type object raises error in modal: re-enables buttons",
         async function (assert) {
             assert.expect(5);
-            testConfig.serverData.views["partner,false,form"] = `
+            serverData.views["partner,false,form"] = `
         <form>
           <field name="display_name"/>
           <footer>
@@ -855,7 +856,7 @@ QUnit.module("ActionManager", (hooks) => {
                     return Promise.reject();
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 5);
             assert.containsOnce(webClient.el, ".modal .o_form_view");
             testUtils.dom.click(webClient.el.querySelector('.modal footer button[name="object"]'));
@@ -873,7 +874,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open a record in form view
         await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -922,7 +923,7 @@ QUnit.module("ActionManager", (hooks) => {
                 assert.strictEqual(args.context.default_partner, 2);
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 24);
         assert.containsOnce(webClient.el, ".o_form_view");
         assert.containsN(webClient.el, ".o_form_buttons_view button:not([disabled])", 2);
@@ -943,7 +944,7 @@ QUnit.module("ActionManager", (hooks) => {
                 return Promise.reject();
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 24);
         assert.containsOnce(webClient.el, ".o_form_view");
         assert.containsN(webClient.el, ".o_form_buttons_view button:not([disabled])", 2);
@@ -974,7 +975,7 @@ QUnit.module("ActionManager", (hooks) => {
                     await def; // block the 'read' call
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 3);
             // open a record in form view
             await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -1009,7 +1010,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open the first record in form view
         await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -1053,9 +1054,9 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("restore previous view state when switching back", async function (assert) {
         assert.expect(5);
-        testConfig.serverData.actions[3].views.unshift([false, "graph"]);
-        testConfig.serverData.views["partner,false,graph"] = "<graph/>";
-        const webClient = await createWebClient({ testConfig });
+        serverData.actions[3].views.unshift([false, "graph"]);
+        serverData.views["partner,false,graph"] = "<graph/>";
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.hasClass(
             $(webClient.el).find(".o_control_panel  .fa-bar-chart-o")[0],
@@ -1094,9 +1095,9 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("view switcher is properly highlighted in graph view", async function (assert) {
         assert.expect(4);
-        testConfig.serverData.actions[3].views.splice(1, 1, [false, "graph"]);
-        testConfig.serverData.views["partner,false,graph"] = "<graph/>";
-        const webClient = await createWebClient({ testConfig });
+        serverData.actions[3].views.splice(1, 1, [false, "graph"]);
+        serverData.views["partner,false,graph"] = "<graph/>";
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.hasClass(
             $(webClient.el).find(".o_control_panel .o_switch_view.o_list")[0],
@@ -1125,13 +1126,13 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("can interact with search view", async function (assert) {
         assert.expect(2);
-        testConfig.serverData.views["partner,false,search"] = `
+        serverData.views["partner,false,search"] = `
       <search>
         <group>
           <filter name="foo" string="foo" context="{'group_by': 'foo'}"/>
         </group>
       </search>`;
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.doesNotHaveClass(
             $(webClient.el).find(".o_list_table")[0],
@@ -1156,14 +1157,14 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("can open a many2one external window", async function (assert) {
         assert.expect(9);
-        testConfig.serverData.models.partner.records[0].bar = 2;
-        testConfig.serverData.views["partner,false,search"] = `
+        serverData.models.partner.records[0].bar = 2;
+        serverData.views["partner,false,search"] = `
       <search>
         <group>
           <filter name="foo" string="foo" context="{'group_by': 'foo'}"/>
         </group>
       </search>`;
-        testConfig.serverData.views["partner,false,form"] = `
+        serverData.views["partner,false,form"] = `
       <form>
         <field name="foo"/>
         <field name="bar"/>
@@ -1174,7 +1175,7 @@ QUnit.module("ActionManager", (hooks) => {
                 return Promise.resolve(false);
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open first record in form view
         await testUtils.dom.click($(webClient.el).find(".o_data_row:first"));
@@ -1204,7 +1205,7 @@ QUnit.module("ActionManager", (hooks) => {
                 assert.deepEqual(args, [[1], { foo: "pinkypie" }]);
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 4);
         // open record in form view
         await testUtils.dom.click($(webClient.el).find(".o_kanban_record:first")[0]);
@@ -1226,8 +1227,8 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("limit set in action is passed to each created controller", async function (assert) {
         assert.expect(2);
-        testConfig.serverData.actions[3].limit = 2;
-        const webClient = await createWebClient({ testConfig });
+        serverData.actions[3].limit = 2;
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.containsN(webClient, ".o_data_row", 2);
         // switch to kanban view
@@ -1238,7 +1239,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("go back to a previous action using the breadcrumbs", async function (assert) {
         assert.expect(10);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
         await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -1314,7 +1315,7 @@ QUnit.module("ActionManager", (hooks) => {
         "form views are restored in readonly when coming back in breadcrumbs",
         async function (assert) {
             assert.expect(2);
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             // open a record in form view
             await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -1334,14 +1335,14 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("honor group_by specified in actions context", async function (assert) {
         assert.expect(5);
-        testConfig.serverData.actions[3].context = "{'group_by': 'bar'}";
-        testConfig.serverData.views["partner,false,search"] = `
+        serverData.actions[3].context = "{'group_by': 'bar'}";
+        serverData.views["partner,false,search"] = `
       <search>
         <group>
           <filter name="foo" string="foo" context="{'group_by': 'foo'}"/>
         </group>
       </search>`;
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.containsOnce(webClient, ".o_list_table_grouped", "should be grouped");
         assert.containsN(
@@ -1380,7 +1381,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("switch request to unknown view type", async function (assert) {
         assert.expect(8);
-        testConfig.serverData.actions[33] = {
+        serverData.actions[33] = {
             id: 33,
             name: "Partners",
             res_model: "partner",
@@ -1393,7 +1394,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 33);
         assert.containsOnce(webClient, ".o_list_view", "should display the list view");
         // try to open a record in a form view
@@ -1412,7 +1413,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("flags field of ir.actions.act_window is used", async function (assert) {
         // more info about flags field : https://github.com/odoo/odoo/commit/c9b133813b250e89f1f61816b0eabfb9bee2009d
         assert.expect(7);
-        testConfig.serverData.actions[44] = {
+        serverData.actions[44] = {
             id: 33,
             name: "Partners",
             res_model: "partner",
@@ -1425,7 +1426,7 @@ QUnit.module("ActionManager", (hooks) => {
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 44);
         assert.containsOnce(webClient, ".o_form_view", "should display the form view");
         assert.containsNone(
@@ -1453,7 +1454,7 @@ QUnit.module("ActionManager", (hooks) => {
                 };
             },
         });
-        testConfig.serverData.actions[33] = {
+        serverData.actions[33] = {
             id: 33,
             context: {
                 shouldNotBeInFilterContext: false,
@@ -1484,7 +1485,7 @@ QUnit.module("ActionManager", (hooks) => {
                 },
             },
         };
-        const webClient = await createWebClient({ testConfig, legacyParams });
+        const webClient = await createWebClient({ serverData, legacyParams });
         await doAction(webClient, 33);
         assert.containsN(webClient, ".o_data_row", 5, "should contain 5 records");
         // filter on bar
@@ -1504,9 +1505,9 @@ QUnit.module("ActionManager", (hooks) => {
         "list with default_order and favorite filter with no orderedBy",
         async function (assert) {
             assert.expect(5);
-            testConfig.serverData.views["partner,1,list"] =
+            serverData.views["partner,1,list"] =
                 '<tree default_order="foo desc"><field name="foo"/></tree>';
-            testConfig.serverData.actions[100] = {
+            serverData.actions[100] = {
                 id: 100,
                 name: "Partners",
                 res_model: "partner",
@@ -1516,7 +1517,7 @@ QUnit.module("ActionManager", (hooks) => {
                     [false, "form"],
                 ],
             };
-            testConfig.serverData.models.partner.filters = [
+            serverData.models.partner.filters = [
                 {
                     name: "favorite filter",
                     id: 5,
@@ -1526,7 +1527,7 @@ QUnit.module("ActionManager", (hooks) => {
                     is_default: false,
                 },
             ];
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 100);
             assert.strictEqual(
                 $(webClient.el).find(".o_list_view tr.o_data_row .o_data_cell").text(),
@@ -1571,7 +1572,7 @@ QUnit.module("ActionManager", (hooks) => {
         "search menus are still available when switching between actions",
         async function (assert) {
             assert.expect(3);
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
             assert.isVisible(
                 webClient.el.querySelector(".o_search_options .o_dropdown.o_filter_menu"),
@@ -1595,24 +1596,25 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("current act_window action is stored in session_storage", async function (assert) {
         assert.expect(1);
         const expectedAction = {
-            ...testConfig.serverData.actions[3],
+            ...serverData.actions[3],
             context: {
                 lang: "en",
                 uid: 7,
                 tz: "taht",
             },
         };
-        const sessionStorage = testConfig.browser.sessionStorage;
-        testConfig.browser.sessionStorage = Object.assign(Object.create(sessionStorage), {
-            setItem(k, value) {
-                assert.deepEqual(
-                    JSON.parse(value),
-                    expectedAction,
-                    "should store the executed action in the sessionStorage"
-                );
-            },
+        patchWithCleanup(browser, {
+            sessionStorage: Object.assign(Object.create(sessionStorage), {
+                setItem(k, value) {
+                    assert.deepEqual(
+                        JSON.parse(value),
+                        expectedAction,
+                        "should store the executed action in the sessionStorage"
+                    );
+                },
+            }),
         });
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
     });
 
@@ -1624,7 +1626,7 @@ QUnit.module("ActionManager", (hooks) => {
             // once restored
             assert.expect(1);
             const expectedAction = {
-                ...testConfig.serverData.actions[4],
+                ...serverData.actions[4],
                 context: {
                     lang: "en",
                     uid: 7,
@@ -1635,19 +1637,20 @@ QUnit.module("ActionManager", (hooks) => {
                 },
             };
             let checkSessionStorage = false;
-            const sessionStorage = testConfig.browser.sessionStorage;
-            testConfig.browser.sessionStorage = Object.assign(Object.create(sessionStorage), {
-                setItem(k, value) {
-                    if (checkSessionStorage) {
-                        assert.strictEqual(
-                            value,
-                            JSON.stringify(expectedAction),
-                            "should store the executed action in the sessionStorage"
-                        );
-                    }
-                },
+            patchWithCleanup(browser, {
+                sessionStorage: Object.assign(Object.create(sessionStorage), {
+                    setItem(k, value) {
+                        if (checkSessionStorage) {
+                            assert.strictEqual(
+                                value,
+                                JSON.stringify(expectedAction),
+                                "should store the executed action in the sessionStorage"
+                            );
+                        }
+                    },
+                }),
             });
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             // execute an action and open a record in form view
             await doAction(webClient, 3);
             await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -1663,7 +1666,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("destroy action with lazy loaded controller", async function (assert) {
         assert.expect(6);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await loadState(webClient, {
             action: 3,
             id: 2,
@@ -1689,8 +1692,8 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("execute action from dirty, new record, and come back", async function (assert) {
         assert.expect(18);
-        testConfig.serverData.models.partner.fields.bar.default = 1;
-        testConfig.serverData.views["partner,false,form"] = `
+        serverData.models.partner.fields.bar.default = 1;
+        serverData.views["partner,false,form"] = `
       <form>
         <field name="display_name"/>
         <field name="foo"/>
@@ -1707,7 +1710,7 @@ QUnit.module("ActionManager", (hooks) => {
                 });
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         // execute an action and create a new record
         await doAction(webClient, 3);
         await testUtils.dom.click($(webClient.el).find(".o_list_button_add"));
@@ -1758,9 +1761,9 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("execute a contextual action from a form view", async function (assert) {
         assert.expect(4);
-        const contextualAction = testConfig.serverData.actions[8];
+        const contextualAction = serverData.actions[8];
         contextualAction.context = "{}"; // need a context to evaluate
-        testConfig.serverData.models.partner.toolbar = {
+        serverData.models.partner.toolbar = {
             action: [contextualAction],
             print: [],
         };
@@ -1773,7 +1776,7 @@ QUnit.module("ActionManager", (hooks) => {
                 );
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         // execute an action and open a record
         await doAction(webClient, 3);
         assert.containsOnce(webClient, ".o_list_view");
@@ -1791,7 +1794,7 @@ QUnit.module("ActionManager", (hooks) => {
         "go back to action with form view as main view, and res_id",
         async function (assert) {
             assert.expect(7);
-            testConfig.serverData.actions[999] = {
+            serverData.actions[999] = {
                 id: 999,
                 name: "Partner",
                 res_model: "partner",
@@ -1799,7 +1802,7 @@ QUnit.module("ActionManager", (hooks) => {
                 res_id: 2,
                 views: [[44, "form"]],
             };
-            testConfig.serverData.views["partner,44,form"] = '<form><field name="m2o"/></form>';
+            serverData.views["partner,44,form"] = '<form><field name="m2o"/></form>';
             const mockRPC = async (route, args) => {
                 if (args.method === "get_formview_action") {
                     return Promise.resolve({
@@ -1810,7 +1813,7 @@ QUnit.module("ActionManager", (hooks) => {
                     });
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 999);
             assert.containsOnce(webClient.el, ".o_form_view");
             assert.hasClass(webClient.el.querySelector(".o_form_view"), "o_form_readonly");
@@ -1839,7 +1842,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("open a record, come back, and create a new record", async function (assert) {
         assert.expect(7);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         // execute an action and open a record
         await doAction(webClient, 3);
         assert.containsOnce(webClient.el, ".o_list_view");
@@ -1863,7 +1866,7 @@ QUnit.module("ActionManager", (hooks) => {
         "open form view, use the pager, execute action, and come back",
         async function (assert) {
             assert.expect(8);
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             // execute an action and open a record
             await doAction(webClient, 3);
             assert.containsOnce(webClient.el, ".o_list_view");
@@ -1902,7 +1905,7 @@ QUnit.module("ActionManager", (hooks) => {
         "create a new record in a form view, execute action, and come back",
         async function (assert) {
             assert.expect(8);
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             // execute an action and create a new record
             await doAction(webClient, 3);
             assert.containsOnce(webClient.el, ".o_list_view");
@@ -1945,10 +1948,10 @@ QUnit.module("ActionManager", (hooks) => {
                 assert.step("init js class");
             },
         });
-        testConfig.serverData.views["partner,false,test_view"] = `
+        serverData.views["partner,false,test_view"] = `
       <div js_class="test_jsClass"></div>
     `;
-        testConfig.serverData.actions[9999] = {
+        serverData.actions[9999] = {
             id: 1,
             name: "Partners Action 1",
             res_model: "partner",
@@ -1957,7 +1960,7 @@ QUnit.module("ActionManager", (hooks) => {
         };
         legacyViewRegistry.add("test_view", TestView);
         legacyViewRegistry.add("test_jsClass", TestJsClassView);
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 9999);
         assert.verifySteps(["init js class"]);
         delete legacyViewRegistry.map.test_view;
@@ -1988,14 +1991,14 @@ QUnit.module("ActionManager", (hooks) => {
                 }),
             });
             legacyViewRegistry.add("test_view", TestCustoFormView);
-            testConfig.serverData.views["partner,3,form"] = `
+            serverData.views["partner,3,form"] = `
       <form js_class="test_view">
         <field name="foo" />
         <footer>
           <button string="Echoes" special="save" />
         </footer>
       </form>`;
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             await doAction(webClient, 24); // main form view
             await doAction(webClient, 25, {
                 // Custom jsClass form view in target new
@@ -2019,7 +2022,7 @@ QUnit.module("ActionManager", (hooks) => {
         "execute action without modal closes bootstrap tooltips anyway",
         async function (assert) {
             assert.expect(12);
-            Object.assign(testConfig.serverData.views, {
+            Object.assign(serverData.views, {
                 "partner,666,form": `<form>
             <header>
               <button name="object" string="Call method" type="object" help="need somebody"/>
@@ -2034,7 +2037,7 @@ QUnit.module("ActionManager", (hooks) => {
                     return Promise.resolve(false);
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 24);
             assert.verifySteps([
                 "/web/webclient/load_menus",
@@ -2077,7 +2080,7 @@ QUnit.module("ActionManager", (hooks) => {
                 }
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         await cpHelpers.editSearch(webClient.el, "m");
         await cpHelpers.validateSearch(webClient.el);
@@ -2102,7 +2105,7 @@ QUnit.module("ActionManager", (hooks) => {
                     writeCalls += 1;
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
             // execute an action and edit existing record
             await doAction(webClient, 3);
             await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
@@ -2134,7 +2137,7 @@ QUnit.module("ActionManager", (hooks) => {
                 Component: DialogContainer,
             });
 
-            testConfig.serverData.views["partner,false,form"] = `
+            serverData.views["partner,false,form"] = `
             <form>
               <field name="foo"/>
             </form>`;
@@ -2150,7 +2153,7 @@ QUnit.module("ActionManager", (hooks) => {
                     });
                 }
             };
-            const webClient = await createWebClient({ testConfig, mockRPC });
+            const webClient = await createWebClient({ serverData, mockRPC });
 
             await doAction(webClient, 3);
 
@@ -2176,7 +2179,7 @@ QUnit.module("ActionManager", (hooks) => {
         "do not call clearUncommittedChanges() when target=new and dialog is opened",
         async function (assert) {
             assert.expect(2);
-            const webClient = await createWebClient({ testConfig });
+            const webClient = await createWebClient({ serverData });
             // Open Partner form view and enter some text
             await doAction(webClient, 3, { viewType: "form" });
             await legacyExtraNextTick();
@@ -2199,14 +2202,14 @@ QUnit.module("ActionManager", (hooks) => {
                 return true;
             }
         };
-        testConfig.serverData.views["partner,false,form"] = `
+        serverData.views["partner,false,form"] = `
       <form>
         <header><button name="do_something" string="Call button" type="object"/></header>
         <sheet>
           <field name="display_name"/>
         </sheet>
       </form>`;
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3, { viewType: "form", resId: 1 });
         await legacyExtraNextTick();
         assert.isVisible(webClient.el.querySelector(".o_form_buttons_view .o_form_button_edit"));
@@ -2235,7 +2238,7 @@ QUnit.module("ActionManager", (hooks) => {
                 return true;
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
         assert.containsNone(
             webClient.el,
@@ -2250,14 +2253,14 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("reload a view via the view switcher keep state", async function (assert) {
         assert.expect(6);
-        testConfig.serverData.actions[3].views.unshift([false, "pivot"]);
-        testConfig.serverData.views["partner,false,pivot"] = "<pivot/>";
+        serverData.actions[3].views.unshift([false, "pivot"]);
+        serverData.views["partner,false,pivot"] = "<pivot/>";
         const mockRPC = async (route, args) => {
             if (args.method === "read_group") {
                 assert.step(args.method);
             }
         };
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         assert.doesNotHaveClass(
             webClient.el.querySelector(".o_pivot_measure_row"),

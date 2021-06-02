@@ -6,15 +6,15 @@ import { EffectContainer } from "@web/webclient/effects/effect_container";
 import testUtils from "web.test_utils";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
-import { createWebClient, doAction, getActionManagerTestConfig } from "./helpers";
+import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
-let testConfig;
+let serverData;
 
 const mainComponentRegistry = registry.category("main_components");
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
-        testConfig = getActionManagerTestConfig();
+        serverData = getActionManagerServerData();
     });
 
     QUnit.module("Effects");
@@ -26,7 +26,7 @@ QUnit.module("ActionManager", (hooks) => {
         mainComponentRegistry.add("EffectContainer", {
             Component: EffectContainer,
         });
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
         assert.containsOnce(webClient.el, ".o_kanban_view");
         assert.containsNone(webClient.el, ".o_reward");
@@ -58,7 +58,7 @@ QUnit.module("ActionManager", (hooks) => {
             Component: NotificationContainer,
         });
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
         assert.containsOnce(webClient.el, ".o_kanban_view");
         assert.containsNone(webClient.el, ".o_reward");
@@ -74,7 +74,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("on close with effect from server", async function (assert) {
         assert.expect(1);
         patchWithCleanup(odoo.session_info, { show_effect: true });
-        const mockRPC = async (route, args) => {
+        const mockRPC = async (route) => {
             if (route === "/web/dataset/call_button") {
                 return Promise.resolve({
                     type: "ir.actions.act_window_close",
@@ -89,7 +89,7 @@ QUnit.module("ActionManager", (hooks) => {
         mainComponentRegistry.add("EffectContainer", {
             Component: EffectContainer,
         });
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 6);
         await click(webClient.el.querySelector('button[name="object"]'));
         assert.containsOnce(webClient, ".o_reward");
@@ -97,7 +97,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("on close with effect in xml", async function (assert) {
         assert.expect(2);
-        testConfig.serverData.views["partner,false,form"] = `
+        serverData.views["partner,false,form"] = `
     <form>
       <header>
         <button string="Call method" name="object" type="object"
@@ -107,7 +107,7 @@ QUnit.module("ActionManager", (hooks) => {
       <field name="display_name"/>
     </form>`;
         patchWithCleanup(odoo.session_info, { show_effect: true });
-        const mockRPC = async (route, args) => {
+        const mockRPC = async (route) => {
             if (route === "/web/dataset/call_button") {
                 return Promise.resolve(false);
             }
@@ -117,7 +117,7 @@ QUnit.module("ActionManager", (hooks) => {
             Component: EffectContainer,
         });
 
-        const webClient = await createWebClient({ testConfig, mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 6);
         await click(webClient.el.querySelector('button[name="object"]'));
         await legacyExtraNextTick();

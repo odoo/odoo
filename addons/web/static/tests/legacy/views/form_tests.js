@@ -24,9 +24,9 @@ const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
 
 const { legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
-const { createWebClient, doAction, getActionManagerTestConfig } = require('@web/../tests/webclient/actions/helpers');
+const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 
-let testConfig;
+let serverData;
 QUnit.module('Views', {
     beforeEach: function () {
         this.data = {
@@ -155,14 +155,15 @@ QUnit.module('Views', {
             views: [[false, 'kanban'], [false, 'form']],
         }];
 
-        testConfig = getActionManagerTestConfig();
-
         // map legacy test data
         const actions = {};
         this.actions.forEach((act) => {
           actions[act.xmlId || act.id] = act;
         });
-        Object.assign(testConfig.serverData, {actions, models: this.data});
+        serverData = {
+            actions,
+            models: this.data,
+        };
     },
 }, function () {
 
@@ -503,11 +504,11 @@ QUnit.module('Views', {
     QUnit.test('Form and subview with _view_ref contexts', async function (assert) {
         assert.expect(3);
 
-        testConfig.serverData.models.product.fields.partner_type_ids = {string: "one2many field", type: "one2many", relation: "partner_type"},
-        testConfig.serverData.models.product.records = [{id: 1, name: 'Tromblon', partner_type_ids: [12,14]}];
-        testConfig.serverData.models.partner.records[0].product_id = 1;
+        serverData.models.product.fields.partner_type_ids = {string: "one2many field", type: "one2many", relation: "partner_type"},
+        serverData.models.product.records = [{id: 1, name: 'Tromblon', partner_type_ids: [12,14]}];
+        serverData.models.partner.records[0].product_id = 1;
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'product,false,form': '<form>'+
                                         '<field name="name"/>'+
                                         '<field name="partner_type_ids" context="{\'tree_view_ref\': \'some_other_tree_view\'}"/>' +
@@ -551,7 +552,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({testConfig, mockRPC});
+        const webClient = await createWebClient({serverData, mockRPC});
         await doAction(webClient, {
             res_id: 1,
             type: 'ir.actions.act_window',
@@ -6816,7 +6817,7 @@ QUnit.module('Views', {
     QUnit.test('translation alerts preserved on reverse breadcrumb', async function (assert) {
         assert.expect(2);
 
-        testConfig.serverData.models['ir.translation'] = {
+        serverData.models['ir.translation'] = {
             fields: {
                 name: { string: "name", type: "char" },
                 source: {string: "Source", type: "char"},
@@ -6825,9 +6826,9 @@ QUnit.module('Views', {
             records: [],
         };
 
-        testConfig.serverData.models.partner.fields.foo.translate = true;
+        serverData.models.partner.fields.foo.translate = true;
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'partner,false,form': '<form string="Partners">' +
                     '<sheet>' +
                         '<field name="foo"/>' +
@@ -6842,7 +6843,7 @@ QUnit.module('Views', {
             'ir.translation,false,search': '<search></search>',
         };
 
-        testConfig.serverData.actions = {
+        serverData.actions = {
             1: {
                 id: 1,
                 name: 'Partner',
@@ -6861,7 +6862,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         patchWithCleanup(_t.database, {
             multi_lang: true,
         });
@@ -8813,7 +8814,7 @@ QUnit.module('Views', {
     QUnit.test('discard after a failed save', async function (assert) {
         assert.expect(2);
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'partner,false,form': '<form>' +
                                     '<field name="date" required="true"/>' +
                                     '<field name="foo" required="true"/>' +
@@ -8823,7 +8824,7 @@ QUnit.module('Views', {
             'partner,false,search': '<search></search>',
         };
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
 
         await testUtils.dom.click('.o_control_panel .o-kanban-button-new');
@@ -9716,7 +9717,7 @@ QUnit.module('Views', {
     QUnit.test('Auto save: save when page changed', async function (assert) {
         assert.expect(10);
 
-        testConfig.serverData.actions[1] = {
+        serverData.actions[1] = {
             id: 1,
             name: 'Partner',
             res_model: 'partner',
@@ -9724,7 +9725,7 @@ QUnit.module('Views', {
             views: [[false, 'list'], [false, 'form']],
         };
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'partner,false,list': `
                 <tree>
                     <field name="name"/>
@@ -9749,7 +9750,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ testConfig , mockRPC });
+        const webClient = await createWebClient({ serverData , mockRPC });
 
         await doAction(webClient, 1);
 
@@ -9780,7 +9781,7 @@ QUnit.module('Views', {
     QUnit.test('Auto save: save when breadcrumb clicked', async function (assert) {
         assert.expect(7);
 
-        testConfig.serverData.actions[1] = {
+        serverData.actions[1] = {
             id: 1,
             name: 'Partner',
             res_model: 'partner',
@@ -9788,7 +9789,7 @@ QUnit.module('Views', {
             views: [[false, 'list'], [false, 'form']],
         };
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'partner,false,list': `
                 <tree>
                     <field name="name"/>
@@ -9813,7 +9814,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ testConfig , mockRPC });
+        const webClient = await createWebClient({ serverData , mockRPC });
 
         await doAction(webClient, 1);
 
@@ -9840,7 +9841,7 @@ QUnit.module('Views', {
     QUnit.test('Auto save: save when action changed', async function (assert) {
         assert.expect(6);
 
-        testConfig.serverData.actions[1] = {
+        serverData.actions[1] = {
             id: 1,
             name: 'Partner',
             res_model: 'partner',
@@ -9848,7 +9849,7 @@ QUnit.module('Views', {
             views: [[false, 'list'], [false, 'form']],
         };
 
-        testConfig.serverData.actions[2] = {
+        serverData.actions[2] = {
             id: 2,
             name: 'Other action',
             res_model: 'partner',
@@ -9856,7 +9857,7 @@ QUnit.module('Views', {
             views: [[false, 'kanban']],
         };
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'partner,false,list': `
                 <tree>
                     <field name="name"/>
@@ -9891,7 +9892,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ testConfig , mockRPC });
+        const webClient = await createWebClient({ serverData , mockRPC });
 
         await doAction(webClient, 1);
 
@@ -10017,7 +10018,7 @@ QUnit.module('Views', {
     QUnit.test('Auto save: save on closing tab/browser (detached form)', async function (assert) {
         assert.expect(3);
 
-        testConfig.serverData.actions[1] = {
+        serverData.actions[1] = {
             id: 1,
             name: 'Partner',
             res_model: 'partner',
@@ -10025,7 +10026,7 @@ QUnit.module('Views', {
             views: [[false, 'list'], [false, 'form']],
         };
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'partner,false,list': `
                 <tree>
                     <field name="display_name"/>
@@ -10047,7 +10048,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({ testConfig , mockRPC });
+        const webClient = await createWebClient({ serverData, mockRPC });
 
         await doAction(webClient, 1);
 

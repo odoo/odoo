@@ -27,9 +27,9 @@ const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
 
 const { legacyExtraNextTick } = require("@web/../tests/helpers/utils");
-const { createWebClient, doAction, getActionManagerTestConfig, loadState } = require('@web/../tests/webclient/actions/helpers');
+const { createWebClient, doAction, loadState } = require('@web/../tests/webclient/helpers');
 
-let testConfig;
+let serverData;
 
 QUnit.module('Views', {
     beforeEach: function () {
@@ -133,8 +133,7 @@ QUnit.module('Views', {
             },
         };
 
-        testConfig = getActionManagerTestConfig();
-        Object.assign(testConfig.serverData, {models: this.data});
+        serverData = { models: this.data };
     }
 }, function () {
 
@@ -1772,17 +1771,19 @@ QUnit.module('Views', {
     QUnit.test('editable list view: check that controlpanel buttons are updating when groupby applied', async function (assert) {
         assert.expect(4);
 
-        testConfig.serverData.models.foo.fields.foo = {string: "Foo", type: "char", required:true};
+        serverData.models.foo.fields.foo = {string: "Foo", type: "char", required:true};
 
-        testConfig.serverData.actions[11] = {
-            id: 11,
-            name: 'Partners Action 11',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[3, 'list']],
-            search_view_id: [9, 'search'],
+        serverData.actions = {
+            11: {
+                id: 11,
+                name: 'Partners Action 11',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [9, 'search'],
+            },
         };
-        testConfig.serverData.views = {
+        serverData.views = {
             'foo,3,list': '<tree editable="top"><field name="display_name"/><field name="foo"/></tree>',
 
             'foo,9,search': '<search>'+
@@ -1790,7 +1791,7 @@ QUnit.module('Views', {
                 '</search>',
         };
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 11);
         await testUtils.dom.click($(webClient.el).find('.o_list_button_add'));
@@ -9484,19 +9485,21 @@ QUnit.module('Views', {
     QUnit.test('add filter in a grouped list with a pager', async function (assert) {
         assert.expect(11);
 
-        testConfig.serverData.actions[11] = {
-            id: 11,
-            name: 'Action 11',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[3, 'list']],
-            search_view_id: [9, 'search'],
-            flags: {
-                context: { group_by: ['int_field'] },
+        serverData.actions = {
+            11: {
+                id: 11,
+                name: 'Action 11',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [9, 'search'],
+                flags: {
+                    context: { group_by: ['int_field'] },
+                },
             },
         };
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'foo,3,list': '<tree groups_limit="3"><field name="foo"/></tree>',
             'foo,9,search': `
                 <search>
@@ -9510,7 +9513,7 @@ QUnit.module('Views', {
             }
         };
 
-        const webClient = await createWebClient({testConfig, mockRPC});
+        const webClient = await createWebClient({serverData, mockRPC});
         await doAction(webClient, 11);
 
         assert.containsOnce(webClient, '.o_list_view');
@@ -11055,22 +11058,24 @@ QUnit.module('Views', {
     QUnit.test('change the viewType of the current action', async function (assert) {
         assert.expect(25);
 
-        testConfig.serverData.actions[1] = {
-            id: 1,
-            name: 'Partners Action 1',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[1, 'kanban']],
-        };
-        testConfig.serverData.actions[2] = {
-            id: 2,
-            name: 'Partners',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[false, 'list'], [1, 'kanban']],
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: 'Partners Action 1',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[1, 'kanban']],
+            },
+            2: {
+                id: 2,
+                name: 'Partners',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list'], [1, 'kanban']],
+            },
         };
 
-        testConfig.serverData.views = {
+        serverData.views = {
             'foo,1,kanban': '<kanban><templates><t t-name="kanban-box">' +
             '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
             '</t></templates></kanban>',
@@ -11083,7 +11088,7 @@ QUnit.module('Views', {
             'foo,false,search': '<search><field name="foo" string="Foo"/></search>',
         };
 
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 2);
 
@@ -11630,28 +11635,30 @@ QUnit.module('Views', {
     QUnit.test("Auto save: add a record and leave action", async function (assert) {
         assert.expect(4);
 
-        testConfig.serverData.actions[1] = {
-            id: 1,
-            name: 'Action 1',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[2, 'list']],
-            search_view_id: [1, 'search'],
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: 'Action 1',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[2, 'list']],
+                search_view_id: [1, 'search'],
+            },
+            2: {
+                id: 2,
+                name: 'Action 2',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [1, 'search'],
+            },
         };
-        testConfig.serverData.actions[2] = {
-            id: 2,
-            name: 'Action 2',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[3, 'list']],
-            search_view_id: [1, 'search'],
-        };
-        testConfig.serverData.views = {
+        serverData.views = {
             'foo,1,search': '<search></search>',
             'foo,2,list': '<tree editable="top"><field name="foo"/></tree>',
             'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
         };
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 1);
 
@@ -11672,28 +11679,30 @@ QUnit.module('Views', {
     QUnit.test("Auto save: modify a record and leave action", async function (assert) {
         assert.expect(2);
 
-        testConfig.serverData.actions[1] = {
-            id: 1,
-            name: 'Action 1',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[2, 'list']],
-            search_view_id: [1, 'search'],
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: 'Action 1',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[2, 'list']],
+                search_view_id: [1, 'search'],
+            },
+            2: {
+                id: 2,
+                name: 'Action 2',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [1, 'search'],
+            },
         };
-        testConfig.serverData.actions[2] = {
-            id: 2,
-            name: 'Action 2',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[3, 'list']],
-            search_view_id: [1, 'search'],
-        };
-        testConfig.serverData.views = {
+        serverData.views = {
             'foo,1,search': '<search></search>',
             'foo,2,list': '<tree editable="top"><field name="foo"/></tree>',
             'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
         };
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 1);
 
@@ -11712,37 +11721,39 @@ QUnit.module('Views', {
     QUnit.test("Auto save: modify a record and leave action (reject)", async function (assert) {
         assert.expect(5);
 
-        testConfig.serverData.actions[1] = {
-            id: 1,
-            name: 'Action 1',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[2, 'list']],
-            search_view_id: [1, 'search'],
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: 'Action 1',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[2, 'list']],
+                search_view_id: [1, 'search'],
+            },
+            2: {
+                id: 2,
+                name: 'Action 2',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [1, 'search'],
+            },
         };
-        testConfig.serverData.actions[2] = {
-            id: 2,
-            name: 'Action 2',
-            res_model: 'foo',
-            type: 'ir.actions.act_window',
-            views: [[3, 'list']],
-            search_view_id: [1, 'search'],
-        };
-        testConfig.serverData.views = {
+        serverData.views = {
             'foo,1,search': '<search></search>',
             'foo,2,list': '<tree editable="top"><field name="foo" required="1"/></tree>',
             'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
         };
-        const webClient = await createWebClient({ testConfig });
+        const webClient = await createWebClient({ serverData });
 
-        await doAction(webClient,1);
+        await doAction(webClient, 1);
 
         assert.strictEqual($(webClient.el).find('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
 
         await testUtils.dom.click($(webClient.el).find('.o_field_cell[name="foo"]:first'));
         await testUtils.fields.editInput($(webClient.el).find('.o_field_widget[name="foo"]'), "");
 
-        await assert.rejects(doAction(webClient,2));
+        await assert.rejects(doAction(webClient, 2));
 
         assert.strictEqual($(webClient.el).find('.o_field_cell[name="foo"]').text(), "blipgnapblip");
         assert.hasClass($(webClient.el).find('.o_field_widget[name="foo"]:first'), 'o_field_invalid');
@@ -11753,7 +11764,6 @@ QUnit.module('Views', {
         assert.expect(3);
 
         const list = await createView({
-            debug: true,
             View: ListView,
             model: 'foo',
             data: this.data,
