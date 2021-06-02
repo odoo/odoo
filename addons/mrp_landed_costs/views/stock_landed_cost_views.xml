@@ -10,11 +10,10 @@
                 <attribute name="groups">mrp.group_mrp_user</attribute>
             </field>
             <field name="picking_ids" position="after">
-                <field name="allowed_mrp_production_ids" invisible="1"/>
                 <field name="mrp_production_ids" 
                     widget="many2many_tags" options="{'no_create_edit': True}"
-                    attrs="{'invisible': [('target_model', '!=', 'manufacturing')]}" 
-                    domain="[('id', 'in', allowed_mrp_production_ids)]"/>
+                    attrs="{'invisible': [('target_model', '!=', 'manufacturing')]}"
+                    domain="[('company_id', '=', company_id), ('move_finished_ids.stock_valuation_layer_ids', '!=', False)]"/>
             </field>
         </field>
     </record>
