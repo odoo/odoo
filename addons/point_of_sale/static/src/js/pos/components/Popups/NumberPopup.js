@@ -10,22 +10,14 @@ class NumberPopup extends owl.Component {
     /**
      * @param {Object} props
      * @param {Boolean} props.isPassword Show password popup.
-     * @param {number|null} props.startingValue Starting value of the popup.
+     * @param {string | null} props.startingValue Starting value of the popup.
      * @param {Boolean} props.isInputSelected Input is highlighted and will reset upon a change.
-     *
-     * Resolve to { confirmed, payload } when used with showPopup method.
-     * @confirmed {Boolean}
-     * @payload {String}
      */
     constructor() {
         super(...arguments);
         useListener('accept-input', this.confirm);
         useListener('close-this-popup', this.cancel);
-        let startingBuffer = '';
-        if (typeof this.props.startingValue === 'number' && this.props.startingValue > 0) {
-            startingBuffer = this.props.startingValue.toFixed(2);
-        }
-        this.state = useState({ buffer: startingBuffer, toStartOver: this.props.isInputSelected });
+        this.state = useState({ buffer: this.props.startingValue || '', toStartOver: this.props.isInputSelected });
         NumberBuffer.use({
             nonKeyboardInputEvent: 'numpad-click-input',
             triggerAtEnter: 'accept-input',

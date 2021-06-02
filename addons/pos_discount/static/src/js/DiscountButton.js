@@ -10,9 +10,10 @@ odoo.define('pos_discount.DiscountButton', function (require) {
             useListener('click', this.onClick);
         }
         async onClick() {
+            const dp = this.env.model.getDecimalPrecision('Discount');
             const [confirmed, payload] = await this.env.ui.askUser('NumberPopup', {
                 title: this.env._t('Discount Percentage'),
-                startingValue: this.env.model.config.discount_pc,
+                startingValue: this.env.model.config.discount_pc.toFixed(dp.digits),
                 isInputSelected: true,
             });
             if (confirmed) {

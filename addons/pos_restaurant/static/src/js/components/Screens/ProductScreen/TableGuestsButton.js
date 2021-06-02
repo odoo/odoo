@@ -14,7 +14,7 @@ odoo.define('pos_restaurant.TableGuestsButton', function (require) {
         }
         async onClick() {
             const [confirmed, inputNumber] = await this.env.ui.askUser('NumberPopup', {
-                startingValue: this.nGuests,
+                startingValue: Math.round(this.nGuests).toFixed(0),
                 cheap: true,
                 title: this.env._t('Guests ?'),
                 isInputSelected: true

@@ -2131,8 +2131,9 @@ class PointOfSaleModel extends EventBus {
         const groupedOrderlines = this.getGroupedOrderlines(this.getOrderlines(order));
         const relatedOrderlines = groupedOrderlines[orderline.id].map((id) => this.getRecord('pos.order.line', id));
         const currentQuantity = sum([orderline, ...relatedOrderlines], (line) => line.qty);
+        const dp = this.getDecimalPrecision('Product Unit of Measure');
         const [confirm, inputNumber] = await this.ui.askUser('NumberPopup', {
-            startingValue: currentQuantity,
+            startingValue: currentQuantity.toFixed(dp.digits),
             title: _t('Set the new quantity'),
             isInputSelected: true,
         });
@@ -2384,9 +2385,11 @@ class PointOfSaleModel extends EventBus {
         const existingTipAmount = this._getExistingTipAmount(order);
         const hasTip = !this.monetaryEQ(existingTipAmount, 0);
         const startingValue = hasTip ? existingTipAmount : this.getOrderChange(order);
+        const dp = this.getDecimalPrecision('Product Price')
         const [confirmed, amountStr] = await this.ui.askUser('NumberPopup', {
             title: hasTip ? _t('Change Tip') : _t('Add Tip'),
-            startingValue,
+            startingValue: startingValue.toFixed(dp.digits),
+            isInputSelected: true,
         });
         if (confirmed) {
             const amount = parse.float(amountStr);

@@ -53,7 +53,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             const selectedTable = this.env.model.getSelectedTable();
             if (!selectedTable) return;
             const [confirmed, inputNumber] = await this.env.ui.askUser('NumberPopup', {
-                startingValue: selectedTable.seats,
+                startingValue: Math.round(selectedTable.seats).toFixed(0),
                 cheap: true,
                 title: this.env._t('Number of Seats ?'),
                 isInputSelected: true,
