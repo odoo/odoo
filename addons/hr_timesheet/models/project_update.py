@@ -28,10 +28,10 @@ class ProjectUpdate(models.Model):
     def _get_activities(self, project):
         if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
             return []
-        today = fields.Datetime.today()
+        today = fields.Date.context_today(self)
         query = """
                 SELECT timesheet.employee_id as employee_id,
-                       gs as period,
+                       gs::date as period,
                        sum(timesheet.unit_amount) as unit_amount,
                        employee.name as name
                   FROM project_project p
@@ -40,8 +40,8 @@ class ProjectUpdate(models.Model):
             INNER JOIN hr_employee employee
                     ON timesheet.employee_id = employee.id
             CROSS JOIN generate_series(
-                        %(today)s::date - '180 days'::interval,
-                        %(today)s::date,
+                        %(today)s - '180 days'::interval,
+                        %(today)s,
                         '30 days'::interval
                        ) gs
                  WHERE p.id = %(project_id)s
