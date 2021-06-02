@@ -1367,9 +1367,71 @@ exports.PosModel = Backbone.Model.extend({
         }
         var decimals = currency.decimals;
 
+<<<<<<< HEAD
         if (precision && this.dp[precision] !== undefined) {
             decimals = this.dp[precision];
         }
+=======
+        var total_included_checkpoints = {};
+        var i = taxes.length - 1;
+        var store_included_tax_total = true;
+
+        var incl_fixed_amount = 0.0;
+        var incl_percent_amount = 0.0;
+        var incl_division_amount = 0.0;
+
+        var cached_tax_amounts = {};
+
+        _(taxes.reverse()).each(function(tax){
+            if(tax.include_base_amount){
+                base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, currency_rounding);
+                incl_fixed_amount = 0.0;
+                incl_percent_amount = 0.0;
+                incl_division_amount = 0.0;
+                store_included_tax_total = true;
+            }
+            if(tax.price_include){
+                if(tax.amount_type === 'percent')
+                    incl_percent_amount += tax.amount;
+                else if(tax.amount_type === 'division')
+                    incl_division_amount += tax.amount;
+                else if(tax.amount_type === 'fixed')
+                    incl_fixed_amount += quantity * tax.amount
+                else{
+                    var tax_amount = self._compute_all(tax, base, quantity);
+                    incl_fixed_amount += tax_amount;
+                    cached_tax_amounts[i] = tax_amount;
+                }
+                if(store_included_tax_total){
+                    total_included_checkpoints[i] = base;
+                    store_included_tax_total = false;
+                }
+            }
+            i -= 1;
+        });
+
+        var total_excluded = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount, this.currency.rounding);
+        var total_included = total_excluded;
+
+        // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
+
+        base = total_excluded;
+
+        var taxes_vals = [];
+        i = 0;
+        var cumulated_tax_included_amount = 0;
+        _(taxes.reverse()).each(function(tax){
+            if(tax.price_include && total_included_checkpoints[i] !== undefined){
+                var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
+                cumulated_tax_included_amount = 0;
+            }else
+                var tax_amount = self._compute_all(tax, base, quantity, true);
+
+            tax_amount = round_pr(tax_amount, currency_rounding);
+
+            if(tax.price_include && total_included_checkpoints[i] === undefined)
+                cumulated_tax_included_amount += tax_amount;
+>>>>>>> 84842ae6aeb... temp
 
         if (typeof amount === 'number') {
             amount = round_di(amount, decimals).toFixed(decimals);
