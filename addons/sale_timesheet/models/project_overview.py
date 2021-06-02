@@ -3,7 +3,6 @@ import babel.dates
 from dateutil.relativedelta import relativedelta
 import itertools
 import json
-from odoo.osv import expression
 
 from odoo import fields, _, models
 from odoo.osv import expression
@@ -22,9 +21,7 @@ class Project(models.Model):
 
     def _qweb_prepare_qcontext(self, view_id, domain):
         values = super()._qweb_prepare_qcontext(view_id, domain)
-        project_ids = self.env.context.get('active_ids')
-        if project_ids:
-            domain = expression.AND([[('id', 'in', project_ids)], domain])
+
         projects = self.search(domain)
         values.update(projects._plan_prepare_values())
         values['actions'] = projects._plan_prepare_actions(values)
@@ -32,14 +29,8 @@ class Project(models.Model):
         return values
 
     def _plan_get_employee_ids(self):
-        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
-        user_ids = [user_id['user_id'][0] for user_id in user_ids]
-        employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
-        # flatten the list of list
-        employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
-
         aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
-        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
+        employee_ids = list(map(lambda x: x['employee_id'][0], aal_employee_ids))
         return employee_ids
 
     def _plan_prepare_values(self):
