@@ -13,7 +13,7 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
     _populate_sizes = {
         'small': 10,
-        'medium': 30,
+        'medium': 10,
         'large': 100,
     }
 

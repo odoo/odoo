@@ -22,7 +22,7 @@ class AccountMove(models.Model):
 
     _populate_sizes = {
         'small': 1000,
-        'medium': 10000,
+        'medium': 1000,
         'large': 500000,
     }
 

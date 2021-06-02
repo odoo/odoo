@@ -15,7 +15,7 @@ class AccountReconcileModel(models.Model):
 
     _populate_sizes = {
         'small': 5,
-        'medium': 100,
+        'medium': 10,
         'large': 1000,
     }
 

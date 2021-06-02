@@ -17,7 +17,7 @@ class AccountBankStatement(models.Model):
     _inherit = "account.bank.statement"
     _populate_sizes = {
         'small': 10,
-        'medium': 1000,
+        'medium': 100,
         'large': 20000,
     }
 
@@ -46,7 +46,7 @@ class AccountBankStatementLine(models.Model):
 
     _populate_sizes = {
         'small': 100,
-        'medium': 10000,
+        'medium': 100,
         'large': 200000,
     }
 

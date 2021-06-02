@@ -18,7 +18,7 @@ class AccountPayment(models.Model):
 
     _populate_sizes = {
         'small': 100,
-        'medium': 5000,
+        'medium': 500,
         'large': 50000,
     }
 
