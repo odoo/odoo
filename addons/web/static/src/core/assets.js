@@ -45,7 +45,7 @@ import { browser } from "./browser/browser";
  * @param {string} url the url of the script
  * @returns {Promise} resolved when the script has been loaded
  */
-const loadJS = memoize(function _loadJS(url) {
+const loadJS = memoize(function loadJS(url) {
     if (document.querySelector(`script[src="${url}"]`)) {
         // Already in the DOM and wasn't loaded through this function
         // Unfortunately there is no way to check whether a script has loaded
@@ -68,7 +68,7 @@ const loadJS = memoize(function _loadJS(url) {
  * @param {string} url the url of the stylesheet
  * @returns {Promise} resolved when the stylesheet has been loaded
  */
-const loadCSS = memoize(function _loadCSS(url) {
+const loadCSS = memoize(function loadCSS(url) {
     if (document.querySelector(`link[href="${url}"]`)) {
         // Already in the DOM and wasn't loaded through this function
         // Unfortunately there is no way to check whether a link has loaded
@@ -93,7 +93,7 @@ const loadCSS = memoize(function _loadCSS(url) {
  * @returns {Promise<XMLDocument>} A Promise of an XML document containing the
  *      owl templates.
  */
-const loadBundleTemplates = memoize(async function _loadBundleTemplates(name) {
+const loadBundleTemplates = memoize(async function loadBundleTemplates(name) {
     // TODO: quid of the "unique" in the URL? We can"t have one cache_hash
     // for each and every bundle I"m guessing.
     const bundleURL = new URL(`/web/webclient/qweb/${Date.now()}`, window.location.origin);
@@ -165,7 +165,7 @@ export function processTemplates(templates) {
  * @param {ORM} orm An ORM object capable of calling methods on models
  * @returns {Promise} Resolved when the contents of the asset is loaded
  */
-export const loadPublicAsset = memoize(async function _loadPublicAsset(xmlid, orm) {
+export const loadPublicAsset = memoize(async function loadPublicAsset(xmlid, orm) {
     const xml = await orm.call("ir.ui.view", "render_public_asset", [xmlid]);
     const doc = new DOMParser().parseFromString(`<xml>${xml}</xml>`, "text/xml");
     return loadAssets({
