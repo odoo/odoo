@@ -473,8 +473,8 @@ class Channel(models.Model):
         if not mailing_channels and not pids:
             return []
 
-        email_from = tools.email_normalize(msg_vals.get('email_from') or msg_sudo.email_from)
-        author_id = msg_vals.get('author_id') or msg_sudo.author_id.id
+        email_from = ''  # tools.email_normalize(msg_vals.get('email_from') or msg_sudo.email_from)
+        author_id = []  # msg_vals.get('author_id') or msg_sudo.author_id.id
 
         recipients_data = []
         if mailing_channels:
