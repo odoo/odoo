@@ -78,7 +78,7 @@ class SaleOrderLine(models.Model):
 
     # no trigger product_id.invoice_policy to avoid retroactively changing SO
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
-    def _get_to_invoice_qty(self):
+    def _compute_qty_to_invoice(self):
         """
         Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
         calculated from the ordered quantity. Otherwise, the quantity delivered is used.
@@ -93,7 +93,7 @@ class SaleOrderLine(models.Model):
                 line.qty_to_invoice = 0
 
     @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'untaxed_amount_to_invoice')
-    def _get_invoice_qty(self):
+    def _compute_qty_invoiced(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
         that this is the case only if the refund is generated from the SO and that is intentional: if
@@ -112,17 +112,17 @@ class SaleOrderLine(models.Model):
             line.qty_invoiced = qty_invoiced
 
     @api.depends('price_unit', 'discount')
-    def _get_price_reduce(self):
+    def _compute_price_reduce(self):
         for line in self:
             line.price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
 
     @api.depends('price_total', 'product_uom_qty')
-    def _get_price_reduce_tax(self):
+    def _compute_price_reduce_tax(self):
         for line in self:
             line.price_reduce_taxinc = line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
 
     @api.depends('price_subtotal', 'product_uom_qty')
-    def _get_price_reduce_notax(self):
+    def _compute_price_reduce_notax(self):
         for line in self:
             line.price_reduce_taxexcl = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
@@ -233,10 +233,10 @@ class SaleOrderLine(models.Model):
     price_tax = fields.Float(compute='_compute_amount', string='Total Tax', readonly=True, store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
 
-    price_reduce = fields.Float(compute='_get_price_reduce', string='Price Reduce', digits='Product Price', readonly=True, store=True)
+    price_reduce = fields.Float(compute='_compute_price_reduce', string='Price Reduce', digits='Product Price', readonly=True, store=True)
     tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
-    price_reduce_taxinc = fields.Monetary(compute='_get_price_reduce_tax', string='Price Reduce Tax inc', readonly=True, store=True)
-    price_reduce_taxexcl = fields.Monetary(compute='_get_price_reduce_notax', string='Price Reduce Tax excl', readonly=True, store=True)
+    price_reduce_taxinc = fields.Monetary(compute='_compute_price_reduce_tax', string='Price Reduce Tax inc', readonly=True, store=True)
+    price_reduce_taxexcl = fields.Monetary(compute='_compute_price_reduce_notax', string='Price Reduce Tax excl', readonly=True, store=True)
 
     discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
 
@@ -269,10 +269,10 @@ class SaleOrderLine(models.Model):
     qty_delivered = fields.Float('Delivered Quantity', copy=False, compute='_compute_qty_delivered', inverse='_inverse_qty_delivered', compute_sudo=True, store=True, digits='Product Unit of Measure', default=0.0)
     qty_delivered_manual = fields.Float('Delivered Manually', copy=False, digits='Product Unit of Measure', default=0.0)
     qty_to_invoice = fields.Float(
-        compute='_get_to_invoice_qty', string='To Invoice Quantity', store=True, readonly=True,
+        compute='_compute_qty_to_invoice', string='To Invoice Quantity', store=True, readonly=True,
         digits='Product Unit of Measure')
     qty_invoiced = fields.Float(
-        compute='_get_invoice_qty', string='Invoiced Quantity', store=True, readonly=True,
+        compute='_compute_qty_invoiced', string='Invoiced Quantity', store=True, readonly=True,
         compute_sudo=True,
         digits='Product Unit of Measure')
 

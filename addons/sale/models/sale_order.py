@@ -33,7 +33,7 @@ class SaleOrder(models.Model):
         return self.env.company.portal_confirmation_pay
 
     @api.depends('order_line.price_total')
-    def _amount_all(self):
+    def _compute_amounts(self):
         """
         Compute the total amounts of the SO.
         """
@@ -60,7 +60,7 @@ class SaleOrder(models.Model):
             order.invoice_count = len(invoices)
 
     @api.depends('state', 'order_line.invoice_status')
-    def _get_invoice_status(self):
+    def _compute_invoice_status(self):
         """
         Compute the invoice status of a SO. Possible statuses:
         - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
@@ -223,15 +223,15 @@ class SaleOrder(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_get_invoice_status', store=True, readonly=True)
+        ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True)
 
     note = fields.Text('Terms and conditions', default=_default_note)
     terms_type = fields.Selection(related='company_id.terms_type')
 
-    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=5)
-    amount_by_group = fields.Binary(string="Tax amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
-    amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
-    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', tracking=4)
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_compute_amounts', tracking=5)
+    amount_by_group = fields.Binary(string="Tax amount by group", compute='_compute_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
+    amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_compute_amounts')
+    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_compute_amounts', tracking=4)
     currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
 
     payment_term_id = fields.Many2one(
@@ -976,7 +976,7 @@ Reason(s) of this behavior could be:
             analytic = self.env['account.analytic.account'].create(order._prepare_analytic_account_data(prefix))
             order.analytic_account_id = analytic
 
-    def _amount_by_group(self):
+    def _compute_amount_by_group(self):
         for order in self:
             currency = order.currency_id or order.company_id.currency_id
             fmt = partial(formatLang, self.with_context(lang=order.partner_id.lang).env, currency_obj=currency)
