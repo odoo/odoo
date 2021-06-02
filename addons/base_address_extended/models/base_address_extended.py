@@ -33,9 +33,9 @@ class Partner(models.Model):
     street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
                                  inverse='_set_street', store=True)
 
-    def _formatting_address_fields(self):
-        """Returns the list of address fields usable to format addresses."""
-        return super(Partner, self)._formatting_address_fields() + self.get_street_fields()
+    def _address_fields(self):
+        """Returns the list of address fields that are synced from the parent."""
+        return super(Partner, self)._address_fields() + self.get_street_fields()
 
     def get_street_fields(self):
         """Returns the fields that can be used in a street format.
@@ -78,7 +78,8 @@ class Partner(models.Model):
 
             # add trailing chars in street_format
             street_value += street_format[previous_pos:]
-            partner.street = street_value
+            if partner.street != street_value:
+                partner.street = street_value
 
     def _split_street_with_params(self, street_raw, street_format):
         street_fields = self.get_street_fields()
