@@ -1146,7 +1146,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         receivable_acc_1 = self.company_data['default_account_receivable']
         receivable_acc_2 = self.copy_account(self.company_data['default_account_receivable'])
-        payment_account = self.bank_journal_1.payment_debit_account_id
+        payment_account = self.bank_journal_1.company_id.account_journal_payment_debit_account_id
         random_acc_1 = self.company_data['default_account_revenue']
         random_acc_2 = self.copy_account(self.company_data['default_account_revenue'])
         test_move = self.env['account.move'].create({

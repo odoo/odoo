@@ -4,7 +4,6 @@ from . import models
 from . import controllers
 
 from odoo.addons.payment import reset_payment_acquirer
-from odoo.addons.payment.models.payment_acquirer import create_missing_journals  # post-init hook
 
 
 def uninstall_hook(cr, registry):

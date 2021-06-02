@@ -52,11 +52,12 @@ class AccountPayment(models.Model):
         readonly=False, store=True,
         compute='_compute_payment_method_id',
         domain="[('id', 'in', available_payment_method_ids)]",
-        help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
-        "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
-        "Check: Pay bill by check and print it from Odoo.\n"\
-        "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"\
-        "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed ")
+        help="Manual : Pay or Get paid by any method outside of Odoo."
+        "Payment Acquirers : Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online."
+        "Check: Pay bills by check and print it from Odoo."
+        "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary."
+        "SEPA Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary"
+        "SEPA Direct Debit : Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary")
     available_payment_method_ids = fields.Many2many('account.payment.method',
         compute='_compute_payment_method_fields')
     hide_payment_method = fields.Boolean(
@@ -84,6 +85,12 @@ class AccountPayment(models.Model):
         store=True, readonly=False, ondelete='restrict',
         compute='_compute_partner_id',
         domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
+        check_company=True)
+    outstanding_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Outstanding Account",
+        store=True,
+        compute='_compute_outstanding_account_id',
         check_company=True)
     destination_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -162,11 +169,20 @@ class AccountPayment(models.Model):
         counterpart_lines = self.env['account.move.line']
         writeoff_lines = self.env['account.move.line']
 
+        if self.payment_type == 'inbound':
+            payment_method_account_ids = self.journal_id.inbound_payment_method_line_ids
+        else:
+            payment_method_account_ids = self.journal_id.outbound_payment_method_line_ids
+
+        payment_method_account_id = payment_method_account_ids\
+            .filtered(lambda line: line.code == self.payment_method_id.code).payment_account_id
+
         for line in self.move_id.line_ids:
             if line.account_id in (
                     self.journal_id.default_account_id,
-                    self.journal_id.payment_debit_account_id,
-                    self.journal_id.payment_credit_account_id,
+                    payment_method_account_id,
+                    self.journal_id.company_id.account_journal_payment_debit_account_id,
+                    self.journal_id.company_id.account_journal_payment_credit_account_id,
             ):
                 liquidity_lines += line
             elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
@@ -187,10 +203,10 @@ class AccountPayment(models.Model):
         self.ensure_one()
         write_off_line_vals = write_off_line_vals or {}
 
-        if not self.journal_id.payment_debit_account_id or not self.journal_id.payment_credit_account_id:
+        if not self.outstanding_account_id:
             raise UserError(_(
-                "You can't create a new payment without an outstanding payments/receipts account set on the %s journal.",
-                self.journal_id.display_name))
+                "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %s payment method in the %s journal.",
+                self.payment_method_id.name, self.journal_id.display_name))
 
         # Compute amounts.
         write_off_amount_currency = write_off_line_vals.get('amount', 0.0)
@@ -256,7 +272,7 @@ class AccountPayment(models.Model):
                 'debit': liquidity_balance if liquidity_balance > 0.0 else 0.0,
                 'credit': -liquidity_balance if liquidity_balance < 0.0 else 0.0,
                 'partner_id': self.partner_id.id,
-                'account_id': self.journal_id.payment_credit_account_id.id if liquidity_balance < 0.0 else self.journal_id.payment_debit_account_id.id,
+                'account_id': self.outstanding_account_id.id,
             },
             # Receivable / Payable.
             {
@@ -371,9 +387,9 @@ class AccountPayment(models.Model):
         '''
         for pay in self:
             if pay.payment_type == 'inbound':
-                available_payment_methods = pay.journal_id.inbound_payment_method_ids
+                available_payment_methods = pay.journal_id.inbound_payment_method_line_ids.mapped('payment_method_id')
             else:
-                available_payment_methods = pay.journal_id.outbound_payment_method_ids
+                available_payment_methods = pay.journal_id.outbound_payment_method_line_ids.mapped('payment_method_id')
 
             # Select the first available one by default.
             if pay.payment_method_id in available_payment_methods:
@@ -384,14 +400,14 @@ class AccountPayment(models.Model):
                 pay.payment_method_id = False
 
     @api.depends('payment_type',
-                 'journal_id.inbound_payment_method_ids',
-                 'journal_id.outbound_payment_method_ids')
+                 'journal_id.inbound_payment_method_line_ids',
+                 'journal_id.outbound_payment_method_line_ids')
     def _compute_payment_method_fields(self):
         for pay in self:
             if pay.payment_type == 'inbound':
-                pay.available_payment_method_ids = pay.journal_id.inbound_payment_method_ids
+                pay.available_payment_method_ids = pay.journal_id.inbound_payment_method_line_ids.mapped('payment_method_id')
             else:
-                pay.available_payment_method_ids = pay.journal_id.outbound_payment_method_ids
+                pay.available_payment_method_ids = pay.journal_id.outbound_payment_method_line_ids.mapped('payment_method_id')
             to_exclude = self._get_payment_method_codes_to_exclude()
             if to_exclude:
                 pay.available_payment_method_ids = pay.available_payment_method_ids.filtered(lambda x: x.code not in to_exclude)
@@ -416,6 +432,24 @@ class AccountPayment(models.Model):
                 pay.partner_id = False
             else:
                 pay.partner_id = pay.partner_id
+
+    @api.depends('journal_id', 'payment_type')
+    def _compute_outstanding_account_id(self):
+        for pay in self:
+            if pay.payment_type == 'inbound':
+                payment_method_account_id = pay.journal_id.inbound_payment_method_line_ids\
+                    .filtered(lambda line: line.code == pay.payment_method_id.code).payment_account_id
+
+                pay.outstanding_account_id = (payment_method_account_id
+                                              or pay.journal_id.company_id.account_journal_payment_debit_account_id)
+            elif pay.payment_type == 'outbound':
+                payment_method_account_id = pay.journal_id.outbound_payment_method_line_ids\
+                    .filtered(lambda line: line.code == pay.payment_method_id.code).payment_account_id
+
+                pay.outstanding_account_id = (payment_method_account_id
+                                              or pay.journal_id.company_id.account_journal_payment_credit_account_id)
+            else:
+                pay.outstanding_account_id = False
 
     @api.depends('journal_id', 'partner_id', 'partner_type', 'is_internal_transfer')
     def _compute_destination_account_id(self):
@@ -542,7 +576,7 @@ class AccountPayment(models.Model):
                 part.debit_move_id = counterpart_line.id
                 OR
                 part.credit_move_id = counterpart_line.id
-            WHERE (account.id = journal.payment_debit_account_id OR account.id = journal.payment_credit_account_id)
+            WHERE account.id = payment.outstanding_account_id
                 AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
                 AND counterpart_line.statement_id IS NOT NULL

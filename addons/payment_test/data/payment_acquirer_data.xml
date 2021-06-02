@@ -8,7 +8,12 @@
         <field name="support_fees_computation">False</field>
         <field name="support_tokenization">True</field>
         <field name="allow_tokenization">True</field>
-        <field name="state">test</field>
+    </record>
+
+    <record id="payment_method_test" model="account.payment.method">
+        <field name="name">Test</field>
+        <field name="code">test</field>
+        <field name="payment_type">inbound</field>
     </record>
 
 </odoo>

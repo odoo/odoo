@@ -117,3 +117,9 @@ class PaymentAcquirer(models.Model):
         :rtype: str
         """
         return f'ODOO_PARTNER_{partner_id}'
+
+    def _get_default_payment_method(self):
+        self.ensure_one()
+        if self.provider != 'adyen':
+            return super()._get_default_payment_method()
+        return self.env.ref('payment_adyen.payment_method_adyen').id

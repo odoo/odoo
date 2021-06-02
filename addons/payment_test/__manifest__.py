@@ -13,7 +13,6 @@ It should never be used in production environment. Make sure to disable it befor
         'views/payment_test_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
-    'post_init_hook': 'create_missing_journals',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [

@@ -271,7 +271,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': self.company.id,
             'date': time.strftime('%Y') + '-' + '07' + '-01',
             'partner_id': self.partner_agrolait_id,
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
+            'payment_method_id': self.inbound_payment_method.id,
             'partner_type': 'supplier'})
 
         # One that will complete the payment of a, the rest goes to b
@@ -282,7 +282,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': self.company.id,
             'date': time.strftime('%Y') + '-' + '08' + '-01',
             'partner_id': self.partner_agrolait_id,
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
+            'payment_method_id': self.outbound_payment_method.id,
             'partner_type': 'supplier'})
 
         # The last one will complete the payment of b
@@ -293,7 +293,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': self.company.id,
             'date': time.strftime('%Y') + '-' + '09' + '-01',
             'partner_id': self.partner_agrolait_id,
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_out').id,
+            'payment_method_id': self.outbound_payment_method.id,
             'partner_type': 'supplier'})
 
         payment_a.action_post()
@@ -339,7 +339,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         inv2 = self.create_invoice(invoice_amount=20, currency_id=self.currency_usd_id)
         payment = self.env['account.payment'].create({
             'payment_type': 'inbound',
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_id': self.inbound_payment_method.id,
             'partner_type': 'customer',
             'partner_id': self.partner_agrolait_id,
             'amount': 100,
@@ -389,7 +389,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         inv = self.create_invoice(invoice_amount=111, currency_id=self.currency_usd_id)
         payment = self.env['account.payment'].create({
             'payment_type': 'inbound',
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_id': self.inbound_payment_method.id,
             'partner_type': 'customer',
             'partner_id': self.partner_agrolait_id,
             'amount': 111,
@@ -426,7 +426,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         self.assertEqual(len(payment.line_ids), 2)
 
-        bank_line = payment.line_ids.filtered(lambda l: l.account_id.id == self.bank_journal_usd.payment_debit_account_id.id)
+        bank_line = payment.line_ids.filtered(lambda l: l.account_id.id == self.bank_journal_usd.company_id.account_journal_payment_debit_account_id.id)
         customer_line = payment.line_ids - bank_line
 
         self.assertEqual(len(bank_line), 1)
@@ -443,7 +443,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         self.assertEqual(len(reversed_move.line_ids), 2)
 
         # Testing the reconciliation matching between the move lines and their reversed counterparts
-        reversed_bank_line = reversed_move.line_ids.filtered(lambda l: l.account_id.id == self.bank_journal_usd.payment_debit_account_id.id)
+        reversed_bank_line = reversed_move.line_ids.filtered(lambda l: l.account_id.id == self.bank_journal_usd.company_id.account_journal_payment_debit_account_id.id)
         reversed_customer_line = reversed_move.line_ids - reversed_bank_line
 
         self.assertEqual(len(reversed_bank_line), 1)
@@ -495,7 +495,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         inv = self.create_invoice(invoice_amount=111, currency_id=self.currency_usd_id)
         payment = self.env['account.payment'].create({
             'payment_type': 'inbound',
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_id': self.inbound_payment_method.id,
             'partner_type': 'customer',
             'partner_id': self.partner_agrolait_id,
             'amount': 111,
@@ -617,7 +617,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         payment = self.env['account.payment'].create({
             'date': time.strftime('%Y') + '-07-15',
             'payment_type': 'inbound',
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_id': self.inbound_payment_method.id,
             'partner_type': 'customer',
             'partner_id': self.partner_agrolait_id,
             'amount': 25,

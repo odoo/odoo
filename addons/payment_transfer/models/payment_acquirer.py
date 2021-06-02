@@ -27,27 +27,6 @@ class PaymentAcquirer(models.Model):
             'show_cancel_msg': False,
         })
 
-    @api.model
-    def _create_missing_journals(self, company=None):
-        """ Override of payment to assign the default Bank journal instead or Electronic. """
-        # Search for transfer acquirers having no journal
-        company = company or self.env.company
-        transfer_acquirers = self.env['payment.acquirer'].search([
-            ('provider', '=', 'transfer'),
-            ('journal_id', '=', False),
-            ('company_id', '=', company.id)
-        ])
-
-        if transfer_acquirers:
-            # Pick the Bank journal
-            bank_journal = self.env['account.journal'].search(
-                [('type', '=', 'bank'), ('company_id', '=', company.id)], limit=1
-            )
-            if bank_journal:
-                transfer_acquirers.write({'journal_id': bank_journal.id})
-
-        return super()._create_missing_journals(company=company)
-
     @api.model_create_multi
     def create(self, values_list):
         """ Make sure to have a pending_msg set. """

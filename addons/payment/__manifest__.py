@@ -8,7 +8,6 @@
     'description': """Payment Acquirer Base Module""",
     'depends': ['account'],
     'data': [
-        'data/account_data.xml',
         'data/payment_icon_data.xml',
         'data/payment_acquirer_data.xml',
         'data/payment_cron.xml',

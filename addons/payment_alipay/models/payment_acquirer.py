@@ -58,3 +58,9 @@ class PaymentAcquirer(models.Model):
             return 'https://mapi.alipay.com/gateway.do'
         else:  # test environment
             return 'https://openapi.alipaydev.com/gateway.do'
+
+    def _get_default_payment_method(self):
+        self.ensure_one()
+        if self.provider != 'alipay':
+            return super()._get_default_payment_method()
+        return self.env.ref('payment_alipay.payment_method_alipay').id

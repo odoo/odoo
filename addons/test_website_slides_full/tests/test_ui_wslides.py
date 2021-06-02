@@ -26,7 +26,10 @@ class TestUi(TestUICommon):
 
         # Specify Accounting Data
         cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env['payment.acquirer'].search([('journal_id', '=', False)]).journal_id = cash_journal
+        self.env['payment.acquirer'].search([('provider', '=', 'test')]).write({
+            'journal_id': cash_journal.id,
+            'state': 'test'
+        })
         a_recv = self.env['account.account'].create({
             'code': 'X1012',
             'name': 'Debtors - (test)',
