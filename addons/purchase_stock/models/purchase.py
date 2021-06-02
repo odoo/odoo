@@ -338,11 +338,9 @@ class PurchaseOrderLine(models.Model):
         return lines
 
     def write(self, values):
-        for line in self.filtered(lambda l: not l.display_type):
-            # PO date_planned overrides any PO line date_planned values
-            if values.get('date_planned'):
-                new_date = fields.Datetime.to_datetime(values['date_planned'])
-                self._update_move_date_deadline(new_date)
+        if values.get('date_planned'):
+            new_date = fields.Datetime.to_datetime(values['date_planned'])
+            self.filtered(lambda l: not l.display_type)._update_move_date_deadline(new_date)
         result = super(PurchaseOrderLine, self).write(values)
         if 'product_qty' in values:
             self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
