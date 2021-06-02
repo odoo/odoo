@@ -107,7 +107,7 @@ function constrain(dt) {
  * @param {string} str
  * @returns {string}
  */
-const stripAlphaDupes = memoize(function _stripAlphaDupes(str) {
+const stripAlphaDupes = memoize(function stripAlphaDupes(str) {
     return str.replace(alphaRegex, (letter, index, str) => {
         return letter === str[index - 1] ? "" : letter;
     });
@@ -119,7 +119,7 @@ const stripAlphaDupes = memoize(function _stripAlphaDupes(str) {
  * @param {string} value original format
  * @returns {string} valid Luxon format
  */
-export const strftimeToLuxonFormat = memoize(function _strftimeToLuxonFormat(value) {
+export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(value) {
     const output = [];
     let inToken = false;
     for (let index = 0; index < value.length; ++index) {
