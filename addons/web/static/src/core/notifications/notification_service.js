@@ -10,38 +10,42 @@ const AUTOCLOSE_DELAY = 4000;
 export const notificationService = {
     start() {
         let notifId = 0;
-        let notifications = [];
         const bus = new EventBus();
 
-        function close(id, wait = 0) {
-            function _close() {
-                const index = notifications.findIndex((n) => n.id === id);
-                if (index > -1) {
-                    notifications.splice(index, 1);
-                    bus.trigger("UPDATE", notifications);
+        return {
+            bus,
+            /**
+             * @param {string} message
+             * @param {Object} [options]
+             * @param {{
+             *      name: string;
+             *      icon?: string;
+             *      primary?: boolean;
+             *      onClick: () => void
+             * }[]} [options.buttons]
+             * @param {string} [options.className]
+             * @param {boolean} [options.messageIsHtml]
+             * @param {() => void} [options.onClose]
+             * @param {boolean} [options.sticky]
+             * @param {string} [options.title]
+             * @param {"warning" | "danger" | "success" | "info"} [options.type]
+             */
+            add(message, options = {}) {
+                const notif = Object.assign({}, options, {
+                    id: ++notifId,
+                    message,
+                });
+                const sticky = notif.sticky;
+                delete notif.sticky;
+                bus.trigger("ADD", notif);
+                if (!sticky) {
+                    browser.setTimeout(() => bus.trigger("REMOVE", notif.id), AUTOCLOSE_DELAY);
                 }
-            }
-            if (wait > 0) {
-                browser.setTimeout(_close, wait);
-            } else {
-                _close();
-            }
-        }
-        function create(message, options) {
-            const notif = Object.assign({}, options, {
-                id: ++notifId,
-                message,
-            });
-            const sticky = notif.sticky;
-            delete notif.sticky;
-            notifications.push(notif);
-            bus.trigger("UPDATE", notifications);
-            if (!sticky) {
-                browser.setTimeout(() => close(notif.id), AUTOCLOSE_DELAY);
-            }
-            return notif.id;
-        }
-        return { close, create, bus };
+                return () => {
+                    bus.trigger("REMOVE", notif.id);
+                };
+            },
+        };
     },
 };
 

@@ -224,22 +224,16 @@ export const fakeTitleService = {
     },
 };
 
-export function makeFakeNotificationService(createMock, closeMock) {
+export function makeFakeNotificationService(mock) {
     return {
         start() {
-            function create() {
-                if (createMock) {
-                    return createMock(...arguments);
-                }
-            }
-            function close() {
-                if (closeMock) {
-                    return closeMock(...arguments);
+            function add() {
+                if (mock) {
+                    return mock(...arguments);
                 }
             }
             return {
-                create,
-                close,
+                add,
             };
         },
     };

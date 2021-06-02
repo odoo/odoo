@@ -109,7 +109,7 @@ errorHandlerRegistry.add("rpcErrorHandler", rpcErrorHandler, { sequence: 97 });
 // Lost connection errors
 // -----------------------------------------------------------------------------
 
-let connectionLostNotifId = null;
+let connectionLostNotifRemove = null;
 /**
  * @param {OdooEnv} env
  * @param {UncaughError} error
@@ -121,12 +121,12 @@ function lostConnectionHandler(env, error, originalError) {
         return false;
     }
     if (originalError instanceof ConnectionLostError) {
-        if (connectionLostNotifId) {
+        if (connectionLostNotifRemove) {
             // notification already displayed (can occur if there were several
             // concurrent rpcs when the connection was lost)
             return true;
         }
-        connectionLostNotifId = env.services.notification.create(
+        connectionLostNotifRemove = env.services.notification.add(
             env._t("Connection lost. Trying to reconnect..."),
             { sticky: true }
         );
@@ -135,9 +135,11 @@ function lostConnectionHandler(env, error, originalError) {
             env.services
                 .rpc("/web/webclient/version_info", {})
                 .then(function () {
-                    env.services.notification.close(connectionLostNotifId);
-                    connectionLostNotifId = null;
-                    env.services.notification.create(
+                    if (connectionLostNotifRemove) {
+                        connectionLostNotifRemove();
+                        connectionLostNotifRemove = null;
+                    }
+                    env.services.notification.add(
                         env._t("Connection restored. You are back online."),
                         {
                             type: "info",

@@ -104,7 +104,7 @@ class ActionAdapter extends ComponentAdapter {
                     message: payload.message,
                 });
             } else {
-                this.notifications.create(payload.message, {
+                this.notifications.add(payload.message, {
                     className: payload.className,
                     sticky: payload.sticky,
                     title: payload.title,
