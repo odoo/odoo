@@ -13,7 +13,7 @@ import { useListener } from 'web.custom_hooks';
 import { useBarcodeReader } from 'point_of_sale.custom_hooks';
 import { parse } from 'web.field_utils';
 import { barcodeRepr } from 'point_of_sale.utils';
-const { useState, useRef } = owl.hooks;
+const { useState, useRef, onMounted } = owl.hooks;
 
 class ProductScreen extends PosComponent {
     constructor() {
@@ -42,6 +42,7 @@ class ProductScreen extends PosComponent {
             triggerAtInput: 'update-selected-orderline',
             useWithBarcode: true,
         });
+        onMounted(() => NumberBuffer.reset());
         this.orderContainerRef = useRef('order-container-ref');
 
         /** @type {{ numpadMode: 'quantity' | 'price' | 'discount', searchTerm: string }} */
@@ -211,9 +212,9 @@ class ProductScreen extends PosComponent {
         NumberBuffer.reset();
         this.state.numpadMode = mode;
     }
-    onSelectOrderline({ detail: orderline }) {
+    async onSelectOrderline({ detail: orderline }) {
         this.state.numpadMode = 'quantity';
-        this.env.model.actionHandler({ name: 'actionSelectOrderline', args: [this.props.activeOrder, orderline.id] });
+        await this.env.model.actionHandler({ name: 'actionSelectOrderline', args: [this.props.activeOrder, orderline.id] });
         NumberBuffer.reset();
     }
     async _onSearchTermChange([searchTerm, key]) {
