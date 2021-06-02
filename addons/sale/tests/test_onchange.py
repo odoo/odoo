@@ -159,12 +159,12 @@ class TestOnchangeProductId(TransactionCase):
 
         # force compute uom and prices
         order_line._onchange_product_id()
-        order_line.product_uom_change()
+        order_line._onchange_quantity()
         order_line._onchange_discount()
         self.assertEqual(order_line.price_subtotal, 90, "Christmas discount pricelist rule not applied")
         self.assertEqual(order_line.discount, 10, "Christmas discount not equalt to 10%")
         order_line.product_uom = new_uom
-        order_line.product_uom_change()
+        order_line._onchange_quantity()
         order_line._onchange_discount()
         self.assertEqual(order_line.price_subtotal, 900, "Christmas discount pricelist rule not applied")
         self.assertEqual(order_line.discount, 10, "Christmas discount not equalt to 10%")
@@ -276,7 +276,7 @@ class TestOnchangeProductId(TransactionCase):
         order_line._onchange_product_id()
         self.assertEqual(order_line.price_unit, 180, "First pricelist rule not applied")
         order_line.product_uom = new_uom
-        order_line.product_uom_change()
+        order_line._onchange_quantity()
         self.assertEqual(order_line.price_unit, 1800, "First pricelist rule not applied")
 
     def test_sale_warnings(self):

@@ -640,7 +640,7 @@ class SaleOrderLine(models.Model):
         return result
 
     @api.onchange('product_uom', 'product_uom_qty')
-    def product_uom_change(self):
+    def _onchange_quantity(self):
         if not self.product_uom or not self.product_id:
             self.price_unit = 0.0
             return

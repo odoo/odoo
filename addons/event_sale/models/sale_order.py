@@ -112,9 +112,9 @@ class SaleOrderLine(models.Model):
             self.event_ticket_id = None
 
     @api.onchange('product_uom', 'product_uom_qty')
-    def product_uom_change(self):
+    def _onchange_quantity(self):
         if not self.event_ticket_id:
-            super(SaleOrderLine, self).product_uom_change()
+            super()._onchange_quantity()
 
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
