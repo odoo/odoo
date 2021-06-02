@@ -72,7 +72,7 @@ class TestSaleFlow(TestSaleCommonBase):
         for line in sale_order.order_line:
             line.product_id_change()
 
-        sale_order.onchange_partner_id()
+        sale_order._onchange_partner_id()
         sale_order._compute_tax_id()
         sale_order.action_confirm()
 

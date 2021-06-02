@@ -50,8 +50,8 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).copy(default=default)
 
     @api.onchange('partner_id')
-    def onchange_partner_id(self):
-        super(SaleOrder, self).onchange_partner_id()
+    def _onchange_partner_id(self):
+        super()._onchange_partner_id()
         template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
         self.note = template.note or self.note
 

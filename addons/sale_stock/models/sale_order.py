@@ -158,8 +158,8 @@ class SaleOrder(models.Model):
             self.warehouse_id = warehouse_id or self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
 
     @api.onchange('user_id')
-    def onchange_user_id(self):
-        super().onchange_user_id()
+    def _onchange_user_id(self):
+        super()._onchange_user_id()
         self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
 
     @api.onchange('partner_shipping_id')

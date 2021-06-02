@@ -512,7 +512,7 @@ class TestSaleOrder(TestSaleCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': partner.id,
         })
-        sale_order.onchange_partner_id()
+        sale_order._onchange_partner_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
 
     def test_assign_sales_team_from_partner_team(self):
@@ -525,7 +525,7 @@ class TestSaleOrder(TestSaleCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': partner.id,
         })
-        sale_order.onchange_partner_id()
+        sale_order._onchange_partner_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should assign to team of partner')
 
     def test_assign_sales_team_when_changing_user(self):
@@ -536,7 +536,7 @@ class TestSaleOrder(TestSaleCommon):
             'team_id': self.crm_team1.id
         })
         sale_order.user_id = self.user_in_team
-        sale_order.onchange_user_id()
+        sale_order._onchange_user_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
 
     def test_keep_sales_team_when_changing_user_with_no_team(self):
@@ -546,7 +546,7 @@ class TestSaleOrder(TestSaleCommon):
             'team_id': self.crm_team1.id
         })
         sale_order.user_id = self.user_not_in_team
-        sale_order.onchange_user_id()
+        sale_order._onchange_user_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should not reset the team to default')
 
     def test_onchange_packaging_00(self):

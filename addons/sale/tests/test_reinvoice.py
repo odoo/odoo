@@ -57,7 +57,7 @@ class TestReInvoice(TestSaleCommon):
         })
         sale_order_line2.product_id_change()
 
-        self.sale_order.onchange_partner_id()
+        self.sale_order._onchange_partner_id()
         self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 
@@ -247,7 +247,7 @@ class TestReInvoice(TestSaleCommon):
         })
         so_line2.product_id_change()
 
-        self.sale_order.onchange_partner_id()
+        self.sale_order._onchange_partner_id()
         self.sale_order._compute_tax_id()
         self.sale_order.action_confirm()
 

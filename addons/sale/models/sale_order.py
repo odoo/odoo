@@ -366,7 +366,7 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self)._track_subtype(init_values)
 
     @api.onchange('partner_shipping_id', 'partner_id', 'company_id')
-    def onchange_partner_shipping_id(self):
+    def _onchange_partner_shipping_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
@@ -374,7 +374,7 @@ class SaleOrder(models.Model):
         return {}
 
     @api.onchange('partner_id')
-    def onchange_partner_id(self):
+    def _onchange_partner_id(self):
         """
         Update the following fields when the partner is changed:
         - Pricelist
@@ -419,14 +419,14 @@ class SaleOrder(models.Model):
         self.update(values)
 
     @api.onchange('user_id')
-    def onchange_user_id(self):
+    def _onchange_user_id(self):
         if self.user_id:
             self.team_id = self.env['crm.team'].with_context(
                 default_team_id=self.team_id.id
             )._get_default_team_id(user_id=self.user_id.id, domain=None)
 
     @api.onchange('partner_id')
-    def onchange_partner_id_warning(self):
+    def _onchange_partner_id_warning(self):
         if not self.partner_id:
             return
         warning = {}
