@@ -419,11 +419,24 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
+<<<<<<< HEAD
         if 'uom_id' in vals or 'uom_po_id' in vals:
             uom_id = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
             uom_po_id = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id
             if uom_id and uom_po_id and uom_id.category_id != uom_po_id.category_id:
                 vals['uom_po_id'] = uom_id.id
+=======
+        if (('type' in vals and vals['type'] != 'service') or ('landed_cost_ok' in vals and vals['landed_cost_ok'] == False)) and self.type == 'service' and self.landed_cost_ok:
+            if self.env['account.move.line'].search_count([('product_id', 'in', self.product_variant_ids.ids), ('is_landed_costs_line', '=', True)]):
+                raise UserError(_("You cannot change the product type or disable landed cost option because the product is used in an account move line."))
+            else:
+                vals['landed_cost_ok'] = False
+        uom = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
+        uom_po = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id
+        if uom and uom_po and uom.category_id != uom_po.category_id:
+            vals['uom_po_id'] = uom.id
+
+>>>>>>> 2b840a9e164... temp
         res = super(ProductTemplate, self).write(vals)
         if 'attribute_line_ids' in vals or (vals.get('active') and len(self.product_variant_ids) == 0):
             self._create_variant_ids()
