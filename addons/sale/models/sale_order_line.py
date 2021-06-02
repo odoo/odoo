@@ -624,20 +624,21 @@ class SaleOrderLine(models.Model):
             vals['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
         self.update(vals)
 
-        title = False
-        message = False
-        result = {}
-        warning = {}
-        if product.sale_line_warn != 'no-message':
-            title = _("Warning for %s", product.name)
-            message = product.sale_line_warn_msg
-            warning['title'] = title
-            warning['message'] = message
-            result = {'warning': warning}
+    @api.onchange('product_id')
+    def _onchange_product_id_warning(self):
+        product = self.product_id
+
+        if product and product.sale_line_warn != 'no-message':
+            result = {
+                'warning': {
+                    'title': _("Warning for %s", product.name),
+                    'message': product.sale_line_warn_msg,
+                }
+            }
             if product.sale_line_warn == 'block':
                 self.product_id = False
 
-        return result
+            return result
 
     @api.onchange('product_uom', 'product_uom_qty')
     def _onchange_quantity(self):
