@@ -1,12 +1,9 @@
 /** @odoo-module **/
 
-import { useService } from "../service_hook";
-
 const { Component, hooks } = owl;
 
 export class Notification extends Component {
     setup() {
-        this.notificationService = useService("notification");
         if (this.props.onClose) {
             hooks.onWillUnmount(() => this.props.onClose());
         }
@@ -34,7 +31,6 @@ export class Notification extends Component {
 
 Notification.template = "web.NotificationWowl";
 Notification.props = {
-    id: { type: Number },
     message: { type: String },
     title: { type: [String, Boolean], optional: true },
     type: {

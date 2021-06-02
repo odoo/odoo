@@ -6,8 +6,7 @@
         role="alert" aria-live="assertive" aria-atomic="true">
             <div class="o_notification_body">
                 <button type="button" class="close o_notification_close"
-                aria-label="Close"
-                    t-on-click="notificationService.close(props.id)">
+                aria-label="Close" t-on-click="trigger('close')">
                     <span class="d-inline" aria-hidden="true">×</span>
                 </button>
                 <div t-if="props.title" class="font-weight-bold o_notification_title mb-1" t-esc="props.title"/>

@@ -196,6 +196,9 @@ export function makeLegacyNotificationService(legacyEnv) {
     return {
         dependencies: ["notification"],
         start(env) {
+            let notifId = 0;
+            const idsToRemoveFn = {};
+
             function notify({
                 title,
                 message,
@@ -224,7 +227,7 @@ export function makeLegacyNotificationService(legacyEnv) {
                     };
                 });
 
-                return env.services.notification.create(message, {
+                const removeFn = env.services.notification.add(message, {
                     sticky,
                     title,
                     type,
@@ -233,12 +236,23 @@ export function makeLegacyNotificationService(legacyEnv) {
                     buttons,
                     messageIsHtml,
                 });
+                const id = ++notifId;
+                idsToRemoveFn[id] = removeFn;
+                return id;
             }
 
-            function close(...args) {
+            function close(id, _, wait) {
                 //the legacy close method had 3 arguments : the notification id, silent and wait.
                 //the new close method only has 2 arguments : the notification id and wait.
-                return env.services.notification.close(args[0], args[2] ? args[2] : 0);
+                const removeFn = idsToRemoveFn[id];
+                delete idsToRemoveFn[id];
+                if (wait) {
+                    browser.setTimeout(() => {
+                        removeFn(id);
+                    }, wait);
+                } else {
+                    removeFn(id);
+                }
             }
 
             legacyEnv.services.notification = { notify, close };

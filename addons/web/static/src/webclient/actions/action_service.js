@@ -607,7 +607,7 @@ function makeActionManager(env) {
                     "A popup window has been blocked. You may need to change your " +
                         "browser settings to allow popup windows for this page."
                 );
-                env.services.notification.create(msg, {
+                env.services.notification.add(msg, {
                     sticky: true,
                     type: "warning",
                 });
@@ -865,7 +865,7 @@ function makeActionManager(env) {
             const state = await wkhtmltopdfStateProm;
             // display a notification according to wkhtmltopdf's state
             if (state in WKHTMLTOPDF_MESSAGES) {
-                env.services.notification.create(WKHTMLTOPDF_MESSAGES[state], {
+                env.services.notification.add(WKHTMLTOPDF_MESSAGES[state], {
                     sticky: true,
                     title: env._t("Report"),
                 });

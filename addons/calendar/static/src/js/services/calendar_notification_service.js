@@ -10,7 +10,7 @@ export const calendarNotificationService = {
     start(env, { action, notification, rpc }) {
         let calendarNotifTimeouts = {};
         let nextCalendarNotifTimeout = null;
-        const calendarNotif = {};
+        const displayedNotifications = new Set();
 
         env.bus.on("WEB_CLIENT_READY", null, async () => {
             const legacyEnv = owl.Component.env;
@@ -38,16 +38,16 @@ export const calendarNotificationService = {
             // For each notification, set a timeout to display it
             notifications.forEach(function (notif) {
                 const key = notif.event_id + "," + notif.alarm_id;
-                if (key in calendarNotif) {
+                if (displayedNotifications.has(key)) {
                     return;
                 }
                 calendarNotifTimeouts[key] = browser.setTimeout(function () {
-                    const notificationID = notification.create(notif.message, {
+                    const notificationRemove = notification.add(notif.message, {
                         title: notif.title,
                         type: "warning",
                         sticky: true,
                         onClose: () => {
-                            delete calendarNotif[key];
+                            displayedNotifications.delete(key);
                         },
                         buttons: [
                             {
@@ -55,7 +55,7 @@ export const calendarNotificationService = {
                                 primary: true,
                                 onClick: async () => {
                                     await rpc("/calendar/notify_ack");
-                                    notification.close(calendarNotif[key]);
+                                    notificationRemove();
                                 },
                             },
                             {
@@ -67,18 +67,18 @@ export const calendarNotificationService = {
                                             resId: notif.event_id,
                                         }
                                     );
-                                    notification.close(calendarNotif[key]);
+                                    notificationRemove();
                                 },
                             },
                             {
                                 name: env._t("Snooze"),
                                 onClick: () => {
-                                    notification.close(calendarNotif[key]);
+                                    notificationRemove();
                                 },
                             },
                         ],
                     });
-                    calendarNotif[key] = notificationID;
+                    displayedNotifications.add(key);
                 }, notif.timer * 1000);
                 lastNotifTimer = Math.max(lastNotifTimer, notif.timer);
             });

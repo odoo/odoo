@@ -126,12 +126,13 @@ QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
             callback();
         },
     });
-    const mockCreate = (message) => {
+    const mock = (message) => {
         assert.step(`create (${message})`);
-        return 1234;
+        return () => {
+            assert.step(`close`);
+        };
     };
-    const mockClose = (id) => assert.step(`close (${id})`);
-    serviceRegistry.add("notification", makeFakeNotificationService(mockCreate, mockClose), {
+    serviceRegistry.add("notification", makeFakeNotificationService(mock), {
         force: true,
     });
     const values = [false, true]; // simulate the 'back online status' after 2 'version_info' calls
@@ -157,7 +158,7 @@ QUnit.test("handle CONNECTION_LOST_ERROR", async (assert) => {
         "version_info",
         "set timeout (>2000)",
         "version_info",
-        "close (1234)",
+        "close",
         "create (Connection restored. You are back online.)",
     ]);
 });

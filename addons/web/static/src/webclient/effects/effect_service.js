@@ -34,7 +34,7 @@ export const effectService = {
          */
         function applyEffect(effect) {
             if (!user.showEffect) {
-                notification.create(effect.message, { sticky: false });
+                notification.add(effect.message, { sticky: false });
             } else {
                 bus.trigger("UPDATE", effect);
             }

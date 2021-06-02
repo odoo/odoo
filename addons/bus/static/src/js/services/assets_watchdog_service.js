@@ -8,7 +8,7 @@ export const assetsWatchdogService = {
 
     start(env, { notification }) {
         const assets = {};
-        let assetsChangedNotificationId = null;
+        let isNotificationDisplayed = false;
         let bundleNotifTimerID = null;
 
         env.bus.on("WEB_CLIENT_READY", null, async () => {
@@ -28,13 +28,13 @@ export const assetsWatchdogService = {
          * Displays one notification on user's screen when assets have changed
          */
         function displayBundleChangedNotification() {
-            if (!assetsChangedNotificationId) {
+            if (!isNotificationDisplayed) {
                 // Wrap the notification inside a delay.
                 // The server may be overwhelmed with recomputing assets
                 // We wait until things settle down
                 browser.clearTimeout(bundleNotifTimerID);
                 bundleNotifTimerID = browser.setTimeout(() => {
-                    assetsChangedNotificationId = notification.create(
+                    notification.add(
                         env._t("The page appears to be out of date."),
                         {
                             title: env._t("Refresh"),
@@ -50,10 +50,11 @@ export const assetsWatchdogService = {
                                 },
                             ],
                             onClose: () => {
-                                assetsChangedNotificationId = null;
+                                isNotificationDisplayed = false;
                             },
                         }
                     );
+                    isNotificationDisplayed = true;
                 }, getBundleNotificationDelay());
             }
         }
