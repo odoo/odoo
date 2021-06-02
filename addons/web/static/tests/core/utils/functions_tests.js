@@ -60,4 +60,12 @@ QUnit.module("utils", () => {
             "Subsequent calls to memoized function with more than one argument do not call the original function again even if the arguments other than the first have changed"
         );
     });
+
+    QUnit.test("memoized function inherit function name if possible", function (assert) {
+        const memoized1 = memoize(function test() {});
+        assert.strictEqual(memoized1.name, "test (memoized)");
+
+        const memoized2 = memoize(function () {});
+        assert.strictEqual(memoized2.name, "memoized");
+    });
 });
