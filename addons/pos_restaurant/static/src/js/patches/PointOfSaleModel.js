@@ -37,7 +37,7 @@ odoo.define('pos_restaurant.PointOfSaleModel', function (require) {
                 this.config.module_pos_restaurant && Boolean(this.getRecords('restaurant.floor').length);
             this.ifacePrinters = this.config.is_order_printer && Boolean(this.getRecords('restaurant.printer').length);
             this.orderIdsToRemove = new Set(
-                JSON.parse(this.storage.getItem(`${this.getStorageKeyPrefix()}/orderIdsToRemove`) || null) || []
+                JSON.parse(this.storage.getItem(`${this.getStorageKeyPrefix('others')}/orderIdsToRemove`) || null) || []
             );
         },
         async _assignDataDerived() {

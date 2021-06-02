@@ -17,7 +17,7 @@ odoo.define('pos_restaurant.PointOfSaleUI', function (require) {
         },
         _saveOrderIdsToRemove() {
             this.env.model.storage.setItem(
-                `${this.env.model.getStorageKeyPrefix()}/orderIdsToRemove`,
+                `${this.env.model.getStorageKeyPrefix('others')}/orderIdsToRemove`,
                 JSON.stringify([...this.env.model.orderIdsToRemove])
             );
         }

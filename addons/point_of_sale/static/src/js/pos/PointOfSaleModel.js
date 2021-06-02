@@ -1890,8 +1890,8 @@ class PointOfSaleModel extends EventBus {
 
     //#region PERSISTENCE OF ORDERS
 
-    getStorageKeyPrefix() {
-        return `odoo-pos-data/${this.config.uuid}/${odoo.pos_session_id}`;
+    getStorageKeyPrefix(type) {
+        return `odoo-pos-data/${type}/${this.config.uuid}/${odoo.pos_session_id}`;
     }
     /**
      * Returns a string which serves a key to localStorage to save the order.
@@ -1899,7 +1899,7 @@ class PointOfSaleModel extends EventBus {
      * @return {string}
      */
     _constructPersistKey(order) {
-        return `${this.getStorageKeyPrefix()}/${order.id}`;
+        return `${this.getStorageKeyPrefix('order')}/${order.id}`;
     }
     /**
      * Deconstructs the string created by _constructPersistKey.
@@ -1955,8 +1955,8 @@ class PointOfSaleModel extends EventBus {
     _getPersistedOrders() {
         const orderData = [];
         for (const [key, orderJSON] of Object.entries(this.storage)) {
-            const [prefix, configUUID] = this._desconstructPersistKey(key);
-            if (!(prefix === 'odoo-pos-data' && configUUID === this.config.uuid)) continue;
+            const [prefix, type, configUUID] = this._desconstructPersistKey(key);
+            if (!(prefix === 'odoo-pos-data' && configUUID === this.config.uuid && type === 'order')) continue;
             orderData.push([key, JSON.parse(orderJSON)]);
         }
         return orderData;
@@ -2568,7 +2568,7 @@ class PointOfSaleModel extends EventBus {
         }
         // If the active order is also deleted, we make sure to set a new one.
         if (!this.getActiveOrder()) {
-            const orders = this.getDraftOrders();
+            const orders = this.getOrdersSelection();
             // IMPROVEMENT: perhaps select the order next to the deleted one instead of the first order
             const orderToSet = orders.length ? orders[0] : this._createDefaultOrder();
             this._setActiveOrderId(orderToSet.id);
