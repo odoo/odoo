@@ -1622,7 +1622,7 @@ class PointOfSaleModel extends EventBus {
             for (const lotId of orderline.pack_lot_ids) {
                 this.deleteRecord('pos.pack.operation.lot', lotId);
             }
-            this.deleteRecord('pos.order.line');
+            this.deleteRecord('pos.order.line', orderline.id);
         }
         for (const paymentId of order.payment_ids) {
             this.deleteRecord('pos.payment', paymentId);
@@ -2073,6 +2073,7 @@ class PointOfSaleModel extends EventBus {
                 await this.actionUpdateOrderline(mergeWith, { qty: mergeWith.qty + line.qty });
             }
             this.actionSelectOrderline(order, mergeWith.id);
+            this._deleteOrderline(order, line);
             return mergeWith;
         } else {
             if (product.tracking === 'serial' || product.tracking === 'lot') {
