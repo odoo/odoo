@@ -1010,40 +1010,44 @@ actual arch.
         """ Process the given arch node, which may be the complete arch or some
         subnode, and fill in the name manager with field information.
         """
-        # compute default
-        tag = node.tag
-        parent = node.getparent()
-        node_info = dict(
-            modifiers={},
-            attr_model=name_manager.Model,
-            editable=editable,
-        )
-        current_node_path = current_node_path + [tag]
+        stack = [(node, current_node_path, editable)]
+        while stack:
+            node, current_node_path, editable = stack.pop()
 
-        postprocessor = getattr(self, '_postprocess_tag_%s' % tag, False)
-        if postprocessor:
-            postprocessor(node, name_manager, node_info)
-            if node.getparent() is not parent:
-                # the node has been removed, stop processing here
-                return
+            # compute default
+            tag = node.tag
+            parent = node.getparent()
+            node_info = dict(
+                modifiers={},
+                attr_model=name_manager.Model,
+                editable=editable,
+            )
+            current_node_path = current_node_path + [tag]
 
-        elif tag in {item[0] for item in type(self.env['ir.ui.view']).type.selection}:
-            node_info['editable'] = False
+            postprocessor = getattr(self, '_postprocess_tag_%s' % tag, False)
+            if postprocessor:
+                postprocessor(node, name_manager, node_info)
+                if node.getparent() is not parent:
+                    # the node has been removed, stop processing here
+                    continue
 
-        if name_manager.validate:
-            # structure validation
-            validator = getattr(self, '_validate_tag_%s' % tag, False)
-            if validator:
-                validator(node, name_manager, node_info)
-            self._validate_attrs(node, name_manager, node_info)
+            elif tag in {item[0] for item in type(self.env['ir.ui.view']).type.selection}:
+                node_info['editable'] = False
 
-        self._apply_groups(node, name_manager, node_info)
-        transfer_node_to_modifiers(node, node_info['modifiers'], self._context, current_node_path)
-        transfer_modifiers_to_node(node_info['modifiers'], node)
+            if name_manager.validate:
+                # structure validation
+                validator = getattr(self, '_validate_tag_%s' % tag, False)
+                if validator:
+                    validator(node, name_manager, node_info)
+                self._validate_attrs(node, name_manager, node_info)
 
-        # if present, iterate on node_info['children'] instead of node
-        for child in node_info.get('children', node):
-            self.postprocess(child, current_node_path, node_info['editable'], name_manager)
+            self._apply_groups(node, name_manager, node_info)
+            transfer_node_to_modifiers(node, node_info['modifiers'], self._context, current_node_path)
+            transfer_modifiers_to_node(node_info['modifiers'], node)
+
+            # if present, iterate on node_info['children'] instead of node
+            for child in reversed(node_info.get('children', node)):
+                stack.append((child, current_node_path, node_info['editable']))
 
     #------------------------------------------------------
     # Specific node postprocessors
