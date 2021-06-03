@@ -20,6 +20,7 @@ class TestMembershipCommon(AccountTestInvoicingCommon):
             'name': 'Basic Limited',
             'type': 'service',
             'list_price': 100.00,
+            'company_id': cls.company_data['company'].id
         })
 
         # Test people

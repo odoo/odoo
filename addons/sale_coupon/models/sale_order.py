@@ -140,7 +140,7 @@ class SaleOrder(models.Model):
 
     def _get_reward_values_discount(self, program):
         if program.discount_type == 'fixed_amount':
-            taxes = program.discount_line_product_id.taxes_id
+            taxes = program.discount_line_product_id.taxes_id.filtered(lambda l: l.company_id.id == self.env.company.id)
             if self.fiscal_position_id:
                 taxes = self.fiscal_position_id.map_tax(taxes)
             return [{

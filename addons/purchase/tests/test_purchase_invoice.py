@@ -22,6 +22,7 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             'purchase_method': 'purchase',
             'default_code': 'PROD_ORDER',
             'taxes_id': False,
+            'company_id': cls.company_data['company'].id
         })
         cls.service_deliver = cls.env['product.product'].create({
             'name': "Cost-plus Contract",
@@ -33,6 +34,7 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             'purchase_method': 'receive',
             'default_code': 'SERV_DEL',
             'taxes_id': False,
+            'company_id': cls.company_data['company'].id
         })
         cls.service_order = cls.env['product.product'].create({
             'name': "Prepaid Consulting",
@@ -44,6 +46,7 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             'purchase_method': 'purchase',
             'default_code': 'PRE-PAID',
             'taxes_id': False,
+            'company_id': cls.company_data['company'].id
         })
         cls.product_deliver = cls.env['product.product'].create({
             'name': "Switch, 24 ports",
@@ -55,6 +58,7 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             'purchase_method': 'receive',
             'default_code': 'PROD_DEL',
             'taxes_id': False,
+            'company_id': cls.company_data['company'].id
         })
 
     def test_vendor_bill_delivered(self):

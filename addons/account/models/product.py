@@ -77,13 +77,12 @@ class ProductTemplate(models.Model):
     def create(self, vals_list):
         products = super().create(vals_list)
         # check allowed company to avoid the test case access
-        if self.env.context.get('allowed_company_ids'):
-            for product in products.filtered(lambda l: not l.company_id):
-                sale_taxes, supplier_taxes = product._get_default_taxes()
-                if sale_taxes:
-                    product.sudo().write({'taxes_id': [(4, tx) for tx in sale_taxes.ids]})
-                if supplier_taxes:
-                    product.sudo().write({'supplier_taxes_id': [(4, tx) for tx in supplier_taxes.ids]})
+        for product in products.filtered(lambda l: not l.company_id):
+            sale_taxes, supplier_taxes = product._get_default_taxes()
+            if sale_taxes:
+                product.sudo().write({'taxes_id': [(4, tx) for tx in sale_taxes.ids]})
+            if supplier_taxes:
+                product.sudo().write({'supplier_taxes_id': [(4, tx) for tx in supplier_taxes.ids]})
         return products
 
 

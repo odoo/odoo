@@ -169,7 +169,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     raise UserError(_('The product used to invoice a down payment should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
                 if self.product_id.type != 'service':
                     raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
-                taxes = self.product_id.taxes_id.filtered(lambda r: not order.company_id or r.company_id == order.company_id)
+                taxes = self.product_id.sudo().taxes_id.filtered(lambda r: not order.company_id or r.company_id == order.company_id)
                 tax_ids = order.fiscal_position_id.map_tax(taxes, self.product_id, order.partner_shipping_id).ids
                 analytic_tag_ids = []
                 for line in order.order_line:

@@ -26,6 +26,7 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         product_form.default_code = 'LIFO'
         product_form.name = 'LIFO Ice Cream'
         product_form.type = 'product'
+        product_form.company_id = self.company_data['company']
         product_form.categ_id = product_category_001
         product_form.lst_price = 100.0
         product_form.uom_id = self.env.ref('uom.product_uom_kgm')
