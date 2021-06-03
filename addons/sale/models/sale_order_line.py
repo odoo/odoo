@@ -20,7 +20,7 @@ class SaleOrderLine(models.Model):
 
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True, index=True)
     currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id.currency_id'], store=True, string='Currency', readonly=True)
-    order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', readonly=False)
+    order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
     state = fields.Selection(
         related='order_id.state', string='Order Status', readonly=True, copy=False, store=True, default='draft')
