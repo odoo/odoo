@@ -339,7 +339,6 @@ class MrpProduction(models.Model):
                 order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids | order.move_finished_ids)
             else:
                 order.post_visible = order.is_locked and any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
-            order.post_visible &= all(wo.state in ['done', 'cancel'] for wo in order.workorder_ids) or all(m.product_id.tracking == 'none' for m in order.move_raw_ids)
 
     @api.multi
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done', 'is_locked')
@@ -831,6 +830,8 @@ class MrpProduction(models.Model):
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             for move in moves_to_do.filtered(lambda m: m.product_qty == 0.0 and m.quantity_done > 0):
                 move.product_uom_qty = move.quantity_done
+            for line in moves_to_do.mapped('move_line_ids').filtered(lambda l: l.product_id.tracking != 'none' and not l.lot_id):
+                line.qty_done = 0
             # MRP do not merge move, catch the result of _action_done in order
             # to get extra moves.
             moves_to_do = moves_to_do._action_done()
