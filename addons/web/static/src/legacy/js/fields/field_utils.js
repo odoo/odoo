@@ -648,8 +648,19 @@ function parseFloatTime(value) {
         factor = -1;
     }
     var float_time_pair = value.split(":");
-    if (float_time_pair.length !== 2)
+    if (float_time_pair.length !== 2) {
+        // if value is integer with all digits e.g. 1234 should be converted to 12:34
+        if (value.length > 2 && value.toString().indexOf('.') === -1) {
+            var parsed = parseNumber(value);
+            if (isNaN(parsed)) {
+                throw new Error(_.str.sprintf(core._t("'%s' is not a correct float"), value));
+            }
+            const hours = parseInt(String(value).slice(0, -2));
+            const minutes = parseInt(String(value).slice(-2));
+            return factor * (hours + (minutes / 60));
+        }
         return factor * parseFloat(value);
+    }
     var hours = parseInteger(float_time_pair[0]);
     var minutes = parseInteger(float_time_pair[1]);
     return factor * (hours + (minutes / 60));

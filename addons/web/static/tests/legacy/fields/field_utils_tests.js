@@ -219,6 +219,28 @@ QUnit.test('parse float', function(assert) {
     _.extend(core._t.database.parameters, originalParameters);
 });
 
+QUnit.test('parse float_time', function(assert) {
+    assert.expect(13);
+
+    assert.strictEqual(fieldUtils.parse.float_time(""), 0);
+    assert.strictEqual(fieldUtils.parse.float_time("0"), 0);
+    assert.strictEqual(fieldUtils.parse.float_time("100.00"), 100);
+    assert.strictEqual(fieldUtils.parse.float_time("-100.00"), -100);
+    assert.strictEqual(fieldUtils.parse.float_time("1,000.00"), 1000);
+    assert.strictEqual(fieldUtils.parse.float_time("1000000.00"), 1000000);
+    // Insert only digits
+    assert.strictEqual(fieldUtils.parse.float_time("12"), 12);
+    assert.strictEqual(parseFloat(fieldUtils.parse.float_time("123").toFixed(2)), 1.38);
+    assert.strictEqual(parseFloat(fieldUtils.parse.float_time("1234").toFixed(2)), 12.57);
+    assert.strictEqual(parseFloat(fieldUtils.parse.float_time("1295").toFixed(2)), 13.58);
+    assert.strictEqual(parseFloat(fieldUtils.parse.float_time("12395").toFixed(2)), 124.58);
+
+    assert.strictEqual(parseFloat(fieldUtils.parse.float_time('1234567').toFixed(2)), 12346.12);
+    assert.throws(function () {
+        fieldUtils.parse.float_time("blabla");
+    }, "Throw an exception if it's not a valid number");
+});
+
 QUnit.test('parse integer', function(assert) {
     assert.expect(11);
 
