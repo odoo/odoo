@@ -370,7 +370,7 @@ class AdyenAccount(models.Model):
             url = self.env['ir.config_parameter'].sudo().get_param('adyen_platforms.onboarding_url')
             params = {
                 'creation_token': request.session.get('adyen_creation_token'),
-                'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
+                'base_url': self.get_base_url(),
                 'adyen_data': adyen_data,
             }
             auth = None
