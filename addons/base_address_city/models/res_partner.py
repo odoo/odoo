@@ -32,10 +32,12 @@ class Partner(models.Model):
         if doc.xpath("//field[@name='city_id']"):
             return arch
 
+        # only add 'parent_id' invisible field if not already available in arch
+        parent_id_exist = doc.xpath("//field[@name='parent_id']")
         replacement_xml = """
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
-                <field name="parent_id" invisible="1"/>
+                %(field_parent_id)s
                 <field name='city' placeholder="%(placeholder)s" class="o_address_city"
                     attrs="{
                         'invisible': [('country_enforce_cities', '=', True), '|', ('city_id', '!=', False), ('city', 'in', ['', False ])],
@@ -58,6 +60,7 @@ class Partner(models.Model):
 
         replacement_data = {
             'placeholder': _('City'),
+            'field_parent_id': '' if parent_id_exist else '<field name="parent_id" invisible="1"/>'
         }
 
         def _arch_location(node):
