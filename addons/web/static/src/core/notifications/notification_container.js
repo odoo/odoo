@@ -25,4 +25,6 @@ NotificationContainer.template = tags.xml`
     </div>`;
 NotificationContainer.components = { NotificationComponent };
 
-registry.category("main_components").add("NotificationContainer", NotificationContainer);
+registry.category("main_components").add("NotificationContainer", {
+    Component: NotificationContainer,
+});

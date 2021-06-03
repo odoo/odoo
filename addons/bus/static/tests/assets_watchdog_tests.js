@@ -34,7 +34,9 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
         serviceRegistry.add("assetsWatchdog", assetsWatchdogService);
 
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", NotificationContainer);
+        mainComponentRegistry.add("NotificationContainer", {
+            Component: NotificationContainer
+        });
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
             clearTimeout: () => {},

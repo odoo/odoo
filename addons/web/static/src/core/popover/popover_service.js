@@ -92,7 +92,9 @@ PopoverManager.template = xml`
   </div>
 `;
 
-registry.category("main_components").add("PopoverManager", PopoverManager);
+registry.category("main_components").add("PopoverManager", {
+    Component: PopoverManager,
+});
 
 export const popoverService = {
     start() {

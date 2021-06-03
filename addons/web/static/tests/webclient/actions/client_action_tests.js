@@ -334,7 +334,9 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("test display_notification client action", async function (assert) {
         assert.expect(6);
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", NotificationContainer);
+        mainComponentRegistry.add("NotificationContainer", {
+            Component: NotificationContainer,
+        });
         const webClient = await createWebClient({ testConfig });
         await doAction(webClient, 1);
         assert.containsOnce(webClient, ".o_kanban_view");
@@ -375,7 +377,9 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("test next action on display_notification client action", async function (assert) {
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", NotificationContainer);
+        mainComponentRegistry.add("NotificationContainer", {
+            Component: NotificationContainer,
+        });
         const webClient = await createWebClient({ testConfig });
         const options = {
             onClose: function (infos) {

@@ -19,7 +19,9 @@ QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         testConfig = getActionManagerTestConfig();
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("DialogContainer", DialogContainer);
+        mainComponentRegistry.add("DialogContainer", {
+            Component: DialogContainer,
+        });
     });
 
     QUnit.module("Report actions");

@@ -50,7 +50,7 @@ QUnit.test("can render a main component", async (assert) => {
     class MyComponent extends Component {}
     MyComponent.template = xml`<span class="chocolate">MyComponent</span>`;
     clearRegistryWithCleanup(mainComponentRegistry);
-    mainComponentRegistry.add("mycomponent", MyComponent);
+    mainComponentRegistry.add("mycomponent", { Component: MyComponent });
     const env = await makeTestEnv(baseConfig);
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });

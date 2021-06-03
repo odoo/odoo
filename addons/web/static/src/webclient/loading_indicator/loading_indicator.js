@@ -50,4 +50,6 @@ export class LoadingIndicator extends Component {
 
 LoadingIndicator.template = "web.LoadingIndicator";
 
-registry.category("main_components").add("LoadingIndicator", LoadingIndicator);
+registry.category("main_components").add("LoadingIndicator", {
+    Component: LoadingIndicator,
+});

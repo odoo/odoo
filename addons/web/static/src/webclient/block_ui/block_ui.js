@@ -86,4 +86,4 @@ BlockUI.template = tags.xml`
       </t>
     </div>`;
 
-registry.category("main_components").add("BlockUI", BlockUI);
+registry.category("main_components").add("BlockUI", { Component: BlockUI });

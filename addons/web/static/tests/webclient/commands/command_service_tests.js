@@ -20,7 +20,7 @@ const commandCategoryRegistry = registry.category("command_categories");
 
 class TestComponent extends Component {}
 TestComponent.components = {
-    DialogContainer: registry.category("main_components").get("DialogContainer"),
+    DialogContainer: registry.category("main_components").get("DialogContainer").Component,
 };
 TestComponent.template = xml`
   <div>
