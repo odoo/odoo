@@ -8,7 +8,13 @@
     var viewUpdateCount = 0;
     var testedApps;
     var testedMenus;
-    var blackListedMenus = ['base.menu_theme_store', 'base.menu_third_party', 'account.menu_action_account_bank_journal_form', 'pos_adyen.menu_pos_adyen_account'];
+    var blackListedMenus = [
+        'base.menu_theme_store',
+        'base.menu_third_party',
+        'account.menu_action_account_bank_journal_form',
+        'pos_adyen.menu_pos_adyen_account',
+        'payment_odoo.menu_adyen_account',
+    ];
     var appsMenusOnly = false;
     let isEnterprise = odoo.session_info.server_version_info[5] === 'e';
 
