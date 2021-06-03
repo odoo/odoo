@@ -171,20 +171,20 @@ class GoogleSync(models.AbstractModel):
         if http_error.response.status_code in (403, 400):
             response = http_error.response.json()
             if self._name == 'calendar.event':
-                start = self.start.strftime('%Y-%m-%d at %H:%M')
+                start = self.start and self.start.strftime('%Y-%m-%d at %H:%M') or _("undefined time")
                 event_ids = self.id
                 name = self.name
                 error_log = "Error while syncing event: "
                 event = self
             else:
                 # calendar recurrence is triggering the error
-                start = self.base_event_id.start.strftime('%Y-%m-%d at %H:%M')
-                event_ids = _("%(id)s and %(length)s following", id=self.base_event_id.id, length=len(self.calendar_event_ids.ids))
-                name = self.base_event_id.name
+                event = self.base_event_id or self._get_first_event(include_outliers=True)
+                start = event.start and event.start.strftime('%Y-%m-%d at %H:%M') or _("undefined time")
+                event_ids = _("%(id)s and %(length)s following", id=event.id, length=len(self.calendar_event_ids.ids))
+                name = event.name
                 # prevent to sync other events
                 self.calendar_event_ids.need_sync = False
-                error_log = "Error while syncing recurrence: "
-                event = self.base_event_id
+                error_log = "Error while syncing recurrence [{id} - {name} - {rrule}]: ".format(id=self.id, name=self.name, rrule=self.rrule)
 
             # We don't have right access on the event or the request paramaters were bad.
             # https://developers.google.com/calendar/v3/errors#403_forbidden_for_non-organizer
@@ -203,11 +203,12 @@ class GoogleSync(models.AbstractModel):
                 "It will not be synced as long at it is not updated.</br>"
                 "%(reason)s", reason=reason)
 
-            event.message_post(
-                body=body,
-                message_type='comment',
-                subtype_xmlid='mail.mt_note',
-            )
+            if event:
+                event.message_post(
+                    body=body,
+                    message_type='comment',
+                    subtype_xmlid='mail.mt_note',
+                )
 
     @after_commit
     def _google_delete(self, google_service: GoogleCalendarService, google_id, timeout=TIMEOUT):
