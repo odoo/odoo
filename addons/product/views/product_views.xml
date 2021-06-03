@@ -48,21 +48,21 @@
                                     <label for="list_price"/>
                                     <div name="pricing">
                                       <field name="list_price" class="oe_inline" widget='monetary'
-                                        options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                        options="{'currency_field': 'currency_id', 'field_digits': True}" invisible='1'/>
                                       <button name="open_pricelist_rules" icon="fa-arrow-right" type="object"
-                                        groups="product.group_product_pricelist" class="oe_inline">
-                                        <field name="pricelist_item_count" attrs="{'invisible': [('pricelist_item_count', '=', 0)]}"/>
-                                        <span attrs="{'invisible': [('pricelist_item_count', '=', 1)]}">
+                                        groups="product.group_product_pricelist" class="oe_inline" invisible='1'>
+                                        <field name="pricelist_item_count" attrs="{'invisible': [('pricelist_item_count', '=', 0)]}" invisible='1'/>
+                                        <span attrs="{'invisible': [('pricelist_item_count', '=', 1)]}" invisible='1'>
                                           Extra Prices
                                         </span>
-                                        <span attrs="{'invisible': [('pricelist_item_count', '!=', 1)]}">
+                                        <span attrs="{'invisible': [('pricelist_item_count', '!=', 1)]}" invisible='1'>
                                           Extra Price
                                         </span>
                                       </button>
                                     </div>
-                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
-                                    <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" class="o_row">
-                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
+                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" invisible='1'/>
+                                    <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" class="o_row" invisible='1'>
+                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}" invisible='1'/>
                                         <span groups="uom.group_uom" class="oe_read_only">per
                                             <field name="uom_name"/>
                                         </span>
