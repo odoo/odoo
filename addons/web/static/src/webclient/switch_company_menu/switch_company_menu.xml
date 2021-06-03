@@ -19,7 +19,7 @@
 
 <t t-name="web.SwitchCompanyItem" owl="1">
     <div>
-        <t t-set="isCompanySelected" t-value="companyService.allowedCompanyIds.includes(company.id)"/>
+        <t t-set="isCompanySelected" t-value="selectedCompanies.includes(company.id)"/>
         <t t-set="isCurrent" t-value="company.id === companyService.currentCompany.id"/>
         <DropdownItem>
             <div class="dropdown-item d-flex py-0 px-0" data-menu="company" t-att-data-company-id="company.id">
@@ -29,7 +29,7 @@
                     t-att-aria-label="company.name"
                     tabindex="0"
                     class="ml-auto pl-3 pr-3 border border-top-0 border-left-0 border-bottom-0 toggle_company o_py"
-                    t-on-click="toggleCompany(company.id)">
+                    t-on-click.stop="toggleCompany(company.id)">
 
                     <span style="height: 2rem;">
                         <i class="fa fa-fw pt-2" t-attf-class="{{isCompanySelected ? 'fa-check-square' : 'fa-square-o'}}"/>
@@ -46,7 +46,7 @@
                     t-attf-style="{{isCurrent ? 'background-color: lightgrey;' : ''}}"
                     t-on-click="logIntoCompany(company.id)">
 
-                    <span class='mr-3 company_label' t-attf-class="{{isCompanySelected ? '' : 'text-muted'}}">
+                    <span class='mr-3 company_label' t-attf-class="{{selectedCompanies.includes(company.id) ? '' : 'text-muted'}}">
                         <t t-esc="company.name"/>
                     </span>
 
