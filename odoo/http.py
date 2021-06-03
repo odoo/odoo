@@ -1452,10 +1452,11 @@ class Root(object):
                     return request._handle_exception(e)
                 return result
 
-            with contextlib.ExitStack() as stack:
-                for manager in self.get_dispatch_context_managers(request):
-                    stack.enter_context(manager)
+            request_manager = request
+            if request.session.profile_session:
+                request_manager = self.get_profiler_context_manager(request)
 
+            with request_manager:
                 db = request.session.db
                 if db:
                     try:
@@ -1487,11 +1488,8 @@ class Root(object):
         except werkzeug.exceptions.HTTPException as e:
             return e(environ, start_response)
 
-    def get_dispatch_context_managers(self, request):
-        """ Return the context managers to use for dispatching a request.
-        This includes ``request`` itself, and optionally a profiler.
-        """
-        context_managers = [request]
+    def get_profiler_context_manager(self, request):
+        """ Return a context manager that combines a profiler and ``request``. """
         if request.session.profile_session and request.session.db:
             if request.session.profile_expiration < str(datetime.now()):
                 # avoid having session profiling for too long if user forgets to disable profiling
@@ -1506,17 +1504,18 @@ class Root(object):
                 _logger.debug("Profiling disabled for evented server")
             else:
                 try:
-                    context_managers.append(profiler.Profiler(
+                    prof = profiler.Profiler(
                         db=request.session.db,
                         description=request.httprequest.full_path,
                         profile_session=request.session.profile_session,
                         collectors=request.session.profile_collectors,
                         params=request.session.profile_params,
-                    ))
+                    )
+                    return profiler.Nested(prof, request)
                 except Exception:
                     _logger.exception("Failure during Profiler creation")
                     request.session.profile_session = None
-        return context_managers
+        return request
 
     def get_db_router(self, db):
         if not db:
