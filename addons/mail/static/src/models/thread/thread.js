@@ -1537,6 +1537,20 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeShouldBeSetAsSeen() {
+            if (
+                this.mass_mailing &&
+                this.env.session.notification_type === 'email' &&
+                this.lastMessage
+            ) {
+                return this.markAsSeen(this.lastMessage);
+            }
+        }
+
+        /**
+         * @private
          * @returns {mail.activity[]}
          */
         _computeTodayActivities() {
@@ -2279,6 +2293,17 @@ function factory(dependencies) {
          */
         serverMessageUnreadCounter: attr({
             default: 0,
+        }),
+        /**
+         * Not a real field, used to trigger `thread.markAsSeen` when
+         * notification "Handled by Email".
+         */
+        shouldBeSetAsSeen: attr({
+            compute: '_computeShouldBeSetAsSeen',
+            dependencies: [
+                'lastMessage',
+                'mass_mailing',
+            ],
         }),
         /**
          * Determines the `mail.suggested_recipient_info` concerning `this`.

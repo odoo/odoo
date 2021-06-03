@@ -40,6 +40,53 @@ QUnit.module('thread_preview_tests.js', {
     },
 });
 
+QUnit.test('Message from mailing channel should not make a notification', async function (assert) {
+    assert.expect(3);
+
+    await this.start({
+        env: {
+            session: {
+                notification_type: "email"
+            }
+        },
+        async mockRPC(route, args) {
+            if (route.includes('channel_seen')) {
+                assert.step('channel_seen');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].create({
+        channel_type: 'channel',
+        id: 100,
+        mass_mailing: true,
+        model: 'mail.channel',
+        name: "General",
+        public: 'public',
+    });
+    this.env.models['mail.message'].create({
+        author: [['insert', { id: 1, display_name: "Admin" }]],
+        body: "<p>Test 1</p>",
+        id: 101,
+        moderation_status: 'pending_moderation',
+        originThread: [['link', thread]],
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadPreviewComponent({ threadLocalId: threadViewer.localId  });
+    assert.containsNone(
+        document.body,
+        '.o_ThreadPreview_counter',
+        "should not have notification counter"
+    );
+    assert.verifySteps(
+        ['channel_seen'],
+        "should have marked the thread as seen"
+    );
+});
+
 QUnit.test('mark as read', async function (assert) {
     assert.expect(8);
     this.data['mail.channel'].records.push({
