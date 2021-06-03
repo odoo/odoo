@@ -615,11 +615,11 @@ class SaleOrder(models.Model):
     #################
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_msg):
         self = self.with_context(
             empty_list_help_document_name=_("sale order"),
         )
-        return super(SaleOrder, self).get_empty_list_help(help)
+        return super(SaleOrder, self).get_empty_list_help(help_msg)
 
     @api.onchange('expected_date')
     def _onchange_commitment_date(self):
