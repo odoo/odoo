@@ -3,7 +3,7 @@ odoo.define('web_editor.convertInline', function (require) {
 
 var FieldHtml = require('web_editor.field.html');
 
-const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/g;
+const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
 /**
  * Returns the css rules which applies on an element, tweaked so that they are
  * browser/mail client ok.
