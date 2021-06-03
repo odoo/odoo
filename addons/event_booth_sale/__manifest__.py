@@ -17,6 +17,8 @@ You can now sell your event booths
         'views/sale_order_views.xml',
         'views/event_type_booth_views.xml',
         'views/event_booth_category_views.xml',
+        # TODO: Delete this when development is finished
+        'views/event_booth_registration_views.xml',
         'views/event_booth_views.xml',
         'wizard/event_booth_configurator_views.xml',
     ],

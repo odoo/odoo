@@ -26,6 +26,14 @@
                     <field name="sale_order_line_id"/>
                 </group>
             </group>
+            <!--TODO: Delete this when development is finished, technical table don't need to have a view on it ?-->
+            <xpath expr="//sheet" position="inside">
+                <notebook groups="base.group_no_one">
+                    <page string="Registrations">
+                        <field name="event_booth_registration_ids" readonly="1"/>
+                    </page>
+                </notebook>
+            </xpath>
         </field>
     </record>
 

@@ -21,7 +21,8 @@ const EventBoothConfiguratorFormController = FormController.extend({
                 infos: {
                     eventBoothConfiguration: {
                         event_id: {id: state.data.event_id},
-                        event_booth_ids: {
+                        event_booth_category_id: {id: state.data.event_booth_category_id},
+                        event_booth_pending_ids: {
                             operation: 'MULTI',
                             commands: [{
                                 operation: 'REPLACE_WITH',

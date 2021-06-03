@@ -8,7 +8,6 @@ const ProductConfiguratorWidget = require('sale.product_configurator');
  * The event booth information include:
  * - event_id
  * - event_booth_id
- * - event_booth_slot_ids
  *
  */
 ProductConfiguratorWidget.include({
@@ -42,8 +41,11 @@ ProductConfiguratorWidget.include({
             if (this.recordData.event_id) {
                 defaultValues.default_event_id = this.recordData.event_id.data.id;
             }
-            if (this.recordData.event_booth_ids) {
-                defaultValues.default_event_booth_ids = this.recordData.event_booth_ids.data.id;
+            if (this.recordData.event_booth_category_id) {
+                defaultValues.default_event_booth_category_id = this.recordData.event_booth_category_id.data.id;
+            }
+            if (this.recordData.event_booth_pending_ids) {
+                defaultValues.default_event_booth_ids = this.recordData.event_booth_pending_ids.res_ids;
             }
             this._openEventBoothConfigurator(defaultValues, this.dataPointID);
         } else {
@@ -100,14 +102,13 @@ ProductConfiguratorWidget.include({
     },
 
     /**
-     * Opens the event booth configurator allowing to configure the SO line with the
-     * booth slots informations.
+     * Opens the event booth configurator allowing to configure the SO line with its informations.
      *
      * When the window is closed, configured values are used to trigger a 'field_changed'
      * event to modify the current SO line.
      *
-     * If the window is closed without providing the required values 'event_id', 'event_booth_id'
-     * and 'event_booth_slot_ids', the product_id field is cleaned.
+     * If the window is closed without providing the required values 'event_id', 'event_booth_category_id'
+     * and 'event_booth_pending_ids', the product_id field is cleaned.
      *
      * @param {Object} add_context: various "default_" values added to context when calling
      *  configuration wizard model;

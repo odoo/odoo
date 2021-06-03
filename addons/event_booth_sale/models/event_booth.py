@@ -7,11 +7,15 @@ from odoo import fields, models
 class EventBooth(models.Model):
     _inherit = 'event.booth'
 
-    sale_order_id = fields.Many2one(
-        'sale.order', string='Sale Order', ondelete='set null',
-        readonly=True, states={'available': [('readonly', False)]})
+    # registrations
+    event_booth_registration_ids = fields.One2many('event.booth.registration', 'event_booth_id')
+    # sale information
+    so_registration_line_ids = fields.Many2many(
+        'sale.order.line', 'event_booth_registration',
+        'event_booth_id', 'sale_order_line_id', string='SO Lines with reservations')
+    sale_order_id = fields.Many2one(related='sale_order_line_id.order_id', store='True')
     sale_order_line_id = fields.Many2one(
-        'sale.order.line', string='Sale Order Line', ondelete='set null',
+        'sale.order.line', string='Final Sale Order Line', ondelete='set null',
         readonly=True, states={'available': [('readonly', False)]})
     is_paid = fields.Boolean('Is Paid')
 

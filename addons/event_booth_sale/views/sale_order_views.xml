@@ -15,7 +15,8 @@
             </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='event_ticket_id']" position="after">
                 <field name="is_event_booth" optional="hide"/>
-                <field name="event_booth_ids" optional="hide"/>
+                <field name="event_booth_category_id" optional="hide"/>
+                <field name="event_booth_pending_ids" optional="hide"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom_qty']" position="attributes">
                 <attribute name="attrs">{'readonly': [('is_event_booth', '=', True)]}</attribute>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <!--TODO: Delete this file when development is finished-->
+
+    <record id="event_booth_registration_view_form" model="ir.ui.view">
+        <field name="name">event.booth.registration.view.form</field>
+        <field name="model">event.booth.registration</field>
+        <field name="arch" type="xml">
+            <form string="Booth Registration">
+                <sheet>
+                    <group>
+                        <field name="sale_order_line_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_registration_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.registration.view.tree</field>
+        <field name="model">event.booth.registration</field>
+        <field name="arch" type="xml">
+            <tree string="Booth Registration">
+                <field name="sale_order_line_id"/>
+            </tree>
+        </field>
+    </record>
+
+</data></odoo>
