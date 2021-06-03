@@ -305,7 +305,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     },
 
     _getContentEditableAreas () {
-        return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], :empty').filter((_, el) => {
+        return $(this.savableSelector).not('input, [data-oe-readonly],[data-oe-type="monetary"],[data-oe-many2one-id], [data-oe-field="arch"]:empty').filter((_, el) => {
             return !$(el).closest('.o_not_editable').length;
         }).toArray();
     },
