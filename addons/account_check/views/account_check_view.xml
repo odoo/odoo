@@ -8,7 +8,7 @@
         <field name="priority">100</field>
         <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'" decoration-bf="state == 'handed'" decoration-danger="state == 'hrejected'" decoration-muted="state == 'cancel'" create="false" delete="false" edit="false" string="Checks">
+            <tree decoration-info="state == 'draft'" decoration-bf="state == 'handed'" decoration-danger="state == 'hrejected'" decoration-muted="state == 'cancel'" string="Checks">
                 <field name="checkbook_id" invisible="context.get('default_type',False) != 'own_check'"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="name"/>
@@ -31,13 +31,14 @@
         <field name="name">account.check.form</field>
         <field name="model">account.check</field>
         <field name="arch" type="xml">
-            <form string="Checks" create="false" delete="false" edit="false" >
+            <form string="Checks">
                 <field name="id" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
                 <field name="company_currency_id" invisible="1"/>
                 <header>
-                    
+                    <field name="state" widget="statusbar"/>
                 </header>
                 <sheet string="Checks">
                     <h1>
@@ -45,22 +46,22 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="journal_id"/>
-                            <field name="checkbook_id" attrs="{'invisible':[('type','!=','own_check')], 'required':[('type','=','own_check')]}" domain="[('journal_id', '=', journal_id)]"/>
-                            <field name="bank_id" attrs="{'invisible': [('type', '!=', 'third_check')]}"/>
+                            <!-- <field name="number"/> -->
                             <field name="amount"/>
                             <field name="amount_company_currency" groups="base.group_multi_currency"/>
+                            <field name="bank_id" attrs="{'invisible': [('type', '!=', 'third_check')], 'required': [('type', '=', 'third_check')]}"/>
+                            <field name="journal_id" readonly="context.get('from_payment')" force_save="1" domain="[('type', 'in', ['bank', 'cash']), type == 'own_check' and ('outbound_payment_method_ids.code', '=', 'new_own_checks') or ('inbound_payment_method_ids.code', '=', 'in_own_checks')]"/>
+                            <field name="checkbook_id" attrs="{'invisible':[('type','!=','own_check')], 'required':[('type','=','own_check')]}" domain="[('journal_id', '=', journal_id)]"/>
                         </group>
                         <group>
-                            <field name="state"/>
-                            <field name="issuer_name" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
                             <field name="issuer_vat" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
+                            <field name="issuer_name" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
                             <field name="issue_date"/>
                             <field name="payment_date"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                     </group>
-                    <group string="Operations">
+                    <group string="Operations" attrs="{'invisible': [('id', '=', False)]}">
                         <field name="operation_ids" nolabel="1">
                             <tree>
                                 <field name="date"/>
