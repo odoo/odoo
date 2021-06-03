@@ -40,7 +40,9 @@ QUnit.module("ActionManager", (hooks) => {
         });
 
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", NotificationContainer);
+        mainComponentRegistry.add("NotificationContainer", {
+            Component: NotificationContainer,
+        });
         const webClient = await createWebClient({ testConfig });
         await doAction(webClient, 3);
         assert.containsOnce(webClient, ".o_list_view");
@@ -67,7 +69,9 @@ QUnit.module("ActionManager", (hooks) => {
             },
         });
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("DialogContainer", DialogContainer);
+        mainComponentRegistry.add("DialogContainer", {
+            Component: DialogContainer,
+        });
 
         const webClient = await createWebClient({ testConfig });
         await doAction(webClient, 3);

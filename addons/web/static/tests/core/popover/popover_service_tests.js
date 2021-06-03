@@ -32,8 +32,8 @@ PseudoWebClient.template = xml`
         <div id="anchor">Anchor</div>
         <div id="close">Close</div>
         <div>
-            <t t-foreach="Components" t-as="Component" t-key="Component[0]">
-                <t t-component="Component[1]"/>
+            <t t-foreach="Components" t-as="C" t-key="C[0]">
+                <t t-component="C[1].Component" t-props="C[1].props"/>
             </t>
         </div>
     </div>
@@ -43,7 +43,9 @@ QUnit.module("PopoverManager", {
     async beforeEach() {
         serviceRegistry.add("popover", popoverService);
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("PopoverManager", PopoverManager);
+        mainComponentRegistry.add("PopoverManager", {
+            Component: PopoverManager,
+        });
         env = await makeTestEnv();
         pseudoWebClient = await mount(PseudoWebClient, {
             env,

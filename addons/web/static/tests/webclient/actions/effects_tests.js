@@ -27,7 +27,9 @@ QUnit.module("ActionManager", (hooks) => {
             force: true,
         });
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("EffectContainer", EffectContainer);
+        mainComponentRegistry.add("EffectContainer", {
+            Component: EffectContainer,
+        });
         const webClient = await createWebClient({ testConfig });
         await doAction(webClient, 1);
         assert.containsOnce(webClient.el, ".o_kanban_view");
@@ -56,7 +58,9 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("show effect notification instead of rainbow man", async function (assert) {
         assert.expect(6);
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", NotificationContainer);
+        mainComponentRegistry.add("NotificationContainer", {
+            Component: NotificationContainer,
+        });
 
         const webClient = await createWebClient({ testConfig });
         await doAction(webClient, 1);
@@ -88,7 +92,9 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("EffectContainer", EffectContainer);
+        mainComponentRegistry.add("EffectContainer", {
+            Component: EffectContainer,
+        });
         const webClient = await createWebClient({ testConfig, mockRPC });
         await doAction(webClient, 6);
         await click(webClient.el.querySelector('button[name="object"]'));
@@ -115,7 +121,9 @@ QUnit.module("ActionManager", (hooks) => {
             }
         };
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("EffectContainer", EffectContainer);
+        mainComponentRegistry.add("EffectContainer", {
+            Component: EffectContainer,
+        });
 
         const webClient = await createWebClient({ testConfig, mockRPC });
         await doAction(webClient, 6);

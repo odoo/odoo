@@ -31,8 +31,8 @@ PseudoWebClient.template = tags.xml`
         <div>
             <div class="o_dialog_container"/>
             <div>
-                <t t-foreach="Components" t-as="Component" t-key="Component[0]">
-                    <t t-component="Component[1]"/>
+                <t t-foreach="Components" t-as="C" t-key="C[0]">
+                    <t t-component="C[1].Component" t-props="C[1].props"/>
                 </t>
             </div>
         </div>
@@ -45,7 +45,9 @@ QUnit.module("DialogManager", {
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("hotkey", hotkeyService);
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("DialogContainer", DialogContainer);
+        mainComponentRegistry.add("DialogContainer", {
+            Component: DialogContainer,
+        });
         env = await makeTestEnv();
     },
     afterEach() {

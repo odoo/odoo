@@ -34,7 +34,9 @@ QUnit.module("Calendar Notification", (hooks) => {
         serviceRegistry.add("calendarNotification", calendarNotificationService);
 
         clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", NotificationContainer);
+        mainComponentRegistry.add("NotificationContainer", {
+            Component: NotificationContainer
+        });
 
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),

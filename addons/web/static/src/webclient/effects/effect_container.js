@@ -27,4 +27,6 @@ EffectContainer.template = tags.xml`
   </div>`;
 EffectContainer.components = { RainbowMan };
 
-registry.category("main_components").add("EffectContainer", EffectContainer);
+registry.category("main_components").add("EffectContainer", {
+    Component: EffectContainer,
+});

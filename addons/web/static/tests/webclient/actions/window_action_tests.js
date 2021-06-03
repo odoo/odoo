@@ -2132,7 +2132,9 @@ QUnit.module("ActionManager", (hooks) => {
 
             const mainComponentRegistry = registry.category("main_components");
             clearRegistryWithCleanup(mainComponentRegistry);
-            mainComponentRegistry.add("DialogContainer", DialogContainer);
+            mainComponentRegistry.add("DialogContainer", {
+                Component: DialogContainer,
+            });
 
             testConfig.serverData.views["partner,false,form"] = `
             <form>

@@ -57,4 +57,6 @@ DialogContainer.template = tags.xml`
     </div>
     `;
 
-registry.category("main_components").add("DialogContainer", DialogContainer);
+registry.category("main_components").add("DialogContainer", {
+    Component: DialogContainer,
+});
