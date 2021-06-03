@@ -32,7 +32,7 @@ function addSystrayItem(Widget) {
     SystrayItem.template = tags.xml`<SystrayItemAdapter Component="Widget" />`;
     SystrayItem.components = { SystrayItemAdapter };
 
-    systrayRegistry.add(name, SystrayItem, { sequence: Widget.prototype.sequence });
+    systrayRegistry.add(name, { Component: SystrayItem }, { sequence: Widget.prototype.sequence });
 
     convertedItems.push(Widget);
 }

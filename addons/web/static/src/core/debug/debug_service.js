@@ -21,7 +21,13 @@ export const debugService = {
     start(env, { orm }) {
         let accessRightsProm;
         if (env.debug !== "") {
-            registry.category("systray").add("web.debug_mode_menu", DebugMenu, { sequence: 100 });
+            registry.category("systray").add(
+                "web.debug_mode_menu",
+                {
+                    Component: DebugMenu,
+                },
+                { sequence: 100 }
+            );
         }
 
         return {

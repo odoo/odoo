@@ -13,19 +13,18 @@ const userMenuRegistry = registry.category("user_menuitems");
 class UserMenuItem extends DropdownItem {
     setup() {
         super.setup();
-        useEffect(() => {
-            if (this.props.payload.id) {
-                this.el.dataset.menu = this.props.payload.id;
-            }
-        }, () => []);
+        useEffect(
+            () => {
+                if (this.props.payload.id) {
+                    this.el.dataset.menu = this.props.payload.id;
+                }
+            },
+            () => []
+        );
     }
 }
 
 export class UserMenu extends Component {
-    static isDisplayed(env) {
-        return !env.isSmall;
-    }
-
     setup() {
         this.user = useService("user");
         const { origin } = browser.location;
@@ -58,4 +57,8 @@ export class UserMenu extends Component {
 UserMenu.template = "web.UserMenu";
 UserMenu.components = { UserMenuItem };
 
-registry.category("systray").add("web.user_menu", UserMenu, { sequence: 0 });
+const systrayItem = {
+    Component: UserMenu,
+    isDisplayed: (env) => !env.isSmall,
+};
+registry.category("systray").add("web.user_menu", systrayItem, { sequence: 0 });
