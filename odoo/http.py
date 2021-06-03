@@ -1493,15 +1493,17 @@ class Root(object):
         """
         context_managers = [request]
         if request.session.profile_session and request.session.db:
-            if 'set_profiling' in request.httprequest.path:
-                _logger.debug("Profiling disabled on route set_profiling")
-            elif request.session.profile_expiration < str(datetime.now()):
+            if request.session.profile_expiration < str(datetime.now()):
                 # avoid having session profiling for too long if user forgets to disable profiling
                 request.session.profile_session = None
                 _logger.warning("Profiling expiration reached, disabling profiling")
-            elif request.httprequest.path.startswith('/longpolling'):  # and odoo.multi_process:
-                # disable profiling for longpolling. This is mandatory for gevent server
-                _logger.debug('Profiling disabled for longpolling in worker mode')
+            elif 'set_profiling' in request.httprequest.path:
+                _logger.debug("Profiling disabled on set_profiling route")
+            elif request.httprequest.path.startswith('/longpolling'):
+                _logger.debug("Profiling disabled for longpolling")
+            elif odoo.evented:
+                # only longpolling should be in a evented server, but this is an additional safety
+                _logger.debug("Profiling disabled for evented server")
             else:
                 try:
                     context_managers.append(profiler.Profiler(
@@ -1512,7 +1514,7 @@ class Root(object):
                         params=request.session.profile_params,
                     ))
                 except Exception:
-                    _logger.exception('Failure during Profiler creation')
+                    _logger.exception("Failure during Profiler creation")
                     request.session.profile_session = None
         return context_managers
 
