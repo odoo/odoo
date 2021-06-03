@@ -124,7 +124,9 @@
                 <p class="m-0">We did not find any exhibitor matching your <strong t-esc="search_key"/> search.</p>
             </div>
             <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
-                <p class="m-0">Add some exhibitors to get started !</p>
+                <a target="_blank" t-att-href="'/web?#action=website_event_exhibitor.event_sponsor_action_from_event&amp;active_id=%s' % event.id">
+                    <p class="m-0">Add some exhibitors to get started !</p>
+                </a>
             </div>
         </div>
     </t>
