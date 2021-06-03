@@ -1014,8 +1014,17 @@ class MassMailing(models.Model):
     @api.model
     def _process_mass_mailing_queue(self):
         mass_mailings = self.search([('state', 'in', ('in_queue', 'sending')), '|', ('schedule_date', '<', fields.Datetime.now()), ('schedule_date', '=', False)])
+        # Mass mailings are by default sent by superuser that is not restricted by access rules, so
+        # when computing recipients, there might be more (eg. from other company) than what was
+        # apparent from the mass mailing sender. By setting this new ir.config_parameter, mailing
+        # responsible will be used to compute recipients and send the mass mailing.
+        force_responsible = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.process_queue_with_responsible')
         for mass_mailing in mass_mailings:
-            user = mass_mailing.write_uid or self.env.user
+            if force_responsible:
+                user = mass_mailing.user_id
+                mass_mailing = mass_mailing.with_user(user)
+            else:
+                user = mass_mailing.write_uid or self.env.user
             mass_mailing = mass_mailing.with_context(**user.sudo(user=user).context_get())
             if len(mass_mailing.get_remaining_recipients()) > 0:
                 mass_mailing.state = 'sending'
