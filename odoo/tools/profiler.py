@@ -345,6 +345,7 @@ class Profiler:
                         "create_date": datetime.datetime.now(),
                         "init_stack_trace": json.dumps(_format_stack(self.init_stack_trace)),
                         "duration": self.duration,
+                        "entry_count": self.entry_count(),
                     }
                     for collector in self.collectors:
                         if collector.entries:
