@@ -9,6 +9,7 @@ class AccountCheck(models.Model):
     _name = 'account.check'
     _description = 'Account Check'
     _order = "id desc"
+    _rec_name = 'number'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     operation_ids = fields.One2many(
@@ -123,6 +124,7 @@ class AccountCheck(models.Model):
         'account.journal',
         compute='_compute_data',
         readonly=True,
+        required=True,
         store=True,
     )
     company_id = fields.Many2one(
@@ -151,7 +153,7 @@ class AccountCheck(models.Model):
         """ We suggest owner name from owner vat """
         issuer_name = self.search([('issuer_vat', '=', self.issuer_vat)], limit=1).issuer_name
         if not issuer_name:
-            issuer_name = self.first_partner_id.commercial_partner_id and self.first_partner_id.commercial_partner_id.name
+            issuer_name = self.first_partner_id.commercial_partner_id and self.first_partner_id.commercial_partner_id.name or False
         self.issuer_name = issuer_name
 
     @api.onchange('first_partner_id', 'type', 'journal_id')
@@ -326,17 +328,27 @@ class AccountCheck(models.Model):
                 raise ValidationError(_(
                     'The Check must be in draft state for unlink !'))
 
-    @api.constrains('currency_id', 'amount', 'amount_company_currency')
-    def _check_amounts(self):
-        for rec in self.filtered(lambda x: not x.amount or not x.amount_company_currency):
-            if rec.currency_id != rec.company_currency_id:
-                raise ValidationError(_(
-                    'If you create a check with different currency thant the '
-                    'company currency, you must provide "Amount" and "Amount '
-                    'Company Currency"'))
-            elif not rec.amount:
-                if not rec.amount_company_currency:
-                    raise ValidationError(_('No puede crear un cheque sin importe'))
-                rec.amount = rec.amount_company_currency
-            elif not rec.amount_company_currency:
-                rec.amount_company_currency = rec.amount
+    # TODO re enable
+    # @api.constrains('currency_id', 'amount', 'amount_company_currency')
+    # def _check_amounts(self):
+    #     for rec in self.filtered(lambda x: not x.amount or not x.amount_company_currency):
+    #         if rec.currency_id != rec.company_currency_id:
+    #             raise ValidationError(_(
+    #                 'If you create a check with different currency thant the '
+    #                 'company currency, you must provide "Amount" and "Amount '
+    #                 'Company Currency"'))
+    #         elif not rec.amount:
+    #             if not rec.amount_company_currency:
+    #                 raise ValidationError(_('No puede crear un cheque sin importe'))
+    #             rec.amount = rec.amount_company_currency
+    #         elif not rec.amount_company_currency:
+    #             rec.amount_company_currency = rec.amount
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = rec.name
+            if rec.type == 'third_check':
+                name = '%s (%s - %s)' % (name, rec.bank_id.name, rec.issuer_vat)
+            result.append((rec.id, name))
+        return result
