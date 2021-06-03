@@ -319,8 +319,6 @@ class Profiler:
     def __enter__(self):
         self.init_thread = threading.current_thread()
         self.init_frame = get_current_frame(self.init_thread)
-        if self.init_frame.f_code.co_name == 'enter_context':
-            self.init_frame = self.init_frame.f_back  # profiler used in a ExitStack case
         self.init_stack_trace = _get_stack_trace(self.init_frame)
         if self.description is None:
             frame = self.init_frame
@@ -403,3 +401,29 @@ class Profiler:
             if filelines is not None:
                 line = filelines[lineno - 1]
                 stack[index] = (filename, lineno, name, line)
+
+
+class Nested:
+    """
+    Utility to nest another context manager inside a profiler.
+
+    The profiler should only be called directly in the "with" without nesting it
+    with ExitStack. If not, the retrieval of the 'init_frame' may be incorrect
+    and lead to an error "Limit frame was not found" when profiling. Since the
+    stack will ignore all stack frames inside this file, the nested frames will
+    be ignored, too. This is also why Nested() does not use
+    contextlib.contextmanager.
+    """
+    def __init__(self, profiler, context_manager):
+        self.profiler = profiler
+        self.context_manager = context_manager
+
+    def __enter__(self):
+        self.profiler.__enter__()
+        return self.context_manager.__enter__()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        try:
+            return self.context_manager.__exit__(exc_type, exc_value, traceback)
+        finally:
+            self.profiler.__exit__(exc_type, exc_value, traceback)
