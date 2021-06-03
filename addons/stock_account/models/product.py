@@ -245,7 +245,7 @@ class ProductProduct(models.Model):
             product = stock_valuation_layer.product_id
             value = stock_valuation_layer.value
 
-            if product.valuation != 'real_time':
+            if product.type != 'product' or product.valuation != 'real_time':
                 continue
 
             # Sanity check.
