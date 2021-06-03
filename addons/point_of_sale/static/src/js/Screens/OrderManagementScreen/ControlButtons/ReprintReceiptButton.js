@@ -18,15 +18,7 @@ odoo.define('point_of_sale.ReprintReceiptButton', function (require) {
             const order = this.orderManagementContext.selectedOrder;
             if (!order) return;
 
-            if (this.env.pos.proxy.printer) {
-                const receiptHtml = this.props.hiddenOrderReceipt.el.outerHTML;
-                const printResult = await this.env.pos.proxy.printer.print_receipt(receiptHtml);
-                if (!printResult.successful) {
-                    this.showTempScreen('ReprintReceiptScreen', { order: order });
-                }
-            } else {
-                this.showTempScreen('ReprintReceiptScreen', { order: order });
-            }
+            this.showScreen('ReprintReceiptScreen', { order: order });
         }
     }
     ReprintReceiptButton.template = 'ReprintReceiptButton';
