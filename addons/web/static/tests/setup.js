@@ -83,6 +83,7 @@ function patchOdoo() {
             name: "Mitchell",
             username: "The wise",
             is_admin: true,
+            is_system: true,
             partner_id: 7,
             // Commit: 3e847fc8f499c96b8f2d072ab19f35e105fd7749
             // to see what user_companies is
