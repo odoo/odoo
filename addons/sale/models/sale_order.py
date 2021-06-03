@@ -32,6 +32,187 @@ class SaleOrder(models.Model):
     def _get_default_require_payment(self):
         return self.env.company.portal_confirmation_pay
 
+    @api.model
+    def _default_note_url(self):
+        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
+    @api.model
+    def _default_note(self):
+        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        if use_invoice_terms and self.env.company.terms_type == "html":
+            return _('Terms & Conditions: %s/terms', self._default_note_url())
+        return use_invoice_terms and self.env.company.invoice_terms or ''
+
+    @api.model
+    def _get_default_team(self):
+        return self.env['crm.team']._get_default_team_id()
+
+    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
+    origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
+    client_order_ref = fields.Char(string='Customer Reference', copy=False)
+    state = fields.Selection([
+        ('draft', 'Quotation'),
+        ('sent', 'Quotation Sent'),
+        ('sale', 'Sales Order'),
+        ('done', 'Locked'),
+        ('cancel', 'Cancelled'),
+        ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
+
+    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company)
+    create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
+    date_order = fields.Datetime(
+        string='Order Date', required=True, readonly=True, index=True, default=fields.Datetime.now,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False,
+        help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.")
+    validity_date = fields.Date(
+        string='Expiration', readonly=True, copy=False, default=_default_validity_date,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+
+    partner_id = fields.Many2one(
+        'res.partner', string='Customer', readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        required=True, change_default=True, index=True, tracking=1,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    partner_invoice_id = fields.Many2one(
+        'res.partner', string='Invoice Address',
+        readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+    partner_shipping_id = fields.Many2one(
+        'res.partner', string='Delivery Address', readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+
+    pricelist_id = fields.Many2one(
+        'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
+        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
+        help="If you change the pricelist, only newly added lines will be affected.")
+    currency_id = fields.Many2one(related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, ondelete="restrict")
+    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
+
+    fiscal_position_id = fields.Many2one(
+        'account.fiscal.position', string='Fiscal Position',
+        domain="[('company_id', '=', company_id)]", check_company=True,
+        help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices."
+        "The default value comes from the customer.")
+    payment_term_id = fields.Many2one(
+        'account.payment.term', string='Payment Terms', check_company=True,  # Unrequired company
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+
+    user_id = fields.Many2one(
+        'res.users', string='Salesperson', index=True, tracking=2, default=lambda self: self.env.user,
+        domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman').id)])
+    team_id = fields.Many2one(
+        'crm.team', 'Sales Team',
+        change_default=True, default=_get_default_team, check_company=True,  # Unrequired company
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+
+    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
+
+    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_compute_amounts', tracking=5)
+    amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_compute_amounts')
+    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_compute_amounts', tracking=4)
+
+    # Analytics #
+    #############
+
+    analytic_account_id = fields.Many2one(
+        'account.analytic.account', 'Analytic Account',
+        readonly=True, copy=False, check_company=True,  # Unrequired company
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="The analytic account related to a sales order.")
+    tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
+
+    # Invoicing #
+    #############
+
+    invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced', readonly=True)
+    invoice_ids = fields.Many2many("account.move", string='Invoices', compute="_get_invoiced", readonly=True, copy=False, search="_search_invoice_ids")
+    invoice_status = fields.Selection([
+        ('upselling', 'Upselling Opportunity'),
+        ('invoiced', 'Fully Invoiced'),
+        ('to invoice', 'To Invoice'),
+        ('no', 'Nothing to Invoice')
+        ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True)
+
+    # Reporting #
+    #############
+
+    amount_by_group = fields.Binary(
+        string="Tax amount by group", compute='_compute_amount_by_group',
+        help="type: [(name, amount, base, formated amount, formated base)]")
+
+    note = fields.Text('Terms and conditions', default=_default_note)
+    terms_type = fields.Selection(related='company_id.terms_type')
+
+    # Portal #
+    ##########
+
+    amount_undiscounted = fields.Float(
+        string='Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
+
+    is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
+
+    require_payment = fields.Boolean('Online Payment', default=_get_default_require_payment, readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help='Request an online payment to the customer in order to confirm orders automatically.')
+    require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature, readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help='Request a online signature to the customer in order to confirm orders automatically.')
+
+    signature = fields.Image('Signature', help='Signature received through the portal.', copy=False, attachment=True, max_width=1024, max_height=1024)
+    signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
+    signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
+
+    # Delivery #
+    ############
+
+    commitment_date = fields.Datetime('Delivery Date', copy=False,
+                                      states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+                                      help="This is the delivery date promised to the customer. "
+                                           "If set, the delivery order will be scheduled based on "
+                                           "this date rather than product lead times.")
+    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
+        help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
+
+    # Payment #
+    ###########
+
+    reference = fields.Char(string='Payment Ref.', copy=False,
+        help='The payment communication of this sale order.')
+    transaction_ids = fields.Many2many('payment.transaction', 'sale_order_transaction_rel', 'sale_order_id', 'transaction_id',
+                                       string='Transactions', copy=False, readonly=True)
+    authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
+                                                  string='Authorized Transactions', copy=False, readonly=True)
+
+    # UI fields #
+    #############
+
+    show_update_pricelist = fields.Boolean(string='Has Pricelist Changed',
+                                           help="Technical Field, True if the pricelist was changed;\n"
+                                                " this will then display a recomputation button")
+    type_name = fields.Char('Type Name', compute='_compute_type_name')
+
+    _sql_constraints = [
+        ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
+    ]
+
+    # Computes #
+    ############
+
+    @api.depends('pricelist_id', 'date_order', 'company_id')
+    def _compute_currency_rate(self):
+        for order in self:
+            if not order.company_id:
+                order.currency_rate = order.currency_id.with_context(date=order.date_order).rate or 1.0
+                continue
+            elif order.company_id.currency_id and order.currency_id:  # the following crashes if any one is undefined
+                order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
+            else:
+                order.currency_rate = 1.0
+
     @api.depends('order_line.price_total')
     def _compute_amounts(self):
         """
@@ -58,6 +239,39 @@ class SaleOrder(models.Model):
             invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
+
+    def _search_invoice_ids(self, operator, value):
+        if operator == 'in' and value:
+            self.env.cr.execute("""
+                SELECT array_agg(so.id)
+                    FROM sale_order so
+                    JOIN sale_order_line sol ON sol.order_id = so.id
+                    JOIN sale_order_line_invoice_rel soli_rel ON soli_rel.order_line_id = sol.id
+                    JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
+                    JOIN account_move am ON am.id = aml.move_id
+                WHERE
+                    am.move_type in ('out_invoice', 'out_refund') AND
+                    am.id = ANY(%s)
+            """, (list(value),))
+            so_ids = self.env.cr.fetchone()[0] or []
+            return [('id', 'in', so_ids)]
+        elif operator == '=' and not value:
+            # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
+            #
+            # We cannot just search [('order_line.invoice_lines', '=', False)]
+            # because it returns orders with uninvoiced lines, which is not
+            # same "Invoices is not set" (some lines may have invoices and some
+            # doesn't)
+            #
+            # A solution is making inverted search first ("orders with invoiced
+            # lines") and then invert results ("get all other orders")
+            #
+            # Domain below returns subset of ('order_line.invoice_lines', '!=', False)
+            order_ids = self._search([
+                ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
+            ])
+            return [('id', 'not in', order_ids)]
+        return ['&', ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund')), ('order_line.invoice_lines.move_id', operator, value)]
 
     @api.depends('state', 'order_line.invoice_status')
     def _compute_invoice_status(self):
@@ -96,214 +310,39 @@ class SaleOrder(models.Model):
             else:
                 order.invoice_status = 'no'
 
-    @api.model
-    def get_empty_list_help(self, help):
-        self = self.with_context(
-            empty_list_help_document_name=_("sale order"),
-        )
-        return super(SaleOrder, self).get_empty_list_help(help)
-
-    @api.model
-    def _default_note_url(self):
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-
-    @api.model
-    def _default_note(self):
-        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
-        if use_invoice_terms and self.env.company.terms_type == "html":
-            return _('Terms & Conditions: %s/terms', self._default_note_url())
-        return use_invoice_terms and self.env.company.invoice_terms or ''
-
-    @api.model
-    def _get_default_team(self):
-        return self.env['crm.team']._get_default_team_id()
-
-    @api.onchange('fiscal_position_id')
-    def _compute_tax_id(self):
-        """
-        Trigger the recompute of the taxes if the fiscal position is changed on the SO.
-        """
+    def _compute_amount_by_group(self):
         for order in self:
-            order.order_line._compute_tax_id()
-
-    def _search_invoice_ids(self, operator, value):
-        if operator == 'in' and value:
-            self.env.cr.execute("""
-                SELECT array_agg(so.id)
-                    FROM sale_order so
-                    JOIN sale_order_line sol ON sol.order_id = so.id
-                    JOIN sale_order_line_invoice_rel soli_rel ON soli_rel.order_line_id = sol.id
-                    JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
-                    JOIN account_move am ON am.id = aml.move_id
-                WHERE
-                    am.move_type in ('out_invoice', 'out_refund') AND
-                    am.id = ANY(%s)
-            """, (list(value),))
-            so_ids = self.env.cr.fetchone()[0] or []
-            return [('id', 'in', so_ids)]
-        elif operator == '=' and not value:
-            # special case for [('invoice_ids', '=', False)], i.e. "Invoices is not set"
-            #
-            # We cannot just search [('order_line.invoice_lines', '=', False)]
-            # because it returns orders with uninvoiced lines, which is not
-            # same "Invoices is not set" (some lines may have invoices and some
-            # doesn't)
-            #
-            # A solution is making inverted search first ("orders with invoiced
-            # lines") and then invert results ("get all other orders")
-            #
-            # Domain below returns subset of ('order_line.invoice_lines', '!=', False)
-            order_ids = self._search([
-                ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
-            ])
-            return [('id', 'not in', order_ids)]
-        return ['&', ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund')), ('order_line.invoice_lines.move_id', operator, value)]
-
-    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
-    origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
-    client_order_ref = fields.Char(string='Customer Reference', copy=False)
-    reference = fields.Char(string='Payment Ref.', copy=False,
-        help='The payment communication of this sale order.')
-    state = fields.Selection([
-        ('draft', 'Quotation'),
-        ('sent', 'Quotation Sent'),
-        ('sale', 'Sales Order'),
-        ('done', 'Locked'),
-        ('cancel', 'Cancelled'),
-        ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
-    date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now, help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.")
-    validity_date = fields.Date(string='Expiration', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-                                default=_default_validity_date)
-    is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
-    require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature, readonly=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        help='Request a online signature to the customer in order to confirm orders automatically.')
-    require_payment = fields.Boolean('Online Payment', default=_get_default_require_payment, readonly=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        help='Request an online payment to the customer in order to confirm orders automatically.')
-    create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
-
-    user_id = fields.Many2one(
-        'res.users', string='Salesperson', index=True, tracking=2, default=lambda self: self.env.user,
-        domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman').id)])
-    partner_id = fields.Many2one(
-        'res.partner', string='Customer', readonly=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        required=True, change_default=True, index=True, tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
-    partner_invoice_id = fields.Many2one(
-        'res.partner', string='Invoice Address',
-        readonly=True, required=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
-    partner_shipping_id = fields.Many2one(
-        'res.partner', string='Delivery Address', readonly=True, required=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'sale': [('readonly', False)]},
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
-
-    pricelist_id = fields.Many2one(
-        'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
-        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
-        help="If you change the pricelist, only newly added lines will be affected.")
-    currency_id = fields.Many2one(related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, ondelete="restrict")
-    analytic_account_id = fields.Many2one(
-        'account.analytic.account', 'Analytic Account',
-        readonly=True, copy=False, check_company=True,  # Unrequired company
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="The analytic account related to a sales order.")
-
-    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
-
-    invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced', readonly=True)
-    invoice_ids = fields.Many2many("account.move", string='Invoices', compute="_get_invoiced", readonly=True, copy=False, search="_search_invoice_ids")
-    invoice_status = fields.Selection([
-        ('upselling', 'Upselling Opportunity'),
-        ('invoiced', 'Fully Invoiced'),
-        ('to invoice', 'To Invoice'),
-        ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True)
-
-    note = fields.Text('Terms and conditions', default=_default_note)
-    terms_type = fields.Selection(related='company_id.terms_type')
-
-    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_compute_amounts', tracking=5)
-    amount_by_group = fields.Binary(string="Tax amount by group", compute='_compute_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
-    amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_compute_amounts')
-    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_compute_amounts', tracking=4)
-    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', compute_sudo=True, store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
-
-    payment_term_id = fields.Many2one(
-        'account.payment.term', string='Payment Terms', check_company=True,  # Unrequired company
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
-    fiscal_position_id = fields.Many2one(
-        'account.fiscal.position', string='Fiscal Position',
-        domain="[('company_id', '=', company_id)]", check_company=True,
-        help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices."
-        "The default value comes from the customer.")
-    company_id = fields.Many2one('res.company', 'Company', required=True, index=True, default=lambda self: self.env.company)
-    team_id = fields.Many2one(
-        'crm.team', 'Sales Team',
-        change_default=True, default=_get_default_team, check_company=True,  # Unrequired company
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-
-    signature = fields.Image('Signature', help='Signature received through the portal.', copy=False, attachment=True, max_width=1024, max_height=1024)
-    signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
-    signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
-
-    commitment_date = fields.Datetime('Delivery Date', copy=False,
-                                      states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-                                      help="This is the delivery date promised to the customer. "
-                                           "If set, the delivery order will be scheduled based on "
-                                           "this date rather than product lead times.")
-    expected_date = fields.Datetime("Expected Date", compute='_compute_expected_date', store=False,  # Note: can not be stored since depends on today()
-        help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
-    amount_undiscounted = fields.Float('Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
-
-    type_name = fields.Char('Type Name', compute='_compute_type_name')
-
-    transaction_ids = fields.Many2many('payment.transaction', 'sale_order_transaction_rel', 'sale_order_id', 'transaction_id',
-                                       string='Transactions', copy=False, readonly=True)
-    authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
-                                                  string='Authorized Transactions', copy=False, readonly=True)
-    show_update_pricelist = fields.Boolean(string='Has Pricelist Changed',
-                                           help="Technical Field, True if the pricelist was changed;\n"
-                                                " this will then display a recomputation button")
-    tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
-
-    _sql_constraints = [
-        ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
-    ]
-
-    @api.constrains('company_id', 'order_line')
-    def _check_order_line_company_id(self):
-        for order in self:
-            companies = order.order_line.product_id.company_id
-            if companies and companies != order.company_id:
-                bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
-                raise ValidationError(_(
-                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
-                    product_company=', '.join(companies.mapped('display_name')),
-                    quote_company=order.company_id.display_name,
-                    bad_products=', '.join(bad_products.mapped('display_name')),
-                ))
-
-    @api.depends('pricelist_id', 'date_order', 'company_id')
-    def _compute_currency_rate(self):
-        for order in self:
-            if not order.company_id:
-                order.currency_rate = order.currency_id.with_context(date=order.date_order).rate or 1.0
-                continue
-            elif order.company_id.currency_id and order.currency_id:  # the following crashes if any one is undefined
-                order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
-            else:
-                order.currency_rate = 1.0
+            currency = order.currency_id or order.company_id.currency_id
+            fmt = partial(formatLang, self.with_context(lang=order.partner_id.lang).env, currency_obj=currency)
+            res = {}
+            for line in order.order_line:
+                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
+                taxes = line.tax_id.compute_all(price_reduce, quantity=line.product_uom_qty, product=line.product_id, partner=order.partner_shipping_id)['taxes']
+                for tax in line.tax_id:
+                    group = tax.tax_group_id
+                    res.setdefault(group, {'amount': 0.0, 'base': 0.0})
+                    for t in taxes:
+                        if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
+                            res[group]['amount'] += t['amount']
+                            res[group]['base'] += t['base']
+            res = sorted(res.items(), key=lambda l: l[0].sequence)
+            order.amount_by_group = [(
+                l[0].name, l[1]['amount'], l[1]['base'],
+                fmt(l[1]['amount']), fmt(l[1]['base']),
+                len(res),
+            ) for l in res]
 
     def _compute_access_url(self):
         super(SaleOrder, self)._compute_access_url()
         for order in self:
             order.access_url = '/my/orders/%s' % (order.id)
+
+    def _compute_amount_undiscounted(self):
+        for order in self:
+            total = 0.0
+            for line in order.order_line:
+                total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
+            order.amount_undiscounted = total
 
     def _compute_is_expired(self):
         today = fields.Date.today()
@@ -325,45 +364,42 @@ class SaleOrder(models.Model):
             else:
                 order.expected_date = False
 
-    @api.onchange('expected_date')
-    def _onchange_commitment_date(self):
-        self.commitment_date = self.expected_date
-
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):
         for trans in self:
             trans.authorized_transaction_ids = trans.transaction_ids.filtered(lambda t: t.state == 'authorized')
-
-    def _compute_amount_undiscounted(self):
-        for order in self:
-            total = 0.0
-            for line in order.order_line:
-                total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
-            order.amount_undiscounted = total
 
     @api.depends('state')
     def _compute_type_name(self):
         for record in self:
             record.type_name = _('Quotation') if record.state in ('draft', 'sent', 'cancel') else _('Sales Order')
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_draft_or_cancel(self):
+    # Constraints #
+    ###############
+
+    @api.constrains('company_id', 'order_line')
+    def _check_order_line_company_id(self):
         for order in self:
-            if order.state not in ('draft', 'cancel'):
-                raise UserError(_('You can not delete a sent quotation or a confirmed sales order. You must first cancel it.'))
+            companies = order.order_line.product_id.company_id
+            if companies and companies != order.company_id:
+                bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
+                raise ValidationError(_(
+                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
+                    product_company=', '.join(companies.mapped('display_name')),
+                    quote_company=order.company_id.display_name,
+                    bad_products=', '.join(bad_products.mapped('display_name')),
+                ))
 
-    def validate_taxes_on_sales_order(self):
-        # Override for correct taxcloud computation
-        # when using coupon and delivery
-        return True
+    # Onchanges #
+    #############
 
-    def _track_subtype(self, init_values):
-        self.ensure_one()
-        if 'state' in init_values and self.state == 'sale':
-            return self.env.ref('sale.mt_order_confirmed')
-        elif 'state' in init_values and self.state == 'sent':
-            return self.env.ref('sale.mt_order_sent')
-        return super(SaleOrder, self)._track_subtype(init_values)
+    @api.onchange('fiscal_position_id')
+    def _compute_tax_id(self):
+        """
+        Trigger the recompute of the taxes if the fiscal position is changed on the SO.
+        """
+        for order in self:
+            order.order_line._compute_tax_id()
 
     @api.onchange('partner_shipping_id', 'partner_id', 'company_id')
     def _onchange_partner_shipping_id(self):
@@ -474,27 +510,8 @@ class SaleOrder(models.Model):
         else:
             self.show_update_pricelist = False
 
-    def update_prices(self):
-        self.ensure_one()
-        lines_to_update = []
-        for line in self.order_line.filtered(lambda line: not line.display_type):
-            product = line.product_id.with_context(
-                partner=self.partner_id,
-                quantity=line.product_uom_qty,
-                date=self.date_order,
-                pricelist=self.pricelist_id.id,
-                uom=line.product_uom.id
-            )
-            price_unit = self.env['account.tax']._fix_tax_included_price_company(
-                line._get_display_price(product), line.product_id.taxes_id, line.tax_id, line.company_id)
-            if self.pricelist_id.discount_policy == 'without_discount' and price_unit:
-                discount = max(0, (price_unit - product.price) * 100 / price_unit)
-            else:
-                discount = 0
-            lines_to_update.append((1, line.id, {'price_unit': price_unit, 'discount': discount}))
-        self.update({'order_line': lines_to_update})
-        self.show_update_pricelist = False
-        self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
+    # CRUD overrides #
+    ##################
 
     @api.model
     def create(self, vals):
@@ -516,6 +533,17 @@ class SaleOrder(models.Model):
         result = super(SaleOrder, self).create(vals)
         return result
 
+    def _create_upsell_activity(self):
+        self and self.activity_unlink(['sale.mail_act_sale_upsell'])
+        for order in self:
+            ref = "<a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a>"
+            order_ref = ref % (order._name, order.id, order.name)
+            customer_ref = ref % (order.partner_id._name, order.partner_id.id, order.partner_id.display_name)
+            order.activity_schedule(
+                'sale.mail_act_sale_upsell',
+                user_id=order.user_id.id or order.partner_id.user_id.id,
+                note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
+
     def _compute_field_value(self, field):
         super()._compute_field_value(field)
         if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
@@ -533,6 +561,61 @@ class SaleOrder(models.Model):
         if 'order_line' not in default:
             default['order_line'] = [(0, 0, line.copy_data()[0]) for line in self.order_line.filtered(lambda l: not l.is_downpayment)]
         return super(SaleOrder, self).copy_data(default)
+
+    # Other methods #
+    #################
+
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("sale order"),
+        )
+        return super(SaleOrder, self).get_empty_list_help(help)
+
+    @api.onchange('expected_date')
+    def _onchange_commitment_date(self):
+        self.commitment_date = self.expected_date
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_draft_or_cancel(self):
+        for order in self:
+            if order.state not in ('draft', 'cancel'):
+                raise UserError(_('You can not delete a sent quotation or a confirmed sales order. You must first cancel it.'))
+
+    def validate_taxes_on_sales_order(self):
+        # Override for correct taxcloud computation
+        # when using coupon and delivery
+        return True
+
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'state' in init_values and self.state == 'sale':
+            return self.env.ref('sale.mt_order_confirmed')
+        elif 'state' in init_values and self.state == 'sent':
+            return self.env.ref('sale.mt_order_sent')
+        return super(SaleOrder, self)._track_subtype(init_values)
+
+    def update_prices(self):
+        self.ensure_one()
+        lines_to_update = []
+        for line in self.order_line.filtered(lambda line: not line.display_type):
+            product = line.product_id.with_context(
+                partner=self.partner_id,
+                quantity=line.product_uom_qty,
+                date=self.date_order,
+                pricelist=self.pricelist_id.id,
+                uom=line.product_uom.id
+            )
+            price_unit = self.env['account.tax']._fix_tax_included_price_company(
+                line._get_display_price(product), line.product_id.taxes_id, line.tax_id, line.company_id)
+            if self.pricelist_id.discount_policy == 'without_discount' and price_unit:
+                discount = max(0, (price_unit - product.price) * 100 / price_unit)
+            else:
+                discount = 0
+            lines_to_update.append((1, line.id, {'price_unit': price_unit, 'discount': discount}))
+        self.update({'order_line': lines_to_update})
+        self.show_update_pricelist = False
+        self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
 
     def name_get(self):
         if self._context.get('sale_show_partner_name'):
@@ -557,17 +640,6 @@ class SaleOrder(models.Model):
                 ])
                 return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
         return super(SaleOrder, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
-
-    def _create_upsell_activity(self):
-        self and self.activity_unlink(['sale.mail_act_sale_upsell'])
-        for order in self:
-            ref = "<a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a>"
-            order_ref = ref % (order._name, order.id, order.name)
-            customer_ref = ref % (order.partner_id._name, order.partner_id.id, order.partner_id.display_name)
-            order.activity_schedule(
-                'sale.mail_act_sale_upsell',
-                user_id=order.user_id.id or order.partner_id.user_id.id,
-                note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
 
     def _prepare_invoice(self):
         """
@@ -975,28 +1047,6 @@ Reason(s) of this behavior could be:
         for order in self:
             analytic = self.env['account.analytic.account'].create(order._prepare_analytic_account_data(prefix))
             order.analytic_account_id = analytic
-
-    def _compute_amount_by_group(self):
-        for order in self:
-            currency = order.currency_id or order.company_id.currency_id
-            fmt = partial(formatLang, self.with_context(lang=order.partner_id.lang).env, currency_obj=currency)
-            res = {}
-            for line in order.order_line:
-                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
-                taxes = line.tax_id.compute_all(price_reduce, quantity=line.product_uom_qty, product=line.product_id, partner=order.partner_shipping_id)['taxes']
-                for tax in line.tax_id:
-                    group = tax.tax_group_id
-                    res.setdefault(group, {'amount': 0.0, 'base': 0.0})
-                    for t in taxes:
-                        if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
-                            res[group]['amount'] += t['amount']
-                            res[group]['base'] += t['base']
-            res = sorted(res.items(), key=lambda l: l[0].sequence)
-            order.amount_by_group = [(
-                l[0].name, l[1]['amount'], l[1]['base'],
-                fmt(l[1]['amount']), fmt(l[1]['base']),
-                len(res),
-            ) for l in res]
 
     def has_to_be_signed(self, include_draft=False):
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_signature and not self.signature
