@@ -5821,7 +5821,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('float_time field with invalid value', async function (assert) {
-        assert.expect(5);
+        assert.expect(2);
 
         const form = await createView({
             View: FormView,
@@ -5831,24 +5831,15 @@ QUnit.module('basic_fields', {
                 `<form>
                     <field name="qux" widget="float_time"/>
                 </form>`,
-            interceptsPropagate: {
-                call_service: function (ev) {
-                    if (ev.data.service === 'notification') {
-                        assert.strictEqual(ev.data.method, 'notify');
-                        assert.strictEqual(ev.data.args[0].title, 'Invalid fields:');
-                        assert.strictEqual(ev.data.args[0].message, '<ul><li>Qux</li></ul>');
-                    }
-                }
-            },
         });
 
         await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), 'blabla', ['change']);
-        await testUtils.form.clickSave(form);
-        assert.hasClass(form.$('input[name=qux]'), 'o_field_invalid');
+        assert.strictEqual(form.$('input[name=qux]').val(), "00:00",
+            "invalid value should reset value");
 
         await testUtils.fields.editAndTrigger(form.$('input[name=qux]'), '6.5', ['change']);
-        assert.doesNotHaveClass(form.$('input[name=qux]'), 'o_field_invalid',
-            "date field should not be displayed as invalid now");
+        assert.strictEqual(form.$('input[name=qux]').val(), "06:30",
+            "valid value should set value");
 
         form.destroy();
     });

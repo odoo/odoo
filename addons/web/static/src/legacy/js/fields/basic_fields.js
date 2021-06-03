@@ -1256,6 +1256,23 @@ var FieldFloatTime = FieldFloat.extend({
         this._super.apply(this, arguments);
         this.formatType = 'float_time';
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _parseValue: function (value) {
+        try {
+            return this._super(...arguments);
+        } catch (error) {
+            this.$input.val("00:00");
+            return 0;
+        }
+    },
+
     /**
      * Ensure the widget is re-rendered after being edited s.t. the value is
      * directly formatted (without waiting for the record to be saved, as we do
