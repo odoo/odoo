@@ -16,21 +16,23 @@ import { browser } from "../browser/browser";
  */
 export function debounce(func, wait, immediate = false) {
     let timeout;
-    return function () {
-        const context = this;
-        const args = arguments;
-        function later() {
-            if (!immediate) {
+    const funcName = func.name ? func.name + " (debounce)" : "debounce";
+    return {
+        [funcName](...args) {
+            const context = this;
+            function later() {
+                if (!immediate) {
+                    func.apply(context, args);
+                }
+            }
+            const callNow = immediate && !timeout;
+            browser.clearTimeout(timeout);
+            timeout = browser.setTimeout(later, wait);
+            if (callNow) {
                 func.apply(context, args);
             }
-        }
-        const callNow = immediate && !timeout;
-        browser.clearTimeout(timeout);
-        timeout = browser.setTimeout(later, wait);
-        if (callNow) {
-            func.apply(context, args);
-        }
-    };
+        },
+    }[funcName];
 }
 
 /**
@@ -43,14 +45,17 @@ export function debounce(func, wait, immediate = false) {
  */
 export function throttle(func, wait) {
     let waiting = false;
-    return function (...args) {
-        const context = this;
-        if (!waiting) {
-            waiting = true;
-            browser.setTimeout(function () {
-                waiting = false;
-                func.call(context, ...args);
-            }, wait);
-        }
-    };
+    const funcName = func.name ? func.name + " (throttle)" : "throttle";
+    return {
+        [funcName](...args) {
+            const context = this;
+            if (!waiting) {
+                waiting = true;
+                browser.setTimeout(function () {
+                    waiting = false;
+                    func.call(context, ...args);
+                }, wait);
+            }
+        },
+    }[funcName];
 }
