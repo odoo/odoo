@@ -124,7 +124,9 @@
                 <p class="m-0">We did not find any track matching your <strong t-esc="search_key"/> search.</p>
             </div>
             <div t-else="" class="alert alert-info text-center" groups="event.group_event_user">
-                <p class="m-0">Schedule some tracks to get started !</p>
+                <a target="_blank" t-att-href="'/web?#action=website_event_track.action_event_track_from_event&amp;active_id=%s' % event.id">
+                    <p class="m-0">Schedule some tracks to get started</p>
+                </a>
             </div>
         </div>
     </t>
