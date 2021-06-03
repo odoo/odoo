@@ -54,7 +54,7 @@ class MailMail(models.Model):
         'Auto Delete',
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     failure_reason = fields.Text(
-        'Failure Reason', readonly=1,
+        'Failure Reason', readonly=1, copy=False,
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.")
     scheduled_date = fields.Char('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible.")
