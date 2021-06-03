@@ -9,13 +9,11 @@ class EventBooth(models.Model):
 
     use_sponsor = fields.Boolean(related='booth_category_id.use_sponsor')
     sponsor_type_id = fields.Many2one(related='booth_category_id.sponsor_type_id')
-    sponsor_id = fields.Many2one(
-        'event.sponsor', string='Sponsor')
+    sponsor_id = fields.Many2one('event.sponsor', string='Sponsor')
 
     def write(self, vals):
-        # TODO: This will create a new sponsor for each booth event when a user register for several booths
         for booth in self:
-            if booth.use_sponsor and not vals.get('sponsor_id'):
+            if booth.use_sponsor and not booth.sponsor_id and not vals.get('sponsor_id'):
                 vals['sponsor_id'] = booth._get_sponsor(vals)
         return super(EventBooth, self).write(vals)
 
@@ -40,3 +38,8 @@ class EventBooth(models.Model):
             'partner_id': vals.get('partner_id'),
         }
         return self.env['event.sponsor'].sudo().create(values)
+
+    def action_confirm(self, values):
+        if self.sponsor_id:
+            self.sponsor_id.write({'active': True})
+        super(EventBooth, self).action_confirm(values)

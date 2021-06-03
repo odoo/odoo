@@ -8,8 +8,8 @@ from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 class WebsiteEventBoothController(WebsiteEventController):
 
-    def _prepare_registration_values(self, event, kwargs):
-        values = super(WebsiteEventBoothController, self)._prepare_registration_values(event, kwargs)
+    def _prepare_booth_registration_values(self, event, kwargs):
+        values = super(WebsiteEventBoothController, self)._prepare_booth_registration_values(event, kwargs)
         sponsor_id = self._create_sponsor(event, values.get('partner_id'), kwargs)
         if sponsor_id:
             values.update({
@@ -17,9 +17,10 @@ class WebsiteEventBoothController(WebsiteEventController):
             })
         return values
 
-    def _is_details_complete(self, booth_category_id):
-        return super(WebsiteEventBoothController, self)._is_details_complete(booth_category_id) \
-               and not booth_category_id.use_sponsor
+    def _booth_registration_details_complete(self, booth_category_id):
+        if booth_category_id.use_sponsor:
+            return False
+        return super(WebsiteEventBoothController, self)._booth_registration_details_complete(booth_category_id)
 
     def _get_partner(self, kwargs):
         if request.env.user._is_public():
@@ -51,6 +52,7 @@ class WebsiteEventBoothController(WebsiteEventController):
                 'event_id': event.id,
                 'sponsor_type_id': booth_category_id.sponsor_type_id.id,
                 'exhibitor_type': booth_category_id.exhibitor_type,
+                'active': False,
             })
             return request.env['event.sponsor'].sudo().create(sponsor)
         return False

@@ -7,7 +7,7 @@
         </xpath>
     </template>
 
-    <template id="event_booth_details" inherit_id="website_event_booth.event_booth_details">
+    <template id="event_booth_registration_details" inherit_id="website_event_booth.event_booth_registration_details">
         <xpath expr="//div[@id='o_wevent_contact_details']" position="before">
             <div id="o_wevent_sponsor_details" t-if="booth_category_id.use_sponsor">
                 <h4 class="mt32">
