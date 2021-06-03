@@ -29,40 +29,29 @@ class AccountPaymentGroup(models.Model):
         copy=False, default=fields.Date.context_today)
     partner_type = fields.Selection(
         [('customer', 'Customer'), ('supplier', 'Vendor')], default='customer', tracking=True, required=True)
-    unreconciled_amount = fields.Monetary(
-        string='Adjustment / Advance', readonly=True, states={'draft': [('readonly', False)]})
     to_pay_move_line_ids = fields.Many2many(
         'account.move.line', string="To Pay Lines", help='This lines are the ones the user has selected to be paid.',
         copy=False, readonly=True, states={'draft': [('readonly', False)]}, check_company=True)
-    # COMPUTED FIELDS
-    to_pay_amount = fields.Monetary(
-        compute='_compute_to_pay_amount', inverse='_inverse_to_pay_amount',
-        string='To Pay Amount', readonly=True, states={'draft': [('readonly', False)]}, tracking=True)
-    payments_amount = fields.Monetary(
-        compute='_compute_payments_amount', string='Amount', tracking=True)
-    payment_difference = fields.Monetary(
-        compute='_compute_payment_difference', readonly=True, string="Payments Difference",
-        help="Difference between selected debt (or to pay amount) and payments amount")
-    selected_debt = fields.Monetary(string='Selected Debt', compute='_compute_selected_debt',)
     # TODO make currency editable
     currency_id = fields.Many2one(
         'res.currency', string='Currency', required=True, tracking=True,
         default=lambda self: self.env.company.currency_id, readonly=True, states={'draft': [('readonly', False)]})
+    # COMPUTED FIELDS
+    payments_amount = fields.Monetary(compute='_compute_payments_amount', string='Amount', tracking=True)
+    selected_debt = fields.Monetary(string='Selected Debt', compute='_compute_selected_debt',)
+    payment_difference = fields.Monetary(
+        compute='_compute_payment_difference', readonly=True, string="Payments Difference",
+        help="Difference between selected debt (or to pay amount) and payments amount")
+
+    @api.depends('selected_debt', 'payments_amount')
+    def _compute_payment_difference(self):
+        for rec in self:
+            rec.payment_difference = rec.selected_debt - rec.payments_amount
 
     @api.depends('to_pay_move_line_ids.amount_residual')
     def _compute_selected_debt(self):
         for rec in self:
             rec.selected_debt = sum(rec.to_pay_move_line_ids._origin.mapped('amount_residual')) * (-1.0 if rec.partner_type == 'supplier' else 1.0)
-
-    @api.depends('selected_debt', 'unreconciled_amount')
-    def _compute_to_pay_amount(self):
-        for rec in self:
-            rec.to_pay_amount = rec.selected_debt + rec.unreconciled_amount
-
-    @api.depends('to_pay_amount', 'payments_amount')
-    def _compute_payment_difference(self):
-        for rec in self:
-            rec.payment_difference = rec.to_pay_amount - rec.payments_amount
 
     @api.depends('payment_ids.amount_signed')
     def _compute_payments_amount(self):
@@ -71,11 +60,6 @@ class AccountPaymentGroup(models.Model):
             # the problem with amount_total_in_currency_signed is that is only computed after saving
             # rec.payments_amount = sum(rec.payment_ids.mapped('amount_total_in_currency_signed'))
             rec.payments_amount = sum(rec.payment_ids.mapped('amount_signed'))
-
-    @api.onchange('to_pay_amount')
-    def _inverse_to_pay_amount(self):
-        for rec in self:
-            rec.unreconciled_amount = rec.to_pay_amount - rec.selected_debt
 
     @api.onchange('partner_id', 'partner_type', 'company_id')
     def _refresh_payments_and_move_lines(self):
