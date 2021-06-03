@@ -60,15 +60,15 @@ export async function nextTick() {
 }
 
 export function makeDeferred() {
+    /** @type {(value:any)=>void} */
     let resolve;
+    /** @type {(reason?:any)=>void} */
     let reject;
-    let prom = new Promise((res, rej) => {
+    const prom = new Promise((res, rej) => {
         resolve = res;
         reject = rej;
     });
-    prom.resolve = resolve;
-    prom.reject = reject;
-    return prom;
+    return Object.assign(prom, { resolve, reject });
 }
 
 function findElement(el, selector) {

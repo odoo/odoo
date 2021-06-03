@@ -152,8 +152,9 @@ function makeMockLocation() {
  * @param {Object} [params={}]
  * @param {Object} [params.initialRoute] initial route object
  * @param {Object} [params.onPushState] hook on the "pushState" method
+ * @param {Object} [params.onReplaceState] hook on the "onReplaceState" method
  * @param {Object} [params.onRedirect] hook on the "redirect" method
- * @returns {RouterService}
+ * @returns {typeof routerService}
  */
 export function makeFakeRouterService(params = {}) {
     const mockLocation = makeMockLocation();
@@ -231,14 +232,6 @@ export function makeFakeUIService(values = {}) {
     };
 }
 
-export function makeFakeCompanyService() {
-    const mockLocation = makeMockLocation();
-    patchWithCleanup(browser, {
-        location: mockLocation,
-    });
-    return companyService;
-}
-
 export const fakeCookieService = {
     start() {
         const cookie = {};
@@ -297,7 +290,7 @@ export function makeFakeNotificationService(createMock, closeMock) {
 }
 
 export const mocks = {
-    company: makeFakeCompanyService,
+    company: () => companyService,
     cookie: () => fakeCookieService,
     effect: () => effectService, // BOI The real service ? Is this what we want ?
     localization: makeFakeLocalizationService,

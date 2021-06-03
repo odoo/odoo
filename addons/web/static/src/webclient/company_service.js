@@ -2,6 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { symmetricalDifference } from "../core/utils/arrays";
 
 function parseCompanyIds(cidsFromHash) {
     const cids = [];
@@ -53,32 +54,29 @@ export const companyService = {
             get currentCompany() {
                 return availableCompanies[allowedCompanyIds[0]];
             },
-            setCompanies(mode, companyId) {
+            setCompanies(mode, ...companyIds) {
                 // compute next company ids
-                let nextCompanyIds = allowedCompanyIds.slice();
+                let nextCompanyIds;
                 if (mode === "toggle") {
-                    if (nextCompanyIds.includes(companyId)) {
-                        nextCompanyIds = nextCompanyIds.filter((id) => id !== companyId);
-                    } else {
-                        nextCompanyIds.push(companyId);
-                    }
+                    nextCompanyIds = symmetricalDifference(allowedCompanyIds, companyIds);
                 } else if (mode === "loginto") {
-                    if (nextCompanyIds.length === 1) {
+                    const companyId = companyIds[0];
+                    if (allowedCompanyIds.length === 1) {
                         // 1 enabled company: stay in single company mode
                         nextCompanyIds = [companyId];
                     } else {
                         // multi company mode
-                        if (nextCompanyIds.includes(companyId)) {
-                            nextCompanyIds = nextCompanyIds.filter((id) => id !== companyId);
-                        }
-                        nextCompanyIds.unshift(companyId);
+                        nextCompanyIds = [
+                            companyId,
+                            ...allowedCompanyIds.filter((id) => id !== companyId),
+                        ];
                     }
                 }
-                allowedCompanyIds = nextCompanyIds.length ? nextCompanyIds : [companyId];
+                nextCompanyIds = nextCompanyIds.length ? nextCompanyIds : [companyIds[0]];
 
                 // apply them
-                router.pushState({ cids: allowedCompanyIds }, { lock: true });
-                cookie.setCookie("cids", allowedCompanyIds);
+                router.pushState({ cids: nextCompanyIds }, { lock: true });
+                cookie.setCookie("cids", nextCompanyIds);
                 browser.setTimeout(() => browser.location.reload()); // history.pushState is a little async
             },
         };

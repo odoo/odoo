@@ -77,3 +77,18 @@ export function sortBy(array, criterion, order = "asc") {
         return order === "asc" ? result : -result;
     });
 }
+
+/**
+ * Returns an array containing all the elements of arrayA
+ * that are not in arrayB and vice-versa.
+ *
+ * @param {any[]} arrayA
+ * @param {any[]} arrayB
+ * @returns an array containing all the elements of arrayA
+ * that are not in arrayB and vice-versa.
+ */
+export function symmetricalDifference(arrayA, arrayB) {
+    return arrayA
+        .filter((id) => !arrayB.includes(id))
+        .concat(arrayB.filter((id) => !arrayA.includes(id)));
+}
