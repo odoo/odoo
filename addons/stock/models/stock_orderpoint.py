@@ -92,13 +92,11 @@ class StockWarehouseOrderpoint(models.Model):
 
     rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules')
     lead_days_date = fields.Date(compute='_compute_lead_days')
-    allowed_route_ids = fields.Many2many('stock.location.route', compute='_compute_allowed_route_ids')
     route_id = fields.Many2one(
-        'stock.location.route', string='Preferred Route', domain="[('id', 'in', allowed_route_ids)]")
+        'stock.location.route', string='Preferred Route', domain="[('product_selectable', '=', True)]")
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty')
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty')
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', store=True, readonly=False)
-
 
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
@@ -117,13 +115,6 @@ class StockWarehouseOrderpoint(models.Model):
                 loc_domain = expression.AND([loc_domain, ['!', ('id', 'child_of', view_location_id.id)]])
                 loc_domain = expression.AND([loc_domain, ['|', ('company_id', '=', False), ('company_id', '=', orderpoint.company_id.id)]])
             orderpoint.allowed_location_ids = self.env['stock.location'].search(loc_domain)
-
-    @api.depends('warehouse_id', 'location_id')
-    def _compute_allowed_route_ids(self):
-        route_by_product = self.env['stock.location.route'].search([
-            ('product_selectable', '=', True),
-        ])
-        self.allowed_route_ids = route_by_product.ids
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_lead_days(self):
