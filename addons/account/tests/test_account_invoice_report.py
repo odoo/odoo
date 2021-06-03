@@ -24,7 +24,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
                     (0, None, {
                         'product_id': cls.product_a.id,
                         'quantity': 3,
-                        'price_unit': 1000,
+                        'price_unit': 750,
                     }),
                     (0, None, {
                         'product_id': cls.product_a.id,
@@ -115,7 +115,7 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
             # amount_total  price_average   price_subtotal  residual    quantity
             [2000,          2000,           2000,           2000,       1],
             [1000,          1000,           1000,           1000,       1],
-            [1000,          1000,           1000,           1000,       3],
+            [750,           250,            750,            750,        3],
             [6,             6,              6,              6,          1],
             [-20,           -20,            -20,            -20,        -1],
             [-20,           -20,            -20,            -20,        -1],
