@@ -9,11 +9,6 @@ const { Component, hooks } = owl;
 const { useState } = hooks;
 
 export class SwitchCompanyMenu extends Component {
-    static isDisplayed(env) {
-        const { availableCompanies } = env.services.company;
-        return Object.keys(availableCompanies).length > 1 && !env.isSmall;
-    }
-
     setup() {
         this.companyService = useService("company");
         this.currentCompany = this.companyService.currentCompany;
@@ -45,4 +40,12 @@ export class SwitchCompanyMenu extends Component {
 SwitchCompanyMenu.template = "web.SwitchCompanyMenu";
 SwitchCompanyMenu.toggleDelay = 1000;
 
-registry.category("systray").add("SwitchCompanyMenu", SwitchCompanyMenu, { sequence: 1 });
+const systrayItem = {
+    Component: SwitchCompanyMenu,
+    isDisplayed(env) {
+        const { availableCompanies } = env.services.company;
+        return Object.keys(availableCompanies).length > 1 && !env.isSmall;
+    },
+};
+
+registry.category("systray").add("SwitchCompanyMenu", systrayItem, { sequence: 1 });

@@ -24,8 +24,8 @@
 
         <!-- Systray -->
         <ul class="o_menu_systray" role="menu">
-          <t t-foreach="systrayItems" t-as="Item" t-key="Item_index">
-            <t t-component="Item" />
+          <t t-foreach="systrayItems" t-as="item" t-key="item_index">
+            <t t-component="item.Component" t-props="item.props" />
           </t>
         </ul>
       </nav>

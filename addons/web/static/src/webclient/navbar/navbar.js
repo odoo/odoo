@@ -14,12 +14,15 @@ const systrayRegistry = registry.category("systray");
 export class MenuDropdown extends Dropdown {
     setup() {
         super.setup();
-        useEffect(() => {
-            if (this.props.xmlid) {
-                const toggler = this.el.querySelector("button.o_dropdown_toggler");
-                toggler.dataset.menuXmlid = this.props.xmlid;
-            }
-        }, () => []);
+        useEffect(
+            () => {
+                if (this.props.xmlid) {
+                    const toggler = this.el.querySelector("button.o_dropdown_toggler");
+                    toggler.dataset.menuXmlid = this.props.xmlid;
+                }
+            },
+            () => []
+        );
     }
 }
 MenuDropdown.props.xmlid = {
@@ -30,11 +33,14 @@ MenuDropdown.props.xmlid = {
 export class MenuItem extends DropdownItem {
     setup() {
         super.setup();
-        useEffect(() => {
-            if (this.props.payload.xmlid) {
-                this.el.dataset.menuXmlid = this.props.payload.xmlid;
-            }
-        }, () => []);
+        useEffect(
+            () => {
+                if (this.props.payload.xmlid) {
+                    this.el.dataset.menuXmlid = this.props.payload.xmlid;
+                }
+            },
+            () => []
+        );
     }
 }
 
@@ -77,7 +83,7 @@ export class NavBar extends Component {
     get systrayItems() {
         return systrayRegistry
             .getAll()
-            .filter((Item) => ("isDisplayed" in Item ? Item.isDisplayed(this.env) : true))
+            .filter((item) => ("isDisplayed" in item ? item.isDisplayed(this.env) : true))
             .reverse();
     }
 
