@@ -547,6 +547,10 @@ class SaleOrder(models.Model):
                 }
             }
 
+    @api.onchange('expected_date')
+    def _onchange_expected_date(self):
+        self.commitment_date = self.expected_date
+
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id(self):
         if self.order_line and self.pricelist_id and self._origin.pricelist_id != self.pricelist_id:
@@ -620,10 +624,6 @@ class SaleOrder(models.Model):
             empty_list_help_document_name=_("sale order"),
         )
         return super(SaleOrder, self).get_empty_list_help(help_msg)
-
-    @api.onchange('expected_date')
-    def _onchange_commitment_date(self):
-        self.commitment_date = self.expected_date
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
