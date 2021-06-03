@@ -155,4 +155,4 @@ def split_partner_name(partner_name):
 # Security
 
 def get_customer_ip_address():
-    return request and request.httprequest.remote_addr
+    return request and request.httprequest.remote_addr or ''
