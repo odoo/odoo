@@ -164,6 +164,7 @@
     odoo.log = function () {
         var missing = [];
         var failed = [];
+        var cycle = null;
 
         if (jobs.length) {
             var debugJobs = {};
@@ -248,7 +249,7 @@
                     log("Rejected linked modules: ", rejectedLinked);
                 }
                 if (unloaded.length) {
-                    const cycle = findCycle(unloaded);
+                    cycle = findCycle(unloaded);
                     if (cycle) {
                         console.error("Cyclic dependencies: " + cycle);
                     }
@@ -266,9 +267,9 @@
         }
         odoo.__DEBUG__.jsModules = {
             missing: missing,
-            failed: failed.map(function (fail) {
-                return fail.name;
-            }),
+            failed: failed.map((mod) => mod.name),
+            unloaded: unloaded ? unloaded.map((mod) => mod.name) : [],
+            cycle,
         };
         didLogInfoResolve();
     };
@@ -300,6 +301,8 @@
                             jobs.push(job);
                             resolve();
                         });
+                } else {
+                    resolve();
                 }
             });
             jobPromises.push(def);
