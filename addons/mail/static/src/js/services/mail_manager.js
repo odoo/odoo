@@ -1152,7 +1152,7 @@ var MailManager =  AbstractService.extend({
             if (values.length < limit) {
                 values = values.concat(_.filter(partners, function (partner) {
                     return (session.partner_id !== partner.id) &&
-                            searchRegexp.test(partner.name);
+                            searchRegexp.test(utils.unaccent(partner.name));
                 })).splice(0, limit);
             }
         });
