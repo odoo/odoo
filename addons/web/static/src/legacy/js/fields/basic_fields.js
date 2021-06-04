@@ -2080,11 +2080,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     template: 'FieldBinaryImage',
     placeholder: "/web/static/img/placeholder.png",
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
-        'click img': function () {
-            if (this.mode === "readonly") {
-                this.trigger_up('bounce_edit');
-            }
-        },
+        'click img': '_onImageClick',
     }),
     supportedFieldTypes: ['binary'],
     file_type_magic_word: {
@@ -2213,6 +2209,15 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     preventClicks: this.nodeOptions.preventClicks,
                 });
             }
+        }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onImageClick: function (ev) {
+        if (this.mode === "readonly") {
+            this.trigger_up('bounce_edit');
         }
     },
 });
