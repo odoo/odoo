@@ -83,7 +83,7 @@ var Dialog = Widget.extend({
             $content: false,
             buttons: [{text: _t("Ok"), close: true}],
             technical: true,
-            $parentNode: false || $(".o_dialog_container"),
+            $parentNode: false || $(document.body.querySelector(".o_dialog_container")),
             backdrop: 'static',
             renderHeader: true,
             renderFooter: true,
