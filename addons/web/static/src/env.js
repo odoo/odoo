@@ -57,8 +57,11 @@ export const SERVICES_METADATA = {};
  */
 export async function startServices(env) {
     const toStart = new Set();
-    let timeoutId;
     serviceRegistry.on("UPDATE", null, async (payload) => {
+        // Wait for all synchronous code so that if new services that depend on
+        // one another are added to the registry, they're all present before we
+        // start them.
+        await Promise.resolve();
         const { operation, key: name, value: service } = payload;
         if (operation === "delete") {
             // We hardly see why it would be usefull to remove a service.
@@ -70,10 +73,10 @@ export async function startServices(env) {
             const namedService = Object.assign(Object.create(service), { name });
             toStart.add(namedService);
         } else {
-            timeoutId = await _startServices(env, toStart, timeoutId);
+            await _startServices(env, toStart);
         }
     });
-    timeoutId = await _startServices(env, toStart, timeoutId);
+    await _startServices(env, toStart);
 }
 
 async function _startServices(env, toStart, timeoutId) {
@@ -128,17 +131,17 @@ async function _startServices(env, toStart, timeoutId) {
         }
     }
     await start();
-    clearTimeout(timeoutId);
-    timeoutId = undefined;
     if (toStart.size) {
         const names = [...toStart].map((s) => s.name);
-        timeoutId = setTimeout(() => {
-            timeoutId = undefined;
-            throw new Error(`Some services could not be started: ${names}`);
-        }, 15000);
-        toStart.clear();
+        const missingDeps = new Set();
+        [...toStart].forEach((s) => s.dependencies.forEach((dep) => {
+            if (!(dep in services) && !names.includes(dep)) {
+                missingDeps.add(dep);
+            }
+        }));
+        const depNames = [...missingDeps].join(", ");
+        throw new Error(`Some services could not be started: ${names}. Missing dependencies: ${depNames}`);
     }
-    return timeoutId;
 
     function findNext() {
         for (let s of toStart) {
