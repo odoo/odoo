@@ -98,7 +98,7 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     events: {
         'click .search-submit': '_onSearchSubmitClick',
         'click .dropdown-item': '_onDropdownItemClick',
-        'keyup input[name="search"]': '_onSearchInputKeyup',
+        'keydown input[name="search"]': '_onSearchInputKeydown',
     },
 
     /**
@@ -156,8 +156,9 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onSearchInputKeyup: function (ev) {
+    _onSearchInputKeydown: function (ev) {
         if (ev.keyCode === $.ui.keyCode.ENTER) {
+            ev.preventDefault();
             this._search();
         }
     },
