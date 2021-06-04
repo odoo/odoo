@@ -269,16 +269,19 @@ class Registry(Mapping):
 
         # prepare the setup on all models
         models = list(env.values())
+
         for model in models:
             model._prepare_setup()
-
         self.field_depends.clear()
         self.field_depends_context.clear()
         self.field_inverses.clear()
 
         # do the actual setup
+        import time
+        t0 = time.time()
         for model in models:
             model._setup_base()
+        _setup_base_time = time.time()-t0
 
         self._m2m = defaultdict(list)
         for model in models:
@@ -289,18 +292,21 @@ class Registry(Mapping):
             model._setup_complete()
 
         # determine field_depends and field_depends_context
+        t0 = time.time()
         for model in models:
             for field in model._fields.values():
                 depends, depends_context = field.get_depends(model)
                 self.field_depends[field] = tuple(depends)
                 self.field_depends_context[field] = tuple(depends_context)
 
+        get_depends_time = time.time()-t0
         # Reinstall registry hooks. Because of the condition, this only happens
         # on a fully loaded registry, and not on a registry being loaded.
         if self.ready:
             for model in env.values():
                 model._register_hook()
             env['base'].flush()
+        _logger.info(f'_setup_base_time:{_setup_base_time}, get_depends_time: {get_depends_time}')
 
     @lazy_property
     def field_computed(self):
