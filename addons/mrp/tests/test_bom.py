@@ -968,7 +968,7 @@ class TestBoM(TestMrpCommon):
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', product_gram.id)])
-        self.assertEqual(orderpoint.qty_multiple, 0.0)
+        self.assertEqual(orderpoint.qty_multiple, 1.0)
         self.assertEqual(orderpoint.qty_to_order, 2300.0)
 
         # We select the manufacturing route and check the impact on the quantities
