@@ -15,7 +15,7 @@ from odoo.addons.calendar.models.calendar_attendee import Attendee
 from odoo.addons.calendar.models.calendar_recurrence import weekday_to_field, RRULE_TYPE_SELECTION, END_TYPE_SELECTION, MONTH_BY_SELECTION, WEEKDAY_SELECTION, BYDAY_SELECTION
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
-from odoo.tools import pycompat, html_escape
+from odoo.tools import pycompat, html2plaintext, html_escape, is_html_empty
 from odoo.exceptions import UserError, ValidationError, AccessError
 
 _logger = logging.getLogger(__name__)
@@ -96,7 +96,7 @@ class Meeting(models.Model):
 
     # description
     name = fields.Char('Meeting Subject', required=True)
-    description = fields.Text('Description')
+    description = fields.Html('Description')
     user_id = fields.Many2one('res.users', 'Organizer', default=lambda self: self.env.user)
     partner_id = fields.Many2one(
         'res.partner', string='Scheduled by', related='user_id.partner_id', readonly=True)
@@ -627,7 +627,7 @@ class Meeting(models.Model):
                 if 'name' in fields:
                     activity_values['summary'] = event.name
                 if 'description' in fields:
-                    activity_values['note'] = tools.plaintext2html(event.description)
+                    activity_values['note'] = event.description
                 if 'start' in fields:
                     # self.start is a datetime UTC *only when the event is not allday*
                     # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
@@ -837,8 +837,12 @@ class Meeting(models.Model):
             event.add('dtstart').value = ics_datetime(meeting.start, meeting.allday)
             event.add('dtend').value = ics_datetime(meeting.stop, meeting.allday)
             event.add('summary').value = meeting.name
-            if meeting.description:
-                event.add('description').value = meeting.description
+            if not is_html_empty(meeting.description):
+                if 'appointment_type_id' in meeting._fields and self.appointment_type_id:
+                    # convert_online_event_desc_to_text method for correct data formatting in external calendars
+                    event.add('description').value = self.convert_online_event_desc_to_text(meeting.description)
+                else:
+                    event.add('description').value = html2plaintext(meeting.description)
             if meeting.location:
                 event.add('location').value = meeting.location
             if meeting.rrule:
@@ -865,6 +869,23 @@ class Meeting(models.Model):
             result[meeting.id] = cal.serialize().encode('utf-8')
 
         return result
+
+    def convert_online_event_desc_to_text(self, description):
+        """
+        We can sync the calendar events with google calendar, iCal and Outlook, and we
+        also pass the event description along with other data. This description needs
+        to be in plaintext to be displayed properly in above platforms. Because online
+        events have fixed format for the description, this method removes some specific
+        html tags, and converts it into readable plaintext (to be used in external
+        calendars). Note that for regular (offline) events, we simply use the standard
+        `html2plaintext` method instead.
+        """
+        desc_str = str(description)
+        tags_to_replace = ["<ul>", "</ul>", "<li>"]
+        for tag in tags_to_replace:
+            desc_str = desc_str.replace(tag, "")
+        desc_str = desc_str.replace("</li>", "<br/>")
+        return html2plaintext(desc_str)
 
     @api.model
     def _get_display_time(self, start, stop, zduration, zallday):
@@ -948,56 +969,3 @@ class Meeting(models.Model):
             'id', 'active', 'allday',
             'duration', 'user_id', 'interval',
             'count', 'rrule', 'recurrence_id', 'show_as', 'privacy'}
-
-    def description_to_html_lines(self):
-        """ Description could contain some structure content, depending on
-        its use. Notably appointment could add some structured data in it
-        in addition to free text. Purpose of this method is to generate a
-        simple html.
-
-        Input (self.description) example:
-Some free text salespeople added
-as multi line
- * Mobile: +320475000000
- * Email: my.email@test.example.com
- * SingleLine: answer
- * MultiLine:
-Answer1
-Answer2
-Answer3
- * Dropdown: answer
- * Radio: answer
- * Checkboxes: answer1, answer2
-Some free text salespeople added
-as multi line
-
-        Output: a list of items[
-'Some free text salespeople added<br />as multi line',
-'Mobile: +320475000000',
-'Email: my.email@test.example.com',
-'SingleLine: answer',
-'MultiLine:<br />Answer1<br />Answer2<br />Answer3',
-'Dropdown: answer',
-'Radio: answer',
-'Checkboxes: answer1, answer2',
-'Some free text salespeople added<br .>as multi line']
-
-        Each item of returned list is escaped so that only our intended <br />
-        are html tags. It should therefore be safe.
-        """
-
-        final_lines = []
-        parsed_lines = []
-        for line in self.description.split('\n'):
-            if not line.strip():
-                continue
-            # new line
-            if line.startswith(' *'):
-                if parsed_lines:
-                    final_lines.append('<br />'.join(html_escape(line) for line in parsed_lines))
-                parsed_lines = [line.lstrip(' *')]
-            else:
-                parsed_lines.append(line)
-        if parsed_lines:
-            final_lines.append('<br />'.join(html_escape(line) for line in parsed_lines))
-        return final_lines

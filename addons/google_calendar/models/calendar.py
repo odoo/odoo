@@ -82,7 +82,7 @@ class Meeting(models.Model):
         name = google_event.summary or related_event and related_event.name or _("(No title)")
         values = {
             'name': name,
-            'description': google_event.description,
+            'description': tools.plaintext2html(google_event.description),
             'location': google_event.location,
             'user_id': google_event.owner(self.env).id,
             'privacy': google_event.visibility or self.default_get(['privacy'])['privacy'],
@@ -214,7 +214,7 @@ class Meeting(models.Model):
             'start': start,
             'end': end,
             'summary': self.name,
-            'description': self.description or '',
+            'description': tools.html2plaintext(self.description) if not tools.is_html_empty(self.description) else '',
             'location': self.location or '',
             'guestsCanModify': True,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
