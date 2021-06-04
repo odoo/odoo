@@ -174,10 +174,12 @@ class StockWarehouseOrderpoint(models.Model):
         if self.product_id:
             self.product_uom = self.product_id.uom_id.id
 
-    @api.onchange('route_id')
-    def _onchange_route_id(self):
-        if self.route_id:
+    @api.onchange('product_id', 'route_id')
+    def _onchange_set_qty_multiple(self):
+        if self.route_id and self.product_id:
             self.qty_multiple = self._get_qty_multiple_to_order()
+        else:
+            self.qty_multiple = 1
 
     def write(self, vals):
         if 'company_id' in vals:
@@ -282,7 +284,7 @@ class StockWarehouseOrderpoint(models.Model):
         """ Calculates the minimum quantity that can be ordered according to the PO UoM or BoM
         """
         self.ensure_one()
-        return 0
+        return 1
 
     def _set_default_route_id(self):
         """ Write the `route_id` field on `self`. This method is intendend to be called on the
