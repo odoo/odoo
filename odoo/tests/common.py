@@ -846,6 +846,7 @@ class ChromeBrowser():
             # TODO: handle windows platform: https://stackoverflow.com/a/40674915
             pass
 
+        self._logger.warning("Chrome executable not found")
         raise unittest.SkipTest("Chrome executable not found")
 
     def _spawn_chrome(self, cmd):
