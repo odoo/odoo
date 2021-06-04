@@ -61,11 +61,11 @@
             <field name="priority">32</field>
             <field name="arch" type="xml">
                 <search string="Opportunities Analysis">
-                    <filter string="My Opportunities" name="my"
+                    <filter string="My Pipeline" name="my"
                             domain="[('user_id', '=', uid)]"/>
                     <separator/>
-                    <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
-                    <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
+                    <filter name="filter_opportunity" string="Opportunities" domain="[('type','=','opportunity')]" help="Show only opportunities" groups="crm.group_use_lead"/>
+                    <filter name="filter_lead" string="Leads" domain="[('type','=', 'lead')]" help="Show only leads" groups="crm.group_use_lead"/>
                     <separator/>
                     <filter string="Won" name="won"
                             domain="[('probability', '=', 100)]"/>
@@ -74,7 +74,7 @@
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="user_id" string="Salesperson"/>
                     <separator/>
-                    <filter string="Creation Date" name="filter_create_date" date="create_date" default_period="this_year"/>
+                    <filter name="filter_create_date" date="create_date" default_period="this_year"/>
                     <filter string="Expected Closing" name="filter_date_deadline" date="date_deadline"/>
                     <filter string="Date Closed" name="date_closed_filter" date="date_closed"/>
                     <group expand="0" string="Extended Filters">
@@ -89,6 +89,7 @@
                         <field name="date_open"/>
                         <field name="date_closed"/>
                     </group>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="1" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
@@ -96,9 +97,12 @@
                         <filter string="Country" name="country" context="{'group_by':'country_id'}" />
                         <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Campaign" name="compaign" domain="[]" context="{'group_by':'campaign_id'}"/>
+                        <filter string="Medium" name="medium" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Source" name="source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
-                        <filter string="Conversion Date" context="{'group_by':'date_conversion:month'}" name="conversion_date" help="Conversion Date from Lead to Opportunity"/>
+                        <filter string="Conversion Date" context="{'group_by':'date_conversion:month'}" name="conversion_date" help="Conversion Date from Lead to Opportunity" groups="crm.group_use_lead"/>
                         <filter string="Expected Closing" context="{'group_by':'date_deadline:month'}" name="date_deadline"/>
                         <filter string="Closed Date" context="{'group_by':'date_closed'}" name="date_closed_groupby"/>
                         <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
@@ -112,7 +116,7 @@
             <field name="res_model">crm.lead</field>
             <field name="view_mode">graph,pivot,tree,form</field>
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
-            <field name="context">{'search_default_opportunity': True, 'search_default_current': True}</field>
+            <field name="context">{'search_default_filter_opportunity': True, 'search_default_current': True}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
@@ -134,7 +138,7 @@
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
             <field name="context">{
                 'default_type': 'lead',
-                'search_default_lead': True,
+                'search_default_filter_lead': True,
                 'search_default_filter_create_date': 1,
             }</field>
             <field name="view_ids"
