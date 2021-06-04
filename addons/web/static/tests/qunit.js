@@ -218,14 +218,32 @@
         // wait for the module system to end processing the JS modules
         await odoo.__DEBUG__.didLogInfo;
         const info = odoo.__DEBUG__.jsModules;
-        if (info.missing.length || info.failed.length) {
+        if (info.missing.length || info.failed.length || info.unloaded.length) {
             document.querySelector("#qunit-banner").classList.add("qunit-fail");
             modulesAlert.classList.toggle("alert-danger");
             modulesAlert.classList.toggle("alert-info");
-            let error = `Some modules couldn't be started: ${info.failed.join(", ")}.`;
-            error += `\nMissing dependencies: ${info.missing.join(", ")}.`;
+            let error = "Some modules couldn't be started:<ul>";
+            if (info.failed.length) {
+                const failedList = info.failed.map((mod) => "<li>" + _.escape(mod) + "</li>");
+                error += `<li> Failed modules: <ul>${failedList.join("")}</ul> </li>`;
+            }
+            if (info.missing.length) {
+                const missingList = info.missing.map((mod) => "<li>" + _.escape(mod) + "</li>");
+                error += `<li> Missing dependencies: <ul>${missingList.join("")}</ul> </li>`;
+            }
+            if (info.unloaded.length) {
+                const unloadedList = info.unloaded.map((mod) => "<li>" + _.escape(mod) + "</li>");
+                error += `
+                    <li> Non loaded modules due to missing dependencies:
+                        <ul>${unloadedList.join("")}</ul>
+                    </li>`;
+                if (info.cycle) {
+                    error += `<li> Cycle: ${info.cycle} </li>`;
+                }
+            }
+            error += "</ul>";
 
-            modulesAlert.textContent = error;
+            modulesAlert.innerHTML = error;
             errorMessages.unshift(error);
             return false;
         } else {
