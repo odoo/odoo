@@ -248,6 +248,9 @@ $o-wblog-loader-size: 50px;
 
             padding-top: 33%;
             height: auto!important;
+            // This is mandatory as we do not want the CoverProperties 
+            // sizing classes to be applied here
+            min-height: auto!important;
 
             &:hover .o_record_cover_image {
                 opacity: 0.8;
