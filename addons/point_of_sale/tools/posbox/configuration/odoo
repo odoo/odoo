@@ -1,0 +1,9 @@
+#!/bin/bash
+
+LOGLEVEL=$1
+DAEMON=/home/pi/odoo/odoo-bin
+CONFIG=/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf
+MODULES=$(ls /home/pi/odoo/addons/ -m -w0 | tr -d ' ')
+[ -z $LOGLEVEL ] && LOGLEVEL='error --logfile=/var/log/odoo/odoo-server.log'
+
+$DAEMON --log-level $LOGLEVEL --load=$MODULES --config $CONFIG
