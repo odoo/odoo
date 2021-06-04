@@ -165,6 +165,9 @@ create_ramdisk_dir () {
     mkdir -v "${1}_ram"
 }
 
+#alias iot_server can take log level in parameter. By default loglevel is error
+echo 'alias iot_server=/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo' >> /home/pi/.bashrc
+
 create_ramdisk_dir "/var"
 create_ramdisk_dir "/etc"
 create_ramdisk_dir "/tmp"
