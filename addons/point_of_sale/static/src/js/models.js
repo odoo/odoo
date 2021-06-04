@@ -2735,7 +2735,7 @@ exports.Order = Backbone.Model.extend({
             amount_paid: this.get_total_paid() - this.get_change(),
             amount_total: this.get_total_with_tax(),
             amount_tax: this.get_total_tax(),
-            amount_return: this.amount_return ? this.amount_return : this.get_change(),
+            amount_return: this.get_change(),
             lines: orderLines,
             statement_ids: paymentLines,
             pos_session_id: this.pos_session_id,
