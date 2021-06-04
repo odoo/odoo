@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import ast
 import logging
 import os.path
 import re
@@ -113,17 +112,17 @@ class QWeb(object):
 
         Render the template specified by the given name.
 
-        :param template: template identifier
+        :param template: template identifier, name or etree (see ``_get_template``)
         :param dict values: template values to be used for rendering
         :param options: used to compile the template (the dict available for the rendering is frozen)
             * ``load`` (function) overrides the load method (returns: (template, ref))
-            * ``profile`` (boolean) profile the rendering
 
         :returns: str as Markup
         :rtype: markupsafe.Markup
         """
         if values and 0 in values:
             raise ValueError('values[0] should be unset when call the _render method and only set into the template.')
+
         render_template = self._compile(template, options)
         rendering = render_template(self, values or {})
         result = ''.join(rendering)
@@ -144,16 +143,23 @@ class QWeb(object):
         if not ref:
             ref = element.get('t-name', str(document))
 
+        # reference to get xml and etree (usually the template ID)
         options['ref'] = ref
-        if 'profile' in options:
-            options['document'] = document if isinstance(document, str) else str(document, 'utf-8')
+        # str xml of the reference template used for compilation. Useful for debugging, dev mode and profiling.
+        options['ref_xml'] = document if isinstance(document, str) else str(document, 'utf-8')
 
         _options = dict(options)
         options = frozendict(options)
 
+        # Initial template value send to render method (not in the froozen dict because it may be
+        # different from one render to another. Indeed, it may be the view ID or the key)
         _options['template'] = template
+        # Root of the etree which will be processed during compilation.
         _options['root'] = element.getroottree()
+        # Reference to the last node being compiled. It is mainly used for debugging and displaying
+        # error messages.
         _options['last_path_node'] = None
+
         if not options.get('nsmap'):
             _options['nsmap'] = {}
 
@@ -172,7 +178,6 @@ class QWeb(object):
         except Exception as e:
             raise QWebException("Error when compiling xml template", self, options,
                 error=e, template=template, path=_options.get('last_path_node'))
-
         try:
             code = '\n'.join(code_lines)
         except QWebException as e:
@@ -213,10 +218,15 @@ class QWeb(object):
         return render_template
 
     def _get_template(self, template, options):
-        """ Retrieve the given template, and return it as a tuple ``(element,
-        document, ref)``, where ``element`` is an etree, ``document`` is the
+        """ Retrieve the given template, and return it as a tuple ``(etree,
+        xml, ref)``, where ``element`` is an etree, ``document`` is the
         string document that contains ``element``, and ``ref`` if the uniq
         reference of the template (id, t-name or template).
+
+        :param template: template identifier, name or etree
+        :param options: used to compile the template (the dict available for
+            the rendering is frozen)
+            ``load`` (function) overrides the load method
         """
         ref = template
         if isinstance(template, etree._Element):
@@ -252,7 +262,7 @@ class QWeb(object):
         return (element, document, ref)
 
     def _load(self, template, options):
-        """ Load a given template. """
+        """ Load a given template and return a tuple ``(xml, ref)``` """
         return (template, None)
 
     # values for running time
@@ -270,7 +280,7 @@ class QWeb(object):
         """ Prepare the global context that will sent to eval the qweb generated
         code.
 
-        :param values: template values to be used for rendering
+        :param globals_dict: template global values use in compiled code
         :param options: frozen dict of compilation parameters.
         """
         globals_dict['Sized'] = Sized
@@ -370,20 +380,15 @@ class QWeb(object):
         """
         compile t-options and add to the dict the t-options-xxx values
         """
-        t_options = el.attrib.pop('t-options', None)
-        directive = ''
-        if t_options:
-            directive = f't-options="{t_options}"'
-
         code = []
         dict_arg = []
         for key in list(el.attrib):
             if key.startswith('t-options-'):
                 value = el.attrib.pop(key)
-                directive += f' {key}={repr(value)}'
                 option_name = key[10:]
                 dict_arg.append(f'{repr(option_name)}:{self._compile_expr(value)}')
 
+        t_options = el.attrib.pop('t-options', None)
         if t_options and dict_arg:
             code.append(self._indent(f"{varname} = {{**{self._compile_expr(t_options)}, {', '.join(dict_arg)}}}", indent))
         elif dict_arg:
@@ -1225,7 +1230,6 @@ class QWeb(object):
         compilation of the content of this element.
         """
         expr = el.attrib.pop('t-call')
-        _values = self._make_name('values_copy')
 
         if el.attrib.get('t-call-options'): # retro-compatibility
             el.attrib.set('t-options', el.attrib.pop('t-call-options'))
@@ -1281,7 +1285,6 @@ class QWeb(object):
                 """).strip(), indent))
         else:
             code.append(self._indent(f"yield from self._compile({template}, t_call_options)(self, t_call_values)", indent))
-
 
         return code
 

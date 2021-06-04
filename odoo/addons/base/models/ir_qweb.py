@@ -67,10 +67,10 @@ class IrQWeb(models.AbstractModel, QWeb):
                   instead of `str`)
         :rtype: MarkupSafe
         """
-        context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
-        context.update(options)
+        compile_options = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
+        compile_options.update(options)
 
-        result = super(IrQWeb, self)._render(template, values=values, **context)
+        result = super()._render(template, values=values, **compile_options)
 
         if not values or not values.get('__keep_empty_lines'):
             result = markupsafe.Markup(IrQWeb._empty_lines.sub('\n', result.strip()))
@@ -121,7 +121,7 @@ class IrQWeb(models.AbstractModel, QWeb):
             id_or_xml_id = int(id_or_xml_id)
         except:
             pass
-        return super(IrQWeb, self)._compile(id_or_xml_id, options=options)
+        return super()._compile(id_or_xml_id, options=options)
 
     def _load(self, name, options):
         lang = options.get('lang', get_lang(self.env).code)
@@ -153,7 +153,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     # order
 
     def _directives_eval_order(self):
-        directives = super(IrQWeb, self)._directives_eval_order()
+        directives = super()._directives_eval_order()
         directives.insert(directives.index('foreach'), 'groups')
         directives.insert(directives.index('call'), 'lang')
         directives.insert(directives.index('field'), 'call-assets')
@@ -164,7 +164,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     def _compile_node(self, el, options, indent):
         if el.get("groups"):
             el.set("t-groups", el.attrib.pop("groups"))
-        return super(IrQWeb, self)._compile_node(el, options, indent)
+        return super()._compile_node(el, options, indent)
 
     # compile directives
 
@@ -359,7 +359,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         values['false'] = False
         if 'request' not in values:
             values['request'] = request
-        return super(IrQWeb, self)._prepare_values(values, options)
+        return super()._prepare_values(values, options)
 
     def _compile_expr(self, expr, raise_on_missing=False):
         """ Compiles a purported Python expression to compiled code, verifies
@@ -368,6 +368,6 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         :param expr: string
         """
-        namespace_expr = super(IrQWeb, self)._compile_expr(expr, raise_on_missing=raise_on_missing)
+        namespace_expr = super()._compile_expr(expr, raise_on_missing=raise_on_missing)
         assert_valid_codeobj(_SAFE_QWEB_OPCODES, compile(namespace_expr, '<>', 'eval'), expr)
         return namespace_expr
