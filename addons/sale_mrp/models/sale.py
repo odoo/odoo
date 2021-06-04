@@ -109,7 +109,7 @@ class SaleOrderLine(models.Model):
 
     def _get_bom_component_qty(self):
         bom_quantity = self.product_uom._compute_quantity(1, self.kit_bom_id.product_uom_id)
-        boms, lines = self.kit_bom_id.explode(self.product_id, bom_quantity)
+        __, lines = self.kit_bom_id.explode(self.product_id, bom_quantity)
         components = defaultdict(float)
         for line, line_data in lines:
             product = line.product_id.id
