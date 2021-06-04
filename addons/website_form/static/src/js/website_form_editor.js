@@ -419,6 +419,9 @@ odoo.define('website_form_editor', function (require) {
             // Prevent saving of the status message  // TODO: would be better on Edit
             this.$target.find('#o_website_form_result').empty();
 
+            // Prevent saving disabled state of send button  // TODO: would be better on Edit
+            this.$target.find('.o_website_form_send').removeClass('disabled').removeAttr('disabled')
+
             // Update values of custom inputs to mirror their labels
             var custom_inputs = this.$target.find('.o_website_form_custom .o_website_form_input');
             _.each(custom_inputs, function (input, index) {
