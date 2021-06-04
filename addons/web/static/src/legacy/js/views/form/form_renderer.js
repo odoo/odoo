@@ -264,6 +264,9 @@ var FormRenderer = BasicRenderer.extend({
      */
     setLocalState: function (state) {
         for (const notebook of this.el.querySelectorAll(':scope div.o_notebook')) {
+            if (notebook.closest(".o_field_widget")) {
+                continue;
+            }
             const name = notebook.dataset.name;
             if (name in state) {
                 const navs = notebook.querySelectorAll(':scope .o_notebook_headers .nav-item');
