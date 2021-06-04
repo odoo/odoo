@@ -96,9 +96,8 @@ publicWidget.registry.PortalHomeCounters = publicWidget.Widget.extend({
 publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     selector: '.o_portal_search_panel',
     events: {
-        'click .search-submit': '_onSearchSubmitClick',
         'click .dropdown-item': '_onDropdownItemClick',
-        'keyup input[name="search"]': '_onSearchInputKeyup',
+        'submit': '_onSubmit',
     },
 
     /**
@@ -139,12 +138,6 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onSearchSubmitClick: function () {
-        this._search();
-    },
-    /**
-     * @private
-     */
     _onDropdownItemClick: function (ev) {
         ev.preventDefault();
         var $item = $(ev.currentTarget);
@@ -156,10 +149,9 @@ publicWidget.registry.portalSearchPanel = publicWidget.Widget.extend({
     /**
      * @private
      */
-    _onSearchInputKeyup: function (ev) {
-        if (ev.keyCode === $.ui.keyCode.ENTER) {
-            this._search();
-        }
+    _onSubmit: function (ev) {
+        ev.preventDefault();
+        this._search();
     },
 });
 
