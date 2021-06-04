@@ -79,7 +79,7 @@ class AccountMove(models.Model):
     l10n_ec_auth_type = fields.Selection(related="l10n_latam_document_type_id.l10n_ec_authorization")
     l10n_ec_is_electronic = fields.Boolean(default=False, compute="_l10n_ec_is_electronic")
 
-    @api.depends('journal_id')
+    @api.depends('journal_id', 'partner_id')
     def _l10n_ec_is_electronic(self):
         self.ensure_one()
         self.l10n_ec_is_electronic = len(self.journal_id.edi_format_ids) > 0
