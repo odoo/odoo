@@ -68,19 +68,26 @@ class WebsiteEventBoothController(WebsiteEventController):
         )
 
     def _prepare_booth_registration_values(self, event, kwargs):
-        return {
-            'partner_id': self._get_partner(kwargs)
-        }
+        return self._prepare_booth_registration_partner_values(event, kwargs)
 
-    def _get_partner(self, kwargs):
+    def _prepare_booth_registration_partner_values(self, event, kwargs):
         if request.env.user._is_public():
-            return request.env['res.partner'].sudo().create({
-                'name': kwargs.get('contact_name'),
-                'email': kwargs.get('contact_email'),
-                'phone': kwargs.get('contact_phone'),
-                'mobile': kwargs.get('contact_mobile'),
-            }).id
-        return request.env.user.partner_id.id
+            contact_email = kwargs['contact_email']
+            partner = request.env['res.partner'].sudo().find_or_create(contact_email)
+            if not partner.name and kwargs.get('contact_name'):
+                partner.name = kwargs['contact_name']
+            if not partner.phone and kwargs.get('contact_phone'):
+                partner.phone = kwargs['contact_phone']
+            if not partner.mobile and kwargs.get('contact_mobile'):
+                partner.mobile = kwargs['contact_mobile']
+        else:
+            partner = request.env.user.partner_id.id
+        return {
+            'partner': partner.id,
+            'partner_name': kwargs.get('contact_name') or partner.name,
+            'partner_email': kwargs.get('contact_email') or partner.email,
+            'partner_phone': kwargs.get('contact_phone') or partner.phone,
+        }
 
     @http.route('/event/booth/check_availability', type='json', auth='public', methods=['POST'])
     def check_booths_availability(self, event_booth_ids=None):
