@@ -57,7 +57,9 @@ class PosController(http.Controller):
             'session_info': session_info,
             'login_number': pos_session.login(),
         }
-        return request.render('point_of_sale.index', qcontext=context)
+        response = request.render('point_of_sale.index', context)
+        response.headers['Cache-Control'] = 'no-store'
+        return response
 
     @http.route('/pos/ui/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):

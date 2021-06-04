@@ -1830,7 +1830,7 @@
                     }
                 }
             }
-            if (node.nodeName !== "t") {
+            if (node.nodeName !== "t" || node.hasAttribute("t-tag")) {
                 let nodeID = this._compileGenericNode(node, ctx, withHandlers);
                 ctx = ctx.withParent(nodeID);
                 let nodeHooks = {};
@@ -2043,7 +2043,14 @@
                 ctx.addLine(`}`);
                 ctx.closeIf();
             }
-            ctx.addLine(`let vn${nodeID} = h('${node.nodeName}', p${nodeID}, c${nodeID});`);
+            let nodeName = `'${node.nodeName}'`;
+            if (node.hasAttribute("t-tag")) {
+                const tagExpr = node.getAttribute("t-tag");
+                node.removeAttribute("t-tag");
+                nodeName = `tag${ctx.generateID()}`;
+                ctx.addLine(`let ${nodeName} = ${ctx.formatExpression(tagExpr)};`);
+            }
+            ctx.addLine(`let vn${nodeID} = h(${nodeName}, p${nodeID}, c${nodeID});`);
             if (ctx.parentNode) {
                 ctx.addLine(`c${ctx.parentNode}.push(vn${nodeID});`);
             }
@@ -2068,6 +2075,7 @@
         att: 1,
         attf: 1,
         translation: 1,
+        tag: 1,
     };
     QWeb.DIRECTIVES = [];
     QWeb.TEMPLATES = {};
@@ -5387,9 +5395,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.2.6';
-    __info__.date = '2021-05-19T10:28:32.429Z';
-    __info__.hash = 'e838781';
+    __info__.version = '1.3.0';
+    __info__.date = '2021-06-04T12:19:29.161Z';
+    __info__.hash = '9cbcf20';
     __info__.url = 'https://github.com/odoo/owl';
 
 
