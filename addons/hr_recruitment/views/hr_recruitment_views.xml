@@ -81,7 +81,7 @@
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_applications_email"
+                    <button name="action_partner_applications"
                             class="oe_stat_button"
                             icon="fa-pencil"
                             type="object"
@@ -107,13 +107,13 @@
                     <h2 class="o_row">
                         <div>
                             <label for="partner_name" class="oe_edit_only"/>
-                            <field name="partner_name"/>
+                            <field name="partner_name" invisible="1" />
+                            <field name="partner_id" />
                         </div>
                     </h2>
                 </div>
                 <group>
                     <group>
-                        <field name="partner_id" invisible="1" />
                         <field name="refuse_reason_id" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="email_from" widget="email"/>
                         <field name="email_cc" groups="base.group_no_one"/>

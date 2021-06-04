@@ -112,10 +112,9 @@ class Applicant(models.Model):
     name = fields.Char("Subject / Application Name", required=True, help="Email subject for applications sent via email")
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Html("Description")
-    email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_email', store=True)
+    email_from = fields.Char("Email", related="partner_id.email", readonly=False)
     probability = fields.Float("Probability")
-    partner_id = fields.Many2one('res.partner', "Contact", copy=False)
+    partner_id = fields.Many2one('res.partner', "Contact", copy=False, required=True, domain="[('application_ids', '!=', False)]")
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                compute='_compute_stage', store=True, readonly=False,
@@ -139,12 +138,10 @@ class Applicant(models.Model):
     salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation", tracking=True)
     salary_expected = fields.Float("Expected Salary", group_operator="avg", help="Salary Expected by Applicant", tracking=True)
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
-    partner_name = fields.Char("Applicant's Name")
-    partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_phone', store=True)
-    partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_mobile', store=True)
-    type_id = fields.Many2one('hr.recruitment.degree', "Degree")
+    partner_name = fields.Char("Applicant's Name", related="partner_id.name", readonly=False)
+    partner_phone = fields.Char("Phone", related="partner_id.phone", readonly=False)
+    partner_mobile = fields.Char("Mobile", related="partner_id.mobile", readonly=False)
+    type_id = fields.Many2one('hr.recruitment.degree', "Degree", compute='_compute_type_id', readonly=False, store=True)
     department_id = fields.Many2one(
         'hr.department', "Department", compute='_compute_department', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
@@ -187,15 +184,10 @@ class Applicant(models.Model):
                 applicant.day_close = False
                 applicant.delay_close = False
 
-    @api.depends('email_from')
+    @api.depends('partner_id')
     def _compute_application_count(self):
-        application_data = self.env['hr.applicant'].with_context(active_test=False).read_group([
-            ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
-        application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
-        applicants = self.filtered(lambda applicant: applicant.email_from)
-        for applicant in applicants:
-            applicant.application_count = application_data_mapped.get(applicant.email_from, 1) - 1
-        (self - applicants).application_count = False
+        for applicant in self:
+            applicant.application_count = max(applicant.partner_id.application_count - 1, 0)
 
     def _compute_meeting_count(self):
         if self.ids:
@@ -261,29 +253,15 @@ class Applicant(models.Model):
             else:
                 applicant.stage_id = False
 
+    @api.depends('partner_id')
+    def _compute_type_id(self):
+        for applicant in self:
+            applicant.type_id = applicant.partner_id.applicant_degree
+
     @api.depends('job_id')
     def _compute_user(self):
         for applicant in self:
             applicant.user_id = applicant.job_id.user_id.id or self.env.uid
-
-    @api.depends('partner_id')
-    def _compute_partner_phone_email(self):
-        for applicant in self:
-            applicant.partner_phone = applicant.partner_id.phone
-            applicant.partner_mobile = applicant.partner_id.mobile
-            applicant.email_from = applicant.partner_id.email
-
-    def _inverse_partner_email(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
-            applicant.partner_id.email = applicant.email_from
-
-    def _inverse_partner_phone(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_phone and not a.partner_id.phone):
-            applicant.partner_id.phone = applicant.partner_phone
-
-    def _inverse_partner_mobile(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile and not a.partner_id.mobile):
-            applicant.partner_id.mobile = applicant.partner_mobile
 
     @api.depends('stage_id.hired_stage')
     def _compute_date_closed(self):
@@ -299,16 +277,12 @@ class Applicant(models.Model):
             self = self.with_context(default_department_id=vals.get('department_id'))
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
-        if vals.get('email_from'):
-            vals['email_from'] = vals['email_from'].strip()
         return super(Applicant, self).create(vals)
 
     def write(self, vals):
         # user_id change: update date_open
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
-        if vals.get('email_from'):
-            vals['email_from'] = vals['email_from'].strip()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
@@ -368,17 +342,9 @@ class Applicant(models.Model):
         action['search_view_id'] = (self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').id, )
         return action
 
-    def action_applications_email(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Job Applications'),
-            'res_model': self._name,
-            'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
-            'domain': [('email_from', 'in', self.mapped('email_from'))],
-            'context': {
-                'active_test': False
-            },
-        }
+    def action_partner_applications(self):
+        self.ensure_one()
+        return self.partner_id.action_applicant_history()
 
     def _track_template(self, changes):
         res = super(Applicant, self)._track_template(changes)
@@ -499,8 +465,7 @@ class Applicant(models.Model):
                     'default_work_phone': applicant.department_id.company_id.phone,
                     'form_view_initial_mode': 'edit',
                     'default_applicant_id': applicant.ids,
-                    }
-                    
+                }
         dict_act_window = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
         dict_act_window['context'] = employee_data
         return dict_act_window

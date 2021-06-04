@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="hr_applicant_view_form_inherit" model="ir.ui.view">
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='source_id']" position="after">
+                    <field name="skill_ids" widget="many2many_tags" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_applicant_view_search_inherit" model="ir.ui.view">
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_search_bis"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='refuse_reason_id']" position="after">
+                    <field name="skill_ids" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

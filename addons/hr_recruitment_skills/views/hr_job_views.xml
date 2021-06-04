@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_hr_job_form_inherit_recruitment_skills" model="ir.ui.view">
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='recruitment']" position="after">
+                    <page string="Talent Pool">
+                        <group>
+                            <group>
+                                <field name="skill_ids" widget="many2many_tags" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

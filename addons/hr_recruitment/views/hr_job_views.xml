@@ -100,9 +100,22 @@
         <field name="name">hr.job.search</field>
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_job_filter" />
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='department_id']" position="after">
                 <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_job_search_view_searchpanel" model="ir.ui.view">
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_job_search_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <searchpanel>
+                    <field name="company_id" icon="fa-building" enable_counters="1" />
+                </searchpanel>
             </xpath>
         </field>
     </record>
@@ -114,6 +127,7 @@
         <field name="view_mode">kanban,form</field>
         <field name="view_id" ref="hr_recruitment.view_hr_job_kanban"/>
         <field name="context">{}</field>
+        <field name="search_view_id" ref="hr_job_search_view_searchpanel" />
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
               Ready to recruit more efficiently?

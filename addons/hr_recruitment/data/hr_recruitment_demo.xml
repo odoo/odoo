@@ -75,6 +75,90 @@
         <field name="job_id" ref="hr.job_trainee"/>
     </record>
 
+    <record id="res_partner_applicant_1" model="res.partner">
+        <field name="name">Enrique Jones</field>
+        <field name="mobile">9963214587</field>
+        <field name="email">iglesias@henri-k.example.com</field>
+    </record>
+    <record id="res_partner_applicant_2" model="res.partner">
+        <field name="name">Meldona Thang</field>
+        <field name="mobile">998655451</field>
+        <field name="email">meldona@thong.example.com</field>
+    </record>
+    <record id="res_partner_applicant_3" model="res.partner">
+        <field name="name">Johan Duck</field>
+        <field name="mobile">8955545</field>
+        <field name="email">coincoin@scrooge.example.com</field>
+    </record>
+    <record id="res_partner_applicant_4" model="res.partner">
+        <field name="name">Kelly Wallant</field>
+        <field name="mobile">879895515</field>
+        <field name="email">kelly124545@example.com</field>
+    </record>
+    <record id="res_partner_applicant_5" model="res.partner">
+        <field name="name">Cécile Donth</field>
+        <field name="mobile">98765411</field>
+        <field name="email">c-sil@dinthdonth.example.com</field>
+    </record>
+    <record id="res_partner_applicant_6" model="res.partner">
+        <field name="name">Ohen Rizome</field>
+        <field name="mobile">654687987654</field>
+        <field name="email">ohem@rizome.example.com</field>
+    </record>
+    <record id="res_partner_applicant_7" model="res.partner">
+        <field name="name">Marie Justine</field>
+        <field name="mobile">9988774455</field>
+        <field name="phone">6633225</field>
+        <field name="email">ohmarie@justine.example.com</field>
+    </record>
+    <record id="res_partner_applicant_8" model="res.partner">
+        <field name="name">Jose</field>
+        <field name="phone">999666735</field>
+        <field name="email">eljose193@example.com</field>
+    </record>
+    <record id="res_partner_applicant_9" model="res.partner">
+        <field name="name">Yin Lee</field>
+        <field name="email">yin@yong.example</field>
+    </record>
+    <record id="res_partner_applicant_10" model="res.partner">
+        <field name="name">Hubert Blank</field>
+        <field name="email">hubert@blank.example.com</field>
+    </record>
+    <record id="res_partner_applicant_11" model="res.partner">
+        <field name="name">John Bruno</field>
+        <field name="email">johnny@letaulier.example.com</field>
+    </record>
+    <record id="res_partner_applicant_12" model="res.partner">
+        <field name="name">Sandra Elvis</field>
+        <field name="email">sandra@presly.example.com</field>
+    </record>
+    <record id="res_partner_applicant_13" model="res.partner">
+        <field name="name">David Armstrong</field>
+        <field name="phone">33968745</field>
+        <field name="email">strongarm@davit.example.com</field>
+    </record>
+    <record id="res_partner_applicant_14" model="res.partner">
+        <field name="name">Joren Jacob</field>
+        <field name="email">jacobus@example.com</field>
+    </record>
+    <record id="res_partner_applicant_15" model="res.partner">
+        <field name="name">Tina Augustie</field>
+        <field name="mobile">9898745745</field>
+        <field name="phone">6630125</field>
+        <field name="email">tina.september@example.com</field>
+    </record>
+    <record id="res_partner_applicant_16" model="res.partner">
+        <field name="name">Shane Williams</field>
+        <field name="mobile">9812398524</field>
+        <field name="phone">6630125</field>
+        <field name="email">shane.willy.98724@example.com</field>
+    </record>
+    <record id="res_partner_applicant_17" model="res.partner">
+        <field name="name">David Billy</field>
+        <field name="mobile">9988774455</field>
+        <field name="email">davidou@billou.example.com</field>
+    </record>
+
     <record id="hr_case_salesman0" model="hr.applicant">
         <field name="name">Sales Manager</field>
         <field name="job_id" ref="hr.job_marketing"/>
@@ -84,8 +168,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field name="user_id" ref="base.user_demo"/>
         <field name="priority">1</field>
-        <field name="partner_name">Enrique Jones</field>
-        <field name="partner_mobile">9963214587</field>
+        <field name="partner_id" ref="res_partner_applicant_1" />
         <field name="stage_id" ref="stage_job1"/>
     </record>
     <record id="hr_case_salesman1" model="hr.applicant">
@@ -96,8 +179,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
         <field name="user_id" ref="base.user_demo"/>
         <field name="priority">1</field>
-        <field name="partner_name">Meldona Thang</field>
-        <field name="partner_mobile">998655451</field>
+        <field name="partner_id" ref="res_partner_applicant_2" />
         <field name="stage_id" ref="stage_job1"/>
     </record>
     <record id="hr_case_dev0" model="hr.applicant">
@@ -109,8 +191,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="priority">3</field>
-        <field name="partner_name">Johan Duck</field>
-        <field name="partner_mobile">8955545</field>
+        <field name="partner_id" ref="res_partner_applicant_3" />
         <field name="stage_id" ref="stage_job1"/>
     </record>
     <record id="hr_case_dev1" model="hr.applicant">
@@ -121,8 +202,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="priority">0</field>
-        <field name="partner_name">Kelly Wallant</field>
-        <field name="partner_mobile">879895515</field>
+        <field name="partner_id" ref="res_partner_applicant_4" />
         <field name="stage_id" ref="stage_job1"/>
     </record>
     <record id="hr_case_dev2" model="hr.applicant">
@@ -134,8 +214,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="priority">0</field>
-        <field name="partner_name">Cécile Donth</field>
-        <field name="partner_mobile">98765411</field>
+        <field name="partner_id" ref="res_partner_applicant_5" />
         <field name="stage_id" ref="stage_job1"/>
     </record>
     <record id="hr_case_dev3" model="hr.applicant">
@@ -146,8 +225,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="priority">0</field>
-        <field name="partner_name">Ohen Rizome</field>
-        <field name="partner_mobile">654687987654</field>
+        <field name="partner_id" ref="res_partner_applicant_6" />
         <field name="stage_id" ref="stage_job1"/>
     </record>
     <record id="hr_case_traineemca0" model="hr.applicant">
@@ -158,10 +236,8 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field name="user_id" ref="base.user_demo"/>
         <field name="priority">2</field>
-        <field name="partner_name">Marie Justine</field>
-        <field name="partner_mobile">9988774455</field>
+        <field name="partner_id" ref="res_partner_applicant_7" />
         <field name="stage_id" ref="stage_job4"/>
-        <field name="partner_phone">6633225</field>
     </record>
     <record id="hr_case_fresher0" model="hr.applicant">
         <field name="name">Fresher</field>
@@ -171,9 +247,8 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="user_id" ref="base.user_demo"/>
         <field name="priority">0</field>
-        <field name="partner_name">Jose</field>
+        <field name="partner_id" ref="res_partner_applicant_8" />
         <field name="stage_id" ref="stage_job3"/>
-        <field name="partner_phone">999666735</field>
     </record>
     <record id="hr_case_mkt0" model="hr.applicant">
         <field name="name">Marketing</field>
@@ -182,7 +257,7 @@
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field name="user_id" ref="base.user_admin"/>
-        <field name="partner_name">Yin Lee</field>
+        <field name="partner_id" ref="res_partner_applicant_9" />
         <field name="stage_id" ref="stage_job1"/>
     </record>
     <record id="hr_case_mkt1" model="hr.applicant">
@@ -192,7 +267,7 @@
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field name="user_id" ref="base.user_admin"/>
-        <field name="partner_name">Hubert Blank</field>
+        <field name="partner_id" ref="res_partner_applicant_10" />
         <field name="priority">3</field>
         <field name="stage_id" ref="stage_job3"/>
     </record>
@@ -204,7 +279,7 @@
         <field name="type_id" ref="degree_graduate"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
         <field name="user_id" ref="base.user_admin"/>
-        <field name="partner_name">John Bruno</field>
+        <field name="partner_id" ref="res_partner_applicant_11" />
         <field name="stage_id" ref="stage_job5"/>
     </record>
     <record id="hr_case_marketingjob0" model="hr.applicant">
@@ -215,7 +290,7 @@
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
         <field name="user_id" ref="base.user_demo"/>
-        <field name="partner_name">Sandra Elvis</field>
+        <field name="partner_id" ref="res_partner_applicant_12" />
         <field name="stage_id" ref="stage_job5"/>
     </record>
     <record id="hr_case_financejob0" model="hr.applicant">
@@ -226,9 +301,8 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="priority">1</field>
-        <field name="partner_name">David Armstrong</field>
+        <field name="partner_id" ref="res_partner_applicant_13" />
         <field name="stage_id" ref="stage_job2"/>
-        <field name="partner_phone">33968745</field>
     </record>
     <record id="hr_case_financejob1" model="hr.applicant">
         <field name="name">Finance</field>
@@ -238,7 +312,7 @@
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="priority">1</field>
-        <field name="partner_name">Joren Jacob</field>
+        <field name="partner_id" ref="res_partner_applicant_14" />
         <field name="stage_id" ref="stage_job2"/>
     </record>
     <record id="hr_case_traineemca1" model="hr.applicant">
@@ -247,10 +321,8 @@
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
-        <field name="partner_name">Tina Augustie</field>
-        <field name="partner_mobile">9898745745</field>
+        <field name="partner_id" ref="res_partner_applicant_15" />
         <field name="stage_id" ref="stage_job4"/>
-        <field name="partner_phone">6630125</field>
         <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="hr_case_programmer" model="hr.applicant">
@@ -260,10 +332,8 @@
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="user_id" ref="base.user_admin"/>
-        <field name="partner_name">Shane Williams</field>
-        <field name="partner_mobile">9812398524</field>
+        <field name="partner_id" ref="res_partner_applicant_16" />
         <field name="stage_id" ref="stage_job4"/>
-        <field name="partner_phone">6630125</field>
         <field name="salary_expected">11000.0</field>
     </record>
     <record id="hr_case_advertisement" model="hr.applicant">
@@ -273,8 +343,7 @@
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
         <field name="user_id" ref="base.user_admin"/>
-        <field name="partner_name">David Billy</field>
-        <field name="partner_mobile">9988774455</field>
+        <field name="partner_id" ref="res_partner_applicant_17" />
         <field name="stage_id" ref="stage_job2"/>
         <field name="salary_expected">11000.0</field>
     </record>

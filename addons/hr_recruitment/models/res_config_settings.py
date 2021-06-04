@@ -9,3 +9,5 @@ class ResConfigSettings(models.TransientModel):
 
     module_website_hr_recruitment = fields.Boolean(string='Online Posting')
     module_hr_recruitment_survey = fields.Boolean(string='Interview Forms')
+    refuse_existing_applications = fields.Boolean(related="company_id.refuse_existing_applications", readonly=False)
+    module_hr_recruitment_skills = fields.Boolean(string='Manage Applicant Skills')
