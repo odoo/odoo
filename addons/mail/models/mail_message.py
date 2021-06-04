@@ -10,7 +10,6 @@ from operator import itemgetter
 
 from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import AccessError, UserError
-from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
 
@@ -959,7 +958,6 @@ class Message(models.Model):
         """Reads values from messages and formats them for the web client."""
         self.check_access_rule('read')
         vals_list = self._read_format(fnames)
-        safari = request and request.httprequest.user_agent.browser == 'safari'
 
         thread_ids_by_model_name = defaultdict(set)
         for message in self:
@@ -979,19 +977,9 @@ class Message(models.Model):
             main_attachment = self.env['ir.attachment']
             if message_sudo.attachment_ids and message_sudo.res_id and issubclass(self.pool[message_sudo.model], self.pool['mail.thread']):
                 main_attachment = self.env[message_sudo.model].sudo().browse(message_sudo.res_id).message_main_attachment_id
-            attachment_ids = []
-            for attachment in message_sudo.attachment_ids:
-                attachment_ids.append({
-                    'checksum': attachment.checksum,
-                    'id': attachment.id,
-                    'filename': attachment.name,
-                    'name': attachment.name,
-                    'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
-                    'is_main': main_attachment == attachment,
-                    'res_id': attachment.res_id,
-                    'res_model': attachment.res_model,
-                })
-
+            attachments_formatted = message_sudo.attachment_ids._attachment_format()
+            for attachment in attachments_formatted:
+                attachment['is_main'] = attachment['id'] == main_attachment.id
             # Tracking values
             tracking_value_ids = []
             for tracking in message_sudo.tracking_value_ids:
@@ -1018,7 +1006,7 @@ class Message(models.Model):
             vals.update({
                 'author_id': author,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachment_ids': attachment_ids,
+                'attachment_ids': attachments_formatted,
                 'tracking_value_ids': tracking_value_ids,
                 'record_name': record_name,
             })
