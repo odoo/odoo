@@ -373,6 +373,7 @@ class AccountTestInvoicingCommon(TransactionCase):
                     .with_company(company or cls.env.company) \
                     .with_context(default_move_type=move_type, account_predictive_bills_disable_prediction=True))
         move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
+        move_form.date = move_form.invoice_date
         move_form.partner_id = partner or cls.partner_a
 
         for product in (products or []):
