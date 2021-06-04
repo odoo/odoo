@@ -7,15 +7,14 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     l10n_co_document_type = fields.Selection([('rut', 'NIT'),
-                                              ('id_document', 'Cédula'),
-                                              ('id_card', 'Tarjeta de Identidad'),
+                                              ('national_citizen_id', 'Cédula de ciudadanía'),
                                               ('passport', 'Pasaporte'),
                                               ('foreign_id_card', 'Cédula Extranjera'),
+                                              ('id_card', 'Tarjeta de Identidad'),
                                               ('external_id', 'ID del Exterior'),
                                               ('diplomatic_card', 'Carné Diplomatico'),
                                               ('residence_document', 'Salvoconducto de Permanencia'),
-                                              ('civil_registration', 'Registro Civil'),
-                                              ('national_citizen_id', 'Cédula de ciudadanía')], string='Document Type',
+                                              ('civil_registration', 'Registro Civil')], string='Document Type',
                                              help='Indicates to what document the information in here belongs to.')
     l10n_co_verification_code = fields.Char(compute='_compute_verification_code', string='VC',  # todo remove this field in master
                                             help='Redundancy check to verify the vat number has been typed in correctly.')
