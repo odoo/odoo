@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import ast
+import logging
+import time
 
 from functools import partial
-import logging
 
 from lxml import etree
 from lxml.builder import E
@@ -3042,3 +3043,26 @@ class TestAllViews(common.TransactionCase):
                 _logger.info('checked %s/%s views', index, len(views))
             with self.subTest(name=view.name):
                 view._check_xml()
+
+@common.tagged('post_install', '-at_install', '-standard', 'render_all_views')
+class TestRenderAllViews(common.TransactionCase):
+
+    @common.users('demo', 'admin')
+    def test_render_all_views(self):
+        env = self.env(context={'lang': 'en_US'})
+        count = 0
+        elapsed = 0
+        for model in env.values():
+            if not model._abstract and model.check_access_rights('read', False):
+                with self.subTest(model=model):
+                    times = []
+                    for _ in range(5):
+                        model.invalidate_cache()
+                        before = time.perf_counter()
+                        model.fields_view_get()
+                        times.append(time.perf_counter() - before)
+                    count += 1
+                    elapsed += min(times)
+
+        _logger.info('Rendered %d views as %s using (best of 5) %ss',
+            count, self.env.user.name, elapsed)
