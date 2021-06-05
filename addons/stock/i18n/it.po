@@ -507,7 +507,7 @@ msgstr "<strong>Data:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>From</strong>"
-msgstr "<strong>da</strong>"
+msgstr "<strong>Da</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -774,12 +774,12 @@ msgstr "Programmazione avanzata"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__procure_method__make_to_order
 msgid "Advanced: Apply Procurement Rules"
-msgstr "Avanzate: applica le regole di approvvigionamento"
+msgstr "Avanzato: applica regole di approvvigionamento"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "All"
-msgstr "Tutti"
+msgstr "Tutto"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -1032,8 +1032,8 @@ msgid ""
 "            suggested counted quantity."
 msgstr ""
 "Il lettore di codice a barre può essere attivato dalle impostazioni di magazzino.\n"
-"            Le rettifiche di inventario manuali possono anche essere eseguite e precompilate\n"
-"            con i conteggi quantità suggeriti."
+"            Le rettifiche di inventario manuali possono anche essere effettuate e precompilate\n"
+"            con le quantità conteggiate proposte."
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_label_transfer_template_pdf
@@ -2848,7 +2848,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__result_package_id
 msgid "If set, the operations are packed into this package"
-msgstr "Se impostato, le operazioni sono incluse in questo collo"
+msgstr "Se impostato, le operazioni sono incluse nel collo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
@@ -2963,6 +2963,8 @@ msgid ""
 "If you cancel this inventory adjustment, all its inventory adjustment lines "
 "will be lost. Are you sure you want to discard it ?"
 msgstr ""
+"Se la rettifica di inventario viene annullata, verranno perse tutte le righe"
+" di rettifica. Abbandonare veramente?"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer
@@ -4291,12 +4293,12 @@ msgstr "Dettagli di localizzazione facoltativi, solo a scopo informativo"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__returned_move_ids
 msgid "Optional: all returned moves created from this move"
-msgstr "Opzionale: tutti i movimenti di rientro creati da questo movimento"
+msgstr "Opzionale: tutti i movimenti di reso creati dal movimento"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_dest_ids
 msgid "Optional: next stock move when chaining them"
-msgstr "Opzionale: il prossimo movimento di magazzino quando si concatenano"
+msgstr "Opzionale: movimento successivo quando concatenati"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_orig_ids
@@ -6192,8 +6194,8 @@ msgid ""
 "Some products of the inventory adjustment are tracked. Are you sure you "
 "don't want to specify a serial or lot number for them?"
 msgstr ""
-"Alcuni prodotti della rettifica di inventario sono tracciati. Sei sicuro di "
-"non voler specificare un numero di serie o di lotto per loro?"
+"Alcuni prodotti della rettifica di inventario sono monitorati. Omettere "
+"veramente di specificare un numero di serie/lotto per tali prodotti?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__origin
@@ -6835,6 +6837,8 @@ msgid ""
 "There is already one inventory adjustment line for this product, you should "
 "rather modify this one instead of creating a new one."
 msgstr ""
+"È già presente una riga di rettifica inventario per il prodotto. Invece di "
+"crearne una nuova è preferibile modificare l'esistente."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -7938,6 +7942,8 @@ msgid ""
 "You can only delete a draft inventory adjustment. If the inventory "
 "adjustment is not done, you can cancel it."
 msgstr ""
+"Possono essere eliminate solo rettifiche di inventario in bozza. Se la "
+"rettifica non è stata completata, è possibile annullarla."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8059,8 +8065,8 @@ msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
 msgstr ""
-"Non è possibile impostare una quantità di prodotto negativa in una riga di inventario:\n"
-"\t%s - qta: %s"
+"Impossibile impostare una quantità di prodotto negativa in una riga di inventario:\n"
+"\t%s - q.tà: %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -8146,6 +8152,8 @@ msgid ""
 "You have product(s) in stock that have no lot/serial number. You can assign "
 "lot/serial numbers by doing an inventory adjustment."
 msgstr ""
+"Sono presenti prodotti in giacenza che che non possiedono un numero di "
+"lotto/serie. È possibile assegnarlo effettuando una rettifica di inventario."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -8293,7 +8301,7 @@ msgstr "es. LOT/0001/20121"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "e.g. PO0032"
-msgstr "es. PO0032"
+msgstr "es. A00032"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
