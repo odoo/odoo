@@ -6,6 +6,7 @@
 # Martin Trigaux, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# Daniela Cervantes <dace@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: José Cabrera Lozano <jose.cabrera@edukative.es>, 2021\n"
+"Last-Translator: Daniela Cervantes <dace@odoo.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -448,10 +449,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    % set colors = {'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00',  'declined': 'red'}\n"
-"    <!--\n"
-"        En un caso de evento recurrente, el object.event_id es siempre el primer evento\n"
-"Esto hace que la fecha del evento (y mucha otra información) sea incorrecta\n"
-"    -->\n"
+"    \n"
 "    % set event_id = ctx.get('force_event_id') or object.event_id\n"
 "    <p>\n"
 "        Hola ${object.common_name},<br/><br/>\n"
@@ -493,7 +491,7 @@ msgstr ""
 "                    <li>Descripción: ${object.event_id.description}</li>\n"
 "                % endif\n"
 "                % if not object.event_id.allday and object.event_id.duration\n"
-"                    <li>Duración: ${('%dH%02d' % (object.event_id.duration,(object.event_id.duration*60)%60))}</li>\n"
+"                    <li>Duración: ${('%dH%02d' % (object.event_id.duration),(object.event_id.duration*60)%60))}</li>\n"
 "                % endif\n"
 "                <li>Asistentes\n"
 "                <ul>\n"
@@ -503,7 +501,7 @@ msgstr ""
 "                        % if attendee.common_name != object.common_name:\n"
 "                            <span style=\"margin-left:5px\">${attendee.common_name}</span>\n"
 "                        % else:\n"
-"                            <span style=\"margin-left:5px\">Usted</span>\n"
+"                          <span style=\"margin-left:5px\">Tú</span>\n"
 "                        % endif\n"
 "                    </li>\n"
 "                % endfor\n"
@@ -552,7 +550,7 @@ msgstr "Acción requerida"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
 msgid "Action to Perform"
-msgstr "Acción a Realizar"
+msgstr "Acción a realizar"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
@@ -667,12 +665,12 @@ msgstr "Calendario"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr "Alarma de calendario"
+msgstr "Alerta de calendario"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Información del Calendario de Asistentes"
+msgstr "Información en el calendario de los asistentes"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
@@ -700,7 +698,7 @@ msgstr "Reunión de calendario"
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr "Calendario: Recordatorio de evento"
+msgstr "Calendario: recordatorio de evento"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrence_update
@@ -708,8 +706,8 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
-"Elija qué hacer con otros eventos en la recurrencia. No se permite "
-"actualizar todos los eventos cuando se modifican las fechas o la hora"
+"Elige qué hacer con otros eventos recurrentes. No se permite actualizar "
+"todos los eventos cuando se modifican las fechas o la hora"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__common_name
@@ -846,7 +844,7 @@ msgstr "ID del documento"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model_id
 msgid "Document Model"
-msgstr "Modelo de documento"
+msgstr "Modelo del documento"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__res_model
@@ -891,17 +889,17 @@ msgstr "Correo electrónico"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "Email - 3 Hours"
-msgstr "Email - 3 Horas"
+msgstr "Correo electrónico - 3 Horas"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hours"
-msgstr "Email - 6 Horas"
+msgstr "Correo electrónico - 6 Horas"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__email
 msgid "Email of Invited Person"
-msgstr "Email del invitado"
+msgstr "Correo electrónico del invitado"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__partner_id
@@ -912,7 +910,7 @@ msgstr "Empleado"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
-msgstr "Fecha final"
+msgstr "Fecha límite"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
@@ -923,27 +921,27 @@ msgstr "Tipo final"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__end_date
 msgid "End date"
-msgstr "Fecha final"
+msgstr "Fecha límite"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr "Terminando a las"
+msgstr "Termina a las"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event Alarm"
-msgstr "Alarma del evento"
+msgstr "Alerta del evento"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr "Gestor de Alarmas de Eventos"
+msgstr "Gestor de alertas del calendario"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr "Tipo de Reunión"
+msgstr "Tipo de reunión"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
@@ -976,13 +974,13 @@ msgstr "Realimentación: "
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__1
 msgid "First"
-msgstr "Primera"
+msgstr "Primero"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr "Primero debe especificar la fecha de la invitación."
+msgstr "Primero debes especificar la fecha de la invitación."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
@@ -1008,7 +1006,7 @@ msgstr "Seguidores (Contactos)"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__forever
 msgid "Forever"
-msgstr "Por siempre"
+msgstr "Siempre"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
@@ -1019,18 +1017,18 @@ msgstr "Cuarto"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__fr
 msgid "Fr"
-msgstr "Vie"
+msgstr "Vr"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
 msgid "Free"
-msgstr "Gratuito"
+msgstr "Gratis"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Free/Busy"
-msgstr "Libre/Ocupado"
+msgstr "Libre/ocupado"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fr
@@ -1052,7 +1050,7 @@ msgstr "Agrupar por"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Grouping by %s is not allowed."
-msgstr "No está permitido agrupar por %s."
+msgstr "No se permite agrupar por %s."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
@@ -1084,12 +1082,13 @@ msgstr "ID"
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
+msgstr ""
+"Si se encuentra seleccionado hay nuevos mensajes que requieren su atención."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -1097,7 +1096,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Si el campo activo es falso, le permitirá ocultar la notificación de aviso "
+"Si el campo activo es falso, te permitirá ocultar la notificación de aviso "
 "del evento sin eliminarlo."
 
 #. module: calendar
@@ -1143,7 +1142,7 @@ msgstr "Es un seguidor"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
-msgstr "Es el Evento Resaltado"
+msgstr "Es un evento destacado"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
@@ -1191,7 +1190,7 @@ msgstr "Última actualización el"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__calendar_last_notif_ack
 #: model:ir.model.fields,field_description:calendar.field_res_users__calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr "Última notificación marcada como leída desde el calendario base"
+msgstr "Última notificación marcada como leída desde el calendario principal"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__rrule_type
@@ -1217,7 +1216,7 @@ msgstr "Logo"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Adjuntos principales"
+msgstr "Archivo adjunto principal"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__user_id
@@ -1274,7 +1273,7 @@ msgstr "Reuniones"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de Envío de Mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
@@ -1344,7 +1343,7 @@ msgstr "No, no asistiré."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No feedback yet"
-msgstr "Todavía no hay feedback"
+msgstr "Todavía no hay retroalimentación"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1359,22 +1358,22 @@ msgstr "Notificación - 1 Día"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "Notification - 1 Hours"
-msgstr "Notificación - 1 Hora"
+msgstr "Notificación - 1 hora"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "Notification - 15 Minutes"
-msgstr "Notificación - 15 Minutos"
+msgstr "Notificación - 15 minutos"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "Notification - 2 Hours"
-msgstr "Notificación - 2 Horas"
+msgstr "Notificación - 2 horas"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "Notification - 30 Minutes"
-msgstr "Notificación - 30 Minutos"
+msgstr "Notificación - 30 minutos"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1447,7 +1446,7 @@ msgstr "Participante"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "Datos de contacto del usuario."
+msgstr "Datos de contacto del usuario"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
@@ -1587,7 +1586,7 @@ msgstr "Seleccione asistentes..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr "Enviar correo"
+msgstr "Enviar correo electrónico"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -1615,12 +1614,14 @@ msgstr "Fecha de inicio"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
 msgid "Start date of an event, without time for full days events"
-msgstr "Fecha de inicio del evento, sin horas para eventos de día completo"
+msgstr ""
+"Fecha de inicio del evento, sin tiempo para eventos que duran un día "
+"completo"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Starting at"
-msgstr "Comenzando en"
+msgstr "Comienza el"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__state
@@ -1645,7 +1646,7 @@ msgstr "Parar"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
 msgid "Stop date of an event, without time for full days events"
-msgstr "Fecha fin del evento, sin horas para eventos de día completo"
+msgstr "Fecha de fin del evento, sin horas para eventos de día completo"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__su
@@ -1671,17 +1672,17 @@ msgstr "Domingo"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists !"
-msgstr "¡El nombre de categoría ya existe!"
+msgstr "¡Este nombre de etiqueta ya existe!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
-msgstr "Categorías"
+msgstr "Etiquetas"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr "Tentativa"
+msgstr "Tentativo"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__th
@@ -1701,8 +1702,8 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed ?"
 msgstr ""
-"La actividad está vinculada a una reunión. Al eliminarlo también se "
-"eliminará la reunión. Quieres proceder ?"
+"La actividad está vinculada a una reunión. Al eliminarla también se "
+"eliminará la reunión ¿Quieres seguir?"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1711,14 +1712,14 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
-"El calendario se comparte entre los empleados y se integra completamente con\n"
-"             otras aplicaciones como el empleado se va o el negocio\n"
-"             oportunidades."
+"El calendario se comparte entre los empleados y se integra por completo con\n"
+"                otras aplicaciones como las asistencias del empleado las oportunidades\n"
+"                de la empresa."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr "El día debe estar entre 1 y 31."
+msgstr "El día debe ser entre 1 y 31."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
@@ -1726,14 +1727,13 @@ msgstr "El día debe estar entre 1 y 31."
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
 msgstr ""
-"La fecha y hora de finalización no pueden ser anteriores a la fecha y hora "
-"de inicio."
+"La fecha y hora de fin no pueden ser anteriores a la fecha y hora de inicio."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
-msgstr "La fecha de finalización no puede ser anterior a la fecha de inicio."
+msgstr "La fecha de fin no puede ser anterior a la fecha de inicio."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -1821,7 +1821,7 @@ msgstr "Tipo"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
 msgid "Uncertain"
-msgstr "Incierto"
+msgstr "Variable "
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
@@ -1852,7 +1852,7 @@ msgid ""
 "only update one particular event and following events."
 msgstr ""
 "No se permite actualizar todos los eventos cuando se modifican las fechas o "
-"la hora. Solo puede actualizar un evento en particular y los eventos "
+"la hora. Solo puedes actualizar un evento en particular y los eventos "
 "siguientes."
 
 #. module: calendar
@@ -1903,7 +1903,7 @@ msgstr "Sí, asistiré"
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr "No puede duplicar un asistente calendario"
+msgstr "No puedes duplicar un asistente calendario"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
@@ -1938,10 +1938,10 @@ msgstr "en %s,"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on the %(position)s %(weekday)s, "
-msgstr "sobre el %(position)s %(weekday)s, "
+msgstr "el %(position)s %(weekday)s, "
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "until %s"
-msgstr "hasta que %s"
+msgstr "hasta el %s"

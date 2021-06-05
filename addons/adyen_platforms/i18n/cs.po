@@ -8,9 +8,9 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# trendspotter, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:42+0000\n"
 "PO-Revision-Date: 2020-11-16 13:49+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
+"Last-Translator: trendspotter, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +39,13 @@ msgid ""
 "            authorities for unregistered or inappropriate use of payment services which will in\n"
 "            such case be payable by you."
 msgstr ""
+". Pokud my nebo náš zpracovatel kdykoli zjistíme, že údaje, které jste o své"
+" firmě uvedli, jsou nesprávné nebo se změnily, aniž byste nás o tom "
+"informovali, nebo pokud porušíte některou z těchto podmínek, mohou být "
+"služby s okamžitou platností pozastaveny a/nebo ukončeny a systémy "
+"kreditních karet a/nebo úřady mohou za neregistrované nebo nevhodné "
+"používání platebních služeb uložit pokuty, které v takovém případě "
+"zaplatíte."
 
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.adyen_account_view_form
@@ -49,7 +56,7 @@ msgstr "<span class=\"o_stat_text\">Transakce</span>"
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "A timeout occured while trying to reach the Adyen proxy."
-msgstr ""
+msgstr "Při pokusu o spojení s proxy serverem Adyen došlo k timeoutu."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_payout__code
@@ -177,7 +184,7 @@ msgstr "Adyen pro akcionáře platforem"
 #. module: adyen_platforms
 #: model:ir.model,name:adyen_platforms.model_adyen_transaction
 msgid "Adyen for Platforms Transaction"
-msgstr ""
+msgstr "Transakce Adyen pro platformy"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
@@ -1134,6 +1141,16 @@ msgid ""
 "            and setting in Processor’s systems which are used by Processor to provide the\n"
 "            services and authorise us to manage these on your behalf."
 msgstr ""
+"Služby zpracování plateb, které jste si objednali zadáním této objednávky, "
+"vám poskytne společnost Adyen N.V. (dále jen \"zpracovatel\"), se kterou "
+"potvrzením této objednávky uzavíráte přímou smlouvu. Společnost Odoo S.A. "
+"(dále jen \"my/nás\") vám bude pomáhat a podporovat vás při využívání služeb"
+" poskytovaných Zpracovatelem a poskytne vám asistenci první linie, která vám"
+" umožní připojit se k systémům Zpracovatele, abyste mohli využívat jeho "
+"služby. Za tímto účelem tímto pověřujete Zpracovatele, aby nám poskytl "
+"přístup k vašim údajům a nastavení v systémech Zpracovatele, které "
+"Zpracovatel používá k poskytování služeb, a zmocňujete nás k jejich správě "
+"vaším jménem."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,help:adyen_platforms.field_adyen_account__state_code
@@ -1152,6 +1169,11 @@ msgid ""
 "Italy: Codice fiscale\n"
 "Australia: Document Number"
 msgstr ""
+"Typ požadovaného identifikačního čísla závisí na zemi:\n"
+"USA: Číslo sociálního pojištění (9 číslic nebo poslední 4 číslice)\n"
+"Kanada: Číslo sociálního pojištění\n"
+"Itálie: Codice fiscale\n"
+"Austrálie: Číslo dokladu"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
@@ -1204,6 +1226,14 @@ msgid ""
 "            services than as registered with your application. In particular you confirm that you\n"
 "            will not use the payment services for any type of product or service appearing in the"
 msgstr ""
+"UPOZORNĚNÍ: Vezměte prosím na vědomí, že právo používat platební služby se "
+"vztahuje pouze na prodej vlastním jménem. Platební služby nesmíte dále "
+"prodávat, pronajímat ani na jiném základě umožnit třetím stranám používat "
+"platební služby, abyste těmto třetím stranám mohli za jejich služby platit. "
+"Platební služby nesmíte používat pro jiné typy produktů a služeb, než jaké "
+"jsou registrovány ve vaší aplikaci. Zejména potvrzujete, že nebudete "
+"používat platební služby pro žádný typ produktu nebo služby, který se "
+"objevuje v nabídce"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1233,6 +1263,8 @@ msgid ""
 "We will notify you when the status of the review changes, or if additional "
 "data is required."
 msgstr ""
+"Budeme vás informovat, pokud se změní stav přezkumu nebo pokud budou "
+"vyžadovány další údaje."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_payout__payout_schedule__week

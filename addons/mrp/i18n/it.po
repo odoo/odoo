@@ -64,13 +64,13 @@ msgid ""
 msgstr ""
 " * Pronto: il materiale è disponibile per iniziare la produzione.\n"
 "            * In attesa: il materiale non è disponibile per iniziare la produzione.\n"
-"            La disponibilità del materiale è influenzata dalla priorità di produzione definita sulla distinta dei materiali."
+"            La disponibilità del materiale è influenzata dalla preparazione alla produzione definita nella DiBa."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
-msgstr " <br/><br/>I componenti vengono presi da <b>%s</b>."
+msgstr " <br/><br/>I componenti vengono prelevati da <b>%s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -421,7 +421,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
-msgstr "Un centro di lavorazione non può essere un'alternativa a se stesso"
+msgstr "Un centro di lavoro non può essere alternativo a se stesso"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -508,7 +508,7 @@ msgstr "Amministratore"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "All"
-msgstr "tutte"
+msgstr "Tutto"
 
 #. module: mrp
 #: code:addons/mrp/controller/main.py:0
@@ -1612,7 +1612,7 @@ msgstr "Calcolo durata"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_percent
 msgid "Duration Deviation (%)"
-msgstr "Deviazione Durata (%)"
+msgstr "Deviazione durata (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_unit
@@ -2061,7 +2061,7 @@ msgstr "Produzione immediata?"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Impacted Transfer(s):"
-msgstr "Trasferimenti influenzati:"
+msgstr "Trasferimenti coinvolti:"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -2526,7 +2526,7 @@ msgstr "Prodotto"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "Manufactured Products"
-msgstr "Prodotti completati"
+msgstr "Prodotti fabbricati"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -2599,7 +2599,7 @@ msgstr "Ordini di produzione in stato confermato."
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__ready_to_produce
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Manufacturing Readiness"
-msgstr "Prontezza di Produzione"
+msgstr "Preparazione alla produzione"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3466,7 +3466,7 @@ msgstr "Prodotti da consumare"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
 msgid "Progress Done (%)"
-msgstr "Avanzamento (%)"
+msgstr "Avanzamento effettuato (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_cancel
@@ -4894,7 +4894,9 @@ msgstr "Quando i componenti per la prima operazione sono disponibili"
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
-msgstr "I prodotti essere creati in questo magazzino."
+msgstr ""
+"Quando vengono fabbricati i prodotti, è possibile farlo in questo magazzino."
+" "
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
