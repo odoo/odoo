@@ -18,9 +18,9 @@ class AccountMove(models.Model):
 
     def _get_invoice_reference(self):
         self.ensure_one()
-        vendor_refs = [ref for ref in set(self.line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
+        vendor_refs = ', '.join(self.line_ids.purchase_line_id.order_id.filtered(lambda order: order.partner_ref != False).mapped('partner_ref')).split(', ')
         if self.ref:
-            return [ref for ref in self.ref.split(', ') if ref and ref not in vendor_refs] + vendor_refs
+            return set(self.ref.split(', ')).union(set(vendor_refs))
         return vendor_refs
 
     @api.onchange('purchase_vendor_bill_id', 'purchase_id')
