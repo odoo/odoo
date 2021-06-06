@@ -47,7 +47,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
-msgstr ""
+msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -408,12 +408,12 @@ msgstr "Kategorie"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category:"
-msgstr ""
+msgstr "Kategorie:"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category: not found"
-msgstr ""
+msgstr "Kategorie: nenalezeno"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1002,7 +1002,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
 msgid "Is product with non zero cost selected"
-msgstr ""
+msgstr "Je vybrán produkt s nenulovými náklady"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
@@ -1361,6 +1361,8 @@ msgid ""
 "Please configure Default Expense account for Category expense: "
 "`property_account_expense_categ_id`."
 msgstr ""
+"Nastavte prosím výchozí výdajový účet pro kategorii výdajů: "
+"`property_account_expense_categ_id`."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
@@ -1624,6 +1626,11 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
+"Odesláním e-mailu na tento e-mailový alias s účtenkou v příloze vytvoříte "
+"výdaj jedním kliknutím. Pokud první slovo předmětu e-mailu obsahuje interní "
+"odkaz na kategorii nebo název kategorie, automaticky se nastaví odpovídající"
+" kategorie. Zadáním částky výdaje do předmětu e-mailu ji nastavíte i na "
+"výdaj."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1758,6 +1765,8 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
+"První slovo předmětu e-mailu neodpovídalo žádnému kódu kategorie. Kategorii "
+"budete muset na výdajích nastavit ručně."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1846,7 +1855,7 @@ msgstr "Celková částka"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 msgid "Total Company Currency"
-msgstr ""
+msgstr "Celková měna společnosti"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
@@ -1963,7 +1972,7 @@ msgstr "Nemáte oprávnění upravovat tento výkaz výdajů."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without category."
-msgstr ""
+msgstr "Bez kategorie nelze hlášení vytvořit."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2043,6 +2052,8 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
+"Abyste mohli pokračovat, musíte mít ve své databázi alespoň jednu kategorii,"
+" kterou lze zařadit do nákladů!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

@@ -12,6 +12,7 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Martin Trigaux, 2020
 # gogobook <O968041428@gmail.com>, 2020
+# JustinC <dev@dottdot.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 09:26+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: gogobook <O968041428@gmail.com>, 2020\n"
+"Last-Translator: JustinC <dev@dottdot.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,6 +61,12 @@ msgid ""
 "                                            Active Users\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&gt;', '1')]}\">\n"
+"                                            現有使用者\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('active_user_count', '&lt;=', '1')]}\">\n"
+"                                            現有使用者\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -72,6 +79,13 @@ msgid ""
 "                                        </span>\n"
 "                                        <br/>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&gt;', '1')]}\">\n"
+"                                            公司\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" attrs=\"{'invisible':[('company_count', '&lt;=', '1')]}\">\n"
+"                                            公司\n"
+"                                        </span>\n"
+"                                        <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -83,6 +97,12 @@ msgid ""
 "                                                Languages\n"
 "                                            </span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&gt;', '1')]}\">\n"
+"                                                語系\n"
+"                                            </span>\n"
+"                                            <span class=\"o_form_label\" attrs=\"{'invisible':[('language_count', '&lt;=', '1')]}\">\n"
+"                                                語系\n"
+"                                            </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -104,7 +124,7 @@ msgstr "<strong>保存</strong>此頁面，然後返回此處選擇您的GEO供�
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up reCaptcha."
-msgstr ""
+msgstr "<strong>保存</strong> 此頁面並返回此處以設定 reCaptcha."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -147,7 +167,7 @@ msgstr "啟動開發人員模式（使用資產測試）"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Add Language"
-msgstr ""
+msgstr "新增語系"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -167,7 +187,7 @@ msgstr "允許使用者同步Google日曆"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
 msgid "Allow the users to synchronize their calendar with Outlook Calendar"
-msgstr ""
+msgstr "允許使用者同步 Outlook 日曆"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
@@ -299,7 +319,7 @@ msgstr "預設訪問權限"
 #: code:addons/base_setup/models/res_config_settings.py:0
 #, python-format
 msgid "Default User Template not found."
-msgstr ""
+msgstr "找不到預設使用者模板。"
 
 #. module: base_setup
 #. openerp-web
@@ -335,7 +355,7 @@ msgstr "編輯佈局"
 #: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
 #, python-format
 msgid "Email addresses already existing: %s."
-msgstr ""
+msgstr "電子郵件地址已存在：%s."
 
 #. module: base_setup
 #. openerp-web
@@ -439,7 +459,7 @@ msgstr "公司間交易"
 #: code:addons/base_setup/static/src/js/res_config_invite_users.js:0
 #, python-format
 msgid "Invalid email addresses: %s."
-msgstr ""
+msgstr "無效的郵件地址：%s."
 
 #. module: base_setup
 #. openerp-web
@@ -493,7 +513,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage API Keys"
-msgstr ""
+msgstr "管理 API 金鑰"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -584,7 +604,7 @@ msgstr "未完成的系統邀請"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Permissions"
-msgstr ""
+msgstr "權限許可"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -594,7 +614,7 @@ msgstr "預覽文檔"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Protect your forms from spam and abuse."
-msgstr ""
+msgstr "保護您的表單免受垃圾訊息或濫用。"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -629,7 +649,7 @@ msgstr "將日曆與Google日曆同步"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Outlook"
-msgstr ""
+msgstr "將您的日曆與 Outlook 同步"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
