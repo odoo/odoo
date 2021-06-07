@@ -61,7 +61,7 @@ export class Dropdown extends Component {
 
         // Set up key navigation -----------------------------------------------
         this.hotkeyService = useService("hotkey");
-        this.hotkeyTokens = [];
+        this.hotkeyRemoves = [];
 
         const nextActiveIndexFns = {
             "FIRST": () => 0,
@@ -104,13 +104,13 @@ export class Dropdown extends Component {
         function autoSubscribeKeynav() {
             if (this.state.open) {
                 // Subscribe keynav
-                if (this.hotkeyTokens.length) {
+                if (this.hotkeyRemoves.length) {
                     // Keynav already subscribed
                     return;
                 }
                 for (const [hotkey, callback] of Object.entries(hotkeyCallbacks)) {
-                    this.hotkeyTokens.push(
-                        this.hotkeyService.registerHotkey(hotkey, callback, {
+                    this.hotkeyRemoves.push(
+                        this.hotkeyService.add(hotkey, callback, {
                             altIsOptional: true,
                             allowRepeat: true,
                         })
@@ -118,10 +118,10 @@ export class Dropdown extends Component {
                 }
             } else {
                 // Unsubscribe keynav
-                for (const token of this.hotkeyTokens) {
-                    this.hotkeyService.unregisterHotkey(token);
+                for (const removeHotkey of this.hotkeyRemoves) {
+                    removeHotkey();
                 }
-                this.hotkeyTokens = [];
+                this.hotkeyRemoves = [];
             }
         }
 

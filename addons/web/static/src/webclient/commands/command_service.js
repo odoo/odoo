@@ -21,7 +21,7 @@ export const commandService = {
         let nextToken = 0;
         let isPaletteOpened = false;
 
-        hotkeyService.registerHotkey("control+k", openPalette, {
+        hotkeyService.add("control+k", openPalette, {
             altIsOptional: true,
             global: true,
         });
@@ -82,7 +82,7 @@ export const commandService = {
             const registration = Object.assign({}, command, { activeElement: null });
 
             if (command.hotkey) {
-                registration.hotkeyToken = hotkeyService.registerHotkey(
+                registration.removeHotkey = hotkeyService.add(
                     command.hotkey,
                     command.action,
                     command.hotkeyOptions
@@ -111,8 +111,8 @@ export const commandService = {
          */
         function unregisterCommand(token) {
             const cmd = registeredCommands.get(token);
-            if (cmd && cmd.hotkeyToken >= 0) {
-                env.services.hotkey.unregisterHotkey(cmd.hotkeyToken);
+            if (cmd && cmd.removeHotkey) {
+                cmd.removeHotkey();
             }
             registeredCommands.delete(token);
         }

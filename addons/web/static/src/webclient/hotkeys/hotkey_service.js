@@ -308,8 +308,21 @@ export const hotkeyService = {
         }
 
         return {
-            registerHotkey,
-            unregisterHotkey,
+            /**
+             * @param {string} hotkey
+             * @param {() => void} callback
+             * @param {Object} options
+             * @param {boolean} [options.altIsOptional=false]
+             * @param {boolean} [options.allowRepeat=false]
+             * @param {boolean} [options.global=false]
+             * @returns {() => void}
+             */
+            add(hotkey, callback, options = {}) {
+                const token = registerHotkey(hotkey, callback, options);
+                return () => {
+                    unregisterHotkey(token);
+                };
+            },
         };
     },
 };

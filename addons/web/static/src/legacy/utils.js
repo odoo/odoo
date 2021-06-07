@@ -78,24 +78,22 @@ export function makeLegacyDialogMappingService(legacyEnv) {
                 return dialog.modalRef ? () => dialog._close() : () => dialog.$modal.modal("hide");
             }
 
-            const tokensMap = new Map();
+            const dialogHotkeyRemoveMap = new Map();
 
             function onOpenDialog(dialog) {
                 ui.activateElement(getModalEl(dialog));
-                const token = hotkey.registerHotkey("escape", getCloseCallback(dialog), {
+                const remove = hotkey.add("escape", getCloseCallback(dialog), {
                     altIsOptional: true,
                 });
-                tokensMap.set(token, dialog);
+                dialogHotkeyRemoveMap.set(dialog, remove);
             }
 
             function onCloseDialog(dialog) {
-                for (const [token, d] of tokensMap) {
-                    if (d === dialog) {
-                        ui.deactivateElement(getModalEl(dialog));
-                        hotkey.unregisterHotkey(token);
-                        tokensMap.delete(token);
-                        break;
-                    }
+                ui.deactivateElement(getModalEl(dialog));
+                if (dialogHotkeyRemoveMap.has(dialog)) {
+                    const removeHotkey = dialogHotkeyRemoveMap.get(dialog);
+                    removeHotkey();
+                    dialogHotkeyRemoveMap.delete(dialog);
                 }
             }
 
