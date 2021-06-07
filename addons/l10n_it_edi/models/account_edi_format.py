@@ -393,7 +393,7 @@ class AccountEdiFormat(models.Model):
                     if elements:
                         message_to_log.append("%s<br/>%s" % (
                             _("Bank account not found, useful informations from XML file:"),
-                            self._compose_info_message(body_tree, './/DatiPagamento')))
+                            invoice._compose_info_message(body_tree, './/DatiPagamento')))
 
                 # Invoice lines. <2.2.1>
                 elements = body_tree.xpath('.//DettaglioLinee')
