@@ -7,8 +7,8 @@ import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_com
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { companyService } from "@web/webclient/company_service";
-import { makeFakeUIService } from "../helpers/mock_services";
 import { click, getFixture, makeDeferred, patchWithCleanup } from "../helpers/utils";
+import { uiService } from "@web/core/ui_service";
 
 const { mount } = owl;
 const serviceRegistry = registry.category("services");
@@ -45,7 +45,7 @@ QUnit.module("SwitchCompanyMenu", (hooks) => {
             },
             current_company: 1,
         });
-        serviceRegistry.add("ui", makeFakeUIService());
+        serviceRegistry.add("ui", uiService);
         serviceRegistry.add("company", companyService);
         serviceRegistry.add("hotkey", hotkeyService);
     });

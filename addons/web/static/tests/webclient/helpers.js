@@ -36,7 +36,6 @@ import {
     fakeTitleService,
     makeFakeLocalizationService,
     makeFakeRouterService,
-    makeFakeUIService,
 } from "../helpers/mock_services";
 import { getFixture, legacyExtraNextTick, nextTick, patchWithCleanup } from "../helpers/utils";
 import session from "web.session";
@@ -44,6 +43,7 @@ import { ComponentAdapter } from "web.OwlCompatibility";
 import LegacyMockServer from "web.MockServer";
 import Widget from "web.Widget";
 import { userService } from "@web/core/user_service";
+import { uiService } from "@web/core/ui_service";
 
 const { Component, mount, tags } = owl;
 
@@ -70,7 +70,7 @@ export function setupWebClientServiceRegistry() {
         popover: () => popoverService,
         router: () => makeFakeRouterService(),
         title: () => fakeTitleService,
-        ui: () => makeFakeUIService(),
+        ui: () => uiService,
         user: () => userService,
         view: () => viewService,
     };
