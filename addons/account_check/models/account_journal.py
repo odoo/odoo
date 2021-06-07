@@ -11,6 +11,13 @@ class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     checkbook_ids = fields.One2many('account.checkbook', 'journal_id', 'Checkbooks')
+    show_checkbooks = fields.Boolean(compute='_compute_show_checkbooks')
+
+    @api.depends('outbound_payment_method_ids.code', 'type')
+    def _compute_show_checkbooks(self):
+        for rec in self:
+            rec.show_checkbooks = rec.type == 'bank' and any(
+                x.code == 'new_own_checks' for x in rec.outbound_payment_method_ids)
 
     @api.model
     def create(self, vals):

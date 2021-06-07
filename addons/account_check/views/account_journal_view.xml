@@ -6,8 +6,9 @@
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
             <page name="bank_account">
-                <label for="checkbook_ids"/>
-                <field name="checkbook_ids" attrs="{'invisible': [('type', '!=', 'bank')]}" context="{'company_id':company_id}"/>
+                <field name="show_checkbooks" invisible="1"/>
+                <label for="checkbook_ids" attrs="{'invisible': [('show_checkbooks', '=', False)]}"/>
+                <field name="checkbook_ids" attrs="{'invisible': [('show_checkbooks', '=', False)]}" context="{'company_id':company_id}"/>
             </page>
         </field>
     </record>
