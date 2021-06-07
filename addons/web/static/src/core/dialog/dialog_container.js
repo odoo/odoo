@@ -31,11 +31,13 @@ export class DialogContainer extends Component {
     }
 
     closeDialog(id) {
-        if (this.dialogs[id].options && this.dialogs[id].options.onCloseCallback) {
-            this.dialogs[id].options.onCloseCallback();
+        if (this.dialogs[id]) {
+            if (this.dialogs[id].options && this.dialogs[id].options.onCloseCallback) {
+                this.dialogs[id].options.onCloseCallback();
+            }
+            delete this.dialogs[id];
+            this.render();
         }
-        delete this.dialogs[id];
-        this.render();
     }
 
     errorCallBack(id) {

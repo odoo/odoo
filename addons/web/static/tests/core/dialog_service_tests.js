@@ -72,6 +72,36 @@ QUnit.test("Simple rendering with a single dialog", async (assert) => {
     assert.containsNone(target, ".o_dialog_manager portal");
     assert.containsNone(target, ".o_dialog_container .o_dialog");
 });
+
+QUnit.test("Simple rendering and close a single dialog", async (assert) => {
+    assert.expect(9);
+
+    class CustomDialog extends Dialog {}
+    CustomDialog.title = "Welcome";
+
+    pseudoWebClient = await mount(PseudoWebClient, { env, target });
+    assert.containsOnce(target, ".o_dialog_manager");
+    assert.containsNone(target, ".o_dialog_manager portal");
+    assert.containsNone(target, ".o_dialog_container .o_dialog");
+
+    const dialogId = env.services.dialog.open(CustomDialog);
+    await nextTick();
+    assert.containsOnce(target, ".o_dialog_manager portal");
+    assert.containsOnce(target, ".o_dialog_container .o_dialog");
+    assert.strictEqual(target.querySelector("header .modal-title").textContent, "Welcome");
+
+    env.services.dialog.close(dialogId);
+    await nextTick();
+    assert.containsOnce(target, ".o_dialog_manager");
+    assert.containsNone(target, ".o_dialog_manager portal");
+    assert.containsNone(target, ".o_dialog_container .o_dialog");
+
+    // Call a second time, the close on the dialog.
+    // As the dialog is already close, this call is just ignored. No error should be raised.
+    env.services.dialog.close(dialogId);
+    await nextTick();
+});
+
 QUnit.test("rendering with two dialogs", async (assert) => {
     assert.expect(12);
     class CustomDialog extends Dialog {
