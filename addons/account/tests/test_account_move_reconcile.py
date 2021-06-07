@@ -1823,7 +1823,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=caba_inv.ids).create({
             'payment_date': '2017-01-01',
             'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pmt_wizard._create_payments()
         partial_rec = caba_inv.mapped('line_ids.matched_credit_ids')
@@ -1911,7 +1911,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=caba_inv.ids).create({
             'payment_date': '2017-01-01',
             'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
             'currency_id': self.company_data['currency'].id,
             'amount': 220.0,
         })
@@ -2271,7 +2271,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         pmt_wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=caba_inv.ids).create({
             'payment_date': caba_inv.date,
             'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pmt_wizard._create_payments()
 
@@ -2345,7 +2345,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': rslt.amount_total,
             'payment_date': rslt.date,
             'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pmt_wizard._create_payments()
 
@@ -2363,7 +2363,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 320,
             'payment_date': invoice.date,
             'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
 
         pmt_wizard._create_payments()
@@ -2397,7 +2397,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 600,
             'payment_date': caba_inv.date,
             'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         pmt_wizard._create_payments()
 

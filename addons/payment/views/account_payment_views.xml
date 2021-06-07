@@ -9,7 +9,7 @@
             <xpath expr='//group[2]' position="inside">
                 <field name="payment_transaction_id" groups="base.group_no_one" attrs="{'invisible': [('use_electronic_payment_method', '!=', True)]}"/>
             </xpath>
-            <field name="payment_method_id" position="after">
+            <field name="payment_method_line_id" position="after">
                 <field name="payment_method_code" invisible="1"/>
                 <field name="suitable_payment_token_ids" invisible="1"/>
                 <field name="use_electronic_payment_method" invisible="1"/>

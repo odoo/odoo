@@ -50,8 +50,7 @@ class TestUi(HttpCaseWithUserDemo):
             'email': 'admin@yourcompany.example.com',
         })
 
-        cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
+        self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
     def test_admin(self):
         # Seen that:
