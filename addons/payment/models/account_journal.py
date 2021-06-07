@@ -30,3 +30,8 @@ class AccountJournal(models.Model):
         if acquirers:
             raise UserError(_("You can't delete a payment method that is linked to an acquirer in the enabled or test state.\n"
                               "Linked acquirer(s): %s", ', '.join(a.display_name for a in acquirers)))
+
+    def _get_available_payment_method_lines(self, payment_type):
+        lines = super(AccountJournal, self)._get_available_payment_method_lines(payment_type)
+
+        return lines.filtered(lambda l: l.payment_acquirer_state != 'disabled')

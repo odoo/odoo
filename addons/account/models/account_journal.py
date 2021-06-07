@@ -117,10 +117,10 @@ class AccountJournal(models.Model):
         inverse_name='journal_id',
         copy=False,
         check_company=True,
-        help="Manual :Get paid by any method outside of Odoo."
-        "Payment Acquirers : Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online."
-        "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary."
-        "SEPA Direct Debit : Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary"
+        help="Manual :Get paid by any method outside of Odoo.\n"
+        "Payment Acquirers : Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+        "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+        "SEPA Direct Debit : Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
     )
     outbound_payment_method_line_ids = fields.One2many(
         comodel_name='account.payment.method.line',
@@ -132,9 +132,9 @@ class AccountJournal(models.Model):
         inverse_name='journal_id',
         copy=False,
         check_company=True,
-        help="Manual : Pay by any method outside of Odoo."
-        "Check: Pay bills by check and print it from Odoo."
-        "SEPA Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary"
+        help="Manual : Pay by any method outside of Odoo.\n"
+        "Check: Pay bills by check and print it from Odoo.\n"
+        "SEPA Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
     )
     profit_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
@@ -886,3 +886,9 @@ class AccountJournal(models.Model):
         last_statement_domain = (domain or []) + [('journal_id', '=', self.id)]
         last_st_line = self.env['account.bank.statement.line'].search(last_statement_domain, order='date desc, id desc', limit=1)
         return last_st_line.statement_id
+
+    def _get_available_payment_method_lines(self, payment_type):
+        if payment_type == 'inbound':
+            return self.inbound_payment_method_line_ids
+        else:
+            return self.outbound_payment_method_line_ids

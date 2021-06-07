@@ -39,7 +39,7 @@ class AccountPayment(models.Model):
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
-    payment_method_id = fields.Many2one(index=True)
+    payment_method_line_id = fields.Many2one(index=True)
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number(self):
@@ -77,7 +77,7 @@ class AccountPayment(models.Model):
                 ) for r in res)
             ))
 
-    @api.depends('payment_method_id', 'currency_id', 'amount')
+    @api.depends('payment_method_line_id', 'currency_id', 'amount')
     def _compute_check_amount_in_words(self):
         for pay in self:
             if pay.currency_id:
@@ -101,18 +101,19 @@ class AccountPayment(models.Model):
                 sequence.padding = len(payment.check_number)
 
     @api.depends('payment_type', 'journal_id', 'partner_id')
-    def _compute_payment_method_id(self):
-        super()._compute_payment_method_id()
+    def _compute_payment_method_line_id(self):
+        super()._compute_payment_method_line_id()
         for record in self:
             preferred = record.partner_id.with_company(record.company_id).property_payment_method_id
-            if (record.payment_type == 'outbound'
-                    and preferred in record.journal_id.outbound_payment_method_line_ids.mapped('payment_method_id')):
-                record.payment_method_id = preferred
+            method_line = record.journal_id.outbound_payment_method_line_ids\
+                .filtered(lambda l: l.payment_method_id == preferred)
+            if record.payment_type == 'outbound' and method_line:
+                record.payment_method_line_id = method_line
 
     def action_post(self):
         res = super(AccountPayment, self).action_post()
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
-        for payment in self.filtered(lambda p: p.payment_method_id == payment_method_check and p.check_manual_sequencing):
+        for payment in self.filtered(lambda p: p.payment_method_line_id.payment_method_id == payment_method_check and p.check_manual_sequencing):
             sequence = payment.journal_id.check_sequence_id
             payment.check_number = sequence.next_by_id()
         return res
@@ -120,7 +121,7 @@ class AccountPayment(models.Model):
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
         # Since this method can be called via a client_action_multi, we need to make sure the received records are what we expect
-        self = self.filtered(lambda r: r.payment_method_id.code == 'check_printing' and r.state != 'reconciled')
+        self = self.filtered(lambda r: r.payment_method_line_id.code == 'check_printing' and r.state != 'reconciled')
 
         if len(self) == 0:
             raise UserError(_("Payments to print as a checks must have 'Check' selected as payment method and "
