@@ -105,7 +105,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_note_url(self):
-        return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        return self.env.company.get_base_url()
 
     @api.model
     def _default_note(self):
