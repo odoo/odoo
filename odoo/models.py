@@ -213,6 +213,9 @@ class NewId(object):
             id_part = hex(id(self))
         return "NewId_%s" % id_part
 
+    def get_id(self, default=False):
+        return self.origin or self.ref or default
+
 
 def origin_ids(ids):
     """ Return an iterator over the origin ids corresponding to ``ids``.
@@ -6091,8 +6094,22 @@ Fields:
                     if not force and other.get(name) == self[name]:
                         continue
                     field = record._fields[name]
-                    if field.type not in ('one2many', 'many2many'):
+                    if field.type not in ('one2many', 'many2many', 'many2one'):
                         result[name] = field.convert_to_onchange(self[name], record, {})
+                    elif field.type == 'many2one':
+                        value = self[name]
+                        value_id = value.id
+
+                        if isinstance(value_id, NewId):
+                            value_id = value_id.get_id()
+
+                        if value_id:
+                            try:
+                                result[name] = (value_id, value.sudo().display_name)
+                            except MissingError:
+                                result[name] = False
+                        else:
+                            result[name] = False
                     else:
                         # x2many fields: serialize value as commands
                         result[name] = commands = [(5,)]

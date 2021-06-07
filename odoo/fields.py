@@ -13,6 +13,7 @@ import base64
 import binascii
 import pytz
 import psycopg2
+from odoo.models import NewId
 
 from .tools import (
     float_repr, float_round, float_compare, float_is_zero, html_sanitize, human_size,
@@ -1222,7 +1223,10 @@ class Integer(Field):
     group_operator = 'sum'
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        return int(value or 0)
+        if isinstance(value, NewId):
+            return int(value.get_id(0))
+        else:
+            return int(value or 0)
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, dict):
