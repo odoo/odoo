@@ -1417,12 +1417,6 @@ class Task(models.Model):
             else:
                 task.stage_id = False
 
-    @api.constrains('recurring_task')
-    def _check_recurring_task(self):
-        # Deprecated method
-        # TODO : Remove me in master
-        return
-
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
