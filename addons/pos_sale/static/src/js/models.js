@@ -53,6 +53,7 @@ models.Orderline = models.Orderline.extend({
       this.sale_order_origin_id = this.sale_order_origin_id || options.sale_order_origin_id;
       this.sale_order_line_id = this.sale_order_line_id || options.sale_order_line_id;
       this.down_payment_details = this.down_payment_details || options.down_payment_details;
+      this.customerNote = this.customerNote || options.customer_note;
   },
   init_from_JSON: function (json) {
       super_order_line_model.init_from_JSON.apply(this, arguments);

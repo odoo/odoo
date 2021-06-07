@@ -143,6 +143,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         price_manually_set: true,
                         sale_order_origin_id: clickedOrder,
                         sale_order_line_id: line,
+                        customer_note: line.customer_note,
                     });
 
                     if (
@@ -230,8 +231,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
               args: [ids],
               context: this.env.session.user_context,
           });
-          let pos_lines = so_lines.filter(line => line.product_type);
-          return pos_lines;
+          return so_lines;
         }
 
     }
