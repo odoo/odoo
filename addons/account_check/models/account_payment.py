@@ -1,11 +1,6 @@
-##############################################################################
-# For copyright and license notices, see __manifest__.py file in module root
-# directory
-##############################################################################
 from odoo import fields, models, _, api
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 import logging
-# import odoo.addons.decimal_precision as dp
 _logger = logging.getLogger(__name__)
 
 
@@ -14,7 +9,6 @@ class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
     check_id = fields.Many2one('account.check', string='Check', readonly=True, states={'draft': [('readonly', False)]}, copy=False,)
-    # this fields is to help with code and view but if needed this field could be removed and check everywhere for the payment_method_code
     check_type = fields.Char(compute='_compute_check_type')
     available_check_ids = fields.Many2many('account.check', compute='_compute_check_data')
     amount = fields.Monetary(compute='_compute_amount', readonly=False, store=True)
@@ -107,73 +101,34 @@ class AccountPayment(models.Model):
         for rec in self.filtered('check_id'):
             rec.amount = rec.check_id.amount
 
-    @api.constrains('check_id', 'select_check_ids')
-    # @api.constrains('check_ids')
-    def _check_checks(self):
-        for rec in self:
-            # we only overwrite if payment method is delivered
-            if rec.payment_method_code == 'delivered_third_check':
-                rec.amount = rec.check_id.amount
-# +                    'El importe del pago no coincide con el importe del cheque seleccionado. Por favor intente '
-# +                    'eliminar y volver a agregar el cheque.'))
-
-                # TODO chequear esto
-                # # si es una entrega de cheques de terceros y es en otra moneda
-                # # a la de la cia, forzamos el importe en moneda de cia de los
-                # # cheques originales
-                # # escribimos force_amount_company_currency directamente en vez
-                # # de amount_company_currency por lo explicado en
-                # # _inverse_amount_company_currency
-                # if rec.currency_id != rec.company_currency_id:
-                #     rec.force_amount_company_currency = sum(
-                #         rec.check_ids.mapped('amount_company_currency'))
-
-    # def _create_paired_internal_transfer_payment(self):
-    #     for rec in self:
-    #         super(AccountPayment, rec.with_context(default_check_ids=rec.check_ids))._create_paired_internal_transfer_payment()
-
     def action_post(self):
-        """ this method is called when posting an account_move of a payment or the payment directly and do two things:
-        1. Do check operations (handed, delivered, etc)
-        2. Split liquidity lines so that statements reconciliation and accounting analysis is suitable for checks management.
-        When spliting the lines we also:
-        a) modify name to be more representative
-        b) add date_maturity from the check
-
-        This split is done for now on this easy way but could be doable directly on draft states by modifying the way
-        the lines are synchronized between move and payment.
-        """
+        """ this method is called when posting an account_move of a payment or the payment directly and do the
+        check operations (handed, delivered, etc) """
         res = super(AccountPayment, self).action_post()
         for rec in self.filtered('check_id'):
             if not rec.currency_id.is_zero(rec.check_id.amount - rec.amount):
                 raise UserError(_(
                     'El importe del pago no coincide con el importe del cheque seleccionado. Por favor intente '
                     'eliminar y volver a agregar el cheque.'))
-            # TODO check if needed
-            # if rec.payment_method_code == 'own_check' and (
-            #         not rec.check_number or not rec.check_name):
-            #     raise UserError(_(
-            #         'Para mandar a proceso de firma debe definir número '
-            #         'de cheque en cada línea de pago.\n'
-            #         '* ID del pago: %s') % rec.id)
             rec._do_checks_operations()
-            # TODO change journal item name and fields?
-            # liquidity_lines, counterpart_lines, writeoff_lines = rec._seek_for_lines()
-            # rec._split_aml_line_per_check(liquidity_lines, operation)
-
         return res
-    #         new_name % check.name
-    #         document_name = _('Check %s %s') % (check.name, operation)
-    #         check_vals = {
-    #             'name': liquidity_lines._get_default_line_name(
-    #                 document_name, check.amount, self.currency_id, self.date, partner=self.partner_id),
-    #             amount_field: check.amount_company_currency,
-    #             'date_maturity': check.payment_date,
-    #             'amount_currency': currency and currency_sign * check.amount,
-    #         }
+
     def _do_checks_operations(self, cancel=False):
         operation, domain = self._get_checks_operations()
         if cancel:
             self.check_id._del_operation(self.move_id)
         else:
             self.check_id._add_operation(operation, self.move_id, date=self.date)
+
+    def _prepare_move_line_default_vals(self, write_off_line_vals=None):
+        """ Add check name and operation on liquidity line """
+        res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
+        if self.check_id:
+            operation, domain = self._get_checks_operations()
+            document_name = _('Check %s %s') % (self.check_id.name, operation)
+            res[0].update({
+                'name': self.env['account.move.line']._get_default_line_name(
+                    document_name, self.amount, self.currency_id, self.date, partner=self.partner_id),
+                'date_maturity': self.check_id.payment_date or self.date,
+            })
+        return res
