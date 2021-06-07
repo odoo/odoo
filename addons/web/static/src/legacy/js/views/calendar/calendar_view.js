@@ -69,6 +69,7 @@ var CalendarView = AbstractView.extend({
         var mapping = {};
         var fieldNames = fields.display_name ? ['display_name'] : [];
         var displayFields = {};
+        let popoverFields = {};
 
         _.each(fieldsToGather, function (field) {
             if (arch.attrs[field]) {
@@ -87,6 +88,7 @@ var CalendarView = AbstractView.extend({
             if (child.tag !== 'field') return;
             var fieldName = child.attrs.name;
             fieldNames.push(fieldName);
+            popoverFields[fieldName] = {attrs: child.attrs};
             if (!child.attrs.invisible || child.attrs.filters) {
                 child.attrs.options = child.attrs.options ? pyUtils.py_eval(child.attrs.options) : {};
                 if (!child.attrs.invisible) {
@@ -177,6 +179,7 @@ var CalendarView = AbstractView.extend({
         this.controllerParams.scales = scales;
 
         this.rendererParams.displayFields = displayFields;
+        this.rendererParams.popoverFields = popoverFields;
         this.rendererParams.model = viewInfo.model;
         this.rendererParams.hideDate = utils.toBoolElse(attrs.hide_date || '', false);
         this.rendererParams.hideTime = utils.toBoolElse(attrs.hide_time || '', false);

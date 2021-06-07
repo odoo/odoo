@@ -180,6 +180,7 @@ return AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.displayFields = params.displayFields;
+        this.popoverFields = params.popoverFields;
         this.model = params.model;
         this.filters = [];
         this.color_map = {};
@@ -807,6 +808,7 @@ return AbstractRenderer.extend({
             event: eventData,
             modelName: this.model,
             canDelete: this.canDelete,
+            popoverFields: this.popoverFields,
         };
 
         var start = moment((eventData.extendedProps && eventData.extendedProps.r_start) || eventData.start);

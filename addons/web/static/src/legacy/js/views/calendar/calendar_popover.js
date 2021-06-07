@@ -31,6 +31,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
         this.event = eventInfo.event;
         this.modelName = eventInfo.modelName;
         this._canDelete = eventInfo.canDelete;
+        this.popoverFields = eventInfo.popoverFields;
     },
     /**
      * @override
@@ -126,7 +127,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
         var self = this;
         var fieldsToGenerate = [];
         const fieldInformation = {};
-        var fields = _.keys(this.displayFields);
+        var fields = _.keys(this.popoverFields);
         for (var i=0; i<fields.length; i++) {
             var fieldName = fields[i];
             var displayFieldInfo = self.displayFields[fieldName] || {attrs: {invisible: 1}};
@@ -139,6 +140,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                 string: displayFieldInfo.attrs.string || fieldInfo.string,
                 value: self.event.extendedProps.record[fieldName],
                 type: fieldInfo.type,
+                invisible: displayFieldInfo.attrs.invisible,
             };
             if (field.type === 'selection') {
                 field.selection = fieldInfo.selection;
@@ -200,7 +202,7 @@ var CalendarPopover = Widget.extend(WidgetAdapterMixin, StandaloneFieldManagerMi
                 // Only display the fields whose attributes does not make them invisible
                 let fieldClass = "list-group-item flex-shrink-0 d-flex flex-wrap";
                 if (fieldWidget.attrs && fieldWidget.attrs.modifiers) {
-                    const fieldModifier = record.evalModifiers(fieldWidget.attrs.modifiers);
+                    const fieldModifier = record.evalModifiers(_.pick(fieldWidget.attrs.modifiers, 'invisible'));
                     fieldClass += fieldModifier.invisible ? ' o_invisible_modifier' : '';
                 }
 

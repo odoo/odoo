@@ -938,7 +938,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('render popover with modifiers', async function (assert) {
-        assert.expect(3);
+        assert.expect(5);
 
         this.data.event.fields.priority = {string: "Priority", type: "selection", selection: [['0', 'Normal'], ['1', 'Important']],};
 
@@ -953,6 +953,10 @@ QUnit.module('Views', {
                 'all_day="allday" '+
                 'mode="week">'+
                 '<field name="priority" widget="priority" readonly="1"/>'+
+                '<field name="is_hatched" invisible="1"/>'+
+                '<field name="partner_id" attrs=\'{"invisible": [["is_hatched","=",False]]}\'/>'+
+                '<field name="start" attrs=\'{"invisible": [["is_hatched","=",True]]}\'/>'+
+
             '</calendar>',
             archs: archs,
             viewOptions: {
@@ -964,7 +968,8 @@ QUnit.module('Views', {
 
         assert.containsOnce(calendar, '.o_cw_popover', "should open a popover clicking on event");
         assert.containsOnce(calendar, '.o_cw_popover .o_priority span.o_priority_star', "priority field should not be editable");
-
+        assert.strictEqual(calendar.$('.o_cw_popover li.o_invisible_modifier').text(), 'user : partner 1', "partner_id field should be invisible");
+        assert.containsOnce(calendar, '.o_cw_popover  span.o_field_date', "The start date should be visible");
         await testUtils.dom.click($('.o_cw_popover .o_cw_popover_close'));
         assert.containsNone(calendar, '.o_cw_popover', "should close a popover");
 
