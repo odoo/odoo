@@ -141,6 +141,9 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(webClient, ".custom-action");
         assert.verifySteps([]);
 
+        // close debug menu
+        await click(webClient.el, ".o_debug_manager button");
+        // open debug menu
         await click(webClient.el, ".o_debug_manager button");
         assert.verifySteps(["debugItems executed"]);
         delete core.action_registry.map.customLegacy;
