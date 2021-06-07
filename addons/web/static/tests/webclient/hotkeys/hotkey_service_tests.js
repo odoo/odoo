@@ -33,13 +33,13 @@ QUnit.test("register / unregister", async (assert) => {
     triggerHotkey(key);
     await nextTick();
 
-    let token = hotkey.registerHotkey(key, () => assert.step(key));
+    let removeHotkey = hotkey.add(key, () => assert.step(key));
     await nextTick();
 
     triggerHotkey(key);
     await nextTick();
 
-    hotkey.unregisterHotkey(token);
+    removeHotkey();
     triggerHotkey(key);
     await nextTick();
 
@@ -117,7 +117,7 @@ QUnit.test("non-MacOS usability", async (assert) => {
     const key = "q";
 
     // On non-MacOS, ALT is NOT replaced by CONTROL key
-    let token = hotkey.registerHotkey(key, () => assert.step(key), { altIsOptional: false });
+    let removeHotkey = hotkey.add(key, () => assert.step(key), { altIsOptional: false });
     await nextTick();
 
     let keydown = new KeyboardEvent("keydown", { key, altKey: true });
@@ -130,10 +130,10 @@ QUnit.test("non-MacOS usability", async (assert) => {
     await nextTick();
     assert.verifySteps([]);
 
-    hotkey.unregisterHotkey(token);
+    removeHotkey();
 
     // On non-MacOS, CONTROL is NOT replaced by COMMAND key (= metaKey)
-    token = hotkey.registerHotkey(`control+${key}`, () => assert.step(`control+${key}`), {
+    removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`), {
         altIsOptional: true,
     });
     await nextTick();
@@ -148,7 +148,7 @@ QUnit.test("non-MacOS usability", async (assert) => {
     await nextTick();
     assert.verifySteps([]);
 
-    hotkey.unregisterHotkey(token);
+    removeHotkey();
 });
 
 QUnit.test("MacOS usability", async (assert) => {
@@ -164,7 +164,7 @@ QUnit.test("MacOS usability", async (assert) => {
     const key = "q";
 
     // On MacOS, ALT is replaced by CONTROL key
-    let token = hotkey.registerHotkey(key, () => assert.step(key), { altIsOptional: false });
+    let removeHotkey = hotkey.add(key, () => assert.step(key), { altIsOptional: false });
     await nextTick();
 
     let keydown = new KeyboardEvent("keydown", { key, altKey: true });
@@ -177,10 +177,10 @@ QUnit.test("MacOS usability", async (assert) => {
     await nextTick();
     assert.verifySteps([key]);
 
-    hotkey.unregisterHotkey(token);
+    removeHotkey();
 
     // On MacOS, CONTROL is replaced by COMMAND key (= metaKey)
-    token = hotkey.registerHotkey(`control+${key}`, () => assert.step(`control+${key}`), {
+    removeHotkey = hotkey.add(`control+${key}`, () => assert.step(`control+${key}`), {
         altIsOptional: true,
     });
     await nextTick();
@@ -195,7 +195,7 @@ QUnit.test("MacOS usability", async (assert) => {
     await nextTick();
     assert.verifySteps([`control+${key}`]);
 
-    hotkey.unregisterHotkey(token);
+    removeHotkey();
 });
 
 QUnit.test("alt is optional parameter", async (assert) => {
@@ -263,13 +263,13 @@ QUnit.test("registration allows repeat if specified", async (assert) => {
     const disallowRepeatKey = "b";
     const defaultBehaviourKey = "c";
 
-    env.services.hotkey.registerHotkey(allowRepeatKey, () => assert.step(allowRepeatKey), {
+    env.services.hotkey.add(allowRepeatKey, () => assert.step(allowRepeatKey), {
         allowRepeat: true,
     });
-    env.services.hotkey.registerHotkey(disallowRepeatKey, () => assert.step(disallowRepeatKey), {
+    env.services.hotkey.add(disallowRepeatKey, () => assert.step(disallowRepeatKey), {
         allowRepeat: false,
     });
-    env.services.hotkey.registerHotkey(defaultBehaviourKey, () => assert.step(defaultBehaviourKey));
+    env.services.hotkey.add(defaultBehaviourKey, () => assert.step(defaultBehaviourKey));
     await nextTick();
 
     // Dispatch the three keys without repeat:
@@ -316,30 +316,30 @@ QUnit.test("hotkeys evil 👹", async (assert) => {
     const hotkey = env.services.hotkey;
 
     assert.throws(function () {
-        hotkey.registerHotkey();
+        hotkey.add();
     }, /must specify an hotkey/);
     assert.throws(function () {
-        hotkey.registerHotkey(null);
+        hotkey.add(null);
     }, /must specify an hotkey/);
 
     function callback() {}
     assert.throws(function () {
-        hotkey.registerHotkey(null, callback);
+        hotkey.add(null, callback);
     }, /must specify an hotkey/);
     assert.throws(function () {
-        hotkey.registerHotkey("");
+        hotkey.add("");
     }, /must specify an hotkey/);
     assert.throws(function () {
-        hotkey.registerHotkey("crap", callback);
+        hotkey.add("crap", callback);
     }, /not whitelisted/);
     assert.throws(function () {
-        hotkey.registerHotkey("ctrl+o", callback);
+        hotkey.add("ctrl+o", callback);
     }, /not whitelisted/);
     assert.throws(function () {
-        hotkey.registerHotkey("Control+o");
+        hotkey.add("Control+o");
     }, /specify a callback/);
     assert.throws(function () {
-        hotkey.registerHotkey("Control+o+d", callback);
+        hotkey.add("Control+o+d", callback);
     }, /more than one single key part/);
 });
 

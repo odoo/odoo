@@ -19,8 +19,8 @@ import { useEffect } from "./effect_hook";
  */
 export function useHotkey(hotkey, callback, options = {}) {
     const hotkeyService = useService("hotkey");
-    useEffect(() => {
-        const token = hotkeyService.registerHotkey(hotkey, callback, options);
-        return () => hotkeyService.unregisterHotkey(token);
-    }, () => []);
+    useEffect(
+        () => hotkeyService.add(hotkey, callback, options),
+        () => []
+    );
 }
