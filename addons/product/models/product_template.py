@@ -403,11 +403,6 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
-        if (('type' in vals and vals['type'] != 'service') or ('landed_cost_ok' in vals and vals['landed_cost_ok'] == False)) and self.type == 'service' and self.landed_cost_ok:
-            if self.env['account.move.line'].search_count([('product_id', 'in', self.product_variant_ids.ids), ('is_landed_costs_line', '=', True)]):
-                raise UserError(_("You cannot change the product type or disable landed cost option because the product is used in an account move line."))
-            else:
-                vals['landed_cost_ok'] = False
         uom = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
         uom_po = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id
         if uom and uom_po and uom.category_id != uom_po.category_id:
