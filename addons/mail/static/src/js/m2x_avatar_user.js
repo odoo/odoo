@@ -97,4 +97,5 @@ export const Many2ManyAvatarUser = FieldMany2ManyTagsAvatar.extend(M2XAvatarMixi
 
 fieldRegistry.add('many2one_avatar_user', Many2OneAvatarUser);
 fieldRegistry.add('kanban.many2one_avatar_user', KanbanMany2OneAvatarUser);
+fieldRegistry.add('activity.many2one_avatar_user', KanbanMany2OneAvatarUser);
 fieldRegistry.add('many2many_avatar_user', Many2ManyAvatarUser);

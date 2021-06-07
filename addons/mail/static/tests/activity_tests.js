@@ -528,4 +528,57 @@ QUnit.test("Activity view: discard an activity creation dialog", async function 
     assert.containsNone($, ".modal.o_technical_modal", "Activity Modal should be closed");
 });
 
+QUnit.test('Activity view: many2one_avatar_user widget in activity view', async function (assert) {
+    assert.expect(3);
+
+    const taskModel = serverData.models.task;
+
+    serverData.models['res.users'] = {
+        fields: {
+            display_name: { string: "Displayed name", type: "char" },
+            avatar_128: { string: "Image 128", type: 'image' },
+        },
+        records: [{
+            id: 1,
+            display_name: "first user",
+            avatar_128: "Atmaram Bhide",
+        }],
+    };
+    taskModel.fields.user_id = { string: "Related User", type: "many2one", relation: 'res.users' };
+    taskModel.records[0].user_id = 1;
+
+    serverData.actions = {
+        1: {
+            id: 1,
+            name: 'Task Action',
+            res_model: 'task',
+            type: 'ir.actions.act_window',
+            views: [[false, 'activity']],
+        }
+    };
+
+    serverData.views = {
+        'task,false,activity': `
+            <activity string="Task">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="user_id" widget="many2one_avatar_user"/>
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </activity>`,
+        'task,false,search': '<search></search>'
+    };
+
+    const webClient = await createWebClient({ serverData, legacyParams: { withLegacyMockServer: true } });
+    await doAction(webClient, 1);
+
+    await legacyExtraNextTick();
+    assert.containsN(webClient, '.o_m2o_avatar', 2);
+    assert.containsOnce(webClient, 'tr[data-res-id=13] .o_m2o_avatar > img[src="/web/image/res.users/1/avatar_128"]',
+        "should have m2o avatar image");
+    assert.containsNone(webClient, '.o_m2o_avatar > span',
+        "should not have text on many2one_avatar_user if onlyImage node option is passed");
+});
+
 });
