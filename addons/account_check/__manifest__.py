@@ -42,8 +42,7 @@ NOTA: En la lógica de impresón de cheques y en general, solo se tienen en cuen
         'views/account_check_view.xml',
         'views/account_journal_view.xml',
         'views/account_checkbook_view.xml',
-        # TODO enable
-        # 'wizards/account_payment_register_views.xml',
+        'wizards/account_payment_register_views.xml',
         'security/ir.model.access.csv',
         'security/account_check_security.xml',
     ],
