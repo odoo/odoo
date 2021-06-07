@@ -174,6 +174,10 @@ class Orderpoint(models.Model):
     def _prepare_procurement_values(self, date=False, group=False):
         values = super()._prepare_procurement_values(date=date, group=group)
         values['supplierinfo_id'] = self.supplier_id
+        # find possible packaging
+        packagings = self.product_id.packaging_ids.filtered(lambda p: p.purchase and p.qty == self.qty_multiple)
+        if packagings:
+            values['product_packaging_id'] = packagings[0]
         return values
 
     def _quantity_in_progress(self):
