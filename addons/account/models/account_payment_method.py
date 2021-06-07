@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.exceptions import UserError
 
 
 class AccountPaymentMethod(models.Model):
@@ -23,17 +24,17 @@ class AccountPaymentMethod(models.Model):
         methods_info = self._get_payment_method_information()
         for method in payment_methods:
             information = methods_info.get(method.code)
-            limit = None if information.get('mode') == 'multi' else 1
 
-            method_domain = method._get_payment_method_domain()
+            if information.get('mode') == 'multi':
+                method_domain = method._get_payment_method_domain()
 
-            journals = self.env['account.journal'].search(method_domain, limit=limit)
+                journals = self.env['account.journal'].search(method_domain)
 
-            self.env['account.payment.method.line'].create([{
-                'name': method.name,
-                'payment_method_id': method.id,
-                'journal_id': journal.id
-            } for journal in journals])
+                self.env['account.payment.method.line'].create([{
+                    'name': method.name,
+                    'payment_method_id': method.id,
+                    'journal_id': journal.id
+                } for journal in journals])
         return payment_methods
 
     def _get_payment_method_domain(self):
@@ -86,6 +87,7 @@ class AccountPaymentMethod(models.Model):
 class AccountPaymentMethodLine(models.Model):
     _name = "account.payment.method.line"
     _description = "Payment Methods"
+    _order = 'sequence'
 
     # == Business fields ==
     name = fields.Char(compute='_compute_name', readonly=False, store=True)
@@ -104,9 +106,10 @@ class AccountPaymentMethodLine(models.Model):
         domain=lambda self: "[('deprecated', '=', False), "
                             "('company_id', '=', company_id), "
                             "('user_type_id.type', 'not in', ('receivable', 'payable')), "
-                            "('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id
+                            "'|', ('user_type_id', '=', %s), ('id', '=', parent.default_account_id)]"
+                            % self.env.ref('account.data_account_type_current_assets').id
     )
-    journal_id = fields.Many2one(comodel_name='account.journal', required=True, ondelete="cascade")
+    journal_id = fields.Many2one(comodel_name='account.journal', ondelete="set null")
 
     # == Display purpose fields ==
     code = fields.Char(related='payment_method_id.code')
@@ -117,4 +120,51 @@ class AccountPaymentMethodLine(models.Model):
     @api.depends('payment_method_id.name')
     def _compute_name(self):
         for method in self:
-            method.name = method.payment_method_id.name
+            if not method.name:
+                method.name = method.payment_method_id.name
+
+    @api.constrains('name')
+    def _ensure_unique_name_for_journal(self):
+        self.flush(['name'])
+        self._cr.execute('''
+            SELECT apml.name, apm.payment_type
+            FROM account_payment_method_line apml
+            JOIN account_payment_method apm ON apml.payment_method_id = apm.id
+            GROUP BY apml.name, journal_id, apm.payment_type
+            HAVING count(apml.id) > 1
+        ''')
+        res = self._cr.fetchall()
+        if res:
+            (name, payment_type) = res[0]
+            raise UserError(_("You can't have two payment method lines of the same payment type (%s) "
+                              "and with the same name (%s) on a single journal.", payment_type, name))
+
+    def unlink(self):
+        """
+        Payment method lines which are used in a payment should not be deleted from the database,
+        only the link betweend them and the journals must be broken.
+        """
+        unused_payment_method_lines = self
+        for line in self:
+            payment_count = self.env['account.payment'].search_count([('payment_method_line_id', '=', line.id)])
+            if payment_count > 0:
+                unused_payment_method_lines -= line
+
+        (self - unused_payment_method_lines).write({'journal_id': False})
+
+        return super(AccountPaymentMethodLine, unused_payment_method_lines).unlink()
+
+    def write(self, vals):
+        if 'payment_account_id' in vals:
+            account = self.env['account.account'].browse(vals['payment_account_id'])
+            if not account.reconcile:
+                account.reconcile = True
+        return super().write(vals)
+
+    @api.model
+    def create(self, vals_list):
+        if 'payment_account_id' in vals_list:
+            account = self.env['account.account'].browse(vals_list['payment_account_id'])
+            if not account.reconcile:
+                account.reconcile = True
+        return super().create(vals_list)

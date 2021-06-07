@@ -16,7 +16,7 @@
                     <field name="date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
-                    <field name="payment_method_id"/>
+                    <field name="payment_method_line_id"/>
                     <field name="partner_id" string="Customer"/>
                     <field name="amount_signed" string="Amount in Currency" groups="base.group_multi_currency" optional="hide"/>
                     <field name="currency_id" string="Payment Currency" groups="base.group_multi_currency" optional="hide"/>
@@ -124,7 +124,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Customer/Vendor" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
                     <filter string="Journal" name="journal" domain="[]" context="{'group_by': 'journal_id'}"/>
-                    <filter string="Payment Method" name="paymentmethod" domain="[]" context="{'group_by': 'payment_method_id'}"/>
+                    <filter string="Payment Method Line" name="paymentmethodline" domain="[]" context="{'group_by': 'payment_method_line_id'}"/>
                     <filter string="Status" name="state" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Payment Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                     <filter string="Currency" name="currency" domain="[]" context="{'group_by': 'currency_id'}" groups="base.group_multi_currency"/>
@@ -177,8 +177,8 @@
                         <field name="payment_method_code" invisible="1"/>
                         <field name="show_partner_bank_account" invisible="1"/>
                         <field name="require_partner_bank_account" invisible="1"/>
-                        <field name="hide_payment_method" invisible="1"/>
-                        <field name="available_payment_method_ids" invisible="1"/>
+                        <field name="hide_payment_method_line" invisible="1"/>
+                        <field name="available_payment_method_line_ids" invisible="1"/>
                         <field name="suitable_journal_ids" invisible="1"/>
                         <field name="country_code" invisible="1"/>
                         <field name="partner_type" invisible="1"/>
@@ -265,8 +265,8 @@
                                 <field name="journal_id"
                                        domain="[('type', 'in', ('bank', 'cash'))]"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="payment_method_id" required="1" options="{'no_create': True, 'no_open': True}"
-                                       attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('hide_payment_method', '=', True)]}"/>
+                                <field name="payment_method_line_id" required="1" options="{'no_create': True, 'no_open': True}"
+                                       attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('hide_payment_method_line', '=', True)]}"/>
 
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Customer Bank Account"
                                         attrs="{

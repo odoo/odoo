@@ -86,29 +86,6 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         self.company_data['default_journal_misc'].account_control_ids = \
             self.company_data['default_account_revenue'] + self.company_data['default_account_expense']
 
-    def test_account_journal_add_new_payment_method_unique(self):
-        """
-        Test the automatic creation of payment method lines with the mode set to unique
-        """
-        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
-
-        def _get_payment_method_information(self):
-            res = Method_get_payment_method_information(self)
-            res['unique'] = {'mode': 'unique', 'domain': [('type', '=', 'bank')]}
-            return res
-
-        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
-            self.env['account.payment.method'].create({
-                'name': 'Unique method',
-                'code': 'unique',
-                'payment_type': 'inbound'
-            })
-
-            journals = self.env['account.journal'].search([('inbound_payment_method_line_ids.code', '=', 'unique')])
-
-            # Only one of the bank journals has been set
-            self.assertEqual(len(journals), 1)
-
     def test_account_journal_add_new_payment_method_multi(self):
         """
         Test the automatic creation of payment method lines with the mode set to multi
@@ -131,3 +108,30 @@ class TestAccountJournal(AccountTestInvoicingCommon):
 
             # The two bank journals have been set
             self.assertEqual(len(journals), 2)
+
+    def test_remove_payment_method_lines(self):
+        """
+        Payment method lines are a bit special in the way their removal is handled.
+        If they are linked to a payment at the moment of the deletion, they won't be deleted but the journal_id will be
+        set to False.
+        If they are not linked to any payment, they will be deleted as expected.
+        """
+
+        # Linked to a payment. It will not be deleted, but its journal_id will be set to False.
+        first_method = self.inbound_payment_method_line
+        self.env['account.payment'].create({
+            'amount': 100.0,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'payment_method_line_id': first_method.id,
+        })
+
+        first_method.unlink()
+
+        self.assertFalse(first_method.journal_id)
+
+        # Not linked to anything. It will be deleted.
+        second_method = self.outbound_payment_method_line
+        second_method.unlink()
+
+        self.assertFalse(second_method.exists())

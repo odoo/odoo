@@ -87,12 +87,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'group_payment': True,
             'payment_difference_handling': 'open',
             'currency_id': self.currency_data['currency'].id,
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertRecordValues(payments, [{
             'ref': 'INV/2017/00001 INV/2017/00002',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
             # Receivable line:
@@ -121,12 +121,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'group_payment': True,
             'payment_difference_handling': 'open',
             'currency_id': self.currency_data['currency'].id,
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertRecordValues(payments, [{
             'ref': 'INV/2017/00001 INV/2017/00002',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
             # Receivable line:
@@ -156,12 +156,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference_handling': 'reconcile',
             'writeoff_account_id': self.company_data['default_account_revenue'].id,
             'writeoff_label': 'writeoff',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertRecordValues(payments, [{
             'ref': 'INV/2017/00001 INV/2017/00002',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
             # Receivable line:
@@ -199,12 +199,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference_handling': 'reconcile',
             'writeoff_account_id': self.company_data['default_account_revenue'].id,
             'writeoff_label': 'writeoff',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertRecordValues(payments, [{
             'ref': 'INV/2017/00001 INV/2017/00002',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
             # Receivable line:
@@ -242,12 +242,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference_handling': 'reconcile',
             'writeoff_account_id': self.company_data['default_account_revenue'].id,
             'writeoff_label': 'writeoff',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertRecordValues(payments, [{
             'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
             # Writeoff line:
@@ -285,12 +285,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'payment_difference_handling': 'reconcile',
             'writeoff_account_id': self.company_data['default_account_revenue'].id,
             'writeoff_label': 'writeoff',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         })._create_payments()
 
         self.assertRecordValues(payments, [{
             'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
-            'payment_method_id': self.inbound_payment_method.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
         }])
         self.assertRecordValues(payments.line_ids.sorted('balance'), [
             # Liquidity line:
@@ -329,11 +329,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         self.assertRecordValues(payments, [
             {
                 'ref': 'INV/2017/00001',
-                'payment_method_id': self.inbound_payment_method.id,
+                'payment_method_line_id': self.inbound_payment_method_line.id,
             },
             {
                 'ref': 'INV/2017/00002',
-                'payment_method_id': self.inbound_payment_method.id,
+                'payment_method_line_id': self.inbound_payment_method_line.id,
             },
         ])
         self.assertRecordValues(payments[0].line_ids.sorted('balance') + payments[1].line_ids.sorted('balance'), [
@@ -385,11 +385,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         self.assertRecordValues(payments, [
             {
                 'ref': 'BILL/2017/01/0001 BILL/2017/01/0002',
-                'payment_method_id': self.outbound_payment_method.id,
+                'payment_method_line_id': self.outbound_payment_method_line.id,
             },
             {
                 'ref': 'BILL/2017/01/0003',
-                'payment_method_id': self.outbound_payment_method.id,
+                'payment_method_line_id': self.outbound_payment_method_line.id,
             },
         ])
         self.assertRecordValues(payments[0].line_ids.sorted('balance') + payments[1].line_ids.sorted('balance'), [
@@ -441,15 +441,15 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         self.assertRecordValues(payments, [
             {
                 'ref': 'BILL/2017/01/0001',
-                'payment_method_id': self.outbound_payment_method.id,
+                'payment_method_line_id': self.outbound_payment_method_line.id,
             },
             {
                 'ref': 'BILL/2017/01/0002',
-                'payment_method_id': self.outbound_payment_method.id,
+                'payment_method_line_id': self.outbound_payment_method_line.id,
             },
             {
                 'ref': 'BILL/2017/01/0003',
-                'payment_method_id': self.outbound_payment_method.id,
+                'payment_method_line_id': self.outbound_payment_method_line.id,
             },
         ])
         self.assertRecordValues(payments[0].line_ids.sorted('balance') + payments[1].line_ids.sorted('balance') + payments[2].line_ids.sorted('balance'), [
