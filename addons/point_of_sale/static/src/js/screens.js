@@ -1631,12 +1631,13 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         };
     },
     print_web: function() {
-        if ($.browser.safari) {
-            document.execCommand('print', false, null);
-        } else {
+        var self = this;
+
+        setTimeout(function () {
             try {
                 window.print();
-            } catch(err) {
+                self.pos.get_order()._printed = true;
+            } catch (err) {
                 if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
                     this.gui.show_popup('error',{
                         'title':_t('Printing is not supported on some android browsers'),
@@ -1646,8 +1647,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
                     throw err;
                 }
             }
-        }
-        this.pos.get_order()._printed = true;
+        }, 500);
     },
     print_xml: function() {
         var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
