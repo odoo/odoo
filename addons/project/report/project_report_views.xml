@@ -5,7 +5,7 @@
             <field name="name">report.project.task.user.pivot</field>
             <field name="model">report.project.task.user</field>
             <field name="arch" type="xml">
-                <pivot string="Tasks Analysis" display_quantity="true" disable_linking="True" sample="1">
+                <pivot string="Tasks Analysis" display_quantity="true" sample="1">
                     <field name="project_id" type="row"/>
                 </pivot>
             </field>
@@ -15,12 +15,27 @@
             <field name="name">report.project.task.user.graph</field>
             <field name="model">report.project.task.user</field>
             <field name="arch" type="xml">
-                <graph string="Tasks Analysis" type="bar" sample="1" disable_linking="1">
+                <graph string="Tasks Analysis" type="bar" sample="1">
                      <field name="project_id" type="row"/>
                      <field name="user_id" type="col"/>
                      <field name="nbr" invisible="1"/>
                  </graph>
              </field>
+        </record>
+
+        <record id="report_project_task_user_view_tree" model="ir.ui.view">
+            <field name="name">report.project.task.user.view.tree</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <tree string="Tasks Analysis">
+                    <field name="name"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="project_id" optional="show"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                    <field name="stage_id" optional="show"/>
+                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
+                </tree>
+            </field>
         </record>
 
         <record id="view_task_project_user_search" model="ir.ui.view">
