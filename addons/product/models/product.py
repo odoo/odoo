@@ -112,6 +112,7 @@ class ProductProduct(models.Model):
                                                           domain=[('attribute_line_id.value_count', '>', 1)], string="Variant Values", ondelete='restrict')
     combination_indices = fields.Char(compute='_compute_combination_indices', store=True, index=True)
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
+    is_excluded_variant = fields.Boolean(compute='_compute_is_excluded_variant', store=True)
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
@@ -155,6 +156,18 @@ class ProductProduct(models.Model):
     def _compute_can_image_variant_1024_be_zoomed(self):
         for record in self:
             record.can_image_variant_1024_be_zoomed = record.image_variant_1920 and tools.is_image_size_above(record.image_variant_1920, record.image_variant_1024)
+
+    @api.depends('product_template_variant_value_ids', 'product_template_variant_value_ids.exclude_for')
+    def _compute_is_excluded_variant(self):
+        # TODO: This is a naive implementation, still needs to be optimized
+        for record in self:
+            product_tmpl_id = record.product_tmpl_id
+            exclusions = product_tmpl_id._complete_inverse_exclusions(product_tmpl_id._get_own_attribute_exclusions())
+            ptav_ids = record.product_template_attribute_value_ids.ids
+            for current_ptav in exclusions.keys():
+                record.is_excluded_variant = bool(len([
+                    ptav for ptav in exclusions[current_ptav] if ptav in ptav_ids
+                ]))
 
     def _set_template_field(self, template_field, variant_field):
         for record in self:
@@ -456,11 +469,11 @@ class ProductProduct(models.Model):
         return self.product_tmpl_id.copy(default=default).product_variant_id
 
     @api.model
-    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+    def _search(self, args, offset=0, limit=None, order=None, count=False, count_distinct=None, access_rights_uid=None):
         # TDE FIXME: strange
         if self._context.get('search_default_categ_id'):
             args.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
-        return super(ProductProduct, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        return super(ProductProduct, self)._search(args, offset=offset, limit=limit, order=order, count=count, count_distinct=count_distinct, access_rights_uid=access_rights_uid)
 
     @api.depends_context('display_default_code')
     def _compute_display_name(self):

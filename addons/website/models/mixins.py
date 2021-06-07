@@ -310,17 +310,32 @@ class WebsiteSearchableMixin(models.AbstractModel):
         raise NotImplementedError()
 
     @api.model
+    def _search_get_model(self, search_detail):
+        return self.sudo() if search_detail.get('requires_sudo') else self
+
+    @api.model
+    def _search_fetch_count(self, model, domain):
+        return model.search_count(domain)
+
+    @api.model
+    def _search_fetch_results(self, model, domain, limit, order):
+        return model.search(
+            domain,
+            limit=limit,
+            order=order,
+        )
+
+    @api.model
     def _search_fetch(self, search_detail, search, limit, order):
         fields = search_detail['search_fields']
         base_domain = search_detail['base_domain']
         domain = self._search_build_domain(base_domain, search, fields, search_detail.get('search_extra'))
-        model = self.sudo() if search_detail.get('requires_sudo') else self
-        results = model.search(
-            domain,
-            limit=limit,
-            order=search_detail.get('order', order)
+        model = self._search_get_model(search_detail)
+        results = self._search_fetch_results(
+            model, domain, limit,
+            order=search_detail.get('order', order),
         )
-        count = model.search_count(domain)
+        count = self._search_fetch_count(model, domain)
         return results, count
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):

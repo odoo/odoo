@@ -333,7 +333,10 @@ class ProductTemplate(models.Model):
         with_description = options['displayDescription']
         with_category = options['displayExtraLink']
         with_price = options['displayDetail']
-        domains = [website.sale_product_domain()]
+        domains = [
+            website.sale_product_domain(),
+            [('is_excluded_variant', '=', False)],
+        ]
         category = options.get('category')
         min_price = options.get('min_price')
         max_price = options.get('max_price')
@@ -354,11 +357,11 @@ class ProductTemplate(models.Model):
                 elif value[0] == attrib:
                     ids.append(value[1])
                 else:
-                    domains.append([('attribute_line_ids.value_ids', 'in', ids)])
+                    domains.append([('product_template_attribute_value_ids.product_attribute_value_id', 'in', ids)])
                     attrib = value[0]
                     ids = [value[1]]
             if attrib:
-                domains.append([('attribute_line_ids.value_ids', 'in', ids)])
+                domains.append([('product_template_attribute_value_ids.product_attribute_value_id', 'in', ids)])
         search_fields = ['name']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
@@ -385,6 +388,19 @@ class ProductTemplate(models.Model):
             'mapping': mapping,
             'icon': 'fa-shopping-cart',
         }
+
+    @api.model
+    def _search_get_model(self, search_detail):
+        product = self.env['product.product']
+        return product.sudo() if search_detail.get('requires_sudo') else product
+
+    @api.model
+    def _search_fetch_count(self, model, domain):
+        return model.search_count(domain, count_distinct=['product_tmpl_id'])
+
+    @api.model
+    def _search_fetch_results(self, model, domain, limit, order):
+        return super()._search_fetch_results(model, domain, limit, order).product_tmpl_id
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         with_image = 'image_url' in mapping
