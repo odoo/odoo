@@ -153,8 +153,6 @@ class Meeting(models.Model):
         'Document Model Name', related='res_model_id.model', readonly=True, store=True)
     # messaging
     activity_ids = fields.One2many('mail.activity', 'calendar_event_id', string='Activities')
-    #redifine message_ids to remove autojoin to avoid search to crash in get_recurrent_ids
-    message_ids = fields.One2many(auto_join=False)
     # attendees
     attendee_ids = fields.One2many(
         'calendar.attendee', 'event_id', 'Participant')
