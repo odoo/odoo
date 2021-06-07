@@ -42,6 +42,11 @@ class ResPartner(models.Model):
         else:
             return values['vat']
 
+    def _format_dotted_vat_cl(self, vat):
+        vat_l = vat.split('-')
+        n_vat, n_dv = vat_l[0], vat_l[1]
+        return '%s-%s' % (format(int(n_vat), ',d').replace(',', '.'), n_dv)
+
     @api.model
     def create(self, values):
         if values.get('vat'):
