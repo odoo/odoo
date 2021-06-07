@@ -13,7 +13,10 @@ class TestPrintCheck(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.payment_method_check = cls.env.ref("account_check_printing.account_payment_method_check")
+        bank_journal = cls.company_data['default_journal_bank']
+
+        cls.payment_method_line_check = bank_journal.outbound_payment_method_line_ids\
+            .filtered(lambda l: l.code == 'check_printing')
 
     def test_in_invoice_check_manual_sequencing(self):
         ''' Test the check generation for vendor bills. '''
@@ -37,12 +40,12 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         # Create a single payment.
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoices.ids).create({
             'group_payment': True,
-            'payment_method_id': self.payment_method_check.id,
+            'payment_method_line_id': self.payment_method_line_check.id,
         })._create_payments()
 
         # Check created payment.
         self.assertRecordValues(payment, [{
-            'payment_method_id': self.payment_method_check.id,
+            'payment_method_line_id': self.payment_method_line_check.id,
             'check_amount_in_words': payment.currency_id.amount_to_text(100.0 * nb_invoices_to_test),
             'check_number': '00042',
         }])
@@ -78,12 +81,12 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         # Create a single payment.
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=out_refunds.ids).create({
             'group_payment': True,
-            'payment_method_id': self.payment_method_check.id,
+            'payment_method_line_id': self.payment_method_line_check.id,
         })._create_payments()
 
         # Check created payment.
         self.assertRecordValues(payment, [{
-            'payment_method_id': self.payment_method_check.id,
+            'payment_method_line_id': self.payment_method_line_check.id,
             'check_amount_in_words': payment.currency_id.amount_to_text(100.0 * nb_invoices_to_test),
             'check_number': '00042',
         }])
@@ -110,7 +113,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         # Partial payment in foreign currency: 100Gol = 33.33$.
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-            'payment_method_id': self.payment_method_check.id,
+            'payment_method_line_id': self.payment_method_line_check.id,
             'currency_id': self.currency_data['currency'].id,
             'amount': 100.0,
             'payment_date': '2017-01-01',

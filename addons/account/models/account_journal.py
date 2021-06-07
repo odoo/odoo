@@ -117,10 +117,10 @@ class AccountJournal(models.Model):
         inverse_name='journal_id',
         copy=False,
         check_company=True,
-        help="Manual :Get paid by any method outside of Odoo."
-        "Payment Acquirers : Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online."
-        "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary."
-        "SEPA Direct Debit : Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary"
+        help="Manual: Get paid by any method outside of Odoo.\n"
+        "Payment Acquirers: Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+        "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+        "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
     )
     outbound_payment_method_line_ids = fields.One2many(
         comodel_name='account.payment.method.line',
@@ -132,9 +132,9 @@ class AccountJournal(models.Model):
         inverse_name='journal_id',
         copy=False,
         check_company=True,
-        help="Manual : Pay by any method outside of Odoo."
-        "Check: Pay bills by check and print it from Odoo."
-        "SEPA Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary"
+        help="Manual: Pay by any method outside of Odoo.\n"
+        "Check: Pay bills by check and print it from Odoo.\n"
+        "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
     )
     profit_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True,
@@ -210,7 +210,6 @@ class AccountJournal(models.Model):
         pay_methods = self.env['account.payment.method'].search([('code', 'in', list(method_information.keys()))])
         pay_method_by_code = {x.code + x.payment_type: x for x in pay_methods}
         unique_pay_methods = [k for k, v in method_information.items() if v['mode'] == 'unique']
-        installed_acquirers = self.env['payment.acquirer'].search([])
 
         pay_methods_by_company = {}
         pay_methods_by_journal = {}
@@ -246,19 +245,19 @@ class AccountJournal(models.Model):
                 for journal in self.filtered_domain(method_domain):
                     protected_pay_method_ids = pay_methods_by_company.get(journal.company_id._origin.id, set()) \
                                                - pay_methods_by_journal.get(journal._origin.id, set())
-                    available_providers = installed_acquirers.filtered(
-                        lambda a: a.company_id == journal.company_id
-                    ).mapped('provider')
 
                     if payment_type == 'inbound':
                         lines = journal.inbound_payment_method_line_ids
                     else:
                         lines = journal.outbound_payment_method_line_ids
 
-                    available = payment_method.code in available_providers
                     already_used = payment_method in lines.payment_method_id
                     is_protected = payment_method.id in protected_pay_method_ids
-                    if vals['mode'] == 'unique' and (already_used or is_protected or not available):
+                    if vals['mode'] == 'unique' and (already_used or is_protected):
+                        continue
+
+                    # Only the manual payment method can be used multiple time on a single journal.
+                    if payment_method.code != "manual" and already_used:
                         continue
 
                     pay_method_ids_commands_x_journal[journal].append(Command.link(payment_method.id))
@@ -402,6 +401,9 @@ class AccountJournal(models.Model):
         """
         method_info = self.env['account.payment.method']._get_payment_method_information()
         unique_codes = tuple(code for code, info in method_info.items() if info.get('mode') == 'unique')
+
+        if not unique_codes:
+            return
 
         self.flush(['inbound_payment_method_line_ids', 'outbound_payment_method_line_ids', 'company_id'])
         self.env['account.payment.method.line'].flush(['payment_method_id', 'journal_id'])
@@ -886,3 +888,18 @@ class AccountJournal(models.Model):
         last_statement_domain = (domain or []) + [('journal_id', '=', self.id)]
         last_st_line = self.env['account.bank.statement.line'].search(last_statement_domain, order='date desc, id desc', limit=1)
         return last_st_line.statement_id
+
+    def _get_available_payment_method_lines(self, payment_type):
+        """
+        This getter is here to allow filtering the payment method lines if needed in other modules.
+        It does NOT serve as a general getter to get the lines.
+
+        For example, it'll be extended to filter out lines from inactive payment acquirers in the payment module.
+        :param payment_type: either inbound or outbound, used to know which lines to return
+        :return: Either the inbound or outbound payment method lines
+        """
+        self.ensure_one()
+        if payment_type == 'inbound':
+            return self.inbound_payment_method_line_ids
+        else:
+            return self.outbound_payment_method_line_ids

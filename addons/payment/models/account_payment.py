@@ -26,7 +26,7 @@ class AccountPayment(models.Model):
         help='Technical field used to hide or show the payment_token_id if needed.'
     )
 
-    @api.depends('payment_method_id')
+    @api.depends('payment_method_line_id')
     def _compute_suitable_payment_token_ids(self):
         for payment in self:
             related_partner_ids = (
@@ -44,7 +44,7 @@ class AccountPayment(models.Model):
             else:
                 payment.suitable_payment_token_ids = [Command.clear()]
 
-    @api.depends('payment_method_id')
+    @api.depends('payment_method_line_id')
     def _compute_use_electronic_payment_method(self):
         for payment in self:
             # Get a list of all electronic payment method codes.
@@ -53,7 +53,7 @@ class AccountPayment(models.Model):
             codes.append('electronic')
             payment.use_electronic_payment_method = payment.payment_method_code in codes
 
-    @api.onchange('partner_id', 'payment_method_id', 'journal_id')
+    @api.onchange('partner_id', 'payment_method_line_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
         if not (self.payment_method_code == 'electronic' and self.partner_id and self.journal_id):
             self.payment_token_id = False

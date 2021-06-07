@@ -1495,7 +1495,7 @@ class AccountMove(models.Model):
                 'payment_id': counterpart_line.id,
                 'partial_id': partial.id,
                 'account_payment_id': counterpart_line.payment_id.id,
-                'payment_method_name': counterpart_line.payment_id.payment_method_id.name if counterpart_line.journal_id.type == 'bank' else None,
+                'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
                 'move_id': counterpart_line.move_id.id,
                 'ref': reconciliation_ref,
             })

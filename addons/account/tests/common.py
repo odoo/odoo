@@ -173,8 +173,8 @@ class AccountTestInvoicingCommon(TransactionCase):
         # ==== Payment methods ====
         bank_journal = cls.company_data['default_journal_bank']
 
-        cls.inbound_payment_method = bank_journal.inbound_payment_method_line_ids[0].payment_method_id
-        cls.outbound_payment_method = bank_journal.outbound_payment_method_line_ids[0].payment_method_id
+        cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
+        cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
 
     @classmethod
     def setup_company_data(cls, company_name, chart_template=None, **kwargs):

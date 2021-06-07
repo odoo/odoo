@@ -50,8 +50,7 @@ class TestUi(HttpCaseWithUserDemo):
             'list_price': 12.0,
         })
 
-        cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
+        self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
         # Avoid Shipping/Billing address page
         (self.env.ref('base.partner_admin') + self.partner_demo).write({

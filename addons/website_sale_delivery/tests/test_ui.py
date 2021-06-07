@@ -62,8 +62,7 @@ class TestUi(odoo.tests.HttpCase):
             'list_base_price': 0,
         }])
 
-        cash_journal = self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
-        self.env.ref('payment.payment_acquirer_transfer').journal_id = cash_journal
+        self.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
 
         # Ensure "Wire Transfer" is the default acquirer.
         # Acquirers are sorted by state, showing `test` acquirers first (don't ask why).

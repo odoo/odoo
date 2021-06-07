@@ -26,13 +26,13 @@ class AccountPaymentRegister(models.TransientModel):
         help='Technical field used to hide or show the payment_token_id if needed.'
     )
     payment_method_code = fields.Char(
-        related='payment_method_id.code')
+        related='payment_method_line_id.code')
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('payment_method_id')
+    @api.depends('payment_method_line_id')
     def _compute_suitable_payment_token_ids(self):
         for wizard in self:
             if wizard.can_edit_wizard and wizard.use_electronic_payment_method:
@@ -50,20 +50,19 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 wizard.suitable_payment_token_ids = [Command.clear()]
 
-    @api.depends('payment_method_id')
+    @api.depends('payment_method_line_id')
     def _compute_use_electronic_payment_method(self):
         for wizard in self:
             # Get a list of all electronic payment method codes.
-            # These codes are comprised of 'electronic' and the providers of each payment acquirer.
+            # These codes are comprised of the providers of each payment acquirer.
             codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
-            codes.append('electronic')
             wizard.use_electronic_payment_method = wizard.payment_method_code in codes
 
-    @api.onchange('can_edit_wizard', 'payment_method_id', 'journal_id')
+    @api.onchange('can_edit_wizard', 'payment_method_line_id', 'journal_id')
     def _compute_payment_token_id(self):
         for wizard in self:
             if wizard.can_edit_wizard \
-                    and wizard.payment_method_id.code == 'electronic' \
+                    and wizard.payment_method_line_id.code == 'electronic' \
                     and wizard.journal_id \
                     and wizard.suitable_payment_token_partner_ids:
                 wizard.payment_token_id = self.env['payment.token'].search([

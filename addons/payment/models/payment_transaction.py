@@ -824,7 +824,8 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        payment_method = self.env['account.payment.method'].search([('code', '=', self.acquirer_id.provider)], limit=1)
+        payment_method_line = self.acquirer_id.journal_id.inbound_payment_method_line_ids\
+            .filtered(lambda l: l.code == self.provider)
         payment_values = {
             'amount': self.amount,
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
@@ -833,7 +834,7 @@ class PaymentTransaction(models.Model):
             'partner_type': 'customer',
             'journal_id': self.acquirer_id.journal_id.id,
             'company_id': self.acquirer_id.company_id.id,
-            'payment_method_id': payment_method.id,
+            'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,
             'ref': self.reference,

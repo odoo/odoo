@@ -52,17 +52,19 @@ class AccountPayment(models.Model):
             ]).ids
 
         @lru_cache()
-        def search_payment_method_ids(type):
+        def search_payment_method_line_ids(payment_type, journal):
             """Search all the payment methods of a certain type.
 
             This method is cached, only one search is done per type.
-            :param type (str): the type of payment method. Valid values are customer and supplier.
+            :param payment_type (str): the type of payment method. Valid values are customer and supplier.
+            :param journal (int): the journal of the payment method.
             :return list<int>: list of ids of payment methods of the selected type
             """
             need_bank_account = self._get_method_codes_needing_bank_account()
             other_blacklist = ['sdd']
-            return self.env['account.payment.method'].search([
-                ('payment_type', '=', type),
+            return self.env['account.payment.method.line'].search([
+                ('journal_id', '=', journal),
+                ('payment_method_id.payment_type', '=', payment_type),
                 ('code', 'not in', need_bank_account + other_blacklist),
             ]).ids
 
@@ -94,13 +96,13 @@ class AccountPayment(models.Model):
             """
             return random.choice(search_journal_ids(values['company_id']))
 
-        def get_payment_method(random, values, **kwargs):
+        def get_payment_method_line(random, values, **kwargs):
             """Get the payment method depending on the payment type.
 
             :param random: seeded random number generator.
             :param values (dict): the values already selected for the record.
             """
-            return random.choice(search_payment_method_ids(values['payment_type']))
+            return random.choice(search_payment_method_line_ids(values['payment_type'], values['journal_id']))
 
         company_ids = self.env['res.company'].search([
             ('chart_template_id', '!=', False),
@@ -110,9 +112,9 @@ class AccountPayment(models.Model):
             ('company_id', populate.cartesian(company_ids.ids)),
             ('payment_type', populate.cartesian(['inbound', 'outbound'])),
             ('partner_type', populate.cartesian(['customer', 'supplier'])),
-            ('payment_method_id', populate.compute(get_payment_method)),
-            ('partner_id', populate.compute(get_partner)),
             ('journal_id', populate.compute(get_journal)),
+            ('payment_method_line_id', populate.compute(get_payment_method_line)),
+            ('partner_id', populate.compute(get_partner)),
             ('amount', populate.randfloat(0, 1000)),
             ('date', populate.randdatetime(relative_before=relativedelta(years=-4))),
         ]

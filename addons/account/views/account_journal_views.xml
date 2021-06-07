@@ -95,12 +95,12 @@
                                         <field name="payment_type" invisible="1"/>
                                         <field name="company_id" invisible="1"/>
                                         <field name="sequence" widget="handle"/>
-                                        <field name="name"/>
                                         <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
+                                        <field name="name"/>
                                         <field name="payment_account_id"
                                                placeholder="Let empty to use the default outstanding account"
                                                string="Outstanding Receipts accounts"
-                                               optional="show"
+                                               optional="hide"
                                                groups="account.group_account_readonly"/>
                                     </tree>
                                 </field>
@@ -112,12 +112,12 @@
                                             <field name="payment_type" invisible="1"/>
                                             <field name="company_id" invisible="1"/>
                                             <field name="sequence" widget="handle"/>
-                                            <field name="name"/>
                                             <field name="payment_method_id" options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="name"/>
                                             <field name="payment_account_id"
                                                    placeholder="Let empty to use the default outstanding account"
                                                    string="Outstanding Payments accounts"
-                                                   optional="show"
+                                                   optional="hide"
                                                    groups="account.group_account_readonly"/>
                                         </tree>
                                     </field>

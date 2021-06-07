@@ -69,19 +69,19 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_from_lines')
 
     # == Payment methods fields ==
-    payment_method_id = fields.Many2one('account.payment.method', string='Payment Method',
+    payment_method_line_id = fields.Many2one('account.payment.method.line', string='Payment Method',
         readonly=False, store=True,
-        compute='_compute_payment_method_id',
-        domain="[('id', 'in', available_payment_method_ids)]",
-        help="Manual : Pay or Get paid by any method outside of Odoo."
-        "Payment Acquirers : Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online."
-        "Check: Pay bills by check and print it from Odoo."
-        "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary."
-        "SEPA Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary"
-        "SEPA Direct Debit : Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary")
-    available_payment_method_ids = fields.Many2many('account.payment.method', compute='_compute_payment_method_fields')
-    hide_payment_method = fields.Boolean(
-        compute='_compute_payment_method_fields',
+        compute='_compute_payment_method_line_id',
+        domain="[('id', 'in', available_payment_method_line_ids)]",
+        help="Manual: Pay or Get paid by any method outside of Odoo.\n"
+        "Payment Acquirers: Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+        "Check: Pay bills by check and print it from Odoo.\n"
+        "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+        "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+        "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n")
+    available_payment_method_line_ids = fields.Many2many('account.payment.method.line', compute='_compute_payment_method_line_fields')
+    hide_payment_method_line = fields.Boolean(
+        compute='_compute_payment_method_line_fields',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
 
     # == Payment difference fields ==
@@ -292,38 +292,40 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('payment_type',
                  'journal_id.inbound_payment_method_line_ids',
                  'journal_id.outbound_payment_method_line_ids')
-    def _compute_payment_method_fields(self):
+    def _compute_payment_method_line_fields(self):
         for wizard in self:
-            if wizard.payment_type == 'inbound':
-                wizard.available_payment_method_ids = wizard.journal_id.inbound_payment_method_line_ids.mapped('payment_method_id')
+            wizard.available_payment_method_line_ids = wizard.journal_id._get_available_payment_method_lines(wizard.payment_type)
+            if wizard.payment_method_line_id.id not in wizard.available_payment_method_line_ids.ids:
+                # In some cases, we could be linked to a payment method line that has been unlinked from the journal.
+                # In such cases, we want to show it on the payment.
+                wizard.hide_payment_method_line = False
             else:
-                wizard.available_payment_method_ids = wizard.journal_id.outbound_payment_method_line_ids.mapped('payment_method_id')
-
-            wizard.hide_payment_method = len(wizard.available_payment_method_ids) == 1 and wizard.available_payment_method_ids.code == 'manual'
+                wizard.hide_payment_method_line = len(wizard.available_payment_method_line_ids) == 1 \
+                                                  and wizard.available_payment_method_line_ids.code == 'manual'
 
     @api.depends('payment_type',
                  'journal_id.inbound_payment_method_line_ids',
                  'journal_id.outbound_payment_method_line_ids')
-    def _compute_payment_method_id(self):
+    def _compute_payment_method_line_id(self):
         for wizard in self:
             if wizard.payment_type == 'inbound':
-                available_payment_methods = wizard.journal_id.inbound_payment_method_line_ids.mapped('payment_method_id')
+                available_payment_methods = wizard.journal_id.inbound_payment_method_line_ids
             else:
-                available_payment_methods = wizard.journal_id.outbound_payment_method_line_ids.mapped('payment_method_id')
+                available_payment_methods = wizard.journal_id.outbound_payment_method_line_ids
 
             # Select the first available one by default.
             if available_payment_methods:
-                wizard.payment_method_id = available_payment_methods[0]._origin
+                wizard.payment_method_line_id = available_payment_methods[0]._origin
             else:
-                wizard.payment_method_id = False
+                wizard.payment_method_line_id = False
 
-    @api.depends('payment_method_id')
+    @api.depends('payment_method_line_id')
     def _compute_show_require_partner_bank(self):
         """ Computes if the destination bank account must be displayed in the payment form view. By default, it
         won't be displayed but some modules might change that, depending on the payment type."""
         for wizard in self:
-            wizard.show_partner_bank_account = wizard.payment_method_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
-            wizard.require_partner_bank_account = wizard.payment_method_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
+            wizard.show_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
+            wizard.require_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
 
     @api.depends('source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date')
     def _compute_amount(self):
@@ -418,7 +420,7 @@ class AccountPaymentRegister(models.TransientModel):
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_bank_id': self.partner_bank_id.id,
-            'payment_method_id': self.payment_method_id.id,
+            'payment_method_line_id': self.payment_method_line_id.id,
             'destination_account_id': self.line_ids[0].account_id.id
         }
 
@@ -442,7 +444,7 @@ class AccountPaymentRegister(models.TransientModel):
             'currency_id': batch_values['source_currency_id'],
             'partner_id': batch_values['partner_id'],
             'partner_bank_id': batch_result['key_values']['partner_bank_id'],
-            'payment_method_id': self.payment_method_id.id,
+            'payment_method_line_id': self.payment_method_line_id.id,
             'destination_account_id': batch_result['lines'][0].account_id.id
         }
 

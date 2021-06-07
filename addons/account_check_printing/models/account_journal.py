@@ -84,7 +84,7 @@ class AccountJournal(models.Model):
     def get_journal_dashboard_datas(self):
         domain_checks_to_print = [
             ('journal_id', '=', self.id),
-            ('payment_method_id.code', '=', 'check_printing'),
+            ('payment_method_line_id.code', '=', 'check_printing'),
             ('state', '=', 'posted'),
             ('is_move_sent','=', False),
         ]
@@ -94,7 +94,7 @@ class AccountJournal(models.Model):
         )
 
     def action_checks_to_print(self):
-        check_method = self.env.ref('account_check_printing.account_payment_method_check')
+        payment_method_line = self.outbound_payment_method_line_ids.filtered(lambda l: l.code == 'check_printing')
         return {
             'name': _('Checks to Print'),
             'type': 'ir.actions.act_window',
@@ -106,6 +106,6 @@ class AccountJournal(models.Model):
                 journal_id=self.id,
                 default_journal_id=self.id,
                 default_payment_type='outbound',
-                default_payment_method_id=check_method.id,
+                default_payment_method_line_id=payment_method_line.id,
             ),
         }
