@@ -5,35 +5,42 @@ import { useService } from "../service_hook";
 const { onWillUnmount, useComponent } = owl.hooks;
 
 export function usePopover() {
-    const keys = new Set();
+    const removeFns = new Set();
     const service = useService("popover");
     const component = useComponent();
 
     onWillUnmount(function () {
-        for (const key of keys) {
-            service.remove(key);
+        for (const removeFn of removeFns) {
+            removeFn();
         }
-        keys.clear();
+        removeFns.clear();
     });
-    return Object.assign(Object.create(service), {
-        add(params) {
-            const newParams = Object.create(params);
-            newParams.onClose = function (key) {
-                if (!params.keepOnClose) {
-                    // manager will delete the popover if keepOnClose is falsy
-                    keys.delete(key);
-                }
-                if (params.onClose && component.__owl__.status !== 5 /* DESTROYED */) {
-                    params.onClose(key);
+    return {
+        /**
+         * Signals the manager to add a popover.
+         *
+         * @param {string | HTMLElement}    target
+         * @param {any}                     Component
+         * @param {Object}                  props
+         * @param {Object}                  [options]
+         * @param {boolean}                 [options.closeOnClickAway=true]
+         * @param {() => void}              [options.onClose]
+         * @param {string}                  [options.popoverClass]
+         * @param {string}                  [options.position]
+         * @returns {() => void}
+         */
+        add(target, Component, props, options = {}) {
+            const newOptions = Object.create(options);
+            newOptions.onClose = function () {
+                removeFns.delete(removeFn);
+                if (options.onClose && component.__owl__.status !== 5 /* DESTROYED */) {
+                    options.onClose();
                 }
             };
-            const key = service.add(newParams);
-            keys.add(key);
-            return key;
+
+            const removeFn = service.add(target, Component, props, newOptions);
+            removeFns.add(removeFn);
+            return removeFn;
         },
-        remove(key) {
-            keys.delete(key);
-            service.remove(key);
-        },
-    });
+    };
 }

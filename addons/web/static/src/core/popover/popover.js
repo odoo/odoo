@@ -3,85 +3,27 @@
 import { debounce, throttle } from "../utils/timing";
 
 const { Component } = owl;
-const { Portal } = owl.misc;
-const { useRef, useState } = owl.hooks;
+const { useExternalListener, useRef } = owl.hooks;
 
 export class Popover extends Component {
     setup() {
-        this.state = useState({
-            displayed: false,
-        });
-
-        this._hasExternalListeners = false;
-        this._onClick = this.onClick.bind(this);
-        this._onMouseEnter = this.onMouseEnter.bind(this);
-        this._onMouseLeave = this.onMouseLeave.bind(this);
-        this._onDocumentClick = this.onClickAway.bind(this);
-        this._onWindowScroll = throttle(this.compute.bind(this), 50);
-        this._onWindowResize = debounce(this.compute.bind(this), 250);
-
-        this._targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
-        this._isTargetObserved = false;
-
         this.popoverRef = useRef("popover");
+
+        useExternalListener(document, "scroll", throttle(this.compute, 50), { capture: true });
+        useExternalListener(window, "resize", debounce(this.compute, 250));
     }
 
     mounted() {
         this.compute();
-        this.addTargetListeners();
     }
     patched() {
         this.compute();
     }
-    willUnmount() {
-        this.disconnectTargetObserver();
-        this.removeTargetListeners();
-        this.removeExternalListeners();
-    }
 
-    //----------------------------------------------------------------------------
-    // Getters
-    //----------------------------------------------------------------------------
-
-    /**
-     * @returns {boolean}
-     */
-    get isDisplayed() {
-        return this.props.trigger === "none" || this.state.displayed;
-    }
-    /**
-     * @returns {HTMLElement}
-     */
-    get target() {
-        return this.props.target ? document.querySelector(this.props.target) : this.el;
-    }
-
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Private
-    //----------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     */
-    addExternalListeners() {
-        if (!this._hasExternalListeners) {
-            document.addEventListener("click", this._onDocumentClick);
-            document.addEventListener("scroll", this._onWindowScroll);
-            window.addEventListener("resize", this._onWindowResize);
-            this._hasExternalListeners = true;
-        }
-    }
-    /**
-     * @private
-     */
-    addTargetListeners() {
-        const target = this.target;
-        if (target) {
-            target.addEventListener("click", this._onClick);
-            target.addEventListener("mouseenter", this._onMouseEnter);
-            target.addEventListener("mouseleave", this._onMouseLeave);
-        }
-    }
     /**
      * Computes the popover according to its props. This method will try to
      * position the popover as requested (according to the `position` props).
@@ -93,20 +35,10 @@ export class Popover extends Component {
      * @private
      */
     compute() {
-        const target = this.target;
-        if (!target) {
-            return;
-        }
-
-        if (!this.isDisplayed) {
-            this.removeExternalListeners();
-            this.disconnectTargetObserver();
-            return;
-        }
-        this.connectTargetObserver();
-        this.addExternalListeners();
-
-        const positioningData = this.constructor.computePositioningData(this.popoverRef.el, target);
+        const positioningData = this.constructor.computePositioningData(
+            this.popoverRef.el,
+            this.props.target
+        );
 
         const ORDERED_POSITIONS = ["top", "bottom", "left", "right"];
         // copy the default ordered position to avoid updating them in place
@@ -144,127 +76,13 @@ export class Popover extends Component {
             this.popoverRef.el.classList.add(`o_popover_${this.props.position}`);
         }
     }
-    /**
-     * @private
-     */
-    connectTargetObserver() {
-        if (!this._isTargetObserved) {
-            this._isTargetObserved = true;
-            this._targetObserver.observe(this.target.parentElement, { childList: true });
-        }
-    }
-    /**
-     * @private
-     */
-    disconnectTargetObserver() {
-        if (this._isTargetObserved) {
-            this._isTargetObserved = false;
-            this._targetObserver.disconnect();
-        }
-    }
-    /**
-     * @private
-     */
-    removeExternalListeners() {
-        if (this._hasExternalListeners) {
-            document.removeEventListener("click", this._onDocumentClick);
-            document.removeEventListener("scroll", this._onWindowScroll);
-            window.removeEventListener("resize", this._onWindowResize);
-            this._hasExternalListeners = false;
-        }
-    }
-    /**
-     * @private
-     */
-    removeTargetListeners() {
-        const target = this.target;
-        if (target) {
-            target.removeEventListener("click", this._onClick);
-            target.removeEventListener("mouseenter", this._onMouseEnter);
-            target.removeEventListener("mouseleave", this._onMouseLeave);
-        }
-    }
-
-    //----------------------------------------------------------------------------
-    // Handlers
-    //----------------------------------------------------------------------------
-
-    /**
-     * Popover must recompute its position when children content changes.
-     */
-    onCompute() {
-        this.compute();
-    }
-    /**
-     * Toggles the popover depending on its current state.
-     */
-    onClick() {
-        if (this.props.trigger === "click") {
-            this.state.displayed = !this.state.displayed;
-        }
-    }
-    /**
-     * A click outside the popover will dismiss the current popover.
-     */
-    onClickAway(ev) {
-        // Handled by `_onClick`.
-        if (this.target.contains(ev.target)) {
-            return;
-        }
-
-        // Ignore click inside the popover.
-        if (this.popoverRef.el && this.popoverRef.el.contains(ev.target)) {
-            return;
-        }
-
-        if (this.props.closeOnClickAway) {
-            this.trigger("popover-closed");
-        }
-    }
-    /**
-     * Closes the popover
-     */
-    onClose() {
-        this.state.displayed = false;
-    }
-    /**
-     * Opens the popover when it's hovered.
-     */
-    onMouseEnter() {
-        if (this.props.trigger === "hover") {
-            this.state.displayed = true;
-        }
-    }
-    /**
-     * Closes the popover when the cursor moves away.
-     */
-    onMouseLeave() {
-        if (this.props.trigger === "hover") {
-            this.state.displayed = false;
-        }
-    }
-    /**
-     * Closes the popover when the target is removed from dom.
-     */
-    onTargetMutate() {
-        if (!this.target) {
-            this.disconnectTargetObserver();
-            this.trigger("popover-closed");
-        }
-    }
 }
 
-Popover.components = {
-    Portal,
-};
 Popover.template = "web.PopoverWowl";
 Popover.defaultProps = {
-    closeOnClickAway: true,
     position: "bottom",
-    trigger: "click",
 };
 Popover.props = {
-    closeOnClickAway: Boolean,
     popoverClass: {
         optional: true,
         type: String,
@@ -273,14 +91,7 @@ Popover.props = {
         type: String,
         validate: (p) => ["top", "bottom", "left", "right"].includes(p),
     },
-    target: {
-        optional: true,
-        type: String,
-    },
-    trigger: {
-        type: String,
-        validate: (t) => ["click", "hover", "none"].includes(t),
-    },
+    target: HTMLElement,
 };
 
 /**
@@ -345,7 +156,3 @@ Popover.computePositioningData = function (popoverElement, targetElement, margin
         },
     };
 };
-
-/** @todo remove this when we have a single implemtation of Popover */
-// delete QWeb.components.Popover;
-// QWeb.registerComponent("Popover", Popover);
