@@ -177,22 +177,29 @@ class TestMailAlias(TestMailCommon):
         with self.assertRaises(exceptions.UserError), self.cr.savepoint():
             self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', new_mail_alias.alias_name)
 
-    def test_alias_mixin_copy(self):
-        user_demo = self.env.ref('base.user_demo')
-        self.assertFalse(user_demo.has_group('base.group_system'), 'Demo user is not supposed to have Administrator access')
-        self._test_alias_mixin_copy(user_demo, 'alias.test1', False)
-        self._test_alias_mixin_copy(user_demo, 'alias.test2', '<p>What Is Dead May Never Die</p>')
 
-    def _test_alias_mixin_copy(self, user, alias_name, alias_bounced_content):
-        record = self.env['mail.test.container'].with_user(user).with_context(lang='en_US').create({
+@tagged('mail_gateway')
+class TestMailAliasMixin(TestMailCommon):
+
+    @users('employee')
+    def test_alias_mixin_copy_content(self):
+        self.assertFalse(self.env.user.has_group('base.group_system'), 'Test user should not have Administrator access')
+
+        record = self.env['mail.test.container'].create({
             'name': 'Test Record',
-            'alias_name': alias_name,
+            'alias_name': 'test.record',
             'alias_contact': 'followers',
-            'alias_bounced_content': alias_bounced_content,
+            'alias_bounced_content': False,
         })
-        self.assertEqual(record.alias_bounced_content, alias_bounced_content)
+        self.assertFalse(record.alias_bounced_content)
         record_copy = record.copy()
-        self.assertEqual(record_copy.alias_bounced_content, alias_bounced_content)
+        self.assertFalse(record_copy.alias_bounced_content)
+
+        new_content = '<p>Bounced Content</p>'
+        record_copy.write({'alias_bounced_content': new_content})
+        self.assertEqual(record_copy.alias_bounced_content, new_content)
+        record_copy2 = record_copy.copy()
+        self.assertEqual(record_copy2.alias_bounced_content, new_content)
 
 
 @tagged('mail_gateway')
