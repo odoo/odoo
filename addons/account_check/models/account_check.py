@@ -9,7 +9,6 @@ class AccountCheck(models.Model):
     _name = 'account.check'
     _description = 'Account Check'
     _order = "id desc"
-    _rec_name = 'number'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     operation_ids = fields.One2many(
@@ -17,19 +16,21 @@ class AccountCheck(models.Model):
         'check_id',
         readonly=True,
     )
+    number = fields.Integer(
+        # required=True,
+        # readonly=True,
+        # states={'draft': [('readonly', False)]},
+        compute='_compute_number',
+        # inverse='_inverse_number',
+    )
     name = fields.Char(
         required=True,
         readonly=True,
         copy=False,
         states={'draft': [('readonly', False)]},
         index=True,
-    )
-    number = fields.Integer(
-        required=True,
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-        compute='_compute_number',
-        inverse='_inverse_number',
+        # compute='_compute_name',
+        # store=True,
     )
     checkbook_id = fields.Many2one(
         'account.checkbook',
@@ -141,12 +142,22 @@ class AccountCheck(models.Model):
         for rec in self:
             rec.number = ''.join(filter(lambda x: x.isdigit(), rec.name or ''))
 
-    @api.onchange('number')
-    def _inverse_number(self):
-        # TODO improve this, actually is harcoded to argentina the 8 digits number
+    # @api.onchange('number')
+    # def _inverse_number(self):
+    #     # TODO improve this, actually is harcoded to argentina the 8 digits number
+    #     for rec in self:
+    #         if rec.number:
+    #             rec.name = '%08d' % rec.number
+
+    # TODO improve this, actually is harcoded to argentina the 8 digits number
+    @api.onchange('name')
+    def _onchange_name(self):
         for rec in self:
-            if rec.number:
-                rec.name = '%08d' % rec.number
+            try:
+                if rec.name:
+                    rec.name = '%08d' % int(rec.name)
+            except Exception:
+                pass
 
     @api.onchange('issuer_vat')
     def onchange_issuer_vat(self):
@@ -172,10 +183,10 @@ class AccountCheck(models.Model):
     @api.onchange('checkbook_id')
     def onchange_checkbook(self):
         if self.checkbook_id and not self.checkbook_id.numerate_on_printing:
-            self.number = self.checkbook_id.next_number
-            self._inverse_number()
+            self.name = self.checkbook_id.next_number
+            self._onchange_name()
         else:
-            self.number = False
+            self.name = False
 
     @api.depends('operation_ids.move_line_id.partner_id', 'operation_ids.move_line_id.journal_id')
     def _compute_data(self):
@@ -297,7 +308,7 @@ class AccountCheck(models.Model):
         old_state = self.state
         operation_from_state_map = {
             # 'draft': [False],
-            'holding': ['draft', 'deposited', 'delivered', 'holding'],
+            'holding': ['draft', 'deposited', 'delivered'],
             'delivered': ['holding'],
             'deposited': ['holding'],
             'handed': ['draft'],
