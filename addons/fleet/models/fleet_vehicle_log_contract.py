@@ -46,7 +46,7 @@ class FleetVehicleLogContract(models.Model):
         help='Choose whether the contract is still valid or not',
         tracking=True,
         copy=False)
-    notes = fields.Text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)
+    notes = fields.Html('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)
     cost_generated = fields.Monetary('Recurring Cost')
     cost_frequency = fields.Selection([
         ('no', 'No'),
