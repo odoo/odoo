@@ -58,6 +58,12 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     }
 }
 
+html[data-edit_translations="1"] {
+    .o_translate_mode_hidden {
+        display: none !important;
+    }
+}
+
 // SNIPPET PANEL
 $i: 1;
 @each $font-name, $font-config in $o-theme-font-configs {

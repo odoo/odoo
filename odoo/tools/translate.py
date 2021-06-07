@@ -151,8 +151,19 @@ TRANSLATED_ATTRS = dict.fromkeys({
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
     'value_label',
 }, lambda e: True)
+
+def translate_attrib_value(node):
+    # check if the value attribute of a node must be translated
+    classes = node.attrib.get('class', '').split(' ')
+    return (
+        (node.tag == 'input' and node.attrib.get('type', 'text') == 'text')
+        and 'datetimepicker-input' not in classes
+        or (node.tag == 'input' and node.attrib.get('type') == 'hidden')
+        and 'o_translatable_input_hidden' in classes
+    )
+
 TRANSLATED_ATTRS.update(
-    value=lambda e: (e.tag == 'input' and e.attrib.get('type', 'text') == 'text') and 'datetimepicker-input' not in e.attrib.get('class', '').split(' '),
+    value=translate_attrib_value,
     text=lambda e: (e.tag == 'field' and e.attrib.get('widget', '') == 'url'),
     **{f't-attf-{attr}': cond for attr, cond in TRANSLATED_ATTRS.items()},
 )
