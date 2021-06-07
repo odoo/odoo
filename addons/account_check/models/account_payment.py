@@ -75,14 +75,9 @@ class AccountPayment(models.Model):
                 payment_method_code,
                 '* Destination journal: %s\n' % destination_journal_id.name if is_internal_transfer else ''))
 
-    # @api.onchange('available_check_ids')
-    # def reset_check_ids(self):
-    #     # self.check_ids = False
-    #     self.select_check_ids = False
-
-    # @api.onchange('payment_method_code')
-    # def unlink(self):
-    #     self.new_check_ids.unlink()
+    @api.onchange('available_check_ids')
+    def reset_check_ids(self):
+        self.check_id = False
 
     @api.depends('payment_method_code', 'partner_id', 'check_type', 'is_internal_transfer', 'journal_id')
     def _compute_check_data(self):
@@ -119,6 +114,9 @@ class AccountPayment(models.Model):
             # we only overwrite if payment method is delivered
             if rec.payment_method_code == 'delivered_third_check':
                 rec.amount = rec.check_id.amount
+# +                    'El importe del pago no coincide con el importe del cheque seleccionado. Por favor intente '
+# +                    'eliminar y volver a agregar el cheque.'))
+
                 # TODO chequear esto
                 # # si es una entrega de cheques de terceros y es en otra moneda
                 # # a la de la cia, forzamos el importe en moneda de cia de los
@@ -164,25 +162,6 @@ class AccountPayment(models.Model):
             # rec._split_aml_line_per_check(liquidity_lines, operation)
 
         return res
-
-    # def _split_aml_line_per_check(self, liquidity_lines, operation):
-    #     """ Take an account move, find the move lines related to check and
-    #     split them one per each check related to the payment
-    #     """
-    #     checks = self.check_ids
-
-    #     liquidity_lines = liquidity_lines.with_context(check_move_validity=False)
-    #     liquidity_line = liquidity_lines[0]
-    #     amount_field = 'credit' if liquidity_line['credit'] else 'debit'
-    #     new_name = _('Deposit check %s') if liquidity_line['credit'] else liquidity_line['name'] + _(' check %s')
-
-    #     # if the move line has currency then we are delivering checks on a different currency than company one
-    #     currency = liquidity_line['currency_id']
-    #     currency_sign = amount_field == 'debit' and 1.0 or -1.0
-
-    #     # with current implementation, liquidity_lines should only have only one line. This is because we're deleting
-    #     # all other lines when reseting too draft because of the design of _synchronize_to_moves
-    #     for check, liquidity_line in zip_longest(checks, liquidity_lines):
     #         new_name % check.name
     #         document_name = _('Check %s %s') % (check.name, operation)
     #         check_vals = {
@@ -192,15 +171,6 @@ class AccountPayment(models.Model):
     #             'date_maturity': check.payment_date,
     #             'amount_currency': currency and currency_sign * check.amount,
     #         }
-    #         if check and liquidity_line:
-    #             liquidity_line.write(check_vals)
-    #         elif check:
-    #             check_vals = liquidity_lines[0].copy(default=check_vals)
-    #         else:
-    #             liquidity_line.unlink()
-    #     self.move_id._check_balanced()
-    #     return True
-
     def _do_checks_operations(self, cancel=False):
         operation, domain = self._get_checks_operations()
         if cancel:
