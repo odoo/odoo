@@ -1,14 +1,8 @@
 /** @odoo-module **/
 
-import { Popover } from "@web/core/popover/popover";
-import {
-    KeyAlreadyExistsError,
-    KeyNotFoundError,
-    PopoverManager,
-    popoverService,
-} from "@web/core/popover/popover_service";
+import { PopoverContainer } from "@web/core/popover/popover_container";
+import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { registerCleanup } from "../../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick } from "../../helpers/utils";
@@ -17,20 +11,22 @@ const { Component, mount } = owl;
 const { xml } = owl.tags;
 
 let env;
-let pseudoWebClient;
+let fixture;
 let popovers;
-const mainComponentRegistry = registry.category("main_components");
-const serviceRegistry = registry.category("services");
+let popoverTarget;
+
+const mainComponents = registry.category("main_components");
 
 class PseudoWebClient extends Component {
     setup() {
-        this.Components = mainComponentRegistry.getEntries();
+        this.Components = mainComponents.getEntries();
     }
 }
 PseudoWebClient.template = xml`
     <div>
         <div id="anchor">Anchor</div>
         <div id="close">Close</div>
+        <div id="sibling">Sibling</div>
         <div>
             <t t-foreach="Components" t-as="C" t-key="C[0]">
                 <t t-component="C[1].Component" t-props="C[1].props"/>
@@ -39,363 +35,161 @@ PseudoWebClient.template = xml`
     </div>
 `;
 
-QUnit.module("PopoverManager", {
+QUnit.module("Popover service", {
     async beforeEach() {
-        serviceRegistry.add("popover", popoverService);
-        clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("PopoverManager", {
-            Component: PopoverManager,
-        });
+        registry.category("services").add("popover", popoverService);
+        clearRegistryWithCleanup(mainComponents);
+        mainComponents.add("PopoverContainer", { Component: PopoverContainer });
+
+        fixture = getFixture();
         env = await makeTestEnv();
-        pseudoWebClient = await mount(PseudoWebClient, {
+        const pseudoWebClient = await mount(PseudoWebClient, {
             env,
-            target: getFixture(),
+            target: fixture,
         });
-        popovers = env.services.popover;
         registerCleanup(() => {
             pseudoWebClient.destroy();
         });
+        popovers = env.services.popover;
+        popoverTarget = fixture.querySelector("#anchor");
     },
 });
 
-QUnit.test("Render custom popover component", async function (assert) {
-    assert.expect(10);
+QUnit.test("simple use", async (assert) => {
+    assert.containsOnce(fixture, ".o_popover_container");
 
-    class CustomPopover extends Component {}
-    CustomPopover.components = { Popover };
-    CustomPopover.template = xml`
-        <Popover target="props.target">
-            <t t-set-slot="content">
-                <div>Popover</div>
-            </t>
-        </Popover>
-    `;
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp">in popover</div>`;
 
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    assert.containsNone(fixture, ".o_popover");
 
-    popovers.add({
-        Component: CustomPopover,
-        props: {
-            target: "#anchor",
-        },
-    });
+    const remove = popovers.add(popoverTarget, Comp, {});
     await nextTick();
 
-    await click(pseudoWebClient.el, "#anchor");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    assert.containsOnce(fixture, ".o_popover");
+    assert.containsOnce(fixture, ".o_popover #comp");
 
-    await click(pseudoWebClient.el, "#close");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    remove();
+    await nextTick();
+
+    assert.containsNone(fixture, ".o_popover");
+    assert.containsNone(fixture, ".o_popover #comp");
 });
 
-QUnit.test("Render popover with content arg", async function (assert) {
-    assert.expect(11);
+QUnit.test("close on click away", async (assert) => {
+    assert.containsOnce(fixture, ".o_popover_container");
 
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp">in popover</div>`;
 
-    popovers.add({
-        content: "skibidi",
-        props: {
-            target: "#anchor",
-        },
-    });
+    popovers.add(popoverTarget, Comp, {});
     await nextTick();
 
-    await click(pseudoWebClient.el, "#anchor");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.strictEqual(
-        pseudoWebClient.el.querySelector(".o_popover_container .o_popover").textContent,
-        "skibidi"
-    );
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    assert.containsOnce(fixture, ".o_popover");
+    assert.containsOnce(fixture, ".o_popover #comp");
 
-    await click(pseudoWebClient.el, "#close");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    await click(fixture, "#close");
+
+    assert.containsNone(fixture, ".o_popover");
+    assert.containsNone(fixture, ".o_popover #comp");
 });
 
-QUnit.test("Callback on close", async function (assert) {
-    assert.expect(2);
+QUnit.test("do not close on click away", async (assert) => {
+    assert.containsOnce(fixture, ".o_popover_container");
 
-    popovers.add({
-        content: "skibidi",
-        onClose() {
-            assert.step("close");
-        },
-        props: {
-            target: "#anchor",
-        },
-    });
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp">in popover</div>`;
+
+    const remove = popovers.add(popoverTarget, Comp, {}, { closeOnClickAway: false });
     await nextTick();
 
-    await click(pseudoWebClient.el, "#anchor");
-    await click(pseudoWebClient.el, "#close");
+    assert.containsOnce(fixture, ".o_popover");
+    assert.containsOnce(fixture, ".o_popover #comp");
+
+    await click(fixture, "#close");
+
+    assert.containsOnce(fixture, ".o_popover");
+    assert.containsOnce(fixture, ".o_popover #comp");
+
+    remove();
+    await nextTick();
+
+    assert.containsNone(fixture, ".o_popover");
+    assert.containsNone(fixture, ".o_popover #comp");
+});
+
+QUnit.test("close callback", async (assert) => {
+    assert.expect(3);
+
+    assert.containsOnce(fixture, ".o_popover_container");
+
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp">in popover</div>`;
+
+    function onClose() {
+        assert.step("close");
+    }
+
+    popovers.add(popoverTarget, Comp, {}, { onClose });
+    await nextTick();
+
+    await click(fixture, "#close");
 
     assert.verifySteps(["close"]);
 });
 
-QUnit.test("Keep popover in manager after close", async function (assert) {
-    assert.expect(9);
+QUnit.test("sub component triggers close", async (assert) => {
+    assert.containsOnce(fixture, ".o_popover_container");
 
-    popovers.add({
-        content: "skibidi",
-        keepOnClose: true,
-        props: {
-            target: "#anchor",
-        },
-    });
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp" t-on-click="trigger('popover-closed')">in popover</div>`;
+
+    popovers.add(popoverTarget, Comp, {});
     await nextTick();
 
-    await click(pseudoWebClient.el, "#anchor");
+    assert.containsOnce(fixture, ".o_popover");
+    assert.containsOnce(fixture, ".o_popover #comp");
 
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    await click(fixture, "#comp");
 
-    await click(pseudoWebClient.el, "#close");
-
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    await click(pseudoWebClient.el, "#anchor");
-
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    assert.containsNone(fixture, ".o_popover");
+    assert.containsNone(fixture, ".o_popover #comp");
 });
 
-QUnit.test("Remove popover manually", async function (assert) {
-    assert.expect(6);
+QUnit.test("close popover if target is removed", async (assert) => {
+    assert.containsOnce(fixture, ".o_popover_container");
 
-    popovers.add({
-        key: "test",
-        content: "skibidi",
-        props: {
-            target: "#anchor",
-            trigger: "none",
-        },
-    });
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp">in popover</div>`;
+
+    popovers.add(popoverTarget, Comp, {});
     await nextTick();
 
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    assert.containsOnce(fixture, ".o_popover");
+    assert.containsOnce(fixture, ".o_popover #comp");
 
-    popovers.remove("test");
+    popoverTarget.remove();
     await nextTick();
 
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    assert.containsNone(fixture, ".o_popover");
+    assert.containsNone(fixture, ".o_popover #comp");
 });
 
-QUnit.test("Remove popover manually when click does not throw", async function (assert) {
-    assert.expect(6);
+QUnit.test("keep popover if target sibling is removed", async (assert) => {
+    assert.containsOnce(fixture, ".o_popover_container");
 
-    const close = pseudoWebClient.el.querySelector("#close");
-    close.addEventListener("click", () => popovers.remove("test"));
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp">in popover</div>`;
 
-    popovers.add({
-        key: "test",
-        content: "skibidi",
-        props: {
-            target: "#anchor",
-            trigger: "none",
-        },
-    });
+    popovers.add(popoverTarget, Comp, {});
     await nextTick();
 
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    assert.containsOnce(fixture, ".o_popover");
+    assert.containsOnce(fixture, ".o_popover #comp");
 
-    await click(pseudoWebClient.el, "#close");
-
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-});
-
-QUnit.test("Check errors", async function (assert) {
-    assert.expect(2);
-
-    popovers.add({ key: "test" });
-    assert.throws(() => {
-        popovers.add({ key: "test" });
-    }, KeyAlreadyExistsError);
-
-    popovers.remove("test");
-    assert.throws(() => {
-        popovers.remove("test");
-    }, KeyNotFoundError);
-});
-
-QUnit.test("remove popover when component is unmount", async function (assert) {
-    assert.expect(12);
-
-    class MyComp extends Component {
-        setup() {
-            this.popoverService = usePopover();
-        }
-        showPopover(key) {
-            const params = {
-                content: "skibidi",
-                props: {
-                    target: "#anchor",
-                    trigger: "none",
-                },
-            };
-            if (key) {
-                params.key = key;
-            }
-            return this.popoverService.add(params);
-        }
-        hidePopover(key) {
-            this.popoverService.remove(key);
-        }
-    }
-    MyComp.template = xml`<div></div>`;
-
-    const comp1 = await mount(MyComp, { env, target: getFixture() });
-    const comp2 = await mount(MyComp, { env, target: getFixture() });
-
-    comp1.showPopover("An other key");
+    fixture.querySelector("#sibling").remove();
     await nextTick();
 
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    comp1.destroy();
-    await nextTick();
-
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    comp2.showPopover();
-    await nextTick();
-
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    comp2.destroy();
-    await nextTick();
-
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-});
-
-QUnit.test("service does not try to remove destroyed popover", async function (assert) {
-    assert.expect(6);
-
-    class MyComp extends Component {
-        setup() {
-            this.popoverService = usePopover();
-        }
-        showPopover() {
-            const params = {
-                content: "skibidi",
-                props: {
-                    target: "#anchor",
-                    trigger: "none",
-                },
-            };
-            return this.popoverService.add(params);
-        }
-        hidePopover(key) {
-            this.popoverService.remove(key);
-        }
-    }
-    MyComp.template = xml`<div></div>`;
-
-    const comp = await mount(MyComp, { env, target: getFixture() });
-    const key = comp.showPopover();
-    await nextTick();
-
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    comp.hidePopover(key);
-    await nextTick();
-
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    comp.destroy();
-});
-
-QUnit.test("popover kept on close is removed when component unmount", async function (assert) {
-    assert.expect(13);
-
-    class MyComp extends Component {
-        setup() {
-            this.popoverService = usePopover();
-        }
-        showPopover() {
-            const params = {
-                content: "skibidi",
-                props: {
-                    target: "#anchor",
-                    trigger: "click",
-                },
-                keepOnClose: true,
-            };
-            return this.popoverService.add(params);
-        }
-    }
-    MyComp.template = xml`<div></div>`;
-
-    const comp = await mount(MyComp, { env, target: getFixture() });
-    comp.showPopover();
-    await nextTick();
-    await click(pseudoWebClient.el, "#anchor");
-
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    await click(pseudoWebClient.el, "#close");
-
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    comp.unmount();
-    await nextTick();
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    await comp.mount(getFixture());
-
-    comp.showPopover();
-    await nextTick();
-    await click(pseudoWebClient.el, "#anchor");
-
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsOnce(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
-
-    comp.destroy();
-    await nextTick();
-
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager portal");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_container .o_popover");
-    assert.containsNone(pseudoWebClient.el, ".o_popover_manager > div:not(.o_popover_container)");
+    assert.containsOnce(fixture, ".o_popover");
+    assert.containsOnce(fixture, ".o_popover #comp");
 });
