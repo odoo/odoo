@@ -68,22 +68,19 @@ QUnit.test("commands evilness 👹", async (assert) => {
     function action() {}
 
     assert.throws(function () {
-        command.registerCommand();
-    }, /undefined/);
-    assert.throws(function () {
-        command.registerCommand(null);
-    }, /null/);
-    assert.throws(function () {
-        command.registerCommand({});
+        command.add();
     }, /A Command must have a name and an action function/);
     assert.throws(function () {
-        command.registerCommand({ name: "" });
+        command.add(null);
     }, /A Command must have a name and an action function/);
     assert.throws(function () {
-        command.registerCommand({ action });
+        command.add("");
     }, /A Command must have a name and an action function/);
     assert.throws(function () {
-        command.registerCommand({ name: "", action });
+        command.add("", action);
+    }, /A Command must have a name and an action function/);
+    assert.throws(function () {
+        command.add("command", null);
     }, /A Command must have a name and an action function/);
 });
 
@@ -93,12 +90,12 @@ QUnit.test("useCommand hook", async (assert) => {
     class MyComponent extends TestComponent {
         setup() {
             super.setup();
-            useCommand({
-                name: "Take the throne",
-                action: () => {
+            useCommand(
+                "Take the throne",
+                () => {
                     assert.step("Hodor");
                 },
-            });
+            );
         }
     }
     testComponent = await mount(MyComponent, { env, target });
@@ -121,9 +118,7 @@ QUnit.test("command with hotkey", async (assert) => {
     assert.expect(2);
 
     const hotkey = "a";
-    env.services.command.registerCommand({
-        name: "test",
-        action: () => assert.step(hotkey),
+    env.services.command.add("test", () => assert.step(hotkey), {
         hotkey,
         hotkeyOptions: { altIsOptional: true },
     });
@@ -197,7 +192,7 @@ QUnit.test("can be searched", async (assert) => {
     function action() {}
     const names = ["Cersei Lannister", "Jaime Lannister", "Tyrion Lannister", "Tywin Lannister"];
     for (const name of names) {
-        env.services.command.registerCommand({ name, action });
+        env.services.command.add(name, action);
     }
     await nextTick();
 
@@ -246,10 +241,10 @@ QUnit.test("command categories", async (assert) => {
 
     // Register some commands
     function action() {}
-    env.services.command.registerCommand({ name: "a", action, category: "custom-nolabel" });
-    env.services.command.registerCommand({ name: "b", action, category: "custom" });
-    env.services.command.registerCommand({ name: "c", action });
-    env.services.command.registerCommand({ name: "d", action, category: "invalid-category" });
+    env.services.command.add("a", action, { category: "custom-nolabel" });
+    env.services.command.add("b", action, { category: "custom" });
+    env.services.command.add("c", action);
+    env.services.command.add("d", action, { category: "invalid-category" });
     await nextTick();
 
     // Open palette

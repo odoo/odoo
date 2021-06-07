@@ -14,6 +14,14 @@ import { CommandPaletteDialog } from "./command_palette_dialog";
  * }} Command
  */
 
+/**
+ * @typedef {{
+ *  category?: string;
+ *  hotkey?: string;
+ *  hotkeyOptions?: any;
+ * }} CommandServiceAddOptions
+ */
+
 export const commandService = {
     dependencies: ["dialog", "hotkey", "ui"],
     start(env, { dialog, hotkey: hotkeyService, ui }) {
@@ -118,8 +126,24 @@ export const commandService = {
         }
 
         return {
-            registerCommand,
-            unregisterCommand,
+            /**
+             * @param {string} name
+             * @param {() => void} action
+             * @param {CommandServiceAddOptions} [options]
+             * @returns {() => void}
+             */
+            add(name, action, options = {}) {
+                const token = registerCommand({
+                    name,
+                    action,
+                    category: options.category,
+                    hotkey: options.hotkey,
+                    hotkeyOptions: options.hotkeyOptions,
+                });
+                return () => {
+                    unregisterCommand(token);
+                };
+            },
         };
     },
 };

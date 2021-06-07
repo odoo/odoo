@@ -4,19 +4,21 @@ import { useService } from "../../core/service_hook";
 import { useEffect } from "../../core/effect_hook";
 
 /**
- * @typedef {import("./command_service").Command} Command
+ * @typedef {import("./command_service").CommandServiceAddOptions} CommandServiceAddOptions
  */
 
 /**
  * This hook will subscribe/unsubscribe the given subscription
  * when the caller component will mount/unmount.
  *
- * @param {Command} command
+ * @param {string} name
+ * @param {() => void} action
+ * @param {CommandServiceAddOptions} [options]
  */
-export function useCommand(command) {
+export function useCommand(name, action, options = {}) {
     const commandService = useService("command");
-    useEffect(() => {
-        const token = commandService.registerCommand(command);
-        return () => commandService.unregisterCommand(token);
-    }, () => []);
+    useEffect(
+        () => commandService.add(name, action, options),
+        () => []
+    );
 }
