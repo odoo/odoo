@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import Markup
-
 from odoo import fields, models, _
 
 
@@ -13,11 +11,7 @@ class Alias(models.Model):
         ('employees', 'Authenticated Employees'),
     ], ondelete={'employees': 'cascade'})
 
-    def _get_alias_bounced_body_fallback(self, message_dict):
+    def _get_alias_contact_description(self):
         if self.alias_contact == 'employees':
-            return Markup(
-                _("""<p>Hi,<br/>
-Your document has not been created because your email address is not recognized.<br/>
-Please send emails with the email address recorded on your employee information, or contact your HR manager.</p>""")
-            )
-        return super(Alias, self)._get_alias_bounced_body_fallback(message_dict)
+            return _('addresses linked to registered employees')
+        return super(Alias, self)._get_alias_contact_description()

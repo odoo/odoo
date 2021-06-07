@@ -8,7 +8,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import remove_accents, is_html_empty
+from odoo.tools import is_html_empty, remove_accents
 
 # see rfc5322 section 3.2.3
 atext = r"[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~]"
@@ -229,11 +229,24 @@ class Alias(models.Model):
         }
 
     def _get_alias_bounced_body_fallback(self, message_dict):
+        contact_description = self._get_alias_contact_description()
+        default_email = self.env.company.partner_id.email_formatted if self.env.company.partner_id.email else self.env.company.name
         return Markup(
-            _("""<p>Hi,<br/>
-The following email sent to %s cannot be accepted because this is a private email address.
-Only allowed people can contact us at this address.</p>""")
-        ) % self.display_name
+            _("""<p>Dear Sender,<br /><br />
+The message below could not be accepted by the address %(alias_display_name)s.
+Only %(contact_description)s are allowed to contact it.<br /><br />
+Please make sure you are using the correct address or contact us at %(default_email)s instead.<br /><br />
+Kind Regards,</p>"""
+             )) % {
+                 'alias_display_name': self.display_name,
+                 'contact_description': contact_description,
+                 'default_email': default_email,
+             }
+
+    def _get_alias_contact_description(self):
+        if self.alias_contact == 'partners':
+            return _('addresses linked to registered partners')
+        return _('some specific addresses')
 
     def _get_alias_bounced_body(self, message_dict):
         """Get the body of the email return in case of bounced email.
