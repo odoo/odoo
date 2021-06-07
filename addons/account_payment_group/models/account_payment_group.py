@@ -2,7 +2,6 @@ from odoo import models, api, fields, _
 from odoo.exceptions import ValidationError, UserError
 
 
-
 class AccountPaymentGroup(models.Model):
     _name = "account.payment.group"
     _description = "Payment Group"
@@ -30,7 +29,8 @@ class AccountPaymentGroup(models.Model):
     partner_type = fields.Selection(
         [('customer', 'Customer'), ('supplier', 'Vendor')], default='customer', tracking=True, required=True)
     to_pay_move_line_ids = fields.Many2many(
-        'account.move.line', string="To Pay Lines", help='This lines are the ones the user has selected to be paid.',
+        'account.move.line', compute='_compute_to_pay_move_lines', store=True,
+        string="To Pay Lines", help='This lines are the ones the user has selected to be paid.',
         copy=False, readonly=True, states={'draft': [('readonly', False)]}, check_company=True)
     # TODO make currency editable
     currency_id = fields.Many2one(
@@ -61,10 +61,8 @@ class AccountPaymentGroup(models.Model):
             # rec.payments_amount = sum(rec.payment_ids.mapped('amount_total_in_currency_signed'))
             rec.payments_amount = sum(rec.payment_ids.mapped('amount_signed'))
 
-    @api.onchange('partner_id', 'partner_type', 'company_id')
-    def _refresh_payments_and_move_lines(self):
-        if self._context.get('default_to_pay_move_line_ids'):
-            return
+    @api.depends('partner_id', 'partner_type', 'company_id')
+    def _compute_to_pay_move_lines(self):
         for rec in self:
             rec.add_all()
 
@@ -103,6 +101,15 @@ class AccountPaymentGroup(models.Model):
             rec.name = self.env['ir.sequence'].next_by_code('account.payment.group.%s' % rec.partner_type)
         self.mapped('payment_ids').action_post()
         self.write({'state': 'posted'})
+
+        # reconcile
+        for rec in self:
+            if not rec.payment_ids:
+                raise ValidationError(_('You can not confirm a payment group without payment lines!'))
+            counterpart_aml = rec.payment_ids.mapped('line_ids').filtered(
+                lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
+            if counterpart_aml and rec.to_pay_move_line_ids:
+                (counterpart_aml + (rec.to_pay_move_line_ids)).reconcile()
         return True
 
     @api.constrains('partner_id', 'to_pay_move_line_ids')
