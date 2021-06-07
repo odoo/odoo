@@ -241,6 +241,7 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 });
 
                 self._markTranslatableNodes();
+                this.$translations.filter('input[type=hidden].o_translatable_input_hidden').prop('type', 'text');
             },
         });
 
