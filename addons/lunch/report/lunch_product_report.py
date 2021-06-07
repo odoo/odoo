@@ -15,7 +15,7 @@ class LunchProductReport(models.Model):
     product_id = fields.Many2one('lunch.product', 'Product')
     name = fields.Char('Product Name', related='product_id.name')
     category_id = fields.Many2one('lunch.product.category', 'Product Category')
-    description = fields.Text('Description', related='product_id.description')
+    description = fields.Html('Description', related='product_id.description')
     price = fields.Float('Price')
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor')
     company_id = fields.Many2one('res.company')

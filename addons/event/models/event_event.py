@@ -106,7 +106,7 @@ class EventEvent(models.Model):
         return self.env['ir.ui.view']._render_template('event.event_default_descripton')
 
     name = fields.Char(string='Event', translate=True, required=True)
-    note = fields.Text(string='Note')
+    note = fields.Html(string='Note')
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(

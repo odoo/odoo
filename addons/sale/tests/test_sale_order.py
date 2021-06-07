@@ -611,12 +611,12 @@ class TestSaleOrder(TestSaleCommon):
         self.env.company.terms_type = 'plain'
         self.env.company.invoice_terms = "Coin coin"
         sale_order = self._create_sale_order()
-        self.assertEqual(sale_order.note, "Coin coin")
+        self.assertEqual(sale_order.note, "<p>Coin coin</p>")
 
         # Html invoice terms (/terms page)
         self.env.company.terms_type = 'html'
         sale_order = self._create_sale_order()
-        self.assertTrue(sale_order.note.startswith("Terms & Conditions: "))
+        self.assertTrue(sale_order.note.startswith("<p>Terms &amp; Conditions: "))
 
     def test_validity_days(self):
         self.env['ir.config_parameter'].sudo().set_param('sale.use_quotation_validity_days', True)

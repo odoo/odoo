@@ -34,15 +34,11 @@ function _renderImageOnCanvas( data, formattype, rerendercallable ) {
     img.src = 'data:' + formattype + ',' + data;
 }
 
+// Override
 // Supported image types
-const imageTypes = [
+[
     'image',
     'image/png;base64',
     'image/jpeg;base64',
     'image/jpg;base64',
-];
-
-// Override
-for (const imageType of imageTypes) {
-    $.fn.jSignature("addPlugin", "import", imageType, _renderImageOnCanvas);
-}
+].forEach(imageType => $.fn.jSignature("addPlugin", "import", imageType, _renderImageOnCanvas));

@@ -40,7 +40,7 @@ class MaintenanceEquipmentCategory(models.Model):
         default=lambda self: self.env.company)
     technician_user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.uid)
     color = fields.Integer('Color Index')
-    note = fields.Text('Comments', translate=True)
+    note = fields.Html('Comments', translate=True)
     equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipments', copy=False)
     equipment_count = fields.Integer(string="Equipment", compute='_compute_equipment_count')
     maintenance_ids = fields.One2many('maintenance.request', 'category_id', copy=False)
@@ -125,7 +125,7 @@ class MaintenanceEquipment(models.Model):
     assign_date = fields.Date('Assigned Date', tracking=True)
     effective_date = fields.Date('Effective Date', default=fields.Date.context_today, required=True, help="Date at which the equipment became effective. This date will be used to compute the Mean Time Between Failure.")
     cost = fields.Float('Cost')
-    note = fields.Text('Note')
+    note = fields.Html('Note')
     warranty_date = fields.Date('Warranty Expiration Date')
     color = fields.Integer('Color Index')
     scrap_date = fields.Date('Scrap Date')
@@ -280,7 +280,7 @@ class MaintenanceRequest(models.Model):
     name = fields.Char('Subjects', required=True)
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env.company)
-    description = fields.Text('Description')
+    description = fields.Html('Description')
     request_date = fields.Date('Request Date', tracking=True, default=fields.Date.context_today,
                                help="Date requested for the maintenance to happen")
     owner_user_id = fields.Many2one('res.users', string='Created by User', default=lambda s: s.env.uid)

@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.misc import find_in_path
-from odoo.tools import config
+from odoo.tools import config, is_html_empty
 from odoo.sql_db import TestCursor
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -886,6 +886,7 @@ class IrActionsReport(models.Model):
                 'doc_model': self_sudo.model,
                 'docs': docs,
             })
+        data['is_html_empty'] = is_html_empty
         return data
 
     def _render(self, res_ids, data=None):

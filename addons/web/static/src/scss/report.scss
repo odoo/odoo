@@ -92,6 +92,17 @@ table {
     }
 }
 
+// TODO: investigate further for proper fix
+// By default there is 40px padding on the lists (both <ol> and <ul>) and it is
+// also the case with HTML reports, but when PDFs are rendered with Wkhtmltopdf,
+// the padding is not applied on <ol>, it is strangely applied on <ul> only.
+// So we simply remove the left padding, and apply left margin instead which
+// seems to do the job while not breaking layout in both html/pdf.
+ol {
+    margin-left: 40px;
+    padding-left: 0;
+}
+
 // Wkhtmltopdf doesn't handle flexbox properly, both the content
 // of columns and columns themselves does not wrap over new lines
 // when needed: the font of the pdf will reduce to make the content

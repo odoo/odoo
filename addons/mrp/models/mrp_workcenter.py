@@ -26,7 +26,7 @@ class MrpWorkcenter(models.Model):
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
 
     code = fields.Char('Code', copy=False)
-    note = fields.Text(
+    note = fields.Html(
         'Description',
         help="Description of the Work Center.")
     capacity = fields.Float(

@@ -111,7 +111,7 @@ class LunchProduct(models.Model):
 
     name = fields.Char('Product Name', required=True, translate=True)
     category_id = fields.Many2one('lunch.product.category', 'Product Category', check_company=True, required=True)
-    description = fields.Text('Description', translate=True)
+    description = fields.Html('Description', translate=True)
     price = fields.Float('Price', digits='Account', required=True)
     supplier_id = fields.Many2one('lunch.supplier', 'Vendor', check_company=True, required=True)
     active = fields.Boolean(default=True)

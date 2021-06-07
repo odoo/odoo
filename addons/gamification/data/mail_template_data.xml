@@ -36,7 +36,7 @@
                     <div>
                         Congratulations ${object.user_id.name} !<br/>
                         You just received badge <strong>${object.badge_id.name}</strong> !<br/>
-                        % if object.badge_id.description
+                        % if not is_html_empty(object.badge_id.description)
                             <table cellspacing="0" cellpadding="0" border="0" style="width: 560px; margin-top: 5px;">
                             <tbody><tr>
                                 <td valign="center">

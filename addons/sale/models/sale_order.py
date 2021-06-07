@@ -9,7 +9,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.misc import formatLang
 from odoo.osv import expression
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 
 
 class SaleOrder(models.Model):
@@ -111,7 +111,8 @@ class SaleOrder(models.Model):
     def _default_note(self):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
         if use_invoice_terms and self.env.company.terms_type == "html":
-            return _('Terms & Conditions: %s/terms', self._default_note_url())
+            baseurl = html_keep_url(self._default_note_url() + '/terms')
+            return _('Terms & Conditions: %s', baseurl)
         return use_invoice_terms and self.env.company.invoice_terms or ''
 
     @api.model
@@ -225,7 +226,7 @@ class SaleOrder(models.Model):
         ('no', 'Nothing to Invoice')
         ], string='Invoice Status', compute='_get_invoice_status', store=True, readonly=True)
 
-    note = fields.Text('Terms and conditions', default=_default_note)
+    note = fields.Html('Terms and conditions', default=_default_note)
     terms_type = fields.Selection(related='company_id.terms_type')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=5)
@@ -409,8 +410,9 @@ class SaleOrder(models.Model):
 
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
             if self.terms_type == 'html' and self.env.company.invoice_terms_html:
-                values['note'] = _('Terms & Conditions: %s/terms', self.get_base_url())
-            elif self.env.company.invoice_terms:
+                baseurl = html_keep_url(self.get_base_url() + '/terms')
+                values['note'] = _('Terms & Conditions: %s', baseurl)
+            elif not is_html_empty(self.env.company.invoice_terms):
                 values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
         if not self.env.context.get('not_self_saleperson') or not self.team_id:
             values['team_id'] = self.env['crm.team'].with_context(

@@ -41,7 +41,7 @@ class LunchOrder(models.Model):
 
     display_toppings = fields.Text('Extras', compute='_compute_display_toppings', store=True)
 
-    product_description = fields.Text('Description', related='product_id.description')
+    product_description = fields.Html('Description', related='product_id.description')
     topping_label_1 = fields.Char(related='product_id.category_id.topping_label_1')
     topping_label_2 = fields.Char(related='product_id.category_id.topping_label_2')
     topping_label_3 = fields.Char(related='product_id.category_id.topping_label_3')
