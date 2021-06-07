@@ -43,5 +43,4 @@ class AccountChartTemplate(models.Model):
             ],
         })
 
-        self.env['account.journal'].with_context(force_company_id=company.id)._enable_own_check_on_bank_journals()
         return res
