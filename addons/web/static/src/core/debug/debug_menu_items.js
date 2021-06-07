@@ -103,7 +103,6 @@ function becomeSuperuser({ env }) {
         hide: !env.services.user.isAdmin,
         href: becomeSuperuserULR,
         callback: () => {
-            //TODO  add /web/become
             browser.open(becomeSuperuserULR, "_self");
         },
         sequence: 440,

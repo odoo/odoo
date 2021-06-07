@@ -17,6 +17,7 @@
                             </DropdownItem>
                         </t>
                         <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
+                        <t t-if="element.type == 'component'" t-component="element.Component" t-props="element.props"/>
                     </t>
                 </t>
             </t>
