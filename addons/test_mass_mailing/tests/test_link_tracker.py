@@ -45,10 +45,14 @@ class TestLinkTracker(common.TestMassMailCommon):
 
     @users('user_marketing')
     def test_add_link_mail_stat(self):
-        mailing = self.env['mailing.mailing'].create({'name': 'Test Mailing', "subject": "Hi!"})
+        record = self.env['mailing.test.blacklist'].create({})
         code = self.link.code
         self.assertEqual(self.link.count, 1)
-        stat = self.env['mailing.trace'].create({'mass_mailing_id': mailing.id})
+        stat = self.env['mailing.trace'].create({
+            'mass_mailing_id': self.mailing_bl.id,
+            'model': record._name,
+            'res_id': record.id,
+        })
         self.assertFalse(stat.opened)
         self.assertFalse(stat.clicked)
 
@@ -60,6 +64,6 @@ class TestLinkTracker(common.TestMassMailCommon):
             mailing_trace_id=stat.id
         )
         self.assertEqual(self.link.count, 2)
-        self.assertEqual(click.mass_mailing_id, mailing)
+        self.assertEqual(click.mass_mailing_id, self.mailing_bl)
         self.assertTrue(stat.opened)
         self.assertTrue(stat.clicked)
