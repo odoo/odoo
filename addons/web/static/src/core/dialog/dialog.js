@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { useHotkey } from "../hotkey_hook";
-import { useActiveElement } from "../ui_service";
 import { useService } from "../service_hook";
+import { useActiveElement } from "../ui/ui_service";
 
 const { Component, hooks, misc } = owl;
 const { useRef, useSubEnv } = hooks;

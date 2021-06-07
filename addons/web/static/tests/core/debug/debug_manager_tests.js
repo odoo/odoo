@@ -6,7 +6,7 @@ import { regenerateAssets } from "@web/core/debug/debug_menu_items";
 import { registry } from "@web/core/registry";
 import { debugService } from "@web/core/debug/debug_service";
 import { ormService } from "@web/core/orm_service";
-import { uiService } from "@web/core/ui_service";
+import { uiService } from "@web/core/ui/ui_service";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registerCleanup } from "../../helpers/cleanup";

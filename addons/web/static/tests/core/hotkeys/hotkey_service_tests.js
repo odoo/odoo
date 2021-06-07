@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { useHotkey } from "@web/core/hotkey_hook";
 import { registry } from "@web/core/registry";
-import { uiService, useActiveElement } from "@web/core/ui_service";
+import { uiService, useActiveElement } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, nextTick, patchWithCleanup, triggerHotkey } from "../../helpers/utils";

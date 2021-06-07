@@ -8,7 +8,7 @@ import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { companyService } from "@web/webclient/company_service";
 import { click, getFixture, makeDeferred, patchWithCleanup } from "../helpers/utils";
-import { uiService } from "@web/core/ui_service";
+import { uiService } from "@web/core/ui/ui_service";
 
 const { mount } = owl;
 const serviceRegistry = registry.category("services");
