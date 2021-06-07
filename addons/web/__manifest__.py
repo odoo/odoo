@@ -61,7 +61,6 @@ This module provides the core of the Odoo Web Client.
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
 
-            'web/static/src/scss/debug_profiling.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web._assets_common_styles'),

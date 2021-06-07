@@ -401,9 +401,7 @@ export function editView({ accessRights, action, component, env }) {
         return null;
     }
     const { viewId, viewType } = component.widget;
-    const displayName = action.views
-        .find((v) => v.type === viewType)
-        .name.toString();
+    const displayName = action.views.find((v) => v.type === viewType).name.toString();
     const description = env._t("Edit View: ") + displayName;
     return {
         type: "item",
@@ -424,12 +422,7 @@ function editControlPanelView({ accessRights, component, env }) {
         type: "item",
         description,
         callback: () => {
-            editModelDebug(
-                env,
-                description,
-                "ir.ui.view",
-                component.props.viewInfo.view_id
-            );
+            editModelDebug(env, description, "ir.ui.view", component.props.viewInfo.view_id);
         },
         sequence: 360,
     };
@@ -506,24 +499,24 @@ const debugRegistry = registry.category("debug");
 
 debugRegistry
     .category("action")
-        .add("actionSeparator", actionSeparator)
-        .add("editAction", editAction)
-        .add("viewFields", viewFields)
-        .add("manageFilters", manageFilters)
-        .add("technicalTranslation", technicalTranslation)
-        .add("accessSeparator", accessSeparator)
-        .add("viewAccessRights", viewAccessRights)
-        .add("viewRecordRules", viewRecordRules)
+    .add("actionSeparator", actionSeparator)
+    .add("editAction", editAction)
+    .add("viewFields", viewFields)
+    .add("manageFilters", manageFilters)
+    .add("technicalTranslation", technicalTranslation)
+    .add("accessSeparator", accessSeparator)
+    .add("viewAccessRights", viewAccessRights)
+    .add("viewRecordRules", viewRecordRules);
 
 debugRegistry
     .category("view")
-        .add("viewSeparator", viewSeparator)
-        .add("fieldsViewGet", fieldsViewGet)
-        .add("editView", editView)
-        .add("editControlPanelView", editControlPanelView)
+    .add("viewSeparator", viewSeparator)
+    .add("fieldsViewGet", fieldsViewGet)
+    .add("editView", editView)
+    .add("editControlPanelView", editControlPanelView);
 
 debugRegistry
     .category("form")
-        .add("setDefaults", setDefaults)
-        .add("viewMetadata", viewMetadata)
-        .add("manageAttachments", manageAttachments);
+    .add("setDefaults", setDefaults)
+    .add("viewMetadata", viewMetadata)
+    .add("manageAttachments", manageAttachments);

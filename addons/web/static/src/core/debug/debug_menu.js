@@ -64,7 +64,10 @@ export class DebugMenu extends Component {
     }
 
     onDropdownItemSelected(ev) {
-        ev.detail.payload.callback();
+        // items of type "component" don't necessarily have a payload/callback
+        if (ev.detail.payload && ev.detail.payload.callback) {
+            ev.detail.payload.callback();
+        }
     }
 
     onClickOnTagA(ev) {
