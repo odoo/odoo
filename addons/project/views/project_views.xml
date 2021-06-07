@@ -1082,7 +1082,7 @@
                     <field name="user_id"/>
                     <templates>
                         <div t-name="activity-box">
-                            <img t-att-src="activity_image('res.users', 'avatar_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
                             <div>
                                 <field name="name" display="full"/>
                                 <field name="project_id" muted="1" display="full" invisible="context.get('default_project_id', False)"/>
