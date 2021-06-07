@@ -4,7 +4,7 @@ import { escapeRegExp, intersperse } from "../utils/strings";
 import { localization } from "./localization";
 import { _lt } from "./translation";
 
-class InvalidNumberError extends Error {}
+export class InvalidNumberError extends Error {}
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -134,40 +134,6 @@ export function parseInteger(value) {
         throw new InvalidNumberError(`"${value}" is not a correct number`);
     }
     return parsed;
-}
-
-/**
- * Try to extract a monetary value from a string. The localization is considered in the process.
- * The monetary value can have the formats sym$&nbsp;float, float$&nbsp;sym or float
- * where $&nbsp; is a non breaking space and sym is a currency symbol.
- * If a symbol is found it must correspond to the default currency symbol or to the
- * symbol of the currency whose id is passed in options.
- *
- * @param {string} value
- * @param {Object} [options={}]
- * @param {number} [options.currencyId]
- * @returns {number} float
- */
-export function parseMonetary(value, options = {}) {
-    let values = value.split("&nbsp;");
-    if (values.length === 1) {
-        return parseFloat(value);
-    }
-    let currency;
-    if (options.currencyId) {
-        currency = odoo.session_info.currencies[options.currencyId];
-    } else {
-        currency = Object.values(odoo.session_info.currencies)[0];
-    }
-    const symbolIndex = values.findIndex((v) => v === currency.symbol);
-    if (symbolIndex === -1) {
-        throw new InvalidNumberError(`"${value}" is not a correct number`);
-    }
-    values.splice(symbolIndex, 1);
-    if (values.length !== 1) {
-        throw new InvalidNumberError(`"${value}" is not a correct number`);
-    }
-    return parseFloat(values[0]);
 }
 
 /**
