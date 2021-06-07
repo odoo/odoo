@@ -2,7 +2,6 @@
 
 import { notificationService } from "@web/core/notifications/notification_service";
 import { registry } from "@web/core/registry";
-import { EffectContainer } from "@web/webclient/effects/effect_container";
 import { effectService } from "@web/webclient/effects/effect_service";
 import { RainbowMan } from "@web/webclient/effects/rainbow_man";
 import { userService } from "@web/core/user_service";
@@ -14,12 +13,12 @@ const serviceRegistry = registry.category("services");
 
 class Parent extends Component {
     setup() {
-        this.RainbowMgr = EffectContainer;
+        this.RainbowMgr = registry.category("main_components").get("EffectContainer");
     }
 }
 Parent.template = tags.xml`
     <div>
-      <t t-component="RainbowMgr" />
+      <t t-component="RainbowMgr.Component" t-props="RainbowMgr.props" />
     </div>
   `;
 

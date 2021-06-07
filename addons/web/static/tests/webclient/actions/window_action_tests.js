@@ -2,7 +2,6 @@
 
 import { browser } from "@web/core/browser/browser";
 import { debugService } from "@web/core/debug/debug_service";
-import { DialogContainer } from "@web/core/dialog/dialog_container";
 import { registry } from "@web/core/registry";
 import { editView } from "@web/legacy/debug_manager";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
@@ -2130,12 +2129,6 @@ QUnit.module("ActionManager", (hooks) => {
         "executing a window action with onchange warning does not hide it",
         async function (assert) {
             assert.expect(2);
-
-            const mainComponentRegistry = registry.category("main_components");
-            clearRegistryWithCleanup(mainComponentRegistry);
-            mainComponentRegistry.add("DialogContainer", {
-                Component: DialogContainer,
-            });
 
             serverData.views["partner,false,form"] = `
             <form>

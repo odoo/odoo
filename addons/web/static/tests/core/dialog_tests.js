@@ -14,7 +14,6 @@ const { useRef, useState } = hooks;
 const serviceRegistry = registry.category("services");
 let parent;
 let target;
-let env;
 
 class SimpleDialog extends Dialog {
     setup() {
@@ -42,7 +41,6 @@ QUnit.module("Components", (hooks) => {
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("dialog", makeFakeDialogService());
-        env = await makeTestEnv();
     });
     hooks.afterEach(() => {
         if (parent) {
@@ -62,6 +60,8 @@ QUnit.module("Components", (hooks) => {
                 Hello!
             </t>
             `;
+
+        const env = await makeTestEnv();
         parent = await mount(Parent, { env, target, props: {} });
         assert.containsOnce(target, "div.o_dialog_container .o_dialog");
         assert.containsOnce(
@@ -98,6 +98,7 @@ QUnit.module("Components", (hooks) => {
               </div>
           `;
         Parent.components = { SimpleDialog };
+        const env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.containsN(target, ".o_dialog", 2);
         assert.deepEqual(
@@ -121,7 +122,7 @@ QUnit.module("Components", (hooks) => {
             }),
             { force: true }
         );
-        env = await makeTestEnv();
+        const env = await makeTestEnv();
         class MyDialog extends SimpleDialog {
             setup() {
                 super.setup();
@@ -153,7 +154,7 @@ QUnit.module("Components", (hooks) => {
                 }),
                 { force: true }
             );
-            env = await makeTestEnv();
+            const env = await makeTestEnv();
             assert.expect(3);
             class MyDialog extends SimpleDialog {
                 setup() {
@@ -199,6 +200,7 @@ QUnit.module("Components", (hooks) => {
               </div>
           `;
         Parent.components = { SimpleButtonsDialog };
+        const env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.containsOnce(target, ".o_dialog");
         assert.containsN(target, ".o_dialog footer button", 2);
@@ -226,6 +228,7 @@ QUnit.module("Components", (hooks) => {
                   <SubComponent text="'Wow(l) Effect'" t-on-subcomponent-clicked="_onSubcomponentClicked"/>
               </SimpleDialog>
           `;
+        const env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.containsOnce(target, ".o_dialog");
         assert.containsOnce(target, ".o_dialog main .o_subcomponent");
@@ -240,6 +243,7 @@ QUnit.module("Components", (hooks) => {
         Parent.template = owl.tags.xml`
               <SimpleDialog renderHeader="false" renderFooter="false"/>
           `;
+        const env = await makeTestEnv();
         Parent.components = { SimpleDialog };
         parent = await mount(Parent, { env, target });
         assert.containsOnce(target, ".o_dialog");
@@ -259,6 +263,7 @@ QUnit.module("Components", (hooks) => {
         <SimpleDialog contentClass="'sm'" size="'modal-sm'"/>
       </div>`;
         Parent.components = { SimpleDialog };
+        const env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.containsN(target, ".o_dialog", 4);
         assert.containsOnce(
@@ -286,6 +291,7 @@ QUnit.module("Components", (hooks) => {
               <div><SimpleDialog fullscreen="true"/></div>
           `;
         Parent.components = { SimpleDialog };
+        const env = await makeTestEnv();
         parent = await mount(Parent, { env, target });
         assert.containsOnce(target, ".o_dialog");
         assert.hasClass(target.querySelector(".o_dialog .modal"), "o_modal_full");
@@ -303,7 +309,7 @@ QUnit.module("Components", (hooks) => {
             }),
             { force: true }
         );
-        env = await makeTestEnv();
+        const env = await makeTestEnv();
         let id = 0;
         class MyDialog extends SimpleDialog {
             setup() {
@@ -385,6 +391,7 @@ QUnit.module("Components", (hooks) => {
                 );
             }
         }
+        const env = await makeTestEnv();
         Parent.template = owl.tags.xml`<div><SimpleDialog t-ref="dialogRef"/></div>`;
         Parent.components = { SimpleDialog };
         parent = await mount(Parent, { env, target });

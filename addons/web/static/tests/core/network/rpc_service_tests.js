@@ -6,9 +6,10 @@ import { notificationService } from "@web/core/notifications/notification_servic
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/service_hook";
 import { patch, unpatch } from "@web/core/utils/patch";
-import { makeTestEnv } from "../../helpers/mock_env";
+import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { makeMockXHR } from "../../helpers/mock_services";
 import { getFixture, makeDeferred, nextTick, patchWithCleanup } from "../../helpers/utils";
+import { registerCleanup } from "../../helpers/cleanup";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -16,6 +17,7 @@ const { xml } = tags;
 let isXHRMocked = false;
 const serviceRegistry = registry.category("services");
 
+let isDeployed = false;
 async function testRPC(route, params) {
     let url = "";
     let request;
@@ -35,10 +37,16 @@ async function testRPC(route, params) {
         { pure: true }
     );
     isXHRMocked = true;
+
+    if (isDeployed) {
+        clearRegistryWithCleanup(registry.category("main_components"));
+    }
     const env = await makeTestEnv({
         serviceRegistry,
         // browser: { XMLHttpRequest: MockXHR },
     });
+    isDeployed = true;
+    registerCleanup(() => (isDeployed = false));
     await env.services.rpc(route, params);
     return { url, request };
 }

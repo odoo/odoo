@@ -2,12 +2,10 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { NotificationContainer } from "@web/core/notifications/notification_container";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import testUtils from "web.test_utils";
 import { registerCleanup } from "../../helpers/cleanup";
-import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
@@ -344,10 +342,6 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("test display_notification client action", async function (assert) {
         assert.expect(6);
-        clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", {
-            Component: NotificationContainer,
-        });
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
         assert.containsOnce(webClient, ".o_kanban_view");
@@ -387,10 +381,6 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("test next action on display_notification client action", async function (assert) {
-        clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", {
-            Component: NotificationContainer,
-        });
         const webClient = await createWebClient({ serverData });
         const options = {
             onClose: function () {

@@ -8,10 +8,8 @@ import * as AbstractStorageService from "web.AbstractStorageService";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { assetsWatchdogService } from "@bus/js/services/assets_watchdog_service";
 import { click, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { NotificationContainer } from "@web/core/notifications/notification_container";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { clearRegistryWithCleanup } from "@web/../tests/helpers/mock_env";
 
 const LocalStorageService = AbstractStorageService.extend({
     storage: new RamStorage(),
@@ -28,10 +26,6 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
 
         serviceRegistry.add("assetsWatchdog", assetsWatchdogService);
 
-        clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", {
-            Component: NotificationContainer
-        });
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
             clearTimeout: () => {},

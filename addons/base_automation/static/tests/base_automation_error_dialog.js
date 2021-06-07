@@ -13,6 +13,10 @@ import { makeFakeRPCService, makeFakeLocalizationService } from "@web/../tests/h
 import { RPCError } from "@web/core/network/rpc_service";
 
 import { BaseAutomationErrorDialog } from "../src/js/base_automation_error_dialog";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { DialogContainer } from "@web/core/dialog/dialog_container";
+import { getFixture } from "@web/../tests/helpers/utils";
+import { nextTick } from "@web/../tests/helpers/utils";
 
 const serviceRegistry = registry.category("services");
 
@@ -66,28 +70,33 @@ QUnit.module("base_automation", {}, function () {
             exceptionName: errorContext.exception_class,
         });
 
-        const env = await makeTestEnv();
-        const dialogOpened = new Promise((resolve) => {
-            env.services.dialog.bus.on("ADD", null, async ({ class: dialogClass, props }) => {
-                assert.equal(props.data.context, errorContext, "Received the correct error context");
-                const fixture = document.getElementById("qunit-fixture");
-                const dialogContainer = document.createElement('div');
-                dialogContainer.classList.add('o_dialog_container');
-                fixture.appendChild(dialogContainer);
-                await owl.mount(dialogClass, { target: fixture, props, env });
-                assert.containsOnce(dialogContainer, '.modal .fa-clipboard');
-                assert.containsOnce(dialogContainer, '.modal .o_disable_action_button');
-                assert.containsOnce(dialogContainer, '.modal .o_edit_action_button');
-                resolve();
-            });
+        patchWithCleanup(DialogContainer.prototype, {
+            setup() {
+                this.props.bus.on("ADD", this, ({ class: dialogClass, props }) => {
+                    assert.equal(props.data.context, errorContext, "Received the correct error context");
+                });
+                this._super();
+            },
+            mounted() {
+                this._super();
+                this.el.classList.add("o_dialog_container");
+            }
         });
+
+        const env = await makeTestEnv();
+        const { Component: Container, props } = registry.category("main_components").get("DialogContainer");
+        const dialogContainer = await owl.mount(Container, { target: getFixture(), env, props });
+
         const errorEvent = new PromiseRejectionEvent("error", { reason: {
             message: error,
             legacy: true,
             event: $.Event(),
         }, promise: null });
         await unhandledRejectionCb(errorEvent);
-        await dialogOpened;
+        await nextTick();
+        assert.containsOnce(dialogContainer, '.modal .fa-clipboard');
+        assert.containsOnce(dialogContainer, '.modal .o_disable_action_button');
+        assert.containsOnce(dialogContainer, '.modal .o_edit_action_button');
     });
 
     QUnit.test("Error not due to an automated action", async function (assert) {
@@ -102,27 +111,27 @@ QUnit.module("base_automation", {}, function () {
             },
         });
 
-        const env = await makeTestEnv();
-        const dialogOpened = new Promise((resolve) => {
-            env.services.dialog.bus.on("ADD", null, async ({ class: dialogClass, props }) => {
-                const fixture = document.getElementById("qunit-fixture");
-                const dialogContainer = document.createElement('div');
-                dialogContainer.classList.add('o_dialog_container');
-                fixture.appendChild(dialogContainer);
-                await owl.mount(dialogClass, { target: fixture, props, env });
-                assert.containsOnce(dialogContainer, '.modal .fa-clipboard');
-                assert.containsNone(dialogContainer, '.modal .o_disable_action_button');
-                assert.containsNone(dialogContainer, '.modal .o_edit_action_button');
-                resolve();
-            });
+        patchWithCleanup(DialogContainer.prototype, {
+            mounted() {
+                this._super();
+                this.el.classList.add("o_dialog_container");
+            }
         });
+
+        const env = await makeTestEnv();
+        const { Component: Container, props } = registry.category("main_components").get("DialogContainer");
+        const dialogContainer = await owl.mount(Container, { target: getFixture(), env, props });
+
         const errorEvent = new PromiseRejectionEvent("error", { reason: {
             message: error,
             legacy: true,
             event: $.Event(),
         }, promise: null });
         await unhandledRejectionCb(errorEvent);
-        await dialogOpened;
+        await nextTick();
+        assert.containsOnce(dialogContainer, '.modal .fa-clipboard');
+        assert.containsNone(dialogContainer, '.modal .o_disable_action_button');
+        assert.containsNone(dialogContainer, '.modal .o_edit_action_button');
     });
 
 });

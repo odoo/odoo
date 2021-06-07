@@ -4,25 +4,20 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui_service";
 import testUtils from "web.test_utils";
 import ReportClientAction from "report.client_action";
-import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { makeFakeNotificationService } from "../../helpers/mock_services";
 import { patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { mockDownload } from "@web/../tests/helpers/utils";
-import { DialogContainer } from "@web/core/dialog/dialog_container";
+import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 
 let serverData;
 
-const mainComponentRegistry = registry.category("main_components");
 const serviceRegistry = registry.category("services");
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
-        clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("DialogContainer", {
-            Component: DialogContainer,
-        });
+        clearRegistryWithCleanup(registry.category("main_components"));
     });
 
     QUnit.module("Report actions");
