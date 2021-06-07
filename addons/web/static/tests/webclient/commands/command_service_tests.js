@@ -2,7 +2,7 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui_service";
+import { uiService } from "@web/core/ui/ui_service";
 import { useCommand } from "@web/webclient/commands/command_hook";
 import { commandService } from "@web/webclient/commands/command_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";

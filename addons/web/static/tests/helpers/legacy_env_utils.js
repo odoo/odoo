@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui_service";
+import { uiService } from "@web/core/ui/ui_service";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { makeLegacyDialogMappingService } from "@web/legacy/utils";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";

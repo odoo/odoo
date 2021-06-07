@@ -2,7 +2,7 @@
 
 import { browser as originalBrowser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui_service";
+import { uiService } from "@web/core/ui/ui_service";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { LoadingIndicator } from "@web/webclient/loading_indicator/loading_indicator";
 import { makeTestEnv } from "../helpers/mock_env";

@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { browser } from "../../core/browser/browser";
-import { registry } from "../../core/registry";
-import { useService } from "../../core/service_hook";
+import { browser } from "@web/core/browser/browser";
 
 const { Component, tags, useState } = owl;
 
@@ -44,9 +42,8 @@ export class BlockUI extends Component {
             line2: "",
         });
 
-        const { bus } = useService("ui");
-        bus.on("BLOCK", this, this.block);
-        bus.on("UNBLOCK", this, this.unblock);
+        this.props.bus.on("BLOCK", this, this.block);
+        this.props.bus.on("UNBLOCK", this, this.unblock);
     }
 
     replaceMessage(index) {
@@ -85,5 +82,3 @@ BlockUI.template = tags.xml`
         </div>
       </t>
     </div>`;
-
-registry.category("main_components").add("BlockUI", { Component: BlockUI });

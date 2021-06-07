@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui_service";
+import { uiService } from "@web/core/ui/ui_service";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { UserMenu } from "@web/webclient/user_menu/user_menu";

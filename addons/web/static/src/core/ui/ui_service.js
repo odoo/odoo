@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import { useService } from "./service_hook";
-import { registry } from "./registry";
-import { debounce } from "./utils/timing";
-import { useEffect } from "./effect_hook";
+import { useService } from "@web/core/service_hook";
+import { registry } from "@web/core/registry";
+import { debounce } from "@web/core/utils/timing";
+import { useEffect } from "@web/core/effect_hook";
+import { BlockUI } from "./block_ui";
 
 const { Component, core, hooks } = owl;
 const { EventBus } = core;
@@ -40,6 +41,7 @@ export const uiService = {
 
         // block/unblock code
         const bus = new EventBus();
+        registry.category("main_components").add("BlockUI", { Component: BlockUI, props: { bus } });
 
         let blockCount = 0;
         function block() {

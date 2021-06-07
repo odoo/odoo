@@ -11,7 +11,7 @@ import { objectToUrlEncodedString } from "@web/core/utils/urls";
 import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
 import { companyService } from "@web/webclient/company_service";
-import { uiService } from "@web/core/ui_service";
+import { uiService } from "@web/core/ui/ui_service";
 
 const { Component } = owl;
 

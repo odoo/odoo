@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui_service";
+import { uiService } from "@web/core/ui/ui_service";
 import testUtils from "web.test_utils";
 import ReportClientAction from "report.client_action";
 import { makeFakeNotificationService } from "../../helpers/mock_services";
