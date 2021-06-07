@@ -1,12 +1,9 @@
 /** @odoo-module **/
 
-import { DialogContainer } from "@web/core/dialog/dialog_container";
 import { registry } from "@web/core/registry";
-import { NotificationContainer } from "@web/core/notifications/notification_container";
 import testUtils from "web.test_utils";
 import ListController from "web.ListController";
 import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
-import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 import { ClientActionAdapter } from "@web/legacy/action_adapters";
@@ -18,8 +15,6 @@ import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 
 let serverData;
-
-const mainComponentRegistry = registry.category("main_components");
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
@@ -39,10 +34,6 @@ QUnit.module("ActionManager", (hooks) => {
             },
         });
 
-        clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("NotificationContainer", {
-            Component: NotificationContainer,
-        });
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.containsOnce(webClient, ".o_list_view");
@@ -67,10 +58,6 @@ QUnit.module("ActionManager", (hooks) => {
                 this._super(...arguments);
                 list = this;
             },
-        });
-        clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("DialogContainer", {
-            Component: DialogContainer,
         });
 
         const webClient = await createWebClient({ serverData });

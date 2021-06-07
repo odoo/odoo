@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "../registry";
+import { PopoverContainer } from "./popover_container";
 
 const { EventBus } = owl.core;
 
@@ -8,8 +9,10 @@ export const popoverService = {
     start() {
         let nextId = 0;
         const bus = new EventBus();
+        registry
+            .category("main_components")
+            .add("PopoverContainer", { Component: PopoverContainer, props: { bus } });
         return {
-            bus,
             /**
              * Signals the manager to add a popover.
              *

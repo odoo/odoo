@@ -2,6 +2,7 @@
 
 import { browser } from "../browser/browser";
 import { registry } from "../registry";
+import { NotificationContainer } from "./notification_container";
 
 const { EventBus } = owl.core;
 
@@ -11,6 +12,11 @@ export const notificationService = {
     start() {
         let notifId = 0;
         const bus = new EventBus();
+
+        registry.category("main_components").add("NotificationContainer", {
+            Component: NotificationContainer,
+            props: { bus },
+        });
 
         return {
             bus,

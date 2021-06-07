@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from "../registry";
-import { useService } from "../service_hook";
 import { Notification as NotificationComponent } from "./notification";
 
 const { Component, tags } = owl;
@@ -9,14 +7,12 @@ const { Component, tags } = owl;
 export class NotificationContainer extends Component {
     setup() {
         this.notifications = [];
-        const { bus } = useService("notification");
-        this.bus = bus;
-        this.bus.on("ADD", this, this.add);
-        this.bus.on("REMOVE", this, this.remove);
+        this.props.bus.on("ADD", this, this.add);
+        this.props.bus.on("REMOVE", this, this.remove);
     }
     __destroy() {
-        this.bus.off("ADD", this, this.add);
-        this.bus.off("REMOVE", this, this.remove);
+        this.props.bus.off("ADD", this, this.add);
+        this.props.bus.off("REMOVE", this, this.remove);
         super.__destroy();
     }
 
@@ -64,7 +60,3 @@ NotificationContainer.template = tags.xml`
         </t>
     </div>`;
 NotificationContainer.components = { NotificationComponent };
-
-registry.category("main_components").add("NotificationContainer", {
-    Component: NotificationContainer,
-});

@@ -16,12 +16,11 @@ ErrorHandler.template = tags.xml`<t t-component="props.dialog.class" t-props="pr
 export class DialogContainer extends Component {
     setup() {
         this.dialogs = {};
-        const { bus } = useService("dialog");
-        bus.on("ADD", this, (dialog) => {
+        this.props.bus.on("ADD", this, (dialog) => {
             this.dialogs[dialog.id] = dialog;
             this.render();
         });
-        bus.on("CLOSE", this, (id) => {
+        this.props.bus.on("CLOSE", this, (id) => {
             this.closeDialog(id);
         });
     }
@@ -45,8 +44,8 @@ export class DialogContainer extends Component {
     }
 
     __destroy() {
-        this.env.bus.off("ADD", this);
-        this.env.bus.off("CLOSE", this);
+        this.props.bus.off("ADD", this);
+        this.props.bus.off("CLOSE", this);
         super.__destroy();
     }
 }
@@ -58,7 +57,3 @@ DialogContainer.template = tags.xml`
       </t>
     </div>
     `;
-
-registry.category("main_components").add("DialogContainer", {
-    Component: DialogContainer,
-});

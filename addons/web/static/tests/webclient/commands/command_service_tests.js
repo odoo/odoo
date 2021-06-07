@@ -18,14 +18,15 @@ let testComponent;
 const serviceRegistry = registry.category("services");
 const commandCategoryRegistry = registry.category("command_categories");
 
-class TestComponent extends Component {}
-TestComponent.components = {
-    DialogContainer: registry.category("main_components").get("DialogContainer").Component,
-};
+class TestComponent extends Component {
+    get DialogContainer() {
+        return registry.category("main_components").get("DialogContainer");
+    }
+}
 TestComponent.template = xml`
   <div>
     <div class="o_dialog_container"/>
-    <DialogContainer/>
+    <t t-component="DialogContainer.Component" t-props="DialogContainer.props" />
   </div>
 `;
 

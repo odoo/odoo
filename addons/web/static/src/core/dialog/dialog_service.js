@@ -2,6 +2,7 @@
 
 import { registry } from "../registry";
 import { Dialog } from "./dialog";
+import { DialogContainer } from "./dialog_container";
 
 const { core } = owl;
 const { EventBus } = core;
@@ -33,7 +34,13 @@ export const dialogService = {
         function close(id) {
             bus.trigger("CLOSE", id);
         }
-        return { open, close, bus };
+
+        registry.category("main_components").add("DialogContainer", {
+            Component: DialogContainer,
+            props: { bus },
+        });
+
+        return { open, close };
     },
 };
 

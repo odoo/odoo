@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from "../registry";
-import { useService } from "../service_hook";
 import { Popover } from "./popover";
 
 const { Component } = owl;
@@ -64,14 +62,12 @@ export class PopoverContainer extends Component {
     setup() {
         // do not include popover params in state to keep original popover props
         this.popovers = {};
-        const { bus } = useService("popover");
-        this.bus = bus;
-        this.bus.on("ADD", this, this.add);
-        this.bus.on("REMOVE", this, this.remove);
+        this.props.bus.on("ADD", this, this.add);
+        this.props.bus.on("REMOVE", this, this.remove);
     }
     __destroy() {
-        this.bus.off("ADD", this, this.add);
-        this.bus.off("REMOVE", this, this.remove);
+        this.props.bus.off("ADD", this, this.add);
+        this.props.bus.off("REMOVE", this, this.remove);
         super.__destroy();
     }
 
@@ -138,5 +134,3 @@ PopoverContainer.template = xml`
         </t>
     </div>
 `;
-
-registry.category("main_components").add("PopoverContainer", { Component: PopoverContainer });

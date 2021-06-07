@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "../../core/registry";
+import { EffectContainer } from "./effect_container";
 
 const { EventBus } = owl.core;
 
@@ -24,6 +25,10 @@ export const effectService = {
     dependencies: ["notification", "user"],
     start(env, { notification, user }) {
         const bus = new EventBus();
+        registry.category("main_components").add("EffectContainer", {
+            Component: EffectContainer,
+            props: { bus },
+        });
         let effectId = 0;
 
         /**
@@ -95,7 +100,7 @@ export const effectService = {
             }
         }
 
-        return { create, rainbowMan, bus };
+        return { create, rainbowMan };
     },
 };
 

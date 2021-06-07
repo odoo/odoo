@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { PopoverContainer } from "@web/core/popover/popover_container";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { registerCleanup } from "../../helpers/cleanup";
@@ -37,9 +36,8 @@ PseudoWebClient.template = xml`
 
 QUnit.module("Popover service", {
     async beforeEach() {
-        registry.category("services").add("popover", popoverService);
         clearRegistryWithCleanup(mainComponents);
-        mainComponents.add("PopoverContainer", { Component: PopoverContainer });
+        registry.category("services").add("popover", popoverService);
 
         fixture = getFixture();
         env = await makeTestEnv();

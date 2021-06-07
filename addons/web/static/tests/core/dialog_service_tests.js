@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { DialogContainer } from "@web/core/dialog/dialog_container";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
 import { errorService } from "@web/core/errors/error_service";
@@ -41,13 +40,12 @@ PseudoWebClient.template = tags.xml`
 QUnit.module("DialogManager", {
     async beforeEach() {
         target = getFixture();
+        clearRegistryWithCleanup(mainComponentRegistry);
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("hotkey", hotkeyService);
-        clearRegistryWithCleanup(mainComponentRegistry);
-        mainComponentRegistry.add("DialogContainer", {
-            Component: DialogContainer,
-        });
+        serviceRegistry.add("l10n", makeFakeLocalizationService());
+
         env = await makeTestEnv();
     },
     afterEach() {
