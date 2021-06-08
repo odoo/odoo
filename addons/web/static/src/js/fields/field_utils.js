@@ -467,7 +467,7 @@ function parseDate(value, field, options) {
         return false;
     }
     var datePattern = time.getLangDateFormat();
-    var datePatternWoZero = datePattern.replace('MM', 'M').replace('DD', 'D');
+    var datePatternWoZero = time.getLangDateFormatWoZero();
     var date;
     const smartDate = parseSmartDateInput(value);
     if (smartDate) {

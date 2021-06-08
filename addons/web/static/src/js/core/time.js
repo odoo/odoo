@@ -306,7 +306,7 @@ const dateFormatWoZeroCache = {};
  */
 function getLangDateFormatWoZero() {
     const dateFormat = getLangDateFormat();
-    if (!dateFormat in dateFormatWoZeroCache) {
+    if (!(dateFormat in dateFormatWoZeroCache)) {
         dateFormatWoZeroCache[dateFormat] = dateFormat
             .replace('MM', 'M')
             .replace('DD', 'D');
@@ -320,7 +320,7 @@ const timeFormatWoZeroCache = {};
  */
 function getLangTimeFormatWoZero() {
     const timeFormat = getLangTimeFormat();
-    if (!timeFormat in timeFormatWoZeroCache) {
+    if (!(timeFormat in timeFormatWoZeroCache)) {
         timeFormatWoZeroCache[timeFormat] = timeFormat
             .replace('HH', 'H')
             .replace('mm', 'm')
