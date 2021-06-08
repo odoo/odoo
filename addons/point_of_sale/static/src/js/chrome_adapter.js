@@ -27,13 +27,6 @@ export class ChromeAdapter extends PopupControllerMixin(PosComponent) {
     setup() {
         this.PosChrome = Registries.Component.get(Chrome);
         this.legacyActionManager = useService("legacy_action_manager");
-        useErrorHandlers();
-        useBus(this.env.bus, "ERROR_DISPATCHED", (error) => {
-            if (error instanceof ConnectionLostError) {
-                error = { code: -9999 }; // just a negative number
-            }
-            this._handlePushOrderError(error);
-        });
 
         this.env = owl.Component.env;
         useBus(this.env.qweb, "update", () => this.render());
