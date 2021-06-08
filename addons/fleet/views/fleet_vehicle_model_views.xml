@@ -32,21 +32,57 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Information" name="information" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
-                            <group string="Vehicle Information">
-                                <field name="transmission"/>
+                        <page string="Information" name="information">
+                            <group>
+                                <group string="Model" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                                    <field name="seats"/>
+                                    <field name="doors"/>
+                                    <field name="color"/>
+                                    <field name="model_year"/>
+                                    <field name="trailer_hook"/>
+                                </group>
+                                <group id="vehicle_information" string="Vehicle Information" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}">
+                                    <field name="electric_assistance"/>
+                                </group>
+                            </group>
+                            <group string="Engine" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
+                                <group>
+                                    <field name="default_fuel_type" required="1"/>
+                                    <label for="default_co2"/>
+                                    <div class="o_row" name="default_co2">
+                                        <field name="default_co2"/><span>g/km</span>
+                                    </div>
+                                    <field name="co2_standard"/>
+                                    <field name="transmission"/>
+                                </group>
+                                <group>
+                                    <label for="power"/>
+                                    <div class="o_row">
+                                        <field name="power"/><span>kW</span>
+                                    </div>
+                                    <field name="horsepower"/>
+                                    <field name="horsepower_tax"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Vendors" name="vendors">
                             <field name="vendors">
                                 <kanban quick_create="false" create="true">
                                     <field name="name"/>
+                                    <field name="phone"/>
+                                    <field name="email"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div style="position: relative" class="oe_kanban_global_click">
                                                 <div>
                                                     <div class="o_kanban_record_title">
                                                         <field name="name"/>
+                                                        <div class="o_kanban_details float-right">
+                                                            <span class="text-muted">
+                                                                <t t-if="record.phone.raw_value"><field name="phone"/><br/></t>
+                                                                <t t-if="record.email.raw_value"><field name="email"/></t>
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
