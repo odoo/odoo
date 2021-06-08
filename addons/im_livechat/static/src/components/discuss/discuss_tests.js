@@ -74,7 +74,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
 });
 
 QUnit.test('livechat in the sidebar: existing user with country', async function (assert) {
-    assert.expect(3);
+    assert.expect(1);
 
     this.data['res.country'].records.push({
         code: 'be',
@@ -93,16 +93,9 @@ QUnit.test('livechat in the sidebar: existing user with country', async function
         members: [this.data.currentPartnerId, 10],
     });
     await this.start();
-    assert.containsOnce(
-        document.body,
-        '.o_DiscussSidebar_groupLivechat',
-        "should have a channel group livechat in the side bar"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'livechat in the sidebar: basic rendering'
     const livechat = document.querySelector('.o_DiscussSidebar_groupLivechat .o_DiscussSidebarItem');
-    assert.ok(
-        livechat,
-        "should have a livechat in sidebar"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'livechat in the sidebar: basic rendering'
     assert.strictEqual(
         livechat.textContent,
         "Jean (Belgium)",
@@ -147,7 +140,7 @@ QUnit.test('do not add livechat in the sidebar on visitor opening his chat', asy
 });
 
 QUnit.test('do not add livechat in the sidebar on visitor typing', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     const currentUser = this.data['res.users'].records.find(user =>
         user.id === this.data.currentUserId
@@ -166,11 +159,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
         members: [this.data.publicPartnerId, this.data.currentPartnerId],
     });
     await this.start();
-    assert.containsNone(
-        document.body,
-        '.o_DiscussSidebar_groupLivechat',
-        "should not have any livechat in the sidebar initially"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'do not add livechat in the sidebar on visitor opening his chat'
 
     // simulate livechat visitor typing
     const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
@@ -193,7 +182,7 @@ QUnit.test('do not add livechat in the sidebar on visitor typing', async functio
 });
 
 QUnit.test('add livechat in the sidebar on visitor sending first message', async function (assert) {
-    assert.expect(4);
+    assert.expect(3);
 
     const currentUser = this.data['res.users'].records.find(user =>
         user.id === this.data.currentUserId
@@ -219,11 +208,7 @@ QUnit.test('add livechat in the sidebar on visitor sending first message', async
         members: [this.data.publicPartnerId, this.data.currentPartnerId],
     });
     await this.start();
-    assert.containsNone(
-        document.body,
-        '.o_DiscussSidebar_groupLivechat',
-        "should not have any livechat in the sidebar initially"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'do not add livechat in the sidebar on visitor opening his chat'
 
     // simulate livechat visitor sending a message
     const channel = this.data['mail.channel'].records.find(channel => channel.id === 10);
@@ -260,7 +245,7 @@ QUnit.test('livechats are sorted by last message date in the sidebar: most recen
      * messages to be more/less recent than others based on their ids instead of
      * their actual creation date.
      */
-    assert.expect(7);
+    assert.expect(6);
 
     this.data['mail.message'].records.push(
         { id: 11, model: "mail.channel", res_id: 11 }, // least recent message due to smaller id
@@ -291,11 +276,7 @@ QUnit.test('livechats are sorted by last message date in the sidebar: most recen
         id: 12,
         model: 'mail.channel',
     });
-    assert.containsOnce(
-        document.body,
-        '.o_DiscussSidebar_groupLivechat',
-        "should have a channel group livechat"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'livechat in the sidebar: existing user with country'
     const initialLivechats = document.querySelectorAll('.o_DiscussSidebar_groupLivechat .o_DiscussSidebarItem');
     assert.strictEqual(
         initialLivechats.length,
