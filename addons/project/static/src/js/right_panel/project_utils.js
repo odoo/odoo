@@ -6,19 +6,6 @@ import { ComponentAdapter } from 'web.OwlCompatibility';
 import { FormViewDialog } from 'web.view_dialogs';
 const { useState, useRef } = owl.hooks;
 
-export class FormViewDialogComponentAdapter extends ComponentAdapter {
-    renderWidget() {
-        // Ensure the dialog is properly reconstructed. Without this line, it is
-        // impossible to open the dialog again after having it closed a first
-        // time, because the DOM of the dialog has disappeared.
-        return this.willStart();
-    }
-}
-
-const components = {
-    FormViewDialogComponentAdapter,
-};
-
 class MilestoneComponent extends owl.Component {
     constructor() {
         super(...arguments);
@@ -63,15 +50,16 @@ class MilestoneComponent extends owl.Component {
         await this.__owl__.parent.willUpdateProps();
     }
 }
-MilestoneComponent.components = components;
+MilestoneComponent.components = { ComponentAdapter };
 
 export class AddMilestone extends MilestoneComponent {
     get NEW_PROJECT_MILESTONE() {
         return _lt("New Milestone");
     }
 
-    onAddMilestoneClick() {
+    onAddMilestoneClick(event) {
         if (!this._isDialogOpen) {
+            event.stopPropagation();
             this.state.openDialog = true;
         }
     }

@@ -7,7 +7,6 @@ $o-rightpanel-category-default-color: $o-brand-primary;
 $o-rightpanel-filter-default-color: #D59244;
 
 .o_controller_with_rightpanel {
-    overflow: hidden !important;
     display: flex;
     align-items: flex-start;
 
@@ -17,6 +16,10 @@ $o-rightpanel-filter-default-color: #D59244;
         max-height: 100%;
         position: relative;
     }
+}
+
+html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_with_rightpanel {
+    overflow: hidden;
 }
 
 .o_rightpanel {

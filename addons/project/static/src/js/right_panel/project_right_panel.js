@@ -43,6 +43,7 @@ export default class ProjectRightPanel extends owl.Component {
     }
 
     async onProjectActionClick(event) {
+        event.stopPropagation();
         let action = event.currentTarget.dataset.action;
         const additionalContext = JSON.parse(event.currentTarget.dataset.additional_context || "{}");
         if (event.currentTarget.dataset.type === "object") {
