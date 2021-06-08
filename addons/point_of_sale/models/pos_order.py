@@ -205,12 +205,7 @@ class PosOrder(models.Model):
             tax_key = ('tax',
                        values['partner_id'],
                        values['tax_line_id'],
-                       values['debit'] > 0,
-                       values.get('currency_id'))
-            if options.get('rounding_method') == 'round_globally':
-                tax_key = ('tax',
-                           values['tax_line_id'],
-                           order_id)
+                       order_id)
             return tax_key
         elif data_type == 'counter_part':
             return ('counter_part',
@@ -317,7 +312,7 @@ class PosOrder(models.Model):
                     'move_id': move.id,
                 })
 
-                key = self._get_account_move_line_group_data_type_key(data_type, values, {'rounding_method': rounding_method})
+                key = self._get_account_move_line_group_data_type_key(data_type, values)
                 if not key:
                     return
 
@@ -333,7 +328,7 @@ class PosOrder(models.Model):
                         current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
                         if 'currency_id' in values:
                             current_value['amount_currency'] = current_value.get('amount_currency', 0.0) + values.get('amount_currency', 0.0)
-                        if key[0] == 'tax' and rounding_method == 'round_globally':
+                        if key[0] == 'tax':
                             if current_value['debit'] - current_value['credit'] > 0:
                                 current_value['debit'] = current_value['debit'] - current_value['credit']
                                 current_value['credit'] = 0
