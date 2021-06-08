@@ -13,7 +13,7 @@
 
                     <div class="container d-flex flex-column flex-grow-1">
                         <h1 class="text-white my-5">Get A Booth</h1>
-                        <div t-if="not event.event_booth_ids" class="alert alert-info">
+                        <div t-if="not event_booth_ids" class="alert alert-info">
                             <span>This event is not open to exhibitors registration, check our <a href="/event">list of future events</a>.</span>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
 
     <template id="event_booth_registration" name="Event Booth Registration">
         <t t-call="website_event_booth.event_booth_layout">
-            <t t-if="event.event_booth_ids">
+            <t t-if="event_booth_ids">
                 <div class="col-lg-9 p-4">
                     <form method="post" t-attf-action="/event/#{slug(event)}/booth/register"
                           id="booth-registration" class="form-horizontal justify-content-center mt32" t-att-data-event-id="event.id">

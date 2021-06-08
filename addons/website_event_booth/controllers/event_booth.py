@@ -3,7 +3,7 @@
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 
@@ -13,13 +13,12 @@ class WebsiteEventBoothController(WebsiteEventController):
     @http.route('/event/<model("event.event"):event>/booth', type='http', auth='public', website=True, sitemap=False)
     def event_booth_main(self, event):
         event_sudo = event.sudo()
-        available_booth_ids = event_sudo.event_booth_ids.filtered(lambda booth: booth.is_available)
-        available_booth_category_ids = available_booth_ids.mapped('booth_category_id')
+        available_booth_category_ids = event_sudo.event_booth_ids.filtered(lambda booth: booth.is_available).mapped('booth_category_id')
         values = {
-            'main_object': event,
             'event': event,
-            'available_booth_ids': available_booth_ids,
+            'event_booth_ids': event_sudo.event_booth_ids,
             'available_booth_category_ids': available_booth_category_ids,
+            'main_object': event,
         }
         return request.render('website_event_booth.event_booth_registration', values)
 
@@ -49,20 +48,24 @@ class WebsiteEventBoothController(WebsiteEventController):
 
     @http.route('/event/<model("event.event"):event>/booth/confirm', type='http', auth='public', methods=['POST'], website=True)
     def event_booth_registration_confirm(self, event, **kwargs):
-        booth_ids = list(map(int, kwargs.get('event_booth_ids').split(',')))
-        booths = self.env['event.booth'].sudo().search([
+        booth_ids = [int(booth_id) for booth_id in kwargs.get('event_booth_ids', '').split(',')]
+        booths = request.env['event.booth'].sudo().search([
             ('event_id', '=', event.id),
-            ('state', '=', 'available')
+            ('state', '=', 'available'),
+            ('id', 'in', booth_ids)
         ])
         if booth_ids != booths.ids:
-            raise Forbidden()  # tde todo: fixme
+            raise Forbidden(_('Booth registration failed. Please try again.'))
 
         booth_values = self._prepare_booth_registration_values(event, kwargs)
         booths.action_confirm(booth_values)
 
+        event_sudo = event.sudo()
         return request.render(
             'website_event_booth.event_booth_registration_complete',
             {'event': event,
+             'event_booth_ids': event_sudo.event_booth_ids,
+             'main_object': event,
              'partner': booths.partner_id,
             }
         )
@@ -81,12 +84,13 @@ class WebsiteEventBoothController(WebsiteEventController):
             if not partner.mobile and kwargs.get('contact_mobile'):
                 partner.mobile = kwargs['contact_mobile']
         else:
-            partner = request.env.user.partner_id.id
+            partner = request.env.user.partner_id
         return {
-            'partner': partner.id,
-            'partner_name': kwargs.get('contact_name') or partner.name,
-            'partner_email': kwargs.get('contact_email') or partner.email,
-            'partner_phone': kwargs.get('contact_phone') or partner.phone,
+            'partner_id': partner.id,
+            'contact_name': kwargs.get('contact_name') or partner.name,
+            'contact_email': kwargs.get('contact_email') or partner.email,
+            'contact_mobile': kwargs.get('contact_mobile') or partner.mobile,
+            'contact_phone': kwargs.get('contact_phone') or partner.phone,
         }
 
     @http.route('/event/booth/check_availability', type='json', auth='public', methods=['POST'])
