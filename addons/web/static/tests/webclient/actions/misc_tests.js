@@ -98,7 +98,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(2);
         const webClient = await createWebClient({ serverData });
         patchWithCleanup(webClient.env.services.notification, {
-            create(message) {
+            add(message) {
                 assert.strictEqual(message, "No action with id '4448' could be found");
             },
         });

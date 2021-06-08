@@ -35,7 +35,7 @@ class InvalidAction extends Component {
             this.env._t("No action with id '%s' could be found"),
             this.props.actionId
         );
-        this.notification.create(message, { type: "danger" });
+        this.notification.add(message, { type: "danger" });
     }
 }
 InvalidAction.template = owl.tags.xml`<div class="o_invalid_action"></div>`;
