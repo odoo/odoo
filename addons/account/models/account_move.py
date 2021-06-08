@@ -1867,6 +1867,11 @@ class AccountMove(models.Model):
             default['date'] = self.company_id._get_user_fiscal_lock_date() + timedelta(days=1)
         if self.move_type == 'entry':
             default['partner_id'] = False
+        if not self.journal_id.active:
+            default['journal_id'] = self.with_context(
+                default_company_id=self.company_id.id,
+                default_move_type=self.move_type,
+            )._get_default_journal().id
         copied_am = super().copy(default)
         copied_am._message_log(body=_(
             'This entry has been duplicated from <a href=# data-oe-model=account.move data-oe-id=%(id)d>%(title)s</a>',
@@ -2518,6 +2523,11 @@ class AccountMove(models.Model):
             if move.auto_post and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s", date_msg))
+            if not move.journal_id.active:
+                raise UserError(_(
+                    "You cannot post an entry in an archived journal (%(journal)s)",
+                    journal=move.journal_id.display_name,
+                ))
 
             if not move.partner_id:
                 if move.is_sale_document():
