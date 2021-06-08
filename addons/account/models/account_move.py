@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from odoo.tools import float_compare, date_utils, email_split, email_re, html_escape, is_html_empty
 from odoo.tools.misc import formatLang, format_date, get_lang
@@ -4252,37 +4252,16 @@ class AccountMoveLine(models.Model):
         self.mapped('move_id')._synchronize_business_models({'line_ids'})
 
         if not self.env.context.get('tracking_disable', False):
-            # Create the dict for the message post
-            tracking_values = {}  # Tracking values to write in the message post
+            # Log changes to move lines on each move
             for move_id, modified_lines in move_initial_values.items():
-                tmp_move = {move_id: []}
                 for line in self.filtered(lambda l: l.move_id.id == move_id):
-                    changes, tracking_value_ids = line._mail_track(ref_fields, modified_lines)  # Return a tuple like (changed field, ORM command)
-                    tmp = {'line_id': line.id}
+                    tracking_value_ids = line._mail_track(ref_fields, modified_lines)[1]
                     if tracking_value_ids:
-                        selected_field = tracking_value_ids[0][2]  # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
-                        tmp.update({
-                            **{'field_name': selected_field.get('field_desc')},
-                            **self._get_formated_values(selected_field)
-                        })
-                    elif changes:
-                        field_name = line._fields[changes.pop()].string  # Get the field name
-                        tmp.update({
-                            'error': True,
-                            'field_error': field_name
-                        })
-                    else:
-                        continue
-                    tmp_move[move_id].append(tmp)
-                if len(tmp_move[move_id]) > 0:
-                    tracking_values.update(tmp_move)
-
-            # Write in the chatter.
-            for move in self.mapped('move_id'):
-                fields = tracking_values.get(move.id, [])
-                if len(fields) > 0:
-                    msg = self._get_tracking_field_string(tracking_values.get(move.id))
-                    move.message_post(body=msg)  # Write for each concerned move the message in the chatter
+                        msg = f"{html_escape(_('Journal Item'))} <a href=# data-oe-model=account.move.line data-oe-id={line.id}>#{line.id}</a> {html_escape(_('updated'))}"
+                        line.move_id._message_log(
+                            body=msg,
+                            tracking_value_ids=tracking_value_ids
+                        )
 
         return result
 
@@ -4370,37 +4349,22 @@ class AccountMoveLine(models.Model):
     # TRACKING METHODS
     # -------------------------------------------------------------------------
 
-    def _get_formated_values(self, tracked_field):
-        if tracked_field.get('field_type') in ('date', 'datetime'):
-            return {
-                'old_value': format_date(self.env, fields.Datetime.from_string(tracked_field.get('old_value_datetime'))),
-                'new_value': format_date(self.env, fields.Datetime.from_string(tracked_field.get('new_value_datetime'))),
-            }
-        elif tracked_field.get('field_type') in ('one2many', 'many2many', 'many2one'):
-            return {
-                'old_value': tracked_field.get('old_value_char', ''),
-                'new_value': tracked_field.get('new_value_char', '')
-            }
-        else:
-            return {
-                'old_value': [val for key, val in tracked_field.items() if 'old_value' in key][0], # Get the first element because we create a list like ['Elem']
-                'new_value': [val for key, val in tracked_field.items() if 'new_value' in key][0], # Get the first element because we create a list like ['Elem']
-            }
-
-    def _get_tracking_field_string(self, fields):
-        ARROW_RIGHT = '<span aria-label="Changed" class="fa fa-long-arrow-alt-right" role="img" title="Changed"></span>'
-        msg = '<ul>'
-        for field in fields:
-            redirect_link = '<a href=# data-oe-model=account.move.line data-oe-id=%d>#%d</a>' % (field['line_id'], field['line_id']) # Account move line link
-            if field.get('error', False):
-                msg += '<li>%s: %s</li>' % (
-                    field['field_error'],
-                    _('A modification has been operated on the line %s.', redirect_link)
-                )
-            else:
-                msg += '<li>%s: %s %s %s (%s)</li>' % (field['field_name'], field['old_value'], ARROW_RIGHT, field['new_value'], redirect_link)
-        msg += '</ul>'
-        return msg
+    def _mail_track(self, tracked_fields, initial):
+        changes, tracking_value_ids = super()._mail_track(tracked_fields, initial)
+        if len(changes) > len(tracking_value_ids):
+            for i, changed_field in enumerate(changes):
+                if tracked_fields[changed_field]['type'] in ['one2many', 'many2many']:
+                    field = self.env['ir.model.fields']._get(self._name, changed_field)
+                    vals = {
+                        'field': field.id,
+                        'field_desc': field.field_description,
+                        'field_type': field.ttype,
+                        'tracking_sequence': field.tracking,
+                        'old_value_char': ', '.join(initial[changed_field].mapped('name')),
+                        'new_value_char': ', '.join(self[changed_field].mapped('name')),
+                    }
+                    tracking_value_ids.insert(i, Command.create(vals))
+        return changes, tracking_value_ids
 
     # -------------------------------------------------------------------------
     # RECONCILIATION
