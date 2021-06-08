@@ -23,6 +23,7 @@ export async function startWebClient(Webclient) {
         db: sessionInfo.db,
         server_version: sessionInfo.server_version,
         server_version_info: sessionInfo.server_version_info,
+        isEnterprise: sessionInfo.server_version_info.slice(-1)[0] === "e",
     };
     odoo.isReady = false;
 

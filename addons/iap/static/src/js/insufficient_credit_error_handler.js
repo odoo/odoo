@@ -19,7 +19,7 @@ class InsufficientCreditDialog extends Dialog {
         });
         this.style = errorData.body ? "padding:0;" : "";
         const { _t } = this.env;
-        const isEnterprise = _.last(odoo.info.server_version_info) === "e";
+        const { isEnterprise } = odoo.info;
         if (errorData.trial && isEnterprise) {
             this.buttonMessage = _t("Start a Trial at Odoo");
         } else {
