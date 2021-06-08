@@ -49,6 +49,14 @@ function registerView(name, LegacyView) {
                         (this.props.state && this.props.state.searchPanel),
                 },
             });
+
+            // To open a new empty form view
+            // Legacy demands undefined ids, not False
+            if (this.viewParams.currentId === false) {
+                this.viewParams.currentId = undefined;
+                this.viewParams.controllerState.currentId = undefined;
+            }
+
             // Only add mode to viewParams if it is specified to avoid overwriting the default mode in some view (eg graph)
             if (this.props.mode) {
                 this.viewParams.mode = this.props.mode;
