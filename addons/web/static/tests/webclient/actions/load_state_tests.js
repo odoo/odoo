@@ -904,4 +904,27 @@ QUnit.module("ActionManager", (hooks) => {
             active_ids: 3,
         });
     });
+
+    QUnit.test(
+        "url form view type switch from list or kanban doesn't timeout",
+        async function (assert) {
+            assert.expect(3);
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 3);
+            assert.containsOnce(webClient, ".o_list_view", "should now display the list view");
+
+            await testUtils.controlPanel.switchView(webClient, "kanban");
+            await legacyExtraNextTick();
+            assert.containsOnce(webClient, ".o_kanban_view", "should now display the kanban view");
+
+            const hash = webClient.env.services.router.current.hash;
+            hash.view_type = "form";
+            await loadState(webClient.env, hash);
+            assert.containsOnce(
+                webClient,
+                ".o_form_view.o_form_editable",
+                "should now display the form view in edit mode"
+            );
+        }
+    );
 });
