@@ -122,7 +122,7 @@ QUnit.test('Notification Sent', async function (assert) {
 });
 
 QUnit.test('Notification Error', async function (assert) {
-    assert.expect(8);
+    assert.expect(5);
 
     const openResendActionDef = makeDeferred();
     const bus = new Bus();
@@ -163,21 +163,7 @@ QUnit.test('Notification Error', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIconClickable',
-        "should display the notification icon container"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIcon',
-        "should display the notification icon"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Notification Sent'
     assert.hasClass(
         document.querySelector('.o_Message_notificationIcon'),
         'fa-mobile',
