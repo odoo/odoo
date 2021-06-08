@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import testUtils from "web.test_utils";
-import { legacyExtraNextTick, nextTick } from "../../helpers/utils";
+import { click, legacyExtraNextTick, nextTick } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 let serverData;
@@ -28,6 +28,27 @@ QUnit.module("ActionManager", (hooks) => {
             type: "ir.actions.act_window_close",
         });
         assert.containsNone(document.body, ".o_technical_modal", "should have closed the modal");
+    });
+
+    QUnit.test("close dialog by clicking on the header button", async function (assert) {
+        assert.expect(5);
+        const webClient = await createWebClient({ serverData });
+        // execute an action in target="new"
+        function onClose() {
+            assert.step("on_close");
+        }
+        await doAction(webClient, 5, { onClose });
+        assert.containsOnce(webClient.el, ".o_dialog_container .o_dialog");
+        await click(
+            webClient.el.querySelector(".o_dialog_container .o_dialog .modal-header button")
+        );
+        assert.containsNone(webClient.el, ".o_dialog_container .o_dialog");
+        assert.verifySteps(["on_close"]);
+
+        // execute an 'ir.actions.act_window_close' action
+        // should not call 'on_close' as it was already called.
+        await doAction(webClient, { type: "ir.actions.act_window_close" });
+        assert.verifySteps([]);
     });
 
     QUnit.test('execute "on_close" only if there is no dialog to close', async function (assert) {

@@ -550,10 +550,21 @@ function makeActionManager(env) {
             }
 
             const { onClose } = dialog;
-            if (dialog.id) {
-                env.services.dialog.close(dialog.id);
+            const oldDialogId = dialog.id;
+            if (oldDialogId) {
+                dialog = {};
+                env.services.dialog.close(oldDialogId);
             }
-            const dialogId = env.services.dialog.open(ActionDialog, actionDialogProps);
+            const dialogId = env.services.dialog.open(ActionDialog, actionDialogProps, {
+                onCloseCallback: () => {
+                    if (dialog.id) {
+                        if (dialog.onClose) {
+                            dialog.onClose();
+                        }
+                        dialog = {};
+                    }
+                },
+            });
             dialog = {
                 id: dialogId,
                 onClose: onClose || options.onClose,
@@ -912,13 +923,14 @@ function makeActionManager(env) {
     async function _executeCloseAction(params = {}) {
         cleanDomFromBootstrap();
         let onClose;
-        if (dialog.id) {
+        const dialogId = dialog.id;
+        if (dialogId) {
             onClose = dialog.onClose;
-            env.services.dialog.close(dialog.id);
+            dialog = {};
+            env.services.dialog.close(dialogId);
         } else {
             onClose = params.onClose;
         }
-        dialog = {};
         if (onClose) {
             await onClose(params.onCloseInfo);
         }
