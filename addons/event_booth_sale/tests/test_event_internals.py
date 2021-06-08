@@ -61,12 +61,24 @@ class TestEventData(TestEventBoothSaleCommon):
         self.assertEqual(event.event_booth_count_available, 2)
         self.assertEqual(event.event_booth_ids.product_id, self.event_booth_product)
 
-        # one booth is sold
+        # updating partner is independent from availability
         event.event_booth_ids[1].write({'partner_id': self.event_customer.id})
+        self.assertEqual(event.event_booth_count, 2)
+        self.assertEqual(event.event_booth_count_available, 2)
+        self.assertEqual(event.event_booth_ids[1].message_partner_ids, self.event_customer)
+
+        # one booth is sold
+        event.event_booth_ids[1].write({'state': 'unavailable'})
         self.assertEqual(event.event_booth_count, 2)
         self.assertEqual(event.event_booth_count_available, 1)
 
-        # change event type to one using booths: reset to type booths as no reserved booth
+        # partner is reset: booth still unavailable but follower removed
+        event.event_booth_ids[1].write({'partner_id': False})
+        self.assertEqual(event.event_booth_count, 2)
+        self.assertEqual(event.event_booth_count_available, 1)
+        self.assertEqual(event.event_booth_ids[1].message_partner_ids, self.env['res.partner'])
+
+        # change event type to one using booths: include event type booths and keep reserved booths
         event_form = Form(event)
         event_form.event_type_id = event_type_wbooths
         self.assertEqual(event_form.event_booth_count, 3)
@@ -77,3 +89,4 @@ class TestEventData(TestEventBoothSaleCommon):
         )
         event_form.save()
         self.assertEqual(event.event_booth_count_available, 2)
+        self.assertEqual(event.event_booth_category_ids, self.event_booth_category_1 + self.event_booth_category_2)
