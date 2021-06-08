@@ -9702,7 +9702,7 @@ QUnit.module('fields', {}, function () {
             assert.expect(2);
 
             let o2m;
-            testUtils.patch(FieldOne2Many, {
+            testUtils.mock.patch(FieldOne2Many, {
                 init() {
                     this._super(...arguments);
                     o2m = this;
@@ -9729,7 +9729,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(o2m.recordData.display_name, "val");
 
             form.destroy();
-            testUtils.unpatch(FieldOne2Many);
+            testUtils.mock.unpatch(FieldOne2Many);
         });
 
         QUnit.test('nested one2many, onchange, no command value', async function (assert) {

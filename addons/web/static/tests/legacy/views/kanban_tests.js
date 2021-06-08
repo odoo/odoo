@@ -2987,7 +2987,7 @@ QUnit.module('Views', {
         // drag&drop a record in another column
         var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
         var $group = kanban.$('.o_kanban_group:nth-child(2)');
-        await testUtils.dragAndDrop($record, $group);
+        await testUtils.dom.dragAndDrop($record, $group);
 
         // should not drag&drop record
         assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length , 2,
