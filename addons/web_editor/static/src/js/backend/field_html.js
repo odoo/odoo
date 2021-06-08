@@ -27,6 +27,8 @@ var jinjaRegex = /(^|\n)\s*%\s(end|set\s)/;
  *  - cssReadonly
  *  - snippets
  *  - wrapper
+ *  - resizable
+ *  - codeview
  */
 var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     description: _lt("Html"),
@@ -194,6 +196,35 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             height: 380,
             resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : true,
         });
+    },
+    /**
+     * Toggle the code view and update the UI.
+     *
+     * @param {JQuery} $codeview
+     * @param {JQuery} [$codeviewButton] include the button to move it back and
+     *                                   forth between the toolbar and the code
+     *                                   view.
+     */
+    _toggleCodeView: function ($codeview, $codeviewButton) {
+        this.wysiwyg.odooEditor.observerUnactive();
+        $codeview.height(this.$content.height())
+        $codeview.toggleClass('d-none');
+        this.$content.toggleClass('d-none');
+        if ($codeview.hasClass('d-none')) {
+            this.wysiwyg.odooEditor.observerActive();
+            this.wysiwyg.setValue($codeview.val());
+            this.wysiwyg.odooEditor.historyStep();
+            if ($codeviewButton) {
+                this.wysiwyg.toolbar.$el.append($codeviewButton);
+            }
+        } else {
+            $codeview.val(this.$content.html());
+            this.wysiwyg.odooEditor.observerActive();
+            if ($codeviewButton) {
+                $codeview.after($codeviewButton);
+                this.wysiwyg.toolbar.$el.css({ visibility: 'hidden' });
+            }
+        }
     },
     /**
      * trigger_up 'field_changed' add record into the "ir.attachment" field found in the view.
@@ -472,6 +503,19 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             top: '+5px',
         });
         this.$el.append($button);
+        if (odoo.debug && this.nodeOptions.codeview) {
+            const $codeviewButton = $(`
+                <div id="codeview-btn-group" class="btn-group">
+                    <button class="o_codeview_btn btn btn-primary">
+                        <i class="fa fa-code"></i>
+                    </button>
+                </div>
+            `);
+            const $codeview = $('<textarea class="o_codeview d-none"/>');
+            this.wysiwyg.$editable.after($codeview);
+            this.wysiwyg.toolbar.$el.append($codeviewButton);
+            $codeviewButton.click(() => this._toggleCodeView($codeview, $codeviewButton));
+        }
     },
     /**
      * @private
