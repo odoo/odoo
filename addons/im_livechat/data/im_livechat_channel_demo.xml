@@ -23,7 +23,7 @@
             <field name="livechat_operator_id" ref="base.partner_admin"/>
             <field name="name">Visitor #234, Mitchell Admin</field>
             <field name="anonymous_name">Visitor #234, Mitchell Admin</field>
-            <field name="channel_last_seen_partner_ids" eval="[(0, 0, {'partner_id': ref('base.partner_admin')}), (0, 0, {'partner_id': ref('base.public_partner')})]"/>
+            <field name="channel_partner_ids" eval="[(4, ref('base.partner_admin')), (4, ref('base.public_partner'))]"/>
         </record>
         <record id="im_livechat_rating_1" model="rating.rating">
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_0"/>
@@ -86,7 +86,7 @@
             <field name="livechat_operator_id" ref="base.partner_demo"/>
             <field name="name">Visitor #323, Marc Demo</field>
             <field name="anonymous_name">Visitor #323, Marc Demo</field>
-            <field name="channel_last_seen_partner_ids" eval="[(0, 0, {'partner_id': ref('base.partner_demo')}), (0, 0, {'partner_id': ref('base.public_partner')})]"/>
+            <field name="channel_partner_ids" eval="[(4, ref('base.partner_demo'), ref('base.public_partner'))]"/>
         </record>
         <record id="im_livechat_rating_2" model="rating.rating">
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_1"/>
@@ -149,7 +149,7 @@
             <field name="livechat_operator_id" ref="base.partner_admin"/>
             <field name="name">Joel Willis, Mitchell Admin</field>
             <field name="anonymous_name">Joel Willis, Mitchell Admin</field>
-            <field name="channel_last_seen_partner_ids" eval="[(0, 0, {'partner_id': ref('base.partner_admin')}), (0, 0, {'partner_id': ref('base.partner_demo_portal')})]"/>
+            <field name="channel_partner_ids" eval="[(4, ref('base.partner_admin'), ref('base.partner_demo_portal'))]"/>
         </record>
         <record id="im_livechat_rating_3" model="rating.rating">
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_2"/>
@@ -202,7 +202,7 @@
             <field name="livechat_operator_id" ref="base.partner_demo"/>
             <field name="name">Joel Willis, Marc Demo</field>
             <field name="anonymous_name">Joel Willis, Marc Demo</field>
-            <field name="channel_last_seen_partner_ids" eval="[(0, 0, {'partner_id': ref('base.partner_demo')}), (0, 0, {'partner_id': ref('base.partner_demo_portal')})]"/>
+            <field name="channel_partner_ids" eval="[(4, ref('base.partner_demo'), ref('base.partner_demo_portal'))]"/>
         </record>
         <record id="im_livechat_rating_4" model="rating.rating">
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_3"/>
@@ -246,7 +246,7 @@
             <field name="livechat_operator_id" ref="base.partner_admin"/>
             <field name="name">Visitor #532, Mitchell Admin</field>
             <field name="anonymous_name">Visitor #532, Mitchell Admin</field>
-            <field name="channel_last_seen_partner_ids" eval="[(0, 0, {'partner_id': ref('base.partner_admin')}), (0, 0, {'partner_id': ref('base.public_partner')})]"/>
+            <field name="channel_partner_ids" eval="[(4, ref('base.partner_admin'), ref('base.public_partner'))]"/>
         </record>
         <record id="im_livechat_rating_5" model="rating.rating">
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_4"/>
@@ -300,7 +300,7 @@
             <field name="livechat_operator_id" ref="base.partner_admin"/>
             <field name="name">Visitor #649, Mitchell Admin</field>
             <field name="anonymous_name">Visitor #649, Mitchell Admin</field>
-            <field name="channel_last_seen_partner_ids" eval="[(0, 0, {'partner_id': ref('base.partner_admin')}), (0, 0, {'partner_id': ref('base.public_partner')})]"/>
+            <field name="channel_partner_ids" eval="[(4, ref('base.partner_admin'), ref('base.public_partner'))]"/>
         </record>
         <record id="im_livechat_rating_6" model="rating.rating">
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_5"/>
@@ -354,7 +354,7 @@
             <field name="livechat_operator_id" ref="base.partner_admin"/>
             <field name="name">Joel Willis, Mitchell Admin</field>
             <field name="anonymous_name">Joel Willis, Mitchell Admin</field>
-            <field name="channel_last_seen_partner_ids" eval="[(0, 0, {'partner_id': ref('base.partner_admin')}), (0, 0, {'partner_id': ref('base.partner_demo_portal')})]"/>
+            <field name="channel_partner_ids" eval="[(4, ref('base.partner_admin'), ref('base.partner_demo_portal'))]"/>
         </record>
         <record id="im_livechat_rating_7" model="rating.rating">
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_6"/>
@@ -407,7 +407,7 @@
             <field name="livechat_operator_id" ref="base.partner_demo"/>
             <field name="name">Visitor #722, Marc Demo</field>
             <field name="anonymous_name">Visitor #722, Marc Demo</field>
-            <field name="channel_last_seen_partner_ids" eval="[(0, 0, {'partner_id': ref('base.partner_demo')}), (0, 0, {'partner_id': ref('base.public_partner')})]"/>
+            <field name="channel_partner_ids" eval="[(4, ref('base.partner_demo'), ref('base.public_partner'))]"/>
         </record>
         <record id="im_livechat_rating_8" model="rating.rating">
             <field name="res_id" ref="im_livechat.im_livechat_mail_channel_data_7"/>
@@ -460,7 +460,7 @@
             <field name="livechat_channel_id" ref="im_livechat.im_livechat_channel_data"/>
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
             <field name="channel_type">livechat</field>
-            <field name="channel_last_seen_partner_ids" eval="[(0, 0, {'partner_id': ref('base.partner_admin')}), (0, 0, {'partner_id': ref('base.public_partner')})]"/>
+            <field name="channel_partner_ids" eval="[(4, ref('base.partner_admin'), ref('base.public_partner'))]"/>
             <field name="anonymous_name">Visitor, Mitchell Admin</field>
         </record>
 
