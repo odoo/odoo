@@ -5,7 +5,16 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
 
+
+#Some fields don't have the exact same name
+MODEL_FIELDS_TO_VEHICLE = {
+    'transmission': 'transmission', 'model_year': 'model_year', 'electric_assistance': 'electric_assistance',
+    'color': 'color', 'seats': 'seats', 'doors': 'doors', 'trailer_hook': 'trailer_hook',
+    'default_co2': 'co2', 'co2_standard': 'co2_standard', 'default_fuel_type': 'fuel_type',
+    'power': 'power', 'horsepower': 'horsepower', 'horsepower_tax': 'horsepower_tax',
+}
 
 class FleetVehicle(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -18,7 +27,7 @@ class FleetVehicle(models.Model):
         return state if state and state.id else False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
-    description = fields.Html("Vehicle Description")
+    description = fields.Html("Vehicle Description", help="Add a note about this vehicle")
     active = fields.Boolean('Active', default=True, tracking=True)
     fleet_id = fields.Many2one('fleet.category', string='Fleet')
     manager_id = fields.Many2one(
@@ -35,10 +44,12 @@ class FleetVehicle(models.Model):
         store=True,
     )
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+    country_id = fields.Many2one('res.country', related='company_id.country_id')
+    country_code = fields.Char(related='country_id.code')
     license_plate = fields.Char(tracking=True,
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
-    trailer_hook = fields.Boolean(default=False)
+    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch', compute='_compute_model_fields', store=True, readonly=False)
     driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver of the vehicle', copy=False)
     future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
@@ -56,15 +67,15 @@ class FleetVehicle(models.Model):
     acquisition_date = fields.Date('Immatriculation Date', required=False,
         default=fields.Date.today, help='Date when the vehicle has been immatriculated')
     first_contract_date = fields.Date(string="First Contract Date", default=fields.Date.today)
-    color = fields.Char(help='Color of the vehicle')
+    color = fields.Char(help='Color of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
         default=_get_default_state, group_expand='_read_group_stage_ids',
         tracking=True,
         help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
-    seats = fields.Integer('Seats Number', help='Number of seats of the vehicle')
-    model_year = fields.Char('Model Year', help='Year of the model')
-    doors = fields.Integer('Doors Number', help='Number of doors of the vehicle', compute="_compute_doors", store=True, readonly=True)
+    seats = fields.Integer('Seats Number', help='Number of seats of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
+    model_year = fields.Char('Model Year', help='Year of the model', compute='_compute_model_fields', store=True, readonly=False)
+    doors = fields.Integer('Doors Number', help='Number of doors of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
     tag_ids = fields.Many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id', 'tag_id', 'Tags', copy=False)
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
         help='Odometer measure of the vehicle at the moment of this log')
@@ -74,23 +85,13 @@ class FleetVehicle(models.Model):
         ], 'Odometer Unit', default='kilometers', help='Unit of the odometer ', required=True)
     transmission = fields.Selection(
         [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle',
-        compute='_compute_transmission', store=True, readonly=False)
-    fuel_type = fields.Selection([
-        ('gasoline', 'Gasoline'),
-        ('diesel', 'Diesel'),
-        ('lpg', 'LPG'),
-        ('electric', 'Electric'),
-        ('hybrid', 'Hybrid'),
-        ('plug_in_hybrid_diesel', 'Plug-in Hybrid Diesel'),
-        ('plug_in_hybrid_gasoline', 'Plug-in Hybrid Gasoline'),
-        ('full_hybrid_gasoline', 'Full Hybrid Gasoline'),
-        ('cng', 'CNG'),
-        ('hydrogen', 'Hydrogen'),
-        ], 'Fuel Type', help='Fuel Used by the vehicle')
-    horsepower = fields.Integer()
-    horsepower_tax = fields.Float('Horsepower Taxation')
-    power = fields.Integer('Power', help='Power in kW of the vehicle')
-    co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle')
+        compute='_compute_model_fields', store=True, readonly=False)
+    fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', help='Fuel Used by the vehicle', compute='_compute_model_fields', store=True, readonly=False)
+    horsepower = fields.Integer(compute='_compute_model_fields', store=True, readonly=False)
+    horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_model_fields', store=True, readonly=False)
+    power = fields.Integer('Power', help='Power in kW of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
+    co2 = fields.Float('CO2 Emissions', help='CO2 emissions of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
+    co2_standard = fields.Char(compute='_compute_model_fields', store=True, readonly=False)
     image_128 = fields.Image(related='model_id.image_128', readonly=True)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
         string='Has Contracts to renew')
@@ -111,7 +112,7 @@ class FleetVehicle(models.Model):
     plan_to_change_bike = fields.Boolean(related='driver_id.plan_to_change_bike', store=True, readonly=False)
     vehicle_type = fields.Selection(related='model_id.vehicle_type')
     frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], help="Frame type of the bike")
-    electric_assistance = fields.Boolean()
+    electric_assistance = fields.Boolean(compute='_compute_model_fields', store=True, readonly=False)
     frame_size = fields.Float()
 
     @api.depends('fleet_id')
@@ -126,10 +127,21 @@ class FleetVehicle(models.Model):
             if record.fleet_id:
                 record.company_id = record.fleet_id.company_id
 
-    @api.depends('vehicle_type')
-    def _compute_doors(self):
-        for record in self:
-            record.doors = 5 if record.model_id.vehicle_type == 'car' else 0
+    @api.depends('model_id')
+    def _compute_model_fields(self):
+        '''
+        Copies all the related fields from the model to the vehicle
+        '''
+        model_values = dict()
+        for vehicle in self.filtered('model_id'):
+            if vehicle.model_id.id in model_values:
+                write_vals = model_values[vehicle.model_id.id]
+            else:
+                # copy if value is truthy
+                write_vals = {MODEL_FIELDS_TO_VEHICLE[key]: vehicle.model_id[key] for key in MODEL_FIELDS_TO_VEHICLE\
+                    if vehicle.model_id[key]}
+                model_values[vehicle.model_id.id] = write_vals
+            vehicle.write(write_vals)
 
     @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
@@ -200,12 +212,6 @@ class FleetVehicle(models.Model):
             record.contract_renewal_total = total - 1  # we remove 1 from the real total for display purposes
             record.contract_renewal_name = name
             record.contract_state = state
-
-    @api.depends('model_id')
-    def _compute_transmission(self):
-        for vehicle in self:
-            if vehicle.model_id:
-                vehicle.transmission = vehicle.model_id.transmission
 
     def _get_analytic_name(self):
         # This function is used in fleet_account and is overrided in l10n_be_hr_payroll_fleet

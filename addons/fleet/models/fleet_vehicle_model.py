@@ -4,6 +4,13 @@
 from odoo import _, api, fields, models
 
 
+FUEL_TYPES = [
+    ('gasoline', 'Gasoline'), ('diesel', 'Diesel'), ('lpg', 'LPG'),
+    ('electric', 'Electric'), ('hybrid', 'Hybrid'), ('plug_in_hybrid_diesel', 'Plug-in Hybrid Diesel'),
+    ('plug_in_hybrid_gasoline', 'Plug-in Hybrid Gasoline'), ('full_hybrid_gasoline', 'Full Hybrid Gasoline'),
+    ('cng', 'CNG'), ('hydrogen', 'Hydrogen'),
+]
+
 class FleetVehicleModel(models.Model):
     _name = 'fleet.vehicle.model'
     _description = 'Model of a vehicle'
@@ -18,6 +25,18 @@ class FleetVehicleModel(models.Model):
     vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], default='car', required=True)
     transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle')
     vehicle_count = fields.Integer(compute='_compute_vehicle_count')
+    model_year = fields.Integer()
+    color = fields.Char()
+    seats = fields.Integer(string='Seats Number')
+    doors = fields.Integer(string='Doors Number')
+    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch')
+    default_co2 = fields.Float('CO2 Emissions')
+    co2_standard = fields.Char()
+    default_fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', default='diesel')
+    power = fields.Integer('Power')
+    horsepower = fields.Integer()
+    horsepower_tax = fields.Float('Horsepower Taxation')
+    electric_assistance = fields.Boolean(default=False)
 
     @api.depends('name', 'brand_id')
     def name_get(self):
