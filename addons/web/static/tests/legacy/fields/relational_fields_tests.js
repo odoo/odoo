@@ -873,7 +873,7 @@ QUnit.module('relational_fields', {
                 </form>`,
             config: {device: {isMobile: false}},
         });
-        testUtils.intercept(form, 'call_service', function (ev) {
+        testUtils.mock.intercept(form, 'call_service', function (ev) {
             assert.strictEqual(ev.data.service, 'notification',
                 "should display an 'invalid fields' notification");
         }, true);
@@ -1482,7 +1482,7 @@ QUnit.module('relational_fields', {
         assert.containsN(list, '.o_field_many2manytags .badge', 2, "there should be 2 tags");
         assert.containsNone(list, '.badge.dropdown-toggle', "the tags should not be dropdowns");
 
-        testUtils.intercept(list, 'switch_view', function (event) {
+        testUtils.mock.intercept(list, 'switch_view', function (event) {
             assert.strictEqual(event.data.view_type, "form", "should switch to form view");
         });
         // click on the tag: should do nothing and open the form view
