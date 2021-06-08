@@ -300,24 +300,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
     },
 
     /**
-     * Toggle the code view.
-     */
-    _toggleCodeView: function () {
-        this.wysiwyg.odooEditor.observerUnactive();
-        const $codeview = this.$content.parent().find('textarea.o_codeview');
-        $codeview.toggleClass('d-none');
-        this.$content.toggleClass('d-none');
-        if ($codeview.hasClass('d-none')) {
-            this.wysiwyg.odooEditor.observerActive();
-            this.wysiwyg.setValue($codeview.val());
-            this.wysiwyg.odooEditor.historyStep();
-        } else {
-            $codeview.val(this.$content.html());
-            this.wysiwyg.odooEditor.observerActive();
-        }
-    },
-
-    /**
      * @override
      */
     _getWysiwygOptions: function () {
@@ -388,8 +370,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!odoo.debug) {
             $snippetsSideBar.find('.o_codeview_btn').hide();
         }
-
-        $snippetsSideBar.on('click', '.o_codeview_btn', this._toggleCodeView.bind(this));
+        const $codeview = this.$content.parent().find('textarea.o_codeview');
+        $snippetsSideBar.on('click', '.o_codeview_btn', () => this._toggleCodeView($codeview));
 
         if ($themes.length === 0) {
             return;
