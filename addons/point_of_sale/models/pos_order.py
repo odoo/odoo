@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-from datetime import timedelta
+from datetime import timedelta, datetime
 from functools import partial
 
 import psycopg2
@@ -373,7 +373,7 @@ class PosOrder(models.Model):
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
-            'invoice_date': self.date_order.astimezone(timezone).date(),
+            'invoice_date': datetime.now().astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
         }
