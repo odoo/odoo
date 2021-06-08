@@ -43,45 +43,53 @@
 
     <t t-name="project.ProjectRightPanel" owl="1">
         <div class="o_rightpanel">
-            <t t-set="tasksAnalysis" t-value="state.data.tasks_analysis"/>
-            <div class="o_rightpanel_section">
-                <div class="o_rightpanel_header">
-                    <div class="o_rightpanel_title">
-                        Tasks Analysis
-                    </div>
-                </div>
+            <t t-call="project.TaskSection"/>
+            <t t-call="project.MilestoneSection"/>
+        </div>
+    </t>
 
-                <div class="o_rightpanel_data">
-                    <div t-foreach="tasksAnalysis.data" t-as="analysis" t-key="analysis.name" class="o_rightpanel_data_row">
-                        <a t-if="state.data.user.is_project_manager" class="btn btn-link o_rightpanel_left_col o_rightpanel_left_button" t-on-click="onProjectActionClick"
-                           t-att-data-action="analysis.action.action"
-                           t-att-data-additional_context="analysis.action.additional_context"
-                           data-type="action">
-                           <t t-esc="analysis.name"/>
-                        </a>
-                        <span t-else="" class="o_rightpanel_left_col o_rightpanel_left_text"><t t-esc="analysis.name"/></span>
-                        <span class="o_rightpanel_right_col"><t t-esc="analysis.value"/></span>
-                    </div>
+    <t t-name="project.TaskSection" owl="1">
+        <t t-set="tasksAnalysis" t-value="state.data.tasks_analysis"/>
+        <div class="o_rightpanel_section" name="task_analysis">
+            <div class="o_rightpanel_header">
+                <div class="o_rightpanel_title">
+                    Tasks Analysis
                 </div>
             </div>
-            <t t-set="milestones" t-value="state.data.milestones"/>
-            <div class="o_rightpanel_section">
-                <div class="o_rightpanel_header">
-                    <div class="o_rightpanel_title">
-                        Milestones
-                    </div>
-                    <span class="o_rightpanel_button">
-                        <AddMilestone context="context"/>
-                    </span>
+
+            <div class="o_rightpanel_data">
+                <div t-foreach="tasksAnalysis.data" t-as="analysis" t-key="analysis.name" class="o_rightpanel_data_row">
+                    <a t-if="state.data.user.is_project_manager" class="btn btn-link o_rightpanel_left_col o_rightpanel_left_button" t-on-click="onProjectActionClick"
+                        t-att-data-action="analysis.action.action"
+                        t-att-data-additional_context="analysis.action.additional_context"
+                        data-type="action">
+                        <t t-esc="analysis.name"/>
+                    </a>
+                    <span t-else="" class="o_rightpanel_left_col o_rightpanel_left_text"><t t-esc="analysis.name"/></span>
+                    <span class="o_rightpanel_right_col"><t t-esc="analysis.value"/></span>
                 </div>
-                <div class="o_rightpanel_data">
-                    <div t-foreach="milestones.data" t-as="milestone" t-key="milestone.id" class="o_rightpanel_data_row">
-                        <OpenMilestone context="context" milestone="milestone" t-key="milestone.id"/>
-                    </div>
-                    <span t-if="milestones.data.length === 0" class="text-muted font-italic">
-                        Track major progress points that must be reached to achieve success.
-                    </span>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="project.MilestoneSection" owl="1">
+        <t t-set="milestones" t-value="state.data.milestones"/>
+        <div class="o_rightpanel_section" name="milestone">
+            <div class="o_rightpanel_header">
+                <div class="o_rightpanel_title">
+                    Milestones
                 </div>
+                <span class="o_rightpanel_button">
+                    <AddMilestone context="context"/>
+                </span>
+            </div>
+            <div class="o_rightpanel_data">
+                <div t-foreach="milestones.data" t-as="milestone" t-key="milestone.id" class="o_rightpanel_data_row">
+                    <OpenMilestone context="context" milestone="milestone" t-key="milestone.id"/>
+                </div>
+                <span t-if="milestones.data.length === 0" class="text-muted font-italic">
+                    Track major progress points that must be reached to achieve success.
+                </span>
             </div>
         </div>
     </t>
@@ -90,7 +98,7 @@
         <div class="o_add_milestone">
             <a t-on-click="onAddMilestoneClick">Add Milestone</a>
             <span t-if="state.openDialog" class="o_rightpanel_hidden">
-                <FormViewDialogComponentAdapter
+                <ComponentAdapter
                     Component="FormViewDialog"
                     params="{
                         context: context,
@@ -121,7 +129,7 @@
                 <a class="o_delete_icon" t-on-click="onDeleteMilestone" title="Delete Milestone"><i class="fa fa-trash"></i></a>
             </span>
             <span t-if="state.openDialog" class="o_rightpanel_hidden">
-                <FormViewDialogComponentAdapter
+                <ComponentAdapter
                     Component="FormViewDialog"
                     params="{
                         context: context,
