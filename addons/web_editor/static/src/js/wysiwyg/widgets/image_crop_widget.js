@@ -82,7 +82,6 @@ const ImageCropWidget = Widget.extend({
 
         await loadImage(this.originalSrc, cropperImage);
         await activateCropper(cropperImage, this.aspectRatios[this.aspectRatio].value, this.media.dataset);
-        core.bus.trigger('deactivate_snippet');
 
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         // We use capture so that the handler is called before other editor handlers

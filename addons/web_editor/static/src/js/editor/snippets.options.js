@@ -4173,6 +4173,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
  */
 registry.ImageTools = SnippetOptionWidget.extend({
     crop() {
+        this.trigger_up('hide_overlay');
         new weWidgets.ImageCropWidget(this, this.$target[0]).appendTo(this.options.wysiwyg.$editable);
     },
     transform() {
@@ -4180,6 +4181,7 @@ registry.ImageTools = SnippetOptionWidget.extend({
             this.$target.removeData('transfo-destroy');
             return;
         }
+        this.trigger_up('hide_overlay');
         const document = this.$target[0].ownerDocument;
         this.$target.transfo({document});
         const mousedown = mousedownEvent => {
