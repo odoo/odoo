@@ -25,6 +25,9 @@ Automatically create a sponsor when renting a booth.
         'web.assets_frontend': [
             '/website_event_booth_exhibitor/static/src/js/booth_register.js',
             '/website_event_booth_exhibitor/static/src/js/booth_sponsor_details.js',
-        ]
+        ],
+        'web.assets_tests': [
+            'website_event_booth_exhibitor/static/tests/tours/website_event_booth_exhibitor.js',
+        ],
     }
 }
