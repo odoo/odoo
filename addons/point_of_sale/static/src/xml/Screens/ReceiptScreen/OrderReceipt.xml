@@ -33,7 +33,7 @@
                     <t t-raw="receipt.header_html" />
                 </t>
                 <t t-if="!receipt.header_html and receipt.header">
-                    <div><t t-esc="receipt.header" /></div>
+                    <div style="white-space:pre-line"><t t-esc="receipt.header" /></div>
                 </t>
                 <t t-if="receipt.cashier">
                     <div class="cashier">
