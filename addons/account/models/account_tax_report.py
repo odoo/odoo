@@ -254,7 +254,7 @@ class AccountTaxReportLine(models.Model):
         """
         all_tags = self.mapped('tag_ids')
         tags_to_unlink = all_tags.filtered(lambda x: not (x.tax_report_line_ids - self))
-        self.write({'tag_ids': [(2, tag.id, 0) for tag in tags_to_unlink]})
+        self.write({'tag_ids': [(3, tag.id, 0) for tag in tags_to_unlink]})
         self._delete_tags_from_taxes(tags_to_unlink.ids)
 
     @api.model
