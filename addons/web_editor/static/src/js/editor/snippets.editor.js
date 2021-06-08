@@ -1152,6 +1152,7 @@ var SnippetsMenu = Widget.extend({
             '.ui-autocomplete',
             '.modal .close',
             '.o_we_crop_widget',
+            '.transfo-container',
         ].join(', ');
 
         this.loadingTimers = {};
