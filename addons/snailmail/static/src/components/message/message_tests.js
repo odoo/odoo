@@ -115,7 +115,7 @@ QUnit.test('Sent', async function (assert) {
 });
 
 QUnit.test('Canceled', async function (assert) {
-    assert.expect(8);
+    assert.expect(2);
 
     await this.start();
     const threadViewer = this.env.models['mail.thread_viewer'].create({
@@ -139,40 +139,12 @@ QUnit.test('Canceled', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIconClickable',
-        "should display the notification icon container"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIcon',
-        "should display the notification icon"
-    );
-    assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
-        'fa-paper-plane',
-        "icon should represent snailmail"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Sent'
 
     await afterNextRender(() => {
         document.querySelector('.o_Message_notificationIconClickable').click();
     });
-    assert.containsOnce(
-        document.body,
-        '.o_SnailmailNotificationPopover',
-        "notification popover should be open"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_SnailmailNotificationPopover_icon',
-        "popover should have one icon"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Sent'
     assert.hasClass(
         document.querySelector('.o_SnailmailNotificationPopover_icon'),
         'fa-trash-o',
@@ -186,7 +158,7 @@ QUnit.test('Canceled', async function (assert) {
 });
 
 QUnit.test('Pending', async function (assert) {
-    assert.expect(8);
+    assert.expect(2);
 
     await this.start();
     const threadViewer = this.env.models['mail.thread_viewer'].create({
@@ -210,40 +182,12 @@ QUnit.test('Pending', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIconClickable',
-        "should display the notification icon container"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIcon',
-        "should display the notification icon"
-    );
-    assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
-        'fa-paper-plane',
-        "icon should represent snailmail"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Sent'
 
     await afterNextRender(() => {
         document.querySelector('.o_Message_notificationIconClickable').click();
     });
-    assert.containsOnce(
-        document.body,
-        '.o_SnailmailNotificationPopover',
-        "notification popover should be open"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_SnailmailNotificationPopover_icon',
-        "popover should have one icon"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Sent'
     assert.hasClass(
         document.querySelector('.o_SnailmailNotificationPopover_icon'),
         'fa-clock-o',
@@ -257,7 +201,7 @@ QUnit.test('Pending', async function (assert) {
 });
 
 QUnit.test('No Price Available', async function (assert) {
-    assert.expect(10);
+    assert.expect(6);
 
     await this.start({
         async mockRPC(route, args) {
@@ -289,26 +233,7 @@ QUnit.test('No Price Available', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIconClickable',
-        "should display the notification icon container"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIcon',
-        "should display the notification icon"
-    );
-    assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
-        'fa-paper-plane',
-        "icon should represent snailmail"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Sent'
 
     await afterNextRender(() => {
         document.querySelector('.o_Message_notificationIconClickable').click();
@@ -344,7 +269,7 @@ QUnit.test('No Price Available', async function (assert) {
 });
 
 QUnit.test('Credit Error', async function (assert) {
-    assert.expect(11);
+    assert.expect(6);
 
     await this.start({
         async mockRPC(route, args) {
@@ -376,30 +301,12 @@ QUnit.test('Credit Error', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIconClickable',
-        "should display the notification icon container"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIcon',
-        "should display the notification icon"
-    );
-    assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
-        'fa-paper-plane',
-        "icon should represent snailmail"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Sent'
 
     await afterNextRender(() => {
         document.querySelector('.o_Message_notificationIconClickable').click();
     });
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'No Price Available'
     assert.containsOnce(
         document.body,
         '.o_SnailmailErrorDialog',
@@ -415,11 +322,7 @@ QUnit.test('Credit Error', async function (assert) {
         '.o_SnailmailErrorDialog_resendLetterButton',
         "dialog should have a 'Re-send letter' button"
     );
-    assert.containsOnce(
-        document.body,
-        '.o_SnailmailErrorDialog_cancelLetterButton',
-        "dialog should have a 'Cancel letter' button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'No Price Available'
 
     await afterNextRender(() => {
         document.querySelector('.o_SnailmailErrorDialog_resendLetterButton').click();
@@ -436,7 +339,7 @@ QUnit.test('Credit Error', async function (assert) {
 });
 
 QUnit.test('Trial Error', async function (assert) {
-    assert.expect(11);
+    assert.expect(5);
 
     await this.start({
         async mockRPC(route, args) {
@@ -468,35 +371,12 @@ QUnit.test('Trial Error', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIconClickable',
-        "should display the notification icon container"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIcon',
-        "should display the notification icon"
-    );
-    assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
-        'fa-paper-plane',
-        "icon should represent snailmail"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Sent'
 
     await afterNextRender(() => {
         document.querySelector('.o_Message_notificationIconClickable').click();
     });
-    assert.containsOnce(
-        document.body,
-        '.o_SnailmailErrorDialog',
-        "error dialog should be open"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'No Price Available'
     assert.containsOnce(
         document.body,
         '.o_SnailmailErrorDialog_contentTrial',
@@ -507,11 +387,7 @@ QUnit.test('Trial Error', async function (assert) {
         '.o_SnailmailErrorDialog_resendLetterButton',
         "dialog should have a 'Re-send letter' button"
     );
-    assert.containsOnce(
-        document.body,
-        '.o_SnailmailErrorDialog_cancelLetterButton',
-        "dialog should have a 'Cancel letter' button"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'No Price Available'
 
     await afterNextRender(() => {
         document.querySelector('.o_SnailmailErrorDialog_resendLetterButton').click();
@@ -528,7 +404,7 @@ QUnit.test('Trial Error', async function (assert) {
 });
 
 QUnit.test('Format Error', async function (assert) {
-    assert.expect(8);
+    assert.expect(4);
 
     const bus = new Bus();
     bus.on('do-action', null, payload => {
@@ -568,26 +444,7 @@ QUnit.test('Format Error', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIconClickable',
-        "should display the notification icon container"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIcon',
-        "should display the notification icon"
-    );
-    assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
-        'fa-paper-plane',
-        "icon should represent snailmail"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Sent'
 
     await afterNextRender(() => {
         document.querySelector('.o_Message_notificationIconClickable').click();
@@ -599,7 +456,7 @@ QUnit.test('Format Error', async function (assert) {
 });
 
 QUnit.test('Missing Required Fields', async function (assert) {
-    assert.expect(8);
+    assert.expect(4);
 
     this.data['mail.message'].records.push({
         id: 10, // random unique id, useful to link letter and notification
@@ -644,26 +501,7 @@ QUnit.test('Missing Required Fields', async function (assert) {
         threadViewLocalId: threadViewer.threadView.localId,
     });
 
-    assert.containsOnce(
-        document.body,
-        '.o_Message',
-        "should display a message component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIconClickable',
-        "should display the notification icon container"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Message_notificationIcon',
-        "should display the notification icon"
-    );
-    assert.hasClass(
-        document.querySelector('.o_Message_notificationIcon'),
-        'fa-paper-plane',
-        "icon should represent snailmail"
-    );
+    // TO_REMOVE_TEST_CLEAN_UP: already in 'Sent'
 
     await afterNextRender(() => {
         document.querySelector('.o_Message_notificationIconClickable').click();
