@@ -233,6 +233,12 @@
             }
         }
 
+        .o_data_row .o_data_cell {
+            &.o_state_selection_cell, &.o_kanban_state_selection_cell {
+                overflow: visible;
+            }
+        }
+
         .o_data_row:not(.o_selected_row) {
             .o_list_many2one,
             .o_list_char,
