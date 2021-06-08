@@ -24,6 +24,7 @@ class TestProjectUpdateSaleTimesheet(TestProjectUpdate):
         self.assertTrue("Profitability" in update.description, "The description should contain 'Profitability'.")
 
     def test_project_update_description_profitability(self):
+        self.project_pigs.allow_billable = True
         template_values = self.env['project.update']._get_template_values(self.project_pigs)
         today = fields.Date.context_today(self.project_pigs)
         self.assertEqual(template_values['profitability']['month'], today.strftime('%B %Y'),
