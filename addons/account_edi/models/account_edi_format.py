@@ -5,6 +5,7 @@ from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 from odoo.osv import expression
+from odoo.tools import html_escape
 
 from lxml import etree
 import base64
@@ -499,5 +500,5 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _format_error_message(self, error_title, errors):
-        bullet_list_msg = ''.join('<li>%s</li>' % msg for msg in errors)
+        bullet_list_msg = ''.join('<li>%s</li>' % html_escape(msg) for msg in errors)
         return '%s<ul>%s</ul>' % (error_title, bullet_list_msg)
