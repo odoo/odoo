@@ -15,9 +15,15 @@ export const dialogService = {
                 throw new Error(dialogClass.name + " must be a subclass of Dialog");
             }
             const id = ++dialogId;
+            class dialogController extends dialogClass {
+                setup() {
+                    super.setup();
+                    this.__id = id;
+                }
+            }
             const dialog = {
                 id,
-                class: dialogClass,
+                class: dialogController,
                 props,
                 options,
             };

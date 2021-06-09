@@ -11,7 +11,7 @@ import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv, prepareRegistriesWithCleanup } from "../../helpers/mock_env";
-import { makeFakeLocalizationService } from "../../helpers/mock_services";
+import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/core/debug/debug_menu_items";
@@ -31,7 +31,8 @@ QUnit.module("DebugMenu", (hooks) => {
             .add("hotkey", hotkeyService)
             .add("ui", uiService)
             .add("orm", ormService)
-            .add("debug", debugService);
+            .add("debug", debugService)
+            .add("dialog", makeFakeDialogService());
         const mockRPC = async (route, args) => {
             if (args.method === "check_access_rights") {
                 return Promise.resolve(true);

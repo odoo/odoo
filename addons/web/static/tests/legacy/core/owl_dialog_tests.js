@@ -6,6 +6,8 @@ odoo.define('web.owl_dialog_tests', function (require) {
     const makeTestEnvironment = require('web.test_env');
     const Dialog = require('web.OwlDialog');
     const testUtils = require('web.test_utils');
+    const { registry } = require("@web/core/registry");
+    const { makeFakeDialogService } = require("@web/../tests/helpers/mock_services");
 
     const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
     const { Dialog: WowlDialog } = require("@web/core/dialog/dialog");
@@ -277,6 +279,14 @@ odoo.define('web.owl_dialog_tests', function (require) {
         QUnit.test("Interactions between legacy owl dialogs and new owl dialogs", async function (assert) {
             assert.expect(7);
 
+            const serviceRegistry = registry.category("services");
+            serviceRegistry.add("dialog", makeFakeDialogService({
+                    close: (id) => {
+                        assert.step(`dialog_${id}_closed`);
+                        parent.dialogs.splice(parent.dialogs.findIndex(d => d.id === id), 1);
+                    },
+                })
+            );
             const { legacyEnv, env } = await makeLegacyDialogMappingTestEnv();
 
             // OwlDialog env
@@ -286,10 +296,12 @@ odoo.define('web.owl_dialog_tests', function (require) {
                     this._super();
                 }
             });
+            let id = 1;
             class WowlDialogSubClass extends WowlDialog{
                 setup(){
                     super.setup();
                     this.contentClass = this.props.contentClass;
+                    this.__id = id;
                 }
             }
             class Parent extends Component {
@@ -314,8 +326,10 @@ odoo.define('web.owl_dialog_tests', function (require) {
 
             parent.dialogs.push({ id: 1, class: WowlDialogSubClass });
             await nextTick();
+            id ++;
             parent.dialogs.push({ id: 2, class: Dialog });
             await nextTick();
+            id ++;
             parent.dialogs.push({ id: 3, class: WowlDialogSubClass });
             await nextTick();
 
