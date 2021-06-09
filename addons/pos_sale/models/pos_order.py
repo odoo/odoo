@@ -51,7 +51,7 @@ class PosOrder(models.Model):
     def create_from_ui(self, orders, draft=False):
         order_ids = super(PosOrder, self).create_from_ui(orders, draft)
         for order in self.sudo().browse([o['id'] for o in order_ids]):
-            for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != -1):
+            for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty > 0 and l.sale_order_origin_id):
                 sale_lines = line.sale_order_origin_id.order_line
                 sale_line = self.env['sale.order.line'].create({
                     'order_id': line.sale_order_origin_id.id,
@@ -60,7 +60,7 @@ class PosOrder(models.Model):
                     'product_uom_qty': 0,
                     'tax_id': [(6, 0, line.tax_ids.ids)],
                     'is_downpayment': True,
-                    'discount': 0,
+                    'discount': line.discount,
                     'sequence': sale_lines and sale_lines[-1].sequence + 1 or 10,
                 })
                 sale_line._compute_tax_id()
