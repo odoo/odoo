@@ -4,6 +4,13 @@
 # 
 # Translators:
 # Mari Khomeriki <mari.khomeriki@maxinai.com>, 2021
+# Saba Khmaladze <skhmaladze@uglt.org>, 2021
+# Martin Trigaux, 2021
+# Temur, 2021
+# Nika Chikhradze <nika@globaltravel.ge>, 2021
+# Giorgi Melitauri <gmelitauri@live.com>, 2021
+# Gvantsa Gvinianidze <gvantsa@live.com>, 2021
+# Vasil Grigalashvili <info@clouddesk.info>, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Mari Khomeriki <mari.khomeriki@maxinai.com>, 2021\n"
+"Last-Translator: Vasil Grigalashvili <info@clouddesk.info>, 2021\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +29,13 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "საჭიროა ქმედება"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active
 msgid "Active"
-msgstr ""
+msgstr "აქტიური"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
@@ -45,7 +52,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
-msgstr ""
+msgstr "სულ"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
@@ -56,7 +63,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
-msgstr ""
+msgstr "ანალიტიკური ანგარიში"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution
@@ -73,7 +80,7 @@ msgstr ""
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "ანალიტიკური ბუღალტერია"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_tags
@@ -142,7 +149,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_view_search
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
-msgstr ""
+msgstr "დაარქივებული"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -152,7 +159,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "დანართების რაოდენობა"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
@@ -168,7 +175,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "Category"
-msgstr ""
+msgstr "კატეგორია"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
@@ -188,7 +195,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
 msgid "Color Index"
-msgstr ""
+msgstr "ფერის ინდექსი"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
@@ -196,12 +203,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__company_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__company_id
 msgid "Company"
-msgstr ""
+msgstr "კომპანია"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__complete_name
 msgid "Complete Name"
-msgstr ""
+msgstr "სრული სახელი"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line__product_uom_category_id
@@ -209,6 +216,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"საზომი ერთეულების გარდაქმნა მოხდება, მხოლოდ ერთი კატეგორიის ერთეულებს შორის."
+" გარდაქმნა მოხდება ერთეულებს შორის არსებული თანაფარდობების შესაბამისად."
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -235,7 +244,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "შემქმნელი"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_date
@@ -244,7 +253,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__create_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__create_date
 msgid "Created on"
-msgstr ""
+msgstr "შექმნის თარიღი"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
@@ -256,18 +265,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__currency_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "ვალუტა"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "კლიენტი"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__date
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Date"
-msgstr ""
+msgstr "თარიღ"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -279,7 +288,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__description
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
 msgid "Description"
-msgstr ""
+msgstr "აღწერა"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
@@ -293,7 +302,7 @@ msgstr "სახელი"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "მიმდევრები"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
@@ -309,13 +318,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__group_id
 msgid "Group"
-msgstr ""
+msgstr "ჯგუფი"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
-msgstr ""
+msgstr "დაჯგუფება"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__id
@@ -374,7 +383,7 @@ msgstr "ბოლოს განახლებულია"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_uid
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ბოლოს განაახლა"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_date
@@ -383,7 +392,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__write_date
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ბოლოს განახლდა"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
@@ -398,14 +407,14 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "მესიჯები"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__name
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Name"
-msgstr ""
+msgstr "სახელი"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -460,7 +469,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "პარტნიორი"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__percentage
@@ -471,12 +480,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
-msgstr ""
+msgstr "რაოდენობა"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__code
 msgid "Reference"
-msgstr ""
+msgstr "წყარო"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -506,7 +515,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__tag_ids
 msgid "Tags"
-msgstr ""
+msgstr "ტეგები"
 
 #. module: analytic
 #: model:ir.model.constraint,message:analytic.constraint_account_analytic_distribution_check_percentage
@@ -530,17 +539,17 @@ msgstr ""
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
-msgstr ""
+msgstr "ჯამი"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_id
 msgid "Unit of Measure"
-msgstr ""
+msgstr "საზომი ერთეული"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "წაუკითხავი შეტყობინებები"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
@@ -550,7 +559,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
-msgstr ""
+msgstr "მომხმარებელი"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

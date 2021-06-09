@@ -158,7 +158,7 @@ class HrEmployeeBase(models.AbstractModel):
     def _get_employee_working_now(self):
         working_now = []
         # We loop over all the employee tz and the resource calendar_id to detect working hours in batch.
-        all_employee_tz = self.mapped('tz')
+        all_employee_tz = set(self.mapped('tz'))
         for tz in all_employee_tz:
             employee_ids = self.filtered(lambda e: e.tz == tz)
             resource_calendar_ids = employee_ids.mapped('resource_calendar_id')

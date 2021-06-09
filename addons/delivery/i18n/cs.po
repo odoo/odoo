@@ -78,13 +78,13 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight (estimated): </span>"
-msgstr ""
+msgstr "<span> - Hmotnost (odhadovaná): </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_stock_report_delivery_no_package_section_line
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
 msgid "<span> - Weight: </span>"
-msgstr ""
+msgstr "<span> - Hmotnost: </span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
@@ -989,11 +989,14 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
+"Celková hmotnost obalů a produktů, které nejsou v obalu. U balíčků bez "
+"zadané přepravní hmotnosti bude výchozí celková hmotnost jejich produktů. "
+"Tato hmotnost se použije pro výpočet nákladů na dopravu."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr ""
+msgstr "Celková hmotnost výrobků, které nejsou v obalu."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight

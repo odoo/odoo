@@ -21,6 +21,7 @@
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Martin Ondrejka <martin.ondrejka@anuva.eu>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
+"Last-Translator: Martin Ondrejka <martin.ondrejka@anuva.eu>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +51,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Skupina daní: Daň je skupinou čiastkových daní.\n"
+"    - Fixná: výška dane zostáva rovnaká bez ohľadu na cenu.\n"
+"    - Percento z ceny: Výška dane je % z ceny:\n"
+"        napr. 100 * (1 + 10%) = 110 (nie je zahrnuté v cene)\n"
+"        napr. 110 / (1 + 10%) = 100 (zahrnuté v cene)\n"
+"    - Percento z ceny vrátane dane: Výška dane je podielom z ceny:\n"
+"        napr. 180 / (1 - 10%) = 200 (nie je zahrnuté v cene)\n"
+"        napr. 200 * (1 - 10%) = 180 (zahrnuté v cene)\n"
+"        "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -159,7 +170,7 @@ msgstr ". Možno sem budete chcieť vložiť vyššie číslo."
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "... (%s other)"
-msgstr ""
+msgstr "... (%s ostatné)"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -217,6 +228,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Vážený(á) ${object.partner_id.name}<br/><br/>\n"
+"        Ďakujeme vám za platbu.\n"
+"        Vaše potvrdenie o úhrade <strong>${(object.name or '').replace('/','-')}</strong> vo výške\n"
+"        <strong>${format_amount(object.amount, object.currency_id)}</strong> od ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        V prípade akýchkoľvek otázok nás neváhajte kontaktovať.\n"
+"        <br/><br/>\n"
+"        S pozdravom,\n"
+"        % if user.signature:\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -326,6 +353,8 @@ msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
+"<li>{amount} ({debit_credit}) z<strong>%s</strong>bolo presunuté "
+"do<strong>{account_target_name}</strong>by {link}</li>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1695,6 +1724,8 @@ msgid ""
 "cancelling {percent:f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"Pre túto faktúru boli vytvorené opravné položky:<ul><li>%(link1)szrušené "
+"{percent:f}%% z {amount}</li><li>%(link0)sodložené na {new_date}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -1711,12 +1742,13 @@ msgid ""
 "Adjusting Entry for {link}: {percent:f}% of {amount} recognized on "
 "{new_date}"
 msgstr ""
+"Úprava záznamu pre {link}: {percent:f}% z {amount} zaznamenané {new_date}"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry of {date} ({percent:f}% recognized on {new_date})"
-msgstr ""
+msgstr "Úprava záznamu z{date} ({percent:f}% zaznamenané {new_date})"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -12804,6 +12836,8 @@ msgid ""
 "The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
+"Vybraný cieľový účet je nastavený na používanie konkrétnej meny. Každý záznam, ktorý sa naň prevedie, sa prepočíta na túto menu\n"
+"                        čím sa stratí akákoľvek predtým existujúca suma v cudzej mene."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -13449,7 +13483,7 @@ msgstr "Prevody"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
-msgstr ""
+msgstr "Vyskúšajte vzorový účet dodávateľa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -13858,6 +13892,13 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
+"Hodnota pre riadok s výškou odpisu\n"
+"    * Percento: Percento zostatku, od 0 do 100.\n"
+"    * Fixná: Pevná hodnota odpisu. Suma sa započíta ako debet, ak je záporná, ako kredit, ak je kladná.\n"
+"    * Zo štítku: Nie je potrebný oddeľovač regexu, potrebný je len regex. Napríklad ak chcete získať sumu z\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Mohli by ste zadať\n"
+"BRT: ([\\d,]+)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__supplier
@@ -14520,6 +14561,8 @@ msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
 msgstr ""
+"Nemôžete znížiť počet desatinných miest meny, ktorá už bola použitá na "
+"vykonanie účtovných zápisov."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14651,7 +14694,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr ""
+msgstr "Záznam %s (id %s) je už zverejnený."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

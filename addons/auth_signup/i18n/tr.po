@@ -3,7 +3,6 @@
 # 	* auth_signup
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Levent Karakaş <levent@mektup.at>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
@@ -14,7 +13,7 @@
 # Umur Akın <umura@projetgrup.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
-# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -22,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,8 +50,8 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
-"Bu kullanıcı için bir parola sıfırlanması istendi. Aşağıdaki bağlantıyı "
-"içeren bir eposta gönderilmiştir."
+"<strong>:Bu kullanıcı için bir parola sıfırlanması istendi. Aşağıdaki "
+"bağlantıyı içeren bir eposta gönderilmiştir.</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -60,7 +59,8 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-"Aşağıdaki abonelik bağlantısını içeren bir davet epostası gönderilmiştir:"
+"<strong>Aşağıdaki abonelik bağlantısını içeren bir davet e-postası "
+"gönderilmiştir:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -408,12 +408,12 @@ msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
-"    <!-- HEADER -->\n"
+"    \n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Account</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Hesabınız</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        ${object.name}\n"
 "                    </span>\n"
@@ -426,22 +426,22 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- CONTENT -->\n"
+"    \n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Dear ${object.name},<br/><br/>\n"
-"                        A password reset was requested for the Odoo account linked to this email.\n"
-"                        You may change your password by following this link which will remain valid during 24 hours:<br/>\n"
+"                        Sayın ${object.name},<br/><br/>\n"
+"                        Bu e-postaya bağlı Odoo hesabı için bir parola sıfırlama istendi.\n"
+"                        24 saat boyunca geçerli olacak bu bağlantıyı takip ederek şifrenizi değiştirebilirsiniz:<br/>\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                            <a href=\"${object.signup_url}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                                Change password\n"
+"                                Parola değiştir\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        If you do not expect this, you can safely ignore this email.<br/><br/>\n"
-"                        Thanks,\n"
+"                       Bunu beklemiyorsanız, bu e-postayı güvenle yok sayabilirsiniz.<br/><br/>\n"
+"                        Teşekkürler,\n"
 "                        % if user.signature:\n"
 "                            <br/>\n"
 "                            ${user.signature | safe}\n"
@@ -454,7 +454,7 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- FOOTER -->\n"
+"    \n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
@@ -478,7 +478,7 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "</td></tr>\n"
-"<!-- POWERED BY -->\n"
+"\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
@@ -578,12 +578,12 @@ msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
-"    <!-- HEADER -->\n"
+"    \n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Account</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Hesabınız</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        ${object.name}\n"
 "                    </span>\n"
@@ -596,22 +596,22 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- CONTENT -->\n"
+"    \n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Dear ${object.name},<br/><br/>\n"
-"                        Your account has been successfully created!<br/>\n"
-"                        Your login is <strong>${object.email}</strong><br/>\n"
-"                        To gain access to your account, you can use the following link:\n"
+"                        Sayın ${object.name},<br/><br/>\n"
+"                        Hesabınız başarıyla oluşturuldu!<br/>\n"
+"                        Girişiniz<strong>${object.email}</strong><br/>\n"
+"                        Hesabınıza erişmek için aşağıdaki bağlantıyı kullanabilirsiniz:\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                            <a href=\"/web/login?auth_login=${object.email}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                                Go to My Account\n"
+"                                Hesabıma Git\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        Thanks,<br/>\n"
+"                        ,Teşekkürler<br/>\n"
 "                        % if user.signature:\n"
 "                            <br/>\n"
 "                            ${user.signature | safe}\n"
@@ -624,7 +624,7 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- FOOTER -->\n"
+"    \n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
@@ -648,7 +648,7 @@ msgstr ""
 "</tbody>\n"
 "</table>\n"
 "</td></tr>\n"
-"<!-- POWERED BY -->\n"
+"\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
@@ -722,7 +722,7 @@ msgstr "Doğrulanmış"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Contact"
-msgstr "Temas"
+msgstr "Kontak"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -821,7 +821,7 @@ msgstr "Davetiye ile"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
-msgstr "Şifre"
+msgstr "Parola"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -859,7 +859,7 @@ msgstr "Parola sıfırlama: geçersiz kullanıcı ad ya da e-posta"
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr "Send Password Reset Instructions"
+msgstr "Parola Sıfırlama Talimatlarını Gönderme"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -992,7 +992,7 @@ msgstr "Hoşgeldiniz ${object.company_id.name}!"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "You cannot perform this action on an archived user."
-msgstr "You cannot perform this action on an archived user."
+msgstr "Bu eylemi arşivlenmiş bir kullanıcı üzerinde gerçekleştiremezsiniz."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

@@ -292,6 +292,10 @@ msgid ""
 "                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> appears to be invalid</span>\n"
 "                            </strong>"
 msgstr ""
+"<strong><span name=\"trace_type_name_mail\">L'e-mail</span>\n"
+"                            <span attrs=\"{'invisible': [('exception', '=', False)]}\"> non può essere inviata</span>\n"
+"                            <span attrs=\"{'invisible': [('bounced', '=', False)]}\"> non sembra essere valida</span>\n"
+"                            </strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -464,6 +468,8 @@ msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
 msgstr ""
+"Almeno una delle mailing list che si sta tentando di archiviare è utilizzata"
+" in una campagna di invio e-mail in corso."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -549,7 +555,7 @@ msgstr "Non recapitate"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Bounced (%)"
-msgstr ""
+msgstr "Non recapitate (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced_ratio
@@ -600,6 +606,8 @@ msgstr "Campagne"
 msgid ""
 "Campaigns are the perfect tool to track results across multiple mailings."
 msgstr ""
+"Le campagne sono lo strumento perfetto per monitorare i risultati di invii "
+"e-mail multipli."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -673,7 +681,7 @@ msgstr "Clic effettuato"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Clicked (%)"
-msgstr ""
+msgstr "Clic effettuato (%)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -937,12 +945,12 @@ msgstr "Consegnate"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Delivered (%)"
-msgstr ""
+msgstr "Consegnate (%)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered to"
-msgstr ""
+msgstr "Consegnate a"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_text
@@ -1872,7 +1880,7 @@ msgstr "E-mail normalizzata"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_trace__email
 msgid "Normalized email address"
-msgstr ""
+msgstr "Indirizzo e-mail normalizzato"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction_counter
@@ -1943,7 +1951,7 @@ msgstr "IN MENO SUL PROSSIMO ORDINE!"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "OPENED"
-msgstr ""
+msgstr "APERTE"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.layout
@@ -1975,7 +1983,7 @@ msgstr "Aperte"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Opened (%)"
-msgstr ""
+msgstr "Aperte (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__opened_ratio
@@ -2082,13 +2090,13 @@ msgstr "Testo di anteprima"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "RECEIVED"
-msgstr ""
+msgstr "RICEVUTE"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "REPLIED"
-msgstr ""
+msgstr "CON RISPOSTA"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
@@ -2174,7 +2182,7 @@ msgstr "Con risposta"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Replied (%)"
-msgstr ""
+msgstr "Con risposta (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__replied_ratio
@@ -2489,7 +2497,7 @@ msgstr "Oggetto"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__subject
 msgid "Subject of your Mailing"
-msgstr ""
+msgstr "Oggetto per l'invio e-mail"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__subscription_list_ids
@@ -2545,7 +2553,7 @@ msgstr "Grazie! Il commento è stato inviato con successo."
 #. module: mass_mailing
 #: model_terms:mailing.list,toast_content:mass_mailing.mailing_list_data
 msgid "Thanks for subscribing!"
-msgstr ""
+msgstr "Grazie per l'iscrizione!"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2667,6 +2675,8 @@ msgid ""
 "Thread: replies go to target document. Email: replies are routed to a given "
 "email."
 msgstr ""
+"Discussione: le risposte arrivano al documento di destinazione. E-mail: le "
+"risposte vengono indirizzate a una e-mail specificata."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__title_id
@@ -2681,7 +2691,7 @@ msgstr "Totale"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Total Bounces"
-msgstr ""
+msgstr "Totale non recapitate"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
@@ -2815,7 +2825,7 @@ msgstr "Destinatari e-mail validi"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_view
 msgid "View Online"
-msgstr ""
+msgstr "Vedi online"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
