@@ -41,7 +41,7 @@ function insufficientCreditHandler(env, error, originalError) {
     }
     const { data } = originalError;
     if (data && data.name === "odoo.addons.iap.tools.iap_tools.InsufficientCreditError") {
-        env.services.dialog.open(InsufficientCreditDialog, {
+        env.services.dialog.add(InsufficientCreditDialog, {
             errorData: JSON.parse(data.message),
         });
         return true;

@@ -278,30 +278,23 @@ odoo.define('web.owl_dialog_tests', function (require) {
 
         QUnit.test("Interactions between legacy owl dialogs and new owl dialogs", async function (assert) {
             assert.expect(7);
-
-            const serviceRegistry = registry.category("services");
-            serviceRegistry.add("dialog", makeFakeDialogService({
-                    close: (id) => {
-                        assert.step(`dialog_${id}_closed`);
-                        parent.dialogs.splice(parent.dialogs.findIndex(d => d.id === id), 1);
-                    },
-                })
-            );
             const { legacyEnv, env } = await makeLegacyDialogMappingTestEnv();
 
+            let id = 1;
             // OwlDialog env
-            patchWithCleanup(Dialog.prototype, {
+            class OwlDialogWrapper extends owl.Component {
                 setup() {
                     this.env = legacyEnv;
-                    this._super();
                 }
-            });
-            let id = 1;
+            }
+            OwlDialogWrapper.template = xml`
+                <Dialog t-on-dialog-closed="props.close()" />
+            `;
+            OwlDialogWrapper.components = { Dialog };
             class WowlDialogSubClass extends WowlDialog{
                 setup(){
                     super.setup();
                     this.contentClass = this.props.contentClass;
-                    this.__id = id;
                 }
             }
             class Parent extends Component {
@@ -311,8 +304,10 @@ odoo.define('web.owl_dialog_tests', function (require) {
                 }
                 // Handlers
                 _onDialogClosed(id) {
-                    assert.step(`dialog_${id}_closed`);
-                    this.dialogs.splice(this.dialogs.findIndex(d => d.id === id), 1);
+                    return () => {
+                        assert.step(`dialog_${id}_closed`);
+                        this.dialogs.splice(this.dialogs.findIndex(d => d.id === id), 1);
+                    };
                 }
             }
             Parent.template = xml`
@@ -320,14 +315,15 @@ odoo.define('web.owl_dialog_tests', function (require) {
                     <div class="o_dialog_container"/>
                     <t t-foreach="dialogs" t-as="dialog" t-key="dialog.id" t-component="dialog.class"
                         contentClass="'dialog_' + dialog.id"
-                        t-on-dialog-closed="_onDialogClosed(dialog.id)" />
+                        close="_onDialogClosed(dialog.id)"
+                    />
                 </div>`;
             const parent = await mount(Parent, { env, target: getFixture() });
 
             parent.dialogs.push({ id: 1, class: WowlDialogSubClass });
             await nextTick();
             id ++;
-            parent.dialogs.push({ id: 2, class: Dialog });
+            parent.dialogs.push({ id: 2, class: OwlDialogWrapper });
             await nextTick();
             id ++;
             parent.dialogs.push({ id: 3, class: WowlDialogSubClass });

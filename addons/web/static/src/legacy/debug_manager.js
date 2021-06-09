@@ -190,7 +190,10 @@ function viewRecordRules({ accessRights, action, env }) {
 }
 
 class FieldViewGetDialog extends Dialog {}
-FieldViewGetDialog.props = Object.assign({}, Dialog.props, { arch: { type: String } });
+FieldViewGetDialog.props = Object.assign({}, Dialog.props, {
+    arch: { type: String },
+    close: Function,
+});
 FieldViewGetDialog.bodyTemplate = tags.xml`<pre t-esc="props.arch"/>`;
 FieldViewGetDialog.title = _lt("Fields View Get");
 
@@ -390,7 +393,7 @@ function fieldsViewGet({ component, env }) {
             const props = {
                 arch: component.props.viewInfo.arch,
             };
-            env.services.dialog.open(FieldViewGetDialog, props);
+            env.services.dialog.add(FieldViewGetDialog, props);
         },
         sequence: 340,
     };
@@ -435,7 +438,7 @@ function setDefaults({ action, component, env }) {
         type: "item",
         description: env._t("Set Defaults"),
         callback: () => {
-            env.services.dialog.open(SetDefaultDialog, {
+            env.services.dialog.add(SetDefaultDialog, {
                 res_model: action.res_model,
                 component,
             });
@@ -453,7 +456,7 @@ function viewMetadata({ action, component, env }) {
         type: "item",
         description: env._t("View Metadata"),
         callback: () => {
-            env.services.dialog.open(GetMetadataDialog, {
+            env.services.dialog.add(GetMetadataDialog, {
                 res_model: action.res_model,
                 selectedIds,
             });

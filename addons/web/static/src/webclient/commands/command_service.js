@@ -67,11 +67,11 @@ export const commandService = {
 
             // Open palette dialog
             isPaletteOpened = true;
-            dialog.open(
+            dialog.add(
                 CommandPaletteDialog,
                 { commands },
                 {
-                    onCloseCallback: () => {
+                    onClose: () => {
                         isPaletteOpened = false;
                     },
                 }

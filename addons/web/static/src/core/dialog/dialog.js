@@ -15,7 +15,6 @@ export class Dialog extends Component {
             );
         }
         this.modalRef = useRef("modal");
-        this.dialogService = useService("dialog");
         useActiveElement("modal");
         useHotkey(
             "escape",
@@ -33,7 +32,6 @@ export class Dialog extends Component {
         this.size = this.constructor.size;
         this.technical = this.constructor.technical;
         this.title = this.constructor.title;
-        this.__id = null;
     }
 
     /**
@@ -41,7 +39,7 @@ export class Dialog extends Component {
      * @private
      */
     close() {
-        this.dialogService.close(this.__id);
+        this.props.close();
     }
 }
 

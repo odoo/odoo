@@ -34,4 +34,5 @@ CommandPaletteDialog.bodyTemplate = "web.CommandPaletteDialogBody";
 CommandPaletteDialog.components = Object.assign({}, Dialog.components, { CommandPalette });
 CommandPaletteDialog.props = {
     commands: { type: Array, element: { type: Object } },
+    close: Function,
 };

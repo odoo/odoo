@@ -44,7 +44,7 @@ function shortCutsItem(env) {
         hide: env.isSmall,
         description: env._t("Shortcuts"),
         callback: () => {
-            env.services.dialog.open(ShortCutsDialog);
+            env.services.dialog.add(ShortCutsDialog);
         },
         sequence: 30,
     };

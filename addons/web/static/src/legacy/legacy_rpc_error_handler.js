@@ -43,7 +43,7 @@ function legacyRPCErrorHandler(env, error, originalError) {
             ErrorComponent = errorDialogRegistry.get(exceptionName);
         }
 
-        env.services.dialog.open(ErrorComponent || RPCErrorDialog, {
+        env.services.dialog.add(ErrorComponent || RPCErrorDialog, {
             traceback: originalError.traceback || originalError.stack,
             message: originalError.message,
             name: originalError.name,

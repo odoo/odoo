@@ -110,67 +110,48 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("click on the button x triggers the service close", async function (assert) {
         assert.expect(3);
-        serviceRegistry.add(
-            "dialog",
-            makeFakeDialogService({
-                close: (id) => {
-                    assert.step("close with id: " + id);
-                },
-            }),
-            { force: true }
-        );
         const env = await makeTestEnv();
-        class MyDialog extends SimpleDialog {
-            setup() {
-                super.setup();
-                this.__id = 666;
+        class MyDialog extends SimpleDialog {}
+        class Parent extends owl.Component {
+            close() {
+                assert.step("close");
             }
         }
-        class Parent extends owl.Component {}
+
         Parent.template = owl.tags.xml`
-                <MyDialog>
-                    Hello!
-                </MyDialog>
-          `;
+            <MyDialog close="close">
+                Hello!
+            </MyDialog>
+        `;
         Parent.components = { MyDialog };
         parent = await mount(Parent, { env, target });
         assert.containsOnce(target, ".o_dialog");
         await click(target, ".o_dialog header button.close");
-        assert.verifySteps(["close with id: 666"]);
+        assert.verifySteps(["close"]);
     });
 
     QUnit.test(
         "click on the default footer button triggers the service close",
         async function (assert) {
-            serviceRegistry.add(
-                "dialog",
-                makeFakeDialogService({
-                    close: (id) => {
-                        assert.step("close with id: " + id);
-                    },
-                }),
-                { force: true }
-            );
             const env = await makeTestEnv();
             assert.expect(3);
-            class MyDialog extends SimpleDialog {
-                setup() {
-                    super.setup();
-                    this.__id = 777;
+            class MyDialog extends SimpleDialog {}
+            class Parent extends owl.Component {
+                close() {
+                    assert.step("close");
                 }
             }
-            class Parent extends owl.Component {}
 
             Parent.template = owl.tags.xml`
-                <MyDialog>
+                <MyDialog close="close">
                     Hello!
                 </MyDialog>
-          `;
+            `;
             Parent.components = { MyDialog };
             parent = await mount(Parent, { env, target });
             assert.containsOnce(target, ".o_dialog");
             await click(target, ".o_dialog footer button");
-            assert.verifySteps(["close with id: 777"]);
+            assert.verifySteps(["close"]);
         }
     );
 
