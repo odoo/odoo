@@ -741,7 +741,7 @@ function makeActionManager(env) {
                 onClose: options.onClose,
             });
         } else {
-            const next = clientAction(env, action);
+            const next = await clientAction(env, action);
             if (next) {
                 return doAction(next, options);
             }

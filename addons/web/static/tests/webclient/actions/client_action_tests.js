@@ -122,6 +122,18 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["/web/webclient/load_menus"]);
     });
 
+    QUnit.test("async client action (function) returning another action", async function (assert) {
+        assert.expect(1);
+
+        registry.category("actions").add("my_action", async () => {
+            await Promise.resolve();
+            return 1; // execute action 1
+        });
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, "my_action");
+        assert.containsOnce(webClient, ".o_kanban_view");
+    });
+
     QUnit.test("client action with control panel (legacy)", async function (assert) {
         assert.expect(4);
         // LPE Fixme: at this time we don't really know the API that wowl ClientActions implement
