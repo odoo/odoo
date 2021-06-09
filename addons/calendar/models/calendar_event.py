@@ -69,6 +69,7 @@ class Meeting(models.Model):
         if 'res_model_id' not in defaults and 'res_model_id' in fields and \
                 self.env.context.get('active_model') and self.env.context['active_model'] != 'calendar.event':
             defaults['res_model_id'] = self.env['ir.model'].sudo().search([('model', '=', self.env.context['active_model'])], limit=1).id
+            defaults['res_model'] = self.env.context.get('active_model')
         if 'res_id' not in defaults and 'res_id' in fields and \
                 defaults.get('res_model_id') and self.env.context.get('active_id'):
             defaults['res_id'] = self.env.context['active_id']
@@ -357,25 +358,32 @@ class Meeting(models.Model):
             for vals in vals_list
         ]
 
-        for values in vals_list:
-            # created from calendar: try to create an activity on the related record
-            if not values.get('activity_ids'):
-                defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id'])
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id', 'res_model'])
+        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        # get list of models ids and filter out None values directly
+        model_ids = list(filter(lambda v: bool(v), {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
+        model_name = defaults.get('res_model')
+        valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
+        if meeting_activity_type and not defaults.get('activity_ids'):
+            for values in vals_list:
+                # created from calendar: try to create an activity on the related record
+                if values.get('activity_ids'):
+                    continue
                 res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
                 res_id = values.get('res_id', defaults.get('res_id'))
                 user_id = values.get('user_id', defaults.get('user_id'))
-                if not defaults.get('activity_ids') and res_model_id and res_id:
-                    if hasattr(self.env[self.env['ir.model'].sudo().browse(res_model_id).model], 'activity_ids'):
-                        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
-                        if meeting_activity_type:
-                            activity_vals = {
-                                'res_model_id': res_model_id,
-                                'res_id': res_id,
-                                'activity_type_id': meeting_activity_type.id,
-                            }
-                            if user_id:
-                                activity_vals['user_id'] = user_id
-                            values['activity_ids'] = [(0, 0, activity_vals)]
+                if not res_model_id or not res_id:
+                    continue
+                if res_model_id not in valid_activity_model_ids:
+                    continue
+                activity_vals = {
+                    'res_model_id': res_model_id,
+                    'res_id': res_id,
+                    'activity_type_id': meeting_activity_type.id,
+                }
+                if user_id:
+                    activity_vals['user_id'] = user_id
+                values['activity_ids'] = [(0, 0, activity_vals)]
 
         # Automatically add the current partner when creating an event if there is none (happens when we quickcreate an event)
         self_partner_id = [(4, self.env.user.partner_id.id)]
@@ -559,10 +567,13 @@ class Meeting(models.Model):
                 added_partner_ids += [command[1]] if command[1] not in self.partner_ids.ids else []
             # commands 0 and 1 not supported
 
-        attendees_to_unlink = self.env['calendar.attendee'].search([
-            ('event_id', 'in', self.ids),
-            ('partner_id', 'in', removed_partner_ids),
-        ])
+        if not self:
+            attendees_to_unlink = self.env['calendar.attendee']
+        else:
+            attendees_to_unlink = self.env['calendar.attendee'].search([
+                ('event_id', 'in', self.ids),
+                ('partner_id', 'in', removed_partner_ids),
+            ])
         attendee_commands += [[2, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
 
         attendee_commands += [
@@ -653,8 +664,8 @@ class Meeting(models.Model):
     def _setup_alarms(self):
         """ Schedule cron triggers for future events """
         cron = self.env.ref('calendar.ir_cron_scheduler_alarm').sudo()
-        alarm_manager = self.env['calendar.alarm_manager']
         alarm_types = self._get_trigger_alarm_types()
+        events_to_notify = self.env['calendar.event']
 
         for event in self:
             for alarm in (alarm for alarm in event.alarm_ids if alarm.alarm_type in alarm_types):
@@ -664,8 +675,9 @@ class Meeting(models.Model):
                     cron._trigger(at=at)
             if any(alarm.alarm_type == 'notification' for alarm in event.alarm_ids):
                 # filter events before notifying attendees through calendar_alarm_manager
-                need_notifs = event.filtered(lambda ev: ev.alarm_ids and ev.stop >= fields.Datetime.now())
-                alarm_manager._notify_next_alarm(need_notifs.partner_ids.ids)
+                events_to_notify |= event.filtered(lambda ev: ev.alarm_ids and ev.stop >= fields.Datetime.now())
+        if events_to_notify:
+            self.env['calendar.alarm_manager']._notify_next_alarm(events_to_notify.partner_ids.ids)
 
     # ------------------------------------------------------------
     # RECURRENCY
