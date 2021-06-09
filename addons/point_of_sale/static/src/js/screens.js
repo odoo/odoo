@@ -1731,7 +1731,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.pos.proxy.printer.print_receipt(receipt);
         this.pos.get_order()._printed = true;
     },
-    print: function() {
+    _print: function() {
         var self = this;
 
         if (!this.pos.proxy.printer) { // browser (html) printing
@@ -1763,6 +1763,9 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             this.print_html();
             this.lock_screen(false);
         }
+    },
+    print: function() {
+        $(window.document).ready(this._print.bind(this));
     },
     click_next: function() {
         this.pos.get_order().finalize();
