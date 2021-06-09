@@ -2020,7 +2020,7 @@ class NameManager:
         self.mandatory_names_or_ids = dict()
         self.available_names_or_ids = set()
         self.validate = validate
-        self.Model = Model
+        self.Model = Model.with_context(lang=False)
         self.fields_get = self.Model.fields_get()
 
     def has_field(self, name, info=()):
