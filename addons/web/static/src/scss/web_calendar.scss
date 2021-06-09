@@ -12,8 +12,8 @@
     @for $index from 1 through $o-nb-calendar-colors {
         .o_calendar_color_#{$index} {
             color: rgb(0, 0, 0) !important;
-            background-color: adjust-hue(rgb(255, 100, 100), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
-            border-color:  adjust-hue(rgb(255, 95, 95), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            background-color: adjust-hue(rgb(250, 100, 100), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            border-color:  adjust-hue(rgb(250, 60, 60), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
             opacity: 1.0;
             &.o_event_hightlight {
                 opacity: 1.0;
@@ -21,11 +21,11 @@
             }
             &:hover {
                 color: rgb(0, 0, 0) !important;
-                background-color: adjust-hue(rgb(255, 60, 60), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+                background-color: adjust-hue(rgb(250, 60, 60), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
             }
         }
         .o_underline_color_#{$index} {
-            border-bottom: 4px solid adjust-hue(rgba(255, 100, 100, 1.0), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            border-bottom: 6px solid adjust-hue(rgb(250, 100, 100), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
         }
     }
 
