@@ -857,7 +857,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'product5',
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
-            'taxes_id': dummy_50_perc_tax.ids
+            'taxes_id': dummy_50_perc_tax.ids,
+            'company_id': self.company.id
         })
 
         # sell product thru pos

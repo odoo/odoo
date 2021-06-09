@@ -54,6 +54,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template)
         cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template)
 
+        cls.companies = (cls.company_data['company'] + cls.company_data_2['company'])
         user.write({
             'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
             'company_id': cls.company_data['company'].id,
@@ -69,7 +70,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         cls.tax_armageddon = cls.setup_armageddon_tax('complex_tax', cls.company_data)
 
         # ==== Products ====
-        cls.product_a = cls.env['product.product'].create({
+        cls.product_a = cls.env['product.product'].with_context(allowed_company_ids=cls.companies.ids).create({
             'name': 'product_a',
             'uom_id': cls.env.ref('uom.product_uom_unit').id,
             'lst_price': 1000.0,
@@ -79,7 +80,7 @@ class AccountTestInvoicingCommon(TransactionCase):
             'taxes_id': [(6, 0, cls.tax_sale_a.ids)],
             'supplier_taxes_id': [(6, 0, cls.tax_purchase_a.ids)],
         })
-        cls.product_b = cls.env['product.product'].create({
+        cls.product_b = cls.env['product.product'].with_context(allowed_company_ids=cls.companies.ids).create({
             'name': 'product_b',
             'uom_id': cls.env.ref('uom.product_uom_dozen').id,
             'lst_price': 200.0,
@@ -529,7 +530,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         cls.currency_euro_id = cls.env.ref("base.EUR").id
         cls.account_rcv = cls.company_data['default_account_receivable']
         cls.account_rsa = cls.company_data['default_account_payable']
-        cls.product = cls.env['product.product'].create({
+        cls.product = cls.env['product.product'].with_context(allowed_company_ids=cls.company.ids).create({
             'name': 'Product Product 4',
             'standard_price': 500.0,
             'list_price': 750.0,

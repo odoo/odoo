@@ -19,6 +19,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'type': 'product',
             'categ_id': cls.stock_account_product_categ.id,
             'taxes_id': [(6, 0, [])],
+            'company_id': cls.company_data['company'].id,
         })
 
     def _dropship_product1(self):

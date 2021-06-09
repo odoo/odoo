@@ -27,10 +27,12 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         cls.product3 = cls.env['product.product'].create({
             'name': 'Product 3',
             'list_price': 450,
+            'company_id': cls.company.id
         })
         cls.product4 = cls.env['product.product'].create({
             'name': 'Product 4',
             'list_price': 750,
+            'company_id': cls.company.id
         })
         cls.partner1 = cls.env['res.partner'].create({'name': 'Partner 1'})
         cls.partner4 = cls.env['res.partner'].create({'name': 'Partner 4'})
@@ -43,16 +45,19 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
             'name': 'LED Lamp',
             'available_in_pos': True,
             'list_price': 0.90,
+            'company_id': cls.company.id
         })
         cls.whiteboard_pen = cls.env['product.product'].create({
             'name': 'Whiteboard Pen',
             'available_in_pos': True,
             'list_price': 1.20,
+            'company_id': cls.company.id
         })
         cls.newspaper_rack = cls.env['product.product'].create({
             'name': 'Newspaper Rack',
             'available_in_pos': True,
             'list_price': 1.28,
+            'company_id': cls.company.id
         })
         cls.cash_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Cash',
@@ -470,6 +475,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'categ_id': category.id,
             'lst_price': lst_price,
             'standard_price': standard_price if standard_price else 0.0,
+            'company_id': cls.company.id
         })
         if sale_account:
             product.property_account_income_id = sale_account

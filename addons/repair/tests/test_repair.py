@@ -307,7 +307,8 @@ class TestRepair(AccountTestInvoicingCommon):
             "taxes_id": [(4, tax01.id), (4, tax02.id)],
         })
         super_variant = super_product.product_variant_id
-        self.assertEqual(super_variant.taxes_id, tax01 | tax02)
+        tx = super_variant.sudo().taxes_id.filtered(lambda c: c.company_id in (company01 + company02))
+        self.assertEqual(tx, tax01 | tax02)
 
         ro_form = Form(self.env['repair.order'])
         ro_form.product_id = super_variant

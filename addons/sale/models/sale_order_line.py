@@ -131,7 +131,7 @@ class SaleOrderLine(models.Model):
             line = line.with_company(line.company_id)
             fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_partner_id.id)
             # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company)
+            taxes = line.product_id.sudo().taxes_id.filtered(lambda t: t.company_id == line.env.company)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)
 
     @api.model
@@ -528,6 +528,7 @@ class SaleOrderLine(models.Model):
         :param optional_values: any parameter that should be added to the returned invoice line
         """
         self.ensure_one()
+        taxes = self.product_id.sudo().taxes_id.filtered(lambda t: t.company_id == self.env.company)
         res = {
             'display_type': self.display_type,
             'sequence': self.sequence,
@@ -537,7 +538,7 @@ class SaleOrderLine(models.Model):
             'quantity': self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.price_unit,
-            'tax_ids': [(6, 0, self.tax_id.ids)],
+            'tax_ids': [(6, 0, taxes.ids)],
             'analytic_account_id': self.order_id.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],

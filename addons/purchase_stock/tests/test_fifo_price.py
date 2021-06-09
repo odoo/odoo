@@ -28,6 +28,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
             'supplier_taxes_id': [],
             'description': 'FIFO Ice Cream',
+            'company_id': self.company_data['company'].id
         })
 
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
@@ -225,6 +226,7 @@ class TestFifoPrice(ValuationReconciliationTestCommon):
             'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
             'supplier_taxes_id': [],
             'description': 'FIFO Ice Cream',
+            'company_id': self.company_data['company'].id
         })
 
         # Create outpicking.create delivery order of 100 kg.
