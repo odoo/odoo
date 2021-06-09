@@ -333,7 +333,10 @@ class PosSession(models.Model):
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
                 self.move_id.unlink()
-
+        elif not self.cash_register_id.difference:
+            cash_register = self.cash_register_id
+            cash_register.pos_session_id = False
+            cash_register.unlink()
         self.write({'state': 'closed'})
         return {
             'type': 'ir.actions.client',
