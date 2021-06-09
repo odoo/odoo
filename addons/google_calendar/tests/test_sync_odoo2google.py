@@ -8,8 +8,10 @@ from unittest.mock import patch
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
+from odoo.tests.common import users, warmup
+from odoo.tests import tagged
 
-
+@tagged('odoo2google')
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
 class TestSyncOdoo2Google(TestSyncGoogle):
 
@@ -52,6 +54,73 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'needsAction'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}}
         })
+
+    @patch_api
+    @users('__system__')
+    @warmup
+    def test_event_creation_perf(self):
+        EVENT_COUNT = 100
+        partners = self.env['res.partner'].create([
+            {'name': 'Jean-Luc %s' % (i), 'email': 'jean-luc-%s@opoo.com' % (i)} for i in range(EVENT_COUNT)])
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Notif',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 18,
+        })
+        partner_model = self.env.ref('base.model_res_partner')
+        partner = self.env['res.partner'].search([], limit=1)
+        with self.assertQueryCount(__system__=1211):
+            events = self.env['calendar.event'].create([{
+                'name': "Event %s" % (i),
+                'start': datetime(2020, 1, 15, 8, 0),
+                'stop': datetime(2020, 1, 15, 18, 0),
+                'partner_ids': [(4, partners[i].id), (4, self.env.user.partner_id.id)],
+                'alarm_ids': [(4, alarm.id)],
+                'privacy': 'private',
+                'need_sync': False,
+                'res_model_id': partner_model.id,
+                'res_id': partner.id,
+            } for i in range(EVENT_COUNT)])
+
+            events._sync_odoo2google(self.google_service)
+
+        with self.assertQueryCount(__system__=129):
+            events.unlink()
+
+
+    @patch_api
+    @users('__system__')
+    @warmup
+    def test_recurring_event_creation_perf(self):
+        partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
+        alarm = self.env['calendar.alarm'].create({
+            'name': 'Notif',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 18,
+        })
+        partner_model = self.env.ref('base.model_res_partner')
+        partner = self.env['res.partner'].search([], limit=1)
+        with self.assertQueryCount(__system__=3637):
+            event = self.env['calendar.event'].create({
+                'name': "Event",
+                'start': datetime(2020, 1, 15, 8, 0),
+                'stop': datetime(2020, 1, 15, 18, 0),
+                'partner_ids': [(4, partner.id)],
+                'alarm_ids': [(4, alarm.id)],
+                'privacy': 'private',
+                'need_sync': False,
+                'interval': 1,
+                'recurrency': True,
+                'rrule_type': 'daily',
+                'end_type': 'forever',
+                'res_model_id': partner_model.id,
+                'res_id': partner.id,
+            })
+
+        with self.assertQueryCount(__system__=2191):
+            event.unlink()
 
     def test_event_without_user(self):
         event = self.env['calendar.event'].create({
