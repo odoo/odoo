@@ -178,12 +178,12 @@
                         <group>
                             <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'readonly': [('user_ids', '!=', [])]}"/>
                             <span class="o_form_label o_td_label" name="address_name">
-                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}">Company Address</b>
-                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}">Invoice Address</b>
-                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}">Delivery Address</b>
-                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}">Other Address</b>
-                                <b attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}">Private Address</b>
-                                <b attrs="{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}">Address</b>
+                                <b attrs="{'invisible': [('company_type', '!=', 'company')]}">Company Address</b>
+                                <b attrs="{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}">Invoice Address</b>
+                                <b attrs="{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}">Delivery Address</b>
+                                <b attrs="{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}">Other Address</b>
+                                <b attrs="{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}">Private Address</b>
+                                <b attrs="{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}">Address</b>
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"
