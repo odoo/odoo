@@ -959,7 +959,7 @@
                 <br/>
                 <div>Subtotal<span t-esc='widget.format_currency(receipt.subtotal)' class="pos-receipt-right-align"/></div>
                 <t t-foreach='receipt.tax_details' t-as='tax'>
-                    <div>
+                    <div class="pos-receipt-tax-line">
                         <t t-esc='tax.name' />
                         <span t-esc='widget.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
                     </div>
