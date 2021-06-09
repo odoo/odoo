@@ -68,6 +68,4 @@ class LeaveReportCalendar(models.Model):
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
-        # Checking the calendar directly allows to not grey out the leaves taken
-        # by the employee
-        return self.env['hr.leave'].get_unusual_days(date_from, date_to=date_to)
+        return self.env.user.employee_id._get_unusual_days(date_from, date_to)

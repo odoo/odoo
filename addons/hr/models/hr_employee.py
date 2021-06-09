@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+import pytz
+from datetime import datetime, time
+from dateutil.rrule import rrule, DAILY
 from random import choice
 from string import digits
 from werkzeug.urls import url_encode
@@ -498,6 +500,19 @@ class HrEmployeePrivate(models.Model):
                 employee_id._message_log(
                     body='<br/>'.join(errors),
                 )
+
+    def _get_unusual_days(self, date_from, date_to=None):
+        # Checking the calendar directly allows to not grey out the leaves taken
+        # by the employee
+        self.ensure_one()
+        calendar = self.resource_calendar_id
+        if not calendar:
+            return {}
+        dfrom = datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=pytz.UTC)
+        dto = datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=pytz.UTC)
+
+        works = {d[0].date() for d in calendar._work_intervals_batch(dfrom, dto)[False]}
+        return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, dfrom, until=dto)}
 
     # ---------------------------------------------------------
     # Messaging
