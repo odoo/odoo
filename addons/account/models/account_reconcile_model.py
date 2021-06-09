@@ -884,7 +884,8 @@ class AccountReconcileModel(models.Model):
         # Statement line amount is equal to the total residual.
         if line_currency.is_zero(line_residual_after_reconciliation):
             return True
-        reconciled_percentage = 100 - abs(line_residual_after_reconciliation) / abs(line_residual - line_residual_after_reconciliation) * 100
+        residual_difference = line_residual - line_residual_after_reconciliation
+        reconciled_percentage = 100 - abs(line_residual_after_reconciliation) / abs(residual_difference) * 100 if (residual_difference != 0) else 0
         return reconciled_percentage >= self.match_total_amount_param
 
     def _filter_candidates(self, candidates, aml_ids_to_exclude, reconciled_amls_ids):
