@@ -2,6 +2,7 @@
 
 import { useHotkey } from "../hotkey_hook";
 import { useActiveElement } from "../ui_service";
+import { useService } from "../service_hook";
 
 const { Component, hooks, misc } = owl;
 const { useRef, useSubEnv } = hooks;
@@ -18,6 +19,7 @@ export class Dialog extends Component {
     }
     setup() {
         this.modalRef = useRef("modal");
+        this.dialogService = useService("dialog");
         useActiveElement("modal");
         useHotkey(
             "escape",
@@ -37,6 +39,7 @@ export class Dialog extends Component {
         this.size = this.constructor.size;
         this.technical = this.constructor.technical;
         this.title = this.constructor.title;
+        this.__id = null;
     }
 
     mounted() {
@@ -68,7 +71,7 @@ export class Dialog extends Component {
      * @private
      */
     close() {
-        this.trigger("dialog-closed");
+        this.dialogService.close(this.__id);
     }
 }
 

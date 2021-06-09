@@ -203,6 +203,20 @@ export function makeFakeNotificationService(mock) {
     };
 }
 
+export function makeFakeDialogService(values = {}) {
+    const open = values.open || (() => {});
+    const close = values.close || (() => {});
+    return {
+        name: "dialog",
+        start() {
+            return {
+                open,
+                close,
+            };
+        },
+    };
+}
+
 export const mocks = {
     company: () => companyService,
     cookie: () => fakeCookieService,
@@ -214,4 +228,5 @@ export const mocks = {
     title: () => fakeTitleService,
     ui: () => uiService,
     user: () => userService,
+    dialog: makeFakeDialogService,
 };

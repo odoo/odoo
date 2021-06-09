@@ -13,7 +13,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui_service";
 import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { makeFakeLocalizationService } from "../../helpers/mock_services";
+import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";
 
 const { Component, mount, tags } = owl;
@@ -31,6 +31,7 @@ QUnit.module("Error dialogs", {
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("localization", makeFakeLocalizationService());
+        serviceRegistry.add("dialog", makeFakeDialogService());
     },
     async afterEach() {
         parent.unmount();
@@ -203,6 +204,15 @@ QUnit.test("WarningDialog", async (assert) => {
 });
 
 QUnit.test("RedirectWarningDialog", async (assert) => {
+    serviceRegistry.add(
+        "dialog",
+        makeFakeDialogService({
+            close: () => {
+                assert.step("dialog-closed");
+            },
+        }),
+        { force: true }
+    );
     assert.expect(10);
     class Parent extends Component {
         constructor() {
@@ -215,12 +225,9 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
                 ],
             };
         }
-        onDialogClosed() {
-            assert.step("dialog-closed");
-        }
     }
     Parent.components = { RedirectWarningDialog };
-    Parent.template = tags.xml`<RedirectWarningDialog data="data" t-on-dialog-closed="onDialogClosed"/>`;
+    Parent.template = tags.xml`<RedirectWarningDialog data="data"/>`;
     const faceActionService = {
         name: "action",
         start() {

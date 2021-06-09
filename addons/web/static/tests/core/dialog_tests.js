@@ -7,6 +7,7 @@ import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
 import { Dialog } from "@web/core/dialog/dialog";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, nextTick } from "../helpers/utils";
+import { makeFakeDialogService } from "../helpers/mock_services";
 
 const { hooks, mount } = owl;
 const { useRef, useState } = hooks;
@@ -40,6 +41,7 @@ QUnit.module("Components", (hooks) => {
         target.append(dialogContainer);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
+        serviceRegistry.add("dialog", makeFakeDialogService());
         env = await makeTestEnv();
     });
     hooks.afterEach(() => {
@@ -108,59 +110,69 @@ QUnit.module("Components", (hooks) => {
         );
     });
 
-    QUnit.test(
-        "click on the button x triggers the custom event 'dialog-closed'",
-        async function (assert) {
-            assert.expect(2);
-            class Parent extends owl.Component {
-                constructor() {
-                    super(...arguments);
-                    this.state = useState({
-                        displayDialog: true,
-                    });
-                }
+    QUnit.test("click on the button x triggers the service close", async function (assert) {
+        assert.expect(3);
+        serviceRegistry.add(
+            "dialog",
+            makeFakeDialogService({
+                close: (id) => {
+                    assert.step("close with id: " + id);
+                },
+            }),
+            { force: true }
+        );
+        env = await makeTestEnv();
+        class MyDialog extends SimpleDialog {
+            setup() {
+                super.setup();
+                this.__id = 666;
             }
-
-            Parent.template = owl.tags.xml`
-              <div t-on-dialog-closed="state.displayDialog = false">
-                  <SimpleDialog t-if="state.displayDialog">
-                      Hello!
-                  </SimpleDialog>
-              </div>
-          `;
-            Parent.components = { SimpleDialog };
-            parent = await mount(Parent, { env, target });
-            assert.containsOnce(target, ".o_dialog");
-            await click(target, ".o_dialog header button.close");
-            assert.containsNone(target, ".o_dialog");
         }
-    );
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`
+                <MyDialog>
+                    Hello!
+                </MyDialog>
+          `;
+        Parent.components = { MyDialog };
+        parent = await mount(Parent, { env, target });
+        assert.containsOnce(target, ".o_dialog");
+        await click(target, ".o_dialog header button.close");
+        assert.verifySteps(["close with id: 666"]);
+    });
 
     QUnit.test(
-        "click on the default footer button triggers the custom event 'dialog-closed'",
+        "click on the default footer button triggers the service close",
         async function (assert) {
-            assert.expect(2);
-            class Parent extends owl.Component {
-                constructor() {
-                    super(...arguments);
-                    this.state = useState({
-                        displayDialog: true,
-                    });
+            serviceRegistry.add(
+                "dialog",
+                makeFakeDialogService({
+                    close: (id) => {
+                        assert.step("close with id: " + id);
+                    },
+                }),
+                { force: true }
+            );
+            env = await makeTestEnv();
+            assert.expect(3);
+            class MyDialog extends SimpleDialog {
+                setup() {
+                    super.setup();
+                    this.__id = 777;
                 }
             }
+            class Parent extends owl.Component {}
 
             Parent.template = owl.tags.xml`
-              <div t-on-dialog-closed="state.displayDialog = false">
-                  <SimpleDialog t-if="state.displayDialog">
-                      Hello!
-                  </SimpleDialog>
-              </div>
+                <MyDialog>
+                    Hello!
+                </MyDialog>
           `;
-            Parent.components = { SimpleDialog };
+            Parent.components = { MyDialog };
             parent = await mount(Parent, { env, target });
             assert.containsOnce(target, ".o_dialog");
             await click(target, ".o_dialog footer button");
-            assert.containsNone(target, ".o_dialog");
+            assert.verifySteps(["close with id: 777"]);
         }
     );
 
@@ -281,30 +293,44 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("Interactions between multiple dialogs", async function (assert) {
         assert.expect(14);
+        serviceRegistry.add(
+            "dialog",
+            makeFakeDialogService({
+                close: (id) => {
+                    assert.step("close with id: " + id);
+                    delete parent.dialogIds[id];
+                },
+            }),
+            { force: true }
+        );
+        env = await makeTestEnv();
+        let id = 0;
+        class MyDialog extends SimpleDialog {
+            setup() {
+                super.setup();
+                this.__id = id;
+            }
+        }
         class Parent extends owl.Component {
             constructor() {
                 super(...arguments);
                 this.dialogIds = useState({});
             }
-            _onDialogClosed(id) {
-                assert.step(`dialog_id=${id}_closed`);
-                delete this.dialogIds[id];
-            }
         }
         Parent.template = owl.tags.xml`
               <div>
-                <SimpleDialog t-foreach="Object.keys(dialogIds)" t-as="dialogId" t-key="dialogId"
-                  t-on-dialog-closed="_onDialogClosed(dialogId)"
-                  />
+                <MyDialog t-foreach="Object.keys(dialogIds)" t-as="dialogId" t-key="dialogId"/>
               </div>
           `;
-        Parent.components = { SimpleDialog };
+        Parent.components = { MyDialog };
         const parent = await mount(Parent, { env, target });
-        parent.dialogIds[0] = 1;
+        parent.dialogIds[0] = id;
         await nextTick();
-        parent.dialogIds[1] = 1;
+        id++;
+        parent.dialogIds[1] = id;
         await nextTick();
-        parent.dialogIds[2] = 1;
+        id++;
+        parent.dialogIds[2] = id;
         await nextTick();
         function activity(modals) {
             const res = [];
@@ -335,7 +361,7 @@ QUnit.module("Components", (hooks) => {
         // dialog 0 is closed through the removal of its parent => no callback
         assert.containsNone(target, ".o_dialog_container .modal");
         assert.doesNotHaveClass(target.querySelector(".o_dialog_container"), "modal-open");
-        assert.verifySteps(["dialog_id=2_closed", "dialog_id=1_closed"]);
+        assert.verifySteps(["close with id: 2", "close with id: 1"]);
     });
 
     QUnit.test("can be the UI active element", async function (assert) {

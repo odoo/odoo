@@ -46,7 +46,7 @@ QUnit.module("base_automation", {}, function () {
     });
 
     QUnit.test("Error due to an automated action", async function (assert) {
-        assert.expect(5);
+        assert.expect(4);
 
         const error = new RPCError();
         const errorContext = {
@@ -70,7 +70,6 @@ QUnit.module("base_automation", {}, function () {
         const dialogOpened = new Promise((resolve) => {
             env.services.dialog.bus.on("ADD", null, async ({ class: dialogClass, props }) => {
                 assert.equal(props.data.context, errorContext, "Received the correct error context");
-                assert.equal(dialogClass, BaseAutomationErrorDialog, "Should open the correct dialog class");
                 const fixture = document.getElementById("qunit-fixture");
                 const dialogContainer = document.createElement('div');
                 dialogContainer.classList.add('o_dialog_container');
@@ -92,7 +91,7 @@ QUnit.module("base_automation", {}, function () {
     });
 
     QUnit.test("Error not due to an automated action", async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         const error = new RPCError();
         Object.assign(error, {
@@ -106,7 +105,6 @@ QUnit.module("base_automation", {}, function () {
         const env = await makeTestEnv();
         const dialogOpened = new Promise((resolve) => {
             env.services.dialog.bus.on("ADD", null, async ({ class: dialogClass, props }) => {
-                assert.notEqual(dialogClass, BaseAutomationErrorDialog, "Should not open base_automation dialog on other errors");
                 const fixture = document.getElementById("qunit-fixture");
                 const dialogContainer = document.createElement('div');
                 dialogContainer.classList.add('o_dialog_container');

@@ -14,6 +14,7 @@ import { registry } from "@web/core/registry";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
 import {
+    makeFakeDialogService,
     makeFakeLocalizationService,
     makeFakeNotificationService,
     makeFakeRPCService,
@@ -24,15 +25,6 @@ const { Component, tags } = owl;
 const errorDialogRegistry = registry.category("error_dialogs");
 const errorHandlerRegistry = registry.category("error_handlers");
 const serviceRegistry = registry.category("services");
-
-function makeFakeDialogService(open) {
-    return {
-        name: "dialog",
-        start() {
-            return { open };
-        },
-    };
-}
 
 let errorCb;
 let unhandledRejectionCb;
@@ -81,7 +73,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
             traceback: error.stack,
         });
     }
-    serviceRegistry.add("dialog", makeFakeDialogService(open), { force: true });
+    serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
     await makeTestEnv();
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
     await unhandledRejectionCb(errorEvent);
@@ -111,7 +103,7 @@ QUnit.test(
                 traceback: error.stack,
             });
         }
-        serviceRegistry.add("dialog", makeFakeDialogService(open), { force: true });
+        serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
         await makeTestEnv();
         errorDialogRegistry.add("strange_error", CustomDialog);
         const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
@@ -192,7 +184,7 @@ QUnit.test("handle uncaught promise errors", async (assert) => {
             traceback: error.stack,
         });
     }
-    serviceRegistry.add("dialog", makeFakeDialogService(open), { force: true });
+    serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
     await makeTestEnv();
 
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
@@ -210,7 +202,7 @@ QUnit.test("handle uncaught client errors", async (assert) => {
         assert.strictEqual(props.name, "UncaughtClientError > TestError");
         assert.strictEqual(props.message, "Uncaught Javascript Error > This is an error test");
     }
-    serviceRegistry.add("dialog", makeFakeDialogService(open), { force: true });
+    serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
     await makeTestEnv();
 
     const errorEvent = new ErrorEvent("error", {
@@ -232,7 +224,7 @@ QUnit.test("handle uncaught CORS errors", async (assert) => {
         assert.strictEqual(dialogClass, NetworkErrorDialog);
         assert.strictEqual(props.message, "Uncaught CORS Error");
     }
-    serviceRegistry.add("dialog", makeFakeDialogService(open), { force: true });
+    serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
     await makeTestEnv();
 
     // CORS error event has no colno, no lineno and no filename
