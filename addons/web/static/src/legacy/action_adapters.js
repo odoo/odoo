@@ -103,7 +103,7 @@ class ActionAdapter extends ComponentAdapter {
                     }
                 }
                 WarningDialog.bodyTemplate = tags.xml`<t t-esc="props.message"/>`;
-                this.dialogs.open(WarningDialog, {
+                this.dialogs.add(WarningDialog, {
                     title: payload.title,
                     message: payload.message,
                 });

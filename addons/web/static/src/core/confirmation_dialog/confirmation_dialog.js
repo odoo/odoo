@@ -24,6 +24,7 @@ ConfirmationDialog.props = {
     body: String,
     confirm: Function,
     cancel: Function,
+    close: Function,
 };
 
 ConfirmationDialog.bodyTemplate = "web.ConfirmationDialogBody";

@@ -58,7 +58,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
     error.message = "Some strange error occured";
     error.data = { debug: "somewhere" };
     error.subType = "strange_error";
-    function open(dialogClass, props) {
+    function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, RPCErrorDialog);
         assert.deepEqual(props, {
             name: "RPC_ERROR",
@@ -73,7 +73,7 @@ QUnit.test("handle RPC_ERROR of type='server' and no associated dialog class", a
             traceback: error.stack,
         });
     }
-    serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
+    serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
     await unhandledRejectionCb(errorEvent);
@@ -90,7 +90,7 @@ QUnit.test(
         error.code = 701;
         error.message = "Some strange error occured";
         error.exceptionName = "strange_error";
-        function open(dialogClass, props) {
+        function addDialog(dialogClass, props) {
             assert.strictEqual(dialogClass, CustomDialog);
             assert.deepEqual(props, {
                 name: "RPC_ERROR",
@@ -103,7 +103,7 @@ QUnit.test(
                 traceback: error.stack,
             });
         }
-        serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
+        serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
         await makeTestEnv();
         errorDialogRegistry.add("strange_error", CustomDialog);
         const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
@@ -176,7 +176,7 @@ QUnit.test("handle uncaught promise errors", async (assert) => {
     error.message = "This is an error test";
     error.name = "TestError";
 
-    function open(dialogClass, props) {
+    function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, ClientErrorDialog);
         assert.deepEqual(props, {
             name: "UncaughtPromiseError > TestError",
@@ -184,7 +184,7 @@ QUnit.test("handle uncaught promise errors", async (assert) => {
             traceback: error.stack,
         });
     }
-    serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
+    serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
 
     const errorEvent = new PromiseRejectionEvent("error", { reason: error, promise: null });
@@ -197,12 +197,12 @@ QUnit.test("handle uncaught client errors", async (assert) => {
     error.message = "This is an error test";
     error.name = "TestError";
 
-    function open(dialogClass, props) {
+    function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, ClientErrorDialog);
         assert.strictEqual(props.name, "UncaughtClientError > TestError");
         assert.strictEqual(props.message, "Uncaught Javascript Error > This is an error test");
     }
-    serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
+    serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
 
     const errorEvent = new ErrorEvent("error", {
@@ -220,11 +220,11 @@ QUnit.test("handle uncaught CORS errors", async (assert) => {
     error.message = "This is a cors error";
     error.name = "CORS error";
 
-    function open(dialogClass, props) {
+    function addDialog(dialogClass, props) {
         assert.strictEqual(dialogClass, NetworkErrorDialog);
         assert.strictEqual(props.message, "Uncaught CORS Error");
     }
-    serviceRegistry.add("dialog", makeFakeDialogService({ open: open }), { force: true });
+    serviceRegistry.add("dialog", makeFakeDialogService(addDialog), { force: true });
     await makeTestEnv();
 
     // CORS error event has no colno, no lineno and no filename

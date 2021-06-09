@@ -35,7 +35,7 @@ function startTour({ env }) {
         type: "item",
         description: env._t("Start Tour"),
         callback: async () => {
-            env.services.dialog.open(ToursDialog);
+            env.services.dialog.add(ToursDialog);
         },
         sequence: 60,
     };

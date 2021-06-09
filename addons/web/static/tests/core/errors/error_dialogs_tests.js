@@ -201,16 +201,10 @@ QUnit.test("WarningDialog", async (assert) => {
 });
 
 QUnit.test("RedirectWarningDialog", async (assert) => {
-    serviceRegistry.add(
-        "dialog",
-        makeFakeDialogService({
-            close: () => {
-                assert.step("dialog-closed");
-            },
-        }),
-        { force: true }
-    );
     assert.expect(10);
+
+    class CloseRedirectWarningDialog extends RedirectWarningDialog {}
+
     class Parent extends Component {
         constructor() {
             super(...arguments);
@@ -222,9 +216,12 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
                 ],
             };
         }
+        close() {
+            assert.step("dialog-closed");
+        }
     }
-    Parent.components = { RedirectWarningDialog };
-    Parent.template = tags.xml`<RedirectWarningDialog data="data"/>`;
+    Parent.components = { RedirectWarningDialog: CloseRedirectWarningDialog };
+    Parent.template = tags.xml`<RedirectWarningDialog data="data" close="close"/>`;
     const faceActionService = {
         name: "action",
         start() {

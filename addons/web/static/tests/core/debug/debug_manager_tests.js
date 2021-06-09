@@ -123,7 +123,11 @@ QUnit.module("DebugMenu", (hooks) => {
 
     QUnit.test("Don't display the DebugMenu if debug mode is disabled", async (assert) => {
         const env = await makeTestEnv(testConfig);
-        const actionDialog = await mount(ActionDialog, { env, target, props: {} });
+        const actionDialog = await mount(ActionDialog, {
+            env,
+            target,
+            props: { close: () => {} },
+        });
         registerCleanup(() => {
             actionDialog.destroy();
         });
@@ -173,9 +177,10 @@ QUnit.module("DebugMenu", (hooks) => {
                     useSubEnv({ inDialog: true });
                     useDebugMenu("custom", { customKey: "abc" });
                 }
+                close() {}
             }
             Parent.components = { ActionDialog };
-            Parent.template = tags.xml`<ActionDialog/>`;
+            Parent.template = tags.xml`<ActionDialog close="close"/>`;
             patchWithCleanup(odoo, { debug: "1" });
             const env = await makeTestEnv(testConfig);
             const actionDialog = await mount(Parent, { env, target });

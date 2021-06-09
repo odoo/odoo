@@ -32,6 +32,7 @@ ActionDialog.props = {
     ActionComponent: { optional: true },
     actionProps: { optional: true },
     title: { optional: true },
+    close: Function,
 };
 
 /**

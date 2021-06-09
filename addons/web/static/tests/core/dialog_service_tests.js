@@ -57,7 +57,7 @@ QUnit.test("Simple rendering with a single dialog", async (assert) => {
     CustomDialog.title = "Welcome";
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
     assert.containsNone(target, ".o_dialog_container .o_dialog");
-    env.services.dialog.open(CustomDialog);
+    env.services.dialog.add(CustomDialog);
     await nextTick();
     assert.containsOnce(target, ".o_dialog_container .o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Welcome");
@@ -74,18 +74,18 @@ QUnit.test("Simple rendering and close a single dialog", async (assert) => {
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
     assert.containsNone(target, ".o_dialog_container .o_dialog");
 
-    const dialogId = env.services.dialog.open(CustomDialog);
+    const removeDialog = env.services.dialog.add(CustomDialog);
     await nextTick();
     assert.containsOnce(target, ".o_dialog_container .o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Welcome");
 
-    env.services.dialog.close(dialogId);
+    removeDialog();
     await nextTick();
     assert.containsNone(target, ".o_dialog_container .o_dialog");
 
     // Call a second time, the close on the dialog.
     // As the dialog is already close, this call is just ignored. No error should be raised.
-    env.services.dialog.close(dialogId);
+    removeDialog();
     await nextTick();
 });
 
@@ -99,11 +99,11 @@ QUnit.test("rendering with two dialogs", async (assert) => {
     }
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
     assert.containsNone(target, ".o_dialog_container .o_dialog");
-    env.services.dialog.open(CustomDialog, { title: "Hello" });
+    env.services.dialog.add(CustomDialog, { title: "Hello" });
     await nextTick();
     assert.containsOnce(target, ".o_dialog_container .o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Hello");
-    env.services.dialog.open(CustomDialog, { title: "Sauron" });
+    env.services.dialog.add(CustomDialog, { title: "Sauron" });
     await nextTick();
     assert.containsN(target, ".o_dialog_container .o_dialog", 2);
     assert.deepEqual(
@@ -125,7 +125,7 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
     }
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
 
-    env.services.dialog.open(CustomDialog, { title: "Hello" });
+    env.services.dialog.add(CustomDialog, { title: "Hello" });
     await nextTick();
     let dialogModal = target.querySelector(
         ".o_dialog_container .o_dialog .modal:not(.o_inactive_modal)"
@@ -133,7 +133,7 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
 
     assert.strictEqual(dialogModal, env.services.ui.activeElement);
 
-    env.services.dialog.open(CustomDialog, { title: "Sauron" });
+    env.services.dialog.add(CustomDialog, { title: "Sauron" });
     await nextTick();
     dialogModal = target.querySelector(
         ".o_dialog_container .o_dialog .modal:not(.o_inactive_modal)"
@@ -141,7 +141,7 @@ QUnit.test("multiple dialogs can become the UI active element", async (assert) =
 
     assert.strictEqual(dialogModal, env.services.ui.activeElement);
 
-    env.services.dialog.open(CustomDialog, { title: "Rafiki" });
+    env.services.dialog.add(CustomDialog, { title: "Rafiki" });
     await nextTick();
     dialogModal = target.querySelector(
         ".o_dialog_container .o_dialog .modal:not(.o_inactive_modal)"
@@ -170,11 +170,11 @@ QUnit.test("Interactions between multiple dialogs", async (assert) => {
     }
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
 
-    env.services.dialog.open(CustomDialog, { title: "Hello" });
+    env.services.dialog.add(CustomDialog, { title: "Hello" });
     await nextTick();
-    env.services.dialog.open(CustomDialog, { title: "Sauron" });
+    env.services.dialog.add(CustomDialog, { title: "Sauron" });
     await nextTick();
-    env.services.dialog.open(CustomDialog, { title: "Rafiki" });
+    env.services.dialog.add(CustomDialog, { title: "Rafiki" });
     await nextTick();
 
     let modals = document.querySelectorAll(".modal");
@@ -248,7 +248,7 @@ QUnit.test("dialog component crashes", async (assert) => {
 
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
 
-    env.services.dialog.open(FailingDialog);
+    env.services.dialog.add(FailingDialog);
     await prom;
     assert.verifySteps(["error"]);
     assert.containsOnce(pseudoWebClient, ".modal");

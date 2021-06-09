@@ -16,37 +16,31 @@ ErrorHandler.template = tags.xml`<t t-component="props.dialog.class" t-props="pr
 export class DialogContainer extends Component {
     setup() {
         this.dialogs = {};
-        this.props.bus.on("ADD", this, (dialog) => {
-            this.dialogs[dialog.id] = dialog;
-            this.render();
-        });
-        this.props.bus.on("CLOSE", this, (id) => {
-            this.closeDialog(id);
-        });
+        this.props.bus.on("ADD", this, this.add);
+        this.props.bus.on("REMOVE", this, this.remove);
+    }
+    __destroy() {
+        this.props.bus.off("ADD", this);
+        this.props.bus.off("REMOVE", this);
+        super.__destroy();
     }
 
-    onDialogClosed(id) {
-        this.closeDialog(id);
+    add(params) {
+        this.dialogs[params.id] = params;
+        this.render();
     }
-
-    closeDialog(id) {
+    remove(id) {
         if (this.dialogs[id]) {
-            if (this.dialogs[id].options && this.dialogs[id].options.onCloseCallback) {
-                this.dialogs[id].options.onCloseCallback();
-            }
             delete this.dialogs[id];
             this.render();
         }
     }
 
-    errorCallBack(id) {
-        return () => this.closeDialog(id);
+    onDialogClosed(id) {
+        this.remove(id);
     }
-
-    __destroy() {
-        this.props.bus.off("ADD", this);
-        this.props.bus.off("CLOSE", this);
-        super.__destroy();
+    errorCallBack(id) {
+        return () => this.remove(id);
     }
 }
 DialogContainer.components = { ErrorHandler };

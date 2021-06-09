@@ -550,14 +550,14 @@ function makeActionManager(env) {
             }
 
             const { onClose } = dialog;
-            const oldDialogId = dialog.id;
-            if (oldDialogId) {
+            const removeOldDialog = dialog.remove;
+            if (removeOldDialog) {
                 dialog = {};
-                env.services.dialog.close(oldDialogId);
+                removeOldDialog();
             }
-            const dialogId = env.services.dialog.open(ActionDialog, actionDialogProps, {
-                onCloseCallback: () => {
-                    if (dialog.id) {
+            const removeDialog = env.services.dialog.add(ActionDialog, actionDialogProps, {
+                onClose: () => {
+                    if (dialog.remove) {
                         if (dialog.onClose) {
                             dialog.onClose();
                         }
@@ -566,7 +566,7 @@ function makeActionManager(env) {
                 },
             });
             dialog = {
-                id: dialogId,
+                remove: removeDialog,
                 onClose: onClose || options.onClose,
             };
             return currentActionProm;
@@ -923,11 +923,11 @@ function makeActionManager(env) {
     async function _executeCloseAction(params = {}) {
         cleanDomFromBootstrap();
         let onClose;
-        const dialogId = dialog.id;
-        if (dialogId) {
+        const removeDialog = dialog.remove;
+        if (removeDialog) {
             onClose = dialog.onClose;
             dialog = {};
-            env.services.dialog.close(dialogId);
+            removeDialog();
         } else {
             onClose = params.onClose;
         }

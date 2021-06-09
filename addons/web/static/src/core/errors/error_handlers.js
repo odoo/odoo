@@ -30,7 +30,7 @@ const errorDialogRegistry = registry.category("error_dialogs");
  */
 function corsErrorHandler(env, error) {
     if (error instanceof UncaughtCorsError) {
-        env.services.dialog.open(NetworkErrorDialog, {
+        env.services.dialog.add(NetworkErrorDialog, {
             traceback: error.traceback,
             message: error.message,
             name: error.name,
@@ -51,7 +51,7 @@ errorHandlerRegistry.add("corsErrorHandler", corsErrorHandler, { sequence: 95 })
  */
 function clientErrorHandler(env, error) {
     if (error instanceof UncaughtClientError) {
-        env.services.dialog.open(ClientErrorDialog, {
+        env.services.dialog.add(ClientErrorDialog, {
             traceback: error.traceback,
             message: error.message,
             name: error.name,
@@ -90,7 +90,7 @@ function rpcErrorHandler(env, error, originalError) {
             ErrorComponent = errorDialogRegistry.get(exceptionName);
         }
 
-        env.services.dialog.open(ErrorComponent || RPCErrorDialog, {
+        env.services.dialog.add(ErrorComponent || RPCErrorDialog, {
             traceback: error.traceback,
             message: originalError.message,
             name: originalError.name,
@@ -170,7 +170,7 @@ function emptyRejectionErrorHandler(env, error) {
     if (!(error instanceof UncaughtPromiseError)) {
         return false;
     }
-    env.services.dialog.open(ClientErrorDialog, {
+    env.services.dialog.add(ClientErrorDialog, {
         traceback: error.traceback,
         message: error.message,
         name: error.name,
@@ -191,7 +191,7 @@ errorHandlerRegistry.add("emptyRejectionErrorHandler", emptyRejectionErrorHandle
  * @returns {boolean}
  */
 function defaultHandler(env, error) {
-    env.services.dialog.open(ErrorDialog, {
+    env.services.dialog.add(ErrorDialog, {
         traceback: error.traceback,
         message: error.message,
         name: error.name,

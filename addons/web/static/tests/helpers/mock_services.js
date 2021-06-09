@@ -203,15 +203,11 @@ export function makeFakeNotificationService(mock) {
     };
 }
 
-export function makeFakeDialogService(values = {}) {
-    const open = values.open || (() => {});
-    const close = values.close || (() => {});
+export function makeFakeDialogService(addDialog) {
     return {
-        name: "dialog",
         start() {
             return {
-                open,
-                close,
+                add: addDialog || (() => () => {}),
             };
         },
     };
