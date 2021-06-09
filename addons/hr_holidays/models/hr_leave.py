@@ -4,15 +4,13 @@
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
 import logging
-import math
 
 from collections import namedtuple
 
-from datetime import datetime, date, timedelta, time
-from dateutil.rrule import rrule, DAILY
+from datetime import datetime, timedelta, time
 from pytz import timezone, UTC
 
-from odoo import api, fields, models, SUPERUSER_ID, tools
+from odoo import api, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -1272,13 +1270,4 @@ class HolidaysRequest(models.Model):
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
-        # Checking the calendar directly allows to not grey out the leaves taken
-        # by the employee
-        calendar = self.env.user.employee_id.resource_calendar_id
-        if not calendar:
-            return {}
-        dfrom = datetime.combine(fields.Date.from_string(date_from), time.min).replace(tzinfo=UTC)
-        dto = datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
-
-        works = {d[0].date() for d in calendar._work_intervals_batch(dfrom, dto)[False]}
-        return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, dfrom, until=dto)}
+        return self.env.user.employee_id._get_unusual_days(date_from, date_to)

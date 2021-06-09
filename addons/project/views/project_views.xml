@@ -690,7 +690,7 @@
                             attrs="{'invisible' : [('user_id', '!=', False)]}" data-hotkey="q"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                     </header>
-                    <div class="alert alert-info oe_edit_only" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}">
+                    <div class="alert alert-info oe_edit_only mb-0" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}">
                         <p>Edit recurring task</p>
                         <field name="recurrence_update" widget="radio"/>
                     </div>
@@ -929,7 +929,7 @@
                                             <s t-if="!record.active.raw_value"><field name="name" widget="name_with_subtask_count"/></s>
                                             <t t-else=""><field name="name" widget="name_with_subtask_count"/></t>
                                         </strong>
-                                        <span  invisible="context.get('default_project_id', False) or context.get('fsm_mode', False)"><br/><field name="project_id" required="1"/></span>
+                                        <span invisible="context.get('default_project_id', False)"><br/><field name="project_id" required="1"/></span>
                                         <br />
                                         <t t-if="record.partner_id.value">
                                             <span t-if="!record.partner_is_company.raw_value">
@@ -960,7 +960,7 @@
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_body">
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="context.get('fsm_mode', False)"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}">
                                         <field name="date_deadline" widget="remaining_days"/>
                                     </div>
@@ -1055,10 +1055,12 @@
             <field name="name">project.task.pivot</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <pivot string="Project Tasks" sample="1" js_class="project_pivot">
+                <pivot string="Tasks" sample="1" js_class="project_pivot">
                     <field name="project_id" type="row"/>
                     <field name="stage_id" type="col"/>
                     <field name="color" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="rating_last_value" type="measure" string="Rating (/5)"/>
                 </pivot>
             </field>
         </record>
@@ -1067,9 +1069,12 @@
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <graph string="Project Tasks" sample="1" js_class="project_graph">
+                <graph string="Tasks" sample="1" js_class="project_graph">
                     <field name="project_id"/>
                     <field name="stage_id"/>
+                    <field name="color" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="rating_last_value" type="measure" string="Rating (/5)"/>
                 </graph>
             </field>
         </record>
