@@ -83,6 +83,21 @@ class FleetVehicleLogContract(models.Model):
 
     def write(self, vals):
         res = super(FleetVehicleLogContract, self).write(vals)
+        if 'start_date' in vals or 'expiration_date' in vals:
+            date_today = fields.Date.from_string(fields.Date.today())
+            futur_contracts = self.env[self._name]
+            running_contracts = self.env[self._name]
+            expired_contracts = self.env[self._name]
+            for contract in self.filtered(lambda c: c.start_date and c.state != 'closed'):
+                if date_today < contract.start_date:
+                    futur_contracts |= contract
+                elif not contract.expiration_date or contract.start_date < date_today < contract.expiration_date:
+                    running_contracts |= contract
+                else:
+                    expired_contracts |= contract
+            futur_contracts.write({'state': 'futur'})
+            running_contracts.write({'state': 'open'})
+            expired_contracts.write({'state': 'expired'})
         if vals.get('expiration_date') or vals.get('user_id'):
             self.activity_reschedule(['fleet.mail_act_fleet_contract_to_renew'], date_deadline=vals.get('expiration_date'), new_user_id=vals.get('user_id'))
         return res
