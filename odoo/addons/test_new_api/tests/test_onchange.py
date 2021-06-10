@@ -544,6 +544,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
             'model': 'test_new_api.payment',
             'arch': """
                 <form>
+                    <field name="move_id" readonly="1" required="0"/>
                     <field name="tag_id"/>
                     <field name="tag_name"/>
                 </form>
