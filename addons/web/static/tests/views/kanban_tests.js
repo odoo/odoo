@@ -814,7 +814,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record: cancel and validate without using the buttons', function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var nbRecords = 4;
         var kanban = createView({
@@ -853,6 +853,14 @@ QUnit.module('Views', {
         kanban.$('.o_kanban_group .o_kanban_record:first').click();
         assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
             "the quick create should be destroyed when the user clicks outside");
+
+        // click to input and drag the mouse outside, should not cancel the quick creation
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+        $quickCreate = kanban.$('.o_kanban_quick_create');
+        $quickCreate.find('input').trigger('mousedown');
+        kanban.$('.o_kanban_group .o_kanban_record:first').click();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length , 1,
+        "the quick create should not have been destroyed after clicking outside");
 
         // click to really add an element
         kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
