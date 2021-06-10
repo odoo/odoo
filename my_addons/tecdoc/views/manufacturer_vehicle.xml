@@ -1,0 +1,221 @@
+<odoo>
+    <!-- Action Menu Tecdoc -->
+    <record id="tecdoc_manufacturer_action" model="ir.actions.act_window">
+        <field name="name">Tecdoc Manufacturer</field>
+        <field name="res_model">tecdoc.manufacturer</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="tecdoc_vehicle_model_series_action" model="ir.actions.act_window">
+        <field name="name">Tecdoc Vehicle Model Series</field>
+        <field name="res_model">tecdoc.vehicle.model.series</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="tecdoc_vehicles_types_action" model="ir.actions.act_window">
+        <field name="name">Tecdoc Vehicles Types</field>
+        <field name="res_model">tecdoc.vehicles.types</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="tecdoc_menu_root"
+              name="Tecdoc"
+              sequence="10"/>
+
+    <menuitem name="Configuration"
+              id="tecdoc_menu_configuration"
+              parent="tecdoc_menu_root"
+              sequence="100"/>
+
+
+    <menuitem id="tecdoc_manufacturer_menu"
+              name="Manufacturer"
+              parent="tecdoc_menu_root"
+              action="tecdoc_manufacturer_action"
+              sequence="5"/>
+
+    <menuitem id="tecdoc_vehicle_menu"
+              name="Vehicle Model Series"
+              parent="tecdoc_menu_root"
+              action="tecdoc_vehicle_model_series_action"
+              sequence="10"/>
+
+    <menuitem id="tecdoc_vehicles_types_menu"
+              name="Vehicles Types"
+              parent="tecdoc_menu_root"
+              action="tecdoc_vehicles_types_action"
+              sequence="15"/>
+
+    <!-- Tecdoc Views -->
+    <record id="tecdoc_manufacturer_form_view" model="ir.ui.view">
+        <field name="name">Tecdoc Manufacturer Form</field>
+        <field name="model">tecdoc.manufacturer</field>
+        <field name="arch" type="xml">
+            <form>
+                <group name="t100_manufacturer_name" string="Manufacturer">
+                    <group col="2">
+                        <field name="logo" widget="image" class="oe_avatar"/>
+                    </group>
+                    <group>
+                        <field name="her_nr"/>
+                        <field name="hkz"/>
+                        <field name="name"/>
+                    </group>
+                </group>
+                <field name="vms_id" string="Vehicle Model Series"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="tecdoc_vehicle_model_series_form_view" model="ir.ui.view">
+        <field name="name">Tecdoc Vehicle Model Series Form</field>
+        <field name="model">tecdoc.vehicle.model.series</field>
+        <field name="arch" type="xml">
+            <form>
+                <group name="t110_vehicle_model_series" string="Vehicle Model Series" col="3">
+                    <group>
+                        <field name="model_picture" widget="image" class="oe_avatar"/>
+                    </group>
+                    <group>
+                        <field name="kmod_nr"/>
+                        <field name="manufacturer_id"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="from_year"/>
+                        <field name="to_year"/>
+                        <field name="sort_nr"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Vehicles types" name="vehicles_types">
+                        <field name="vts_id" string="Vehicle type"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="tecdoc_vehicles_types_form_view" model="ir.ui.view">
+        <field name="name">Tecdoc Vehicle Model Series Form</field>
+        <field name="model">tecdoc.vehicles.types</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="vehicle_model_id"/>
+                        <field name="name"/>
+                        <field name="ktyp_nr"/>
+                        <field name="bjvon"/>
+                        <field name="bjbis"/>
+                        <field name="kw"/>
+                        <field name="ps"/>
+                        <field name="ccm_steuer"/>
+                        <field name="ccm_tech"/>
+                        <field name="lit"/>
+                        <field name="zyl"/>
+                        <field name="tueren"/>
+                        <field name="tank_inhalt"/>
+                        <field name="spannung"/>
+                    </group>
+                    <group>
+                        <field name="abs"/>
+                        <field name="asr"/>
+                        <field name="mot_art"/>
+                        <field name="kraftstoffaufbereitungsprinzip"/>
+                        <field name="antr_art"/>
+                        <field name="brems_art"/>
+                        <field name="brems_sys"/>
+                        <field name="ventile_brennraum"/>
+                        <field name="kr_stoff_art"/>
+                        <field name="kat_art"/>
+                        <field name="getr_art"/>
+                        <field name="aufbau_art"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree / List -->
+    <record id="tecdoc_manufacturer_tree_view" model="ir.ui.view">
+        <field name="name">Tecdoc Vehicule Tree</field>
+        <field name="model">tecdoc.manufacturer</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="hkz"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tecdoc_vehicule_search" model="ir.ui.view">
+        <field name="name">Tecdoc Manufacturer Search</field>
+        <field name="model">tecdoc.manufacturer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="tecdoc_vehicle_model_series_tree_view" model="ir.ui.view">
+        <field name="name">Tecdoc Vehicle Model Series Tree</field>
+        <field name="model">tecdoc.vehicle.model.series</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="manufacturer_id"/>
+                <field name="name"/>
+                <field name="from_year"/>
+                <field name="to_year"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tecdoc_vehicle_model_series_search" model="ir.ui.view">
+        <field name="name">Tecdoc Vehicle Model Series Search</field>
+        <field name="model">tecdoc.vehicle.model.series</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+            <searchpanel>
+                <field name="manufacturer_id"/>
+            </searchpanel>
+        </field>
+    </record>
+
+    <record id="tecdoc_vehicles_types_tree_view" model="ir.ui.view">
+        <field name="name">Tecdoc Vehicles Types Tree</field>
+        <field name="model">tecdoc.vehicles.types</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="vehicle_model_id"/>
+                <field name="name"/>
+                <field name="bjvon"/>
+                <field name="bjbis"/>
+                <field name="kw"/>
+                <field name="ps"/>
+                <field name="ccm_steuer"/>
+                <field name="lit"/>
+                <field name="zyl"/>
+                <field name="mot_art"/>
+                <field name="antr_art"/>
+                <field name="kr_stoff_art"/>
+                <field name="aufbau_art"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tecdoc_vehicles_types_search" model="ir.ui.view">
+        <field name="name">Tecdoc Vehicles Types Search</field>
+        <field name="model">tecdoc.vehicles.types</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

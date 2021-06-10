@@ -1,0 +1,196 @@
+<odoo>
+    <!-- Action Menu Tecdoc -->
+    <record id="tecdoc_criterias_action" model="ir.actions.act_window">
+        <field name="name">Description of all criteria</field>
+        <field name="res_model">tecdoc.criterias</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="tecdoc_tables_action" model="ir.actions.act_window">
+        <field name="name">Table definition</field>
+        <field name="res_model">tecdoc.tables</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="tecdoc_tables_entries_action" model="ir.actions.act_window">
+        <field name="name">Key Table Entries</field>
+        <field name="res_model">tecdoc.tables.entries</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="tecdoc_criterias_menu"
+              name="Criterias"
+              parent="tecdoc_menu_configuration"
+              action="tecdoc_criterias_action"
+              sequence="5"/>
+
+    <menuitem id="tecdoc_tables_menu"
+              name="Table definition"
+              parent="tecdoc_menu_configuration"
+              action="tecdoc_tables_action"
+              sequence="10"/>
+
+    <menuitem id="tecdoc_tables_entries_menu"
+              name="Key Table Entries"
+              parent="tecdoc_menu_configuration"
+              action="tecdoc_tables_entries_action"
+              sequence="15"/>
+
+    <!-- Tecdoc Views -->
+    <record id="tecdoc_criterias_form_view" model="ir.ui.view">
+        <field name="name">Description of all criteria</field>
+        <field name="model">tecdoc.criterias</field>
+        <field name="arch" type="xml">
+            <form>
+                <group name="t100_manufacturer_name" string="Criteria">
+                    <group>
+                        <field name="krit_nr"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="typ"/>
+                        <field name="max_len"/>
+                        <field name="tab_nr"/>
+                    </group>
+                </group>
+                <group string="Used for">
+                    <group>
+                        <field name="ok_artikel"/>
+                        <field name="ok_nkw"/>
+                        <field name="ok_pkw"/>
+                        <field name="ok_motor"/>
+                    </group>
+                    <group>
+                        <field name="ok_fahrerhaus"/>
+                        <field name="stucklisten_criterion"/>
+                        <field name="zubehor_criterion"/>
+                        <field name="mehrfach_verwendung"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <field name="abk"/>
+                    </group>
+                    <group>
+                        <field name="einheit"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <field name="intervall_criterion"/>
+                    </group>
+                    <group>
+                        <field name="nachfolge_criterion"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="tecdoc_tables_form_view" model="ir.ui.view">
+        <field name="name">Tecdoc Table definition</field>
+        <field name="model">tecdoc.tables</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group><field name="name"/><field name="tab_nr"/></group>
+                    <group><field name="tab_typ"/></group>
+                    <field name="key_entries_id"/>
+                </group>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="tecdoc_tables_entries_form_view" model="ir.ui.view">
+        <field name="name">Tecdoc Key Table Entries</field>
+        <field name="model">tecdoc.tables.entries</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="key_table_id"/>
+                        <field name="tab_nr"/>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="key"/>
+                        <field name="sort_nr"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree / List -->
+    <record id="tecdoc_criterias_tree_view" model="ir.ui.view">
+        <field name="name">Tecdoc Criterias Tree</field>
+        <field name="model">tecdoc.criterias</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="typ"/>
+                <field name="abk"/>
+                <field name="tab_nr"/>
+                <field name="einheit"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="tecdoc_criterias_search" model="ir.ui.view">
+        <field name="name">Tecdoc Criterias Search</field>
+        <field name="model">tecdoc.criterias</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="tecdoc_tables_tree_view" model="ir.ui.view">
+        <field name="name">Tecdoc Tables Tree</field>
+        <field name="model">tecdoc.tables</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="tab_typ"/>
+                <field name="tab_nr"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tecdoc_tables_search" model="ir.ui.view">
+        <field name="name">Tecdoc Tables Search</field>
+        <field name="model">tecdoc.tables</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="tecdoc_tables_entries_tree_view" model="ir.ui.view">
+        <field name="name">Tecdoc Key Table Entries</field>
+        <field name="model">tecdoc.tables.entries</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="key_table_id"/>
+                <field name="name"/>
+                <field name="key"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="tecdoc_tables_entries_search" model="ir.ui.view">
+        <field name="name">Tecdoc Key Table Entries</field>
+        <field name="model">tecdoc.tables.entries</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

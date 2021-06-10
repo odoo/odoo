@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id='library_book_rent_action' model='ir.actions.act_window'>
+        <field name="name">Book on rent</field>
+        <field name="res_model">library.book.rent</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Book on rent" id="library_book_rent_menu" parent="library_base_menu" action="library_book_rent_action"/>
+
+    <!-- Form View -->
+    <record id="library_book_rent_view_form" model="ir.ui.view">
+        <field name="name">Library Rent Form</field>
+        <field name="model">library.book.rent</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="book_return" string="Return the Book" states="ongoing" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="book_id" domain="[('state', '=', 'available')]"/>
+                            <field name="borrower_id"/>
+                        </group>
+                        <group>
+                            <field name="rent_date"/>
+                            <field name="return_date"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree(list) View -->
+    <record id="library_book_rent_view_tree" model="ir.ui.view">
+        <field name="name">Library Book Rent</field>
+        <field name="model">library.book.rent</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="book_id"/>
+                <field name="borrower_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="library_book_rent_view_search" model="ir.ui.view">
+        <field name="name">Library Book Rent Search</field>
+        <field name="model">library.book.rent</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="book_id"/>
+                <field name="borrower_id"/>
+                <field name="state"/>
+                <filter string="On rent" name="on_rent" domain="[('state','=','ongoing')]"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>
