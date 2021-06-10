@@ -97,7 +97,7 @@ def MockRequest(
             referrer='',
         ),
         lang=env['res.lang']._lang_get(lang_code),
-        redirect=werkzeug.utils.redirect,
+        redirect=env['ir.http']._redirect,
         session=DotDict(
             geoip={'country_code': country_code},
             debug=False,

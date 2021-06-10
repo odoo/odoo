@@ -118,17 +118,9 @@ def serialize_exception(f):
             return werkzeug.exceptions.InternalServerError(json.dumps(error))
     return wrap
 
-def redirect_with_hash(*args, **kw):
-    """
-        .. deprecated:: 8.0
-
-        Use the ``http.redirect_with_hash()`` function instead.
-    """
-    return http.redirect_with_hash(*args, **kw)
-
 def abort_and_redirect(url):
     r = request.httprequest
-    response = werkzeug.utils.redirect(url, 302)
+    response = request.redirect(url, 302)
     response = r.app.get_response(r, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
 
@@ -173,7 +165,7 @@ def ensure_db(redirect='/web/database/selector'):
     # if no db can be found til here, send to the database selector
     # the database selector will redirect to database manager if needed
     if not db:
-        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
+        werkzeug.exceptions.abort(request.redirect(redirect, 303))
 
     # always switch the session to the computed db
     if db != request.session.db:
@@ -245,7 +237,7 @@ def login_and_redirect(db, login, key, redirect_url='/web'):
     return set_cookie_and_redirect(redirect_url)
 
 def set_cookie_and_redirect(redirect_url):
-    redirect = werkzeug.utils.redirect(redirect_url, 303)
+    redirect = request.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
     return redirect
 
@@ -818,16 +810,16 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
-        return http.local_redirect('/web', query=request.params, keep_hash=True)
+        return request.redirect_query('/web', query=request.params)
 
     # ideally, this route should be `auth="user"` but that don't work in non-monodb mode.
     @http.route('/web', type='http', auth="none")
     def web_client(self, s_action=None, **kw):
         ensure_db()
         if not request.session.uid:
-            return werkzeug.utils.redirect('/web/login', 303)
+            return request.redirect('/web/login', 303)
         if kw.get('redirect'):
-            return werkzeug.utils.redirect(kw.get('redirect'), 303)
+            return request.redirect(kw.get('redirect'), 303)
 
         request.uid = request.session.uid
         try:
@@ -836,7 +828,7 @@ class Home(http.Controller):
             response.headers['X-Frame-Options'] = 'DENY'
             return response
         except AccessError:
-            return werkzeug.utils.redirect('/web/login?error=access')
+            return request.redirect('/web/login?error=access')
 
     @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'])
     def web_load_menus(self, unique):
@@ -863,7 +855,7 @@ class Home(http.Controller):
         ensure_db()
         request.params['login_success'] = False
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
-            return http.redirect_with_hash(redirect)
+            return request.redirect(redirect)
 
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
@@ -879,7 +871,7 @@ class Home(http.Controller):
             try:
                 uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
                 request.params['login_success'] = True
-                return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
+                return request.redirect(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
                 request.uid = old_uid
                 if e.args == odoo.exceptions.AccessDenied().args:
@@ -909,7 +901,7 @@ class Home(http.Controller):
             request.env['res.users'].clear_caches()
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
-        return http.local_redirect(self._login_redirect(uid), keep_hash=True)
+        return request.redirect(self._login_redirect(uid))
 
 class WebClient(http.Controller):
 
@@ -1088,7 +1080,7 @@ class Database(http.Controller):
             country_code = post.get('country_code') or False
             dispatch_rpc('db', 'create_database', [master_pwd, name, bool(post.get('demo')), lang, password, post['login'], country_code, post['phone']])
             request.session.authenticate(name, post['login'], password)
-            return http.local_redirect('/web/')
+            return request.redirect('/web')
         except Exception as e:
             error = "Database creation error: %s" % (str(e) or repr(e))
         return self._render_template(error=error)
@@ -1103,7 +1095,7 @@ class Database(http.Controller):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
             dispatch_rpc('db', 'duplicate_database', [master_pwd, name, new_name])
             request._cr = None  # duplicating a database leads to an unusable cursor
-            return http.local_redirect('/web/database/manager')
+            return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Database duplication error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
@@ -1116,7 +1108,7 @@ class Database(http.Controller):
         try:
             dispatch_rpc('db','drop', [master_pwd, name])
             request._cr = None  # dropping a database leads to an unusable cursor
-            return http.local_redirect('/web/database/manager')
+            return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Database deletion error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
@@ -1153,7 +1145,7 @@ class Database(http.Controller):
             with tempfile.NamedTemporaryFile(delete=False) as data_file:
                 backup_file.save(data_file)
             db.restore_db(name, data_file.name, str2bool(copy))
-            return http.local_redirect('/web/database/manager')
+            return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Database restore error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
@@ -1165,7 +1157,7 @@ class Database(http.Controller):
     def change_password(self, master_pwd, master_pwd_new):
         try:
             dispatch_rpc('db', 'change_admin_password', [master_pwd, master_pwd_new])
-            return http.local_redirect('/web/database/manager')
+            return request.redirect('/web/database/manager')
         except Exception as e:
             error = "Master password update error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
@@ -1276,7 +1268,7 @@ class Session(http.Controller):
     @http.route('/web/session/logout', type='http', auth="none")
     def logout(self, redirect='/web'):
         request.session.logout(keep_db=True)
-        return werkzeug.utils.redirect(redirect, 303)
+        return request.redirect(redirect, 303)
 
 
 class DataSet(http.Controller):

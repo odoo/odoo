@@ -146,7 +146,7 @@ class MassMailController(http.Controller):
             country_code=country_code,
             mailing_trace_id=mailing_trace_id
         )
-        return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)
+        return request.redirect(request.env['link.tracker'].get_url_from_code(code), code=301, local=False)
 
     @http.route('/mailing/blacklist/check', type='json', auth='public')
     def blacklist_check(self, mailing_id, res_id, email, token):

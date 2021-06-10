@@ -14,13 +14,12 @@ import traceback
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.routing
-import werkzeug.urls
 import werkzeug.utils
 
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, MissingError
-from odoo.http import request, content_disposition
+from odoo.http import request, content_disposition, Response
 from odoo.tools import consteq, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
@@ -159,7 +158,7 @@ class IrHttp(models.AbstractModel):
 
             if (not datas and name != request.httprequest.path and
                     name.startswith(('http://', 'https://', '/'))):
-                return werkzeug.utils.redirect(name, 301)
+                return request.redirect(name, 301, local=False)
 
             response = werkzeug.wrappers.Response()
             response.last_modified = wdate
@@ -242,6 +241,10 @@ class IrHttp(models.AbstractModel):
             return cls._handle_exception(e)
 
         return result
+
+    @classmethod
+    def _redirect(cls, location, code=303):
+        return werkzeug.utils.redirect(location, code=code, Response=Response)
 
     @classmethod
     def _postprocess_args(cls, arguments, rule):
@@ -485,6 +488,6 @@ class IrHttp(models.AbstractModel):
         if status == 304:
             return werkzeug.wrappers.Response(status=status, headers=headers)
         elif status == 301:
-            return werkzeug.utils.redirect(content, code=301)
+            return request.redirect(content, code=301, local=False)
         elif status != 200:
             return request.not_found()
