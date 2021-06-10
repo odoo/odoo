@@ -48,8 +48,9 @@
                 <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
                 <field name="qty_on_hand" force_save="1"/>
                 <field name="qty_forecast" force_save="1"/>
-                <field name="json_lead_days_popover" optional="show" nolabel="1" string="Forecast Description" width="10px" widget="popover_widget" attrs="{'invisible': [('id', '=', False)]}"/>
+                <button name="action_product_forecast_report" type="object" icon="fa-area-chart" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="route_id" options="{'no_create': True, 'no_open': True}"/>
+                <button name="action_stock_replenishment_info" type="object" icon="fa-info" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="trigger" optional="hide"/>
                 <field name="product_min_qty" optional="show"/>
                 <field name="product_max_qty" optional="show"/>
@@ -83,7 +84,7 @@
                 <field name="product_min_qty" optional="show"/>
                 <field name="product_max_qty" optional="show"/>
                 <field name="qty_multiple" optional="show"/>
-                <field name="json_lead_days_popover" optional="show" nolabel="1" string="Forecast Description" width="10px" widget="popover_widget" attrs="{'invisible': [('id', '=', False)]}"/>
+                <button name="stock.action_stock_replenishment_info" string="Forecast Description" type="action" icon="fa-area-chart" attrs="{'invisible': [('id', '=', False)]}"/>
                 <field name="product_uom_name" string="UoM" groups="uom.group_uom"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
             </tree>
@@ -160,7 +161,7 @@
                             <div class="o_row">
                                 <field name="product_min_qty"/>
                                 <field name="product_uom_name"/>
-                                <field name="json_lead_days_popover" widget="popover_widget" attrs="{'invisible': [('id', '=', False)]}"/>
+                                <button name="stock.action_stock_replenishment_info" string="Forecast Description" type="action" icon="fa-area-chart" attrs="{'invisible': [('id', '=', False)]}"/>
                             </div>
                             <label for="product_max_qty"/>
                             <div class="o_row">

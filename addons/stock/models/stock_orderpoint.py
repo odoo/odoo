@@ -6,7 +6,6 @@ from collections import defaultdict
 from datetime import datetime, time
 from dateutil import relativedelta
 from itertools import groupby
-from json import dumps
 from psycopg2 import OperationalError
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
@@ -92,7 +91,6 @@ class StockWarehouseOrderpoint(models.Model):
     allowed_location_ids = fields.One2many(comodel_name='stock.location', compute='_compute_allowed_location_ids')
 
     rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules')
-    json_lead_days_popover = fields.Char(compute='_compute_json_popover')
     lead_days_date = fields.Date(compute='_compute_lead_days')
     allowed_route_ids = fields.Many2many('stock.location.route', compute='_compute_allowed_route_ids')
     route_id = fields.Many2one(
@@ -128,35 +126,13 @@ class StockWarehouseOrderpoint(models.Model):
         self.allowed_route_ids = route_by_product.ids
 
     @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
-    def _compute_json_popover(self):
-        for orderpoint in self:
-            if not orderpoint.product_id or not orderpoint.location_id:
-                orderpoint.json_lead_days_popover = False
-                continue
-            dummy, lead_days_description = orderpoint.rule_ids._get_lead_days(orderpoint.product_id)
-            orderpoint.json_lead_days_popover = dumps({
-                'title': _('Replenishment'),
-                'icon': 'fa-area-chart',
-                'popoverTemplate': 'stock.leadDaysPopOver',
-                'lead_days_date': fields.Date.to_string(orderpoint.lead_days_date),
-                'lead_days_description': lead_days_description,
-                'today': fields.Date.to_string(fields.Date.today()),
-                'trigger': orderpoint.trigger,
-                'qty_forecast': orderpoint.qty_forecast,
-                'qty_to_order': orderpoint.qty_to_order,
-                'product_min_qty': orderpoint.product_min_qty,
-                'product_max_qty': orderpoint.product_max_qty,
-                'product_uom_name': orderpoint.product_uom_name,
-                'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
-            })
-
-    @api.depends('rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_lead_days(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
                 orderpoint.lead_days_date = False
                 continue
-            lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id)
+            values = orderpoint._get_lead_days_values()
+            lead_days, dummy = orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **values)
             lead_days_date = fields.Date.today() + relativedelta.relativedelta(days=lead_days)
             orderpoint.lead_days_date = lead_days_date
 
@@ -212,9 +188,31 @@ class StockWarehouseOrderpoint(models.Model):
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         return super().write(vals)
 
+    def action_product_forecast_report(self):
+        self.ensure_one()
+        action = self.product_id.action_product_forecast_report()
+        action['context'] = {
+            'active_id': self.product_id.id,
+            'active_model': 'product.product',
+        }
+        warehouse = self.warehouse_id
+        if warehouse:
+            action['context']['warehouse'] = warehouse.id
+        return action
+
     @api.model
     def action_open_orderpoints(self):
         return self._get_orderpoint_action()
+
+    def action_stock_replenishment_info(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('stock.action_stock_replenishment_info')
+        action['name'] = _('Replenishment Information for %s in %s', self.product_id.display_name, self.warehouse_id.display_name)
+        res = self.env['stock.replenishment.info'].create({
+            'orderpoint_id': self.id,
+        })
+        action['res_id'] = res.id
+        return action
 
     def action_replenish(self):
         self._procure_orderpoint_confirm(company_id=self.env.company)
@@ -287,6 +285,10 @@ class StockWarehouseOrderpoint(models.Model):
                 continue
             orderpoints = self.filtered(lambda o: o.location_id.id == g['location_id'][0])
             orderpoints.route_id = g['route_id']
+
+    def _get_lead_days_values(self):
+        self.ensure_one()
+        return dict()
 
     def _get_product_context(self):
         """Used to call `virtual_available` when running an orderpoint."""
