@@ -3160,6 +3160,8 @@ class AccountMoveLine(models.Model):
     @api.onchange('product_uom_id')
     def _onchange_uom_id(self):
         ''' Recompute the 'price_unit' depending of the unit of measure. '''
+        if self.display_type in ('line_section', 'line_note'):
+            return
         taxes = self._get_computed_taxes()
         if taxes and self.move_id.fiscal_position_id:
             taxes = self.move_id.fiscal_position_id.map_tax(taxes, partner=self.partner_id)
