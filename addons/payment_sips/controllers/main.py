@@ -4,8 +4,6 @@
 import logging
 import pprint
 
-import werkzeug
-
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -32,7 +30,7 @@ class SipsController(http.Controller):
                 request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
         except ValidationError:
             pass
-        return werkzeug.utils.redirect('/payment/status')
+        return request.redirect('/payment/status')
 
     @http.route(_notify_url, type='http', auth='public', methods=['POST'], csrf=False)
     def sips_ipn(self, **post):

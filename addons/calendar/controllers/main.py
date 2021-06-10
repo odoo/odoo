@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-
 import odoo.http as http
 
 from odoo.http import request
@@ -70,7 +68,7 @@ class CalendarController(http.Controller):
         # If user is internal and logged, redirect to form view of event
         # otherwise, display the simplifyed web page with event informations
         if request.session.uid and request.env['res.users'].browse(request.session.uid).user_has_groups('base.group_user'):
-            return werkzeug.utils.redirect('/web?db=%s#id=%s&view_type=form&model=calendar.event' % (request.env.cr.dbname, id))
+            return request.redirect('/web?db=%s#id=%s&view_type=form&model=calendar.event' % (request.env.cr.dbname, id))
 
         # NOTE : we don't use request.render() since:
         # - we need a template rendering which is not lazy, to render before cursor closing

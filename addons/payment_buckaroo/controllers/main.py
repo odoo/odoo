@@ -3,8 +3,6 @@
 import logging
 import pprint
 
-import werkzeug
-
 from odoo import http
 from odoo.http import request
 
@@ -22,4 +20,4 @@ class BuckarooController(http.Controller):
         """
         _logger.info("received notification data:\n%s", pprint.pformat(data))
         request.env['payment.transaction'].sudo()._handle_feedback_data('buckaroo', data)
-        return werkzeug.utils.redirect('/payment/status')
+        return request.redirect('/payment/status')

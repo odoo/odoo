@@ -27,7 +27,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
         certification_url = slide._generate_certification_url().get(slide.id)
         if not certification_url:
             raise werkzeug.exceptions.NotFound()
-        return werkzeug.utils.redirect(certification_url)
+        return request.redirect(certification_url)
 
     @http.route(['/slides_survey/certification/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slides_certification_search_read(self, fields):

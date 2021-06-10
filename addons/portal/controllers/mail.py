@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
 
@@ -241,5 +240,5 @@ class MailController(main.MailController):
                             url_params = url.decode_query()
                             url_params.update([("pid", pid), ("hash", hash)])
                             url = url.replace(query=urls.url_encode(url_params)).to_url()
-                        return werkzeug.utils.redirect(url)
+                        return request.redirect(url)
         return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token)
