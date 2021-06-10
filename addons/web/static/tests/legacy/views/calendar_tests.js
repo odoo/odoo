@@ -3369,6 +3369,7 @@ QUnit.module('Views', {
             'The day should be in the given locale specific format');
 
         moment.locale(initialLocale);
+        moment.defineLocale('zz', null);
 
         calendar.destroy();
     });
