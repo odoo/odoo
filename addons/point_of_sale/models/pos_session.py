@@ -307,7 +307,7 @@ class PosSession(models.Model):
             # made thru cash in/out when sesion is in cash_control.
             if self.config_id.cash_control:
                 self.cash_register_id.button_confirm_bank()
-            self.move_id.unlink()
+            self.move_id.unlink() if not sudo else self.move_id.sudo().unlink()
         self.write({'state': 'closed'})
         return {
             'type': 'ir.actions.client',
