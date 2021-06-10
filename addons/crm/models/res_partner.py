@@ -38,9 +38,27 @@ class Partner(models.Model):
 
     @api.multi
     def _compute_opportunity_count(self):
+        result_list = self.env['crm.lead'].read_group(
+            [
+                ('type', '=', 'opportunity'),
+                '|',
+                ('partner_id.commercial_partner_id', 'in', self.ids),
+                ('partner_id', 'in', self.ids),
+            ],
+            ["id"],
+            ["partner_id"]
+        )
+        result_map = {}
+        involved_partners = self.browse([result['partner_id'][0] for result in result_list], self._prefetch)
+        for partner, result in zip(involved_partners, result_list):
+            result_map.setdefault(partner.id, 0)
+            result_map[partner.id] += result['partner_id_count']
+            # Count opportunities of a company and all its contacts
+            if partner != partner.commercial_partner_id:
+                result_map.setdefault(partner.commercial_partner_id.id, 0)
+                result_map[partner.commercial_partner_id.id] += result['partner_id_count']
         for partner in self:
-            operator = 'child_of' if partner.is_company else '='  # the opportunity count should counts the opportunities of this company and all its contacts
-            partner.opportunity_count = self.env['crm.lead'].search_count([('partner_id', operator, partner.id), ('type', '=', 'opportunity')])
+            partner.opportunity_count = result_map.get(partner.id, 0)
 
     @api.multi
     def _compute_meeting_count(self):
