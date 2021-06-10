@@ -18,3 +18,14 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('Forum'), url_for('/forum'), 'website_forum'))
         return suggested_controllers
+
+    def configurator_get_footer_links(self):
+        links = super().configurator_get_footer_links()
+        links.append({'text': _("Forum"), 'href': '/forum'})
+        return links
+
+    def configurator_set_menu_links(self, menu_company, module_data):
+        # Forum menu should only be a footer link, not a menu
+        forum_menu = self.env['website.menu'].search([('url', '=', '/forum'), ('website_id', '=', self.id)])
+        forum_menu.unlink()
+        super().configurator_set_menu_links(menu_company, module_data)
