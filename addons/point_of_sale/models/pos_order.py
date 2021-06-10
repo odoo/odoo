@@ -194,8 +194,19 @@ class PosOrder(models.Model):
             'name': order_line.product_id.display_name,
             'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
-            'customer_note': order_line.customer_note,
         }
+
+    def _prepare_invoice_lines(self):
+        invoice_lines = []
+        for line in self.lines:
+            invoice_lines.append((0, None, self._prepare_invoice_line(line)))
+            if line.customer_note:
+                invoice_lines.append((0, None, {
+                    'name': line.customer_note,
+                    'display_type': 'line_note',
+                }))
+
+        return invoice_lines
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
@@ -492,7 +503,7 @@ class PosOrder(models.Model):
             'invoice_user_id': self.user_id.id,
             'invoice_date': self.date_order.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
-            'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
+            'invoice_line_ids': self._prepare_invoice_lines(),
             'invoice_cash_rounding_id': self.config_id.rounding_method.id
             if self.config_id.cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids))
             else False
