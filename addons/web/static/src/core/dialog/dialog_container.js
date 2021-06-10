@@ -51,9 +51,10 @@ export class DialogContainer extends Component {
 }
 DialogContainer.components = { ErrorHandler };
 DialogContainer.template = tags.xml`
-    <div class="o_dialog_manager">
+    <div class="o_dialog_container" t-att-class="{'modal-open': Object.keys(dialogs).length > 0}">
       <t t-foreach="Object.values(dialogs)" t-as="dialog" t-key="dialog.id">
-        <ErrorHandler dialog="dialog" t-on-dialog-closed="onDialogClosed(dialog.id)" callback="errorCallBack(dialog.id)" />
+        <ErrorHandler dialog="dialog" t-on-dialog-closed="onDialogClosed(dialog.id)" callback="errorCallBack(dialog.id)"
+            t-att-class="{o_inactive_modal: !dialog_last}"/>
       </t>
     </div>
     `;

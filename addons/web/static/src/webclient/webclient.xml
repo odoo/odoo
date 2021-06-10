@@ -5,7 +5,6 @@
         <body class="o_web_client" t-att-class="{'o_is_superuser': user.userId === 1}">
             <NavBar/>
             <ActionContainer/>
-            <div class="o_dialog_container"/>
             <div>
                 <t t-foreach="Components" t-as="C" t-key="C[0]">
                     <t t-component="C[1].Component" t-props="C[1].props"/>

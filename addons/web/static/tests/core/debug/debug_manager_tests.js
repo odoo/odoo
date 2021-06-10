@@ -122,16 +122,12 @@ QUnit.module("DebugMenu", (hooks) => {
     });
 
     QUnit.test("Don't display the DebugMenu if debug mode is disabled", async (assert) => {
-        const dialogContainer = document.createElement("div");
-        dialogContainer.classList.add("o_dialog_container");
-        target.append(dialogContainer);
         const env = await makeTestEnv(testConfig);
         const actionDialog = await mount(ActionDialog, { env, target, props: {} });
         registerCleanup(() => {
             actionDialog.destroy();
-            target.querySelector(".o_dialog_container").remove();
         });
-        assert.containsOnce(target, "div.o_dialog_container .o_dialog");
+        assert.containsOnce(target, ".o_dialog");
         assert.containsNone(target, ".o_dialog .o_debug_manager .fa-bug");
     });
 
@@ -139,9 +135,6 @@ QUnit.module("DebugMenu", (hooks) => {
         "Display the DebugMenu correctly in a ActionDialog if debug mode is enabled",
         async (assert) => {
             assert.expect(8);
-            const dialogContainer = document.createElement("div");
-            dialogContainer.classList.add("o_dialog_container");
-            target.append(dialogContainer);
             debugRegistry.add("global", () => {
                 return {
                     type: "item",
@@ -188,12 +181,11 @@ QUnit.module("DebugMenu", (hooks) => {
             const actionDialog = await mount(Parent, { env, target });
             registerCleanup(() => {
                 actionDialog.destroy();
-                target.querySelector(".o_dialog_container").remove();
             });
-            assert.containsOnce(target, "div.o_dialog_container .o_dialog");
+            assert.containsOnce(target, ".o_dialog");
             assert.containsOnce(target, ".o_dialog .o_debug_manager .fa-bug");
             await click(target, ".o_dialog .o_debug_manager button");
-            const debugManagerEl = target.querySelector(".o_dialog_container .o_debug_manager");
+            const debugManagerEl = target.querySelector(".o_debug_manager");
             assert.containsN(debugManagerEl, "ul.o_dropdown_menu li.o_dropdown_item", 2);
             // Check that global debugManager elements are not displayed (global_1)
             const items =

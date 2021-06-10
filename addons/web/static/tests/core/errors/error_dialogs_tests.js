@@ -25,9 +25,6 @@ const serviceRegistry = registry.category("services");
 QUnit.module("Error dialogs", {
     async beforeEach() {
         target = getFixture();
-        const dialogContainer = document.createElement("div");
-        dialogContainer.classList.add("o_dialog_container");
-        target.append(dialogContainer);
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("localization", makeFakeLocalizationService());
@@ -54,7 +51,7 @@ QUnit.test("ErrorDialog with traceback", async (assert) => {
     assert.containsNone(target, ".o_dialog");
     env = await makeTestEnv();
     parent = await mount(Parent, { env, target });
-    assert.containsOnce(target, "div.o_dialog_container .o_dialog");
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Odoo Error");
     const mainButtons = target.querySelectorAll("main button");
     assert.deepEqual(
@@ -106,7 +103,7 @@ QUnit.test("Client ErrorDialog with traceback", async (assert) => {
     assert.containsNone(target, ".o_dialog");
     env = await makeTestEnv();
     parent = await mount(Parent, { env, target });
-    assert.containsOnce(target, "div.o_dialog_container .o_dialog");
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(
         target.querySelector("header .modal-title").textContent,
         "Odoo Client Error"
@@ -196,7 +193,7 @@ QUnit.test("WarningDialog", async (assert) => {
     assert.containsNone(target, ".o_dialog");
     env = await makeTestEnv();
     parent = await mount(Parent, { env, target });
-    assert.containsOnce(target, "div.o_dialog_container .o_dialog");
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "User Error");
     assert.containsOnce(target, "main .o_dialog_warning");
     assert.strictEqual(target.querySelector("main").textContent, "Some strange unreadable message");
@@ -242,7 +239,7 @@ QUnit.test("RedirectWarningDialog", async (assert) => {
     env = await makeTestEnv();
     assert.containsNone(target, ".o_dialog");
     parent = await mount(Parent, { env, target });
-    assert.containsOnce(target, "div.o_dialog_container .o_dialog");
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Odoo Warning");
     assert.strictEqual(target.querySelector("main").textContent, "Some strange unreadable message");
     let footerButtons = target.querySelectorAll("footer button");
@@ -265,7 +262,7 @@ QUnit.test("Error504Dialog", async (assert) => {
     assert.containsNone(target, ".o_dialog");
     env = await makeTestEnv();
     parent = await mount(Parent, { env, target });
-    assert.containsOnce(target, "div.o_dialog_container .o_dialog");
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(target.querySelector("header .modal-title").textContent, "Request timeout");
     assert.strictEqual(
         target.querySelector("main p").textContent,
@@ -289,7 +286,7 @@ QUnit.test("SessionExpiredDialog", async (assert) => {
     env = await makeTestEnv();
     assert.containsNone(target, ".o_dialog");
     parent = await mount(Parent, { env, target });
-    assert.containsOnce(target, "div.o_dialog_container .o_dialog");
+    assert.containsOnce(target, ".o_dialog");
     assert.strictEqual(
         target.querySelector("header .modal-title").textContent,
         "Odoo Session Expired"
