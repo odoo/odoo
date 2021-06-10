@@ -194,7 +194,6 @@
         'point_of_sale.qunit_suite_tests': [
             'web/static/tests/legacy/component_extension_tests.js',
             'point_of_sale/static/tests/unit/**/*',
-            ('remove', 'point_of_sale/static/tests/unit/helpers/test_main.js')
         ],
         'point_of_sale.assets_backend_prod_only': [
             'point_of_sale/static/src/js/chrome_adapter.js',

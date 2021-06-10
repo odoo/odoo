@@ -123,7 +123,6 @@ odoo.define('web.test_utils', async function (require) {
     // to load xml files that are normally lazy loaded by specific widgets).
     await Promise.all([
         session.is_bound,
-        ajax.loadXML('/web/static/src/legacy/xml/crash_manager.xml', core.qweb),
         ajax.loadXML('/web/static/src/legacy/frontend/debug_manager/debug.xml', core.qweb),
         ajax.loadXML('/web/static/src/legacy/xml/dialog.xml', core.qweb),
         ajax.loadXML('/web/static/src/legacy/xml/translation_dialog.xml', core.qweb),

@@ -1898,7 +1898,6 @@ var AbstractFieldBinary = AbstractField.extend({
     on_file_uploaded: function (size, name) {
         if (size === false) {
             this.displayNotification({ message: _t("There was a problem while uploading your file"), type: 'danger' });
-            // TODO: use crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
             this.on_file_uploaded_and_valid.apply(this, arguments);

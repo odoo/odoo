@@ -2,7 +2,12 @@
 
 import { browser } from "../core/browser/browser";
 import AbstractStorageService from "web.AbstractStorageService";
-import { ConnectionAbortedError, RPCError } from "../core/network/rpc_service";
+import {
+    ConnectionAbortedError,
+    RPCError,
+    makeErrorFromResponse,
+} from "../core/network/rpc_service";
+import { ErrorDialog } from "../core/errors/error_dialogs";
 
 export function mapDoActionOptionAPI(legacyOptions) {
     legacyOptions = legacyOptions || {};
@@ -254,6 +259,23 @@ export function makeLegacyNotificationService(legacyEnv) {
             }
 
             legacyEnv.services.notification = { notify, close };
+        },
+    };
+}
+
+export function makeLegacyCrashManagerService(legacyEnv) {
+    return {
+        dependencies: ["dialog"],
+        start(env) {
+            legacyEnv.services.crash_manager = {
+                show_message(message) {
+                    env.services.dialog.open(ErrorDialog, { traceback: message });
+                },
+                rpc_error(errorResponse) {
+                    // Will be handled by error_service
+                    Promise.reject(makeErrorFromResponse(errorResponse));
+                },
+            };
         },
     };
 }

@@ -26,8 +26,6 @@ odoo.define("web.test_legacy", async (require) => {
         const session = require("web.session");
         await session.is_bound; // await for templates from server
         require("web.test_utils");
-        const LegacyCrashManager = require("web.CrashManager");
-        LegacyCrashManager.disable();
         resolve();
     });
 

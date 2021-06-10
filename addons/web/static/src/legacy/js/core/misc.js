@@ -4,7 +4,6 @@ odoo.define('web.framework', function (require) {
 var core = require('web.core');
 var ajax = require('web.ajax');
 var Widget = require('web.Widget');
-var disableCrashManager = require('web.CrashManager').disable;
 const {sprintf} = require('web.utils')
 
 var _t = core._t;
@@ -101,9 +100,6 @@ function unblockUI() {
  * If wait is true, sleep 1s and wait for the server i.e. after a restart.
  */
 function redirect (url, wait) {
-    // Dont display a dialog if some xmlhttprequest are in progress
-    disableCrashManager();
-
     var load = function() {
         var old = "" + window.location;
         var old_no_hash = old.split("#")[0];
