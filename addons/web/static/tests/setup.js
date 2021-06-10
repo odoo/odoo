@@ -2,6 +2,7 @@
 
 import core from "web.core";
 import session from "web.session";
+import { _t } from "web.core";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { legacyProm } from "web.test_legacy";
@@ -12,6 +13,39 @@ const { whenReady, loadFile } = owl.utils;
 
 owl.config.enableTransitions = false;
 owl.QWeb.dev = true;
+
+function stringifyObjectValues(obj, properties) {
+    let res = "";
+    for (const dotted of properties) {
+        const keys = dotted.split(".");
+        let val = obj;
+        for (const k of keys) {
+            val = val[k];
+        }
+        res += JSON.stringify(val);
+    }
+    return res;
+}
+
+function checkGlobalObjectsIntegrity() {
+    const objects = [
+        [session, ["user_context", "currencies"]],
+        [_t, ["database.multi_lang", "database.parameters"]],
+    ];
+    const initials = objects.map((obj) => stringifyObjectValues(obj[0], obj[1]));
+
+    registerCleanup((infos) => {
+        const finals = objects.map((obj) => stringifyObjectValues(obj[0], obj[1]));
+        for (const index in initials) {
+            if (initials[index] !== finals[index]) {
+                const [global, keys] = objects[index];
+                throw new Error(
+                    `The keys "${keys}" of some global objects (usually session or _t) may have been polluted by the test "${infos.testName}" in module "${infos.moduleName}"`
+                );
+            }
+        }
+    });
+}
 
 function forceLocaleAndTimezoneWithCleanup() {
     const originalLocale = luxon.Settings.defaultLocale;
@@ -140,6 +174,7 @@ function patchOdoo() {
 
 export async function setupTests() {
     QUnit.testStart(() => {
+        checkGlobalObjectsIntegrity();
         prepareRegistriesWithCleanup();
         forceLocaleAndTimezoneWithCleanup();
         patchBrowserWithCleanup();
