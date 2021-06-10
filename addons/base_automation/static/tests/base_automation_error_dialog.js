@@ -6,7 +6,7 @@ import { errorService } from "@web/core/errors/error_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { uiService } from "@web/core/ui_service";
-import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { makeFakeRPCService, makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";

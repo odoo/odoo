@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui_service";
 import { legacyServiceProvider } from "@web/legacy/legacy_service_provider";
 import { actionService } from "@web/webclient/actions/action_service";
-import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
