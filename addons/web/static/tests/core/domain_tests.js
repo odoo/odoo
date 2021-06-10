@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
+import { PyDate } from "../../src/core/py_js/py_date";
+import { patchWithCleanup } from "../helpers/utils";
 
 QUnit.module("domain", {}, () => {
     // ---------------------------------------------------------------------------
@@ -236,6 +238,17 @@ QUnit.module("domain", {}, () => {
         assert.deepEqual(new Domain(`[('date', '!=', 1 + 2)]`).toList(), [["date", "!=", 3]]);
         assert.ok(new Domain(`[('a', '==', 1 + 2)]`).contains({ a: 3 }));
         assert.notOk(new Domain(`[('a', '==', 1 + 2)]`).contains({ a: 2 }));
+    });
+
+    QUnit.test("some expression with date stuff", function (assert) {
+        patchWithCleanup(PyDate, {
+            today() {
+                return new PyDate(2013, 4, 24);
+            },
+        });
+        const domainStr =
+            "[('date','>=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]";
+        assert.deepEqual(new Domain(domainStr).toList(), [["date", ">=", "2013-03-25"]]);
     });
 
     QUnit.test("Check that there is no dependency between two domains", function (assert) {
