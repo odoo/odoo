@@ -54,13 +54,13 @@ const WebsiteCookiesbarField = FieldBoolean.extend({
             title: _t("Please confirm"),
             $content: QWeb.render('website.res_config_settings.cookies_modal_main'),
             buttons: [{
-                text: 'Do not activate',
+                text: _t('Do not activate'),
                 classes: 'btn-primary',
                 close: true,
                 click: cancelCallback,
             },
             {
-                text: 'Activate anyway',
+                text: _t('Activate anyway'),
                 close: true,
                 click: () => this._setValue(checked),
             }],
