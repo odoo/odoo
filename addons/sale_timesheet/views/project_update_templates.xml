@@ -1,37 +1,31 @@
 <?xml version="1.0"?>
 <odoo>
     <template id="project_update_default_description" inherit_id="hr_timesheet.project_update_default_description">
+        <!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
         <xpath expr="//div[@name='milestone']" position="after">
-            <hr t-if="profitability"/>
-            <div name="profitability" t-if="profitability">
-                <h1>Profitability</h1>
+<hr t-if="profitability"/>
+<div name="profitability" t-if="profitability">
+<h1>Profitability</h1>
 
-                <t t-if="project.allow_timesheets and user.has_group('hr_timesheet.group_hr_timesheet_user')">
-                    In <t t-esc="profitability['month']"/>,
-                    <b>
-                        <t t-if="profitability['is_timesheet_uom_hour']" t-esc="profitability['timesheet_unit_amount']"/>
-                        <t t-else="" t-esc="profitability['timesheet_unit_amount']"/>
-                        <t t-esc="profitability['timesheet_uom']"/>
-                    </b> have been recorded on the project vs.
-                        <t t-if="profitability['is_timesheet_uom_hour']" t-esc="profitability['previous_timesheet_unit_amount']"/>
-                        <t t-else="" t-esc="profitability['previous_timesheet_unit_amount']"/>
-                        <t t-esc="profitability['timesheet_uom']"/>
-                    in <t t-esc="profitability['previous_month']"/> (<t t-esc="profitability['timesheet_trend']"/> %).
-                </t>
+<t t-if="project.allow_timesheets and user.has_group('hr_timesheet.group_hr_timesheet_user')">
+In <t t-esc="profitability['month']"/>, <b><t t-if="profitability['is_timesheet_uom_hour']" t-esc="profitability['timesheet_unit_amount']"/><t t-else="" t-esc="profitability['timesheet_unit_amount']"/> <t t-esc="profitability['timesheet_uom']"/></b> have been recorded on the project vs.
+<t t-if="profitability['is_timesheet_uom_hour']" t-esc="profitability['previous_timesheet_unit_amount']"/><t t-else="" t-esc="profitability['previous_timesheet_unit_amount']"/>
+<t t-esc="profitability['timesheet_uom']"/> in <t t-esc="profitability['previous_month']"/> (<t t-esc="profitability['timesheet_trend']"/> %).
+</t>
 
-                <t t-if="project.analytic_account_id and project.allow_billable and user.has_group('project.group_project_manager')">
-                    The cost of the project is now at <t t-esc="profitability['costs']"/>, for a revenue of <t t-esc="profitability['revenues']"/>, leading to a
-                    <span>
-                        <font t-if="profitability['margin'] &gt; 0"  style="color: rgb(0, 128, 0)">
-                            <b><t t-esc="profitability['margin_formatted']"/></b>
-                        </font>
-                        <font t-elif="profitability['margin'] &lt; 0" style="color: rgb(128, 0, 0)">
-                            <b><t t-esc="profitability['margin_formatted']"/></b>
-                        </font>
-                        <t t-else="" t-esc="profitability['margin_formatted']"/>
-                    </span> margin (<t t-esc="profitability['margin_percentage']"/> %), and a <b><t t-esc="profitability['billing_rate']"/> % billing rate</b>.
-                </t>
-            </div>
+<t t-if="project.analytic_account_id and project.allow_billable and user.has_group('project.group_project_manager')">
+The cost of the project is now at <t t-esc="profitability['costs']"/>, for a revenue of <t t-esc="profitability['revenues']"/>, leading to a
+<span>
+<font t-if="profitability['margin'] &gt; 0"  style="color: rgb(0, 128, 0)">
+<b><t t-esc="profitability['margin_formatted']"/></b>
+</font>
+<font t-elif="profitability['margin'] &lt; 0" style="color: rgb(128, 0, 0)">
+<b><t t-esc="profitability['margin_formatted']"/></b>
+</font>
+<t t-else="" t-esc="profitability['margin_formatted']"/>
+</span> margin (<t t-esc="profitability['margin_percentage']"/> %), and a <b><t t-esc="profitability['billing_rate']"/> % billing rate</b>.
+</t>
+</div>
         </xpath>
     </template>
 
