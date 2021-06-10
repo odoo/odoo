@@ -123,11 +123,11 @@
                         <page string="Miscellaneous" name="miscellaneous">
                             <group>
                                 <group>
-                                    <field name="ready_to_produce" attrs="{'invisible': [('type','!=','normal')]}" string="Manufacturing Readiness" widget="radio" groups="mrp.group_mrp_routings"/>
-                                    <field name="consumption" attrs="{'invisible': [('type','!=','normal')]}" widget="radio"/>
+                                    <field name="ready_to_produce" attrs="{'invisible': [('type','=','phantom')]}" string="Manufacturing Readiness" widget="radio" groups="mrp.group_mrp_routings"/>
+                                    <field name="consumption" attrs="{'invisible': [('type','=','phantom')]}" widget="radio"/>
                                 </group>
                                 <group>
-                                    <field name="picking_type_id" attrs="{'invisible': [('type','!=','normal')]}" string="Operation" groups="stock.group_adv_location"/>
+                                    <field name="picking_type_id" attrs="{'invisible': [('type','=','phantom')]}" string="Operation" groups="stock.group_adv_location"/>
                                 </group>
                             </group>
                         </page>
