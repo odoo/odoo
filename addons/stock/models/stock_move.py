@@ -187,8 +187,8 @@ class StockMove(models.Model):
         compute='_compute_product_packaging_qty', store=True, readonly=False)
     product_packaging_id = fields.Many2one(
         'product.packaging', 'Packaging',
-        compute='_compute_product_packaging_id', store=True, readonly=False,
-        domain="[('product_id', '=', product_id)]", check_company=True)
+        domain="['|', ('product_id', '=', product_id), ('product_tmpl_id.product_variant_ids', 'in', product_id)]",
+        compute='_compute_product_packaging_id', store=True, readonly=False, check_company=True)
     from_immediate_transfer = fields.Boolean(related="picking_id.immediate_transfer")
 
     @api.depends('product_id')

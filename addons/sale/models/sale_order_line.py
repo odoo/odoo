@@ -169,7 +169,7 @@ class SaleOrderLine(models.Model):
         string="Packaging",
         compute='_compute_product_packaging_id',
         store=True, readonly=False, precompute=True,
-        domain="[('sales', '=', True), ('product_id','=',product_id)]",
+        domain="[('sales', '=', True), '|', ('product_id','=',product_id), ('product_tmpl_id.product_variant_ids', 'in', product_id)]",
         check_company=True)
     product_packaging_qty = fields.Float(
         string="Packaging Quantity",

@@ -103,6 +103,9 @@ class ProductTemplate(models.Model):
     packaging_ids = fields.One2many(
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
+    tmpl_packaging_ids = fields.One2many(
+        'product.packaging', 'product_tmpl_id', string="Product Template Packages",
+        help="Product packaging shared by all prodcut variants.")
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', depends_context=('company',))
     variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 

@@ -136,6 +136,12 @@
                                 groups="product.group_stock_packaging">
                                 <field colspan="2" name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
+                            <group name="tmpl_packaging" string="Packaging"
+                                colspan="4"
+                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), '|', ('product_variant_count', '=', 1), ('is_product_variant', '=', True)]}"
+                                groups="product.group_stock_packaging">
+                                <field colspan="2" name="tmpl_packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

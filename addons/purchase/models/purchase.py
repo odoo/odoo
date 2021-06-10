@@ -961,8 +961,10 @@ class PurchaseOrderLine(models.Model):
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
     date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
     date_approve = fields.Datetime(related="order_id.date_approve", string='Confirmation Date', readonly=True)
-    product_packaging_id = fields.Many2one('product.packaging', string='Packaging', domain="[('purchase', '=', True), ('product_id', '=', product_id)]", check_company=True,
-                                           compute="_compute_product_packaging_id", store=True, readonly=False)
+    product_packaging_id = fields.Many2one(
+        'product.packaging', string='Packaging',
+        domain="[('purchase', '=', True), '|', ('product_id', '=', product_id), ('product_tmpl_id.product_variant_ids', 'in', product_id)]",
+        compute="_compute_product_packaging_id", store=True, readonly=False, check_company=True)
     product_packaging_qty = fields.Float('Packaging Quantity', compute="_compute_product_packaging_qty", store=True, readonly=False)
 
     display_type = fields.Selection([
