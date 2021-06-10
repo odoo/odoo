@@ -50,7 +50,7 @@ class Authenticate(http.Controller):
         else:
             params.update({'success': 0, 'state': kw.get('state', '')})
         updated_redirect = parsed_redirect.replace(query=werkzeug.urls.url_encode(params))
-        return werkzeug.utils.redirect(updated_redirect.to_url())
+        return request.redirect(updated_redirect.to_url())
 
     # In this case, an exception will be thrown in case of preflight request if only POST is allowed.
     @http.route(['/mail_client_extension/auth/access_token', '/mail_plugin/auth/access_token'], type='json', auth="none", cors="*",

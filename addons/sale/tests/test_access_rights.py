@@ -141,7 +141,7 @@ class TestAccessRightsControllers(HttpCase):
             url='/my/orders/%s?report_type=pdf' % portal_so.id,
             allow_redirects=False,
         )
-        self.assertEqual(req.status_code, 302)
+        self.assertEqual(req.status_code, 303)
 
         # or with a random token
         req = self.url_open(
@@ -151,7 +151,7 @@ class TestAccessRightsControllers(HttpCase):
             ),
             allow_redirects=False,
         )
-        self.assertEqual(req.status_code, 302)
+        self.assertEqual(req.status_code, 303)
 
         # but works fine with the right token
         req = self.url_open(
@@ -177,4 +177,4 @@ class TestAccessRightsControllers(HttpCase):
             url='/my/orders/%s?report_type=pdf' % private_so.id,
             allow_redirects=False,
         )
-        self.assertEqual(req.status_code, 302)
+        self.assertEqual(req.status_code, 303)

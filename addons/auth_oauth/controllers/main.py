@@ -88,7 +88,7 @@ class OAuthLogin(Home):
         ensure_db()
         if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
             # Redirect if already logged in and redirect param is present
-            return http.redirect_with_hash(request.params.get('redirect'))
+            return request.redirect(request.params.get('redirect'))
         providers = self.list_providers()
 
         response = super(OAuthLogin, self).web_login(*args, **kw)
@@ -155,7 +155,7 @@ class OAuthController(http.Controller):
                 # oauth credentials not valid, user could be on a temporary session
                 _logger.info('OAuth2: access denied, redirect to main page in case a valid session exists, without setting cookies')
                 url = "/web/login?oauth_error=3"
-                redirect = werkzeug.utils.redirect(url, 303)
+                redirect = request.redirect(url, 303)
                 redirect.autocorrect_location_header = False
                 return redirect
             except Exception as e:

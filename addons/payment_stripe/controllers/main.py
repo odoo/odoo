@@ -45,7 +45,7 @@ class StripeController(http.Controller):
         request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
 
         # Redirect the user to the status page
-        return werkzeug.utils.redirect('/payment/status')
+        return request.redirect('/payment/status')
 
     @http.route(_validation_return_url, type='http', auth='public', csrf=False)
     def stripe_return_from_validation(self, **data):
@@ -71,7 +71,7 @@ class StripeController(http.Controller):
         request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
 
         # Redirect the user to the status page
-        return werkzeug.utils.redirect('/payment/status')
+        return request.redirect('/payment/status')
 
     @http.route('/payment/stripe/webhook', type='json', auth='public')
     def stripe_webhook(self):

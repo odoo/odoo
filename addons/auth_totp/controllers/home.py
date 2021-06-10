@@ -15,10 +15,10 @@ class Home(odoo.addons.web.controllers.main.Home):
     )
     def web_totp(self, redirect=None, **kwargs):
         if request.session.uid:
-            return http.redirect_with_hash(self._login_redirect(request.session.uid, redirect=redirect))
+            return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
 
         if not request.session.pre_uid:
-            return http.redirect_with_hash('/web/login')
+            return request.redirect('/web/login')
 
         error = None
         if request.httprequest.method == 'POST':
@@ -32,7 +32,7 @@ class Home(odoo.addons.web.controllers.main.Home):
                 error = _("Invalid authentication code format.")
             else:
                 request.session.finalize()
-                return http.redirect_with_hash(self._login_redirect(request.session.uid, redirect=redirect))
+                return request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
 
         return request.render('auth_totp.auth_totp_form', {
             'error': error,

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug
-
 from odoo import http
 from odoo.http import request
 from odoo.tools import html2plaintext
@@ -36,7 +34,7 @@ class CrmClient(http.Controller):
             for supporting older versions
         """
         server_action = http.request.env.ref("crm_mail_plugin.lead_creation_prefilled_action")
-        return werkzeug.utils.redirect(
+        return request.redirect(
             '/web#action=%s&model=crm.lead&partner_id=%s' % (server_action.id, int(partner_id)))
 
     @http.route('/mail_plugin/lead/create', type='json', auth='outlook', cors="*")
@@ -61,4 +59,4 @@ class CrmClient(http.Controller):
         """
         action = http.request.env.ref("crm.crm_lead_view_form")
         url = '/web#id=%s&action=%s&model=crm.lead&edit=1&model=crm.lead' % (lead_id, action.id)
-        return werkzeug.utils.redirect(url)
+        return request.redirect(url)

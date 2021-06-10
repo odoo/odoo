@@ -159,21 +159,6 @@ def dispatch_rpc(service_name, method, params):
         odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
         raise
 
-def local_redirect(path, query=None, keep_hash=False, code=303):
-    # FIXME: drop the `keep_hash` param, now useless
-    url = path
-    if not query:
-        query = {}
-    if query:
-        url += '?' + urls.url_encode(query)
-    return werkzeug.utils.redirect(url, code)
-
-def redirect_with_hash(url, code=303):
-    # Section 7.1.2 of RFC 7231 requires preservation of URL fragment through redirects,
-    # so we don't need any special handling anymore. This function could be dropped in the future.
-    # seealso : http://www.rfc-editor.org/info/rfc7231
-    #           https://tools.ietf.org/html/rfc7231#section-7.1.2
-    return werkzeug.utils.redirect(url, code)
 
 class WebRequest(object):
     """ Parent class for all Odoo Web request types, mostly deals with
@@ -314,6 +299,18 @@ class WebRequest(object):
         # not guaranteed to copy.copy cleanly & we want `exception` as leaf (for
         # callers to check & look at)
         raise exception.with_traceback(None) from new_cause
+
+    def redirect(self, location, code=303, local=True):
+        if local:
+            location = urls.url_parse(location).replace(scheme='', netloc='').to_url()
+        if request and request.db:
+            return request.registry['ir.http']._redirect(location, code)
+        return werkzeug.utils.redirect(location, code, Response=Response)
+
+    def redirect_query(self, location, query=None, code=303, local=True):
+        if query:
+            location += '?' + urls.url_encode(query)
+        return self.redirect(location, code=code, local=local)
 
     def _is_cors_preflight(self, endpoint):
         return False
@@ -759,7 +756,7 @@ class HttpRequest(WebRequest):
                 query = werkzeug.urls.url_encode({
                     'redirect': redirect,
                 })
-                return werkzeug.utils.redirect('/web/login?%s' % query)
+                return request.redirect('/web/login?%s' % query)
         except werkzeug.exceptions.HTTPException as e:
             return e
 

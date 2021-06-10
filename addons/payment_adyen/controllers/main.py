@@ -234,7 +234,7 @@ class AdyenController(http.Controller):
         )
 
         # Redirect the user to the status page
-        return werkzeug.utils.redirect('/payment/status')
+        return request.redirect('/payment/status')
 
     @http.route('/payment/adyen/notification', type='json', auth='public')
     def adyen_notification(self):

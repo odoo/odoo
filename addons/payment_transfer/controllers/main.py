@@ -3,8 +3,6 @@
 import logging
 import pprint
 
-import werkzeug
-
 from odoo import http
 from odoo.http import request
 
@@ -18,4 +16,4 @@ class TransferController(http.Controller):
     def transfer_form_feedback(self, **post):
         _logger.info("beginning _handle_feedback_data with post data %s", pprint.pformat(post))
         request.env['payment.transaction'].sudo()._handle_feedback_data('transfer', post)
-        return werkzeug.utils.redirect('/payment/status')
+        return request.redirect('/payment/status')

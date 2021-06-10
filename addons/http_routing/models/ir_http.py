@@ -423,7 +423,7 @@ class IrHttp(models.AbstractModel):
         # handle // in url
         if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
             new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string.decode('utf-8')
-            return werkzeug.utils.redirect(new_url, 301)
+            return request.redirect(new_url, code=301)
 
         # locate the controller method
         try:
@@ -456,8 +456,6 @@ class IrHttp(models.AbstractModel):
 
         # For website routes (only), add website params on `request`
         if request.is_frontend:
-            request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
-
             cls._add_dispatch_parameters(func)
 
             path = request.httprequest.path.split('/')
@@ -493,7 +491,7 @@ class IrHttp(models.AbstractModel):
                         path = request.httprequest.path[:-1]
                         if request.httprequest.query_string:
                             path += '?' + request.httprequest.query_string.decode('utf-8')
-                        return werkzeug.utils.redirect(path, code=301)
+                        return request.redirect(path, code=301)
                     path.pop(1)
                     routing_error = None
                     return cls.reroute('/'.join(path) or '/')
@@ -520,6 +518,12 @@ class IrHttp(models.AbstractModel):
             result.set_cookie('frontend_lang', request.lang.code)
 
         return result
+
+    @classmethod
+    def _redirect(cls, location, code=303):
+        if request and request.db and request.is_frontend:
+            location = url_for(location)
+        return super()._redirect(location, code)
 
     @classmethod
     def reroute(cls, path):
@@ -557,7 +561,7 @@ class IrHttp(models.AbstractModel):
                     path = '/' + request.lang.url_code + path
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string.decode('utf-8')
-                return werkzeug.utils.redirect(path, code=301)
+                return request.redirect(path, code=301)
 
     @classmethod
     def _get_exception_code_values(cls, exception):

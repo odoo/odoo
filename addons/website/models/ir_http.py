@@ -145,12 +145,12 @@ class Http(models.AbstractModel):
             return False
 
         template = False
-        if hasattr(response, 'qcontext'):  # classic response
+        if hasattr(response, '_cached_page'):
+            website_page, template = response._cached_page, response._cached_template
+        elif hasattr(response, 'qcontext'):  # classic response
             main_object = response.qcontext.get('main_object')
             website_page = getattr(main_object, '_name', False) == 'website.page' and main_object
             template = response.qcontext.get('response_template')
-        elif hasattr(response, '_cached_page'):
-            website_page, template = response._cached_page, response._cached_template
 
         view = template and request.env['website'].get_template(template)
         if view and view.track:
@@ -276,7 +276,7 @@ class Http(models.AbstractModel):
                 path = '/' + request.lang.url_code + path
             if request.httprequest.query_string:
                 path += '?' + request.httprequest.query_string.decode('utf-8')
-            return werkzeug.utils.redirect(path, code=301)
+            return request.redirect(path, code=301)
 
         if page:
             # prefetch all menus (it will prefetch website.page too)
@@ -297,7 +297,7 @@ class Http(models.AbstractModel):
                 try:
                     r = page._get_cache_response(cache_key)
                     if r['time'] + page.cache_time > time.time():
-                        response = werkzeug.Response(r['content'], mimetype=r['contenttype'])
+                        response = odoo.http.Response(r['content'], mimetype=r['contenttype'])
                         response._cached_template = r['template']
                         response._cached_page = page
                         return response

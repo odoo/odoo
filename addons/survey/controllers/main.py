@@ -141,7 +141,7 @@ class Survey(http.Controller):
         elif error_key == 'answer_deadline' and answer_sudo.access_token:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
 
-        return werkzeug.utils.redirect("/")
+        return request.redirect("/")
 
     # ------------------------------------------------------------
     # TEST / RETRY SURVEY ROUTES
@@ -155,7 +155,7 @@ class Survey(http.Controller):
         try:
             answer_sudo = survey_sudo._create_answer(user=request.env.user, test_entry=True)
         except:
-            return werkzeug.utils.redirect('/')
+            return request.redirect('/')
         return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.access_token)))
 
     @http.route('/survey/retry/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
@@ -169,7 +169,7 @@ class Survey(http.Controller):
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
         if not answer_sudo:
             # attempts to 'retry' without having tried first
-            return werkzeug.utils.redirect("/")
+            return request.redirect("/")
 
         try:
             retry_answer_sudo = survey_sudo._create_answer(
@@ -181,7 +181,7 @@ class Survey(http.Controller):
                 **self._prepare_retry_additional_values(answer_sudo)
             )
         except:
-            return werkzeug.utils.redirect("/")
+            return request.redirect("/")
         return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=retry_answer_sudo.access_token)))
 
     def _prepare_retry_additional_values(self, answer):
@@ -227,7 +227,7 @@ class Survey(http.Controller):
                 survey_sudo.with_user(request.env.user).check_access_rights('read')
                 survey_sudo.with_user(request.env.user).check_access_rule('read')
             except:
-                return werkzeug.utils.redirect("/")
+                return request.redirect("/")
             else:
                 return request.render("survey.survey_403_page", {'survey': survey_sudo})
 
@@ -598,7 +598,7 @@ class Survey(http.Controller):
 
         if not survey:
             # no certification found
-            return werkzeug.utils.redirect("/")
+            return request.redirect("/")
 
         succeeded_attempt = request.env['survey.user_input'].sudo().search([
             ('partner_id', '=', request.env.user.partner_id.id),

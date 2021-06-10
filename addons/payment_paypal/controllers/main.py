@@ -4,7 +4,6 @@ import logging
 import pprint
 
 import requests
-import werkzeug
 
 from odoo import _, http
 from odoo.exceptions import ValidationError
@@ -34,7 +33,7 @@ class PaypalController(http.Controller):
                 request.env['payment.transaction'].sudo()._handle_feedback_data('paypal', data)
             else:
                 pass  # The customer has cancelled the payment, don't do anything
-        return werkzeug.utils.redirect('/payment/status')
+        return request.redirect('/payment/status')
 
     @http.route(_notify_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False)
     def paypal_ipn(self, **data):

@@ -23,7 +23,7 @@ class MailController(http.Controller):
     @classmethod
     def _redirect_to_messaging(cls):
         url = '/web#%s' % url_encode({'action': 'mail.action_discuss'})
-        return werkzeug.utils.redirect(url)
+        return request.redirect(url)
 
     @classmethod
     def _check_token(cls, token):
@@ -106,7 +106,7 @@ class MailController(http.Controller):
         record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
-            return werkzeug.utils.redirect(record_action['url'])
+            return request.redirect(record_action['url'])
         # other choice: act_window (no support of anything else currently)
         elif not record_action['type'] == 'ir.actions.act_window':
             return cls._redirect_to_messaging()
@@ -124,7 +124,7 @@ class MailController(http.Controller):
         if cids:
             url_params['cids'] = ','.join([str(cid) for cid in cids])
         url = '/web?#%s' % url_encode(url_params)
-        return werkzeug.utils.redirect(url)
+        return request.redirect(url)
 
     @http.route('/mail/read_followers', type='json', auth='user')
     def read_followers(self, res_model, res_id):
