@@ -320,7 +320,7 @@ class StockRule(models.Model):
                 move_values[field] = values.get(field)
         return move_values
 
-    def _get_lead_days(self, product):
+    def _get_lead_days(self, product, **values):
         """Returns the cumulative delay and its description encountered by a
         procurement going through the rules in `self`.
 

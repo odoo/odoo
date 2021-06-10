@@ -25,6 +25,7 @@
         'report/purchase_report_templates.xml',
         'report/report_stock_forecasted.xml',
         'report/report_stock_rule.xml',
+        'wizard/stock_replenishment_info.xml'
     ],
     'demo': [
         'data/purchase_stock_demo.xml',
