@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import inspect
-import logging
 import hashlib
-import requests
+import inspect
+import json
+import logging
 import re
+import requests
 
 from lxml import etree, html
 from werkzeug import urls
@@ -290,6 +291,16 @@ class Website(models.Model):
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
 
+    def configurator_set_menu_links(self, menu_company, module_data):
+        menus = self.env['website.menu'].search([('url', 'in', list(module_data.keys())), ('website_id', '=', self.id)])
+        for m in menus:
+            m.sequence = module_data[m.url]['sequence']
+
+    def configurator_get_footer_links(self):
+        return [
+            {'text': _("Privacy Policy"), 'href': '/privacy'},
+        ]
+
     @api.model
     def configurator_init(self):
         r = dict()
@@ -299,7 +310,7 @@ class Website(models.Model):
             'id': feature.id,
             'name': feature.name,
             'description': feature.description,
-            'type': feature.type,
+            'type': 'page' if feature.page_view_id else 'app',
             'icon': feature.icon,
             'website_config_preselection': feature.website_config_preselection,
             'module_state': feature.module_id.state,
@@ -341,15 +352,44 @@ class Website(models.Model):
             self.env['web_editor.assets'].make_scss_customization(url, values)
 
         def set_features(selected_features):
-            feature_ids = self.env['website.configurator.feature'].browse(selected_features)
+            features = self.env['website.configurator.feature'].browse(selected_features)
+
+            menu_company = self.env['website.menu']
+            if len(features.filtered('menu_sequence')) > 5 and len(features.filtered('menu_company')) > 1:
+                menu_company = self.env['website.menu'].create({
+                    'name': _('Company'),
+                    'parent_id': website.menu_id.id,
+                    'website_id': website.id,
+                    'sequence': 40,
+                })
+
             pages_views = {}
             modules = self.env['ir.module.module']
-            for feature_id in feature_ids:
-                if feature_id.type == 'app' and feature_id.module_id and feature_id.module_id.state != 'installed':
-                    modules += feature_id.module_id
-                if feature_id.type == 'page' and feature_id.page_view_id:
-                    result = self.env['website'].new_page(name=feature_id.name, add_menu=True, template=feature_id.page_view_id.key)
-                    pages_views[feature_id.iap_page_code] = result['view_id']
+            module_data = {}
+            for feature in features:
+                add_menu = bool(feature.menu_sequence)
+                if feature.module_id:
+                    if feature.module_id.state != 'installed':
+                        modules += feature.module_id
+                    if add_menu:
+                        if feature.module_id.name != 'website_blog':
+                            module_data[feature.feature_url] = {'sequence': feature.menu_sequence}
+                        else:
+                            blogs = module_data.setdefault('#blog', [])
+                            blogs.append({'name': feature.name, 'sequence': feature.menu_sequence})
+                elif feature.page_view_id:
+                    result = self.env['website'].new_page(
+                        name=feature.name,
+                        add_menu=add_menu,
+                        page_values=dict(url=feature.feature_url, is_published=True),
+                        menu_values=add_menu and {
+                            'url': feature.feature_url,
+                            'sequence': feature.menu_sequence,
+                            'parent_id': feature.menu_company and menu_company.id or website.menu_id.id,
+                        },
+                        template=feature.page_view_id.key
+                    )
+                    pages_views[feature.iap_page_code] = result['view_id']
 
             if modules:
                 modules.button_immediate_install()
@@ -357,6 +397,8 @@ class Website(models.Model):
                 self._cr.commit()
                 api.Environment.reset()
                 self.env = api.Environment(modules._cr, modules._uid, modules._context)
+
+            self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
 
             return pages_views
 
@@ -439,21 +481,6 @@ class Website(models.Model):
         if palette:
             set_colors(palette)
 
-        # modules
-        pages_views = set_features(kwargs.get('selected_features'))
-        # We need to refresh the environment of website because set_features installed some new module
-        # and we need the overrides of these new menus e.g. for .get_cta_data()
-        website = self.env['website'].browse(website.id)
-
-        # Load suggestion from iap for selected pages
-        requested_pages = list(pages_views.keys())
-        requested_pages.append('homepage')
-        params = {
-            'theme': kwargs.get('theme_name'),
-            'pages': requested_pages,
-        }
-        custom_resources = self._website_api_rpc('/api/website/1/configurator/custom_resources/%s' % kwargs.get('industry_id'), params)
-
         # Update CTA
         cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
         if cta_data['cta_btn_text']:
@@ -497,6 +524,43 @@ class Website(models.Model):
                 except ValueError as e:
                     logger.warning(e)
 
+        # modules
+        pages_views = set_features(kwargs.get('selected_features'))
+        # We need to refresh the environment of website because set_features installed some new module
+        # and we need the overrides of these new menus e.g. for .get_cta_data()
+        website = self.env['website'].browse(website.id)
+
+        # Update footers links, needs to be done after `set_features` to go
+        # through module overide of `configurator_get_footer_links`
+        footer_links = website.configurator_get_footer_links()
+        footer_ids = [
+            'website.template_footer_contact', 'website.template_footer_headline',
+            'website.footer_custom', 'website.template_footer_links',
+            'website.template_footer_minimalist',
+        ]
+        for footer_id in footer_ids:
+            try:
+                view_id = self.env['website'].viewref(footer_id)
+                if view_id:
+                    # Deliberately hardcode dynamic code inside the view arch,
+                    # it will be transformed into static nodes after a save/edit
+                    # thanks to the t-ignore in parents node.
+                    arch_string = etree.fromstring(view_id.arch_db)
+                    el = arch_string.xpath("//t[@t-set='configurator_footer_links']")[0]
+                    el.attrib['t-value'] = json.dumps(footer_links)
+                    view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(arch_string)})
+            except Exception as e:
+                # The xml view could have been modified in the backend, we don't
+                # want the xpath error to break the configurator feature
+                logger.warning(e)
+
+        # Load suggestion from iap for selected pages
+        requested_pages = list(pages_views.keys()) + ['homepage']
+        custom_resources = self._website_api_rpc('/api/website/1/configurator/custom_resources/%s' % kwargs.get('industry_id'), {
+            'theme': kwargs.get('theme_name'),
+            'pages': requested_pages,
+        })
+
         # Update pages
         pages = custom_resources.get('pages', {})
         for page_code, snippet_list in pages.items():
@@ -504,7 +568,6 @@ class Website(models.Model):
 
         images = custom_resources.get('images', [])
         set_images(images)
-
         return url
 
     # ----------------------------------------------------------
@@ -562,11 +625,14 @@ class Website(models.Model):
                 copy_menu(submenu, new_top_menu)
 
     @api.model
-    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None):
+    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name : the name of the page
+            :param add_menu : if True, add a menu for that page
             :param template : potential xml_id of the page to create
             :param namespace : module part of the xml_id if none, the template module name is used
+            :param page_values : default values for the page to be created
+            :param menu_values : default values for the menu to be created
         """
         if namespace:
             template_module = namespace
@@ -597,21 +663,27 @@ class Website(models.Model):
 
         website = self.get_current_website()
         if ispage:
-            page = self.env['website.page'].create({
+            default_page_values = {
                 'url': page_url,
                 'website_id': website.id,  # remove it if only one website or not?
                 'view_id': view.id,
                 'track': True,
-            })
+            }
+            if page_values:
+                default_page_values.update(page_values)
+            page = self.env['website.page'].create(default_page_values)
             result['page_id'] = page.id
         if add_menu:
-            menu = self.env['website.menu'].create({
+            default_menu_values = {
                 'name': name,
                 'url': page_url,
                 'parent_id': website.menu_id.id,
                 'page_id': page.id,
                 'website_id': website.id,
-            })
+            }
+            if menu_values:
+                default_menu_values.update(menu_values)
+            menu = self.env['website.menu'].create(default_menu_values)
             result['menu_id'] = menu.id
         return result
 
