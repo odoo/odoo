@@ -126,7 +126,7 @@ function applyBinaryOp(ast, context) {
     const left = evaluate(ast.left, context);
     const right = evaluate(ast.right, context);
     switch (ast.op) {
-        case "+":
+        case "+": {
             const isLeftDelta = left instanceof PyRelativeDelta;
             const isRightDelta = right instanceof PyRelativeDelta;
             if (isLeftDelta || isRightDelta) {
@@ -135,8 +135,14 @@ function applyBinaryOp(ast, context) {
                 return PyRelativeDelta.add(date, delta);
             }
             return left + right;
-        case "-":
+        }
+        case "-": {
+            const isRightDelta = right instanceof PyRelativeDelta;
+            if (isRightDelta) {
+                return PyRelativeDelta.substract(left, right);
+            }
             return left - right;
+        }
         case "*":
             return left * right;
         case "/":

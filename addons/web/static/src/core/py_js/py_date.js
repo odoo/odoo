@@ -447,6 +447,23 @@ export class PyRelativeDelta {
         return new PyDateTime(s.year, s.month, s.day, s.hour, s.minute, s.second, 0);
     }
 
+    /**
+     * @param {PyDate} date
+     * @param {PyRelativeDelta} delta
+     * @returns {PyDateTime}
+     */
+    static substract(date, delta) {
+        const s = tmxxx(
+            date.year,
+            date.month,
+            date.day - delta.day,
+            -delta.hour,
+            -delta.minute,
+            -delta.second
+        );
+        return new PyDateTime(s.year, s.month, s.day, s.hour, s.minute, s.second, 0);
+    }
+
     constructor() {
         this.year = 0;
         this.month = 0;

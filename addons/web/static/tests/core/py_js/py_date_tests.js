@@ -112,6 +112,21 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr(expr), "2001-04-02");
         });
 
+        QUnit.test("substracting date and relative delta", (assert) => {
+            const expr1 =
+                "(datetime.date(day=3,month=4,year=2001) - relativedelta(days=-1)).strftime('%Y-%m-%d')";
+            assert.strictEqual(evaluateExpr(expr1), "2001-04-04");
+            const expr2 =
+                "(datetime.date(day=3,month=4,year=2001) - relativedelta(weeks=-1)).strftime('%Y-%m-%d')";
+            assert.strictEqual(evaluateExpr(expr2), "2001-04-10");
+            const expr3 =
+                "(datetime.date(day=3,month=4,year=2001) - relativedelta(days=1)).strftime('%Y-%m-%d')";
+            assert.strictEqual(evaluateExpr(expr3), "2001-04-02");
+            const expr4 =
+                "(datetime.date(day=3,month=4,year=2001) - relativedelta(weeks=1)).strftime('%Y-%m-%d')";
+            assert.strictEqual(evaluateExpr(expr4), "2001-03-27");
+        });
+
         QUnit.module("datetime.timedelta");
 
         QUnit.test("adding date and time delta", (assert) => {
