@@ -1667,6 +1667,7 @@
                 ctx.variables = Object.create(null);
                 ctx.parentNode = ctx.generateID();
                 ctx.allowMultipleRoots = true;
+                ctx.shouldDefineParent = true;
                 ctx.hasParentWidget = true;
                 ctx.shouldDefineResult = false;
                 ctx.addLine(`let c${ctx.parentNode} = extra.parentNode;`);
@@ -2376,7 +2377,9 @@
             }
             // Step 4: add the appropriate function call to current component
             // ------------------------------------------------
-            const parentComponent = `utils.getComponent(context)`;
+            const parentComponent = ctx.rootContext.shouldDefineParent
+                ? `parent`
+                : `utils.getComponent(context)`;
             const key = ctx.generateTemplateKey();
             const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
             const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
@@ -5395,9 +5398,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.3.0';
-    __info__.date = '2021-06-04T12:19:29.161Z';
-    __info__.hash = '9cbcf20';
+    __info__.version = '1.3.1';
+    __info__.date = '2021-06-10T08:37:12.080Z';
+    __info__.hash = 'd121155';
     __info__.url = 'https://github.com/odoo/owl';
 
 
