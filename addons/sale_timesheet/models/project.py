@@ -70,7 +70,7 @@ class Project(models.Model):
         employees = self.env['account.analytic.line'].read_group([('task_id', 'in', projects.task_ids.ids)], ['employee_id', 'project_id'], ['employee_id', 'project_id'], ['employee_id', 'project_id'], lazy=False)
         dict_project_employee = defaultdict(list)
         for line in employees:
-            dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]]
+            dict_project_employee[line['project_id'][0]] += [line['employee_id'][0]] if line['employee_id'] else []
         for project in projects:
             project.warning_employee_rate = any(x not in project.sale_line_employee_ids.employee_id.ids for x in dict_project_employee[project.id])
 
