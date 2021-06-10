@@ -17,11 +17,13 @@ class WebsiteConfiguratorFeature(models.Model):
     icon = fields.Char()
     iap_page_code = fields.Char(help='Page code used to tell IAP website_service for which page a snippet list should be generated')
     website_config_preselection = fields.Char(help='Comma-separated list of website type/purpose for which this feature should be pre-selected')
-    type = fields.Selection([('page', "Page"), ('app', "App")], compute='_compute_type')
     page_view_id = fields.Many2one('ir.ui.view', ondelete='cascade')
     module_id = fields.Many2one('ir.module.module', ondelete='cascade')
+    feature_url = fields.Char()
+    menu_sequence = fields.Integer(help='If set, a website menu will be created for the feature.')
+    menu_company = fields.Boolean(help='If set, add the menu as a second level menu, as a child of "Company" menu.')
 
-    @api.depends('module_id', 'page_view_id')
+    @api.depends('page_view_id')
     def _compute_type(self):
         for record in self:
             record.type = 'page' if record.page_view_id else 'app'
