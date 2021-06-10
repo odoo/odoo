@@ -3580,8 +3580,8 @@ var FieldReference = FieldMany2One.extend({
         if (this.modelName) {
             this.$('.o_input_dropdown').show();
             if (!this.nodeOptions.model_field) {
-                // this class is used to display the two components (select & input) on the same line
-                this.$el.addClass('o_row');
+                // this classes are used to display the two components (select & input) on the same line
+                this.$el.addClass('o_field_reference_editable d-flex w-auto');
             }
         } else {
             // hide the many2one if the selection is empty

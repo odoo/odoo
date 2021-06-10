@@ -100,6 +100,20 @@
             padding-top: 0;
             padding-bottom: 0;
         }
+
+        &.o_field_reference_editable {
+            margin-left: -$o-form-spacing-unit/2;
+            margin-right: -$o-form-spacing-unit/2;
+            > .o_field_many2one_selection {
+                > .o_input, > .o_input_dropdown {
+                    flex: 1 1 auto;
+                    width: 0;
+                }
+                > * {
+                    margin: 0 $o-form-spacing-unit/2;
+                }
+            }
+        }
     }
 
     // Many2OneAvatar
