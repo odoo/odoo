@@ -101,6 +101,65 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeHasAutoScrollOnMessageReceived() {
+            return (this.order === 'asc') ? this.isAtEnd : this.isAtStart;
+        }
+
+        /**
+         * States whether the threadview is scrolled at the bottom.
+         *
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsAtBottom() {
+            return (this.scrollTop >=
+                this.scrollHeight -
+                this.clientHeight - 30);
+        }
+
+        /**
+         * States whether the threadview is at the end of the conversation
+         * regardeless of the order.
+         *
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsAtEnd() {
+            if (this.order === 'asc') {
+                return this.isAtBottom;
+            }
+            return this.isAtTop;
+        }
+
+        /**
+         * states whether the threadview is at the beginning of the conversation
+         * regardeless of the order.
+         *
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsAtStart() {
+            if (this.order === 'asc') {
+                return this.isAtTop;
+            }
+            return this.isAtBottom;
+        }
+
+
+        /**
+         * States whether the threadview is scrolled at the top.
+         *
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsAtTop() {
+            return this.scrollTop <= 30;
+        }
+
+        /**
+         * @private
          * @returns {string[]}
          */
         _computeTextInputSendShortcuts() {
@@ -337,7 +396,7 @@ function factory(dependencies) {
          * hint `message-received`.
          */
         hasAutoScrollOnMessageReceived: attr({
-            default: true,
+            compute: '_computeHasAutoScrollOnMessageReceived',
         }),
         /**
          * Last message in the context of the currently displayed thread cache.
@@ -423,6 +482,44 @@ function factory(dependencies) {
             inverse: 'threadView',
             isCausal: true,
             readonly: true,
+        }),
+        order: attr({
+            related: 'threadViewer.order',
+        }),
+        scrollTop: attr(),
+        scrollHeight: attr(),
+        clientHeight: attr(),
+        /**
+         * States whether the message list scroll position is at the bottom of the
+         * message list.
+         */
+        isAtBottom: attr({
+            compute: '_computeIsAtBottom',
+        }),
+        /**
+         * States whether the message list scroll position is at the end of the
+         * message list. Depending of the message list order, this could be the
+         * top or the bottom.
+         */
+        isAtEnd: attr({
+            compute: '_computeIsAtEnd',
+            default: false,
+        }),
+        /**
+         * States whether the message list scroll position is at the start of the
+         * message list. Depending of the message list order, this could be the
+         * top or the bottom.
+         */
+        isAtStart: attr({
+            compute: '_computeIsAtStart',
+            default: false,
+        }),
+        /**
+         * States whether the message list scroll position is at the top of the
+         * message list.
+         */
+        isAtTop: attr({
+            compute: '_computeIsAtTop',
         }),
     };
     ThreadView.onChanges = [

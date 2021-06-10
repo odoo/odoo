@@ -67,6 +67,7 @@ export async function boot() {
             hasThreadView: true,
             hasTopbar: true,
             thread: insert(messaging.models['mail.thread'].convertData(channelData)),
+            order: 'asc',
         });
         const ThreadView = getMessagingComponent('ThreadView');
         const threadViewComponent = new ThreadView(null, {
@@ -74,6 +75,7 @@ export async function boot() {
             hasComposer: true,
             hasComposerThreadTyping: true,
             threadViewLocalId: threadViewer.threadView.localId,
+            order: 'asc',
         });
         await threadViewComponent.mount(document.body);
         if (threadViewer.thread.defaultDisplayMode === 'video_full_screen') {

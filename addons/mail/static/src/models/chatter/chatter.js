@@ -221,6 +221,7 @@ function factory(dependencies) {
             const threadViewerData = {
                 hasThreadView: this.hasThreadView,
                 thread: this.thread ? link(this.thread) : unlink(),
+                order: 'desc',
             };
             if (!this.threadViewer) {
                 return create(threadViewerData);

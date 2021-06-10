@@ -116,7 +116,6 @@ Object.assign(ThreadView, {
         haveMessagesMarkAsReadIcon: false,
         haveMessagesReplyIcon: false,
         isDoFocus: false,
-        order: 'asc',
         showComposerAttachmentsExtensions: true,
         showComposerAttachmentsFilenames: true,
     },
@@ -162,10 +161,6 @@ Object.assign(ThreadView, {
          * Determines whether this should become focused.
          */
         isDoFocus: Boolean,
-        order: {
-            type: String,
-            validate: prop => ['asc', 'desc'].includes(prop),
-        },
         showComposerAttachmentsExtensions: Boolean,
         showComposerAttachmentsFilenames: Boolean,
         threadViewLocalId: String,

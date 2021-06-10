@@ -41,7 +41,7 @@
                         </button>
                     </div>
                 </t>
-                <t t-elif="props.order === 'asc' and orderedMessages.length > 0">
+                <t t-elif="threadView.order === 'asc' and orderedMessages.length > 0">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
                 <!-- MESSAGES -->
@@ -78,7 +78,7 @@
                     </t>
                 </t>
                 <!-- LOADING (if order desc)-->
-                <t t-if="!threadView.threadCache.hasLoadingFailed and props.order === 'desc' and orderedMessages.length > 0">
+                <t t-if="!threadView.threadCache.hasLoadingFailed and threadView.order === 'desc' and orderedMessages.length > 0">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
             </t>

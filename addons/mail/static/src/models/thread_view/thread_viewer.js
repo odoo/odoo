@@ -108,6 +108,13 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * States the sorting direction.
+         * Possible value: asc, desc
+         */
+        order: attr({
+            required: true,
+        }),
+        /**
          * Determines the selected `mail.message`.
          */
         selectedMessage: many2one('mail.message'),

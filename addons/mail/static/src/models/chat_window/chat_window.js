@@ -270,6 +270,7 @@ function factory(dependencies) {
                 compact: true,
                 hasThreadView: this.hasThreadView,
                 thread: this.thread ? link(this.thread) : unlink(),
+                order: 'asc',
             };
             if (!this.threadViewer) {
                 return create(threadViewerData);
