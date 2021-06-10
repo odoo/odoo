@@ -204,7 +204,6 @@ This module provides the core of the Odoo Web Client.
 
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/js/public/public_env.js',
-            'web/static/src/legacy/js/public/public_crash_manager.js',
             'web/static/src/legacy/js/public/public_root.js',
             'web/static/src/legacy/js/public/public_root_instance.js',
             'web/static/src/legacy/js/public/public_widget.js',
@@ -396,7 +395,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/services/config.js',
             'web/static/src/legacy/js/services/core.js',
             'web/static/src/legacy/js/services/local_storage_service.js',
-            'web/static/src/legacy/js/services/crash_manager.js',
             'web/static/src/legacy/js/core/error_utils.js',
             'web/static/src/legacy/js/services/session_storage_service.js',
             'web/static/src/legacy/js/common_env.js',
@@ -408,7 +406,6 @@ This module provides the core of the Odoo Web Client.
 
         # Used during the transition of the web architecture
         'web.frontend_legacy': [
-            # Old rainbow man kept for website compatibility
             'web/static/src/legacy/frontend/**/*',
         ],
 
