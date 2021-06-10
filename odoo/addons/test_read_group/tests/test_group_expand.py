@@ -87,3 +87,13 @@ class TestGroupOnSelection(common.TransactionCase):
                 '__domain': [('state', '=', False)],
             },
         ])
+
+    def test_reverse_order(self):
+        self.Model.create({'state': 'a', 'value': 1})
+        self.Model.create({'state': 'b', 'value': 2})
+
+        groups = self.Model.read_group([], fields=['state'], groupby=['state'], orderby='state DESC')
+        self.assertEqual(groups, [
+            {'__domain': [('state', '=', 'b')], 'state': 'b', 'state_count': 1},
+            {'__domain': [('state', '=', 'a')], 'state': 'a', 'state_count': 1},
+        ])

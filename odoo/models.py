@@ -1753,6 +1753,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # determine all groups that should be returned
         values = [line[groupby] for line in read_group_result if line[groupby]]
 
+        read_group_order = read_group_order and read_group_order.lower()
         if field.relational:
             # groups is a recordset; determine order on groups's model
             groups = self.env[field.comodel_name].browse([value[0] for value in values])
