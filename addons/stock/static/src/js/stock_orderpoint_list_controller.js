@@ -3,6 +3,7 @@ odoo.define('stock.StockOrderpointListController', function (require) {
 
 var core = require('web.core');
 var ListController = require('web.ListController');
+var FormView = require('web.FormView');
 
 var qweb = core.qweb;
 
@@ -33,7 +34,7 @@ var StockOrderpointListController = ListController.extend({
     // -------------------------------------------------------------------------
 
     _onButtonClicked: function (ev) {
-        if (ev.data.attrs.class.split(' ').includes('o_replenish_buttons')) {
+        if (ev.data.attrs.class && ev.data.attrs.class.split(' ').includes('o_replenish_buttons')) {
             ev.stopPropagation();
             var self = this;
             this._callButtonAction(ev.data.attrs, ev.data.record).then(function () {

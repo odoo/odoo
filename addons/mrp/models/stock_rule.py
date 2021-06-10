@@ -111,11 +111,11 @@ class StockRule(models.Model):
             date_planned = date_planned - relativedelta(hours=1)
         return date_planned
 
-    def _get_lead_days(self, product):
+    def _get_lead_days(self, product, **values):
         """Add the product and company manufacture delay to the cumulative delay
         and cumulative description.
         """
-        delay, delay_description = super()._get_lead_days(product)
+        delay, delay_description = super()._get_lead_days(product, **values)
         bypass_delay_description = self.env.context.get('bypass_delay_description')
         manufacture_rule = self.filtered(lambda r: r.action == 'manufacture')
         if not manufacture_rule:

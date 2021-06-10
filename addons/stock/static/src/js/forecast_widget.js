@@ -70,7 +70,21 @@ const ForecastWidgetField = AbstractField.extend({
     },
 });
 
+const JsonWidget = AbstractField.extend({
+    supportedFieldTypes: ['char'],
+
+    _render: function () {
+        var value = JSON.parse(this.value);
+        if (!value || !value.template) {
+            this.$el.html('');
+            return;
+        }
+        $(QWeb.render(value.template, value)).appendTo(this.$el);
+    },
+});
+
 fieldRegistry.add('forecast_widget', ForecastWidgetField);
+fieldRegistry.add('json_widget', JsonWidget);
 
 return ForecastWidgetField;
 });
