@@ -133,7 +133,7 @@ class StockMove(models.Model):
                 operation_domain = [
                     ('id', 'in', move.raw_material_production_id.bom_id.operation_ids.ids),
                     '|',
-                        ('company_id', '=', self.company_id.id),
+                        ('company_id', '=', move.company_id.id),
                         ('company_id', '=', False)
                 ]
                 move.allowed_operation_ids = self.env['mrp.routing.workcenter'].search(operation_domain)
