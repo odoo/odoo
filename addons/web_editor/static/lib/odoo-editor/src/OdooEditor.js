@@ -64,6 +64,8 @@ const IS_KEYBOARD_EVENT_BOLD = ev => ev.key === 'b' && (ev.ctrlKey || ev.metaKey
 
 const FIRST_STEP_PREVIOUS_ID = 'FIRST_STEP_PREVIOUS_ID';
 
+const peek = arr => arr[arr.length - 1];
+
 const CLIPBOARD_BLACKLISTS = {
     unwrap: ['.Apple-interchange-newline', 'DIV'], // These elements' children will be unwrapped.
     remove: ['META', 'STYLE', 'SCRIPT'], // These elements will be removed along with their children.
@@ -300,7 +302,6 @@ export class OdooEditor extends EventTarget {
         this.observerActive();
         this.document.getSelection().setPosition(this.editable);
         this.execCommand('insertHTML', editableContent);
-        this.options.collaborative.initServerHistory(this._historySteps);
         this._isCollaborativeActive = true;
     }
 
@@ -570,24 +571,17 @@ export class OdooEditor extends EventTarget {
         }
 
         // push history
-        const latest = this.historyGetCurrentStep();
-        if (!latest.mutations.length) {
+        const current = this.historyGetCurrentStep();
+        if (!current.mutations.length) {
             return false;
         }
 
-        latest.id = uuidV4();
-        latest.userId = this._userId;
-        let previousStepId;
-        for (let i = this._historySteps.length - 1; !previousStepId && i >= 0; i--) {
-            if (this._historySteps[i].userId === this._userId) {
-                previousStepId = this._historySteps[i].id;
-            }
-        }
-        // If we did not find a step belonging to us, it is our first step
-        latest.previousStepId = previousStepId || FIRST_STEP_PREVIOUS_ID;
-        latest.index = this._historySteps.length;
-        this._historySteps.push(latest);
-        this._historySend(latest);
+        current.id = uuidV4();
+        current.userId = this._userId;
+        const latest = peek(this._historySteps);
+        current.previousStepId = (latest && latest.id) || FIRST_STEP_PREVIOUS_ID;
+        this._historySteps.push(current);
+        this._historySend(current);
         this._currentStep = {
             cursor: {},
             mutations: [],
@@ -638,26 +632,24 @@ export class OdooEditor extends EventTarget {
 
     /**
      * history receive algo:
+     *  Steps are conceptually a linked list where each step remembers the step
+     *  it comes after, called the "previous step". In case of conflict where
+     *  an incoming has the same previous step as a step already present in the
+     *  history, the clients have the same heuristic to decide which step is
+     *  gonna keep it's previous step and which is gonna get the other as its
+     *  own previous step.
      *
-     *  if we receive a step with an index higher than the current last index+1
-     *  or that matches a step we have but with a different index:
-     *      That's a problem, we need to resynchronize.
-     *
-     *  else if the received step is exactly the next one in the sequence:
+     *  if the received step is exactly the next one in the sequence:
      *      we're not up to date but we're still synchronized so apply the step.
      *
-     *  else if the received step index is smaller or equal to the current last
-     *  index:
-     *      someone introduced changes before us and the server reordered the
-     *      steps.
-     *      1. rollback all the changes after this index
-     *      2. apply the received changes
-     *      3. reapply the rollbacked steps, update their index
-     *      If the same nodes are modified, there will be problems, otherwise
-     *      everything should be fine.
-     *
-     *  else if newStep.id is the same as historyStep[newStep.index].id:
-     *      do nothing, we're up to date.
+     *  else if the received step's previous step is matching a step that
+     *  already has a next step:
+     *      someone introduced changes before us we need to reorder the steps.
+     *      1. rollback all the changes until the "previous step", not included
+     *      2. pick which step is gonna be reordered
+     *      3. apply both steps
+     *      4. reapply the rollbacked steps (make sure the first one to be
+     *         reapplied has the correct previous step)
      *
      */
     historyReceive(newStep) {
@@ -665,42 +657,53 @@ export class OdooEditor extends EventTarget {
             return;
         }
         this.observerUnactive();
-        const localStep = this._historySteps.find(({ id }) => id === newStep.id);
-        const localStepIsDesynchronized = localStep && localStep.index !== newStep.index;
-        if (localStepIsDesynchronized || newStep.index > this._historySteps.length) {
-            this.options.collaborative.requestSynchronization();
-        } else if (newStep.index === this._historySteps.length) {
-            // apply step
+        const previousStep = this._historySteps.find(step => step.id === newStep.previousStepId);
+        if (previousStep === this._historySteps[this._historySteps.length - 1]) {
+            // newStep has the correct previous id so we simply apply it.
             this.historyApply(newStep.mutations);
             this._historySteps.push(newStep);
-        } else if (!localStep) {
+        } else if (previousStep) {
             this._computeHistoryCursor();
-            //rollback and apply
             const currentStep = this.historyGetCurrentStep();
             if (currentStep.mutations && currentStep.mutations.length) {
                 this.historyRevert(currentStep);
             }
+            // rollback right until the new step's previous step (not included)
             const stepsToReapply = [];
             while (
                 this._historySteps.length &&
-                this._historySteps[this._historySteps.length - 1].index >= newStep.index
+                this._historySteps[this._historySteps.length - 1] !== previousStep
             ) {
                 // Put the step at the beginning of the array, so that the first
                 // reverted step is the last reapplied
                 stepsToReapply.unshift(this._historySteps.pop());
                 this.historyRevert(stepsToReapply[0]);
             }
-            this.historyApply(newStep.mutations);
-            this._historySteps.push(newStep);
+            // pick between new step and local step for reordering
+            const localStep = stepsToReapply[0];
+            if (newStep.id.localeCompare(localStep.id) < 0) {
+                // New step's id comes before local step's id in alphabetical
+                // order so the local steps gets reordered
+                localStep.previousStepId = newStep.id;
+                stepsToReapply.unshift(newStep);
+            } else {
+                stepsToReapply.shift();
+                stepsToReapply[0].previousStepId = newStep.id;
+                stepsToReapply.unshift(newStep);
+                newStep.previousStepId = localStep.id;
+                stepsToReapply.unshift(localStep);
+            }
             stepsToReapply.forEach(step => {
                 this.historyApply(step.mutations);
-                this._historySteps.push({ ...step, index: step.index + 1 });
+                this._historySteps.push(step);
             });
 
             if (currentStep.mutations && currentStep.mutations.length) {
                 this.historyApply(currentStep.mutations);
             }
             this.historySetCursor(currentStep);
+        } else {
+            this.options.collaborative.requestSynchronization();
         }
 
         this.observerActive();
