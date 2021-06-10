@@ -19,11 +19,23 @@ class AccountAnalyticLine(models.Model):
         ('billable_fixed', 'Billed at a Fixed price'),
         ('non_billable', 'Non Billable Tasks'),
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
+    commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
-    so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
+    so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False, domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_partner_id', 'child_of', commercial_partner_id)]")
     # we needed to store it only in order to be able to groupby in the portal
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=False)
     is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
+
+    @api.depends('project_id.commercial_partner_id', 'task_id.commercial_partner_id')
+    def _compute_commercial_partner(self):
+        for timesheet in self:
+            timesheet.commercial_partner_id = timesheet.task_id.commercial_partner_id or timesheet.project_id.commercial_partner_id
+
+    # When user edit Sale Order Item(so_line) for timesheet make is_so_line_edited field true
+    @api.onchange('so_line')
+    def _onchange_so_line(self):
+        if not self.is_so_line_edited:
+            self.is_so_line_edited = True
 
     # TODO: [XBO] Since the task_id is not required in this model,  then it should more efficient to depends to pricing_type of project (See in master)
     @api.depends('so_line.product_id', 'project_id', 'task_id', 'task_id.pricing_type')

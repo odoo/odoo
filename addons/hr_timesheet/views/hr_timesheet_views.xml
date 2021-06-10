@@ -125,14 +125,14 @@
                     <sheet string="Analytic Entry">
                         <group>
                             <group>
-                                <field name="date"/>
                                 <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                                 <field name="task_id" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                                 <field name="name"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                             </group>
                             <group>
-                                <field name="amount"/>
+                                <field name="date"/>
+                                <field name="amount" invisible="1"/>
                                 <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                                 <field name="currency_id" invisible="1"/>
                             </group>
@@ -149,8 +149,8 @@
             <field name="mode">primary</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='company_id']" position="before">
-                    <field name="employee_id" required="1" options='{"no_open": True}'/>
+                <xpath expr="//field[@name='date']" position="before">
+                    <field name="employee_id" required="1"/>
                     <field name="user_id" invisible="1"/>
                 </xpath>
             </field>

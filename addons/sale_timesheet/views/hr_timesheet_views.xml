@@ -6,22 +6,47 @@
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='department_id']" position="after">
-                    <field name="timesheet_invoice_type"/>
+                <xpath expr="//field[@name='task_id']" position="after">
+                    <field name="so_line" groups="sales_team.group_sale_salesman"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
-                    <filter name="billable_timesheet" string="Billable" domain="[('so_line', '!=', False)]"/>
-                    <filter name="non_billable_timesheet" string="Non Billable" domain="[('so_line', '=', False)]"/>
-                    <separator/>
                     <filter name="billable_time" string="Billed on Timesheets" domain="[('timesheet_invoice_type', '=', 'billable_time')]"/>
                     <filter name="billable_fixed" string="Billed at a Fixed Price" domain="[('timesheet_invoice_type', '=', 'billable_fixed')]"/>
-                    <filter name="non_billable" string="Non Billable Tasks" domain="[('timesheet_invoice_type', '=', 'non_billable')]"/>
+                    <filter name="non_billable" string="Non Billable" domain="[('timesheet_invoice_type', '=', 'non_billable')]"/>
                     <separator/>
                 </xpath>
-                <xpath expr="//filter[@name='groupby_department']" position="before">
-                        <filter string="Billable Type" name="groupby_timesheet_invoice_type" domain="[]" context="{'group_by': 'timesheet_invoice_type'}"/>
+                <xpath expr="//filter[@name='groupby_employee']" position="after">
+                    <filter string="Sales Order Item" name="groupby_sale_order_item" domain="[]" context="{'group_by': 'so_line'}" groups="sales_team.group_sale_salesman"/>
+                    <filter string="Invoice" name="groupby_invoice" domain="[]" context="{'group_by': 'timesheet_invoice_id'}"/>
+                    <filter string="Billable Type" name="groupby_timesheet_invoice_type" domain="[]" context="{'group_by': 'timesheet_invoice_type'}"/>
                 </xpath>
             </field>
+    </record>
+
+    <record id="hr_timesheet_line_tree_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='unit_amount']" position="before">
+                <field name="commercial_partner_id" invisible="1"/>
+                <field name="so_line" optional="hide" options="{'no_create': True}" context="{'create': False, 'edit': False, 'delete': False}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_line_form_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.inherit</field>
+        <field name="model">account.analytic.line</field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='task_id']" position="after">
+                <field name="commercial_partner_id" invisible="1"/>
+                <field name="so_line" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False}"/>
+            </xpath>
+        </field>
     </record>
 
     <record id="timesheet_view_pivot_revenue" model="ir.ui.view">

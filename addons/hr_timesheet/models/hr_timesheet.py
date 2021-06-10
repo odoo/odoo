@@ -49,6 +49,24 @@ class AccountAnalyticLine(models.Model):
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
 
+    def name_get(self):
+        result = super().name_get()
+        timesheets_read = self.env[self._name].search_read([('project_id', '!=', False), ('id', 'in', self.ids)], ['id', 'project_id', 'task_id'])
+        if not timesheets_read:
+            return result
+        def _get_display_name(project_id, task_id):
+            """ Get the display name of the timesheet based on the project and task
+                :param project_id: tuple containing the id and the display name of the project
+                :param task_id: tuple containing the id and the display name of the task if a task exists in the timesheet
+                              otherwise False.
+                :returns: the display name of the timesheet
+            """
+            if task_id:
+                return '%s - %s' % (project_id[1], task_id[1])
+            return project_id[1]
+        timesheet_dict = {res['id']: _get_display_name(res['project_id'], res['task_id']) for res in timesheets_read}
+        return list({**dict(result), **timesheet_dict}.items())
+
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
             analytic_line.encoding_uom_id = analytic_line.company_id.timesheet_encode_uom_id
@@ -131,7 +149,7 @@ class AccountAnalyticLine(models.Model):
         # custom inheretied view stored in database. Even if normally, no xpath can be done on
         # 'string' attribute.
         for node in doc.xpath("//field[@name='unit_amount'][@widget='timesheet_uom'][not(@string)]"):
-            node.set('string', _('Duration (%s)') % (re.sub(r'[\(\)]', '', encoding_uom.name or '')))
+            node.set('string', _('%s Spent') % (re.sub(r'[\(\)]', '', encoding_uom.name or '')))
         return etree.tostring(doc, encoding='unicode')
 
     @api.model
