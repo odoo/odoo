@@ -35,9 +35,6 @@ SimpleDialog.bodyTemplate = owl.tags.xml`<t t-slot="default"/>`;
 QUnit.module("Components", (hooks) => {
     hooks.beforeEach(async () => {
         target = getFixture();
-        const dialogContainer = document.createElement("div");
-        dialogContainer.classList.add("o_dialog_container");
-        target.append(dialogContainer);
         serviceRegistry.add("hotkey", hotkeyService);
         serviceRegistry.add("ui", uiService);
         serviceRegistry.add("dialog", makeFakeDialogService());
@@ -63,7 +60,7 @@ QUnit.module("Components", (hooks) => {
 
         const env = await makeTestEnv();
         parent = await mount(Parent, { env, target, props: {} });
-        assert.containsOnce(target, "div.o_dialog_container .o_dialog");
+        assert.containsOnce(target, ".o_dialog");
         assert.containsOnce(
             target,
             ".o_dialog header .modal-title",
@@ -103,11 +100,11 @@ QUnit.module("Components", (hooks) => {
         assert.containsN(target, ".o_dialog", 2);
         assert.deepEqual(
             [...target.querySelectorAll("header .modal-title")].map((el) => el.textContent),
-            ["Second Title", "First Title"] // mounted is called in reverse order
+            ["First Title", "Second Title"]
         );
         assert.deepEqual(
             [...target.querySelectorAll(".o_dialog .modal-body")].map((el) => el.textContent),
-            [" Hello again! ", " Hello! "] // mounted is called in reverse order
+            [" Hello! ", " Hello again! "]
         );
     });
 
@@ -295,79 +292,6 @@ QUnit.module("Components", (hooks) => {
         parent = await mount(Parent, { env, target });
         assert.containsOnce(target, ".o_dialog");
         assert.hasClass(target.querySelector(".o_dialog .modal"), "o_modal_full");
-    });
-
-    QUnit.test("Interactions between multiple dialogs", async function (assert) {
-        assert.expect(14);
-        serviceRegistry.add(
-            "dialog",
-            makeFakeDialogService({
-                close: (id) => {
-                    assert.step("close with id: " + id);
-                    delete parent.dialogIds[id];
-                },
-            }),
-            { force: true }
-        );
-        const env = await makeTestEnv();
-        let id = 0;
-        class MyDialog extends SimpleDialog {
-            setup() {
-                super.setup();
-                this.__id = id;
-            }
-        }
-        class Parent extends owl.Component {
-            constructor() {
-                super(...arguments);
-                this.dialogIds = useState({});
-            }
-        }
-        Parent.template = owl.tags.xml`
-              <div>
-                <MyDialog t-foreach="Object.keys(dialogIds)" t-as="dialogId" t-key="dialogId"/>
-              </div>
-          `;
-        Parent.components = { MyDialog };
-        const parent = await mount(Parent, { env, target });
-        parent.dialogIds[0] = id;
-        await nextTick();
-        id++;
-        parent.dialogIds[1] = id;
-        await nextTick();
-        id++;
-        parent.dialogIds[2] = id;
-        await nextTick();
-        function activity(modals) {
-            const res = [];
-            for (let i = 0; i < modals.length; i++) {
-                res[i] = !modals[i].classList.contains("o_inactive_modal");
-            }
-            return res;
-        }
-        let modals = document.querySelectorAll(".modal");
-        assert.containsN(target, ".o_dialog", 3);
-        assert.deepEqual(activity(modals), [false, false, true]);
-        assert.hasClass(target.querySelector(".o_dialog_container"), "modal-open");
-        let lastDialog = modals[modals.length - 1];
-        lastDialog.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Escape" }));
-        await nextTick();
-        await nextTick();
-        modals = document.querySelectorAll(".modal");
-        assert.containsN(target, ".o_dialog", 2);
-        assert.deepEqual(activity(modals), [false, true]);
-        assert.hasClass(target.querySelector(".o_dialog_container"), "modal-open");
-        lastDialog = modals[modals.length - 1];
-        await click(lastDialog, "footer button");
-        modals = document.querySelectorAll(".modal");
-        assert.containsN(target, ".o_dialog", 1);
-        assert.deepEqual(activity(modals), [true]);
-        assert.hasClass(target.querySelector(".o_dialog_container"), "modal-open");
-        parent.unmount();
-        // dialog 0 is closed through the removal of its parent => no callback
-        assert.containsNone(target, ".o_dialog_container .modal");
-        assert.doesNotHaveClass(target.querySelector(".o_dialog_container"), "modal-open");
-        assert.verifySteps(["close with id: 2", "close with id: 1"]);
     });
 
     QUnit.test("can be the UI active element", async function (assert) {

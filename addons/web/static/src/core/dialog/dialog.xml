@@ -2,32 +2,30 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Dialog" owl="1">
-        <Portal target="'.o_dialog_container'">
-            <div class="o_dialog">
-                <div role="dialog" class="modal"
-                    tabindex="-1"
-                    t-att-class="{ o_technical_modal: technical, o_modal_full: fullscreen }"
-                    t-ref="modal"
-                    >
-                    <div class="modal-dialog" t-att-class="size">
-                        <div class="modal-content" t-att-class="contentClass">
-                            <header t-if="renderHeader" class="modal-header">
-                                <h4 class="modal-title">
-                                    <t t-esc="title"/>
-                                </h4>
-                                <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="close">×</button>
-                            </header>
-                            <main class="modal-body">
-                                <t t-call="{{ constructor.bodyTemplate }}"/>
-                            </main>
-                            <footer t-if="renderFooter" class="modal-footer">
-                                <t t-call="{{ constructor.footerTemplate }}" />
-                            </footer>
-                        </div>
+        <div class="o_dialog">
+            <div role="dialog" class="modal"
+                tabindex="-1"
+                t-att-class="{ o_technical_modal: technical, o_modal_full: fullscreen }"
+                t-ref="modal"
+                >
+                <div class="modal-dialog" t-att-class="size">
+                    <div class="modal-content" t-att-class="contentClass">
+                        <header t-if="renderHeader" class="modal-header">
+                            <h4 class="modal-title">
+                                <t t-esc="title"/>
+                            </h4>
+                            <button type="button" class="close" aria-label="Close" tabindex="-1" t-on-click="close">×</button>
+                        </header>
+                        <main class="modal-body">
+                            <t t-call="{{ constructor.bodyTemplate }}"/>
+                        </main>
+                        <footer t-if="renderFooter" class="modal-footer">
+                            <t t-call="{{ constructor.footerTemplate }}" />
+                        </footer>
                     </div>
                 </div>
             </div>
-        </Portal>
+        </div>
     </t>
 
     <t t-name="web.DialogFooterDefault" owl="1">
