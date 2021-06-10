@@ -297,6 +297,7 @@ class PosSession(models.Model):
 
     def _validate_session(self, balancing_account=False, amount_to_balance=0):
         self.ensure_one()
+        sudo = self.user_has_groups('point_of_sale.group_pos_user')
         if self.order_ids or self.statement_ids.line_ids:
             self.cash_real_transaction = self.cash_register_total_entry_encoding
             self.cash_real_expected = self.cash_register_balance_end
@@ -309,7 +310,7 @@ class PosSession(models.Model):
             try:
                 data = self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
             except AccessError as e:
-                if self.user_has_groups('point_of_sale.group_pos_user'):
+                if sudo:
                     data = self.sudo().with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance)
                 else:
                     raise e
@@ -336,7 +337,7 @@ class PosSession(models.Model):
             else:
                 self.move_id.unlink()
         elif not self.cash_register_id.difference:
-            cash_register = self.cash_register_id
+            cash_register = self.cash_register_id.sudo() if sudo else self.cash_register_id
             cash_register.pos_session_id = False
             cash_register.unlink()
         self.write({'state': 'closed'})
