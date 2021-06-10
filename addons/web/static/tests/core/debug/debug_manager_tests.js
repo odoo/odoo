@@ -8,7 +8,7 @@ import { debugService } from "@web/core/debug/debug_service";
 import { ormService } from "@web/core/orm_service";
 import { uiService } from "@web/core/ui_service";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
-import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv, prepareRegistriesWithCleanup } from "../../helpers/mock_env";
 import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";

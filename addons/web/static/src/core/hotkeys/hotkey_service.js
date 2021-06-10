@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-import { isMacOS } from "../../core/browser/feature_detection";
-import { registry } from "../../core/registry";
-import { browser } from "../../core/browser/browser";
+import { isMacOS } from "../browser/feature_detection";
+import { registry } from "../registry";
+import { browser } from "../browser/browser";
 
 export function getHotkeyToPress(hotkey, altIsOptional = false) {
     let result = hotkey.split("+");

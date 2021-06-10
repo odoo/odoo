@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui_service";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { makeLegacyDialogMappingService } from "@web/legacy/utils";
-import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import core from "web.core";
 import makeTestEnvironment from "web.test_env";
 import { registerCleanup } from "./cleanup";

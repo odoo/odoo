@@ -6,7 +6,7 @@ import { menuService } from "@web/webclient/menu_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui_service";
 import { actionService } from "@web/webclient/actions/action_service";
-import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, nextTick, patchWithCleanup } from "../helpers/utils";

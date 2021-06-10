@@ -11,7 +11,7 @@ import {
 } from "@web/core/errors/error_dialogs";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui_service";
-import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { makeFakeDialogService, makeFakeLocalizationService } from "../../helpers/mock_services";
 import { click, getFixture, nextTick, patchWithCleanup } from "../../helpers/utils";

@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui_service";
 import { useCommand } from "@web/webclient/commands/command_hook";
 import { commandService } from "@web/webclient/commands/command_service";
-import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { click, getFixture, nextTick, triggerHotkey } from "../../helpers/utils";
 
@@ -90,12 +90,9 @@ QUnit.test("useCommand hook", async (assert) => {
     class MyComponent extends TestComponent {
         setup() {
             super.setup();
-            useCommand(
-                "Take the throne",
-                () => {
-                    assert.step("Hodor");
-                },
-            );
+            useCommand("Take the throne", () => {
+                assert.step("Hodor");
+            });
         }
     }
     testComponent = await mount(MyComponent, { env, target });

@@ -7,7 +7,7 @@ import { errorService } from "@web/core/errors/error_service";
 import { registry } from "@web/core/registry";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { uiService } from "@web/core/ui_service";
-import { hotkeyService } from "@web/webclient/hotkeys/hotkey_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { registerCleanup } from "../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService, makeFakeRPCService } from "../helpers/mock_services";
