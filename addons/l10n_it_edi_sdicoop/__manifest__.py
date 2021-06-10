@@ -6,7 +6,7 @@
     'version': '0.3',
     'depends': [
         'l10n_it_edi',
-        'account_edi_extended',
+        'account_edi',
         'account_edi_proxy_client',
     ],
     'author': 'Odoo',
