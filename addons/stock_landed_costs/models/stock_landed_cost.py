@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_is_zero, float_compare
 
 
 SPLIT_METHOD = [
@@ -429,8 +429,9 @@ class AdjustmentLines(models.Model):
         AccountMoveLine.append([0, 0, debit_line])
         AccountMoveLine.append([0, 0, credit_line])
 
+        precision = self.env["decimal.precision"].precision_get("Product Unit of Measure")
         # Create account move lines for quants already out of stock
-        if qty_out > 0:
+        if float_compare(qty_out, 0, precision_digits=precision) > 0:
             debit_line = dict(base_line,
                               name=(self.name + ": " + str(qty_out) + _(' already out')),
                               quantity=0,
@@ -440,7 +441,7 @@ class AdjustmentLines(models.Model):
                                quantity=0,
                                account_id=debit_account_id)
             diff = diff * qty_out / self.quantity
-            if diff > 0:
+            if float_compare(diff, 0, precision_digits=precision) > 0:
                 debit_line['debit'] = diff
                 credit_line['credit'] = diff
             else:
@@ -461,7 +462,7 @@ class AdjustmentLines(models.Model):
                                    quantity=0,
                                    account_id=already_out_account_id)
 
-                if diff > 0:
+                if float_compare(diff, 0, precision_digits=precision) > 0:
                     debit_line['debit'] = diff
                     credit_line['credit'] = diff
                 else:
