@@ -364,15 +364,17 @@ export class MessageList extends Component {
             thread,
             threadViewer,
         });
+        if (this.messageListView) {
+            this.messageListView.update({
+                clientHeight: this._getScrollableElement().clientHeight,
+                scrollHeight: this._getScrollableElement().scrollHeight,
+                scrollTop: this._getScrollableElement().scrollTop,
+            });
+        }
         if (!this._isLastScrollProgrammatic && threadView && threadView.exists()) {
-            // Margin to compensate for inaccurate scrolling to bottom and height
-            // flicker due height change of composer area.
-            const margin = 30;
             // Automatically scroll to new received messages only when the list is
             // currently fully scrolled.
-            const hasAutoScrollOnMessageReceived = (order === 'asc')
-                ? scrollTop >= this._getScrollableElement().scrollHeight - this._getScrollableElement().clientHeight - margin
-                : scrollTop <= margin;
+            const hasAutoScrollOnMessageReceived = this.messageListView.isAtEnd;
             threadView.update({ hasAutoScrollOnMessageReceived });
         }
         if (threadViewer && threadViewer.exists()) {
