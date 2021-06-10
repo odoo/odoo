@@ -64,6 +64,10 @@ class AccountEdiProxyClientUser(models.Model):
             'id': uuid.uuid4().hex,
         }
 
+        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+            # Last barrier : in case the demo mode is not handled by the caller, we block access.
+            raise Exception("Can't access the proxy in demo mode")
+
         try:
             response = requests.post(
                 url,
@@ -120,19 +124,22 @@ class AccountEdiProxyClientUser(models.Model):
             encoding=serialization.Encoding.PEM,
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
-
-        try:
-            response = self._make_request(SERVER_URL + '/iap/account_edi/1/create_user', params={
-                'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
-                'company_id': company.id,
-                'edi_format_code': edi_format.code,
-                'edi_identification': edi_identification,
-                'public_key': base64.b64encode(public_pem)
-            })
-        except AccountEdiProxyError as e:
-            raise UserError(e.message)
-        if 'error' in response:
-            raise UserError(response['error'])
+        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+            # simulate registration
+            response = {'id_client': 'demo', 'refresh_token': 'demo'}
+        else:
+            try:
+                response = self._make_request(SERVER_URL + '/iap/account_edi/1/create_user', params={
+                    'dbuuid': company.env['ir.config_parameter'].get_param('database.uuid'),
+                    'company_id': company.id,
+                    'edi_format_code': edi_format.code,
+                    'edi_identification': edi_identification,
+                    'public_key': base64.b64encode(public_pem)
+                })
+            except AccountEdiProxyError as e:
+                raise UserError(e.message)
+            if 'error' in response:
+                raise UserError(response['error'])
 
         self.create({
             'id_client': response['id_client'],
