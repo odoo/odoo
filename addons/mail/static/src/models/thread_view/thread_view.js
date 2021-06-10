@@ -146,6 +146,55 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeHasAutoScrollOnMessageReceived() {
+            return this.isAtEnd;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsAtBottom() {
+            return (
+                this.scrollTop >= this.scrollHeight - this.clientHeight - 30
+            );
+        }
+
+        /***
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsAtEnd() {
+            if (this.order === 'asc') {
+                return this.isAtBottom;
+            }
+            return this.isAtTop;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsAtStart() {
+            if (this.order === 'asc') {
+                return this.isAtTop;
+            }
+            return this.isAtBottom;
+        }
+
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsAtTop() {
+            return this.scrollTop <= 30;
+        }
+
+        /**
+         * @private
          * @returns {string[]}
          */
         _computeTextInputSendShortcuts() {
@@ -352,6 +401,7 @@ function factory(dependencies) {
             inverse: 'threadView',
             isCausal: true,
         }),
+        clientHeight: attr(),
         /**
          * List of component hints. Hints contain information that help
          * components make UI/UX decisions based on their UI state.
@@ -409,6 +459,36 @@ function factory(dependencies) {
             related: 'threadViewer.hasTopbar',
         }),
         /**
+         * States whether the message list scroll position is at the bottom
+         * of the message list.
+         */
+        isAtBottom: attr({
+            compute: '_computeIsAtBottom',
+        }),
+        /**
+         * States whether the message list scroll position is at the end of
+         * the message list. Depending of the message list order, this could be
+         * the top or the bottom.
+         */
+        isAtEnd: attr({
+            compute: '_computeIsAtEnd',
+        }),
+        /**
+         * States whether the message list scroll position is at the start
+         * of the message list. Depending of the message list order, this could
+         * be the top or the bottom.
+         */
+        isAtStart: attr({
+            compute: '_computeIsAtStart',
+        }),
+        /**
+         * States whether the message list scroll position is at the top of
+         * the message list.
+         */
+        isAtTop: attr({
+            compute: '_computeIsAtTop',
+        }),
+        /**
          * States whether `this.threadCache` is currently loading messages.
          *
          * This field is related to `this.threadCache.isLoading` but with a
@@ -446,7 +526,7 @@ function factory(dependencies) {
          * hint `message-received`.
          */
         hasAutoScrollOnMessageReceived: attr({
-            default: true,
+            compute: '_computeHasAutoScrollOnMessageReceived',
         }),
         /**
          * Last message in the context of the currently displayed thread cache.
@@ -490,6 +570,8 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
+        scrollHeight: attr(),
+        scrollTop: attr(),
         /**
          * Determines the keyboard shortcuts that are available to send a message
          * from the composer of this thread viewer.

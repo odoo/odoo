@@ -115,7 +115,7 @@ QUnit.test('message list desc order', async function (assert) {
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => createThreadViewComponent(threadViewer.threadView, undefined, { isFixedSize: true }),
+        func: () => createThreadViewComponent(threadViewer.threadView, {}, { isFixedSize: true }),
         message: "should wait until channel 100 loaded initial messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -213,7 +213,7 @@ QUnit.test('message list asc order', async function (assert) {
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => createThreadViewComponent(threadViewer.threadView, undefined, { isFixedSize: true }),
+        func: () => createThreadViewComponent(threadViewer.threadView, {}, { isFixedSize: true }),
         message: "should wait until channel 100 loaded initial messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -847,7 +847,7 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
         eventName: 'o-component-message-list-scrolled',
         func: () => createThreadViewComponent(
             threadViewer.threadView,
-            undefined,
+            {},
             { isFixedSize: true },
         ),
         message: "should wait until channel 20 scrolled initially",
@@ -914,13 +914,14 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
     const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
+        order: 'asc',
         thread: link(thread),
     });
     await this.afterEvent({
         eventName: 'o-component-message-list-scrolled',
         func: () => createThreadViewComponent(
             threadViewer.threadView,
-            undefined,
+            {},
             { isFixedSize: true },
         ),
         message: "should wait until channel 20 scrolled initially",
@@ -1723,7 +1724,7 @@ QUnit.test('[technical] message list with a full page of empty messages should s
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: () => {
-            createThreadViewComponent(threadViewer.threadView, undefined, { isFixedSize: true });
+            createThreadViewComponent(threadViewer.threadView, {}, { isFixedSize: true });
         },
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {

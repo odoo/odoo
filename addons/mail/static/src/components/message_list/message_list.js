@@ -54,10 +54,33 @@ export class MessageList extends Component {
                 threadViewer: threadView && threadView.threadViewer,
             };
         });
+        /**
+         * This observer will trigger each time the root element is resized and
+         * adjust the scroll position.
+         */
+        this.resizeObserver = new ResizeObserver(elements => {
+            // In this case, this loop seems useless since we are really working
+            // on a single element, but it's required by the ResizeObserver to
+            // avoid error: ResizeObserver loop completed with undelivered
+            // notifications.
+            for (const element of elements) {
+                if (this.threadView && this.threadView.isAtEnd) {
+                    this._adjustScrollForExtraMessagesAtTheEnd();
+                }
+            }
+        });
         // useUpdate must be defined after useRenderedValues, indeed they both
         // use onMounted/onPatched, and the calls from useRenderedValues must
         // happen first to save the values before useUpdate accesses them.
         useUpdate({ func: () => this._update() });
+    }
+
+    mounted() {
+        this.resizeObserver.observe(this._getScrollableElement());
+    }
+
+    willUnmount() {
+        this.resizeObserver.disconnect();
     }
 
     willPatch() {
@@ -348,6 +371,13 @@ export class MessageList extends Component {
      * @param {ScrollEvent} ev
      */
     onScroll(ev) {
+        if (this.threadView) {
+            this.threadView.update({
+                clientHeight: this._getScrollableElement().clientHeight,
+                scrollHeight: this._getScrollableElement().scrollHeight,
+                scrollTop: this._getScrollableElement().scrollTop,
+            });
+        }
         this._onScrollThrottled(ev);
     }
 
@@ -357,11 +387,9 @@ export class MessageList extends Component {
      */
     _onScrollThrottled(ev) {
         const {
-            order,
             orderedMessages,
             thread,
             threadCache,
-            threadView,
             threadViewer,
         } = this._lastRenderedValues();
         if (!this._getScrollableElement()) {
@@ -375,17 +403,6 @@ export class MessageList extends Component {
             thread,
             threadViewer,
         });
-        if (!this._isLastScrollProgrammatic && threadView && threadView.exists()) {
-            // Margin to compensate for inaccurate scrolling to bottom and height
-            // flicker due height change of composer area.
-            const margin = 30;
-            // Automatically scroll to new received messages only when the list is
-            // currently fully scrolled.
-            const hasAutoScrollOnMessageReceived = (order === 'asc')
-                ? scrollTop >= this._getScrollableElement().scrollHeight - this._getScrollableElement().clientHeight - margin
-                : scrollTop <= margin;
-            threadView.update({ hasAutoScrollOnMessageReceived });
-        }
         if (threadViewer && threadViewer.exists()) {
             threadViewer.saveThreadCacheScrollHeightAsInitial(this._getScrollableElement().scrollHeight, threadCache);
             threadViewer.saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache);

@@ -2467,6 +2467,47 @@ QUnit.test('chat window should remain folded when new message is received', asyn
     );
 });
 
+QUnit.test('with conversation scrolled to end, when composer size changes, conversation should still be scrolled to end', async function(assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    // Create enough message to make the scrollbar inside the chat window.
+    for (let i = 0; i < 10; i++) {
+        this.data['mail.message'].records.push({
+            body: "not empty",
+            model: "mail.channel",
+            res_id: 20,
+        });
+    }
+    await this.start();
+
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await this.afterEvent({
+        eventName: 'o-component-message-list-scrolled',
+        func: () => document.querySelector('.o_NotificationList_preview').click(),
+        message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
+        predicate: ({ scrollTop, thread }) => {
+            const messageList = document.querySelector('.o_ThreadView_messageList');
+            return (
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
+                scrollTop === messageList.scrollHeight - messageList.clientHeight
+            );
+        },
+    });
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "\n");
+    });
+    assert.strictEqual(
+        document.querySelector(`.o_ThreadView_messageList`).scrollTop,
+        document.querySelector('.o_ThreadView_messageList').scrollHeight - document.querySelector('.o_ThreadView_messageList').clientHeight,
+        "scrollTop should still be the same after inserting a new line inside the composer. Composer resize will not push the scrollbar up"
+    );
+});
+
 });
 });
 });
