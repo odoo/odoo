@@ -22,6 +22,9 @@ class AccountEdiFormat(models.Model):
     def _cron_receive_fattura_pa(self):
         ''' Check the proxy for incoming invoices.
         '''
+        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+            return
+
         proxy_users = self.env['account_edi_proxy_client.user'].search([('edi_format_id', '=', self.env.ref('l10n_it_edi.edi_fatturaPA').id)])
         for proxy_user in proxy_users:
             company = proxy_user.company_id
@@ -58,11 +61,13 @@ class AccountEdiFormat(models.Model):
                 })
 
                 proxy_acks.append(id_transaction)
-            try:
-                proxy_user._make_request(SERVER_URL + '/api/l10n_it_edi/1/ack',
-                                         params={'transaction_ids': proxy_acks})
-            except AccountEdiProxyError as e:
-                _logger.error('Error while receiving file from SdiCoop: %s', e)
+
+            if proxy_acks:
+                try:
+                    proxy_user._make_request(SERVER_URL + '/api/l10n_it_edi/1/ack',
+                                            params={'transaction_ids': proxy_acks})
+                except AccountEdiProxyError as e:
+                    _logger.error('Error while receiving file from SdiCoop: %s', e)
 
     # -------------------------------------------------------------------------
     # Export
@@ -133,10 +138,14 @@ class AccountEdiFormat(models.Model):
             return {invoice: {
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
                 'blocking_level': 'error'} for invoice in invoices}
-        try:
-            responses = self._l10n_it_edi_upload([i['data'] for i in to_send.values()], proxy_user)
-        except AccountEdiProxyError as e:
-            return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
+
+        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+            responses = {filename: {'id_transaction': 'demo'} for invoice in invoices}
+        else:
+            try:
+                responses = self._l10n_it_edi_upload([i['data'] for i in to_send.values()], proxy_user)
+            except AccountEdiProxyError as e:
+                return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
 
         for filename, response in responses.items():
             invoice = to_send[filename]['invoice']
@@ -160,11 +169,16 @@ class AccountEdiFormat(models.Model):
             return {invoice: {
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
                 'blocking_level': 'error'} for invoice in invoices}
-        try:
-            responses = proxy_user._make_request(SERVER_URL + '/api/l10n_it_edi/1/in/TrasmissioneFatture',
-                                                params={'ids_transaction': list(to_check.keys())})
-        except AccountEdiProxyError as e:
-            return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
+
+        if self.env['ir.config_parameter'].get_param('account_edi_proxy_client.demo', False):
+            # simulate success and bypass ack
+            return {invoice: {'attachment': invoice.l10n_it_edi_attachment_id} for invoice in invoices}
+        else:
+            try:
+                responses = proxy_user._make_request(SERVER_URL + '/api/l10n_it_edi/1/in/TrasmissioneFatture',
+                                                    params={'ids_transaction': list(to_check.keys())})
+            except AccountEdiProxyError as e:
+                return {invoice: {'error': e.message, 'blocking_level': 'error'} for invoice in invoices}
 
         proxy_acks = []
         for id_transaction, response in responses.items():

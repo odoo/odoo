@@ -18,6 +18,9 @@ Odoo database.
     'data': [
         'security/ir.model.access.csv',
     ],
+    'demo': [
+        'data/config_demo.xml',
+    ],
     'installable': True,
     'application': False,
 }
