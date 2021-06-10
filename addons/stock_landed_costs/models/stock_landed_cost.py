@@ -265,10 +265,10 @@ class StockLandedCost(models.Model):
                         else:
                             value = (line.price_unit / total_line)
 
-                        if digits:
-                            value = tools.float_round(value, precision_digits=digits, rounding_method='UP')
+                        if digits:                            
                             fnc = min if line.price_unit > 0 else max
                             value = fnc(value, line.price_unit - value_split)
+                            value = tools.float_round(value, precision_digits=digits, rounding_method='UP')
                             value_split += value
 
                         if valuation.id not in towrite_dict:
