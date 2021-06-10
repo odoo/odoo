@@ -69,6 +69,10 @@ class ActionAdapter extends ComponentAdapter {
         );
     }
 
+    get actionId() {
+        throw new Error("Should be implement by specific adapters");
+    }
+
     _trigger_up(ev) {
         const payload = ev.data;
         if (ev.name === "do_action") {
@@ -147,6 +151,12 @@ class ActionAdapter extends ComponentAdapter {
         }
         super.willUnmount();
     }
+    __destroy() {
+        if (this.actionService.__legacy__isActionInStack(this.actionId)) {
+            this.widget = null;
+        }
+        super.__destroy(...arguments);
+    }
 }
 
 export class ClientActionAdapter extends ActionAdapter {
@@ -154,6 +164,10 @@ export class ClientActionAdapter extends ActionAdapter {
         super.setup();
         useDebugMenu("action", { action: this.props.widgetArgs[0] });
         this.env = Component.env;
+    }
+
+    get actionId() {
+        return this.props.widgetArgs[0].jsId;
     }
 
     async willStart() {
@@ -240,6 +254,10 @@ export class ViewAdapter extends ActionAdapter {
         this.env = Component.env;
     }
 
+    get actionId() {
+        return this.props.viewParams.action.jsId;
+    }
+
     async willStart() {
         if (this.props.widget) {
             this.widget = this.props.widget;
@@ -254,7 +272,9 @@ export class ViewAdapter extends ActionAdapter {
             if (this.__owl__.status === 5 /* DESTROYED */) {
                 // the component might have been destroyed meanwhile, but if so, `this.widget` wasn't
                 // destroyed by OwlCompatibility layer as it wasn't set yet, so destroy it now
-                this.widget.destroy();
+                if (!this.actionService.__legacy__isActionInStack(this.actionId)) {
+                    this.widget.destroy();
+                }
                 return Promise.resolve();
             }
             return this.widget._widgetRenderAndInsert(() => {});

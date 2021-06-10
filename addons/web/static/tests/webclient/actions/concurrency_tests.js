@@ -582,4 +582,39 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/search_read",
         ]);
     });
+
+    QUnit.test("click multiple times to open a record", async function (assert) {
+        assert.expect(5);
+
+        const def = testUtils.makeTestPromise();
+        const defs = [null, def];
+        const mockRPC = async (route, args) => {
+            if (args.method === "read") {
+                await Promise.resolve(defs.shift());
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+        assert.containsOnce(webClient, ".o_list_view");
+
+        await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_form_view");
+
+        await testUtils.dom.click(webClient.el.querySelector(".o_back_button"));
+        await legacyExtraNextTick();
+
+        assert.containsOnce(webClient, ".o_list_view");
+
+        await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
+        await testUtils.dom.click(webClient.el.querySelector(".o_list_view .o_data_row"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_list_view");
+
+        def.resolve();
+        await nextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_form_view");
+    });
 });
