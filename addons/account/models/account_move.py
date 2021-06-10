@@ -4262,6 +4262,12 @@ class AccountMoveLine(models.Model):
                     credit_line = None
                     continue
 
+                # To prevent an infinite loop
+                if not has_debit_residual_left and not has_credit_residual_left:
+                    debit_line = None
+                    credit_line = None
+                    continue
+
                 min_debit_amount_residual_currency = credit_line.company_currency_id._convert(
                     min_amount_residual,
                     debit_line.currency_id,
