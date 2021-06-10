@@ -205,12 +205,16 @@ class AccountMoveLine(models.Model):
         amount = (self.credit or 0.0) - (self.debit or 0.0)
 
         if self.product_id.expense_policy == 'sales_price':
-            return self.product_id.with_context(
+            product = self.product_id.with_context(
                 partner=order.partner_id.id,
                 date_order=order.date_order,
                 pricelist=order.pricelist_id.id,
-                uom=self.product_uom_id.id
-            ).price
+                uom=self.product_uom_id.id,
+                quantity=unit_amount
+            )
+            if order.pricelist_id.discount_policy == 'with_discount':
+                return product.price
+            return product.lst_price
 
         uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if float_is_zero(unit_amount, precision_digits=uom_precision_digits):
