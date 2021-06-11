@@ -1,6 +1,7 @@
 odoo.define('web.calendar_tests', function (require) {
 "use strict";
 
+const AbstractField = require('web.AbstractField');
 var AbstractStorageService = require('web.AbstractStorageService');
 const BasicModel = require('web.BasicModel');
 var CalendarView = require('web.CalendarView');
@@ -4084,6 +4085,54 @@ QUnit.module('Views', {
         calendar.destroy();
 
         testUtils.mock.unpatch(CalendarRenderer);
+    });
+
+    QUnit.test("fields are added in the right order in popover", async function (assert) {
+        assert.expect(3);
+
+        const def = testUtils.makeTestPromise();
+        const DeferredWidget = AbstractField.extend({
+            async start() {
+                await this._super(...arguments);
+                await def;
+            }
+        });
+        fieldRegistry.add("deferred_widget", DeferredWidget);
+
+        const calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="month"
+                >
+                    <field name="user_id" widget="deferred_widget" />
+                    <field name="name" />
+                </calendar>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click(calendar.$(`[data-event-id="4"]`));
+        assert.containsNone(calendar, ".o_cw_popover");
+
+        def.resolve();
+        await testUtils.nextTick();
+        assert.containsOnce(calendar, ".o_cw_popover");
+
+        assert.strictEqual(
+            calendar.$(".o_cw_popover .o_cw_popover_fields_secondary").text(),
+            "user : name : event 4"
+        );
+
+        calendar.destroy();
+        delete fieldRegistry.map.deferred_widget;
     });
 });
 
