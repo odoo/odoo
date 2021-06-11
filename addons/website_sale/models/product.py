@@ -207,6 +207,14 @@ class ProductTemplate(models.Model):
 
     product_template_image_ids = fields.One2many('product.image', 'product_tmpl_id', string="Extra Product Media", copy=True)
 
+    def _get_website_accessory_product(self):
+        domain = self.env['website'].sale_product_domain()
+        return self.accessory_product_ids.filtered_domain(domain)
+
+    def _get_website_alternative_product(self):
+        domain = self.env['website'].sale_product_domain()
+        return self.alternative_product_ids.filtered_domain(domain)
+
     def _has_no_variant_attributes(self):
         """Return whether this `product.template` has at least one no_variant
         attribute.
