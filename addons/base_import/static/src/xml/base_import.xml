@@ -18,12 +18,6 @@
                 <t t-call="ImportView.data_matching"/>
             </div>
 
-            <div class="o_import_partial_alert alert alert-warning d-none">
-                Click 'Resume' to proceed with the import, resuming at line
-                <span class="o_import_partial_count">0</span>.<br/>
-                You can test or reload your file before resuming the import.
-            </div>
-
             <div class="o_view_nocontent">
                 <div class="o_nocontent_help">
                     <p class="o_view_nocontent_smiling_face">
@@ -225,6 +219,11 @@
                     field corresponding to the column. This makes imports
                     simpler especially when the file has many columns.</p>
             </div>
+            <div class="o_import_partial_alert alert alert-warning d-none mx-2 my-2 font-weight-bold">
+                Click 'Resume' to proceed with the import, resuming at line
+                <span class="o_import_partial_count">0</span>.<br/>
+                You can test or reload your file before resuming the import.
+            </div>
             <div class="oe_import_error_report px-3 py-2"></div>
             <div class="table-responsive">
                 <table class="table-striped oe_import_grid w-100 overflow-hidden" />
@@ -244,7 +243,7 @@
                     <span id="oe_imported_file_extension" class="font-italic"></span>
                 </div>
 
-                <div class="oe_import_has_multiple_sheets js_import_options flex-column mt-2">
+                <div class="oe_import_has_multiple_sheets flex-column mt-2">
                     <label for="oe_import_sheet">Sheet:</label>
                     <input class="oe_import_sheet oe_import_dropdown" id="oe_import_sheet"/>
                 </div>
@@ -270,15 +269,15 @@
 
                 <div class="o_import_batch">
                     <h4 class="mt-3">Batch Import</h4>
-                    <div class="o_import_batch_alert alert alert-info d-none">
-                        The file will be imported by batches.
+                    <div class="o_import_batch_alert font-weight-bold d-none pb-2">
+                        The file will be imported by batches
                     </div>
                     <div class="d-flex">
-                        <div class="js_import_options oe_import_options oe_import_batch_limit w-50 pr-1">
+                        <div class="oe_import_options oe_import_batch_limit w-50 pr-1">
                             <label class="mb-1" for="oe_import_batch_limit">Batch limit</label>
                             <input class="w-100" id="oe_import_batch_limit" value="2000"/>
                         </div>
-                        <div class="js_import_options oe_import_options w-50 pl-1" title="Warning: ignores the labels line, empty lines and
+                        <div class="oe_import_options w-50 pl-1" title="Warning: ignores the labels line, empty lines and
 lines composed only of empty cells">
                             <label class="mb-1" for="oe_import_row_start">Start at line</label>
                             <input class="w-100" id="oe_import_row_start" value="1"/>
@@ -315,4 +314,33 @@ lines composed only of empty cells">
             </div>
         </div>
     </t>
+
+    <div t-name="base_import.progressDialog" class="o_import_progress_dialog text-white">
+        <span class="fa fa-spin fa-circle-o-notch fa-2x mb-2"/>
+        <div t-if="isBatch">
+            <div class="o_import_progress_dialog_batch">
+                <span t-esc="importMode"/> batch <span class="o_import_progress_dialog_batch_count">1</span> out of <span t-esc="totalSteps"/>...
+                <div class="o_import_progress_dialog_time_left d-none">
+                    <span>Estimated time left:</span>
+                    <span class="o_import_progress_dialog_time_left_text"/>
+                    <span>minutes</span>
+                </div>
+            </div>
+            <span class="o_import_progress_dialog_stop d-none">
+                Finalizing current batch before interrupting...
+            </span>
+            <div class="d-flex align-items-center mt-2">
+                <div class="progress flex-grow-1">
+                    <div class="progress-bar progress-bar-striped" role="progressbar"
+                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                        <span>0%</span>
+                    </div>
+                </div>
+                <a class="o_progress_stop_import ml-2" role="button"><i class="fa fa-close" aria-label="Stop Import"/></a>
+            </div>
+        </div>
+        <div t-else="">
+            <span t-esc="task"/>...
+        </div>
+    </div>
 </templates>

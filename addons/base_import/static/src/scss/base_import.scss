@@ -68,6 +68,9 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .o_import_batch_alert {
+            color: #46646d;
+        }
     }
 
     &.oe_import_preview .oe_import_grid {
@@ -231,6 +234,27 @@
         max-height: 192px;
         .text-decoration-underline {
             text-decoration: underline;
+        }
+    }
+}
+
+/* Import Progress Bar */
+.o_import_progress_dialog {
+    .progress {
+        height: 1.5rem;
+        border-radius: 4px;
+        font-size: 1rem;
+
+        .progress-bar {
+            width: 0%;
+            min-width: 3%;
+        }
+    }
+
+    .o_progress_stop_import {
+        cursor: pointer;
+        &:hover {
+            transform: scale(1.2);
         }
     }
 }
