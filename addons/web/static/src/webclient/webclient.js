@@ -26,9 +26,12 @@ export class WebClient extends Component {
                 this.el.classList.toggle("o_fullscreen", mode === "fullscreen");
             }
         });
-        useEffect(() => {
-            this.loadRouterState();
-        }, () => []);
+        useEffect(
+            () => {
+                this.loadRouterState();
+            },
+            () => []
+        );
     }
 
     mounted() {

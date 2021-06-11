@@ -30,12 +30,15 @@ export class RainbowMan extends Component {
         const delay = fadeout ? RainbowMan.rainbowFadeouts[fadeout] : false;
         this.delay = typeof delay === "number" ? delay : false;
         if (this.delay !== false) {
-            useEffect(() => {
-                const timeout = browser.setTimeout(() => {
-                    this.el.classList.add("o_reward_fading");
-                }, this.delay);
-                return () => browser.clearTimeout(timeout);
-            }, () => []);
+            useEffect(
+                () => {
+                    const timeout = browser.setTimeout(() => {
+                        this.el.classList.add("o_reward_fading");
+                    }, this.delay);
+                    return () => browser.clearTimeout(timeout);
+                },
+                () => []
+            );
         }
     }
 

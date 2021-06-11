@@ -14,9 +14,12 @@ const { hooks } = owl;
 patch(Dialog.prototype, "Legacy Adapted Dialog", {
     setup() {
         this._super();
-        useEffect(() => {
-            OwlDialog.display(this);
-            return () => OwlDialog.hide(this);
-        }, () => []);
+        useEffect(
+            () => {
+                OwlDialog.display(this);
+                return () => OwlDialog.hide(this);
+            },
+            () => []
+        );
     },
 });

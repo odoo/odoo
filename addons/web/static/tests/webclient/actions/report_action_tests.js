@@ -93,7 +93,7 @@ QUnit.module("ActionManager", (hooks) => {
                         assert.step("notify");
                     },
                     () => {}
-                ),
+                )
             );
             mockDownload((options) => {
                 assert.step(options.url);
@@ -131,7 +131,7 @@ QUnit.module("ActionManager", (hooks) => {
                         assert.step("notify");
                     },
                     () => {}
-                ),
+                )
             );
             const mockRPC = async (route, args) => {
                 assert.step(args.method || route);

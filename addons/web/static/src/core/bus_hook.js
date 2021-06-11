@@ -30,8 +30,11 @@ const { useComponent } = owl.hooks;
  */
 export function useBus(bus, eventName, callback) {
     const component = useComponent();
-    useEffect(() => {
-        bus.on(eventName, component, callback);
-        return () => bus.off(eventName, component);
-    }, () => []);
+    useEffect(
+        () => {
+            bus.on(eventName, component, callback);
+            return () => bus.off(eventName, component);
+        },
+        () => []
+    );
 }

@@ -25,10 +25,13 @@ export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 export function useActiveElement(refName = null) {
     const uiService = useService("ui");
     const owner = refName ? useRef(refName) : Component.current;
-    useEffect(() => {
-        uiService.activateElement(owner.el);
-        return () => uiService.deactivateElement(owner.el);
-    }, () => []);
+    useEffect(
+        () => {
+            uiService.activateElement(owner.el);
+            return () => uiService.deactivateElement(owner.el);
+        },
+        () => []
+    );
 }
 
 export const uiService = {
