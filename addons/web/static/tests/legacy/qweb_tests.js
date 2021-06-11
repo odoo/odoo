@@ -2,6 +2,7 @@ odoo.define('web.qweb_tests', function (require) {
 "use strict";
 
 var qwebPath = '/web/static/lib/qweb/';
+const {hushConsole} = require('@web/../tests/helpers/utils');
 
 function trim(s) {
     return s.replace(/(^\s+|\s+$)/g, '');
@@ -63,7 +64,13 @@ function loadTest(assert, template, context) {
     return prom;
 }
 
-QUnit.module('QWeb', {}, function () {
+QUnit.module('QWeb', {
+    before() {
+        this.oldConsole = window.console;
+        window.console = hushConsole;
+    },
+    after() {window.console = this.oldConsole;}
+}, function () {
     QUnit.test('Output', function (assert) {
         loadTest(assert, 'qweb-test-output.xml');
     });
