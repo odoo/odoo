@@ -253,7 +253,7 @@ class PaymentTransactionStripeSCA(models.Model):
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data.get('metadata', data).get("reference")
+        reference = data.get('metadata', {}).get("reference") or data.get("reference")
         if not reference:
             stripe_error = data.get("error", {}).get("message", "")
             _logger.error(
