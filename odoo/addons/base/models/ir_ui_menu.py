@@ -209,7 +209,7 @@ class IrUiMenu(models.Model):
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
 
         menu_root = {
-            'id': False,
+            'id': 'root',
             'name': 'root',
             'parent_id': [-1, ''],
             'children': menu_roots_data,
@@ -230,40 +230,32 @@ class IrUiMenu(models.Model):
         :rtype: dict('children': menu_nodes)
         """
         fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'web_icon_data']
-        menu_roots = self.get_user_roots()
-        menu_roots_data = menu_roots.read(fields) if menu_roots else []
         menu_root = {
-            'id': False,
+            'id': 'root',
             'name': 'root',
             'parent_id': [-1, ''],
-            'children': [menu['id'] for menu in menu_roots_data],
+            'children': [],
         }
-
         all_menus = {'root': menu_root}
-
-        if not menu_roots_data:
-            return all_menus
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
-        menus_domain = [('id', 'child_of', menu_roots.ids)]
+        menus_domain = []
         blacklisted_menu_ids = self._load_menus_blacklist()
         if blacklisted_menu_ids:
-            menus_domain = expression.AND([menus_domain, [('id', 'not in', blacklisted_menu_ids)]])
+            menus_domain = [('id', 'not in', blacklisted_menu_ids)]
         menus = self.search(menus_domain)
         menu_items = menus.read(fields)
-        xmlids = (menu_roots + menus)._get_menuitems_xmlids()
+        xmlids = menus._get_menuitems_xmlids()
 
-        # add roots at the end of the sequence, so that they will overwrite
-        # equivalent menu items from full menu read when put into id:item
-        # mapping, resulting in children being correctly set on the roots.
-        menu_items.extend(menu_roots_data)
+        # add root at the end of the sequence, so it will be used during tree generation
+        menu_items.append(menu_root)
 
         # set children ids and xmlids
         menu_items_map = {menu_item["id"]: menu_item for menu_item in menu_items}
         for menu_item in menu_items:
             menu_item.setdefault('children', [])
-            parent = menu_item['parent_id'] and menu_item['parent_id'][0]
+            parent = menu_item['parent_id'] and menu_item['parent_id'][0] or 'root'
             menu_item['xmlid'] = xmlids.get(menu_item['id'], "")
             if parent in menu_items_map:
                 menu_items_map[parent].setdefault(
@@ -280,8 +272,7 @@ class IrUiMenu(models.Model):
             for child_id in menu['children']:
                 _set_app_id(app_id, all_menus[child_id])
 
-        for app in menu_roots_data:
-            app_id = app['id']
+        for app_id in all_menus['root']['children']:
             _set_app_id(app_id, all_menus[app_id])
 
         # filter out menus not related to an app (+ keep root menu)

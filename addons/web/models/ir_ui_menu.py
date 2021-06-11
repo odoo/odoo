@@ -20,7 +20,7 @@ class IrUiMenu(models.Model):
 
         web_menus = {}
         for menu in menus.values():
-            if not menu['id']:
+            if menu['id'] == 'root':
                 # special root menu case
                 web_menus['root'] = {
                     "id": 'root',
