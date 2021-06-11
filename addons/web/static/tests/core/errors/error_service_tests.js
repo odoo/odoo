@@ -235,8 +235,11 @@ QUnit.test("handle uncaught CORS errors", async (assert) => {
 QUnit.test("check retry", async (assert) => {
     assert.expect(3);
 
-    const def = makeDeferred();
+    errorHandlerRegistry.add("__test_handler__", () => {
+        assert.step("dispatched");
+    });
 
+    const def = makeDeferred();
     patchWithCleanup(browser, {
         setTimeout(fn) {
             def.then(fn);
@@ -244,11 +247,7 @@ QUnit.test("check retry", async (assert) => {
     });
 
     serviceRegistry.remove("dialog");
-    const env = await makeTestEnv();
-
-    env.bus.on("ERROR_DISPATCHED", null, () => {
-        assert.step("ERROR_DISPATCHED");
-    });
+    await makeTestEnv();
 
     class TestError extends Error {}
     const error = new TestError();
@@ -264,7 +263,5 @@ QUnit.test("check retry", async (assert) => {
     await nextTick();
 
     await def.resolve();
-    assert.verifySteps(["ERROR_DISPATCHED"]);
-
-    env.bus.off("ERROR_DISPATCHED", null);
+    assert.verifySteps(["dispatched"]);
 });
