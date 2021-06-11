@@ -19,6 +19,18 @@ class FleetVehicle(models.Model):
                     employee = employee.search([('user_id.partner_id', '=', vehicle.driver_id.id)], limit=1)
             vehicle.mobility_card = employee.mobility_card
 
+    def write(self, vals):
+        if 'driver_id' in vals:
+            for vehicle in self:
+                if vehicle.driver_id and vehicle.driver_id.id != vals['driver_id']:
+                    # Retrieve private address and user's partner
+                    partners_to_unsubscribe = vehicle.driver_id.ids
+                    employee = self.env['hr.employee'].search([('address_home_id', '=', vehicle.driver_id.id)])
+                    if employee and employee.user_id.partner_id:
+                        partners_to_unsubscribe.append(employee.user_id.partner_id.id)
+                    vehicle.message_unsubscribe(partner_ids=partners_to_unsubscribe)
+        return super().write(vals)
+
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
