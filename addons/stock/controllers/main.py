@@ -11,7 +11,7 @@ import json
 class StockReportController(http.Controller):
 
     @http.route('/stock/<string:output_format>/<string:report_name>/<int:report_id>', type='http', auth='user')
-    def report(self, output_format, report_name, token, report_id=False, **kw):
+    def report(self, output_format, report_name, report_id=False, **kw):
         uid = request.session.uid
         domain = [('create_uid', '=', uid)]
         stock_traceability = request.env['stock.traceability.report'].with_user(uid).search(domain, limit=1)
@@ -25,7 +25,6 @@ class StockReportController(http.Controller):
                         ('Content-Disposition', 'attachment; filename=' + 'stock_traceability' + '.pdf;')
                     ]
                 )
-                response.set_cookie('fileToken', token)
                 return response
         except Exception as e:
             se = _serialize_exception(e)

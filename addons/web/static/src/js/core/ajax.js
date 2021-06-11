@@ -223,15 +223,6 @@ var loadJS = (function () {
 /**
  * Cooperative file download implementation, for ajaxy APIs.
  *
- * Requires that the server side implements an httprequest correctly
- * setting the `fileToken` cookie to the value provided as the `token`
- * parameter. The cookie *must* be set on the `/` path and *must not* be
- * `httpOnly`.
- *
- * It would probably also be a good idea for the response to use a
- * `Content-Disposition: attachment` header, especially if the MIME is a
- * "known" type (e.g. text/plain, or for some browsers application/json
- *
  * @param {Object} options
  * @param {String} [options.url] used to dynamically create a form
  * @param {Object} [options.data] data to add to the form submission. If can be used without a form, in which case a form is created from scratch. Otherwise, added to form data
@@ -257,7 +248,6 @@ function get_file(options) {
             data.append(k, v);
         });
     }
-    data.append('token', 'dummy-because-api-expects-one');
     if (core.csrf_token) {
         data.append('csrf_token', core.csrf_token);
     }
