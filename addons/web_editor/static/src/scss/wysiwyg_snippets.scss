@@ -2134,6 +2134,21 @@ we-select.o_we_shape_menu {
         }
     }
 }
+.o_we_shape_animated_label {
+    @include o-position-absolute(0, 0);
+    padding: 0 6px;
+    background: $o-we-color-success;
+    color: white;
+
+    > span {
+        @include o-text-overflow(inline-block);
+        max-width: 0;
+    }
+}
+we-button:hover .o_we_shape_animated_label > span {
+    max-width: 150px;
+    transition: max-width 0.5s ease 0s;
+}
 
 .o_we_ui_loading {
     @include o-position-absolute(0, 0, 0, 0);
