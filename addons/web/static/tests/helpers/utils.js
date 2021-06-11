@@ -208,3 +208,8 @@ export async function legacyExtraNextTick() {
 export function mockDownload(cb) {
     patchWithCleanup(download, { _download: cb });
 }
+
+export const hushConsole = Object.create(null);
+for(const propName of Object.keys(window.console)) {
+    hushConsole[propName] = () => {}
+}
