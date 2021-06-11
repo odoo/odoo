@@ -12,7 +12,7 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
     let sessionUserContextBackup;
     let sessionUOMIdsBackup;
     let sessionUIDBackup;
-    hooks.before(async function (assert) {
+    hooks.beforeEach(async function (assert) {
         env = new SetupTimesheetUOMWidgetsTestEnvironment();
         // Backups session parts that this testing module will alter in order to restore it at the end.
         sessionUserCompaniesBackup = session.user_companies || false;
@@ -20,7 +20,7 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
         sessionUOMIdsBackup = session.uom_ids || false;
         sessionUIDBackup = session.uid || false;
     });
-    hooks.after(async function (assert) {
+    hooks.afterEach(async function (assert) {
         // Restores the session
         const sessionToApply = Object.assign(
             { },
@@ -42,7 +42,7 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
         QUnit.module('fieldRegistry', function (hooks) {
             let FieldTimesheetTimeBackup;
             let FieldTimesheetToggleBackup;
-            hooks.before(function (assert) {
+            hooks.beforeEach(function (assert) {
                 // Backups the FieldTimesheetTime widget as it will be altered in this testing module
                 // in order to to ease testing.
                 FieldTimesheetTimeBackup = TimesheetUOM.FieldTimesheetTime;
@@ -60,7 +60,7 @@ QUnit.module('Timesheet UOM Widgets', function (hooks) {
                     },
                 });
             });
-            hooks.after(async function (hooks) {
+            hooks.afterEach(async function (hooks) {
                 // Restores the widgets and trigger reload in FieldRegistry.
                 TimesheetUOM.FieldTimesheetTime = FieldTimesheetTimeBackup;
                 TimesheetUOM.FieldTimesheetToggle = FieldTimesheetToggleBackup;
