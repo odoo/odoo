@@ -302,6 +302,10 @@ Dropdown.props = {
         type: Function,
         optional: true,
     },
+    tag: {
+        type: String,
+        optional: true,
+    },
     togglerClass: {
         type: String,
         optional: true,

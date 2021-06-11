@@ -17,7 +17,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Quotations')"
     content: _t("Let's create products."),
     position: "bottom",
 }, {
-    trigger: ".o_menu_sections .o_dropdown_item span:contains('Products')",
+    trigger: ".o_menu_sections .o_dropdown_item:contains('Products')",
     content: _t("Let's create products."),
     position: "bottom"
 }, {

@@ -173,6 +173,14 @@ export class NavBar extends Component {
             this.menuService.selectMenu(menu);
         }
     }
+
+    getMenuItemHref(payload) {
+        const parts = [`menu_id=${payload.id}`];
+        if (payload.action) {
+            parts.push(`action=${payload.action.split(",")[1]}`);
+        }
+        return "#" + parts.join("&");
+    }
 }
 NavBar.template = "web.NavBar";
 NavBar.components = { MenuDropdown, MenuItem };

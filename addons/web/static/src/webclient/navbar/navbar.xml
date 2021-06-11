@@ -3,19 +3,25 @@
 
   <t t-name="web.NavBar" owl="1">
     <header>
-      <nav class="o_main_navbar" t-on-dropdown-item-selected="onNavBarDropdownItemSelection" data-command-category="navbar">
+      <nav
+        class="o_main_navbar"
+        t-on-dropdown-item-selected="onNavBarDropdownItemSelection"
+        data-command-category="navbar"
+      >
         <!-- Apps Menu -->
         <t t-call="web.NavBar.AppsMenu">
           <t t-set="apps" t-value="menuService.getApps()" />
         </t>
 
         <!-- App Brand -->
-        <DropdownItem
+        <a
           t-if="currentApp"
-          class="o_menu_brand"
-          payload="currentApp"
+          t-att-href="getMenuItemHref(currentApp)"
           t-esc="currentApp.name"
-          t-ref="menuBrand" />
+          class="o_menu_brand"
+          t-ref="menuBrand"
+          t-on-click="menuService.selectMenu(currentApp)"
+        />
 
         <!-- Current App Sections -->
         <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
@@ -37,11 +43,15 @@
       <i class="fa fa-th-large" />
       <t t-set-slot="menu">
         <MenuItem
-          t-foreach="apps" t-as="app" t-key="app.id"
+          t-foreach="apps"
+          t-as="app"
+          t-key="app.id"
           class="o_app"
           t-att-class="{ o_dropdown_active: menuService.getCurrentApp() === app }"
           payload="app"
-          t-esc="app.name" />
+        >
+          <a t-att-href="getMenuItemHref(app)" t-esc="app.name" />
+        </MenuItem>
       </t>
     </Dropdown>
   </t>
@@ -50,22 +60,34 @@
     <ul class="o_menu_sections" t-ref="appSubMenus" role="menu">
 
       <t t-foreach="sections" t-as="section" t-key="section.id">
-        <t t-set="sectionsVisibleCount" t-value="(sections.length - currentAppSectionsExtra.length)" />
+        <t
+          t-set="sectionsVisibleCount"
+          t-value="(sections.length - currentAppSectionsExtra.length)"
+        />
 
         <t t-if="section_index lt Math.min(10, sectionsVisibleCount)">
-          <t t-set="hotkey" t-value="((section_index + 1) % 10).toString()"/>
+          <t t-set="hotkey" t-value="((section_index + 1) % 10).toString()" />
         </t>
         <t t-else="">
-          <t t-set="hotkey" t-value="undefined"/>
+          <t t-set="hotkey" t-value="undefined" />
         </t>
 
         <t t-if="!section.childrenTree.length">
-          <MenuItem title="section.name" payload="section" hotkey="hotkey">
-            <span t-esc="section.name" t-att-data-section="section.id" />
+          <MenuItem title="section.name" class="o_nav_entry" payload="section" hotkey="hotkey">
+            <a
+              t-att-href="getMenuItemHref(section)"
+              t-att-data-section="section.id"
+              t-esc="section.name"
+            />
           </MenuItem>
         </t>
         <t t-else="">
-          <MenuDropdown hotkey="hotkey" title="section.name" xmlid="section.xmlid">
+          <MenuDropdown
+            tag="'li'"
+            hotkey="hotkey"
+            title="section.name"
+            xmlid="section.xmlid"
+          >
             <span t-esc="section.name" t-att-data-section="section.id" />
             <t t-set-slot="menu">
               <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
@@ -79,7 +101,7 @@
       <t t-if="currentAppSectionsExtra.length" t-call="web.NavBar.SectionsMenu.MoreDropdown">
         <t t-set="sections" t-value="currentAppSectionsExtra" />
         <t t-if="sectionsVisibleCount lt 10">
-          <t t-set="hotkey" t-value="(sectionsVisibleCount + 1 % 10).toString()"/>
+          <t t-set="hotkey" t-value="(sectionsVisibleCount + 1 % 10).toString()" />
         </t>
       </t>
 
@@ -88,7 +110,9 @@
 
   <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot" owl="1">
     <t t-foreach="items" t-as="item" t-key="item.id">
-      <MenuItem t-if="!item.childrenTree.length" payload="item" t-esc="item.name" />
+      <MenuItem t-if="!item.childrenTree.length" payload="item">
+        <a t-att-href="getMenuItemHref(item)" t-esc="item.name" />
+      </MenuItem>
 
       <t t-else="">
         <div class="o_dropdown_menu_group" t-esc="item.name" />
@@ -97,28 +121,29 @@
           t-as="subItem"
           t-key="subItem.id"
           class="o_dropdown_menu_group_entry"
-          payload="subItem"
-          t-esc="subItem.name" />
+          payload="subItem">
+          <a t-att-href="getMenuItemHref(subItem)" t-esc="subItem.name" />
+        </MenuItem>
       </t>
     </t>
   </t>
 
   <t t-name="web.NavBar.SectionsMenu.MoreDropdown" owl="1">
-    <Dropdown class="o_menu_sections_more" title="'More Menu'" hotkey="hotkey">
-      <i class="fa fa-plus"/>
+    <Dropdown tag="'li'" class="o_menu_sections_more" title="'More Menu'" hotkey="hotkey">
+      <i class="fa fa-plus" />
       <t t-set-slot="menu">
         <t t-foreach="sections" t-as="section" t-key="section.id">
 
           <t t-if="!section.childrenTree.length">
-            <MenuItem
-              class="o_more_dropdown_section"
-              payload="section"
-              t-esc="section.name" />
+            <MenuItem class="o_more_dropdown_section" payload="section">
+              <a t-att-href="getMenuItemHref(section)" t-esc="section.name" />
+            </MenuItem>
           </t>
           <t t-else="">
             <div
               class="o_more_dropdown_section o_more_dropdown_section_group bg-200 font-weight-bold"
-              t-esc="section.name" />
+              t-esc="section.name"
+            />
             <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
               <t t-set="items" t-value="section.childrenTree" />
             </t>

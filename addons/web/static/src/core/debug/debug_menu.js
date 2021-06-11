@@ -69,12 +69,6 @@ export class DebugMenu extends Component {
             ev.detail.payload.callback();
         }
     }
-
-    onClickOnTagA(ev) {
-        if (!ev.ctrlKey) {
-            ev.preventDefault();
-        }
-    }
 }
 
 DebugMenu.template = "web.DebugMenu";

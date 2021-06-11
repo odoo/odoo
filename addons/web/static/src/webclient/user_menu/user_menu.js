@@ -47,12 +47,6 @@ export class UserMenu extends Component {
     onDropdownItemSelected(ev) {
         ev.detail.payload.callback();
     }
-
-    onClickOnTagA(ev) {
-        if (!ev.ctrlKey) {
-            ev.preventDefault();
-        }
-    }
 }
 UserMenu.template = "web.UserMenu";
 UserMenu.components = { UserMenuItem };
