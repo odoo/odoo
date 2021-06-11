@@ -53,27 +53,32 @@ export class Dropdown extends Component {
                 this.close();
             }
         });
-        useEffect(() => {
-            Promise.resolve().then(() => {
-                this.myActiveEl = this.ui.activeElement;
-            });
-        }, () => []);
+        useEffect(
+            () => {
+                Promise.resolve().then(() => {
+                    this.myActiveEl = this.ui.activeElement;
+                });
+            },
+            () => []
+        );
 
         // Set up key navigation -----------------------------------------------
         this.hotkeyService = useService("hotkey");
         this.hotkeyRemoves = [];
 
         const nextActiveIndexFns = {
-            "FIRST": () => 0,
-            "LAST": (items) => items.length - 1,
-            "NEXT": (items, prevActiveIndex) => Math.min(prevActiveIndex + 1, items.length - 1),
-            "PREV": (_, prevActiveIndex) => Math.max(0, prevActiveIndex - 1),
+            FIRST: () => 0,
+            LAST: (items) => items.length - 1,
+            NEXT: (items, prevActiveIndex) => Math.min(prevActiveIndex + 1, items.length - 1),
+            PREV: (_, prevActiveIndex) => Math.max(0, prevActiveIndex - 1),
         };
 
         /** @type {(direction: "FIRST"|"LAST"|"NEXT"|"PREV") => Function} */
         function activeItemSetter(direction) {
             return function () {
-                const items = [...this.el.querySelectorAll(":scope > ul.o_dropdown_menu > .o_dropdown_item")];
+                const items = [
+                    ...this.el.querySelectorAll(":scope > ul.o_dropdown_menu > .o_dropdown_item"),
+                ];
                 const prevActiveIndex = items.findIndex((item) =>
                     [...item.classList].includes("o_dropdown_active")
                 );
@@ -85,11 +90,11 @@ export class Dropdown extends Component {
         }
 
         const hotkeyCallbacks = {
-            "arrowdown": activeItemSetter("NEXT").bind(this),
-            "arrowup": activeItemSetter("PREV").bind(this),
+            arrowdown: activeItemSetter("NEXT").bind(this),
+            arrowup: activeItemSetter("PREV").bind(this),
             "shift+arrowdown": activeItemSetter("LAST").bind(this),
             "shift+arrowup": activeItemSetter("FIRST").bind(this),
-            "enter": () => {
+            enter: () => {
                 const activeItem = this.el.querySelector(
                     ":scope > ul.o_dropdown_menu > .o_dropdown_item.o_dropdown_active"
                 );
@@ -97,7 +102,7 @@ export class Dropdown extends Component {
                     activeItem.click();
                 }
             },
-            "escape": this.close.bind(this),
+            escape: this.close.bind(this),
         };
 
         /** @this {Dropdown} */

@@ -18,22 +18,25 @@ const scrollSymbol = Symbol("scroll");
 export function useSetupAction(params) {
     const component = useComponent();
 
-    useEffect(() => {
-        if (component.props.registerCallback) {
-            if (params.beforeLeave) {
-                component.props.registerCallback("beforeLeave", params.beforeLeave);
-            }
-            component.props.registerCallback("export", () => {
-                const state = {};
-                state[scrollSymbol] = getScrollPosition(component);
-                if (params.export) {
-                    Object.assign(state, params.export());
+    useEffect(
+        () => {
+            if (component.props.registerCallback) {
+                if (params.beforeLeave) {
+                    component.props.registerCallback("beforeLeave", params.beforeLeave);
                 }
-                return state;
-            });
-        }
-        if (component.props.state) {
-            setScrollPosition(component, component.props.state[scrollSymbol]);
-        }
-    }, () => []);
+                component.props.registerCallback("export", () => {
+                    const state = {};
+                    state[scrollSymbol] = getScrollPosition(component);
+                    if (params.export) {
+                        Object.assign(state, params.export());
+                    }
+                    return state;
+                });
+            }
+            if (component.props.state) {
+                setScrollPosition(component, component.props.state[scrollSymbol]);
+            }
+        },
+        () => []
+    );
 }

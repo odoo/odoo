@@ -49,7 +49,7 @@ export function formatCurrency(value, cid, options = {}) {
  * @param {number} [options.currencyId]
  * @returns {number} float
  */
- export function parseCurrency(value, options = {}) {
+export function parseCurrency(value, options = {}) {
     let values = value.split("&nbsp;");
     if (values.length === 1) {
         return parseFloat(value);

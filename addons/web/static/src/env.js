@@ -134,13 +134,17 @@ async function _startServices(env, toStart, timeoutId) {
     if (toStart.size) {
         const names = [...toStart].map((s) => s.name);
         const missingDeps = new Set();
-        [...toStart].forEach((s) => s.dependencies.forEach((dep) => {
-            if (!(dep in services) && !names.includes(dep)) {
-                missingDeps.add(dep);
-            }
-        }));
+        [...toStart].forEach((s) =>
+            s.dependencies.forEach((dep) => {
+                if (!(dep in services) && !names.includes(dep)) {
+                    missingDeps.add(dep);
+                }
+            })
+        );
         const depNames = [...missingDeps].join(", ");
-        throw new Error(`Some services could not be started: ${names}. Missing dependencies: ${depNames}`);
+        throw new Error(
+            `Some services could not be started: ${names}. Missing dependencies: ${depNames}`
+        );
     }
 
     function findNext() {
