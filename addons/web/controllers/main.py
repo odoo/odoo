@@ -1405,8 +1405,6 @@ class Binary(http.Controller):
             content_base64 = base64.b64decode(content)
             headers.append(('Content-Length', len(content_base64)))
             response = request.make_response(content_base64, headers)
-        if token:
-            response.set_cookie('fileToken', token)
         return response
 
     @http.route(['/web/assets/debug/<string:filename>',
@@ -1892,7 +1890,7 @@ class ExportFormat(object):
                             content_disposition(
                                 osutil.clean_filename(self.filename(model) + self.extension))),
                      ('Content-Type', self.content_type)],
-            cookies={'fileToken': token})
+        )
 
 class CSVExport(ExportFormat, http.Controller):
 
@@ -2033,13 +2031,14 @@ class ReportController(http.Controller):
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
     @http.route(['/report/download'], type='http', auth="user")
-    def report_download(self, data, token, context=None):
+    def report_download(self, data, context=None):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
         :param data: a javascript array JSON.stringified containg report internal url ([0]) and
         type [1]
-        :returns: Response with a filetoken cookie and an attachment header
+        :returns: Response with an attachment header
+
         """
         requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
@@ -2077,7 +2076,6 @@ class ReportController(http.Controller):
                         report_name = safe_eval(report.print_report_name, {'object': obj, 'time': time})
                         filename = "%s.%s" % (report_name, extension)
                 response.headers.add('Content-Disposition', content_disposition(filename))
-                response.set_cookie('fileToken', token)
                 return response
             else:
                 return
