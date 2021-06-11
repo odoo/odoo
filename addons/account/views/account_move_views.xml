@@ -438,7 +438,7 @@
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="payment_reference" optional="hide" invisible="context.get('default_move_type') in ('out_invoice', 'out_refund','out_receipt')"/>
                     <field name="ref" optional="hide"/>
-                    <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Sales Person" widget="many2one_avatar_user"/>
+                    <field name="invoice_user_id" optional="hide" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" string="Salesperson" widget="many2one_avatar_user"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
                     <field name="amount_untaxed_signed" string="Tax Excluded" sum="Total" optional="show"/>
