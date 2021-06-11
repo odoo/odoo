@@ -3,6 +3,7 @@
 
     <record id="event_7_track_1_quiz" model="event.quiz">
         <field name="name">What This Event Is All About</field>
+        <field name="event_track_id" ref="website_event_track.event_7_track_1"/>
     </record>
 
     <record id="event_7_track_1_question_0" model="event.quiz.question">
@@ -48,12 +49,9 @@
         <field name="question_id" ref="event_7_track_1_question_1"/>
     </record>
 
-    <record id="website_event_track.event_7_track_1" model="event.track">
-        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_1_quiz"/>
-    </record>
-
     <record id="event_7_track_5_quiz" model="event.quiz">
         <field name="name">Securing your Lumber during transport</field>
+        <field name="event_track_id" ref="website_event_track.event_7_track_5"/>
     </record>
 
     <record id="event_7_track_5_question_0" model="event.quiz.question">
@@ -99,12 +97,9 @@
         <field name="question_id" ref="event_7_track_5_question_1"/>
     </record>
 
-    <record id="website_event_track.event_7_track_5" model="event.track">
-        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_5_quiz"/>
-    </record>
-
     <record id="event_7_track_13_quiz" model="event.quiz">
         <field name="name">Pretty. Ugly. Lovely.</field>
+        <field name="event_track_id" ref="website_event_track.event_7_track_13"/>
     </record>
 
     <record id="event_7_track_13_question_0" model="event.quiz.question">
@@ -132,9 +127,6 @@
         <field name="question_id" ref="event_7_track_13_question_0"/>
     </record>
 
-    <record id="website_event_track.event_7_track_13" model="event.track">
-        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_13_quiz"/>
-    </record>
     <record id="event.event_7" model="event.event">
         <field name="community_menu" eval="True"/>
     </record>

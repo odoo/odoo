@@ -8,10 +8,16 @@ from odoo.osv import expression
 class EventTrack(models.Model):
     _inherit = ['event.track']
 
-    quiz_id = fields.Many2one('event.quiz', string="Quiz", groups="event.group_event_user")
+    quiz_id = fields.Many2one('event.quiz', string="Quiz", compute='_compute_quiz_id', store=True, groups="event.group_event_user")
+    quiz_ids = fields.One2many('event.quiz', 'event_track_id', string="Quizzes")
     quiz_questions_count = fields.Integer(string="# Quiz Questions", compute='_compute_quiz_questions_count', groups="event.group_event_user")
     is_quiz_completed = fields.Boolean('Is Quiz Done', compute='_compute_quiz_data')
     quiz_points = fields.Integer('Quiz Points', compute='_compute_quiz_data')
+
+    @api.depends('quiz_ids.event_track_id')
+    def _compute_quiz_id(self):
+        for track in self:
+            track.quiz_id = track.quiz_ids[0] if track.quiz_ids else False
 
     @api.depends('quiz_id.question_ids')
     def _compute_quiz_questions_count(self):
@@ -64,3 +70,31 @@ class EventTrack(models.Model):
                     else:
                         track.is_quiz_completed = False
                         track.quiz_points = 0
+
+    def action_add_quiz(self):
+        self.ensure_one()
+        event_quiz_form = self.env.ref('website_event_track_quiz.event_quiz_view_form')
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'event.quiz',
+            'view_id': event_quiz_form.id,
+            'context': {
+                'default_event_track_id': self.id,
+                'create': False,
+            },
+        }
+
+    def action_view_quiz(self):
+        self.ensure_one()
+        event_quiz_form = self.env.ref('website_event_track_quiz.event_quiz_view_form')
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'event.quiz',
+            'res_id' : self.quiz_id.id,
+            'view_id': event_quiz_form.id,
+            'context': {
+                'create': False,
+            }
+        }
