@@ -18,7 +18,7 @@ class TableExporter(http.Controller):
         return xlsxwriter is not None
 
     @http.route('/web/pivot/export_xlsx', type='http', auth="user")
-    def export_xlsx(self, data, token):
+    def export_xlsx(self, data, **kw):
         jdata = json.loads(data)
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
@@ -106,6 +106,6 @@ class TableExporter(http.Controller):
         response = request.make_response(xlsx_data,
             headers=[('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
                     ('Content-Disposition', content_disposition(filename + '.xlsx'))],
-            cookies={'fileToken': token})
+        )
 
         return response
