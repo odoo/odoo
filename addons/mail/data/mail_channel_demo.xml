@@ -16,6 +16,19 @@
             <field name="description">Research and development discussion group</field>
         </record>
 
+        <!-- TODO remove demo users -->
+        <record model="mail.channel" id="channel_rtc_1">
+            <field name="name">RTC1</field>
+            <field name="description">testing webRTC.</field>
+            <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+
+        <record model="mail.channel" id="channel_rtc_2">
+            <field name="name">RTC2</field>
+            <field name="description">testing more webRTC.</field>
+            <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+
         <!-- Best sales practices messages -->
         <record id="mail_message_channel_1_1" model="mail.message">
             <field name="model">mail.channel</field>

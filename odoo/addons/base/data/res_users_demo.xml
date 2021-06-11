@@ -39,6 +39,151 @@
             <field name="image_1920" type="base64" file="base/static/img/user_demo-image.jpg"/>
         </record>
 
+        <!-- TODO remove demo users -->
+        <record id="user_fp" model="res.users">
+            <field name="login">fp</field>
+            <field name="password">fp</field>
+            <field name="name">fp</field>
+            <field name="email">fp@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_al" model="res.users">
+            <field name="login">al</field>
+            <field name="password">al</field>
+            <field name="name">al</field>
+            <field name="email">al@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_cpe" model="res.users">
+            <field name="login">cpe</field>
+            <field name="password">cpe</field>
+            <field name="name">cpe</field>
+            <field name="email">cpe@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_avw" model="res.users">
+            <field name="login">avw</field>
+            <field name="password">avw</field>
+            <field name="name">avw</field>
+            <field name="email">avw@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_apr" model="res.users">
+            <field name="login">apr</field>
+            <field name="password">apr</field>
+            <field name="name">apr</field>
+            <field name="email">apr@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_ngr" model="res.users">
+            <field name="login">ngr</field>
+            <field name="password">ngr</field>
+            <field name="name">ngr</field>
+            <field name="email">ngr@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_seb" model="res.users">
+            <field name="login">seb</field>
+            <field name="password">seb</field>
+            <field name="name">seb</field>
+            <field name="email">seb@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_aku" model="res.users">
+            <field name="login">aku</field>
+            <field name="password">aku</field>
+            <field name="name">aku</field>
+            <field name="email">aku@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_tso" model="res.users">
+            <field name="login">tso</field>
+            <field name="password">tso</field>
+            <field name="name">tso</field>
+            <field name="email">tso@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_jgi" model="res.users">
+            <field name="login">jgi</field>
+            <field name="password">jgi</field>
+            <field name="name">jgi</field>
+            <field name="email">jgi@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_qho" model="res.users">
+            <field name="login">qho</field>
+            <field name="password">qho</field>
+            <field name="name">qho</field>
+            <field name="email">qho@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_system'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        </record>
+
+        <record id="user_usr" model="res.users">
+            <field name="login">usr</field>
+            <field name="password">usr</field>
+            <field name="name">usr</field>
+            <field name="email">usr@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_user')])]"/>
+        </record>
+
+        <record id="user_rtc" model="res.users">
+            <field name="login">rtc0</field>
+            <field name="password">rtc0</field>
+            <field name="name">rtc0</field>
+            <field name="email">rtc0@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_user')])]"/>
+        </record>
+
+        <record id="user_rtc1" model="res.users">
+            <field name="login">rtc1</field>
+            <field name="password">rtc1</field>
+            <field name="name">rtc1</field>
+            <field name="email">rtc1@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_user')])]"/>
+        </record>
+
+        <record id="user_rtc2" model="res.users">
+            <field name="login">rtc2</field>
+            <field name="password">rtc2</field>
+            <field name="name">rtc2</field>
+            <field name="email">rtc2@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_user')])]"/>
+        </record>
+
+        <record id="user_rtc3" model="res.users">
+            <field name="login">rtc3</field>
+            <field name="password">rtc3</field>
+            <field name="name">rtc3</field>
+            <field name="email">rtc2@example.com</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="[Command.set([ref('base.group_user')])]"/>
+        </record>
+
         <record model="res.partner" id="base.partner_root">
             <field name="email">root@yourcompany.example.com</field>
             <field name="tz">Europe/Brussels</field>
