@@ -213,7 +213,6 @@ class IrUiMenu(models.Model):
             'name': 'root',
             'parent_id': [-1, ''],
             'children': menu_roots_data,
-            'all_menu_ids': menu_roots.ids,
         }
 
         xmlids = menu_roots._get_menuitems_xmlids()
