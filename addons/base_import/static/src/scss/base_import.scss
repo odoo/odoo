@@ -68,6 +68,9 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .o_import_batch_alert {
+            color: #46646d;
+        }
     }
 
     &.oe_import_preview .oe_import_grid {
@@ -232,5 +235,16 @@
         .text-decoration-underline {
             text-decoration: underline;
         }
+    }
+}
+
+/* Import Progress Bar */
+.o_progress_dialog {
+    .progress-bar {
+        width: 0%;
+        min-width: 3%;
+    }
+    .o_progress_stop_import {
+        cursor: pointer;
     }
 }

@@ -4,6 +4,7 @@ odoo.define('base_import.import', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var config = require('web.config');
 var core = require('web.core');
+var Dialog = require('web.Dialog');
 var session = require('web.session');
 var time = require('web.time');
 
@@ -445,7 +446,8 @@ var DataImport = AbstractAction.extend({
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
         // Activate the batch configuration panel only of the file length > 100. (In order to let the user choose
         // the batch size even for medium size file. Could be useful to reduce the batch size for complex models).
-        this.$('.o_import_batch').toggleClass('d-none', !(result.file_length > 100));
+        this.fileLength = result.file_length;
+        this.$('.o_import_batch').toggleClass('d-none', !(this.fileLength > 100));
         this.$('.o_import_batch_alert').toggleClass('d-none', !result.batch);
 
         var messages = [];
@@ -798,19 +800,42 @@ var DataImport = AbstractAction.extend({
             {tracking_disable: tracking_disable}
         );
         var self = this;
-        $.blockUI({message: QWeb.render('Throbber')});
-        $(document.body).addClass('o_ui_blocked');
-        var opts = this.import_options();
 
-        var $el = $('.oe_throbber_message');
-        var msg = kwargs.dryrun ? _t("%d records tested...")
-                                : _t("%d records successfully imported...");
-        opts.callback = function (count) {
-            if (count) {
-                $el.text(_.str.sprintf(msg, count));
-            } else {
-                $el.text(kwargs.dryrun ? _t("Testing...") : _t("Importing..."));
-            }
+        this.stopImport = false;
+        this.totalToImport = this.fileLength - parseInt(this.$('#oe_import_row_start').val());
+        this.batchSize = parseInt(this.$('#oe_import_batch_limit').val() || 0);
+        var isBatch = this.totalToImport > this.batchSize;
+        var totalBatch = isBatch ? Math.floor(this.totalToImport / this.batchSize) + 1 : 1;
+        this.currentBatchNumber = 1;
+
+        $.blockUI({
+            message: QWeb.render(
+                'base_import.progressDialog', {
+                    title: kwargs.dryrun ? _t("Testing import...") : _t('Importing...'),
+                    isBatch: isBatch,
+                    totalRows: this.totalToImport,
+                    totalBatch: totalBatch,
+                }
+            )});
+        $(document.body).addClass('o_ui_blocked');
+
+        var closeButton = $('.o_progress_dialog').find('.o_progress_stop_import');
+        closeButton.on('click', function (event) {
+            $(event.currentTarget).enable(false);
+            $(event.currentTarget).closest('.o_progress_dialog').find('.o_progress_dialog_stop, .o_progress_dialog_batch').toggleClass('d-none');
+            self.stopImport = true;
+        });
+
+        var opts = this.import_options();
+        opts.callback = function (self) {
+            var recordsDone = self.batchSize * (self.currentBatchNumber - 1);
+            var percentage = parseInt(recordsDone / self.totalToImport * 100);
+            $('.o_progress_dialog').find('.progress-bar')
+                .text(percentage + "%")
+                .attr('aria-valuenow', percentage)
+                .css('width', percentage + '%');
+            $('.o_progress_dialog').find('.o_progress_dialog_txt').text(recordsDone);
+            $('.o_progress_dialog').find('.o_progress_dialog_batch_txt').text(self.currentBatchNumber);
         };
 
         return this._batchedImport(opts, [this.id, fields, columns], kwargs, {done: 0, prev: 0})
@@ -862,8 +887,30 @@ var DataImport = AbstractAction.extend({
      * @private
      */
     _batchedImport: function (opts, args, kwargs, rec) {
-        opts.callback && opts.callback(rec.done || 0);
         var self = this;
+        opts.callback && opts.callback(this);
+        this.currentBatchNumber += 1;
+
+        if (this.stopImport) {
+            if (!kwargs.dryrun) {
+                self.$('#oe_import_row_start').val(parseInt(opts.skip) + 1);
+            }
+            var results = {
+                'messages': [{
+                    type: 'info',
+                    priority: true,
+                    message: _.str.sprintf(
+                        _t("This file has been %s up to line %d."),
+                        kwargs.dryrun ? _t('tested') : _t('successfully imported'),
+                        opts.skip
+                    )
+                }]
+            }
+            $(document.body).removeClass('o_ui_blocked');
+            $.unblockUI();
+            return Promise.resolve(results);
+        }
+
         return this._rpc({
             model: 'base_import.import',
             method: 'execute_import',
