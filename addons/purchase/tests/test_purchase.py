@@ -215,3 +215,36 @@ class TestPurchase(AccountTestInvoicingCommon):
             line.product_packaging_qty = 1.0
         po_form.save()
         self.assertEqual(po.order_line.product_qty, 12)
+
+    def test_with_different_uom(self):
+        """ This test ensures that the unit price is correctly computed"""
+        uom_units = self.env['ir.model.data'].xmlid_to_object('uom.product_uom_unit')
+        uom_dozens = self.env['ir.model.data'].xmlid_to_object('uom.product_uom_dozen')
+        uom_pairs = self.env['uom.uom'].create({
+            'name': 'Pairs',
+            'category_id': uom_units.category_id.id,
+            'uom_type': 'bigger',
+            'factor_inv': 2,
+            'rounding': 1,
+        })
+        product_data = {
+            'name': 'SuperProduct',
+            'type': 'consu',
+            'uom_id': uom_units.id,
+            'uom_po_id': uom_pairs.id,
+            'standard_price': 100
+        }
+        product_01 = self.env['product.product'].create(product_data)
+        product_02 = self.env['product.product'].create(product_data)
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_01
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product_02
+            po_line.product_uom = uom_dozens
+        po = po_form.save()
+
+        self.assertEqual(po.order_line[0].price_unit, 200)
+        self.assertEqual(po.order_line[1].price_unit, 1200)
