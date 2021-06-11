@@ -691,6 +691,11 @@ class PosSession(models.Model):
         for output_account, vals in stock_output_vals.items():
             stock_output_lines[output_account] = MoveLine.create(vals)
 
+        account = self.order_ids.filtered(lambda o: o.state=='invoiced').picking_ids.move_lines.filtered('stock_valuation_layer_ids').product_id.categ_id.property_stock_account_output_categ_id
+        already_invoiced_lines = self.order_ids.account_move.line_ids.filtered(lambda l: l.account_id == account)
+
+        stock_output_lines[account] = stock_output_lines.get(account, MoveLine) + already_invoiced_lines
+
         data.update({'stock_output_lines': stock_output_lines})
         return data
 
@@ -738,7 +743,7 @@ class PosSession(models.Model):
 
         # reconcile stock output lines
         pickings = self.picking_ids.filtered(lambda p: not p.pos_order_id)
-        pickings |= self.order_ids.filtered(lambda o: not o.is_invoiced).mapped('picking_ids')
+        pickings |= self.order_ids.mapped('picking_ids')
         stock_moves = self.env['stock.move'].search([('picking_id', 'in', pickings.ids)])
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
@@ -1034,13 +1039,16 @@ class PosSession(models.Model):
         # get all the linked move lines to this account move.
         non_reconcilable_lines = session_move.line_ids.filtered(lambda aml: not aml.account_id.reconcile)
         reconcilable_lines = session_move.line_ids - non_reconcilable_lines
-        fully_reconciled_lines = reconcilable_lines.filtered(lambda aml: aml.full_reconcile_id)
+        fully_reconciled_lines = reconcilable_lines.mapped('full_reconcile_id.reconciled_line_ids')
+        extra_reconciled_lines = (fully_reconciled_lines.mapped('move_id') - session_move).line_ids
+
         partially_reconciled_lines = reconcilable_lines - fully_reconciled_lines
 
         cash_move_lines = self.env['account.move.line'].search([('statement_id', '=', self.cash_register_id.id)])
 
         ids = (non_reconcilable_lines.ids
-                + fully_reconciled_lines.mapped('full_reconcile_id').mapped('reconciled_line_ids').ids
+                + fully_reconciled_lines.ids
+                + sum(extra_reconciled_lines.mapped(get_matched_move_lines), extra_reconciled_lines.ids)
                 + sum(partially_reconciled_lines.mapped(get_matched_move_lines), partially_reconciled_lines.ids)
                 + cash_move_lines.ids)
 
