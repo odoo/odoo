@@ -9,7 +9,6 @@
         <t t-set="pre_printed_report" t-value="report_type == 'pdf'"/>
         <t t-set="report_name" t-value="o.l10n_latam_document_type_id.name"/>
         <t t-set="header_address" t-value="o.company_id.partner_id"/>
-        <!--<t t-set="is_tax" t-value="o.l10n_latam_document_type_id.code not in ['39', '41', '110', '111', '112', '34']"/>-->
         <t t-set="custom_footer">
             <t t-call="l10n_cl.custom_footer"/>
         </t>
@@ -144,10 +143,21 @@
         <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
             <attribute name="t-field">line.l10n_latam_price_unit</attribute>
         </xpath>
+        <!-- nuevo inicio -->
+        <xpath expr="//span[@id='line_tax_ids']" position="attributes">
+            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.l10n_latam_tax_ids))</attribute>
+        </xpath>
+        <!-- nuevo fin -->
 
         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
             <attribute name="t-value">current_subtotal + line.l10n_latam_price_subtotal</attribute>
         </t>
+
+        <!-- nuevo inicio -->
+        <xpath expr="//th[@name='th_subtotal']/span[@groups='account.group_show_line_subtotals_tax_included']" position="replace">
+            <span groups="account.group_show_line_subtotals_tax_included">Amount</span>
+        </xpath>
+        <!-- nuevo fin -->
 
         <span t-field="line.price_subtotal" position="attributes">
             <attribute name="t-field">line.l10n_latam_price_subtotal</attribute>
@@ -158,7 +168,8 @@
         </span>
 
         <!-- we remove the taxes column in boletas -->
-        <xpath expr="//th[@name='th_taxes']/span" position="replace">
+        <!-- comentar para ver si el approach que usan en l10n_ar funciona bien -->
+        <!--<xpath expr="//th[@name='th_taxes']/span" position="replace">
             <t t-if="o.l10n_latam_document_type_id.code not in ['39', '41', '110', '111', '112', '34']">
                 <span>Taxes</span>
             </t>
@@ -181,21 +192,6 @@
             </td>
         </xpath>
 
-        <!-- remove payment term, this is added on information section -->
-        <p name="payment_term" position="replace"/>
-
-
-        <xpath expr="//span[@t-field='o.payment_reference']/../.." position="replace"/>
-
-        <div id="informations" position="replace">
-            <t t-call="l10n_cl.informations"/>
-        </div>
-
-        <!--  we remove the ml auto and also give more space to avoid multiple lines on tax detail -->
-        <xpath expr="//div[@id='total']/div" position="attributes">
-            <attribute name="t-attf-class">#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}</attribute>
-        </xpath>
-
         <xpath expr="//tr[hasclass('o_subtotal')]" position="replace">
             <t t-if="o.l10n_latam_document_type_id.code not in ['39', '41', '110', '111', '112', '34']">
                 <tr class="border-black o_subtotal" style="">
@@ -205,6 +201,41 @@
                     </td>
                 </tr>
             </t>
+        </xpath>
+
+        -->
+        <!-- aca lo pongo igual que argentina.. si no resulta, vuelvo al anterior comentado arriba -->
+        <xpath expr="//th[@name='th_taxes']/span" position="replace">
+            <span>% VAT</span>
+        </xpath>
+
+        <xpath expr="//th[@name='th_taxes']" position="attributes">
+            <attribute name="t-if">o.amount_by_group</attribute>
+        </xpath>
+
+        <!-- use column vat instead of taxes and only list vat taxes-->
+        <xpath expr="//span[@id='line_tax_ids']/.." position="attributes">
+            <attribute name="t-if">o.amount_by_group</attribute>
+        </xpath>
+        <span id="line_tax_ids" position="attributes">
+            <attribute name="t-esc">', '.join(map(lambda x: (x.description or x.name), line.l10n_latam_tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
+        </span>
+        <!--- aca termina la prueba como en argentina -->
+
+        <!-- remove payment term, this is added on information section -->
+        <p name="payment_term" position="replace"/>
+
+        <!-- we remove the payment reference not used in chile -->
+        <xpath expr="//span[@t-field='o.payment_reference']/../.." position="replace"/>
+
+        <!-- replace information section and usage chilean style -->
+        <div id="informations" position="replace">
+            <t t-call="l10n_cl.informations"/>
+        </div>
+
+        <!--  we remove the ml auto and also give more space to avoid multiple lines on tax detail -->
+        <xpath expr="//div[@id='total']/div" position="attributes">
+            <attribute name="t-attf-class">#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}</attribute>
         </xpath>
 
         <t t-foreach="o.amount_by_group" t-as="amount_by_group" position="replace">

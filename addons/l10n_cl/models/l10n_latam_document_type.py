@@ -28,3 +28,10 @@ class L10nLatamDocumentType(models.Model):
             return False
 
         return document_number.zfill(6)
+
+    def _filter_taxes_included(self, taxes):
+        """ In Chile we include taxes depending on document type """
+        self.ensure_one()
+        if self.country_id.code == "CL" and self.code in ['39', '41', '110', '111', '112', '34']:
+            return taxes.filtered(lambda x: x.l10n_cl_sii_code == 14)
+        return super()._filter_taxes_included(taxes)
