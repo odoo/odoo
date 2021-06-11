@@ -95,7 +95,6 @@ export const errorService = {
                     break;
                 }
             }
-            env.bus.trigger("ERROR_DISPATCHED", error);
         }
 
         window.addEventListener("error", async (ev) => {
