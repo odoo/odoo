@@ -1326,11 +1326,14 @@ var SnippetsMenu = Widget.extend({
 
         // Add tooltips on we-title elements whose text overflows
         this.$el.tooltip({
-            selector: 'we-title',
+            selector: 'we-title, [data-tooltip="true"]',
             placement: 'bottom',
             delay: 100,
             title: function () {
                 const el = this;
+                if (el.tagName !== 'WE-TITLE') {
+                    return el.title;
+                }
                 // On Firefox, el.scrollWidth is equal to el.clientWidth when
                 // overflow: hidden, so we need to update the style before to
                 // get the right values.
@@ -1360,13 +1363,6 @@ var SnippetsMenu = Widget.extend({
                     });
                 }, 50));
             }
-
-            this.$('[data-title]').tooltip({
-                delay: 100,
-                title: function () {
-                    return this.classList.contains('active') ? false : this.dataset.title;
-                },
-            });
 
             // Trigger a resize event once entering edit mode as the snippets
             // menu will take part of the screen width (delayed because of
