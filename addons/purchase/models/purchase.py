@@ -1091,8 +1091,9 @@ class PurchaseOrderLine(models.Model):
 
         # If not seller, use the standard price. It needs a proper currency conversion.
         if not seller:
+            po_line_uom = self.product_uom or self.product_id.uom_po_id
             price_unit = self.env['account.tax']._fix_tax_included_price_company(
-                self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_id.uom_po_id),
+                self.product_id.uom_id._compute_price(self.product_id.standard_price, po_line_uom),
                 self.product_id.supplier_taxes_id,
                 self.taxes_id,
                 self.company_id,
@@ -1104,9 +1105,6 @@ class PurchaseOrderLine(models.Model):
                     self.order_id.company_id,
                     self.date_order or fields.Date.today(),
                 )
-
-            if self.product_uom:
-                price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom)
 
             self.price_unit = price_unit
             return
