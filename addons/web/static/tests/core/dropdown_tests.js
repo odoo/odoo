@@ -30,8 +30,31 @@ QUnit.module("Components", (hooks) => {
         class Parent extends owl.Component {}
         Parent.template = owl.tags.xml`<Dropdown/>`;
         parent = await mount(Parent, { env, target });
+        assert.strictEqual(
+            parent.el.outerHTML,
+            '<div class="o_dropdown"><button class="o_dropdown_toggler "><span></span></button></div>'
+        );
         assert.containsOnce(parent.el, "button.o_dropdown_toggler");
         assert.containsNone(parent.el, "ul.o_dropdown_menu");
+    });
+
+    QUnit.test("can be rendered (custom tag)", async (assert) => {
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`<Dropdown tag="'ged'"/>`;
+        parent = await mount(Parent, { env, target });
+        assert.strictEqual(
+            parent.el.outerHTML,
+            '<ged class="o_dropdown"><button class="o_dropdown_toggler "><span></span></button></ged>'
+        );
+        assert.containsOnce(parent.el, "button.o_dropdown_toggler");
+        assert.containsNone(parent.el, "ul.o_dropdown_menu");
+    });
+
+    QUnit.test("DropdownItem can be rendered", async (assert) => {
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`<DropdownItem>coucou</DropdownItem>`;
+        parent = await mount(Parent, { env, target });
+        assert.strictEqual(parent.el.outerHTML, '<li class="o_dropdown_item">coucou</li>');
     });
 
     QUnit.test("can be styled", async (assert) => {

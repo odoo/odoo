@@ -7,7 +7,8 @@ import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 import { useEffect } from "@web/core/effect_hook";
 
-const { Component } = owl;
+const { Component, hooks } = owl;
+const { useExternalListener } = hooks;
 const mainComponentRegistry = registry.category("main_components");
 
 export class WebClient extends Component {
@@ -32,6 +33,7 @@ export class WebClient extends Component {
             },
             () => []
         );
+        useExternalListener(window, "click", this.onGlobalClick, { capture: true });
     }
 
     mounted() {
@@ -79,6 +81,23 @@ export class WebClient extends Component {
         const firstApp = root.children[0];
         if (firstApp) {
             return this.menuService.selectMenu(firstApp);
+        }
+    }
+
+    /**
+     * @param {MouseEvent} ev
+     */
+    onGlobalClick(ev) {
+        // When a ctrl-click occurs inside an <a href/> element
+        // we let the browser do the default behavior and
+        // we do not want any other listener to execute.
+        if (
+            ev.ctrlKey &&
+            ((ev.target instanceof HTMLAnchorElement && ev.target.href) ||
+                (ev.target instanceof HTMLElement && ev.target.closest("a[href]:not([href=''])")))
+        ) {
+            ev.stopImmediatePropagation();
+            return;
         }
     }
 }

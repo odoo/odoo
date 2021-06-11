@@ -12,7 +12,7 @@ import { menuService } from "@web/webclient/menu_service";
 import { WebClient } from "@web/webclient/webclient";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { fakeTitleService } from "../helpers/mock_services";
-import { getFixture, patchWithCleanup } from "../helpers/utils";
+import { getFixture, patchWithCleanup, triggerEvent } from "../helpers/utils";
 
 const { Component, tags, mount } = owl;
 const { xml } = tags;
@@ -43,6 +43,7 @@ QUnit.test("can be rendered", async (assert) => {
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });
     assert.containsOnce(webClient.el, "header > nav.o_main_navbar");
+    webClient.destroy();
 });
 
 QUnit.test("can render a main component", async (assert) => {
@@ -55,6 +56,7 @@ QUnit.test("can render a main component", async (assert) => {
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });
     assert.containsOnce(webClient.el, ".chocolate");
+    webClient.destroy();
 });
 
 QUnit.test("webclient for the superuser", async (assert) => {
@@ -64,6 +66,7 @@ QUnit.test("webclient for the superuser", async (assert) => {
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });
     assert.hasClass(webClient.el, "o_is_superuser");
+    webClient.destroy();
 });
 
 QUnit.test("webclient for a non superuser", async (assert) => {
@@ -73,4 +76,55 @@ QUnit.test("webclient for a non superuser", async (assert) => {
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });
     assert.doesNotHaveClass(webClient.el, "o_is_superuser");
+    webClient.destroy();
+});
+
+QUnit.test("control-click propagation stopped on <a href/>", async (assert) => {
+    assert.expect(8);
+
+    patchWithCleanup(WebClient.prototype, {
+        /** @param {MouseEvent} ev */
+        onGlobalClick(ev) {
+            this._super(ev);
+            if (ev.ctrlKey) {
+                assert.ok(
+                    ev.defaultPrevented === false,
+                    "the global click should not prevent the default behavior on ctrl-click an <a href/>"
+                );
+                // Necessary in order to prevent the test browser to open in new tab on ctrl-click
+                ev.preventDefault();
+            }
+        },
+    });
+
+    class MyComponent extends Component {
+        /** @param {MouseEvent} ev */
+        onclick(ev) {
+            assert.step(ev.ctrlKey ? "ctrl-click" : "click");
+            // Necessary in order to prevent the test browser to open in new tab on ctrl-click
+            ev.preventDefault();
+        }
+    }
+    MyComponent.template = xml`<a href="#" class="MyComponent" t-on-click="onclick" />`;
+    const target = getFixture();
+    let env = await makeTestEnv(baseConfig);
+
+    // Mount the component as standalone and control-click the <a href/>
+    const standaloneComponent = await mount(MyComponent, { env, target });
+    assert.verifySteps([]);
+    await triggerEvent(standaloneComponent.el, "", "click", { ctrlKey: false });
+    await triggerEvent(standaloneComponent.el, "", "click", { ctrlKey: true });
+    assert.verifySteps(["click", "ctrl-click"]);
+    standaloneComponent.destroy();
+
+    // Register the component as a main one, mount the webclient and control-click the <a href/>
+    clearRegistryWithCleanup(mainComponentRegistry);
+    mainComponentRegistry.add("mycomponent", { Component: MyComponent });
+    env = await makeTestEnv(baseConfig);
+    const webClient = await mount(WebClient, { env, target });
+    assert.verifySteps([]);
+    await triggerEvent(webClient.el, ".MyComponent", "click", { ctrlKey: false });
+    await triggerEvent(webClient.el, ".MyComponent", "click", { ctrlKey: true });
+    assert.verifySteps(["click"]);
+    webClient.destroy();
 });

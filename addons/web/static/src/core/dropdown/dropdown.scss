@@ -26,6 +26,9 @@
     @extend .dropdown-item.active;
   }
 
+}
+
+.dropdown-menu .dropdown-item {
   // Using <a> tags inside a '.dropdown-item' elements  should not be necessary
   // since the class in usually applied to the <a> tag itself.
   // The following rules will handle custom layouts needs (eg '.o_user_menu').
@@ -79,6 +82,14 @@
 
   &_item {
     @extend .dropdown-item;
+
+    // we want the dropdownitem first child to define its own padding
+    // because it can be an <a href/>
+    padding: 0;
+    > *:first-child {
+      padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+      display: flex;
+    }
 
     &.o_dropdown_active {
       @extend .dropdown-item:hover;
