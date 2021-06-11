@@ -566,7 +566,7 @@ class AccountTax(models.Model):
             subsequent_taxes = self.env['account.tax']
             subsequent_tags = self.env['account.account.tag']
             if tax.include_base_amount:
-                subsequent_taxes = taxes[i+1:]
+                subsequent_taxes = taxes[i+1:].filtered('is_base_affected')
                 subsequent_tags = subsequent_taxes.get_tax_tags(is_refund, 'base')
 
             # Compute the tax line amounts by multiplying each factor with the tax amount.

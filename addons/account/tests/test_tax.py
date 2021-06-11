@@ -1060,6 +1060,9 @@ class TestTax(TestTaxCommon):
             (2, 10, False, True),
         ]])
 
+        compute_all_results = taxes.compute_all(100.0)
+
+        # Check the balance of the generated move lines
         self._check_compute_all_results(
             123.2,      # 'total_included'
             100.0,      # 'total_excluded'
@@ -1071,8 +1074,13 @@ class TestTax(TestTaxCommon):
                 (112.0, 11.2),
                 # -------------------------
             ],
-            taxes.compute_all(100.0),
+            compute_all_results,
         )
+
+        # Check the tax_ids on tax lines
+        expected_tax_ids_list = [taxes[2].ids, taxes[2].ids, []]
+        tax_ids_list = [tax_line['tax_ids'] for tax_line in compute_all_results['taxes']]
+        self.assertEqual(tax_ids_list, expected_tax_ids_list, "Only a tax affected by previous taxes should have tax_ids set on its tax line when used after an 'include_base_amount' tax.")
 
     def test_mixing_price_included_excluded_with_affect_base(self):
         tax_10_fix = self.env['account.tax'].create({
