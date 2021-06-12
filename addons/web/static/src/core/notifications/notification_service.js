@@ -8,50 +8,65 @@ const { EventBus } = owl.core;
 
 const AUTOCLOSE_DELAY = 4000;
 
+/**
+ * @typedef {Object} NotificationButton
+ * @property {string} name
+ * @property {string} [icon]
+ * @property {boolean} [primary]
+ * @property {() => void} onClick
+ *
+ * @typedef {Object} NotificationOptions
+ * @property {string} [title]
+ * @property {"warning" | "danger" | "success" | "info"} [type]
+ * @property {boolean} [sticky]
+ * @property {string} [className]
+ * @property {() => void} [onClose]
+ * @property {NotificationButton} [buttons]
+ */
+
 export const notificationService = {
     start() {
         let notifId = 0;
+        let notifications = [];
         const bus = new EventBus();
 
         registry.category("main_components").add("NotificationContainer", {
             Component: NotificationContainer,
-            props: { bus },
+            props: { bus, notifications },
         });
 
-        return {
-            bus,
-            /**
-             * @param {string} message
-             * @param {Object} [options]
-             * @param {{
-             *      name: string;
-             *      icon?: string;
-             *      primary?: boolean;
-             *      onClick: () => void
-             * }[]} [options.buttons]
-             * @param {string} [options.className]
-             * @param {boolean} [options.messageIsHtml]
-             * @param {() => void} [options.onClose]
-             * @param {boolean} [options.sticky]
-             * @param {string} [options.title]
-             * @param {"warning" | "danger" | "success" | "info"} [options.type]
-             */
-            add(message, options = {}) {
-                const notif = Object.assign({}, options, {
-                    id: ++notifId,
-                    message,
-                });
-                const sticky = notif.sticky;
-                delete notif.sticky;
-                bus.trigger("ADD", notif);
-                if (!sticky) {
-                    browser.setTimeout(() => bus.trigger("REMOVE", notif.id), AUTOCLOSE_DELAY);
-                }
-                return () => {
-                    bus.trigger("REMOVE", notif.id);
-                };
-            },
-        };
+        /**
+         * @param {string} message
+         * @param {NotificationOptions} [options]
+         */
+        function add(message, options = {}) {
+            const id = ++notifId;
+            const props = Object.assign({}, options, { message });
+            const sticky = props.sticky;
+            delete props.sticky;
+            const closeFn = () => close(id);
+            const notification = {
+                id,
+                props,
+                close: closeFn,
+            };
+            notifications.push(notification);
+            bus.trigger("UPDATE");
+            if (!sticky) {
+                browser.setTimeout(closeFn, AUTOCLOSE_DELAY);
+            }
+            return closeFn;
+        }
+
+        function close(id) {
+            const index = notifications.findIndex((n) => n.id === id);
+            if (index > -1) {
+                notifications.splice(index, 1);
+                bus.trigger("UPDATE");
+            }
+        }
+
+        return { add };
     },
 };
 
