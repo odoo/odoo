@@ -9,8 +9,8 @@
 # Martin Trigaux, 2020
 # Goh Gangtai <gangtai.goh@gmail.com>, 2020
 # Link Up링크업 <linkup.way@gmail.com>, 2020
-# Linkup <link-up@naver.com>, 2021
 # JH CHOI <hwangtog@gmail.com>, 2021
+# Linkup <link-up@naver.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1123,9 +1123,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        제품 임대 지정(제품, 견적, 송장 등)\n"
-"        제품 상태, 임대, 연체 관리\n"
-"        사용자 및 관리자 알림 관리\n"
+"        품목 임대(품목, 견적서, 청구서 등)를 설정합니다\n"
+"        품목, 임대, 연체 상태를 관리합니다\n"
+"        사용자 및 관리자 알림을 관리합니다\n"
 "    "
 
 #. module: base
@@ -1428,7 +1428,7 @@ msgid ""
 msgstr ""
 "\n"
 "        출퇴근 기록지를 발행할 때, SO에 연결된 모든 출퇴근 기록지 또는\n"
-"        유효성이 확인된 출퇴근 기록지만 발행할 수 있습니다\n"
+"        승인된 출퇴근 기록지만 발행할 수 있습니다\n"
 "    "
 
 #. module: base
@@ -1561,7 +1561,7 @@ msgstr ""
 "\n"
 "    잠금 날짜를 되돌릴 수 없도록 설정 :\n"
 "\n"
-"    * 사용자보다 회계사에 대해 더 엄격한 제한을 설정할 수 없습니다. 따라서 모든 사용자 잠금 날짜는 송장/청구서 잠금 날짜보다 이전(또는 동일)이어야 합니다.\n"
+"    * 사용자보다 회계사에 대해 더 엄격한 제한을 설정할 수 없습니다. 따라서 모든 사용자 잠금 날짜는 청구서/공급업체 청구서의 잠금 날짜보다 이전(또는 동일)이어야 합니다.\n"
 "    * 아직 종료되지 않은 기간은 잠글 수 없습니다. 따라서 모든 사용자 잠금 날짜는 전월 말일 이전(또는 동일)이어야 합니다.\n"
 "    * 새로운 모든 사용자 잠금 날짜는 이전 날짜보다 이후(또는 동일)여야 합니다.\n"
 "    "
@@ -2212,12 +2212,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"고객 송장 및 공급 업체 청구서에 구조화 된 커뮤니케이션을 추가합니다.\n"
+"고객 청구서 및 공급 업체 청구서에 구조화 된 커뮤니케이션을 추가합니다.\n"
 "------------------------------------------------------------------\n"
 "\n"
 "OCR 구조화 된 커뮤니케이션을 사용하면 송장과 결제 간의 조정이 간소화됩니다.\n"
 "\n"
-"OCR 레벨 1 ~ 4에 대한 고객 송장 지원의 경우 OCR 번호는 파트너 또는 송장을 기반으로 \n"
+"OCR 레벨 1 ~ 4에 대한 고객 송장 지원의 경우 OCR 번호는 파트너 또는 청구서를 기반으로 \n"
 "할 수 있습니다.\n"
 "\n"
 "공급 업체 청구서 지원을 위해 기본 공급 업체별 OCR 및 OCR에 대한 유효성 검사가 추가되었습니다.\n"
@@ -2737,11 +2737,11 @@ msgid ""
 "invoices from picking, the system is able to add and compute the shipping line.\n"
 msgstr ""
 "\n"
-"판매 주문 및 불출에 납품 방법을 추가합니다.\n"
+"판매 주문 및 품목 선별에 납품 방법을 추가합니다.\n"
 "==============================================================\n"
 "\n"
 "택배회사의 가격을 정의할 수 있습니다.\n"
-"불출로 청구서를 생성하면 시스템이 배송 라인을 추가하고 계산할 수 있습니다.\n"
+"품목선별시 청구서를 생성하면 시스템이 배송 라인을 추가하고 계산할 수 있습니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_account_enterprise
@@ -3187,10 +3187,11 @@ msgid ""
 "Documents app in the desired format(s).\n"
 msgstr ""
 "\n"
-"계정과 문서 앱 간의 연결 모듈입니다.\n"
-"이것은 문서 모듈에서 송장 작성을 가능하게 합니다. \n"
+"회계와 문서 앱 간의 연결 모듈입니다.\n"
+"이것은 문서 앱에서 청구서 작성을 가능하게 하며,\n"
 "그리고 원하는 형식으로 문서 앱에 보고서를 저장할 수 있는 \n"
-"회계 보고서 버튼을 추가합니다.\n"
+"회계 앱의 보고서에 버튼을 추가하여\n"
+"보고서를 문서관리 앱에서 원하는 양식으로 저장하도록 해줍니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -3815,7 +3816,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"전자 송장 구현\n"
+"전자 청구서 구현\n"
 "    "
 
 #. module: base
@@ -4579,7 +4580,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"사용자 지정 번호로 전자 송장을 생성합니다.\n"
+"사용자 지정 번호로 온라인 청구서를 생성합니다.\n"
 "    "
 
 #. module: base
@@ -4642,8 +4643,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"송장을 기준으로 한 신고서에 대해 \n"
-"Intrastat XML 보고서를 생성합니다.\n"
+"청구서에 기반한 \n"
+"연동된 XML보고서를 생성합니다.\n"
 "Intrastat XML 보고서에서 원산지 국가 및 파트너의 부가가치세를 지정할 수 있도록 추가합니다.\n"
 "    "
 
@@ -4812,9 +4813,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"많은 국가에서 차변표는 기존 송장의 금액을 증가시키거나 \n"
+"많은 국가에서 차변전표는 기존 청구서의 금액을 증가시키거나 \n"
 "대변전표를 취소하기 위해 특정 경우에 사용됩니다.\n"
-"일반 송장과 같지만, 원본 송장과의 링크를 계속 추적해야 합니다.\n"
+"일반 청구서와 같지만, 원본 청구성와의 연결을 계속 추적해야 합니다.\n"
 "사용된 마법사는 대변전표에 사용되는 마법사와 유사합니다."
 
 #. module: base
@@ -5700,7 +5701,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"다단계 미지급 송장 자동 독촉 문서 모듈\n"
+"다단계 미지급 청구서 자동 독촉 문서 모듈\n"
 "=========================================================================\n"
 "\n"
 "메뉴를 통해 다단계 독촉을 정의할 수 있습니다 :\n"
@@ -8838,10 +8839,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"유니버설 비즈니스 언어(UBL <http://ubl.xml.org/>`_)는 송장과 같은 표준 전자 XML 비즈니스 문서의 라이브러리입니다.\n"
+"유니버설 비즈니스 언어(UBL `_)는 송장과 같은 표준 전자 XML 비즈니스 문서의 라이브러리입니다.\n"
 "UBL 표준은 `ISO/IEC 19845가 되었습니다\n"
-"<http://www.iso.org/iso/catalogue_detail.htm?csnumber=66370>`_ 2016년 1월 표준\n"
-"(`공식 발표 <http://www.prweb.com/releases/2016/01/prweb13186919.htm>`_).\n"
+"`_ 2016년 1월 표준\n"
+"(`공식 발표 `_).\n"
 "벨기에 전자 송장은 e-fff 프로토콜을 사용하여 UBL 2.0을 사용합니다.\n"
 "    "
 
@@ -9168,9 +9169,9 @@ msgid ""
 "\n"
 "    Supported documents are invoices/credit notes.\n"
 msgstr ""
-" 여러 회사 간의 문서 동기화를 위한 모듈입니다. 예를 들어, 시스템의 다른 회사에서 공급업체로 구매 주문이 검증될 때 판매 주문이 자동으로 생성되도록 할 수 있습니다 .\n"
+" 여러 회사 간의 문서 동기화를 위한 모듈입니다. 예를 들어, 시스템의 다른 회사에서 공급업체로 구매 주문이 승인될 때 판매 주문이 자동으로 생성되도록 할 수 있습니다 .\n"
 "\n"
-"    지원되는 문서는 송장/대변전표입니다.\n"
+"    지원되는 문서는 청구서/대변전표입니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase_stock
@@ -9689,22 +9690,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
-"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">회사 주소</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">송장 주소</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">배송 주소</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">기타 주소</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">개인 주소</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">주소</b>\n"
-"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -10232,8 +10225,8 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
 msgstr ""
-"동일한 <span><span class=\"o_vat_label\">세금 ID</span></span>를 가진 협력사가 이미 있습니다. "
-"("
+"동일한 <span><span class=\"o_vat_label\">사업자등록번호</span></span>를 가진 협력사가 이미 "
+"있습니다. ("
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
@@ -13436,7 +13429,7 @@ msgstr "점수 계산 및 영업제안 자동 배정"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
-msgstr "자동 송장 생성 후 TaxCloud로 세금을 계산합니다."
+msgstr "청구서가 자동으로 생성 후 TaxCloud로 세금을 계산합니다."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
@@ -15584,8 +15577,8 @@ msgstr ""
 "\n"
 "**Contributors**\n"
 "\n"
-"* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
-"* Luis Torres <luis_t@vauxoo.com> (Developer)\n"
+"* Nhomar Hernandez  (Planner/Auditor)\n"
+"* Luis Torres  (Developer)\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_edi
@@ -18383,17 +18376,17 @@ msgstr "인터넷으로 환율을 가져옵니다.\n"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi
 msgid "Import/Export Invoices From XML/PDF"
-msgstr "XML/PDF에서 송장 가져오기/내보내기"
+msgstr "XML/PDF에서 청구서 가져오기/내보내기"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_facturx
 msgid "Import/Export invoices with Factur-X"
-msgstr "Factur-X로 송장 가져오기/내보내기"
+msgstr "Factur-X로 청구서 가져오기/내보내기"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl
 msgid "Import/Export invoices with generic UBL"
-msgstr "일반 UBL로 송장 가져오기/내보내기"
+msgstr "일반 UBL로 청구서 가져오기/내보내기"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__modules
@@ -18942,12 +18935,12 @@ msgstr "청구서"
 msgid ""
 "Invoice & Delivery addresses are used in sales orders. Private addresses are"
 " only visible by authorized users."
-msgstr "판매 주문에 사용된 송장 및 배달 주소. 개인 주소는 인증된 사용자만 볼 수 있습니다."
+msgstr "판매 주문에 사용된 청구서 및 배달 주소. 개인 주소는 인증된 사용자만 볼 수 있습니다."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
 msgid "Invoice Address"
-msgstr "송장 발행 주소"
+msgstr "청구서 발행 주소"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -18957,7 +18950,7 @@ msgstr "청구서 및 결제"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
 msgid "Invoices from Documents"
-msgstr "문서 상 청구서"
+msgstr "문서관리로부터의 청구서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -26900,7 +26893,7 @@ msgstr "기계 및 도구에 대한 유지 관리를 예약하고 관리합니�
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm_sale
 msgid "Schedule and track onsite operations, invoice time and material"
-msgstr "현장 운영, 송장 시간 및 자재 일정 및 추적"
+msgstr "현장 운영, 청구서 시간 및 자재 일정 및 추적"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_industry_fsm
@@ -29306,7 +29299,7 @@ msgid ""
 "This module ensures that the taxes are computed on the invoice before a payment is created automatically for a subscription.\n"
 "    "
 msgstr ""
-"이 모듈은 구독에 대한 지불이 자동으로 작성되기 전에 송장에서 세금이 계산되도록 합니다.\n"
+"이 모듈은 구독에 대한 지불이 자동으로 작성되기 전에 청구서에서 세금이 계산되도록 합니다.\n"
 "    "
 
 #. module: base
@@ -30360,7 +30353,7 @@ msgstr "'%s' 형식 사용"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__vat_label
 msgid "Use this field if you want to change vat label."
-msgstr "VAT 꼬리표를 변경하려면 이 필드를 사용하십시오."
+msgstr "사업자등록번호를 변경하려면 이 필드를 사용하십시오."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__address_view_id
@@ -30649,7 +30642,7 @@ msgstr "변수 필드는 파이썬 코드 또는 파이썬 표현식을 사용�
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__vat_label
 msgid "Vat Label"
-msgstr "부가가치세 꼬리표"
+msgstr "사업자등록번호"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_0
