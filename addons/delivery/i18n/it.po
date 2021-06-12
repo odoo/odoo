@@ -161,7 +161,7 @@ msgstr "Aggiungi"
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "Add a shipping method"
-msgstr "Aggiungi un metodo di spedizione"
+msgstr "Aggiungi metodo di spedizione"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
@@ -372,7 +372,7 @@ msgstr "Indice di successo consegne"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
 msgid "Delivery Set"
-msgstr "Consegna selezionata"
+msgstr "Gruppo di consegne"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
@@ -417,7 +417,7 @@ msgstr "Nome visualizzato"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr "Elenco link tracciabilità"
+msgstr "Visualizza link tracciabilità"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -449,8 +449,8 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of the shipping will be updated on the SO after the delivery."
 msgstr ""
-"Costo Stimato: il cliente riceverà una fattura per il costo simato della spedizione.\n"
-"Costo reale: il cliente riceverà una fattura per il costo reale della spedizione, il costo di spedizione sarà aggiornato sull'ordine di vendita dopo che la consegna sarà effettauta."
+"Costo stimato: al cliente viene fatturato il costo stimato della spedizione.\n"
+"Costo reale: al cliente viene fatturato il costo reale della spedizione, che viene aggiornato nell'OdV dopo la consegna."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
@@ -857,7 +857,7 @@ msgstr "Salva"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "Inviare al mittente"
+msgstr "Invia al mittente"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
@@ -883,6 +883,8 @@ msgid ""
 "Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
 "%(ref)s<br/>Cost: %(price).2f %(currency)s"
 msgstr ""
+"Spedizione inviata al vettore %(carrier_name)s con numero di tracciabilità "
+"%(ref)s<br/>Costo: %(price).2f %(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -921,8 +923,8 @@ msgid ""
 "Standardized code for international shipping and goods declaration. At the "
 "moment, only used for the FedEx shipping provider."
 msgstr ""
-"Codice standard per le consegne internazionali e le dichiarazioni merci. Al "
-"momento utilizzato solo con le spedizioni effettuate con FedEx. "
+"Codice standardizzato per spedizioni internazionali e dichiarazione merci. "
+"Al momento è utilizzato solo per spedizioni del corriere FedEx."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -1032,7 +1034,7 @@ msgstr "Indirizzi codici tracciabilità"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr "Monitoraggio"
+msgstr "Tracciabilità"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_tracking_ref
@@ -1047,7 +1049,7 @@ msgstr "URL tracciabilità"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
-msgstr "Monitoraggio:"
+msgstr "Tracciabilità:"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking

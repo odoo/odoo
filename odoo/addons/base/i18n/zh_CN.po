@@ -10,7 +10,7 @@
 # Gang LIU <liu9ang@hotmail.com>, 2020
 # bf2549c5415a9287249cba2b8a5823c7, 2020
 # 海飞 Lu <330472962@qq.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Felix Yang <felixyangsh@aliyun.com>, 2020
 # as co02 <asco02@163.com>, 2020
 # 朱仁杰 <johnson19960308@gmail.com>, 2020
 # Summer Xia <sxi@odoo.com>, 2020
@@ -61,7 +61,7 @@
 # Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # Titan Li <lghbeta@gmail.com>, 2021
 # 卓忆科技 <zhanghao@jointd.com>, 2021
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
@@ -9685,22 +9685,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
-"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">公司地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">结算单地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">交货地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">其他地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">个人地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">地址</b>\n"
-"                            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
