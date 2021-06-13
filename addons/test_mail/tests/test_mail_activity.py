@@ -333,3 +333,31 @@ class TestActivityMixin(TestActivityCommon):
             user_id=self.user_admin.id,
             new_user_id=self.user_employee.id)
         self.assertEqual(rec.activity_ids[0].user_id, self.user_employee)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_my_activity_flow_employee(self):
+        Activity = self.env['mail.activity']
+        activity_1 = Activity.create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_admin.id,
+        })
+        activity_2 = Activity.create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_call').id,
+            'date_deadline': date.today() + relativedelta(days=1),
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': self.test_record.id,
+            'user_id': self.user_employee.id,
+        })
+
+        test_record_1 = self.env['mail.test.activity'].with_context(self._test_context).create({'name': 'Test 1'})
+        activity_3 = Activity.create({
+            'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
+            'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
+            'res_id': test_record_1.id,
+            'user_id': self.user_employee.id,
+        })
+        with self.with_user('employee'):
+            record = self.env['mail.test.activity'].search([('my_activity_date_deadline', '=', datetime.today())])
+            self.assertEqual(test_record_1, record)

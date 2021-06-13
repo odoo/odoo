@@ -59,11 +59,11 @@ class AccountMove(models.Model):
         # DEPRECATED use AccountEdiFormat._l10n_it_edi_check_invoice_configuration instead
         errors = self.env['account.edi.format']._l10n_it_edi_check_invoice_configuration(self)
         if errors:
-            raise self.env['account.edi.format']._format_error_message(_("Invalid configuration:"), errors)
+            raise UserError(self.env['account.edi.format']._format_error_message(_("Invalid configuration:"), errors))
 
     def invoice_generate_xml(self):
         self.ensure_one()
-        report_name = self.env['account_edi_format']._l10n_it_edi_generate_electronic_invoice_filename(self)
+        report_name = self.env['account.edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)
 
         data = b"<?xml version='1.0' encoding='UTF-8'?>" + self._export_as_xml()
         description = _('Italian invoice: %s', self.move_type)

@@ -754,6 +754,8 @@ msgid ""
 "<p><b>Your homepage is live.</b></p><p>Let's add a new page for your "
 "site.</p>"
 msgstr ""
+"<p><b>La pagina principale è in rete.</b></p><p>Aggiungiamo una nuova pagina"
+" per il sito.</p>"
 
 #. module: website
 #. openerp-web
@@ -1197,6 +1199,13 @@ msgid "Action"
 msgstr "Azione"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Activate anyway"
+msgstr "Attiva comunque"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
@@ -1579,6 +1588,15 @@ msgstr "Autore"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Auto"
 msgstr "Automatico"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid ""
+"Automatically opens the pop-up if the user stays on a page longer than the "
+"specified time."
+msgstr ""
+"Se l'utente rimane su un pagina più a lungo di un tempo indicato apre "
+"automaticamente la finestra a comparsa."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
@@ -2989,6 +3007,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
 msgstr "Visualizzare il sito web quando gli utenti visitano il dominio"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Do not activate"
+msgstr "Non attivare"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -5630,6 +5655,8 @@ msgid ""
 "Once the user closes the popup, it won't be shown again for that period of "
 "time."
 msgstr ""
+"Periodo di tempo nel quale non viene più mostrata la finestra a comparsa "
+"dopo la chiusura da parte dell'utente."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
@@ -6581,7 +6608,7 @@ msgstr "Seleziona un menù"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.onboarding_website_theme_step
 msgid "Select a theme for your website."
-msgstr "Selezionare un tema per il sito web."
+msgstr "Seleziona un tema per il sito web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
