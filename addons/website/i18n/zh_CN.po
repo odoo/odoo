@@ -19,7 +19,7 @@
 # Lisa Zhang <lzh@odoo.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2019
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2019
+# Felix Yang <felixyangsh@aliyun.com>, 2019
 # Youfu Sheng <wdmsyf@sina.com>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
 # lttlsnk <lttlsnk@gmail.com>, 2020
@@ -38,7 +38,7 @@
 # Jeanphy <hzh0292@qq.com>, 2020
 # e2f <projects@e2f.com>, 2020
 # v2exerer <9010446@qq.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # diaojiaolou <124412206@qq.com>, 2021
 # JZH-Odoo <jzh@odoo.com>, 2021
 # Martin Trigaux, 2021
@@ -1257,7 +1257,14 @@ msgid "Action"
 msgstr "动作"
 
 #. module: website
+#. openerp-web
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__active
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Activate anyway"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
@@ -1657,6 +1664,13 @@ msgstr "作者"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Auto"
 msgstr "自动"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid ""
+"Automatically opens the pop-up if the user stays on a page longer than the "
+"specified time."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
@@ -3055,6 +3069,13 @@ msgstr "在网站上显示此徽标。"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
 msgstr "用户访问此域时显示此网站"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Do not activate"
+msgstr ""
 
 #. module: website
 #. openerp-web

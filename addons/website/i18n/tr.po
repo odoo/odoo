@@ -616,7 +616,7 @@ msgstr "<font style=\"font-size: 62px;\">Güçlü Bir Başlık</font>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
 msgid "<font style=\"font-size: 62px;\">Sell Online. Easily.</font>"
-msgstr ""
+msgstr "<font style=\"font-size: 62px;\"> Kolayca. Çevrimiçi Sat.  </font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -750,6 +750,8 @@ msgid ""
 "<i class=\"fa fa-lock fa-2x\"/><br/>\n"
 "                            <span class=\"mt-1\">A password is required to access this page.</span>"
 msgstr ""
+"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"                            <span class=\"mt-1\">Bu sayfaya erişmek için bir şifre gereklidir.</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
@@ -757,6 +759,8 @@ msgid ""
 "<i class=\"fa fa-lock fa-2x\"/><br/>\n"
 "                            <span class=\"mt-1\">Wrong password</span>"
 msgstr ""
+"<i class=\"fa fa-lock fa-2x\"/><br/>\n"
+"                            <span class=\"mt-1\">Yanlış Parola</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_add_language
@@ -764,6 +768,8 @@ msgid ""
 "<i class=\"fa fa-plus-circle\"/>\n"
 "        Add a language..."
 msgstr ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"       Dil ekle..."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -1066,6 +1072,9 @@ msgid ""
 "                    <span class=\"css_publish\">Unpublished</span>\n"
 "                    <span class=\"css_unpublish\">Published</span>"
 msgstr ""
+"<span/>\n"
+"                            <span class=\"css_publish\">Yayınlanmayan</span>\n"
+"                            <span class=\"css_unpublish\">Yayınlanan</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -1229,7 +1238,14 @@ msgid "Action"
 msgstr "Aksiyon"
 
 #. module: website
+#. openerp-web
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__active
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Activate anyway"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
@@ -1640,6 +1656,13 @@ msgid "Auto"
 msgstr "Otomatik"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid ""
+"Automatically opens the pop-up if the user stays on a page longer than the "
+"specified time."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
 msgid "Autoredirect Language"
 msgstr "Otoyönlendirme Dili"
@@ -1835,7 +1858,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Building blocks system"
-msgstr ""
+msgstr "Yapı blokları sistemi"
 
 #. module: website
 #. openerp-web
@@ -3040,6 +3063,13 @@ msgstr "Bu logoyu web sitesinde görüntüle."
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
 msgstr "Bu logoyu web sitesinde bakın."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Do not activate"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -4248,6 +4278,8 @@ msgid ""
 "If you discard the current edits, all unsaved changes will be lost. You can "
 "cancel to return to edit mode."
 msgstr ""
+"Mevcut düzenlemeleri atarsanız, kaydedilmemiş tüm değişiklikler "
+"kaybolacaktır. Düzenleme moduna dönmek için iptal edebilirsiniz. "
 
 #. module: website
 #. openerp-web
@@ -6017,7 +6049,7 @@ msgstr "Yayımlandı"
 #: code:addons/website/static/src/js/content/website_root.js:0
 #, python-format
 msgid "Published with success."
-msgstr ""
+msgstr "Başarıyla yayınlandı."
 
 #. module: website
 #. openerp-web
@@ -7423,7 +7455,7 @@ msgstr "Bu sayfa menünün içinde <b>%s</b>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "This page will be published on {{ date_formatted }}"
-msgstr ""
+msgstr "Bu sayfada yayınlanacak {{ date_formatted }}"
 
 #. module: website
 #. openerp-web
@@ -8750,7 +8782,7 @@ msgstr ""
 #: code:addons/website/static/src/js/content/website_root.js:0
 #, python-format
 msgid "You've published your %s."
-msgstr ""
+msgstr " Sen yayınladın%s."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form

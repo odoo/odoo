@@ -82,6 +82,8 @@ msgid ""
 "\n"
 "(%s) exists in location %s"
 msgstr ""
+"\n"
+"(%s) existuje v místě %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -161,6 +163,8 @@ msgid ""
 "%s use default source or destination locations from warehouse %s that will "
 "be archived."
 msgstr ""
+"%s používá výchozí zdrojové nebo cílové umístění ze skladu %s, které bude "
+"archivováno."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -617,7 +621,7 @@ msgstr "<strong>Komu</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "<strong>Tracked product(s):</strong>"
-msgstr ""
+msgstr "<strong>Sledovaný produkt (produkty):</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -1878,7 +1882,7 @@ msgstr "Termín překračuje nebo/i do plánovaného"
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "Deadline updated due to delay on %s"
-msgstr ""
+msgstr "Termín aktualizován z důvodu zpoždění %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__12
@@ -2458,13 +2462,13 @@ msgstr "Stávající sériová čísla. Opravte prosím zakódovaná sériová �
 #: code:addons/stock/static/src/xml/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
-msgstr ""
+msgstr "Exp"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
-msgstr ""
+msgstr "Exp %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
@@ -2511,7 +2515,7 @@ msgstr "Filtry"
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__next_serial_number
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN"
-msgstr ""
+msgstr "První SN"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -2749,7 +2753,7 @@ msgstr "Získejte plnou sledovatelnost od dodavatelů k zákazníkům"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
-msgstr ""
+msgstr "Získání informativních nebo blokačních upozornění o partnerech"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_putaway_rule__sequence
@@ -2763,7 +2767,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__sequence
 msgid "Gives the sequence of this line when displaying the warehouses."
-msgstr ""
+msgstr "Udává pořadí tohoto řádku při zobrazení skladů."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -2860,7 +2864,7 @@ msgstr "Historie"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
 msgid "How products in transfers of this operation type should be reserved."
-msgstr ""
+msgstr "Jak by měly být produkty v převodech tohoto typu operace rezervovány."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__id
@@ -3935,7 +3939,7 @@ msgstr "Označit jako 'úkol'"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Max Quantity"
-msgstr ""
+msgstr "Maximální množství"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__max_weight
@@ -3956,7 +3960,7 @@ msgstr "Maximální váha musí být kladné číslo"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_positive_max_weight
 msgid "Max weight should be a positive number."
-msgstr ""
+msgstr "Maximální hmotnost by měla být kladné číslo."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before_priority
@@ -3964,6 +3968,8 @@ msgid ""
 "Maximum number of days before scheduled date that priority picking products "
 "should be reserved."
 msgstr ""
+"Maximální počet dní před plánovaným datem, kdy by měly být produkty "
+"přednostního vyzvednutí rezervovány."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_days_before
@@ -4012,7 +4018,7 @@ msgstr "Metoda"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "Min Quantity"
-msgstr ""
+msgstr "Minimální množství"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -4035,7 +4041,7 @@ msgstr "Přesunout"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Move Detail"
-msgstr ""
+msgstr "Detail přesunu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_type_entire_packs
@@ -4110,7 +4116,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
-msgstr ""
+msgstr "Moje počty"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4141,7 +4147,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Negative Forecasted Quantity"
-msgstr ""
+msgstr "Záporné předpokládané množství"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -4210,7 +4216,7 @@ msgstr "Příští očekávaná inventura"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
 msgid "Next date the On Hand Quantity should be counted."
-msgstr ""
+msgstr "Příští den by mělo být spočítáno množství na skladě."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -4220,7 +4226,7 @@ msgstr "Další ovlivněné převody:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr ""
+msgstr "Žádné zpětné objednávky"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -4230,7 +4236,7 @@ msgstr "Žádná zpráva"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__none
 msgid "No Tracking"
-msgstr ""
+msgstr "Žádné sledování"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -4241,7 +4247,7 @@ msgstr "Nejsou povolena negativní množství"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "No operation made on this lot."
-msgstr ""
+msgstr "Na tomto dílu se neprovádějí žádné operace."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -4255,6 +4261,8 @@ msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
 "can be returned)."
 msgstr ""
+"Žádné produkty k vrácení (vrátit lze pouze položky ve stavu Hotovo a dosud "
+"ne zcela vrácené)."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
@@ -4362,7 +4370,7 @@ msgstr "Počet chyb"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_in
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_in
 msgid "Number of incoming stock moves in the past 12 months"
-msgstr ""
+msgstr "Počet příchozích pohybů zásob za posledních 12 měsíců"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -4382,7 +4390,7 @@ msgstr "Počet zpráv s chybou při doručení"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_out
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_out
 msgid "Number of outgoing stock moves in the past 12 months"
-msgstr ""
+msgstr "Počet odchozích pohybů zásob za posledních 12 měsíců"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_unread_counter
@@ -4409,7 +4417,7 @@ msgstr "Po ruce"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr ""
+msgstr "Pohotové množství"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -4796,6 +4804,8 @@ msgid ""
 "Packages are usually created via transfers (during pack operation) and can contain different products.\n"
 "                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again."
 msgstr ""
+"Balíčky se obvykle vytvářejí prostřednictvím přesunů (během operace balení) a mohou obsahovat různé produkty.\n"
+"Po vytvoření lze celý balík přesunout najednou nebo lze produkty rozbalit a opět přesunout jako jednotlivé jednotky."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -4934,7 +4944,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add 'Done' quantities to the picking to create a new pack."
-msgstr ""
+msgstr "Pro vytvoření nového balení přidejte do výběru množství \"Hotovo\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -5414,7 +5424,7 @@ msgstr "Množství"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
-msgstr ""
+msgstr "Vytvoření množství je omezeno, tuto operaci nelze provést."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5498,6 +5508,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
+"Množství plánovaných příchozích produktů.\n"
+"V kontextu s jedním skladovým místem zahrnuje zboží, které přichází do tohoto místa nebo do kteréhokoli z jeho podřízených míst.\n"
+"V kontextu s jedním skladem zahrnuje zboží, které přichází do skladového umístění tohoto skladu nebo do kteréhokoli z jeho podřízených umístění.\n"
+"Jinak sem patří zboží, které přichází do jakéhokoli skladového místa s typem \"interní\"."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty

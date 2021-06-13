@@ -152,6 +152,8 @@ msgid ""
 "<strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
+"<strong>Upozornění</strong> Vytvoření příjemce platby z tlačítka <em>VYTVOŔIT</em> není podporováno.\n"
+"Místo toho použijte akci <em>Duplikovat</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -190,7 +192,7 @@ msgstr "K vytvoření nové platební transakce je vyžadován token."
 #, python-format
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
-msgstr ""
+msgstr "Transakce s odkazem%(ref)sbyla zahájena (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -199,6 +201,8 @@ msgid ""
 "A transaction with reference %(ref)s has been initiated using the payment "
 "method %(token_name)s (%(acq_name)s)."
 msgstr ""
+"Byla zahájena transakce s odkazem %(ref)s pomocí platební metody "
+"%(token_name)s (%(acq_name)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
@@ -393,7 +397,7 @@ msgstr "Hash zpětného volání"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "metoda zpětného volání"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
@@ -416,7 +420,7 @@ msgstr "Zrušeno"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Canceled Message"
-msgstr ""
+msgstr "Zrušená zpráva"
 
 #. module: payment
 #. openerp-web
@@ -821,7 +825,7 @@ msgstr "HTTP Routing"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr ""
+msgstr "Platba byla dodatečně zpracována"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -873,7 +877,7 @@ msgstr "Pokud platba nebyla potvrzena, můžete nás kontaktovat."
 msgid ""
 "If you believe that it is an error, please contact the website "
 "administrator."
-msgstr ""
+msgstr "Pokud se domníváte, že se jedná o chybu, obraťte se na správce webu."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__image_128
@@ -993,7 +997,7 @@ msgstr "Naposled změněno"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "Datum poslední změny stavu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -1051,7 +1055,7 @@ msgstr "Metoda"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Multiple payment options selected"
-msgstr ""
+msgstr "Výběr více možností platby"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1065,7 +1069,7 @@ msgstr "Název"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__provider__none
 msgid "No Provider Set"
-msgstr ""
+msgstr "Není nastaven žádný poskytovatel"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1100,7 +1104,7 @@ msgstr "Není dokončeno"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Not verified"
-msgstr ""
+msgstr "Neověřeno"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1133,7 +1137,7 @@ msgstr "Odoo Platby"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
 msgid "Offline payment by token"
-msgstr ""
+msgstr "Offline platba pomocí tokenu"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -1152,17 +1156,17 @@ msgstr "Ok"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
-msgstr ""
+msgstr "Přímá platba online"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
 msgid "Online payment by token"
-msgstr ""
+msgstr "Online platba pomocí tokenu"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
 msgid "Online payment with redirection"
-msgstr ""
+msgstr "Online platba s přesměrováním"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1174,13 +1178,13 @@ msgstr "K těmto údajům mohou přistupovat pouze správci."
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be captured."
-msgstr ""
+msgstr "Zachyceny mohou být pouze autorizované transakce."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be voided."
-msgstr ""
+msgstr "Anulovat lze pouze autorizované transakce."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
@@ -1258,7 +1262,7 @@ msgstr "Příjemci plateb"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Payment Followup"
-msgstr ""
+msgstr "Sledování plateb"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form

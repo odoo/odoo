@@ -21,10 +21,10 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 09:26+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2021\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +43,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
 msgid "% completed"
-msgstr ""
+msgstr "% Tamamlandı"
 
 #. module: survey
 #: code:addons/survey/models/survey_survey.py:0
@@ -149,6 +149,8 @@ msgid ""
 "<br/>\n"
 "                        <span>Score:</span>"
 msgstr ""
+"<br/>\n"
+"                        <span>Skor:</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
@@ -184,6 +186,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Sayın ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        % if object.survey_id.certification:\n"
+"            Yeni bir sertifika almaya davet edildiniz.\n"
+"        % else:\n"
+"            Bir anket yapıyoruz ve yanıtınız takdir edilecektir..\n"
+"        % endif\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.get_start_url()) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                % if object.survey_id.certification:\n"
+"                    Sertifikasyona Başla\n"
+"                % else:\n"
+"                    Anketi Başlat\n"
+"                % endif\n"
+"            </a>\n"
+"        </div>\n"
+"        % if object.deadline:\n"
+"            Lütfen anketi cevaplayın ${format_date(object.deadline)}.<br/><br/>\n"
+"        % endif\n"
+"        Katıldığınız için teşekkürler.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -207,7 +233,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "<i class=\"fa fa-bar-chart\"/> Results"
-msgstr ""
+msgstr "<i class=\"fa fa-bar-chart\"/> Sonuçlar"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -231,7 +257,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "<i class=\"fa fa-close\"/> Close"
-msgstr ""
+msgstr "<i class=\"fa fa-close\"/> Kapat"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -253,11 +279,13 @@ msgid ""
 "<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
 "                                        Download certification"
 msgstr ""
+"<i class=\"fa fa-fw fa-trophy\" role=\"img\" aria-label=\"Download certification\" title=\"Download certification\"/>\n"
+"                                        Sertifikayı İndir"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date
 msgid "<i class=\"fa fa-list-alt\"/> All Data"
-msgstr ""
+msgstr "<i class=\"fa fa-list-alt\"/> Tüm Veriler"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
@@ -268,7 +296,7 @@ msgstr "<i class=\"fa fa-list-alt\"/> Veri"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date
 msgid "<i class=\"fa fa-list-ol\"/> Most Common"
-msgstr ""
+msgstr "<i class=\"fa fa-list-ol\"/> En Yaygın"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -295,6 +323,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
 "seconds</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_time_limited', '=', False)]}\"> "
+"saniye</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
@@ -331,6 +361,8 @@ msgid ""
 "<span class=\"font-weight-bold text-muted ml-2 d-none d-md-inline\"> or "
 "press Enter</span>"
 msgstr ""
+"<span class=\"font-weight-bold text-muted ml-2 d-none d-md-inline\"> veya "
+"Enter'a basın</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -338,6 +370,8 @@ msgid ""
 "<span class=\"font-weight-bold text-muted ml-2 d-none d-md-inline\">or press"
 " Enter</span>"
 msgstr ""
+"<span class=\"font-weight-bold text-muted ml-2 d-none d-md-inline\"> veya "
+"Enter'a basın</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -363,6 +397,8 @@ msgid ""
 "<span class=\"o_survey_enter font-weight-bold text-muted ml-2\">or press "
 "Enter</span>"
 msgstr ""
+"<span class=\"o_survey_enter font-weight-bold text-muted ml-2\"> veya "
+"Enter'a basın</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -410,7 +446,7 @@ msgstr "<span>Kalan giriş sayısı</span>:"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "<span>Right answer:</span>"
-msgstr ""
+msgstr "<span>Doğru cevap:</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -562,7 +598,7 @@ msgstr "Tüm sorular"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "All surveys"
-msgstr ""
+msgstr "Tüm anketler"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -602,7 +638,7 @@ msgstr "Cevap verme süresi"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__triggering_answer_id
 msgid "Answer that will trigger the display of the current question."
-msgstr ""
+msgstr "Geçerli sorunun görüntülenmesini tetikleyecek yanıt."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -850,7 +886,7 @@ msgstr "Kapat"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Close Live Session"
-msgstr ""
+msgstr "Canlı Oturumu Kapat"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_kanban
@@ -898,13 +934,13 @@ msgstr "Eposta Yaz"
 #: code:addons/survey/models/survey_user.py:0
 #, python-format
 msgid "Computing score requires a question in arguments."
-msgstr ""
+msgstr "Hesaplama puanı, bağımsız değişkenlerde bir soru gerektirir."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_conditional
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Conditional Display"
-msgstr ""
+msgstr "Koşullu Görüntüleme"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -924,7 +960,7 @@ msgstr "Kontak"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_conditional_questions
 msgid "Contains conditional questions"
-msgstr ""
+msgstr "Koşullu sorular içerir"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body
@@ -994,7 +1030,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Create Live Session"
-msgstr ""
+msgstr "Canlı Oturum Oluştur"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -1052,12 +1088,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_id
 msgid "Current Question"
-msgstr ""
+msgstr "Güncel Soru "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_start_time
 msgid "Current Question Start Time"
-msgstr ""
+msgstr "Güncel Soru Başlangıç Saati"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_start_time
@@ -1067,7 +1103,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__is_time_limited
 msgid "Currently only supported for live sessions."
-msgstr ""
+msgstr "Şu anda yalnızca canlı oturumlar için desteklenmektedir."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -1593,12 +1629,12 @@ msgstr "Sınırlı sayıda deneme"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Live Session"
-msgstr ""
+msgstr "Canlı Oturum"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Live Sessions"
-msgstr ""
+msgstr "Canlı Oturum"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_users_login_required
@@ -2049,7 +2085,7 @@ msgstr "Yazdır"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
 msgid "Progression Mode"
-msgstr ""
+msgstr "İlerleme Modu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -2072,12 +2108,12 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Question Time Limit"
-msgstr ""
+msgstr "Soru Zaman Sınırı"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__question_time_limit_reached
 msgid "Question Time Limit Reached"
-msgstr ""
+msgstr "Soru Zaman Sınırı Ulaşıldı"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_type
@@ -2179,7 +2215,7 @@ msgstr "Yinele"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_speed_rating
 msgid "Reward quick answers"
-msgstr ""
+msgstr "Hızlı yanıtları ödüllendirin"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
@@ -2229,12 +2265,12 @@ msgstr "SMS Ulaştırma hatası"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_email
 msgid "Save as user email"
-msgstr ""
+msgstr "Kullanıcıyı e-postası olarak kaydet"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
 msgid "Save as user nickname"
-msgstr ""
+msgstr "Kullanıcı takma adı olarak kaydet"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__answer_score
@@ -2342,7 +2378,7 @@ msgstr "Sıra"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_code
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Session Code"
-msgstr ""
+msgstr "Oturum Kodu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_link
@@ -2358,7 +2394,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_session_code_unique
 msgid "Session code should be unique"
-msgstr ""
+msgstr "Oturum kodu benzersiz olmalıdır"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
@@ -2544,12 +2580,12 @@ msgstr "Anket Sorusu"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Survey Time Limit"
-msgstr ""
+msgstr "Anket Zaman Sınırı"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_time_limit_reached
 msgid "Survey Time Limit Reached"
-msgstr ""
+msgstr "Anket Zaman Sınırına Ulaşıldı"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__title
@@ -2559,7 +2595,7 @@ msgstr "Anket Başlığı"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_start_url
 msgid "Survey URL"
-msgstr ""
+msgstr "Anket URL"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
@@ -2725,7 +2761,7 @@ msgstr ""
 #: code:addons/survey/controllers/main.py:0
 #, python-format
 msgid "The survey has already started."
-msgstr ""
+msgstr "Anket şimdiden başladı."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_time_limited
@@ -2794,6 +2830,8 @@ msgid ""
 "This code will be used by your attendees to reach your session. Feel free to"
 " customize it however you like!"
 msgstr ""
+"Bu kod, oturumunuza ulaşmak için katılımcılarınız tarafından "
+"kullanılacaktır. İstediğiniz gibi özelleştirmekten çekinmeyin! "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -2892,7 +2930,7 @@ msgstr "Bu Gunkü Aktiviteler"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_total
 msgid "Total Score"
-msgstr ""
+msgstr "Toplam Skor"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_id
@@ -2902,7 +2940,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_id
 msgid "Triggering Question"
-msgstr ""
+msgstr "Tetikleyici Soru"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search

@@ -26,11 +26,11 @@
 # Gennady Marchenko <gennadym@gmail.com>, 2020
 # Sergey Vilizhanin, 2020
 # Collex100, 2021
-# Сергей Шебанин <sergey@shebanin.ru>, 2021
 # Martin Trigaux, 2021
 # Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # Ekaterina <nawsikaya@bk.ru>, 2021
+# Сергей Шебанин <sergey@shebanin.ru>, 2021
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-05-11 09:25+0000\n"
 "PO-Revision-Date: 2016-08-05 13:11+0000\n"
-"Last-Translator: Ekaterina <nawsikaya@bk.ru>, 2021\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,6 +177,8 @@ msgid ""
 "(see e.g. Opinion\n"
 "            04/2012 on Cookie Consent Exemption by the EU Art.29 WP)."
 msgstr ""
+"(смотри, например, документ Opinion 04/2012 on Cookie Consent Exemption "
+"опубликованный EU Art.29 WP)."
 
 #. module: website
 #. openerp-web
@@ -186,6 +188,8 @@ msgid ""
 "* provided that your analytics is anonymized, which is not the\n"
 "            case by default with Google Analytics."
 msgstr ""
+"* предполагается, что ваша аналитика анонимна, что не так по умолчанию для "
+"Google Analytics."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -898,12 +902,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-pencil mr-2\"/>Edit"
-msgstr ""
+msgstr "<span class=\"fa fa-pencil mr-2\"/>Редактировать"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-plus mr-2\"/>New"
-msgstr ""
+msgstr "<span class=\"fa fa-plus mr-2\"/>Добавить"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -1064,6 +1068,9 @@ msgid ""
 "                    <span class=\"css_publish\">Unpublished</span>\n"
 "                    <span class=\"css_unpublish\">Published</span>"
 msgstr ""
+"<span/>\n"
+"                    <span class=\"css_publish\">Неопубликовано</span>\n"
+"                    <span class=\"css_unpublish\">Опубликовано</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -1226,7 +1233,14 @@ msgid "Action"
 msgstr "Действие"
 
 #. module: website
+#. openerp-web
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__active
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Activate anyway"
+msgstr "Все равно включить"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__active
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
@@ -1635,6 +1649,13 @@ msgstr "Автор"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Auto"
 msgstr "Авто"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup_options
+msgid ""
+"Automatically opens the pop-up if the user stays on a page longer than the "
+"specified time."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
@@ -2369,7 +2390,7 @@ msgstr "Сеть доставки контента"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Content Width"
-msgstr ""
+msgstr "Ширина содержимого"
 
 #. module: website
 #. openerp-web
@@ -2399,20 +2420,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
 msgid "Cookie Policy"
-msgstr ""
+msgstr "Политика Cookie"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "Cookie bars may significantly impair the experience"
-msgstr ""
+msgstr "Уведомление о Cookies может негативно повлиять "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_cookies_bar
 #: model:ir.model.fields,field_description:website.field_website__cookies_bar
 msgid "Cookies Bar"
-msgstr ""
+msgstr "Уведомление о Cookies"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -2468,7 +2489,7 @@ msgstr "Группы стран"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Course"
-msgstr ""
+msgstr "Обучающий курс"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.record_cover
@@ -3006,6 +3027,7 @@ msgstr "Отображаемое Имя"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display a customizable cookies bar on your website."
 msgstr ""
+"Показывать настраиваемое уведомление об использовании Cookies на сайте."
 
 #. module: website
 #: code:addons/website/models/ir_qweb_fields.py:0
@@ -3035,6 +3057,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
 msgstr "Отображать этот сайт, когда пользователи посещают этот домен"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#, python-format
+msgid "Do not activate"
+msgstr "Не включать"
 
 #. module: website
 #. openerp-web
@@ -3158,7 +3187,7 @@ msgstr "Дублируйте блоки и столбцы для добавле�
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Dynamic Content"
-msgstr ""
+msgstr "Динамические элементы"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -3607,7 +3636,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "For session cookies, authentification and analytics*,"
-msgstr ""
+msgstr "Для отслеживания сессий, авторизации и аналитики*"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4119,7 +4148,7 @@ msgstr "Гибрид"
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 #, python-format
 msgid "I agree"
-msgstr ""
+msgstr "Принять"
 
 #. module: website
 #. openerp-web
@@ -4242,6 +4271,8 @@ msgid ""
 "If you discard the current edits, all unsaved changes will be lost. You can "
 "cancel to return to edit mode."
 msgstr ""
+"Вы не нажали кнопку Сохранить и изменения не сохранятся. Нажмите Отменить, "
+"чтобы вернуться к редактированию."
 
 #. module: website
 #. openerp-web
@@ -4357,7 +4388,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Inner content"
-msgstr ""
+msgstr "Внутренние элементы"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4530,7 +4561,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Job Offer"
-msgstr ""
+msgstr "Вакансия"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
@@ -4802,7 +4833,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 msgid "Legal"
-msgstr ""
+msgstr "Оферта"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -5784,7 +5815,7 @@ msgstr "Оплатить"
 #: model:ir.actions.act_window,name:website.theme_install_kanban_action
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Pick a Theme"
-msgstr ""
+msgstr "Выбрать тему"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -5806,7 +5837,7 @@ msgstr "Одноцветный"
 #: code:addons/website/static/src/js/backend/res_config_settings.js:0
 #, python-format
 msgid "Please confirm"
-msgstr ""
+msgstr "Необходимо подтверждение"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6398,7 +6429,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Scroll down button"
-msgstr ""
+msgstr "Иконка \"Вниз\""
 
 #. module: website
 #. openerp-web
@@ -7255,7 +7286,7 @@ msgstr "прикрепление темы"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Theme Colors"
-msgstr ""
+msgstr "Цвета Темы"
 
 #. module: website
 #. openerp-web
@@ -8158,7 +8189,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website.website_visitor_menu
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_graph
 msgid "Visitors"
-msgstr ""
+msgstr "Посетители"
 
 #. module: website
 #. openerp-web
@@ -8192,6 +8223,8 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.\n"
 "                            <br/><br/>Our products are designed for small to medium size companies willing to optimize their performance."
 msgstr ""
+"Мы - команда влюбленных в свое дело людей, и наша цель - разработка продуктов, которые делают нашу жизнь лучше. Мы предлагаем первоклассные решения для ваших бизнес-задач.\n"
+"                            <br/><br/>Наши продукты ориентированы на средние и малые компании, которые заинтересованы в повышении собственной эффективности."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
@@ -8201,6 +8234,11 @@ msgid ""
 "problems. Our products are designed for small to medium size companies "
 "willing to optimize their performance."
 msgstr ""
+"Мы - команда влюбленных в свое дело людей, и наша цель - разработка "
+"продуктов, которые делают нашу жизнь лучше. Мы предлагаем первоклассные "
+"решения для ваших бизнес-задач. Наши продукты ориентированы на компании "
+"малого и среднего бизнеса, которые заинтересованы в повышении собственной "
+"эффективности."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
@@ -8208,6 +8246,9 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's "
 "life.<br/>Our services are designed for small to medium size companies."
 msgstr ""
+"Мы - команда влюбленных в свое дело людей, и наша цель - сделать жизнь "
+"каждого лучше. Наши продукты ориентированы на компании малого и среднего "
+"бизнеса."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar
@@ -8253,6 +8294,8 @@ msgstr ""
 #, python-format
 msgid "We use cookies to provide you a better user experience."
 msgstr ""
+"Мы используем cookies, поскольку они упрощают использование этого сайта для "
+"вас."
 
 #. module: website
 #. openerp-web
@@ -9083,7 +9126,7 @@ msgstr "изображение, медиа, иллюстрация"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "in the top right corner to start designing."
-msgstr ""
+msgstr "в правом верхнем углу страницы и настройте главную страницу."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -9138,6 +9181,8 @@ msgid ""
 "            verified with a legal advisor that you absolutely need cookie\n"
 "            consent in your country."
 msgstr ""
+"на\n"
+"ваших посетителей. Мы рекомендуем не использовать его, кроме случаев, когда вы посоветовались с юристом и абсолютно уверены, что в вашей стране это уведомление необходимо."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -9258,7 +9303,7 @@ msgstr "да"
 #: code:addons/website/static/src/xml/website.res_config_settings.xml:0
 #, python-format
 msgid "you do not need to ask for the consent"
-msgstr ""
+msgstr "вам не обязательно отображать это уведомление"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -9288,7 +9333,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Colors"
-msgstr ""
+msgstr "⌙ Цвета"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_map_options
@@ -9370,7 +9415,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "⌙ Parallax"
-msgstr ""
+msgstr "⌙ Параллакс"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9390,7 +9435,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Spacing"
-msgstr ""
+msgstr "⌙ Отступ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
