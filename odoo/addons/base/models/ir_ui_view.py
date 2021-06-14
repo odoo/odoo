@@ -611,7 +611,7 @@ actual arch.
                       AND ({where_clause})
             )
             SELECT
-                v.id, v.inherit_id,
+                v.id, v.inherit_id, v.mode,
                 ARRAY(SELECT r.group_id FROM ir_ui_view_group_rel r WHERE r.view_id=v.id)
             FROM ir_ui_view_inherits v
             ORDER BY v.priority, v.id
@@ -628,14 +628,15 @@ actual arch.
         rows = self.env.cr.fetchall()
 
         # filter out forbidden views
-        if any(row[2] for row in rows):
+        if any(row[3] for row in rows):
             user_groups = set(self.env.user.groups_id.ids)
-            rows = [row for row in rows if not (row[2] and user_groups.isdisjoint(row[2]))]
+            rows = [row for row in rows if not (row[3] and user_groups.isdisjoint(row[3]))]
 
         views = self.browse(row[0] for row in rows)
 
-        # optimization: fill in cache of inherit_id
+        # optimization: fill in cache of inherit_id and mode
         self.env.cache.update(views, type(self).inherit_id, [row[1] for row in rows])
+        self.env.cache.update(views, type(self).mode, [row[2] for row in rows])
 
         # During an upgrade, we can only use the views that have been
         # fully upgraded already.
