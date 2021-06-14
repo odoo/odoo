@@ -346,6 +346,10 @@ var SnippetEditor = Widget.extend({
             return;
         }
 
+        const transform = window.getComputedStyle(targetEl).getPropertyValue('transform');
+        const transformOrigin = window.getComputedStyle(targetEl).getPropertyValue('transform-origin');
+        targetEl.classList.add('o_transform_removal');
+
         // Now cover the element
         const offset = $target.offset();
         var manipulatorOffset = this.$el.parent().offset();
@@ -353,10 +357,15 @@ var SnippetEditor = Widget.extend({
         offset.left -= manipulatorOffset.left;
         this.$el.css({
             width: $target.outerWidth(),
+            height: $target.outerHeight(),
             left: offset.left,
             top: offset.top,
+            transform,
+            'transform-origin': transformOrigin,
         });
         this.$('.o_handles').css('height', $target.outerHeight());
+
+        targetEl.classList.remove('o_transform_removal');
 
         const editableOffsetTop = this.$editable.offset().top - manipulatorOffset.top;
         this.$el.toggleClass('o_top_cover', offset.top - editableOffsetTop < 25);
