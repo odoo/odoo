@@ -165,11 +165,3 @@ class FleetVehicle(models.Model):
                         partners_to_unsubscribe.append(employee.user_id.partner_id.id)
                     vehicle.message_unsubscribe(partner_ids=partners_to_unsubscribe)
         return super().write(vals)
-
-class FleetVehicleOdometer(models.Model):
-    _inherit = 'fleet.vehicle.odometer'
-
-    driver_employee_id = fields.Many2one(
-        related='vehicle_id.driver_employee_id', string='Current Driver (Employee)',
-        readonly=True,
-    )
