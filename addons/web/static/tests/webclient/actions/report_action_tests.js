@@ -9,6 +9,7 @@ import { patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 import { mockDownload } from "@web/../tests/helpers/utils";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
+import { session } from "@web/session";
 
 let serverData;
 
@@ -184,7 +185,7 @@ QUnit.module("ActionManager", (hooks) => {
                 () => {}
             )
         );
-        patchWithCleanup(odoo.session_info.user_context, { some_key: 2 });
+        patchWithCleanup(session.user_context, { some_key: 2 });
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
             if (route.includes("/report/html/some_report")) {

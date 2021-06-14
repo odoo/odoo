@@ -5,6 +5,7 @@ import { localization } from "@web/core/l10n/localization";
 import { patch, unpatch } from "@web/core/utils/patch";
 import { defaultLocalization } from "../../helpers/mock_services";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { session } from "@web/session";
 
 QUnit.module("utils", (hooks) => {
     hooks.beforeEach(() => {
@@ -34,7 +35,7 @@ QUnit.module("utils", (hooks) => {
     QUnit.test("parseCurrency", function (assert) {
         assert.expect(17);
 
-        patchWithCleanup(odoo.session_info, {
+        patchWithCleanup(session, {
             currencies: {
                 1: {
                     digits: [69, 2],

@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
 import { registry } from "./registry";
+import { session } from "@web/session";
 
 export const userService = {
     dependencies: ["rpc"],
     async: ["hasGroup"],
     start(env, { rpc }) {
-        const sessionInfo = odoo.session_info;
         const groupProms = {};
 
         const context = {
-            ...sessionInfo.user_context,
-            uid: sessionInfo.uid,
+            ...session.user_context,
+            uid: session.uid,
         };
         return {
             get context() {
@@ -37,13 +37,13 @@ export const userService = {
                 }
                 return groupProms[group];
             },
-            name: sessionInfo.name,
-            userName: sessionInfo.username,
-            isAdmin: sessionInfo.is_admin,
-            isSystem: sessionInfo.is_system,
-            partnerId: sessionInfo.partner_id,
-            home_action_id: sessionInfo.home_action_id,
-            showEffect: sessionInfo.show_effect,
+            name: session.name,
+            userName: session.username,
+            isAdmin: session.is_admin,
+            isSystem: session.is_system,
+            partnerId: session.partner_id,
+            home_action_id: session.home_action_id,
+            showEffect: session.show_effect,
             get userId() {
                 return context.uid;
             },
@@ -55,10 +55,10 @@ export const userService = {
             },
             get db() {
                 const res = {
-                    name: sessionInfo.db,
+                    name: session.db,
                 };
-                if ("dbuuid" in sessionInfo) {
-                    res.uuid = sessionInfo.dbuuid;
+                if ("dbuuid" in session) {
+                    res.uuid = session.dbuuid;
                 }
                 return res;
             },

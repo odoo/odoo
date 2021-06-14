@@ -4,6 +4,7 @@ odoo.define('google_recaptcha.ReCaptchaV3', function (require) {
 const ajax = require('web.ajax');
 const Class = require('web.Class');
 const core = require('web.core');
+const { session } = require('@web/session');
 
 const _t = core._t;
 
@@ -12,7 +13,7 @@ const ReCaptcha = Class.extend({
      * @override
      */
     init: function () {
-        this._publicKey = odoo.session_info.recaptcha_public_key;
+        this._publicKey = session.recaptcha_public_key;
     },
     /**
      * Loads the recaptcha libraries.

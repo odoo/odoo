@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
 export const companyAutocompleteService = {
     dependencies: ["orm", "company"],
 
     start(env, { orm, company }) {
-        if (odoo.session_info.iap_company_enrich) {
+        if (session.iap_company_enrich) {
             const currentCompanyId = company.currentCompany.id;
             orm.silent.call("res.company", "iap_enrich_auto", [currentCompanyId], {});
         }

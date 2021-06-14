@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { formatFloat, humanNumber, parseFloat, InvalidNumberError } from "./numbers";
+import { session } from "@web/session";
 
 /**
  * Formats a value as a currency.
@@ -20,7 +21,7 @@ export function formatCurrency(value, cid, options = {}) {
     if (value === false) {
         return "";
     }
-    const currency = odoo.session_info.currencies[cid];
+    const currency = session.currencies[cid];
     const { noSymbol } = options || {};
     const digits = (currency && currency.digits) || options.digits;
 
@@ -56,9 +57,9 @@ export function parseCurrency(value, options = {}) {
     }
     let currency;
     if (options.currencyId) {
-        currency = odoo.session_info.currencies[options.currencyId];
+        currency = session.currencies[options.currencyId];
     } else {
-        currency = Object.values(odoo.session_info.currencies)[0];
+        currency = Object.values(session.currencies)[0];
     }
     const symbolIndex = values.findIndex((v) => v === currency.symbol);
     if (symbolIndex === -1) {

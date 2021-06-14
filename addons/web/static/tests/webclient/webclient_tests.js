@@ -13,6 +13,7 @@ import { WebClient } from "@web/webclient/webclient";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
 import { fakeTitleService } from "../helpers/mock_services";
 import { getFixture, patchWithCleanup, triggerEvent } from "../helpers/utils";
+import { session } from "@web/session";
 
 const { Component, tags, mount } = owl;
 const { xml } = tags;
@@ -61,7 +62,7 @@ QUnit.test("can render a main component", async (assert) => {
 
 QUnit.test("webclient for the superuser", async (assert) => {
     assert.expect(1);
-    patchWithCleanup(odoo.session_info, { uid: 1 });
+    patchWithCleanup(session, { uid: 1 });
     const env = await makeTestEnv(baseConfig);
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });
@@ -71,7 +72,7 @@ QUnit.test("webclient for the superuser", async (assert) => {
 
 QUnit.test("webclient for a non superuser", async (assert) => {
     assert.expect(1);
-    patchWithCleanup(odoo.session_info, { uid: 2 });
+    patchWithCleanup(session, { uid: 2 });
     const env = await makeTestEnv(baseConfig);
     const target = getFixture();
     const webClient = await mount(WebClient, { env, target });

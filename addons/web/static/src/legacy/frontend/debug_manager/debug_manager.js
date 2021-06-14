@@ -5,6 +5,7 @@ var core = require('web.core');
 var session = require('web.session');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+const { session: sessionInfo } = require('@web/session');
 
 var QWeb = core.qweb;
 
@@ -25,12 +26,12 @@ var DebugManager = Widget.extend({
         var debug = odoo.debug;
         this.debug_mode = debug;
         this.debug_mode_help = debug && debug !== '1' ? ' (' + debug + ')' : '';
-        this.profile_session = odoo.session_info && odoo.session_info.profile_session || false;
-        this.profile_collectors = odoo.session_info && odoo.session_info.profile_collectors;
+        this.profile_session = sessionInfo.profile_session || false;
+        this.profile_collectors = sessionInfo.profile_collectors;
         if (! Array.isArray(this.profile_collectors)) {
             this.profile_collectors = ['sql', 'traces_async'];  // use default value when not defined in session.
         }
-        this.profile_params = odoo.session_info && odoo.session_info.profile_params || {};
+        this.profile_params = sessionInfo.profile_params || {};
     },
     start: function () {
         core.bus.on('rpc:result', this, function (req, resp) {

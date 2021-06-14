@@ -9,6 +9,7 @@ var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
+const { session } = require('@web/session');
 
 var _t = core._t;
 
@@ -581,7 +582,7 @@ var MetaImageSelector = Widget.extend({
         this.activeMetaImg = data.metaImg;
         this.serverUrl = data.htmlpage.url();
         const imgField = data.hasSocialDefaultImage ? 'social_default_image' : 'logo';
-        data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/%s', odoo.session_info.website_id, imgField));
+        data.pageImages.unshift(_.str.sprintf('/web/image/website/%s/%s', session.website_id, imgField));
         this.images = _.uniq(data.pageImages);
         this.customImgUrl = _.contains(
             data.pageImages.map((img)=>  new URL(img, window.location.origin).pathname),

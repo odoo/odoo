@@ -6,6 +6,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
+const { session } = require('@web/session');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -258,7 +259,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @returns {Promise} promise indicating the session is done reloading
      */
     session_reload: function () {
-        var result = _.extend({}, window.odoo.session_info);
+        var result = _.extend({}, session);
         _.extend(this, result);
         return Promise.resolve();
     },
