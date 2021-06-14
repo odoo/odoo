@@ -89,7 +89,7 @@
                                 </div>
                                 <div class="oe_kanban_bottom_right" t-if="!selection_mode">
                                     <field name="kanban_state" widget="state_selection"/>
-                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="user_id" widget="many2one_avatar_user" options="{'no_open_chat': True}"/>
                                 </div>
                             </div>
                         </div>
@@ -115,7 +115,7 @@
                 <field name="child_text" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id" optional="hide"/>
-                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user" options="{'no_open_chat': True}"/>
                 <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="kanban_state" widget="state_selection" optional="hide"/>
@@ -152,7 +152,7 @@
                             <field name="display_project_id" string="Project" invisible="1"/>
                             <field name="user_id"
                                 class="o_task_user_field"
-                                options="{'no_open': True}"
+                                options="{'no_open': True, 'no_open_chat': True}"
                                 widget="many2one_avatar_user"
                                 domain="[('share', '=', False)]"/>
                         </group>
@@ -181,7 +181,7 @@
                                     <field name="display_project_id" string="Project" optional="hide" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
-                                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                                    <field name="user_id" widget="many2one_avatar_user" optional="show" options="{'no_open_chat': True}"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="kanban_state" widget="state_selection" optional="hide"/>
