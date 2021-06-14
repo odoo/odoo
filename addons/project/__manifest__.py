@@ -96,6 +96,12 @@
         'project.webclient': [
             ('include', 'web.assets_backend'),
             ('remove', 'web/static/src/webclient/menu_service.js'),
+
+            # Remove Longpolling bus and packages needed this bus
+            ('remove', 'bus/static/src/js/services/assets_watchdog_service.js'),
+            ('remove', 'mail/static/src/services/messaging/messaging.js'),
+            ('remove', 'mail/static/src/components/notification_request/notification_request.js'),
+
             ('remove', 'mail/static/src/components/dialog_manager/dialog_manager.js'),
             ('remove', 'mail/static/src/services/dialog_service/dialog_service.js'),
             ('remove', 'mail/static/src/components/chat_window_manager/chat_window_manager.js'),

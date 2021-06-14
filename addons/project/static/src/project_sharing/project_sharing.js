@@ -40,9 +40,7 @@ export class ProjectSharingWebClient extends Component {
         );
     }
 
-    mounted() {
-        this.env.bus.trigger("WEB_CLIENT_READY");
-    }
+    mounted() { }
 
     handleComponentError(error, C) {
         // remove the faulty component
