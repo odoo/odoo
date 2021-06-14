@@ -3,13 +3,34 @@
 
 from datetime import timedelta
 
-from odoo.tests.common import TransactionCase
-from odoo.tests import Form
 from odoo import tools
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.fields import Date
+from odoo.tests import Form, tagged, users
+from odoo.tests.common import TransactionCase
 
 
+@tagged('crm_lead_pls')
 class TestCRMPLS(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        """ Keep a limited setup to ensure tests are not impacted by other
+        records created in CRM common. """
+        super(TestCRMPLS, cls).setUpClass()
+
+        cls.company_main = cls.env.user.company_id
+        cls.user_sales_manager = mail_new_test_user(
+            cls.env, login='user_sales_manager',
+            name='Martin PLS Sales Manager', email='crm_manager@test.example.com',
+            company_id=cls.company_main.id,
+            notification_type='inbox',
+            groups='sales_team.group_sale_manager,base.group_partner_manager',
+        )
+
+        cls.pls_team = cls.env['crm.team'].create({
+            'name': 'PLS Team',
+        })
 
     def _get_lead_values(self, team_id, name_suffix, country_id, state_id, email_state, phone_state, source_id, stage_id):
         return {
@@ -478,3 +499,63 @@ class TestCRMPLS(TransactionCase):
         res_config_new = resConfig.new()
         self.assertEqual(Date.to_string(res_config_new.predictive_lead_scoring_start_date),
             str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
+
+    @users('user_sales_manager')
+    def test_team_unlink(self):
+        """ Test that frequencies are sent to "no team" when unlinking a team
+        in order to avoid loosing too much informations. """
+        pls_team = self.env["crm.team"].browse(self.pls_team.ids)
+
+        # clean existing data
+        self.env["crm.lead.scoring.frequency"].sudo().search([('team_id', '=', False)]).unlink()
+
+        # existing no-team data
+        no_team = [
+            ('stage_id', '1', 20, 10),
+            ('stage_id', '2', 0.1, 0.1),
+            ('stage_id', '3', 10, 0),
+            ('country_id', '1', 10, 0.1),
+        ]
+        self.env["crm.lead.scoring.frequency"].sudo().create([
+            {'variable': variable, 'value': value,
+             'won_count': won_count, 'lost_count': lost_count,
+             'team_id': False,
+            } for variable, value, won_count, lost_count in no_team
+        ])
+
+        # add some frequencies to team to unlink
+        team = [
+            ('stage_id', '1', 20, 10),  # existing noteam
+            ('country_id', '1', 0.1, 10),  # existing noteam
+            ('country_id', '2', 0.1, 0),  # new but void
+            ('country_id', '3', 30, 30),  # new
+        ]
+        existing_plsteam = self.env["crm.lead.scoring.frequency"].sudo().create([
+            {'variable': variable, 'value': value,
+             'won_count': won_count, 'lost_count': lost_count,
+             'team_id': pls_team.id,
+            } for variable, value, won_count, lost_count in team
+        ])
+
+        pls_team.unlink()
+
+        final_noteam = [
+            ('stage_id', '1', 40, 20),
+            ('stage_id', '2', 0.1, 0.1),
+            ('stage_id', '3', 10, 0),
+            ('country_id', '1', 10, 10),
+            ('country_id', '3', 30, 30),
+
+        ]
+        self.assertEqual(
+            existing_plsteam.exists(), self.env["crm.lead.scoring.frequency"],
+            'Frequencies of unlinked teams should be unlinked (cascade)')
+        existing_noteam = self.env["crm.lead.scoring.frequency"].sudo().search([
+            ('team_id', '=', False),
+            ('variable', 'in', ['stage_id', 'country_id']),
+        ])
+        for frequency in existing_noteam:
+            stat = next(item for item in final_noteam if item[0] == frequency.variable and item[1] == frequency.value)
+            self.assertEqual(frequency.won_count, stat[2])
+            self.assertEqual(frequency.lost_count, stat[3])
+        self.assertEqual(len(existing_noteam), len(final_noteam))
