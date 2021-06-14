@@ -105,7 +105,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             // click_tip
             const tip = this.currentOrder.get_tip();
             const change = this.currentOrder.get_change();
-            let value = tip === 0 && change > 0 ? change : tip;
+            const value = tip === 0 && change > 0 ? change : tip;
 
             const { confirmed, payload } = await this.showPopup('NumberPopup', {
                 title: tip ? this.env._t('Change Tip') : this.env._t('Add Tip'),
