@@ -379,3 +379,72 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
 
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, even after invoice validation")
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice, even after invoice validation")
+
+    def test_update_task_on_timesheets(self):
+        """ Test update task on timesheets from different employees
+        """
+        # create SO and confirm it
+        self.env['res.currency.rate'].search([]).unlink()
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'partner_invoice_id': self.partner_customer_usd.id,
+            'partner_shipping_id': self.partner_customer_usd.id,
+            'pricelist_id': self.pricelist_usd.id,
+        })
+        so_line_deliver_global_project = self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet2.name,
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 50,
+            'product_uom': self.product_delivery_timesheet2.uom_id.id,
+            'price_unit': self.product_delivery_timesheet2.list_price,
+            'order_id': sale_order.id,
+        })
+        so_line_deliver_task_project = self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet3.name,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 20,
+            'product_uom': self.product_delivery_timesheet3.uom_id.id,
+            'price_unit': self.product_delivery_timesheet3.list_price,
+            'order_id': sale_order.id,
+        })
+        so_line_deliver_global_project.product_id_change()
+        so_line_deliver_task_project.product_id_change()
+
+        # confirm SO
+        sale_order.action_confirm()
+        task_serv1 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_global_project.id)])
+        task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_task_project.id)])
+
+        # let's log some timesheets
+        analytic_line_obj = self.env['account.analytic.line']
+        timesheet1 = analytic_line_obj.create({
+            'name': 'Test Line 1',
+            'project_id': task_serv1.project_id.id,  # global project
+            'task_id': task_serv1.id,
+            'unit_amount': 10.5,
+            'employee_id': self.employee_user.id,
+        })
+        timesheet1 += analytic_line_obj.create({
+            'name': 'Test Line 2',
+            'project_id': task_serv1.project_id.id,  # global project
+            'task_id': task_serv1.id,
+            'unit_amount': 10.5,
+            'employee_id': self.employee_manager.id,
+        })
+
+        # task on timesheets from different employees can be modified if the task billing Type is at task rate
+        timesheet1.write({
+            'project_id': task_serv2.project_id.id,
+            'task_id': task_serv2.id,
+        })
+        for analytic_line in timesheet1:
+            self.assertEqual(analytic_line.task_id, task_serv2, "The task should be the same for both employees")
+
+        # task on timesheets from different employees cannot be modified if the task billing Type is at employee rate
+        task_serv3 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_task_project.id)])
+        task_serv3.billable_type = 'employee_rate'
+        with self.assertRaises(UserError):
+            timesheet1.write({
+                'project_id': task_serv3.project_id.id,
+                'task_id': task_serv3.id,
+            })

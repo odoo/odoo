@@ -71,9 +71,9 @@ class AccountAnalyticLine(models.Model):
         values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
         # task implies so line (at create)
         if 'task_id' in values and not values.get('so_line') and (values.get('employee_id') or self.mapped('employee_id')):
-            if not values.get('employee_id') and len(self.mapped('employee_id')) > 1:
-                raise UserError(_('You can not modify timesheets from different employees'))
             task = self.env['project.task'].sudo().browse(values['task_id'])
+            if task.billable_type == 'employee_rate' and not values.get('employee_id') and len(self.mapped('employee_id')) > 1:
+                raise UserError(_('You can not change task on timesheets from different employees if the task Billing Type is at Employee Rate'))
             employee = self.env['hr.employee'].sudo().browse(values['employee_id']) if values.get('employee_id') else self.mapped('employee_id')
             values['so_line'] = self._timesheet_determine_sale_line(task, employee).id
         return values
