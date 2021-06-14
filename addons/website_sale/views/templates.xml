@@ -254,6 +254,22 @@
         </div>
     </template>
 
+    <template id="products_breadcrumb" name="Products Breadcrumb">
+        <ol t-if="category" t-attf-class="breadcrumb #{_classes}">
+            <li class="breadcrumb-item">
+                <a href="/shop">Products</a>
+            </li>
+            <t t-foreach="category.parents_and_self" t-as="cat">
+                <li t-if="cat == category" class="breadcrumb-item">
+                    <span class="d-inline-block" t-field="cat.name"/>
+                </li>
+                <li t-else="" class="breadcrumb-item">
+                    <a t-att-href="keep('/shop/category/%s' % slug(cat), category=0)" t-field="cat.name"/>
+                </li>
+            </t>
+        </ol>
+    </template>
+
     <!-- /shop product listing -->
     <template id="products" name="Products">
         <t t-call="website.layout">
@@ -267,6 +283,9 @@
                             <div class="products_attributes_filters"/>
                         </div>
                         <div id="products_grid" t-attf-class="col #{'o_wsale_layout_list' if layout_mode == 'list' else ''}">
+                            <t t-call="website_sale.products_breadcrumb">
+                                <t t-set="_classes" t-valuef="w-100"/>
+                            </t>
                             <div class="products_header form-inline flex-md-nowrap justify-content-end mb-4">
                                 <t t-call="website_sale.search">
                                     <t t-set="_classes" t-valuef="w-100 w-md-auto mr-auto mb-2"/>
