@@ -191,3 +191,13 @@ class AccountEdiProxyClientUser(models.Model):
         )
         f = Fernet(key)
         return f.decrypt(base64.b64decode(data))
+
+    def _neutralize(self):
+        super()._neutralize()
+        self.flush()
+        self.invalidate_cache()
+        self.env.cr.execute("""
+            INSERT INTO ir_config_parameter(key, value)
+            VALUES ('account_edi_proxy_client.demo', true)
+            ON CONFLICT (key) DO UPDATE SET value = true
+        """)

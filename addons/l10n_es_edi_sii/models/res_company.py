@@ -42,3 +42,9 @@ class ResCompany(models.Model):
                 )
             else:
                 company.l10n_es_edi_certificate_id = False
+
+    def _neutralize(self):
+        super()._neutralize()
+        self.flush()
+        self.invalidate_cache()
+        self.env.cr.execute("UPDATE res_company SET l10n_es_edi_test_env = true")

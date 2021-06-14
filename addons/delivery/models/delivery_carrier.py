@@ -358,3 +358,16 @@ class DeliveryCarrier(models.Model):
 
     def _product_price_to_company_currency(self, quantity, product, company):
         return company.currency_id._convert(quantity * product.standard_price, product.currency_id, company, fields.Date.today())
+
+    # -------------------------- #
+    # neutralize                 #
+    # -------------------------- #
+
+    def _neutralize(self):
+        super()._neutralize()
+        self.flush()
+        self.invalidate_cache()
+        self.env.cr.execute("""
+            UPDATE delivery_carrier
+            SET prod_environment = false, active = false
+        """)
