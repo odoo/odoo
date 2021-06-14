@@ -50,7 +50,9 @@
 
                             <div class="payment-buttons">
                                 <div class="customer-button">
-                                    <div class="button" t-on-click="selectClient">
+                                    <div class="button"
+                                         t-att-class="{ highlight: env.pos.get_client() }"
+                                         t-on-click="selectClient">
                                         <i class="fa fa-user" role="img" aria-label="Customer"
                                            title="Customer" />
                                         <span class="js_customer_name">
@@ -69,9 +71,14 @@
                                         t-on-click="toggleIsToInvoice">
                                         <i class="fa fa-file-text-o" /> Invoice
                                     </div>
-                                    <div t-if="env.pos.config.tip_product_id" class="button js_tip"
-                                        t-on-click="addTip">
-                                        <i class="fa fa-heart" /> Tip <t t-if="currentOrder.get_tip() != 0">(<t t-esc="env.pos.format_currency(currentOrder.get_tip())"/>)</t>
+                                    <div t-if="env.pos.config.tip_product_id"
+                                         class="button js_tip"
+                                         t-att-class="{ highlight: currentOrder.get_tip() > 0 }"
+                                         t-on-click="addTip">
+                                         <i class="fa fa-heart" /> Tip
+                                         <t t-if="currentOrder.get_tip() > 0">
+                                             (<t t-esc="env.pos.format_currency(currentOrder.get_tip())"/>)
+                                         </t>
                                     </div>
                                     <div t-if="env.pos.config.iface_cashdrawer" class="button js_cashdrawer"
                                         t-on-click="openCashbox">
