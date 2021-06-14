@@ -41,7 +41,7 @@
         </xpath>
         <xpath expr="//head/script[@id='web.layout.odooscript']" position="after">
             <script type="text/javascript">
-                odoo.session_info = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+                odoo.__session_info__ = <t t-out="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
                 if (!/(^|;\s)tz=/.test(document.cookie)) {
                     const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
                     document.cookie = `tz=${userTZ}; path=/`;
@@ -286,13 +286,13 @@
         <t t-call="web.layout">
             <t t-set="head_web">
                 <script type="text/javascript">
-                    odoo.session_info = <t t-out="json.dumps(session_info)"/>;
-                    odoo.reloadMenus = () => fetch(`/web/webclient/load_menus/${odoo.session_info.cache_hashes.load_menus}`).then(res => res.json());
+                    odoo.__session_info__ = <t t-out="json.dumps(session_info)"/>;
+                    odoo.reloadMenus = () => fetch(`/web/webclient/load_menus/${odoo.__session_info__.cache_hashes.load_menus}`).then(res => res.json());
                     odoo.loadMenusPromise = odoo.reloadMenus();
-                    odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.session_info.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());
+                    odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());
                     // Block to avoid leaking variables in the script scope
                     {
-                        const { user_context,  cache_hashes } = odoo.session_info;
+                        const { user_context,  cache_hashes } = odoo.__session_info__;
                         // Prefetch translations to speedup webclient. This is done in JS because link rel="prefetch"
                         // is not yet supported on safari.
                         fetch(`/web/webclient/translations/${cache_hashes.translations}?lang=${user_context.lang}`);

@@ -32,7 +32,7 @@
             <script type="text/javascript">
                 var odoo = <t t-out="json.dumps({
                     'csrf_token': request.csrf_token(None),
-                    'session_info': session_info,
+                    '__session_info__': session_info,
                     'debug': debug,
                 })"/>;
             </script>

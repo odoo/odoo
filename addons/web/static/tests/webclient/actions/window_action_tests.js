@@ -10,6 +10,7 @@ import FormView from "web.FormView";
 import ListController from "web.ListController";
 import testUtils from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
+import { session } from "@web/session";
 import {
     click,
     legacyExtraNextTick,
@@ -712,7 +713,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("requests for execute_action of type object are handled", async function (assert) {
         assert.expect(11);
-        patchWithCleanup(odoo.session_info.user_context, { some_key: 2 });
+        patchWithCleanup(session.user_context, { some_key: 2 });
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
             if (route === "/web/dataset/call_button") {

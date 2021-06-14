@@ -5,16 +5,17 @@ odoo.define("web.SessionOverrideForTests", (require) => {
     // So if a test does a session_reload, it will merge the odoo global of that test
     // into the session, and will alter every subsequent test of the suite.
     // Obviously, we don't want that, ever.
-    const initialOdoo = Object.assign({}, odoo);
+    const { session: sessionInfo } = require("@web/session");
+    const initialSessionInfo = Object.assign({}, sessionInfo);
     const Session = require("web.Session");
     const { patch } = require("@web/core/utils/patch");
     patch(Session.prototype, "web.SessionTestPatch", {
         async session_reload() {
-            const oldOdoo = odoo;
-            odoo = initialOdoo;
-            const res = await this._super(...arguments);
-            odoo = oldOdoo;
-            return res;
+            for (const key in sessionInfo) delete sessionInfo[key];
+            for (const key in initialSessionInfo) {
+                sessionInfo[key] = initialSessionInfo[key];
+            }
+            return await this._super(...arguments);
         },
     });
 });

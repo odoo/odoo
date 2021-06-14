@@ -5,6 +5,7 @@ import testUtils from "web.test_utils";
 import { clearRegistryWithCleanup } from "../../helpers/mock_env";
 import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import { session } from "@web/session";
 
 let serverData;
 
@@ -19,7 +20,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("rainbowman integrated to webClient", async function (assert) {
         assert.expect(10);
-        patchWithCleanup(odoo.session_info, { show_effect: true });
+        patchWithCleanup(session, { show_effect: true });
         clearRegistryWithCleanup(mainComponentRegistry);
 
         const webClient = await createWebClient({ serverData });
@@ -65,7 +66,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("on close with effect from server", async function (assert) {
         assert.expect(1);
-        patchWithCleanup(odoo.session_info, { show_effect: true });
+        patchWithCleanup(session, { show_effect: true });
         const mockRPC = async (route) => {
             if (route === "/web/dataset/call_button") {
                 return Promise.resolve({
@@ -96,7 +97,7 @@ QUnit.module("ActionManager", (hooks) => {
       </header>
       <field name="display_name"/>
     </form>`;
-        patchWithCleanup(odoo.session_info, { show_effect: true });
+        patchWithCleanup(session, { show_effect: true });
         const mockRPC = async (route) => {
             if (route === "/web/dataset/call_button") {
                 return Promise.resolve(false);
