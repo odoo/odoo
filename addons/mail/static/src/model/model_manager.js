@@ -954,6 +954,9 @@ class ModelManager {
                     let dependencyField = TargetModel.fields[dependencyFieldName];
                     while (!dependencyField) {
                         TargetModel = TargetModel.__proto__;
+                        if (!TargetModel.fields) {
+                            throw Error(`Field ${dependencyFieldName} used in the computation of field ${field.fieldName} is missing from the ${Model.modelName} model`);
+                        }
                         dependencyField = TargetModel.fields[dependencyFieldName];
                     }
                     const dependent = [field.id, field.fieldName].join(DEPENDENT_INNER_SEPARATOR);
