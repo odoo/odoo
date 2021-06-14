@@ -342,6 +342,14 @@ class HrExpense(models.Model):
     # ORM Overrides
     # ----------------------------------------
 
+    def unlink(self):
+        self.env['ir.attachment'].search([
+            ('res_model', '=', 'hr.expense.sheet'),
+            ('original_expense_id', 'in', self.ids),
+        ]).unlink()
+
+        return super().unlink()
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted_or_approved(self):
         for expense in self:
@@ -955,13 +963,38 @@ class HrExpenseSheet(models.Model):
         })
         sheet = super(HrExpenseSheet, self.with_context(context)).create(vals)
         sheet.activity_update()
+        sheet._copy_expense_attachments(sheet.expense_line_ids.ids)
         return sheet
+
+    def write(self, vals):
+        previous_line_ids = set(self.expense_line_ids.ids)
+        res = super().write(vals)
+
+        new_line_ids = list(set(self.expense_line_ids.ids) - previous_line_ids)
+        self._copy_expense_attachments(new_line_ids)
+
+        removed_line_ids = list(previous_line_ids - set(self.expense_line_ids.ids))
+        self.env['ir.attachment'].search([
+            ('res_model', '=', 'hr.expense.sheet'),
+            ('res_id', 'in', self.ids),
+            ('original_expense_id', 'in', removed_line_ids),
+        ]).unlink()
+
+        return res
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted_or_paid(self):
         for expense in self:
             if expense.state in ['post', 'done']:
                 raise UserError(_('You cannot delete a posted or paid expense.'))
+
+    def _copy_expense_attachments(self, expense_ids):
+        attachment_ids = self.env['ir.attachment'].search([
+            ('res_model', '=', 'hr.expense'),
+            ('res_id', 'in', expense_ids)
+        ])
+        for attachment in attachment_ids:
+            attachment.copy({'res_model': 'hr.expense.sheet', 'res_id': self.id, 'original_expense_id': attachment.res_id})
 
     # --------------------------------------------
     # Mail Thread
@@ -1006,8 +1039,6 @@ class HrExpenseSheet(models.Model):
         expense_line_ids = self.mapped('expense_line_ids')\
             .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.company.currency_id).rounding))
         res = expense_line_ids.with_context(clean_context(self.env.context)).action_move_create()
-        for sheet in self.filtered(lambda s: not s.accounting_date):
-            sheet.accounting_date = sheet.account_move_id.date
         to_post = self.filtered(lambda sheet: sheet.payment_mode == 'own_account' and sheet.expense_line_ids)
         to_post.write({'state': 'post'})
         (self - to_post).write({'state': 'done'})

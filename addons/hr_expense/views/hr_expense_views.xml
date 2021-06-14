@@ -69,7 +69,8 @@
                     <field name="tax_ids" optional="show" widget="many2many_tags" groups="account.group_account_user"/>
                     <field name="total_amount" optional="show" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}" decoration-bf="True"/>
                     <field name="total_amount_company" optional="show" sum="Total Company Currency" widget='monetary' options="{'currency_field': 'company_currency_id'}" decoration-bf="True" />
-                    <button name="action_get_attachment_view" string="Attachments" type="object" icon="fa-paperclip" attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
+                    <button name="action_get_attachment_view" type="object" icon="fa-paperclip" aria-label="View Attachments" title="View Attachments" class="float-right pr-0"/>
+                    <field name="attachment_number" class="text-left pl-0" nolabel="1"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="state" optional="show" readonly="1" decoration-info="state == 'draft'" decoration-success="state in ['reported', 'approved', 'done']" decoration-danger="state in 'refused'" widget="badge"/>
                 </tree>
@@ -109,6 +110,7 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <form string="Expenses" class="o_expense_form" js_class="hr_expense_form_view">
+                <field name="attachment_number" invisible="1" />
                 <header>
                   <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', '|', ('id', '=', False), ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
                   <widget name="attach_document" string="Attach Receipt" action="message_post" attrs="{'invisible': ['|', ('attachment_number', '&lt;', 1), ('id','=',False)]}"/>
@@ -118,14 +120,6 @@
                   <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('sheet_id', '=', False)]}" data-hotkey="w"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_get_attachment_view"
-                            class="oe_stat_button"
-                            icon="fa-file-text-o"
-                            type="object">
-                            <field name="attachment_number" widget="statinfo" string="Receipts" options="{'reload_on_button': true}"/>
-                        </button>
-                    </div>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
@@ -190,7 +184,7 @@
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
-                    <field name="message_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'always'}"/>
                 </div>
                 </form>
             </field>
@@ -204,9 +198,6 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/header" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr="/form/sheet/div[hasclass('oe_button_box')]" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <field name="employee_id" position="attributes">
@@ -727,9 +718,11 @@
                         <group name="employee_details">
                             <field name="employee_id" context="{'default_company_id': company_id}" widget="many2one_avatar_employee"/>
                             <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
-                            <field name="payment_mode"/>
                             <field name="address_id" invisible="1" context="{'default_company_id': company_id}"/>
                             <field name="department_id" invisible="1" context="{'default_company_id': company_id}"/>
+                        </group>
+                        <group>
+                            <field name="payment_mode"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -770,21 +763,25 @@
                                        attrs="{'invisible': [('state', 'not in', ('post', 'done'))]}"/>
                             </group>
                         </page>
-                        <page name="other_info" string="Other Info">
+                        <page name="other_info" string="Accounting" groups="account.group_account_invoice,account.group_account_readonly">
                             <group>
                                 <group>
                                     <field name="journal_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}" context="{'default_company_id': company_id}"/>
-                                    <field name="bank_journal_id" groups="account.group_account_invoice,account.group_account_readonly" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" context="{'default_company_id': company_id}"/>
-                                    <field name="accounting_date" groups="account.group_account_invoice,account.group_account_readonly" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
+                                    <field name="bank_journal_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" context="{'default_company_id': company_id}"/>
+                                    <field name="accounting_date" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
+                                </group>
+                                <group>
+                                    <field name="account_move_id" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>
                                 </group>
                             </group>
                         </page>
                      </notebook>
                 </sheet>
+                <div class="o_attachment_preview"/>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
-                    <field name="message_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'always'}"/>
                 </div>
                 </form>
             </field>
