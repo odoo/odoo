@@ -32,7 +32,7 @@ class ExhibitorController(WebsiteEventController):
         '/event/<model("event.event"):event>/exhibitors',
         # TDE BACKWARD: matches event/event-1/exhibitor/exhib-1 sub domain
         '/event/<model("event.event"):event>/exhibitor'
-    ], type='http', auth="public", website=True, sitemap=False)
+    ], type='http', auth="public", website=True, sitemap=False, methods=['GET', 'POST'])
     def event_exhibitors(self, event, **searches):
         return request.render(
             "website_event_exhibitor.event_exhibitors",
@@ -209,22 +209,20 @@ class ExhibitorController(WebsiteEventController):
 
     def _get_search_countries(self, country_search):
         # TDE FIXME: make me generic (slides, event, ...)
+        country_ids = set(request.httprequest.form.getlist('sponsor_country'))
         try:
-            country_ids = literal_eval(country_search)
+            country_ids.update(literal_eval(country_search))
         except Exception:
-            countries = request.env['res.country'].sudo()
-        else:
-            # perform a search to filter on existing / valid tags implicitly
-            countries = request.env['res.country'].sudo().search([('id', 'in', country_ids)])
-        return countries
+            pass
+        # perform a search to filter on existing / valid tags implicitly
+        return request.env['res.country'].sudo().search([('id', 'in', list(country_ids))])
 
     def _get_search_sponsorships(self, sponsorship_search):
         # TDE FIXME: make me generic (slides, event, ...)
+        sponsorship_ids = set(request.httprequest.form.getlist('sponsor_type'))
         try:
-            sponsorship_ids = literal_eval(sponsorship_search)
+            sponsorship_ids.update(literal_eval(sponsorship_search))
         except Exception:
-            sponsorships = request.env['event.sponsor.type'].sudo()
-        else:
-            # perform a search to filter on existing / valid tags implicitly
-            sponsorships = request.env['event.sponsor.type'].sudo().search([('id', 'in', sponsorship_ids)])
-        return sponsorships
+            pass
+        # perform a search to filter on existing / valid tags implicitly
+        return request.env['event.sponsor.type'].sudo().search([('id', 'in', list(sponsorship_ids))])
