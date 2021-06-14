@@ -36,6 +36,13 @@ class SlidePartnerRelation(models.Model):
     completed = fields.Boolean('Completed')
     quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
 
+    _sql_constraints = [
+        ('slide_partner_uniq',
+         'unique(slide_id, partner_id)',
+         'A partner membership to a slide must be unique!'
+        )
+    ]
+
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
