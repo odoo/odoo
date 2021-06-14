@@ -1818,12 +1818,12 @@ body.editor_enable.editor_has_snippets {
 #oe_manipulators {
     position: relative;
     z-index: $o-we-overlay-zindex;
+    pointer-events: none;
 
     // SNIPPET MANIPULATORS
     .oe_overlay {
         @include o-position-absolute;
         display: none;
-        height: 0;
         border-color: $o-we-handles-accent-color;
         background: transparent;
         text-align: center;
@@ -1842,6 +1842,7 @@ body.editor_enable.editor_has_snippets {
         > .o_handles {
             @include o-position-absolute(-$o-we-handles-offset-to-hide, 0, auto, 0);
             border-color: inherit;
+            pointer-events: auto;
 
             &:hover > .o_handle {
                 background-color: rgba($o-we-handles-accent-color, 0.05);
