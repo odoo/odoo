@@ -276,6 +276,17 @@ class TestViewInheritance(ViewCase):
         v.arch = '<form></form>'
         self.assertEqual(v.arch, '<form></form>')
 
+    def test_get_combined_arch_query_count(self):
+        # If the query count increases, you probably made the view combination
+        # fetch an extra field on views. You better fetch that extra field with
+        # the query of _get_inheriting_views() and manually feed the cache.
+        self.View.invalidate_cache()
+        with self.assertQueryCount(3):
+            # 1: browse([self.view_ids['A']])
+            # 2: _get_inheriting_views: id, inherit_id, mode, groups
+            # 3: _combine: arch_db
+            self.view_ids['A'].get_combined_arch()
+
 
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
