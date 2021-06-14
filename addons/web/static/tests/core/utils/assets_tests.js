@@ -10,6 +10,7 @@ QUnit.module("utils", () => {
     QUnit.test("loadAssets: load invalid JS lib", function (assert) {
         assert.rejects(
             loadAssets({ jsLibs: ["/some/invalid/file.js"] }),
+            new RegExp("The loading of /some/invalid/file.js failed"),
             "Trying to load an invalid file rejects the promise"
         );
         assert.ok(
@@ -21,6 +22,7 @@ QUnit.module("utils", () => {
     QUnit.test("loadAssets: load invalid CSS lib", function (assert) {
         assert.rejects(
             loadAssets({ cssLibs: ["/some/invalid/file.css"] }),
+            new RegExp("The loading of /some/invalid/file.css failed"),
             "Trying to load an invalid file rejects the promise"
         );
         assert.ok(
