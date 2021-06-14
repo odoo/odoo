@@ -703,6 +703,10 @@ class TestExpression(SavepointCaseWithUserDemo):
             countries = self._search(Country, domain)
             self.assertEqual(countries, belgium)
 
+        countries = self._search(Country, [('name', 'not in', ['No country'])])
+        all_countries = self._search(Country, [])
+        self.assertEqual(countries, all_countries)
+
     @mute_logger('odoo.sql_db')
     def test_invalid(self):
         """ verify that invalid expressions are refused, even for magic fields """

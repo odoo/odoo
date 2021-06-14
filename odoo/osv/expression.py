@@ -909,7 +909,7 @@ class expression(object):
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
                         right = '%%%s%%' % right
-                    if sql_operator == 'in':
+                    if sql_operator in ('in', 'not in'):
                         right = tuple(right)
 
                     unaccent = self._unaccent if sql_operator.endswith('like') else lambda x: x
