@@ -68,6 +68,12 @@ class ProductProduct(models.Model):
         compute='_compute_used_in_bom_count', compute_sudo=False)
     mrp_product_qty = fields.Float('Manufactured',
         compute='_compute_mrp_product_qty', compute_sudo=False)
+    current_bom_id = fields.Many2one('mrp.bom', compute="_compute_current_bom_id")
+
+    @api.depends('variant_bom_ids', 'bom_ids')
+    @api.depends_context('company', 'bom_type', 'picking_type_id')
+    def _compute_current_bom_id(self):
+        
 
     def _compute_bom_count(self):
         for product in self:
@@ -103,10 +109,9 @@ class ProductProduct(models.Model):
 
     def _compute_mrp_product_qty(self):
         date_from = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=365))
-        #TODO: state = done?
         domain = [('state', '=', 'done'), ('product_id', 'in', self.ids), ('date_planned_start', '>', date_from)]
         read_group_res = self.env['mrp.production'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
-        mapped_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in read_group_res])
+        mapped_data = dict((data['product_id'][0], data['product_uom_qty']) for data in read_group_res)
         for product in self:
             if not product.id:
                 product.mrp_product_qty = 0.0
