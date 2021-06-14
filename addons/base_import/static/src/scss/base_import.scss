@@ -161,25 +161,13 @@
                 .o_single_line_text {
                     @include o-text-overflow($display: table-cell, $max-width: $cell-max-width - $cell-padding);
                 }
-                .alert {
-                    // alias -error to -danger
-                    &.alert-error {
-                        background-color: transparent;
-                    }
-                    &.alert-warning {
-                        background-color: transparent;
-                    }
-                    &.alert-info {
-                        background-color: transparent;
-                    }
-                }
             }
         }
     }
 
     /* Default Color for placeholder on import fields*/
     .select2-default{
-        color: #F0AD4E !important;
+        color: #D67D00 !important;
         font-weight: 500;
     }
 
@@ -203,6 +191,7 @@
             background-repeat: no-repeat;
             appearance: none;
             width: auto;
+            background-color: white;
         }
 
         .select2-arrow {

@@ -357,7 +357,7 @@ class TestPreview(TransactionCase):
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
         ])
-        self.assertEqual(result['preview'], ['foo', '5', '4'])
+        self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['5'], ['4', '6']])
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
@@ -381,7 +381,7 @@ class TestPreview(TransactionCase):
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
         ])
-        self.assertEqual(result['preview'], ['foo', '1', '2'])
+        self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
@@ -405,7 +405,7 @@ class TestPreview(TransactionCase):
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer', 'model_name': 'base_import.tests.models.preview'},
         ])
-        self.assertEqual(result['preview'], ['foo', '1', '2'])
+        self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
@@ -647,6 +647,65 @@ class test_convert_import_data(TransactionCase):
         )
 
         self.assertItemsEqual(data, [data_row])
+
+    def test_set_empty_value_import(self):
+        partners_before = self.env['res.partner'].search([])
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': """foo,US,person\n
+foo1,Invalid Country,person\n
+foo2,US,persons\n""",
+            'file_type': 'text/csv'
+        })
+
+        results = import_wizard.execute_import(
+            ['name', 'country_id', 'company_type'],
+            [],
+            {
+                'quoting': '"',
+                'separator': ',',
+                'import_set_empty_fields': ['country_id', 'company_type'],
+            }
+        )
+        partners_now = self.env['res.partner'].search([]) - partners_before
+        self.assertEqual(len(results['ids']), 3, "should have imported the first 3 records in full, got %s" % results['ids'])
+
+        self.assertEqual(partners_now[0].name, 'foo', "New partner's name should be foo")
+        self.assertEqual(partners_now[0].country_id.id, self.env.ref('base.us').id, "Foo partner's country should be US")
+        self.assertEqual(partners_now[0].company_type, 'person', "Foo partner's country should be person")
+
+        self.assertEqual(partners_now[1].country_id.id, False, "foo1 partner's country should be False")
+
+        self.assertEqual(partners_now[2].company_type, False, "foo2 partner's country should be False")
+        # if results empty, no errors
+        self.assertItemsEqual(results['messages'], [])
+
+    def test_skip_record_import(self):
+        partners_before = self.env['res.partner'].search([])
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': """foo,US,0,person\n
+foo1,Invalid Country,0,person\n
+foo2,US,False Value,person\n
+foo3,US,0,persons\n""",
+            'file_type': 'text/csv'
+        })
+
+        results = import_wizard.execute_import(
+            ['name', 'country_id', 'is_company', 'company_type'],
+            [],
+            {
+                'quoting': '"',
+                'separator': ',',
+                'import_skip_records': ['country_id', 'is_company', 'company_type']
+            }
+        )
+        partners_now = self.env['res.partner'].search([]) - partners_before
+
+        self.assertEqual(len(results['ids']), 1, "should have imported the first record in full, got %s" % results['ids'])
+        self.assertEqual(partners_now.name, 'foo', "New partner's name should be foo")
+        # if results empty, no errors
+        self.assertItemsEqual(results['messages'], [])
 
 
 class TestBatching(TransactionCase):

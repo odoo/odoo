@@ -950,16 +950,21 @@ class Import(models.TransientModel):
                 has_relational_match = any(len(match) > 1 for field, match in matches.items() if match)
                 advanced_mode = has_relational_header or has_relational_match
 
-            # Take the first non null value for each column to display example to user
+            # Take first non null values for each column to show preview to users.
+            # Initially first non null value is displayed to the user.
+            # On hover preview consists in 5 values.
             column_example = []
             for column_index, _unused in enumerate(preview[0]):
+                vals = []
                 for record in preview:
                     if record[column_index]:
-                        column_example.append("%s%s" % (record[column_index][:50], "..." if len(record[column_index]) > 50 else ""))
+                        vals.append("%s%s" % (record[column_index][:50], "..." if len(record[column_index]) > 50 else ""))
+                    if len(vals) == 5:
                         break
-                # add a blank value if no example have been found at all for the current column
-                else:
-                    column_example.append("")
+                column_example.append(
+                    vals or
+                    [""]  # blank value if no example have been found at all for the current column
+                )
 
             # Batch management
             batch = False
@@ -1304,7 +1309,8 @@ class Import(models.TransientModel):
         model = self.env[self.res_model].with_context(
             import_file=True,
             name_create_enabled_fields=name_create_enabled_fields,
-            import_skip_fields=options.get('import_skip_fields'),
+            import_set_empty_fields=options.get('import_set_empty_fields', []),
+            import_skip_records=options.get('import_skip_records', []),
             _import_limit=import_limit)
         import_result = model.load(import_fields, merged_data)
         _logger.info('done')

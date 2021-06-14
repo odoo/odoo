@@ -311,7 +311,8 @@ var DataImport = AbstractAction.extend({
             advanced: this.$('input.oe_import_advanced_mode').prop('checked'),
             keep_matches: this.do_not_change_match,
             name_create_enabled_fields: {},
-            import_skip_fields: [],
+            import_set_empty_fields: [],
+            import_skip_records: [],
             fallback_values: {},
             // start at row 1 = skip 0 lines
             skip: Number(this.$('#oe_import_row_start').val()) - 1 || 0,
@@ -339,9 +340,11 @@ var DataImport = AbstractAction.extend({
             var field = this.getAttribute('field');
             var type = this.getAttribute('type');
             if (field) {
-                if (['many2one', "many2many"].includes(type)) {
-                    if (this.value === 'skip') {
-                        options.import_skip_fields.push(field);
+                if (['boolean', 'many2one', 'many2many', 'selection'].includes(type) && this.value === 'skip_record') {
+                    options.import_skip_records.push(field);
+                } else if (['many2one', "many2many", "selection"].includes(type)) {
+                    if (this.value === 'set_empty') {
+                        options.import_set_empty_fields.push(field);
                     } else {
                         options.name_create_enabled_fields[field] = this.value === 'create';
                     }
@@ -456,6 +459,14 @@ var DataImport = AbstractAction.extend({
         this.$form.addClass('oe_import_preview');
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
+        this.$('.oe_import_grid .o_import_preview').each((index, element) => {
+            $(element).popover({
+                title: _t("Preview"),
+                trigger: 'hover',
+                html: true,
+                content: QWeb.render('ImportView.preview_popover', { preview: result.preview[index] }),
+            });
+        });
         // Activate the batch configuration panel only of the file length > 100. (In order to let the user choose
         // the batch size even for medium size file. Could be useful to reduce the batch size for complex models).
         this.fileLength = result.file_length;
@@ -515,7 +526,18 @@ var DataImport = AbstractAction.extend({
                 var $commentCell = $fieldInput.closest('tr.oe_import_grid-row').find('.oe_import_comment_cell');
                 var $optionsDiv = $commentCell.find('.oe_import_options_div');
                 var isRelational = fieldInfo.type === 'many2many' || fieldInfo.type === 'many2one';
-                var showSkip = !fieldInfo.required && (isRelational || fieldInfo.type === 'selection');
+                var setEmpty = !fieldInfo.required && (isRelational || fieldInfo.type === 'selection');
+
+                // if relational field is child of one2many then do not display skip record option
+                var isO2MField = false;
+                if (isRelational && fieldInfo.id.includes('/')) {
+                    var fieldName = fieldInfo.id.split('/')[0];
+                    var field = result.fields.find((field) => field.name === fieldName);
+                    if (field && field.type === 'one2many') {
+                        isO2MField = true;
+                    }
+                }
+                var showSkipRecord = setEmpty && !isO2MField || (!fieldInfo.required && fieldInfo.type === 'boolean');
 
                 // get options cell related to that field
                 if (isRelational || fieldInfo.type === 'boolean') {
@@ -524,7 +546,8 @@ var DataImport = AbstractAction.extend({
                         QWeb.render('ImportView.create_record_option', {
                             data: fieldInfo,
                             is_relational: isRelational,
-                            show_skip: showSkip,
+                            set_empty: setEmpty,
+                            show_skip_record: showSkipRecord
                         })
                     );
                 } else if (fieldInfo.type === 'selection') {
@@ -540,7 +563,8 @@ var DataImport = AbstractAction.extend({
                             QWeb.render('ImportView.create_record_option', {
                                 data: fieldInfo,
                                 values: selectionLabels,
-                                show_skip: showSkip,
+                                set_empty: setEmpty,
+                                show_skip_record: showSkipRecord
                             })
                         );
                         self.selectionFields[data.id] = values;

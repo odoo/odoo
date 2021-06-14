@@ -67,7 +67,7 @@ class TestEncoding(ImportCase):
         })
         self.assertIsNone(r.get('error'))
         self.assertEqual(r['options']['encoding'], 'iso-8859-1')
-        self.assertEqual(r['preview'], [s.decode('iso-8859-1')])
+        self.assertEqual(r['preview'], [[s.decode('iso-8859-1'), 'text']])
 
 
 class TestFileSeparator(ImportCase):
@@ -90,7 +90,7 @@ d|4
         })
         self.assertIsNone(r.get('error'))
         self.assertEqual(r['headers'], ['c', 'f'])
-        self.assertEqual(r['preview'], ['a', '1'])
+        self.assertEqual(r['preview'], [['a', 'b', 'c', 'd'], ['1', '2', '3', '4']])
         self.assertEqual(r['options']['separator'], '|')
 
     def test_explicit_fail(self):
@@ -103,7 +103,7 @@ d|4
         })
         self.assertIsNone(r.get('error'))
         self.assertEqual(r['headers'], ['c|f'])
-        self.assertEqual(r['preview'], ['a|1'])
+        self.assertEqual(r['preview'], [['a|1', 'b|2', 'c|3', 'd|4']])
         self.assertEqual(r['options']['separator'], ',')
 
     def test_guess_ok(self):
@@ -114,7 +114,7 @@ d|4
         })
         self.assertIsNone(r.get('error'))
         self.assertEqual(r['headers'], ['c', 'f'])
-        self.assertEqual(r['preview'], ['a', '1'])
+        self.assertEqual(r['preview'], [['a', 'b', 'c', 'd'], ['1', '2', '3', '4']])
         self.assertEqual(r['options']['separator'], '|')
 
     def test_noguess(self):
@@ -129,7 +129,7 @@ d|4
         })
         self.assertIsNone(r.get('error'))
         self.assertEqual(r['headers'], ['c'])
-        self.assertEqual(r['preview'], ['a'])
+        self.assertEqual(r['preview'], [['a', 'b', 'c', 'd']])
         self.assertEqual(r['options']['separator'], '')
 
 
