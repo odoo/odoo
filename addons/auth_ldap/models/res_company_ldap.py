@@ -121,12 +121,6 @@ class CompanyLDAP(models.Model):
         except ldap.INVALID_CREDENTIALS as e:
             _logger.error('An LDAP User Id or password is incorrect: %s', e)
             return False
-        except ldap.TIMEOUT as e:
-            _logger.error('An LDAP timeout exception occurred: %s', e)
-            return False
-        except ldap.SERVER_DOWN as e:
-            _logger.error('An LDAP server down exception occurred: %s', e)
-            return False
         except ldap.LDAPError as e:
             _logger.error('An LDAP exception occurred: %s', e)
             return False
