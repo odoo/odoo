@@ -4,6 +4,8 @@ const { useEnv, onWillStart } = owl.hooks;
 import { memoize } from "./utils/functions";
 import { browser } from "./browser/browser";
 
+class AssetsLoadingError extends Error {}
+
 //------------------------------------------------------------------------------
 // Types
 //------------------------------------------------------------------------------
@@ -59,7 +61,9 @@ const loadJS = memoize(function loadJS(url) {
     document.head.appendChild(scriptEl);
     return new Promise((resolve, reject) => {
         scriptEl.addEventListener("load", resolve);
-        scriptEl.addEventListener("error", reject);
+        scriptEl.addEventListener("error", () => {
+            reject(new AssetsLoadingError(`The loading of ${url} failed`));
+        });
     });
 });
 /**
@@ -83,7 +87,9 @@ const loadCSS = memoize(function loadCSS(url) {
     document.head.appendChild(linkEl);
     return new Promise(function (resolve, reject) {
         linkEl.addEventListener("load", resolve);
-        linkEl.addEventListener("error", reject);
+        linkEl.addEventListener("error", () => {
+            reject(new AssetsLoadingError(`The loading of ${url} failed`));
+        });
     });
 });
 /**
