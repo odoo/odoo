@@ -37,6 +37,7 @@
             'website_event_exhibitor/static/src/scss/event_templates_sponsor.scss',
             'website_event_exhibitor/static/src/scss/event_exhibitor_templates.scss',
             'website_event_exhibitor/static/src/js/event_exhibitor_connect.js',
+            'website_event_exhibitor/static/src/js/event_sponsor_search.js',
         ],
     }
 }
