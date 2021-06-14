@@ -122,3 +122,9 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
             '937cca8f486b75e93df1e9811a5ebf43357fc3f2',
             msg="The signing string items should be ordered based on a lower-case copy of the keys",
         )
+
+    def test_buckaroo_neutralize(self):
+        self.env['payment.acquirer']._neutralize()
+
+        self.assertEqual(self.acquirer.buckaroo_website_key, False)
+        self.assertEqual(self.acquirer.buckaroo_secret_key, False)

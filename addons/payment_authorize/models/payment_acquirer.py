@@ -132,3 +132,12 @@ class PaymentAcquirer(models.Model):
         if self.provider != 'authorize':
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_authorize.payment_method_authorize').id
+
+    def _neutralize(self):
+        super()._neutralize()
+        self._neutralize_fields('authorize', [
+            'authorize_login',
+            'authorize_transaction_key',
+            'authorize_signature_key',
+            'authorize_client_key',
+        ])

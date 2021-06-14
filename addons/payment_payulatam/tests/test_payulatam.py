@@ -144,3 +144,10 @@ class PayULatamTest(PayULatamCommon):
         self.env['payment.transaction']._handle_feedback_data('payulatam', payulatam_post_data)
         self.assertEqual(tx.state, 'done', 'Payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
+
+    def test_payulatam_neutralize(self):
+        self.env['payment.acquirer']._neutralize()
+
+        self.assertEqual(self.acquirer.payulatam_merchant_id, False)
+        self.assertEqual(self.acquirer.payulatam_account_id, False)
+        self.assertEqual(self.acquirer.payulatam_api_key, False)

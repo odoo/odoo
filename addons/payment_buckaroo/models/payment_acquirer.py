@@ -69,3 +69,7 @@ class PaymentAcquirer(models.Model):
         if self.provider != 'buckaroo':
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_buckaroo.payment_method_buckaroo').id
+
+    def _neutralize(self):
+        super()._neutralize()
+        self._neutralize_fields('buckaroo', ['buckaroo_website_key', 'buckaroo_secret_key'])

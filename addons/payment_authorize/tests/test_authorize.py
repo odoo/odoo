@@ -54,3 +54,11 @@ class AuthorizeTest(AuthorizeCommon):
         token = self.create_token(active=False)
         with self.assertRaises(UserError):
             token._handle_reactivation_request()
+
+    def test_authorize_neutralize(self):
+        self.env['payment.acquirer']._neutralize()
+
+        self.assertEqual(self.acquirer.authorize_login, False)
+        self.assertEqual(self.acquirer.authorize_transaction_key, False)
+        self.assertEqual(self.acquirer.authorize_signature_key, False)
+        self.assertEqual(self.acquirer.authorize_client_key, False)

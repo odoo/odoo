@@ -71,3 +71,11 @@ class PaymentAcquirer(models.Model):
         if self.provider != 'paypal':
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_paypal.payment_method_paypal').id
+
+    def _neutralize(self):
+        super()._neutralize()
+        self._neutralize_fields('paypal', [
+            'paypal_email_account',
+            'paypal_seller_account',
+            'paypal_pdt_token',
+        ])

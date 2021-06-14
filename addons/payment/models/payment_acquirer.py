@@ -2,6 +2,8 @@
 
 import logging
 
+from psycopg2 import sql
+
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
@@ -419,3 +421,26 @@ class PaymentAcquirer(models.Model):
         """
         self.ensure_one()
         return self.redirect_form_view_id
+
+    def _neutralize(self):
+        super()._neutralize()
+        self.flush()
+        self.invalidate_cache()
+        self.env.cr.execute("""
+            UPDATE payment_acquirer SET state = 'disabled'
+            WHERE state NOT IN ('test', 'disabled')
+        """)
+
+    def _neutralize_fields(self, provider, fields):
+        """ Helper to neutralize API keys for a specific provider
+        :param str provider: name of provider
+        :param list fields: list of fiels to nullify
+        """
+        self.flush()
+        self.invalidate_cache()
+        query = sql.SQL("""
+            UPDATE payment_acquirer
+            SET ({fields}) = ROW({vals})
+            WHERE provider = %s
+        """).format(fields=sql.SQL(','.join(fields)), vals=sql.SQL(', '.join(['NULL'] * len(fields))))
+        self.env.cr.execute(query, (provider, ))

@@ -129,3 +129,10 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             payload,
             self.acquirer.adyen_hmac_key,
         )
+
+    def test_adyen_neutralize(self):
+        self.env['payment.acquirer']._neutralize()
+
+        self.assertEqual(self.acquirer.adyen_merchant_account, False)
+        self.assertEqual(self.acquirer.adyen_api_key, False)
+        self.assertEqual(self.acquirer.adyen_hmac_key, False)

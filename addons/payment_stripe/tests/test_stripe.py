@@ -64,3 +64,10 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ):
             self._make_json_request(url, data=self.NOTIFICATION_DATA)
             self.assertEqual(signature_check_mock.call_count, 1)
+
+    def test_stripe_neutralize(self):
+        self.env['payment.acquirer']._neutralize()
+
+        self.assertEqual(self.acquirer.stripe_secret_key, False)
+        self.assertEqual(self.acquirer.stripe_publishable_key, False)
+        self.assertEqual(self.acquirer.stripe_webhook_secret, False)
