@@ -4148,20 +4148,8 @@ registry.StaticMediaTools = SnippetOptionWidget.extend({
     toggleShapeThumbnail(previewMode) {
         this._toggleShape(previewMode, 'img-thumbnail');
     },
-    setPadding(previewMode, padding, params) {
-        if (previewMode === true) {
-            this.currentPadding = params.possibleValues.find(c => this.$target.hasClass(c)) || '';
-        }
-        for (const value of params.possibleValues) {
-            if (previewMode === 'reset') {
-                this.$target.toggleClass(value, value === this.currentPadding);
-            } else {
-                this.$target.toggleClass(value, value === padding)
-            }
-        }
-        if (previewMode === false) {
-            this.currentPadding = padding;
-        }
+    setPadding(previewMode, padding) {
+        this.$target.css('padding', padding);
     },
     align(previewMode, alignment, params) {
         if (previewMode === true) {
@@ -4187,7 +4175,7 @@ registry.StaticMediaTools = SnippetOptionWidget.extend({
         if (['toggleShapeRounded', 'toggleShapeCircle', 'toggleShapeShadow', 'toggleShapeThumbnail'].includes(methodName)) {
             return params.possibleValues.find(c => this.$target.hasClass(c)) || '';
         } else if (methodName === 'setPadding') {
-            return params.possibleValues.find(c => this.$target.hasClass(c)) || '';
+            return this.$target.css('padding');
         } else if (methodName === 'align') {
             return this._getAlignment();
         }
@@ -4255,7 +4243,7 @@ registry.FontawesomeTools = SnippetOptionWidget.extend({
  * General options of an image.
  */
 registry.ImageTools = SnippetOptionWidget.extend({
-    setWidth(previewMode, width, params) {
+    setWidth(previewMode, width) {
         if (previewMode === true) {
             this.currentWidth = this.$target.css('width');
         }
