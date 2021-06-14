@@ -2,4 +2,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_neutralize
-from . import test_res_company
