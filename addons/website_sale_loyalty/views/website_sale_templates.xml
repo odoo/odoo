@@ -26,7 +26,7 @@
                         <span t-field="reward.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
                     </td>
                     <td style="width: 50%;">
-                        <t t-set="reward_product" t-value="reward.gift_product_id if reward.reward_type == 'gift' else reward.discount_product_id" />
+                        <t t-set="reward_product" t-value="reward.reward_product_id if reward.reward_type == 'product' else reward.discount_product_id" />
                         <div><strong t-esc="reward_product.with_context(display_default_code=False).display_name" /></div>
                         <div><span class="text-muted small" t-esc="reward['name']" /></div>
                     </td>

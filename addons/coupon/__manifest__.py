@@ -6,7 +6,7 @@
     'description': """Integrate coupon mechanism in orders.""",
     'category': 'Sales',
     'version': '1.0',
-    'depends': ['account'],
+    'depends': ['account', 'reward'],
     'data': [
         'wizard/coupon_generate_views.xml',
         'security/ir.model.access.csv',

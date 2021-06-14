@@ -14,6 +14,7 @@ where customers earn loyalty points and get rewards.
 """,
     'depends': [
         'product',
+        'reward',
     ],
     'data': [
         'views/loyalty_views.xml',

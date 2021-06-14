@@ -8,7 +8,8 @@
     'category': 'Sale',
     'depends': [
         'loyalty',
-        'website_sale'
+        'sale_reward',
+        'website_sale',
     ],
     'data': [
         'security/ir.model.access.csv',

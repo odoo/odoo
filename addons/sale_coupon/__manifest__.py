@@ -6,7 +6,7 @@
     'description': """Integrate coupon mechanism in sales orders.""",
     'category': 'Sales/Sales',
     'version': '1.0',
-    'depends': ['coupon', 'sale'],
+    'depends': ['coupon', 'sale_reward'],
     'data': [
         'data/mail_template_data.xml',
         'security/sale_coupon_security.xml',

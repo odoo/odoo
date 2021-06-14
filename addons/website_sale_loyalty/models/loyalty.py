@@ -20,7 +20,7 @@ class LoyaltyProgram(models.Model):
                     continue
                 elif reward.reward_type == 'discount' and reward.point_cost > spendable_points:
                     continue
-                elif reward.reward_type == 'gift' and reward.point_cost > spendable_points:
+                elif reward.reward_type == 'product' and reward.point_cost > spendable_points:
                     continue
                 elif reward.reward_type == 'discount' and reward.discount_apply_on == 'specific_products':
                     if not (order.order_line.product_id & reward.discount_specific_product_ids):

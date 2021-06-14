@@ -18,11 +18,6 @@ class SaleOrder(models.Model):
         domain="[('promo_code_usage', '=', 'code_needed'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", copy=False)
     promo_code = fields.Char(related='code_promo_program_id.promo_code', help="Applied program code", readonly=False)
 
-    @api.depends('order_line')
-    def _compute_reward_total(self):
-        for order in self:
-            order.reward_amount = sum([line.price_subtotal for line in order._get_reward_lines()])
-
     def _get_no_effect_on_threshold_lines(self):
         self.ensure_one()
         lines = self.env['sale.order.line']
@@ -61,10 +56,6 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_draft()
         self.generated_coupon_ids.write({'state': 'reserved'})
         return res
-
-    def _get_reward_lines(self):
-        self.ensure_one()
-        return self.order_line.filtered(lambda line: line.is_reward_line)
 
     def _is_reward_in_order_lines(self, program):
         self.ensure_one()
@@ -132,10 +123,6 @@ class SaleOrder(models.Model):
             return total_amount
         else:
             return fixed_amount
-
-    def _get_cheapest_line(self):
-        # Unit prices tax included
-        return min(self.order_line.filtered(lambda x: not x._is_not_sellable_line() and x.price_reduce > 0), key=lambda x: x['price_reduce'])
 
     def _get_reward_values_discount_percentage_per_line(self, program, line):
         discount_amount = line.product_uom_qty * line.price_reduce * (program.discount_percentage / 100)
@@ -445,33 +432,6 @@ class SaleOrder(models.Model):
         """
         return self.code_promo_program_id + self.no_code_promo_program_ids + self.applied_coupon_ids.mapped('program_id')
 
-    def _get_invoice_status(self):
-        # Handling of a specific situation: an order contains
-        # a product invoiced on delivery and a promo line invoiced
-        # on order. We would avoid having the invoice status 'to_invoice'
-        # if the created invoice will only contain the promotion line
-        super()._get_invoice_status()
-        for order in self.filtered(lambda order: order.invoice_status == 'to invoice'):
-            paid_lines = order._get_paid_order_lines()
-            if not any(line.invoice_status == 'to invoice' for line in paid_lines):
-                order.invoice_status = 'no'
-
-    def _get_invoiceable_lines(self, final=False):
-        """ Ensures we cannot invoice only reward lines.
-
-        Since promotion lines are specified with service products,
-        those lines are directly invoiceable when the order is confirmed
-        which can result in invoices containing only promotion lines.
-
-        To avoid those cases, we allow the invoicing of promotion lines
-        iff at least another 'basic' lines is also invoiceable.
-        """
-        invoiceable_lines = super()._get_invoiceable_lines(final)
-        reward_lines = self._get_reward_lines()
-        if invoiceable_lines <= reward_lines:
-            return self.env['sale.order.line'].browse()
-        return invoiceable_lines
-
     def update_prices(self):
         """Recompute coupons/promotions after pricelist prices reset."""
         super().update_prices()
@@ -481,11 +441,6 @@ class SaleOrder(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
-
-    is_reward_line = fields.Boolean('Is a program reward line')
-
-    def _is_not_sellable_line(self):
-        return self.is_reward_line or super()._is_not_sellable_line()
 
     def unlink(self):
         related_program_lines = self.env['sale.order.line']
@@ -504,26 +459,6 @@ class SaleOrderLine(models.Model):
                 line.order_id.code_promo_program_id -= related_program
                 related_program_lines |= line.order_id.order_line.filtered(lambda l: l.product_id.id == related_program.discount_line_product_id.id) - line
         return super(SaleOrderLine, self | related_program_lines).unlink()
-
-    def _compute_tax_id(self):
-        reward_lines = self.filtered('is_reward_line')
-        super(SaleOrderLine, self - reward_lines)._compute_tax_id()
-        # Discount reward line is split per tax, the discount is set on the line but not on the product
-        # as the product is the generic discount line.
-        # In case of a free product, retrieving the tax on the line instead of the product won't affect the behavior.
-        for line in reward_lines:
-            line = line.with_company(line.company_id)
-            fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_partner_id.id)
-            # If company_id is set, always filter taxes by the company
-            taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
-            line.tax_id = fpos.map_tax(taxes)
-
-    def _get_display_price(self, product):
-        # A product created from a promotion does not have a list_price.
-        # The price_unit of a reward order line is computed by the promotion, so it can be used directly
-        if self.is_reward_line:
-            return self.price_unit
-        return super()._get_display_price(product)
 
     # Invalidation of `coupon.program.order_count`
     # `test_program_rules_validity_dates_and_uses`,

@@ -19,9 +19,9 @@ class TestLoyalty(TransactionCaseWithUserDemo):
         cls.product_gift = cls.env['product.product'].create({'name': 'Gift'})
         cls.reward_id = cls.env['loyalty.reward'].create({
             'name': 'Gift',
-            'reward_type': 'gift',
+            'reward_type': 'product',
             'point_cost': 5,
-            'gift_product_id': cls.product_gift.id,
+            'reward_product_id': cls.product_gift.id,
         })
         cls.product_1 = cls.env['product.product'].create({'name': 'Product one'})
         cls.product_2 = cls.env['product.product'].create({'name': 'Product two'})

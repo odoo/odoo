@@ -231,19 +231,19 @@ class SaleOrder(models.Model):
         order_line = self.env['sale.order.line'].sudo().search([('order_id', '=', self.id), ('loyalty_reward_id', '=', reward_id)])
         if order_line:
             order_line.ensure_one()
-            if reward.reward_type == 'gift':
+            if reward.reward_type == 'product':
                 order_line.product_uom_qty += add_qty
-        elif reward.reward_type == 'gift':
+        elif reward.reward_type == 'product':
             # Take the default taxes on the reward product, mapped with the fiscal position
-            taxes = reward.gift_product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
+            taxes = reward.reward_product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
             if self.fiscal_position_id:
                 taxes = self.fiscal_position_id.map_tax(taxes)
             order_line = self.env['sale.order.line'].create({
-                'product_id': reward.gift_product_id.id,
+                'product_id': reward.reward_product_id.id,
                 'loyalty_reward_id': reward.id,
                 'is_main_loyalty_reward': True,
                 'product_uom_qty': add_qty,
-                'product_uom': reward.gift_product_id.uom_id.id,
+                'product_uom': reward.reward_product_id.uom_id.id,
                 'order_id': self.id,
                 'price_unit': 0,
                 'tax_id': [fields.Command.link(tax.id) for tax in taxes],

@@ -100,12 +100,12 @@
                         <field name="discount_product_id" string="Discount Product" readonly="1" attrs="{'invisible': ['|', ('reward_type', '!=', 'discount'), ('discount_product_id', '=', False)]}"/>
                     </group>
                     <group>
-                        <field name="gift_product_id" attrs="{'invisible': [('reward_type', '!=', 'gift')], 'required': [('reward_type', '=', 'gift')]}" placeholder="Select reward product"/>
-                        <label string="Apply Discount" for="discount_type" attrs="{'invisible': [('reward_type', 'in', ('gift'))]}"/>
-                        <div class="o_row" attrs="{ 'invisible':[('reward_type','!=','discount')] }">
-                            <field name="discount_type" attrs="{ 'required':[('reward_type','=','discount')] }"/>
-                            <field name="discount_percentage" attrs="{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}" class="oe_inline"/>
-                            <span attrs="{'invisible': [('discount_type', '!=', 'percentage')],'required': [('discount_type', '=', 'percentage')]}" class="oe_inline">%</span>
+                        <field name="reward_product_id" attrs="{'invisible': [('reward_type', '!=', 'product')], 'required': [('reward_type', '=', 'product')]}" placeholder="Select reward product"/>
+                        <label string="Apply Discount" for="discount_type" attrs="{'invisible': [('reward_type', 'in', ('product'))]}"/>
+                        <div class="o_row" attrs="{'invisible': [('reward_type', '!=', 'discount')]}">
+                            <field name="discount_type" attrs="{'required': [('reward_type', '=', 'discount')]}"/>
+                            <field name="discount_percentage" attrs="{'invisible': [('discount_type', '!=', 'percentage')], 'required': [('discount_type', '=', 'percentage')]}" class="oe_inline"/>
+                            <span attrs="{'invisible': [('discount_type', '!=', 'percentage')], 'required': [('discount_type', '=', 'percentage')]}" class="oe_inline">%</span>
                         </div>
                         <label string="Fixed Amount" for="discount_fixed_amount" attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}" />
                         <div attrs="{'invisible': ['|',('discount_type', '!=', 'fixed_amount'), ('reward_type', '!=', 'discount')]}">
@@ -116,11 +116,10 @@
                             <field name="minimum_amount" class="oe_inline" attrs="{'required':[('discount_type', '=', 'fixed_amount')]}"/>
                         </div>
 
-                        <field name="discount_apply_on" attrs="{'invisible':
-                        ['|', ('reward_type', 'in', ('product', 'gift')), ('discount_type', '!=', 'percentage')]}" widget="radio"/>
-                        <field name="discount_specific_product_ids" widget='many2many_tags' attrs="{'invisible': ['|', '|', ('discount_apply_on', '!=', 'specific_products'),('discount_type', '!=', 'percentage'), ('reward_type', 'in', ('product', 'gift'))], 'required': [('reward_type', '=', 'discount'),('discount_apply_on', '=', 'specific_products'),('discount_type', '=', 'percentage')]}" placeholder="Select products"/>
-                        <label for="discount_max_amount" string="Max Discount Amount" attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'gift')), ('discount_type', '!=', 'percentage')]}"/>
-                        <div attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'gift')), ('discount_type', '!=', 'percentage')]}">
+                        <field name="discount_apply_on" attrs="{'invisible': ['|', ('reward_type', '=', 'product'), ('discount_type', '!=', 'percentage')]}" widget="radio"/>
+                        <field name="discount_specific_product_ids" widget='many2many_tags' attrs="{'invisible': ['|', '|', ('discount_apply_on', '!=', 'specific_products'), ('discount_type', '!=', 'percentage'), ('reward_type', '=', 'product')], 'required': [('reward_type', '=', 'discount'), ('discount_apply_on', '=', 'specific_products'), ('discount_type', '=', 'percentage')]}" placeholder="Select products"/>
+                        <label for="discount_max_amount" string="Max Discount Amount" attrs="{'invisible': ['|', ('reward_type', '=', 'product'), ('discount_type', '!=', 'percentage')]}"/>
+                        <div attrs="{'invisible': ['|', ('reward_type', '=', 'product'), ('discount_type', '!=', 'percentage')]}">
                             <field name="discount_max_amount" class="oe_inline"/>
                             <span class="oe_grey">if 0, no limit</span>
                         </div>
