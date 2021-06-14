@@ -712,3 +712,9 @@ class IrMailServer(models.Model):
         outgoing mail server.
         """
         return getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+
+    def _neutralize(self):
+        super()._neutralize()
+        self.flush()
+        self.invalidate_cache()
+        self.env.cr.execute("UPDATE ir_mail_server SET active = false")
