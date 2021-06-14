@@ -56,7 +56,8 @@
                     <option value="false">Set to: False</option>
                     <option value="true" >Set to: True</option>
                 </t>
-                <option t-if="show_skip" value="skip">Skip unknown values</option>
+                <option t-if="set_empty" value="set_empty">Set value as empty</option>
+                <option t-if="show_skip_record" value="skip_record">Skip record</option>
                 <option t-if="is_relational" value="create">Create new values</option>
                 <t t-if="data.type === 'selection'">
                     <option t-foreach="values" t-as="value" t-att-value="value">Set to: <t t-esc="value"/></option>
@@ -80,11 +81,13 @@
             <t t-set="columns" t-value="headers || preview"/>
             <tr t-if="columns" t-foreach="columns" t-as="column" class="oe_import_grid-row">
                 <td class="oe_import_grid-cell oe_import_name_cell">
-                    <span class="o_import_header_name o_single_line_text" t-att-title="column">
+                    <span class="o_import_header_name o_single_line_text font-weight-bold" t-att-title="column">
                         <span t-if="column" t-esc="column"/>
                         <span t-else="">Untitled</span>
                     </span>
-                    <span t-if="options['has_headers']" class="font-italic text-muted small"><t t-esc="preview[column_index]"/></span>
+                    <span t-if="options['has_headers']" class="font-italic small o_import_preview">
+                        <t t-esc="preview[column_index][0]"/>
+                    </span>
                 </td>
                 <td class="oe_import_grid-cell oe_import_match_cell">
                     <input class="oe_import_match_field oe_import_dropdown"/>
@@ -106,6 +109,12 @@
     <t t-name="ImportView.comment_m2m_field">
         <div class="oe_import_m2m_field alert alert-info">
             To import multiple values, separate them by a comma
+        </div>
+    </t>
+
+    <t t-name="ImportView.preview_popover">
+        <div class="o_import_preview_popover" style="position: relative">
+            <div t-foreach="preview" t-as="preview_value" t-esc="preview_value"/>
         </div>
     </t>
 

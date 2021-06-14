@@ -204,6 +204,9 @@ class IrFieldsConverter(models.AbstractModel):
         if value.lower() in falses:
             return False, []
 
+        if field.name in self._context.get('import_skip_records', []):
+            return None, []
+
         return True, [self._format_import_error(
             ValueError,
             _(u"Unknown value '%s' for boolean field '%%(field)s'"),
@@ -319,6 +322,10 @@ class IrFieldsConverter(models.AbstractModel):
             if value.lower() == str(item).lower() or any(value.lower() == label.lower() for label in labels):
                 return item, []
 
+        if field.name in self._context.get('import_skip_records', []):
+            return None, []
+        elif field.name in self._context.get('import_set_empty_fields', []):
+            return False, []
         raise self._format_import_error(
             ValueError,
             _(u"Value '%s' not found in selection field '%%(field)s'"),
@@ -417,12 +424,14 @@ class IrFieldsConverter(models.AbstractModel):
                 subfield
             )
 
-        import_skip = False
+        set_empty = False
+        skip_record = False
         if self.env.context.get('import_file'):
-            import_skip_fields = self.env.context.get('import_skip_fields') or []
+            import_set_empty_fields = self.env.context.get('import_set_empty_fields') or []
             field_path = "/".join((self.env.context.get('parent_fields_hierarchy', []) + [field.name]))
-            import_skip = field_path in import_skip_fields
-        if id is None and not import_skip:
+            set_empty = field_path in import_set_empty_fields
+            skip_record = field_path in self.env.context.get('import_skip_records', [])
+        if id is None and not set_empty and not skip_record:
             if error_msg:
                 message = _("No matching record found for %(field_type)s '%(value)s' in field '%%(field)s' and the following error was encountered when we attempted to create one: %(error_message)s")
             else:
@@ -515,6 +524,11 @@ class IrFieldsConverter(models.AbstractModel):
             id, _, ws = self.db_id_for(model, field, subfield, reference)
             ids.append(id)
             warnings.extend(ws)
+
+        if field.name in self._context.get('import_set_empty_fields', []) and any([id is None for id in ids]):
+            ids = [id for id in ids if id]
+        elif field.name in self._context.get('import_skip_records', []) and any([id is None for id in ids]):
+            return None, warnings
 
         if self._context.get('update_many2many'):
             return [Command.link(id) for id in ids], warnings
