@@ -134,3 +134,11 @@ class PaymentAcquirer(models.Model):
         if self.provider != 'adyen':
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_adyen.payment_method_adyen').id
+
+    def _neutralize(self):
+        super()._neutralize()
+        self._neutralize_fields('adyen', [
+            'adyen_merchant_account',
+            'adyen_api_key',
+            'adyen_hmac_key',
+        ])

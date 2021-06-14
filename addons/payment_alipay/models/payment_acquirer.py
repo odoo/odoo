@@ -64,3 +64,11 @@ class PaymentAcquirer(models.Model):
         if self.provider != 'alipay':
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_alipay.payment_method_alipay').id
+
+    def _neutralize(self):
+        super()._neutralize()
+        self._neutralize_fields('alipay', [
+            'alipay_merchant_partner_id',
+            'alipay_md5_signature_key',
+            'alipay_seller_email',
+        ])

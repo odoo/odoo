@@ -60,3 +60,7 @@ class PaymentAcquirer(models.Model):
         if self.provider != 'sips':
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_sips.payment_method_sips').id
+
+    def _neutralize(self):
+        super()._neutralize()
+        self._neutralize_fields('sips', ['sips_merchant_id', 'sips_secret'])

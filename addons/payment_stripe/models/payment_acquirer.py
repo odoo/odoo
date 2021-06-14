@@ -78,3 +78,11 @@ class PaymentAcquirer(models.Model):
         if self.provider != 'stripe':
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_stripe.payment_method_stripe').id
+
+    def _neutralize(self):
+        super()._neutralize()
+        self._neutralize_fields('stripe', [
+            'stripe_secret_key',
+            'stripe_publishable_key',
+            'stripe_webhook_secret',
+        ])
