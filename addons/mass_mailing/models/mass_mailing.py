@@ -102,7 +102,7 @@ class MassMailingList(models.Model):
     _description = 'Mailing List'
 
     name = fields.Char(string='Mailing List', required=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, string="Active")
     contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
     contact_ids = fields.Many2many(
         'mail.mass_mailing.contact', 'mail_mass_mailing_contact_list_rel', 'list_id', 'contact_id',
@@ -322,7 +322,7 @@ class MassMailingCampaign(models.Model):
     _rec_name = "campaign_id"
     _inherits = {'utm.campaign': 'campaign_id'}
 
-    stage_id = fields.Many2one('mail.mass_mailing.stage', string='Stage', ondelete='restrict', required=True, 
+    stage_id = fields.Many2one('mail.mass_mailing.stage', string='Stage', ondelete='restrict', required=True,
         default=lambda self: self.env['mail.mass_mailing.stage'].search([], limit=1),
         group_expand='_group_expand_stage_ids')
     user_id = fields.Many2one(
@@ -469,7 +469,7 @@ class MassMailing(models.Model):
                 res['reply_to_mode'] = 'thread'
         return res
 
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, string="Active")
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
