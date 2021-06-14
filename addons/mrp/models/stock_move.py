@@ -215,7 +215,7 @@ class StockMove(models.Model):
     def unlink(self):
         # Avoid deleting move related to active MO
         for move in self:
-            if move.production_id and move.production_id.state not in ('draft', 'cancel'):
+            if move.production_id and move.production_id.state not in ('draft', 'cancel') and not self._context.get('force_delete'):
                 raise UserError(_('Please cancel the Manufacture Order first.'))
         return super(StockMove, self).unlink()
 
