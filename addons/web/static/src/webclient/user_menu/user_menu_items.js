@@ -4,6 +4,7 @@ import { Dialog } from "../../core/dialog/dialog";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 import { _lt } from "../../core/l10n/translation";
+import { session } from "@web/session";
 
 function documentationItem(env) {
     const documentationURL = "https://www.odoo.com/documentation/14.0";
@@ -20,7 +21,7 @@ function documentationItem(env) {
 }
 
 function supportItem(env) {
-    const url = odoo.session_info.support_url;
+    const url = session.support_url;
     return {
         type: "item",
         id: "support",

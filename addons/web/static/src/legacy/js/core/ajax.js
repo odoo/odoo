@@ -7,6 +7,7 @@ var core = require('web.core');
 var time = require('web.time');
 var download = require('web.download');
 var contentdisposition = require('web.contentdisposition');
+const { session } = require('@web/session');
 
 var _t = core._t;
 
@@ -437,7 +438,7 @@ var loadAsset = (function () {
         if (cache[xmlId]) {
             return cache[xmlId];
         }
-        context = _.extend({}, odoo.session_info.user_context, context);
+        context = _.extend({}, session.user_context, context);
         const params = {
             args: [xmlId, {
                 debug: config.isDebug()

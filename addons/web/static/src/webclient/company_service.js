@@ -3,6 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { symmetricalDifference } from "../core/utils/arrays";
+import { session } from "@web/session";
 
 function parseCompanyIds(cidsFromHash) {
     const cids = [];
@@ -15,7 +16,7 @@ function parseCompanyIds(cidsFromHash) {
 }
 
 function computeAllowedCompanyIds(cids) {
-    const { user_companies } = odoo.session_info;
+    const { user_companies } = session;
     let allowedCompanyIds = cids || [];
     const availableCompaniesFromSession = user_companies.allowed_companies;
     const notReallyAllowedCompanies = allowedCompanyIds.filter(
@@ -44,7 +45,7 @@ export const companyService = {
         cookie.setCookie("cids", stringCIds);
 
         user.updateContext({ allowed_company_ids: allowedCompanyIds });
-        const availableCompanies = odoo.session_info.user_companies.allowed_companies;
+        const availableCompanies = session.user_companies.allowed_companies;
 
         return {
             availableCompanies,

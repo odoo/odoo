@@ -2,11 +2,12 @@
 
 import { browser } from "../core/browser/browser";
 import { registry } from "../core/registry";
+import { session } from "@web/session";
 
 const loadMenusUrl = `/web/webclient/load_menus`;
 
 function makeFetchLoadMenus() {
-    const cacheHashes = odoo.session_info.cache_hashes;
+    const cacheHashes = session.cache_hashes;
     let loadMenusHash = cacheHashes.load_menus || new Date().getTime().toString();
     return async function fetchLoadMenus(reload) {
         if (reload) {

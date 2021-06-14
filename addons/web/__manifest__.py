@@ -57,6 +57,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/es6-promise/es6-promise-polyfill.js',
             'web/static/src/legacy/js/promise_extension.js',
             'web/static/src/boot.js',
+            'web/static/src/session.js',
         ],
         'web.assets_common': [
             ('include', 'web._assets_helpers'),
@@ -73,6 +74,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/lib/es6-promise/es6-promise-polyfill.js'),
             ('remove', 'web/static/src/legacy/js/promise_extension.js'),
             ('remove', 'web/static/src/boot.js'),
+            ('remove', 'web/static/src/session.js'),
         ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),

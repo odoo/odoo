@@ -5,11 +5,12 @@ import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
 import { translatedTerms, _t } from "./translation";
+import { session } from "@web/session";
 
 export const localizationService = {
     dependencies: ["user"],
     start: async (env, { user }) => {
-        const cacheHashes = odoo.session_info.cache_hashes;
+        const cacheHashes = session.cache_hashes;
         const translationsHash = cacheHashes.translations || new Date().getTime().toString();
         const lang = user.lang || null;
         let url = `/web/webclient/translations/${translationsHash}`;

@@ -19,7 +19,7 @@
                 <!--in an iframe, we don't want the session to perform qweb_templates rpc-->
                 <script type="text/javascript">
                     window.odoo = {};
-                    window.odoo.session_info = {is_report: true};
+                    window.odoo.__session_info__ = {is_report: true};
                 </script>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.report_assets_common" t-css="false"/>
