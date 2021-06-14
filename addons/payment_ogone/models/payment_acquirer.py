@@ -120,3 +120,13 @@ class PaymentAcquirer(models.Model):
         if self.provider != 'ogone':
             return super()._get_default_payment_method_id()
         return self.env.ref('payment_ogone.payment_method_ogone').id
+
+    def _neutralize(self):
+        super()._neutralize()
+        self._neutralize_fields('ogone', [
+            'ogone_pspid',
+            'ogone_userid',
+            'ogone_password',
+            'ogone_shakey_in',
+            'ogone_shakey_out',
+        ])
