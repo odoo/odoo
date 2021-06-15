@@ -42,7 +42,7 @@ QUnit.module("RainbowMan", (hooks) => {
         RainbowMan.rainbowFadeouts = { nextTick: 0 };
         const env = await makeTestEnv({ serviceRegistry });
         const parent = await mount(Parent, { env, target });
-        env.services.effect.rainbowMan(rainbowManDefault);
+        env.services.effect.add("rainbowman", rainbowManDefault);
         await nextTick();
         assert.containsOnce(target, ".o_reward");
         assert.containsOnce(parent.el, ".o_reward_rainbow");
@@ -64,7 +64,7 @@ QUnit.module("RainbowMan", (hooks) => {
         rainbowManDefault.fadeout = "no";
         const env = await makeTestEnv({ serviceRegistry });
         const parent = await mount(Parent, { env, target });
-        env.services.effect.rainbowMan(rainbowManDefault);
+        env.services.effect.add("rainbowman", rainbowManDefault);
         await nextTick();
         assert.containsOnce(parent.el, ".o_reward");
         assert.containsOnce(parent.el, ".o_reward_rainbow");

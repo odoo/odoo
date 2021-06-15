@@ -8,10 +8,10 @@ export const legacyServiceProvider = {
     dependencies: ["effect"],
     start({ services }) {
         browser.addEventListener("show-effect", (ev) => {
-            services.effect.create(ev.detail.type, ev.detail);
+            services.effect.add(ev.detail.type, ev.detail);
         });
         bus.on("show-effect", this, (payload) => {
-            services.effect.create(payload.type, payload);
+            services.effect.add(payload.type, payload);
         });
     },
 };
