@@ -2475,8 +2475,8 @@ td {
     transform: translate(-50%, -50%);
 }
 
-.pos .modal-dialog .popup-lg{
-    max-width: 80%;
+.pos .modal-dialog .popup-med{
+    max-width: 700px;
     max-height: 600px;
     height: auto;
 }
@@ -2494,7 +2494,7 @@ td {
     margin: 16px;
 }
 
-.pos .popup-lg .body {
+.pos .popup-med .body {
     max-height: 400px;
     overflow-y: auto;
 }
@@ -3010,16 +3010,7 @@ td {
 
 .pos .product_configurator_attributes .attribute {
     margin-bottom: 1em;
-    display: inline-block;
-    width: 45%;
     padding-left: 0.5em;
-    vertical-align: top;
-}
-
-@media screen and (max-width: 768px) {
-    .pos .product_configurator_attributes .attribute {
-        width: 95%;
-    }
 }
 
 .pos .product_configurator_attributes .attribute_name {
@@ -3038,15 +3029,29 @@ td {
     line-height: 1.5;
 }
 
+.pos .product_configurator_attributes .configurator_radio .table {
+    display: grid;
+    grid-template-columns: max-content max-content 1fr;
+    grid-template-rows: max-content;
+}
+
+.pos .product_configurator_attributes .configurator_radio .table div {
+    margin: 5px 0;
+}
+
+.pos .product_configurator_attributes .configurator_radio .attribute-name-cell {
+    grid-column: 1;
+    word-break: break-word;
+    max-width: 300px;
+}
+
+.pos .product_configurator_attributes .configurator_radio .price-extra-cell {
+    grid-column: 2;
+}
+
 .pos .product_configurator_attributes .configurator_radio input[type='radio'] {
     box-shadow: none;
     margin-right: 0.5em;
-}
-
-.pos .product_configurator_attributes .configurator_radio .radio_attribute_label {
-    font-weight: normal;
-    display: inline-block;
-    width: 80%;
 }
 
 .pos .product_configurator_attributes .configurator_radio .price_extra {
@@ -3058,7 +3063,9 @@ td {
 }
 
 .pos .product_configurator_attributes .configurator_radio .custom_value {
-    margin: 0.3em 1.3em;
+    margin-left: 0.5em;
+    height: 1.3em;
+
 }
 
 /** Selector attribute **/
@@ -3109,6 +3116,21 @@ td {
 
 .pos .product_configurator_attributes .configurator_color.active input {
     margin: 18px;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .product_configurator_attributes .attribute {
+        width: 95%;
+    }
+
+    .pos .product_configurator_attributes .configurator_radio .attribute-name-cell {
+        max-width: 190px;
+    }
+
+    .pos .product_configurator_attributes .configurator_radio .custom-value-cell {
+        grid-column: 1 / 3;
+        justify-self: center;
+    }
 }
 
 /* TICKET SCREEN */
