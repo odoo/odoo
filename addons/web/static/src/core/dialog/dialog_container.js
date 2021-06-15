@@ -1,8 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from "../registry";
-import { useService } from "../service_hook";
-
 const { Component, tags } = owl;
 
 class ErrorHandler extends Component {
@@ -15,39 +12,24 @@ ErrorHandler.template = tags.xml`<t t-component="props.dialog.class" t-props="pr
 
 export class DialogContainer extends Component {
     setup() {
-        this.dialogs = {};
-        this.props.bus.on("ADD", this, this.add);
-        this.props.bus.on("REMOVE", this, this.remove);
-    }
-    __destroy() {
-        this.props.bus.off("ADD", this);
-        this.props.bus.off("REMOVE", this);
-        super.__destroy();
+        this.props.bus.on("UPDATE", this, this.render);
     }
 
-    add(params) {
-        this.dialogs[params.id] = params;
-        this.render();
-    }
-    remove(id) {
-        if (this.dialogs[id]) {
-            delete this.dialogs[id];
-            this.render();
+    close(id) {
+        if (this.props.dialogs[id]) {
+            this.props.dialogs[id].props.close();
         }
     }
 
-    onDialogClosed(id) {
-        this.remove(id);
-    }
     errorCallBack(id) {
-        return () => this.remove(id);
+        return () => this.close(id);
     }
 }
 DialogContainer.components = { ErrorHandler };
 DialogContainer.template = tags.xml`
-    <div class="o_dialog_container" t-att-class="{'modal-open': Object.keys(dialogs).length > 0}">
-      <t t-foreach="Object.values(dialogs)" t-as="dialog" t-key="dialog.id">
-        <ErrorHandler dialog="dialog" t-on-dialog-closed="onDialogClosed(dialog.id)" callback="errorCallBack(dialog.id)"
+    <div class="o_dialog_container" t-att-class="{'modal-open': Object.keys(props.dialogs).length > 0}">
+      <t t-foreach="Object.values(props.dialogs)" t-as="dialog" t-key="dialog.id">
+        <ErrorHandler dialog="dialog" t-on-dialog-closed="dialog.props.close()" callback="errorCallBack(dialog.id)"
             t-att-class="{o_inactive_modal: !dialog_last}"/>
       </t>
     </div>
