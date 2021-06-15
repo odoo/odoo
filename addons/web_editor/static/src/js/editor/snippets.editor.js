@@ -2233,10 +2233,16 @@ var SnippetsMenu = Widget.extend({
                 handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
-                    dragSnip.querySelectorAll('.o_delete_btn').forEach(
-                        el => el.remove()
-                    );
+                    for (const className of ['.o_delete_btn', '.o_rename_btn']) {
+                        dragSnip.querySelectorAll(className).forEach(
+                            el => el.remove()
+                        );
+                    }
                     return dragSnip;
+                },
+                cursorAt: {
+                    top: 40,
+                    left: 45,
                 },
                 start: function (ev) {
                     self.options.wysiwyg.odooEditor.automaticStepUnactive();
