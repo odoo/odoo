@@ -303,6 +303,62 @@ class TestCRMLead(TestCrmCommon):
                          'Partner sanitized should be computed on mobile')
 
     @users('user_sales_manager')
+    def test_crm_lead_partner_sync_email_phone_corner_cases(self):
+        """ Test corner cases of email and phone sync (False versus '', formatting
+        differences, wrong input, ...) """
+        test_email = 'amy.wong@test.example.com'
+        lead = self.lead_1.with_user(self.env.user)
+        contact = self.env['res.partner'].create({
+            'name': 'NoContact Partner',
+            'phone': '',
+            'email': '',
+            'mobile': '',
+        })
+
+        lead_form = Form(lead)
+        self.assertEqual(lead_form.email_from, test_email)
+        self.assertFalse(lead_form.ribbon_message)
+
+        # email: False versus empty string
+        lead_form.partner_id = contact
+        self.assertIn('the customer email', lead_form.ribbon_message)
+        lead_form.email_from = ''
+        self.assertFalse(lead_form.ribbon_message)
+        lead_form.email_from = False
+        self.assertFalse(lead_form.ribbon_message)
+
+        # phone: False versus empty string
+        lead_form.phone = '+1 202-555-0888'
+        self.assertIn('the customer phone', lead_form.ribbon_message)
+        lead_form.phone = ''
+        self.assertFalse(lead_form.ribbon_message)
+        lead_form.phone = False
+        self.assertFalse(lead_form.ribbon_message)
+
+        # email/phone: formatting should not trigger ribbon
+        lead.write({
+            'email_from': '"My Name" <%s>' % test_email,
+            'phone': '+1 202-555-0888',
+        })
+        contact.write({
+            'email': '"My Name" <%s>' % test_email,
+            'phone': '+1 202-555-0888',
+        })
+
+        lead_form = Form(lead)
+        self.assertFalse(lead_form.ribbon_message)
+        lead_form.partner_id = contact
+        self.assertFalse(lead_form.ribbon_message)
+        lead_form.email_from = '"Another Name" <%s>' % test_email  # same email normalized
+        self.assertFalse(lead_form.ribbon_message, 'Formatting-only change should not trigger write')
+        lead_form.phone = '2025550888'  # same number but another format
+        self.assertFalse(lead_form.ribbon_message, 'Formatting-only change should not trigger write')
+
+        # wrong value are also propagated
+        lead_form.phone = '666 789456789456789456'
+        self.assertIn('the customer phone', lead_form.ribbon_message)
+
+    @users('user_sales_manager')
     def test_crm_lead_stages(self):
         lead = self.lead_1.with_user(self.env.user)
         self.assertEqual(lead.team_id, self.sales_team_1)
