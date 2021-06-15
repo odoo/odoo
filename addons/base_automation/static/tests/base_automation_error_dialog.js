@@ -1,6 +1,5 @@
 /** @odoo-modules */
 
-import session from "web.session";
 import { registry } from "@web/core/registry";
 import { errorService } from "@web/core/errors/error_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
@@ -70,17 +69,11 @@ QUnit.module("base_automation", {}, function () {
             exceptionName: errorContext.exception_class,
         });
 
-        patchWithCleanup(DialogContainer.prototype, {
+        patchWithCleanup(BaseAutomationErrorDialog.prototype, {
             setup() {
-                this.props.bus.on("ADD", this, ({ class: dialogClass, props }) => {
-                    assert.equal(props.data.context, errorContext, "Received the correct error context");
-                });
+                assert.equal(this.props.data.context, errorContext, "Received the correct error context");
                 this._super();
             },
-            mounted() {
-                this._super();
-                this.el.classList.add("o_dialog_container");
-            }
         });
 
         const env = await makeTestEnv();

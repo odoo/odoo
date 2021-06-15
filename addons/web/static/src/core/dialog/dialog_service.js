@@ -25,12 +25,13 @@ const { EventBus } = core;
 export const dialogService = {
     /** @returns {DialogServiceInterface} */
     start() {
+        const dialogs = {};
         const bus = new EventBus();
         let dialogId = 0;
 
         registry.category("main_components").add("DialogContainer", {
             Component: DialogContainer,
-            props: { bus },
+            props: { bus, dialogs },
         });
 
         function add(dialogClass, props, options = {}) {
@@ -40,10 +41,13 @@ export const dialogService = {
 
             const id = ++dialogId;
             function close() {
-                if (options.onClose) {
-                    options.onClose();
+                if (dialogs[id]) {
+                    delete dialogs[id];
+                    if (options.onClose) {
+                        options.onClose();
+                    }
+                    bus.trigger("UPDATE");
                 }
-                bus.trigger("REMOVE", id);
             }
 
             const dialog = {
@@ -51,7 +55,8 @@ export const dialogService = {
                 class: dialogClass,
                 props: { ...props, close },
             };
-            bus.trigger("ADD", dialog);
+            dialogs[id] = dialog;
+            bus.trigger("UPDATE");
 
             return close;
         }
