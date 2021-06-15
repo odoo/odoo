@@ -33,14 +33,14 @@ function registerView(name, LegacyView) {
                 action: this.props.action,
                 // legacy views automatically add the last part of the breadcrumbs
                 breadcrumbs: breadcrumbsToLegacy(this.props.breadcrumbs),
-                modelName: this.props.model,
-                currentId: this.props.recordId,
+                modelName: this.props.resModel,
+                currentId: this.props.resId,
                 controllerState: {
                     currentId:
-                        "recordId" in this.props
-                            ? this.props.recordId
+                        "resId" in this.props
+                            ? this.props.resId
                             : this.props.state && this.props.state.currentId,
-                    resIds: this.props.recordIds || (this.props.state && this.props.state.resIds),
+                    resIds: this.props.resIds || (this.props.state && this.props.state.resIds),
                     searchModel:
                         this.props.searchModel ||
                         (this.props.state && this.props.state.searchModel),
@@ -75,7 +75,7 @@ function registerView(name, LegacyView) {
 
         async willStart() {
             const params = {
-                model: this.props.model,
+                model: this.props.resModel,
                 views: this.props.views,
                 context: this.props.context,
             };

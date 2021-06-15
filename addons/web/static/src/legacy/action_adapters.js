@@ -330,8 +330,8 @@ export class ViewAdapter extends ActionAdapter {
             const state = ev.target.exportState();
             try {
                 await this.actionService.switchView(payload.view_type, {
-                    recordId: payload.res_id,
-                    recordIds: state.resIds,
+                    resId: payload.res_id,
+                    resIds: state.resIds,
                     searchModel: state.searchModel,
                     searchPanel: state.searchPanel,
                     mode: payload.mode,
@@ -351,10 +351,10 @@ export class ViewAdapter extends ActionAdapter {
                     buttonContext: buttonContext,
                     context: envContext,
                     close: payload.action_data.close,
-                    model: payload.env.model,
+                    resModel: payload.env.model,
                     name: payload.action_data.name,
-                    recordId: payload.env.currentID || null,
-                    recordIds: payload.env.resIDs,
+                    resId: payload.env.currentID || null,
+                    resIds: payload.env.resIDs,
                     special: payload.action_data.special,
                     type: payload.action_data.type,
                     onClose: payload.on_closed,

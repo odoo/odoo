@@ -21,12 +21,17 @@ function registerClientAction(name, action) {
                 super(...arguments);
                 this.controllerRef = hooks.useRef("controller");
                 this.Widget = action;
-                this.widgetArgs = [
-                    this.props.action,
-                    Object.assign({}, this.props.options, {
-                        breadcrumbs: breadcrumbsToLegacy(this.props.breadcrumbs),
-                    }),
-                ];
+                const options = {};
+                for (const key in this.props) {
+                    if (key === "action" || key === "actionId") {
+                        continue;
+                    } else if (key === "breadcrumbs") {
+                        options[key] = breadcrumbsToLegacy(this.props[key]);
+                    } else {
+                        options[key] = this.props[key];
+                    }
+                }
+                this.widgetArgs = [this.props.action, options];
                 this.widget = this.props.state && this.props.state.__legacy_widget__;
                 this.onReverseBreadcrumb =
                     this.props.state && this.props.state.__on_reverse_breadcrumb__;

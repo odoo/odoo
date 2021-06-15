@@ -340,6 +340,37 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
+    QUnit.test("ClientAction receives arbitrary props from doAction (wowl)", async (assert) => {
+        assert.expect(1);
+        class ClientAction extends Component {
+            setup() {
+                assert.strictEqual(this.props.division, "bell");
+            }
+        }
+        ClientAction.template = tags.xml`<div class="my_owl_action"></div>`;
+        actionRegistry.add("OwlClientAction", ClientAction);
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, "OwlClientAction", {
+            props: { division: "bell" },
+        });
+    });
+
+    QUnit.test("ClientAction receives arbitrary props from doAction (legacy)", async (assert) => {
+        assert.expect(1);
+        const ClientAction = AbstractAction.extend({
+            init(parent, action, options) {
+                assert.strictEqual(options.division, "bell");
+                this._super.apply(this, arguments);
+            },
+        });
+        core.action_registry.add("ClientAction", ClientAction);
+        registerCleanup(() => delete core.action_registry.map.ClientAction);
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, "ClientAction", {
+            props: { division: "bell" },
+        });
+    });
+
     QUnit.test("test display_notification client action", async function (assert) {
         assert.expect(6);
         const webClient = await createWebClient({ serverData });

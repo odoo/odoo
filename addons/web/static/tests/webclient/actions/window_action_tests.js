@@ -2202,7 +2202,7 @@ QUnit.module("ActionManager", (hooks) => {
         </sheet>
       </form>`;
         const webClient = await createWebClient({ serverData, mockRPC });
-        await doAction(webClient, 3, { viewType: "form", resId: 1 });
+        await doAction(webClient, 3, { viewType: "form", props: { resId: 1 } });
         await legacyExtraNextTick();
         assert.isVisible(webClient.el.querySelector(".o_form_buttons_view .o_form_button_edit"));
         await click(webClient.el.querySelector(".o_form_buttons_view .o_form_button_edit"));
@@ -2287,7 +2287,7 @@ QUnit.module("ActionManager", (hooks) => {
 
             const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 1, {
-                controllerState: {
+                props: {
                     searchModel:
                         '{"ControlPanelModelExtension":{"filters":{"1":{"type":"field","description":"Foo","fieldName":"foo","fieldType":"char","groupId":1,"id":1},"2":{"description":"ID is \\"99\\"","domain":"[[\\"id\\",\\"=\\",99]]","type":"filter","groupId":3,"groupNumber":2,"id":2}},"query":[{"groupId":3,"filterId":2}]}}',
                 },
