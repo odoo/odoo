@@ -359,7 +359,7 @@ QUnit.module("ActionManager", (hooks) => {
             "breadcrumbs should contain the display_name of the opened record"
         );
         await doAction(webClient, 3, {
-            resId: 2,
+            props: { resId: 2 },
             viewType: "form",
         });
         assert.containsN(
@@ -815,7 +815,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.step(route);
         };
         const webClient = await createWebClient({ serverData, mockRPC });
-        await doAction(webClient, 999, { viewType: "form", resId: 2 });
+        await doAction(webClient, 999, { viewType: "form", props: { resId: 2 } });
         assert.containsOnce(webClient, ".o_form_view");
         assert.containsN(webClient, ".breadcrumb-item", 2);
         assert.strictEqual(
