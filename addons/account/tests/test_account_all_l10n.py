@@ -41,7 +41,6 @@ class TestDemoInstalled(SavepointCase):
     def test_demo_installed(self):
         if not self.env.ref('base.module_account').demo:
             self.skipTest("Need demo data to test that it is installed...")
-        main_company = self.env.ref('base.main_company')
         countries_installed = {
              meta['xmlid'].split('.')[0]
              for meta in self.env['account.chart.template'].search([]).get_metadata()
