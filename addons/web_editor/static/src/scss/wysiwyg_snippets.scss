@@ -53,24 +53,24 @@ body.editor_enable.editor_has_snippets {
         background-color: rgba(62, 62, 70, 1);
         cursor: -moz-grabbing;
         cursor: -webkit-grabbing;
-        cursor: move;
         cursor: grabbing !important;
 
         font-size: 12px;
         text-align: center;
         width: 84px;
-        line-height: 1.5;
-
-        text-overflow: ellipsis;
-        overflow-wrap: break-word;
-        word-wrap: break-word;
 
         box-shadow: 0 5px 25px -10px black;
         transition: transform 0.3s, box-shadow 0.3s;
 
-        &.oe_snippet_thumbnail_title {
-            padding: 5px;
+        & .oe_snippet_thumbnail_title {
             box-sizing: border-box;
+            display: block;
+            padding: $o-we-sidebar-blocks-content-spacing / 2;
+            text-align: center;
+
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: "...";
         }
     }
 
@@ -1612,7 +1612,6 @@ body.editor_enable.editor_has_snippets {
         &:hover {
             cursor: -moz-grab; // mozilla
             cursor: url(/web_editor/static/src/img/openhand.cur), default !important; // chrome
-            cursor: move; // fallback
         }
     }
 }
@@ -2026,7 +2025,6 @@ body.editor_enable.editor_has_snippets {
                 .o_we_grabbing {
                     cursor: -webkit-grabbing;
                     cursor: -moz-grabbing;
-                    cursor: move;
                     cursor: grabbing;
                 }
             }
