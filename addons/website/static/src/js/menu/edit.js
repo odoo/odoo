@@ -135,7 +135,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         const $target = this._targetForEdition();
         const $skeleton = $target.find('.oe_structure.oe_empty, [data-oe-type="html"]');
         this.$editorMessageElements = $skeleton.not('[data-editor-message]').attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
-        $skeleton.attr('contentEditable', !$skeleton.is(':empty'));
+        $skeleton.attr('contenteditable', function () { return !$(this).is(':empty'); });
     },
     /**
      * Returns the target for edition.
