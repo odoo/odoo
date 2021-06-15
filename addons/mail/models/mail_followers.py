@@ -135,7 +135,7 @@ SELECT DISTINCT ON(pid, cid) * FROM (
     )
     SELECT partner.id as pid, NULL::int AS cid,
             partner.active as active, partner.partner_share as pshare, NULL as ctype,
-            users.notification_type AS notif, array_agg(groups.id) AS groups
+            users.notification_type AS notif, array_agg(groups.id) AS groups, partner.lang as lang
         FROM res_partner partner
         LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
         LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
@@ -150,7 +150,7 @@ SELECT DISTINCT ON(pid, cid) * FROM (
     UNION
     SELECT NULL::int AS pid, channel.id AS cid,
             TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-            CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
+            CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups, NULL as lang
         FROM mail_channel channel
         WHERE EXISTS (
             SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
@@ -171,7 +171,7 @@ ORDER BY pid, cid, notif
                 query_pid = """
 SELECT DISTINCT ON (partner.id) partner.id as pid, NULL::int AS cid,
     partner.active as active, partner.partner_share as pshare, NULL as ctype,
-    users.notification_type AS notif, NULL AS groups
+    users.notification_type AS notif, NULL AS groups, partner.lang as lang
 FROM res_partner partner
 LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
 WHERE partner.id IN %s
@@ -181,7 +181,7 @@ ORDER BY partner.id, users.notification_type"""
                 query_cid = """
 SELECT NULL::int AS pid, channel.id AS cid,
     TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-    CASE when channel.email_send = TRUE then 'email' else 'inbox' end AS notif, NULL AS groups
+    CASE when channel.email_send = TRUE then 'email' else 'inbox' end AS notif, NULL AS groups, NULL as lang
 FROM mail_channel channel WHERE channel.id IN %s """
                 params.append(tuple(cids))
             query = ' UNION'.join(x for x in [query_pid, query_cid] if x)
