@@ -47,6 +47,10 @@ class SaleOrder(models.Model):
         for sale_order in self:
             sale_order.attendee_count = attendee_count_data.get(sale_order.id, 0)
 
+    def unlink(self):
+        self.order_line._unlink_associated_registrations()
+        return super(SaleOrder, self).unlink()
+
 
 class SaleOrderLine(models.Model):
 
@@ -119,6 +123,13 @@ class SaleOrderLine(models.Model):
     def _onchange_event_ticket_id(self):
         # we call this to force update the default name
         self.product_id_change()
+
+    def unlink(self):
+        self._unlink_associated_registrations()
+        return super(SaleOrderLine, self).unlink()
+
+    def _unlink_associated_registrations(self):
+        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).unlink()
 
     def get_sale_order_line_multiline_description_sale(self, product):
         """ We override this method because we decided that:
