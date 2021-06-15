@@ -406,8 +406,9 @@ actual arch.
         for view in self:
             try:
                 # verify the view is valid xml and that the inheritance resolves
-                view_arch = etree.fromstring(view.arch)
-                view._valid_inheritance(view_arch)
+                if view.inherit_id:
+                    view_arch = etree.fromstring(view.arch)
+                    view._valid_inheritance(view_arch)
                 combined_arch = view._get_combined_arch()
                 if view.type == 'qweb':
                     continue
@@ -421,8 +422,7 @@ actual arch.
 
             try:
                 # verify that all fields used are valid, etc.
-                view.postprocess_and_fields(combined_arch, validate=True)
-                # RNG-based validation is not possible anymore with 7.0 forms
+                view._validate_view(combined_arch, view.model)
                 combined_archs = [combined_arch]
                 if combined_archs[0].tag == 'data':
                     # A <data> element is a wrapper for multiple root nodes
@@ -943,7 +943,7 @@ actual arch.
     #------------------------------------------------------
     # TODO: remove group processing from ir_qweb
     #------------------------------------------------------
-    def postprocess_and_fields(self, node, model=None, validate=False):
+    def postprocess_and_fields(self, node, model=None):
         """ Return an architecture and a description of all the fields.
 
         The field description combines the result of fields_get() and
@@ -952,26 +952,24 @@ actual arch.
         :param self: the view to postprocess
         :param node: the architecture as an etree
         :param model: the view's reference model name
-        :param validate: whether the view must be validated
         :return: a tuple (arch, fields) where arch is the given node as a
             string and fields is the description of all the fields.
 
         """
         self and self.ensure_one()      # self is at most one view
 
-        name_manager = self._postprocess_view(node, model or self.model, validate=validate)
+        name_manager = self._postprocess_view(node, model or self.model)
 
         arch = etree.tostring(node, encoding="unicode").replace('\t', '')
         return arch, name_manager.available_fields
 
-    def _postprocess_view(self, node, model_name, validate=True, editable=True):
+    def _postprocess_view(self, node, model_name, editable=True):
         """ Process the given architecture, modifying it in-place to add and
         remove stuff.
 
         :param self: the optional view to postprocess
         :param node: the combined architecture as an etree
         :param model_name: the view's reference model name
-        :param validate: whether the view must be validated
         :param editable: whether the view is considered editable
         :return: the processed architecture's NameManager
         """
@@ -981,14 +979,9 @@ actual arch.
             self._raise_view_error(_('Model not found: %(model)s', model=model_name), root)
         model = self.env[model_name]
 
-        if not validate:
-            # validation mode does not care about on_change
-            self._postprocess_on_change(root, model)
+        self._postprocess_on_change(root, model)
 
-        name_manager = NameManager(validate, model)
-
-        # tree, form, graph, etc.
-        VIEW_TAGS = {item[0] for item in type(self).type.selection}
+        name_manager = NameManager(False, model)
 
         # use a stack to recursively traverse the tree
         stack = [(root, editable)]
@@ -1001,7 +994,7 @@ actual arch.
             node_info = {
                 'modifiers': {},
                 'attr_model': name_manager.Model,
-                'editable': editable,
+                'editable': editable and self._editable_node(node, name_manager),
             }
 
             # tag-specific postprocessing
@@ -1011,15 +1004,6 @@ actual arch.
                 if node.getparent() is not parent:
                     # the node has been removed, stop processing here
                     continue
-            elif node.tag in VIEW_TAGS:
-                node_info['editable'] = False
-
-            if name_manager.validate:
-                # tag-specific validation
-                validator = getattr(self, f"_validate_tag_{tag}", None)
-                if validator is not None:
-                    validator(node, name_manager, node_info)
-                self._validate_attrs(node, name_manager, node_info)
 
             self._apply_groups(node, name_manager, node_info)
             transfer_node_to_modifiers(node, node_info['modifiers'], self._context)
@@ -1029,12 +1013,8 @@ actual arch.
             for child in reversed(node_info.get('children', node)):
                 stack.append((child, node_info['editable']))
 
-        if validate:
-            name_manager.check_view_fields(self)
-        else:
-            # validation does not care about fields_get and access rights
-            name_manager.update_view_fields()
-            self._postprocess_access_rights(root, model.sudo(False))
+        name_manager.update_view_fields()
+        self._postprocess_access_rights(root, model.sudo(False))
 
         return name_manager
 
@@ -1101,7 +1081,6 @@ actual arch.
         for f in node:
             if f.tag == 'filter':
                 name_manager.has_field(f.get('name'))
-        node_info['editable'] = False
 
     def _postprocess_tag_field(self, node, name_manager, node_info):
         if node.get('name'):
@@ -1113,14 +1092,6 @@ actual arch.
                     node.getparent().remove(node)
                     # no point processing view-level ``groups`` anymore, return
                     return
-                node_info['editable'] = node_info['editable'] and field.is_editable() and (
-                    node.get('readonly') not in ('1', 'True')
-                    or get_dict_asts(node.get('attrs') or "{}")
-                )
-                if name_manager.validate:
-                    name_manager.must_have_fields(
-                        self._get_field_domain_variables(node, field, node_info['editable'])
-                    )
                 views = {}
                 for child in node:
                     if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
@@ -1128,17 +1099,15 @@ actual arch.
                         sub_name_manager = self.with_context(
                             base_model_name=name_manager.Model._name,
                         )._postprocess_view(
-                            child, field.comodel_name, name_manager.validate,
-                            editable=node_info['editable'],
+                            child, field.comodel_name, editable=node_info['editable'],
                         )
-                        name_manager.must_have_fields(sub_name_manager.mandatory_parent_fields)
                         xarch = etree.tostring(child, encoding="unicode").replace('\t', '')
                         views[child.tag] = {
                             'arch': xarch,
                             'fields': sub_name_manager.available_fields,
                         }
                 attrs['views'] = views
-                if field.comodel_name in self.env:
+                if field.relational:
                     comodel = self.env[field.comodel_name].sudo(False)
                     node_info['attr_model'] = comodel
                     if field.type in ('many2one', 'many2many'):
@@ -1148,6 +1117,7 @@ actual arch.
                         node.set('can_write', 'true' if can_write else 'false')
 
             name_manager.has_field(node.get('name'), attrs)
+
             field = name_manager.fields_get.get(node.get('name'))
             if field:
                 transfer_field_to_modifiers(field, node_info['modifiers'])
@@ -1165,14 +1135,11 @@ actual arch.
         if not field or not field.comodel_name:
             return
         # move all children nodes into a new node <groupby>
-        groupby_node = E.groupby()
-        for child in list(node):
-            node.remove(child)
-            groupby_node.append(child)
-        # validate the new node as a nested view, and associate it to the field
+        groupby_node = E.groupby(*node)
+        # post-process the node as a nested view, and associate it to the field
         sub_name_manager = self.with_context(
             base_model_name=name_manager.Model._name,
-        )._postprocess_view(groupby_node, field.comodel_name, name_manager.validate, editable=False)
+        )._postprocess_view(groupby_node, field.comodel_name, editable=False)
         xarch = etree.tostring(groupby_node, encoding="unicode").replace('\t', '')
         name_manager.has_field(name, {'views': {
             'groupby': {
@@ -1180,7 +1147,6 @@ actual arch.
                 'fields': sub_name_manager.available_fields,
             }
         }})
-        name_manager.must_have_fields(sub_name_manager.mandatory_parent_fields)
 
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if node.get('for'):
@@ -1194,37 +1160,167 @@ actual arch.
             self.with_context(
                 base_model_name=name_manager.Model._name,
             )._postprocess_view(
-                searchpanel[0], name_manager.Model._name, name_manager.validate, editable=False,
+                searchpanel[0], name_manager.Model._name, editable=False,
             )
             node_info['children'] = [child for child in node if child.tag != 'searchpanel']
-        node_info['editable'] = False
 
     def _postprocess_tag_tree(self, node, name_manager, node_info):
+        # reuse form view post-processing
         self._postprocess_tag_form(node, name_manager, node_info)
-        node_info['editable'] = node_info['editable'] and node.get('editable')
+
+    #-------------------------------------------------------------------
+    # view editability
+    #-------------------------------------------------------------------
+
+    def _editable_node(self, node, name_manager):
+        """ Return whether the given node must be considered editable. """
+        func = getattr(self, f"_editable_tag_{node.tag}", None)
+        if func is not None:
+            return func(node, name_manager)
+        # by default views are non-editable
+        return node.tag not in (item[0] for item in type(self).type.selection)
+
+    def _editable_tag_form(self, node, name_manager):
+        return True
+
+    def _editable_tag_tree(self, node, name_manager):
+        return node.get('editable')
+
+    def _editable_tag_field(self, node, name_manager):
+        field = name_manager.Model._fields.get(node.get('name'))
+        return field is None or field.is_editable() and (
+            node.get('readonly') not in ('1', 'True')
+            or get_dict_asts(node.get('attrs') or "{}")
+        )
+
+    #-------------------------------------------------------------------
+    # view validation
+    #-------------------------------------------------------------------
+
+    def _validate_view(self, node, model_name, editable=True):
+        """ Validate the given architecture node, and return its corresponding
+        NameManager.
+
+        :param self: the view being validated
+        :param node: the combined architecture as an etree
+        :param model_name: the reference model name for the given architecture
+        :param editable: whether the view is considered editable
+        :return: the combined architecture's NameManager
+        """
+        self.ensure_one()
+
+        if model_name not in self.env:
+            self._raise_view_error(_('Model not found: %(model)s', model=model_name), node)
+
+        model = self.env[model_name]
+        name_manager = NameManager(True, model)
+
+        # use a stack to recursively traverse the tree
+        stack = [(node, editable)]
+        while stack:
+            node, editable = stack.pop()
+
+            # compute default
+            tag = node.tag
+            node_info = {
+                'attr_model': name_manager.Model,
+                'editable': editable and self._editable_node(node, name_manager),
+            }
+
+            # tag-specific validation
+            validator = getattr(self, f"_validate_tag_{tag}", None)
+            if validator is not None:
+                validator(node, name_manager, node_info)
+
+            self._validate_attrs(node, name_manager, node_info)
+
+            for child in reversed(node):
+                stack.append((child, node_info['editable']))
+
+        name_manager.check_view_fields(self)
+
+        return name_manager
 
     #------------------------------------------------------
     # Node validator
     #------------------------------------------------------
+    def _validate_tag_form(self, node, name_manager, node_info):
+        pass
+
+    def _validate_tag_tree(self, node, name_manager, node_info):
+        # reuse form view validation
+        self._validate_tag_form(node, name_manager, node_info)
+        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
+        for child in node.iterchildren(tag=etree.Element):
+            if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
+                msg = _(
+                    'Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)',
+                    tags=', '.join(allowed_tags), wrong_tag=child.tag,
+                )
+                self._raise_view_error(msg, child)
+
+    def _validate_tag_graph(self, node, name_manager, node_info):
+        for child in node.iterchildren(tag=etree.Element):
+            if child.tag != 'field' and not isinstance(child, etree._Comment):
+                msg = _('A <graph> can only contains <field> nodes, found a <%s>', child.tag)
+                self._raise_view_error(msg, child)
+
+    def _validate_tag_calendar(self, node, name_manager, node_info):
+        for additional_field in ('date_start', 'date_delay', 'date_stop', 'color', 'all_day'):
+            if node.get(additional_field):
+                name_manager.has_field(node.get(additional_field).split('.', 1)[0], {})
+        for f in node:
+            if f.tag == 'filter':
+                name_manager.has_field(f.get('name'), {})
+
+    def _validate_tag_search(self, node, name_manager, node_info):
+        if not list(node.iterdescendants(tag="field")):
+            # the field of the search view may be within a group node, which is why we must check
+            # for all descendants containing a node with a field tag, if this is not the case
+            # then a search is not possible.
+            self._log_view_warning('Search tag requires at least one field element', node)
+
+        searchpanels = [child for child in node if child.tag == 'searchpanel']
+        if searchpanels:
+            if len(searchpanels) > 1:
+                self._raise_view_error(_('Search tag can only contain one search panel'), node)
+            node.remove(searchpanels[0])
+            self._validate_view(searchpanels[0], name_manager.Model._name, editable=False)
+
     def _validate_tag_field(self, node, name_manager, node_info):
         name = node.get('name')
         if not name:
             self._raise_view_error(_("Field tag must have a \"name\" attribute defined"), node)
+
         field = name_manager.Model._fields.get(name)
-        if not field and name in name_manager.fields_get:
-            return
-        if not field:
+        if field:
+            fields = self._get_field_domain_variables(node, field, node_info['editable'])
+            name_manager.must_have_fields(fields)
+            for child in node:
+                if child.tag not in ('form', 'tree', 'graph', 'kanban', 'calendar'):
+                    continue
+                node.remove(child)
+                sub_manager = self._validate_view(child, field.comodel_name, node_info['editable'])
+                name_manager.must_have_fields(sub_manager.mandatory_parent_fields)
+
+            if node.get('domain') and not field.relational:
+                msg = _(
+                    'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
+                    name=name, domain=node.get('domain'),
+                )
+                self._raise_view_error(msg, node)
+
+            if field.relational:
+                node_info['attr_model'] = self.env[field.comodel_name]
+
+        elif name not in name_manager.fields_get:
             msg = _(
                 'Field "%(field_name)s" does not exist in model "%(model_name)s"',
                 field_name=name, model_name=name_manager.Model._name,
             )
             self._raise_view_error(msg, node)
-        if node.get('domain') and field.comodel_name not in self.env:
-            msg = _(
-                'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
-                name=name, domain=node.get('domain'),
-            )
-            self._raise_view_error(msg, node)
+
+        name_manager.has_field(name, {'id': node.get('id'), 'select': node.get('select')})
 
         for attribute in ('invisible', 'readonly', 'required'):
             val = node.get(attribute)
@@ -1299,53 +1395,35 @@ actual arch.
             description = 'A button with icon attribute (%s)' % node.get('icon')
             self._validate_fa_class_accessibility(node, description)
 
-    def _validate_tag_graph(self, node, name_manager, node_info):
-        for child in node.iterchildren(tag=etree.Element):
-            if child.tag != 'field' and not isinstance(child, etree._Comment):
-                msg = _('A <graph> can only contains <field> nodes, found a <%s>', child.tag)
-                self._raise_view_error(msg, child)
-
     def _validate_tag_groupby(self, node, name_manager, node_info):
         # groupby nodes should be considered as nested view because they may
         # contain fields on the comodel
         name = node.get('name')
-        if name:
-            field = name_manager.Model._fields.get(name)
-            if field:
-                if field.type != 'many2one':
-                    msg = _(
-                        "Field '%(name)s' found in 'groupby' node can only be of type many2one, found %(type)s",
-                        name=field.name, type=field.type,
-                    )
-                    self._raise_view_error(msg, node)
-                name_manager.must_have_fields(
-                    self._get_field_domain_variables(node, field, node_info['editable'])
-                )
-            else:
+        if not name:
+            return
+        field = name_manager.Model._fields.get(name)
+        if field:
+            if field.type != 'many2one':
                 msg = _(
-                    "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s",
-                    field=name, model=name_manager.Model._name,
+                    "Field '%(name)s' found in 'groupby' node can only be of type many2one, found %(type)s",
+                    name=field.name, type=field.type,
                 )
                 self._raise_view_error(msg, node)
+            fields = self._get_field_domain_variables(node, field, node_info['editable'])
+            name_manager.must_have_fields(fields)
 
-    def _validate_tag_tree(self, node, name_manager, node_info):
-        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
-        for child in node.iterchildren(tag=etree.Element):
-            if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
-                msg = _(
-                    'Tree child can only have one of %(tags)s tag (not %(wrong_tag)s)',
-                    tags=', '.join(allowed_tags), wrong_tag=child.tag,
-                )
-                self._raise_view_error(msg, child)
-
-    def _validate_tag_search(self, node, name_manager, node_info):
-        if len([c for c in node if c.tag == 'searchpanel']) > 1:
-            self._raise_view_error(_('Search tag can only contain one search panel'), node)
-        if not list(node.iterdescendants(tag="field")):
-            # the field of the search view may be within a group node, which is why we must check
-            # for all descendants containing a node with a field tag, if this is not the case
-            # then a search is not possible.
-            self._log_view_warning('Search tag requires at least one field element', node)
+            # move all children nodes into a new node <groupby>
+            groupby_node = E.groupby(*node)
+            # validate the node as a nested view
+            sub_manager = self._validate_view(groupby_node, field.comodel_name, editable=False)
+            name_manager.has_field(name, {})
+            name_manager.must_have_fields(sub_manager.mandatory_parent_fields)
+        else:
+            msg = _(
+                "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s",
+                field=name, model=name_manager.Model._name,
+            )
+            self._raise_view_error(msg, node)
 
     def _validate_tag_searchpanel(self, node, name_manager, node_info):
         for child in node.iterchildren(tag=etree.Element):
