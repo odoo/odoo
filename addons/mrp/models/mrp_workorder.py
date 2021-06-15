@@ -135,6 +135,10 @@ class MrpWorkorder(models.Model):
         help="Technical field indicating whether the current user is working. ")
     working_user_ids = fields.One2many('res.users', string='Working user on this work order.', compute='_compute_working_users')
     last_working_user_id = fields.One2many('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
+    costs_hour = fields.Float(
+        string='Cost per hour',
+        help='Technical field to store the hourly cost of workcenter at time of work order completion (i.e. to keep a consistent cost).',
+        default=0.0, group_operator="avg")
 
     next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order", check_company=True)
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
@@ -570,7 +574,8 @@ class MrpWorkorder(models.Model):
                 'qty_produced': workorder.qty_produced or workorder.qty_producing or workorder.qty_production,
                 'state': 'done',
                 'date_finished': end_date,
-                'date_planned_finished': end_date
+                'date_planned_finished': end_date,
+                'costs_hour': workorder.workcenter_id.costs_hour
             }
             if not workorder.date_start:
                 vals['date_start'] = end_date
@@ -648,6 +653,7 @@ class MrpWorkorder(models.Model):
             'state': 'done',
             'date_finished': end_date,
             'date_planned_finished': end_date,
+            'costs_hour': self.workcenter_id.costs_hour
         })
 
     def button_scrap(self):
