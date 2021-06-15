@@ -2,6 +2,7 @@
 import logging
 
 from odoo.tests import standalone
+from odoo.tests import tagged, SavepointCase
 
 
 _logger = logging.getLogger(__name__)
@@ -33,3 +34,23 @@ def test_all_l10n(env):
                 coa.try_loading()
         except Exception:
             _logger.error("Error when creating COA %s", coa.name, exc_info=True)
+
+
+@tagged('post_install', '-at_install')
+class TestDemoInstalled(SavepointCase):
+    def test_demo_installed(self):
+        if not self.env.ref('base.module_account').demo:
+            self.skipTest("Need demo data to test that it is installed...")
+        main_company = self.env.ref('base.main_company')
+        countries_installed = {
+             meta['xmlid'].split('.')[0]
+             for meta in self.env['account.chart.template'].search([]).get_metadata()
+             if meta['xmlid'] and meta['xmlid'] != 'l10n_generic_coa.configurable_chart_template'
+        }
+        countries_instantiated = {
+            meta['xmlid'].split('.')[0]
+            for meta in self.env['res.company'].search([
+                ('id', '!=', self.env.ref('base.main_company').id)
+            ]).chart_template_id.get_metadata()
+        }
+        self.assertFalse(countries_installed - countries_instantiated)
