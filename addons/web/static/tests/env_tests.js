@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { makeTestEnv } from "../helpers/mock_env";
-import { makeDeferred, nextTick, patchWithCleanup } from "../helpers/utils";
+import { makeTestEnv } from "./helpers/mock_env";
+import { makeDeferred, nextTick, patchWithCleanup } from "./helpers/utils";
 
 const serviceRegistry = registry.category("services");
 
