@@ -6,7 +6,7 @@ import FormView from 'web.FormView';
 import KanbanView from 'web.KanbanView';
 import ListView from 'web.ListView';
 import { Many2OneAvatarUser } from '@mail/js/m2x_avatar_user';
-import { dom, mock } from 'web.test_utils';
+import { dom, mock, nextTick } from 'web.test_utils';
 
 
 QUnit.module('mail', {}, function () {
@@ -157,8 +157,35 @@ QUnit.module('mail', {}, function () {
         form.destroy();
     });
 
+    QUnit.test('many2many_avatar_user widget with single record in list view', async function (assert) {
+        assert.expect(4);
+
+        this.data.foo.records[1].user_ids = [11];
+
+        const { widget: list } = await start({
+            hasView: true,
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="user_ids" widget="many2many_avatar_user"/></tree>',
+            res_id: 1,
+        });
+
+        assert.containsN(list, '.o_data_row:eq(0) .o_field_many2manytags.avatar.o_field_widget .o_m2m_avatar', 2,
+            "should have 2 records");
+        assert.containsN(list, '.o_data_row:eq(1) .o_field_many2manytags.avatar.o_field_widget > div > span', 1,
+            "should have 1 record in second row");
+        assert.containsN(list, '.o_data_row:eq(1) .o_field_many2manytags.avatar.o_field_widget > div > span', 1,
+            "should have img and span in second record");
+
+        await dom.click(list.$('.o_data_row:eq(1) .o_field_many2manytags.avatar:first > div > span'));
+        assert.containsOnce(list, '.o_selected_row');
+
+        list.destroy();
+    });
+
     QUnit.test('many2many_avatar_user widget in list view', async function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         const { widget: list } = await start({
             hasView: true,
@@ -178,9 +205,14 @@ QUnit.module('mail', {}, function () {
             assert.step('open record');
         });
 
-        assert.containsN(list.$(".o_data_cell:first"), '.o_field_many2manytags.avatar.o_field_widget .badge', 2,
+        assert.containsN(list.$(".o_data_cell:first"), '.o_field_many2manytags.avatar.o_field_widget span', 2,
             "should have 2 records");
-        assert.strictEqual(list.$('.o_data_cell:first .o_tag_badge_text').text().trim(), 'MarioYoshi');
+        assert.strictEqual(list.$(".o_data_cell:first .o_field_many2manytags.avatar img.o_m2m_avatar:first").data('src'),
+            "/web/image/res.users/11/avatar_128",
+            "should have right image");
+        assert.strictEqual(list.$(".o_data_cell:eq(0) .o_field_many2manytags.avatar img.o_m2m_avatar:eq(1)").data('src'),
+            "/web/image/res.users/23/avatar_128",
+            "should have right image");
 
         // sanity check: later on, we'll check that clicking on the avatar doesn't open the record
         await dom.click(list.$('.o_data_row:first .o_field_many2manytags'));
@@ -196,6 +228,80 @@ QUnit.module('mail', {}, function () {
         ]);
 
         list.destroy();
+    });
+
+    QUnit.test('many2many_avatar_user in kanban view', async function (assert) {
+        assert.expect(11);
+
+        this.data['res.users'].records.push({ id: 15, name: "Tapu", partner_id: 11 },);
+        this.data.foo.records[2].user_ids = [11, 23, 7, 15];
+
+        const { widget: kanban } = await start({
+            hasView: true,
+            View: KanbanView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="user_id"/>
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="user_ids" widget="many2many_avatar_user"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            mockRPC(route, args) {
+                if (args.method === 'read') {
+                    assert.step(`read ${args.model} ${args.args[0]}`);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        mock.intercept(kanban, 'open_record', () => {
+            assert.step('open record');
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar:first').data('src'),
+            "/web/image/res.users/11/avatar_128",
+            "should have correct avatar image");
+        assert.strictEqual(kanban.$('.o_kanban_record:first .o_field_many2manytags img.o_m2m_avatar:eq(1)').data('src'),
+            "/web/image/res.users/23/avatar_128",
+            "should have correct avatar image");
+
+        assert.containsN(kanban, '.o_kanban_record:eq(2) .o_field_many2manytags > span:not(.o_m2m_avatar_empty)', 2,
+            "should have 2 records");
+        assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags img.o_m2m_avatar:first').data('src'),
+            "/web/image/res.users/11/avatar_128",
+            "should have correct avatar image");
+        assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags img.o_m2m_avatar:eq(1)').data('src'),
+            "/web/image/res.users/23/avatar_128",
+            "should have correct avatar image");
+        assert.containsOnce(kanban, '.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty',
+            "should have o_m2m_avatar_empty span");
+        assert.strictEqual(kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty').text().trim(), "+2",
+            "should have +2 in o_m2m_avatar_empty");
+
+        kanban.$('.o_kanban_record:eq(2) .o_field_many2manytags .o_m2m_avatar_empty').trigger($.Event('mouseenter'));
+        await nextTick();
+        assert.containsOnce(kanban, '.popover',
+            "should open a popover hover on o_m2m_avatar_empty");
+        assert.strictEqual(kanban.$('.popover .popover-body > div').text().trim(), "LuigiTapu",
+            "should have a right text in popover");
+
+        assert.verifySteps([
+            "read res.users 7,11,15,23",
+        ]);
+
+        kanban.destroy();
     });
 
 });
