@@ -51,6 +51,7 @@ class Rating(models.Model):
         string='Parent Ref', selection='_selection_target_model',
         compute='_compute_parent_ref', readonly=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated Operator", help="Owner of the rated resource")
+    rated_partner_name = fields.Char(related="rated_partner_id.name")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
     rating = fields.Float(string="Rating Value", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 5=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
