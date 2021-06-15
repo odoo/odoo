@@ -993,7 +993,7 @@
                             </t>
                         </td>
                         <td class="text-center td-qty">
-                            <div class="css_quantity input-group mx-auto">
+                            <div class="css_quantity input-group mx-auto justify-content-center">
                                 <t t-if="not line._is_not_sellable_line()">
                                     <t t-if="show_qty">
                                         <div class="input-group-prepend">
@@ -1014,6 +1014,7 @@
                                 </t>
                                 <t t-else="">
                                     <span class="text-muted w-100" t-esc="int(line.product_uom_qty)"/>
+                                    <input type="hidden" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="line.product_uom_qty" />
                                 </t>
                             </div>
                         </td>
