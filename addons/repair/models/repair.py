@@ -3,9 +3,11 @@
 from collections import defaultdict
 from random import randint
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, is_html_empty
 
 
 class StockMove(models.Model):
@@ -357,10 +359,10 @@ class Repair(models.Model):
                 invoice_vals = current_invoices_list[0]
                 invoice_vals['invoice_origin'] += ', ' + repair.name
                 invoice_vals['repair_ids'].append((4, repair.id))
-                if not invoice_vals['narration']:
+                if  is_html_empty(invoice_vals['narration']):
                     invoice_vals['narration'] = narration
                 else:
-                    invoice_vals['narration'] += '<br/>' + narration
+                    invoice_vals['narration'] += Markup('<br/>') + narration
 
             # Create invoice lines from operations.
             for operation in repair.operations.filtered(lambda op: op.type == 'add'):
