@@ -964,6 +964,7 @@ const Wysiwyg = Widget.extend({
             '#media-description',
         ].join(',')).toggleClass('d-none', !$target.is('img'));
         this.lastMediaClicked = isInMedia && e.target;
+        this.lastElement = $target[0];
         // Hide the irrelevant text buttons for media.
         this.toolbar.$el.find([
             '#style',
