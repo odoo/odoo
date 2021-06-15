@@ -91,7 +91,7 @@ export const effectService = {
          *    All the options for the effect.
          *    The options get passed to the more specific effect methods.
          */
-        function create(type, params = {}) {
+        function add(type, params = {}) {
             switch (type.replace("_", "").toLowerCase()) {
                 case "rainbowman":
                     return rainbowMan(params);
@@ -100,7 +100,7 @@ export const effectService = {
             }
         }
 
-        return { create, rainbowMan };
+        return { add };
     },
 };
 

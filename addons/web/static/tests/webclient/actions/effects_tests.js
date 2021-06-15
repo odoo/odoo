@@ -26,7 +26,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 1);
         assert.containsOnce(webClient.el, ".o_kanban_view");
         assert.containsNone(webClient.el, ".o_reward");
-        webClient.env.services.effect.rainbowMan({ message: "", fadeout: "no" });
+        webClient.env.services.effect.add("rainbowman", { message: "", fadeout: "no" });
         await nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(webClient.el, ".o_reward");
@@ -35,7 +35,7 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         assert.containsNone(webClient.el, ".o_reward");
         assert.containsOnce(webClient.el, ".o_kanban_view");
-        webClient.env.services.effect.rainbowMan({ message: "", fadeout: "no" });
+        webClient.env.services.effect.add("rainbowman", { message: "", fadeout: "no" });
         await nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(webClient.el, ".o_reward");
@@ -55,7 +55,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(webClient.el, ".o_kanban_view");
         assert.containsNone(webClient.el, ".o_reward");
         assert.containsNone(webClient.el, ".o_notification");
-        webClient.env.services.effect.rainbowMan({ message: "", fadeout: "no" });
+        webClient.env.services.effect.add("rainbowman", { message: "", fadeout: "no" });
         await nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(webClient.el, ".o_kanban_view");
