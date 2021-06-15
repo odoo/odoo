@@ -15,7 +15,7 @@ from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
 
 
-PROJECT_TASK_READABLE_FIELDS = [
+PROJECT_TASK_READABLE_FIELDS = {
     'id',
     'active',
     'description',
@@ -27,6 +27,7 @@ PROJECT_TASK_READABLE_FIELDS = [
     'partner_is_company',
     'commercial_partner_id',
     'allow_subtasks',
+    'subtask_count',
     'child_text',
     'is_closed',
     'email_from',
@@ -36,9 +37,9 @@ PROJECT_TASK_READABLE_FIELDS = [
     'displayed_image_id',
     'display_name',
     'priority',
-]
+}
 
-PROJECT_TASK_WRITABLE_FIELDS = [
+PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'partner_id',
     'partner_email',
@@ -50,7 +51,7 @@ PROJECT_TASK_WRITABLE_FIELDS = [
     'kanban_state',
     'child_ids',
     'parent_id',
-]
+}
 
 
 class ProjectTaskType(models.Model):

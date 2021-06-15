@@ -7,6 +7,22 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 
+PROJECT_TASK_READABLE_FIELDS = {
+    'allow_subtasks',
+    'allow_timesheets',
+    'analytic_account_active',
+    'effective_hours',
+    'encode_uom_in_days',
+    'planned_hours',
+    'progress',
+    'overtime',
+    'remaining_hours',
+    'subtask_effective_hours',
+    'subtask_planned_hours',
+    'timesheet_ids',
+    'total_hours_spent',
+}
+
 class Project(models.Model):
     _inherit = "project.project"
 
@@ -177,6 +193,10 @@ class Task(models.Model):
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
+
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
 
     def _uom_in_days(self):
         return self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
