@@ -6,6 +6,7 @@ import { useBus } from "../core/bus_hook";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 import { useEffect } from "@web/core/effect_hook";
+import { makeNonUpdatableComponent } from "../core/utils/components";
 
 const { Component, hooks } = owl;
 const { useExternalListener } = hooks;
@@ -19,7 +20,11 @@ export class WebClient extends Component {
         this.router = useService("router");
         this.user = useService("user");
         useService("legacy_service_provider");
-        this.Components = mainComponentRegistry.getEntries();
+        this.Components = mainComponentRegistry.getEntries().map(([name, elem]) => {
+            const { Component, props } = elem;
+            const NonUpdatableComp = makeNonUpdatableComponent(Component);
+            return [name, { Component: NonUpdatableComp, props }];
+        });
         this.title.setParts({ zopenerp: "Odoo" }); // zopenerp is easy to grep
         useBus(this.env.bus, "ROUTE_CHANGE", this.loadRouterState);
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", (mode) => {

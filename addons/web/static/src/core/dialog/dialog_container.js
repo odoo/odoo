@@ -7,6 +7,9 @@ class ErrorHandler extends Component {
         this.props.callback();
         throw error;
     }
+    shouldUpdate() {
+        return false;
+    }
 }
 ErrorHandler.template = tags.xml`<t t-component="props.dialog.class" t-props="props.dialog.props" />`;
 
